@@ -19,7 +19,7 @@ dependencies = [
     "pydantic==2.13.4",
     "PyJWT==2.13.0",
     "requests==2.34.2",
-    "sqlalchemy==2.0.51",
+    "sqlalchemy==2.0.52",
     "uvicorn[standard]==0.52.1",
 ]
 
