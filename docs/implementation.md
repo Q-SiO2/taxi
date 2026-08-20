@@ -1,6 +1,6 @@
 # Implementation Blueprint
 
-This document fixes the implementation choices required to turn the TaxiMobile product documents into working software. It is subordinate to the domain rules in `product.md`, `auth.md`, `rides.md`, `matching.md`, `pricing.md`, and `payments.md`. If a technical choice conflicts with one of those rules, the domain rule wins and the conflict must be resolved in documentation first.
+This document fixes the implementation choices required to turn the TaxiMobile product documents into working software. It is subordinate to the domain rules in `product.md`, `operations.md`, `auth.md`, `rides.md`, `matching.md`, `pricing.md`, and `payments.md`. If a technical choice conflicts with one of those rules, the domain rule wins and the conflict must be resolved in documentation first.
 
 ## 1. Repository Structure
 
@@ -8,13 +8,13 @@ TaxiMobile remains one repository with four deliberate top-level areas:
 
 ```text
 Projects/
-|- TaxiMobile/                 # Kotlin Multiplatform passenger and driver clients
+|- TaxiMobile/                 # Kotlin Multiplatform mobile clients and operations web
 |- backend/                    # Python modular-monolith API, worker, migrations, tests
 |- infra/                      # local Compose and deployment configuration
 `- docs/                       # authoritative product and technical decisions
 ```
 
-`TaxiMobile/` is retained as the mobile build root. `backend/` and `infra/` are separate because Python and deployment tooling must not be coupled into the Kotlin build. Generated files, local databases, credentials, and build output are never committed.
+`TaxiMobile/` is retained as the client build root. `backend/` and `infra/` are separate because Python and deployment tooling must not be coupled into the Kotlin build. Generated files, local databases, credentials, and build output are never committed.
 
 ## 2. Mobile Clients
 
@@ -23,7 +23,7 @@ The product has two mobile applications with different operational roles:
 * **Passenger** requests and follows rides.
 * **Driver** manages eligibility, availability, ride offers, and active rides.
 
-They share one Kotlin Multiplatform codebase. Android starts with two product flavors in `TaxiMobile/androidApp`; iOS starts with two targets/schemes that embed the same shared framework. This produces separate installable apps without duplicating business or API code. Desktop and web targets are retained only as development and UI-test surfaces until a product decision promotes either to a supported client.
+They share one Kotlin Multiplatform codebase. Android starts with two product flavors in `TaxiMobile/androidApp`; iOS starts with two targets/schemes that embed the same shared framework. This produces separate installable apps without duplicating business or API code. Desktop remains a development/UI-test surface. The approved national expansion promotes `TaxiMobile/webApp` to the operations and driver-application web client described below.
 
 The shared module evolves toward this feature-first structure:
 
@@ -44,6 +44,44 @@ TaxiMobile/shared/src/commonMain/kotlin/<package>/
    |- rides/
    `- profile/
 ```
+
+### Operations web application
+
+`TaxiMobile/webApp` must stop calling the passenger/driver `App()` root when the
+national control-plane phase begins. It owns a dedicated `OperationsApp` and web
+navigation tree with two route groups: a public applicant portal and a protected
+operations console. It may reuse shared localization, exact-money/coordinate
+types, API error mapping, and the approved UI tokens, but it must not import
+mobile ride-screen composition or mobile secure-storage assumptions.
+
+Initial structure:
+
+```text
+TaxiMobile/webApp/src/
+|- webMain/kotlin/<package>/
+|  |- application/             # browser boot and environment config
+|  |- auth/                    # operations/applicant session presentation
+|  |- navigation/
+|  |- operations/
+|  |  |- rollout/
+|  |  |- cities/
+|  |  |- operators/
+|  |  |- driverreview/
+|  |  |- pricing/
+|  |  |- fixedroutes/
+|  |  |- scheduling/
+|  |  |- analytics/
+|  |  `- audit/
+|  `- applicant/
+`- webTest/
+```
+
+The browser client calls only HTTPS `/api/v1` contracts. Administrative access
+uses a dedicated audience/session policy, exact operations origin, mandatory MFA
+before national production, no persistent browser bearer token, and the CSRF/CSP
+boundary in `security.md`. The selected scope in the UI is presentation input;
+the backend grant remains authority. Operations web releases are built/tested and
+promoted separately from Android/iOS artifacts.
 
 Compose screens present state and dispatch user intent. View models and use cases perform application work. Repository implementations call the backend; no UI component may directly issue network requests. Ktor Client and kotlinx serialization are the selected shared HTTP/serialization stack. Secure token storage, location, push registration, permissions, and maps are interfaces in shared code with implementations in Android and iOS source sets. Sensitive tokens never go into normal preferences or logs.
 
@@ -365,6 +403,43 @@ backend/
    `- api/
 ```
 
+The national phases add domain modules inside this monolith rather than new
+deployables by default:
+
+```text
+domains/
+|- markets/             # market/operator/city and configuration lifecycle
+|- administration/      # scoped grants and audited control-plane commands
+|- driver_applications/ # city requirements, applications, authorizations
+|- fixed_routes/        # immutable route/direction/stop publication
+|- scheduling/          # future booking, offers, commitments, handoff
+|- pricing/             # city tariffs, scheduling surcharge, operator fees
+`- analytics/           # typed facts and privacy-bounded aggregates
+```
+
+Existing `auth`, `drivers`, `rides`, `matching`, `payments`, and `outbox`
+modules remain owners of their current rules. New modules call those boundaries;
+they do not duplicate identity, assignment, fare, or payment state. Every
+operational aggregate stores/derives city scope, but analytics never becomes a
+command source of truth.
+
+Migration delivery follows the roadmap and is intentionally split:
+
+```text
+market/operator/city + service-area/configuration versions + backfill
+→ scoped grants
+→ city requirement versions + protected application evidence/authorizations
+→ city financial policy versions
+→ fixed-route versions/directions
+→ scheduled bookings/offers/overlap-safe commitments
+→ typed aggregate facts/views
+```
+
+Backfills use reviewed deterministic mappings for existing pilot data and retain
+historical IDs/amounts. A migration must not guess a city from an old arbitrary
+coordinate or promote a legacy administrator to national access without an
+explicit bootstrap mapping.
+
 The selected persistence stack is PostgreSQL 16+ with PostGIS 3.4+, SQLAlchemy 2.x, asyncpg, and Alembic. PostgreSQL stores all durable business facts. PostGIS geography uses WGS84 coordinates and supports proximity operations. UUID primary keys, UTC timestamps, explicit constraints, optimistic/version checks or transaction locks where appropriate, and migration-only schema changes are mandatory. Money is represented with fixed-precision `NUMERIC` values and explicit currency; never floating-point values.
 
 All APIs use `/api/v1`, JSON, FastAPI-generated OpenAPI, and the error model in `api.md`. The Kotlin client is handwritten against the published contract in the MVP. Code generation is deferred until the contract has proven stable.
@@ -380,6 +455,13 @@ session, type, issued-at, and expiration claim in addition to HS256 signature
 validation; server-side session and user-status checks remain authoritative.
 
 The shared mobile `RideGateway` exposes fare estimation as a backend call. A client may render the returned amount and tariff version, but it does not calculate, select, or lock the authoritative fare; the API locks the quote when the passenger creates the ride.
+
+National quotes extend that response with backend-resolved city/operator,
+service type, scheduling surcharge, operator fee calculation/funding mode,
+passenger total, expected driver net, and immutable policy versions. Fixed-route
+requests reference a published direction version. Scheduled requests use a
+separate gateway/aggregate and do not add a long-lived scheduled state to the
+live `Ride` model.
 
 ## 4. Real-Time and Background Work
 
@@ -400,6 +482,27 @@ exclude already-tried drivers for that ride, and advance sequentially. The
 processor claims expired offers with row locks and `SKIP LOCKED`, so horizontal
 replicas cannot both expire the same offer. Candidate exhaustion records
 `UNMATCHED`; it never leaves the passenger in an indefinite matching state.
+
+The scheduled-booking phase adds a separate lease-safe processor for opening
+offer windows and performing dispatch handoff. It uses database time, row locks,
+idempotent transitions, and bounded batches. A commitment does not change the
+driver's live availability outside its configured protected window. Candidate
+discovery requires the separate city-scoped scheduled-offer preference and
+never treats immediate `AVAILABLE` state, push reachability, or passenger-facing
+state as scheduling authority. Acceptance writes an active commitment with the
+configured protected `tstzrange`; the transaction-safe overlap constraint/lock
+rejects conflicting work and concurrent acceptance by another driver. At handoff,
+the processor revalidates city authorization, credentials, vehicle, and
+location/conflict policy, then creates at most one live ride or records the
+documented fallback/unfulfilled outcome.
+Scheduling notifications remain refresh hints; authorized polling is the
+delivery fallback.
+
+City configuration activation emits an invalidation hint containing only city
+and immutable configuration version. Replicas still load and validate the
+authoritative version from PostgreSQL. A paused city prevents new requests and
+bookings while allowing active rides, approved support flows, and history to
+complete according to documented emergency policy.
 
 The repository-owned matching simulation reuses that pure production scoring
 function in a deterministic, seeded synthetic city. It generates demand,
@@ -528,6 +631,22 @@ poll scheduling belong only to the worker. Database, monitoring, and matching
 policy are the deliberately shared inputs.
 Development configurations must use isolated databases and sandbox provider
 credentials.
+
+Country-scale deployment does not begin with a database or application fork per
+city. API replicas remain stateless behind the load balancer, and worker claims
+remain database-lease safe. Every operational index/query is reviewed for
+`city_id`; city/service/date keys lead the busiest matching, booking, route,
+pricing, and aggregate paths. Immutable catalogs/configuration versions may use
+bounded cache headers or a shared cache later, while current assignment,
+eligibility, booking, fare, payment, and grant state always returns to
+PostgreSQL. Read replicas, partitioning, Redis, a queue, and a warehouse require
+measured thresholds plus stale-read/failure/restore runbooks.
+
+The operations web bundle is hosted on an exact HTTPS origin separate from the
+public API origin where practical. Production response headers include a reviewed
+Content Security Policy and no-store for authenticated pages/API responses.
+Public fixed-route catalog versions may be cached; driver applications,
+operations pages, city drafts, reports, and exports are not shared-cacheable.
 
 Production starts with a small Linux deployment containing one public API
 container, one private background-worker container owning matching, outbox, and
@@ -757,6 +876,23 @@ For every later capability, complete this gate before moving on:
 5. Exercise the real migration and endpoint path against local PostGIS.
 6. Check negative authorization, invalid transition, and duplicate-request behavior for sensitive operations.
 7. Update documentation only when the delivered design changes a documented contract.
+
+National-expansion slices add these mandatory gates:
+
+1. Prove a caller scoped to City A cannot read, count, export, mutate, or infer
+   City B data before adding the positive UI path.
+2. Prove a passenger cannot enumerate online drivers through catalogs, matching,
+   errors, WebSockets, metrics, or maps.
+3. Reconcile passenger total, driver net, operator allocation, and scheduling
+   surcharge with exact arithmetic and immutable policy snapshots.
+4. Run migration/backfill tests from the current single-city head; never assume a
+   fresh national database only.
+5. Exercise two-city PostGIS fixtures and concurrent fixed-route/scheduled
+   acceptance/handoff behavior.
+6. Validate operations web keyboard/RTL/loading/conflict behavior and generated
+   OpenAPI compatibility separately from mobile clients.
+7. Activate features behind backend city configuration only after the
+   corresponding city readiness gate; clients do not contain city allowlists.
 
 No feature is complete because a screen renders, an endpoint returns `200`, or a local cache changed. Completion requires the backend-authoritative behavior, an appropriate test, and the documented failure path.
 

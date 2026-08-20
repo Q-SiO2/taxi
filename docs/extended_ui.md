@@ -77,7 +77,8 @@ Examples:
 - Phone numbers use a phone-number component.
 - Email uses an email component.
 - OTP uses a segmented code-entry component.
-- Card numbers use a card-number component.
+- CMI card payments use the provider-hosted entry surface; TaxiMobile forms do
+  not render card-number or CVV inputs.
 - Search locations use a location-search component.
 - Driver document numbers use constrained field formats.
 - Dates use date pickers.
@@ -840,8 +841,12 @@ Search launcher:
 Bottom panel:
 - recent places
 - saved Home/Work
-- nearby taxi status
+- published fixed routes for the selected city
 - promotion only if actually useful
+
+The passenger home never exposes online taxi markers, counts, queues, or live
+supply status. Published route cards remain useful when no taxi is online and
+show direction/start/finish/flat fare without implying availability.
 
 Do not clutter the map with promotional banners.
 
@@ -953,7 +958,8 @@ Each service card:
 - vehicle asset/illustration
 - service name
 - passenger capacity
-- ETA
+- route-duration estimate when available; never a pre-assignment pickup ETA or
+  live-supply signal
 - estimated fare or fare rule
 - concise descriptor
 
@@ -977,6 +983,22 @@ Large/shared taxi must be visually distinct from normal taxi:
 - different vehicle silhouette
 - passenger capacity indicator
 - fixed-route/shared label where applicable
+
+### P14A — Fixed Route Directory and Direction
+
+Use the same map, cards, typography, and bottom-sheet system.
+
+Directory rows show:
+- localized route name,
+- explicit outbound/inbound direction,
+- start → finish,
+- flat fare and currency,
+- active/paused booking status.
+
+Detail shows static route geometry and ordered stops. Route direction must be
+readable in text and screen-reader order, not only color or arrow direction.
+Never add taxi markers or online-driver counts to this catalog. Book now and
+Schedule appear only when the backend city catalog enables them.
 
 ---
 
@@ -1013,12 +1035,12 @@ Each method:
 - short status
 - selected indicator
 
-Card entry:
-- card-number field
-- expiration
-- CVV
-- cardholder name where necessary
-- secure-entry cues
+CMI card entry:
+- opens the configured CMI-hosted HTTPS payment experience,
+- keeps card number, expiration, CVV, and cardholder entry outside TaxiMobile,
+- treats the provider return as pending until the backend verifies and
+  reconciles the callback,
+- offers a safe return/retry or cash path without displaying invented success.
 
 Never simulate security with fake shield graphics or unsupported claims.
 
@@ -1037,6 +1059,10 @@ Bottom sheet:
 - fare estimate
 - payment method
 - optional note
+- Now / Schedule choice when enabled
+- scheduled pickup time and city timezone when selected
+- scheduling surcharge and cancellation/refund terms
+- operator service fee as a separate line when passenger-funded
 
 Primary:
 - Request taxi
@@ -1055,7 +1081,7 @@ Prevent accidental duplicate booking:
 
 Map:
 - pickup/destination remain visible
-- nearby candidate taxi markers may appear only if data is real
+- no online, candidate, queued, or simulated taxi markers before assignment
 
 Bottom sheet:
 - “Finding a driver”
@@ -1067,7 +1093,7 @@ Bottom sheet:
 Animation:
 - route/pickup pulse
 - soft radar-like search visualization is acceptable
-- avoid fake moving taxis if not based on actual positions
+- never represent the pulse as real driver movement or supply
 
 States:
 - searching
@@ -1121,11 +1147,10 @@ Vehicle marker:
 ## P20 — Approach Tracking
 
 Map:
-- update driver position smoothly
-- interpolate movement between GPS updates
-- do not teleport marker
-- heading smoothing
-- snap cautiously to road if provider supports it
+- show only the backend-authorized static last-known observation after assignment
+- label its observation time
+- replace it only after an explicit authoritative refresh
+- do not interpolate, project, or label it as live movement
 
 ETA:
 - update without flickering
@@ -1387,6 +1412,7 @@ Explain:
 - key requirements
 - basic workflow
 - verification expectation
+- that eligibility is reviewed for a selected recruiting city
 
 ---
 
@@ -1398,6 +1424,7 @@ Specialized fields for:
 - email
 - date of birth
 - identity document data where legally required
+- recruiting city selection from the backend catalog
 
 Use correct keyboard and formatting per field.
 
@@ -1455,8 +1482,16 @@ Timeline:
 - additional information
 - approved
 - rejected
+- withdrawn
 
 No vague infinite spinner.
+
+An editable pre-approval application offers **Withdraw application** behind a
+confirmation step. The UI keeps the withdrawn record/status and never presents
+withdrawal as document deletion or account removal.
+
+When a driver has more than one city application, each status is scoped and
+named. Approval in one city must not visually imply national eligibility.
 
 ---
 
@@ -1510,6 +1545,10 @@ Show:
 - ride/service type
 - fare/earning estimate if available and appropriate
 - passenger rating if used
+- immediate / fixed-route / scheduled service label
+- fixed-route direction/start/finish and flat fare when applicable
+- scheduled pickup time/timezone and commitment/cancellation terms when applicable
+- separate scheduling surcharge, operator fee/funding mode, and expected driver net
 
 Actions:
 - Accept
@@ -2106,6 +2145,8 @@ Before implementation approval, verify:
 9. driver matched
 10. active ride
 11. completion/rating
+12. fixed-route catalog/direction
+13. scheduled review/upcoming booking states
 
 ## Stage D — Passenger account
 1. Trips
@@ -2132,6 +2173,51 @@ Before implementation approval, verify:
 8. completion
 9. earnings
 10. history/account
+11. scheduled offers/upcoming commitments
+
+## Stage G — National operations web (after backend control plane)
+1. operations authentication and scope shell
+2. rollout overview
+3. city readiness/lifecycle
+4. operator assignments and staff grants
+5. driver application review
+6. pricing/scheduling/operator-fee versions
+7. fixed-route map editor and publication review
+8. scheduled exceptions
+9. aggregate reporting
+10. audit/security review
+
+---
+
+# 58A. National Operations Web Extension
+
+This console extends the existing identity; it does not introduce a new palette,
+font system, icon family, map style, or motion language.
+
+Desktop shell:
+- persistent navy sidebar,
+- white/neutral content canvas,
+- top scope switcher showing market, operator, and city,
+- mustard reserved for the primary action/selected state,
+- responsive tables, cards, side drawers, and map workspaces,
+- exact status text paired with semantic feedback colors.
+
+Required rules:
+- scope selection triggers a backend-authorized reload and never grants access,
+- draft/review/active/replaced/paused/retired states are visually distinct,
+- route/fare/config previews show the version and effective time,
+- city pause, rate activation, route publication, staff grant, and driver
+  decision require a review summary and explicit confirmation,
+- charts have text/table alternatives and use a restrained semantic palette,
+- city/route maps show service geometry or authorized aggregates, never
+  participant trails or passenger-facing online taxis,
+- success animation occurs only after the backend returns the new state,
+- keyboard, screen-reader, RTL, loading, empty, conflict, error, and offline
+  states are designed with the first implementation slice.
+
+The public driver web portal reuses auth/onboarding components but has no
+operations sidebar or privileged data. Submitting an application displays a
+pending/review status, never an approval celebration.
 
 ---
 

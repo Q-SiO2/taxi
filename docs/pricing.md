@@ -80,25 +80,31 @@ The matching system must not modify the fare.
 
 ---
 
-# 4. Fare Components
+# 4. Fare and Charge Components
 
-A fare may eventually consist of:
+The regulated or configured **transport fare** remains distinct from booking and
+operator charges:
 
 ```text
-Base fare
-+
-Distance component
-+
-Time component
-+
-Approved supplements
-+
-Optional service fees
--
-Applicable discounts
+base fare
++ distance component
++ time component
++ approved transport supplements
+- applicable transport discounts
+= transport fare
+
+transport fare
++ scheduling surcharge when applicable
++ passenger-funded operator service fee when configured
++ approved passenger extras
+- passenger discounts/subsidies
+= passenger total
 ```
 
-The exact components depend on the applicable taxi regulations and operating model.
+A driver-funded operator fee is already inside the transport fare and appears in
+settlement, not as another passenger charge. The exact transport components and
+allowed extras depend on the applicable taxi regulations and operating model;
+the backend returns each authoritative amount separately.
 
 ---
 
@@ -137,10 +143,13 @@ Future models may include:
 
 ```text
 ZONE_BASED
-SCHEDULED
 CONTRACTED
 COOPERATIVE_RATE
 ```
+
+Scheduling is a booking type with its own explicit surcharge policy, not an
+ambiguous fare model. It may use a fixed, estimated, metered, or fixed-route
+transport fare according to city policy.
 
 ---
 
@@ -186,6 +195,12 @@ Airport → City Center
 could have a configured tariff.
 
 The passenger should see the applicable price before confirming the ride whenever legally and technically possible.
+
+A published fixed-route direction always references a versioned flat transport
+fare. Outbound and inbound directions are priced explicitly even when they share
+geometry. The first fixed-route release prices the complete selected direction;
+it does not infer segment fares from optional stops. Route/fare edits create new
+versions and never alter historical bookings.
 
 ---
 
@@ -327,6 +342,10 @@ A tariff should conceptually contain:
 ```text
 Tariff
 ├── id
+├── city_id
+├── operator_id
+├── service_type
+├── optional_fixed_route_direction_id
 ├── name
 ├── currency
 ├── effective_from
@@ -337,6 +356,11 @@ Tariff
 ├── supplements
 └── version
 ```
+
+Pricing selection is scoped by city, operator, service type, booking type,
+optional fixed-route direction, and effective time. At most one active rule may
+match the same specificity and time. The backend resolves scope from validated
+service data rather than trusting a client to choose a cheaper city or policy.
 
 ---
 
@@ -473,6 +497,8 @@ Base fare                 10 MAD
 Distance                   8 MAD
 Time                       5 MAD
 Supplement                 0 MAD
+Scheduling surcharge       0 MAD
+Operator service fee       0 MAD
 --------------------------------
 Total                     23 MAD
 ```
@@ -504,35 +530,84 @@ The system must not assume that the entire passenger payment is automatically pl
 
 ---
 
-# 23. Platform Fee
+# 23. Operator Service Fee
 
-If TaxiMobile eventually charges a service fee, it must be explicit.
-
-Example:
+TaxiMobile's approved national model calls this the **operator service fee** and
+requires an explicit versioned city/operator policy. Each policy chooses exactly
+one calculation mode:
 
 ```text
-Passenger pays:          35 MAD
-Driver receives:         34 MAD
-TaxiMobile service fee:   1 MAD
+PERCENTAGE_OF_TRANSPORT_FARE
+FLAT_PER_COMPLETED_BOOKING
 ```
 
-This is only an example.
+The percentage uses a bounded decimal rate and a documented eligible
+transport-fare subtotal. Undefined “profit,” tips, tolls, scheduling surcharges,
+subsidies, refunds, and payment-provider costs are not the calculation base.
+The policy also fixes exact rounding and a non-negative driver-net floor.
+A percentage must be at least zero and below 100%; a flat amount must be
+non-negative and use the ride currency. An invalid combination is rejected
+before activation/quotation. The backend does not silently cap or reinterpret a
+fee unless that cap is itself an explicit versioned policy rule.
+Each policy also chooses one funding mode:
 
-The actual fee model is a product and governance decision.
+```text
+DRIVER_SETTLEMENT_DEDUCTION
+PASSENGER_SURCHARGE
+```
+
+With a settlement deduction, the fee is already within the transport fare and
+is shown when calculating driver net. With a passenger surcharge, it is added as
+a separate passenger-visible component and does not reduce the driver's
+transport-fare credit. The first release permits only one operator service fee
+per ride, preventing hidden national/local fee stacking.
+
+Example policies (illustrative only):
+
+```text
+Transport fare:                 40 MAD
+Operator fee (5%, deduction):    2 MAD
+Driver net before adjustments:  38 MAD
+Passenger total:                40 MAD
+```
+
+or, for a passenger-surcharge policy:
+
+```text
+Transport fare:                 40 MAD
+Operator service fee (flat):     2 MAD
+Driver transport-fare credit:   40 MAD
+Passenger total:                42 MAD
+```
+
+Every quote, offer, completed fare, earning, and settlement snapshots policy
+version, base, rate or flat amount, funding mode, currency, and calculated
+amount. An explicit zero-fee policy is stored when the operator charges nothing.
+
+## 23.1 Scheduling surcharge
+
+A city may configure a separate flat scheduling surcharge for future bookings.
+The passenger sees it before confirmation along with its cancellation/refund
+conditions. Its allocation and collection timing are explicit and it is excluded
+from the operator percentage base by default. Scheduling a ride never permits an
+arbitrary client-provided fee.
 
 ---
 
-# 24. No Hidden Commission
+# 24. No Hidden Operator Fee or Commission
 
 The system should not silently deduct an undisclosed percentage from driver earnings.
 
-Any platform fee must be:
+Any operator service fee must be:
 
 * Defined.
 * Visible.
 * Auditable.
 * Configurable.
 * Communicated to drivers.
+* Communicated to passengers when it changes their total.
+* Scoped to the applicable city/operator/service.
+* Snapshotted independently from the tariff.
 
 ---
 
@@ -962,6 +1037,11 @@ Pickup location
 Destination or relevant destination information
 ```
 
+The backend also returns separate scheduling-surcharge, operator-fee, and
+expected driver-net components when applicable. A fixed-route offer identifies
+the route direction and locked flat fare. The driver application never
+reconstructs these values from a percentage stored in client code.
+
 Subject to privacy and operational requirements.
 
 ---
@@ -1169,9 +1249,10 @@ Country
            └── Tariff
 ```
 
-The initial implementation may support one jurisdiction.
-
-The architecture should not make expansion impossible.
+The implemented MVP supports one implicit jurisdiction. The approved national
+expansion makes city/operator scope explicit and deploys one configuration
+bundle at a time. A tariff active in one city must never match a ride in another
+city merely because currency or effective dates overlap.
 
 ---
 
@@ -1180,6 +1261,13 @@ The architecture should not make expansion impossible.
 Only authorized administrators should modify active tariffs.
 
 Changes should be audited.
+
+National operation separates draft/edit, review, and activation permissions by
+scoped grant. City managers and pricing managers may act only in assigned cities;
+market-wide authority is exceptional. Activating a tariff, operator fee,
+scheduling surcharge, or fixed-route fare records the scope, actor, policy
+version, effective time, and replaced version. City activation verifies a
+complete compatible policy bundle.
 
 An ordinary mobile client must never be able to change:
 
@@ -1260,6 +1348,14 @@ New tariff
 Effective date
 ```
 
+```text
+City/operator isolation
+Service-type specificity
+Fixed-route direction version
+No overlapping active rule at equal specificity
+Coherent configuration-bundle activation
+```
+
 ### Adjustments
 
 ```text
@@ -1278,6 +1374,15 @@ Cancellation
 Missing route data
 ```
 
+```text
+Percentage operator fee rounding
+Flat operator fee and insufficient fare policy
+Passenger surcharge versus driver deduction
+Scheduling surcharge cancellation/refund
+Zero-fee policy
+Historical policy version after city rate change
+```
+
 ---
 
 # 64. Pricing Invariants
@@ -1290,6 +1395,14 @@ A final fare must have a tariff version.
 A final fare must have a currency.
 
 A final fare must be reproducible.
+
+A ride and scheduled booking must retain city and operator scope.
+
+Operator fee mode, funding mode, base, and version must be explicit.
+
+A scheduling surcharge must be separate from transport fare and operator fee.
+
+Passenger total, driver net, and operator allocation must reconcile exactly.
 
 Historical fares must not change when tariffs change.
 
@@ -1326,17 +1439,20 @@ Advanced payment integrations can be added later.
 
 Potential future features:
 
-* Multiple cities.
-* Multiple tariff systems.
 * Physical meter integration.
 * Cooperative pricing governance.
 * Subscription programs.
 * Institutional accounts.
 * Corporate transportation.
-* Scheduled ride pricing.
 * Accessibility supplements.
 * Tourism/airport tariffs.
 * Integrated electronic payments.
+
+Multiple city tariffs, fixed-route flat fares, scheduled-booking surcharges, and
+percentage-or-flat operator fees are approved national-expansion scope rather
+than unspecified future features. More complex segment fares, pooled-seat
+pricing, recurring-booking discounts, and multi-operator revenue sharing remain
+future policy work.
 
 ---
 
@@ -1393,3 +1509,8 @@ cannot silently alter which tariff a historical fare would have selected.
 When a passenger confirms a ride, the backend persists the selected tariff and
 quoted fixed amount on the ride. Completion finalizes the fare from that locked
 rule, rather than selecting whichever tariff happens to be active later.
+
+This remains the implemented single-scope compatibility boundary. The national
+model in `operations.md` requires additive city/operator/policy migrations and
+new API/UI slices; documenting it does not make the current global tariff
+endpoint multi-city safe.

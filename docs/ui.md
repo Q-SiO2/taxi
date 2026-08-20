@@ -28,6 +28,7 @@ This plan is **not** an instruction to polish the UI immediately. Implement visu
 | Wave 3 — Driver operational shell | Phase 10 | Offer cards, availability HUD, active-ride controls |
 | Wave 4 — Delight & density | Late Phase 9–10 | Micro-interactions, empty states, receipt theater |
 | Wave 5 — Production polish | Phase 11 | Reduced-motion QA, localization layout, device acceptance |
+| Wave 6 — National service extensions | National expansion phases | Fixed routes, scheduling, city onboarding, and operations web console using the established identity |
 
 Do not rebuild business logic while applying visual layers. Theme and layout wrap existing coordinators and gateways.
 
@@ -43,6 +44,9 @@ TaxiMobile should feel like a modern ride-hailing product (Uber / Lyft class), a
 * **One primary action.** Every surface has one dominant CTA.
 * **Backend is truth.** Animations celebrate confirmed transitions; they never invent assignment, fare, or payment success.
 * **Navy is identity.** Color, chrome, and markers read as TaxiMobile without relying on logo alone.
+* **Service before supply.** Passengers browse destinations and published routes,
+  never the online fleet; driver-specific presentation begins only after backend
+  assignment.
 
 ---
 
@@ -460,6 +464,10 @@ MapLibre is the renderer. Style/tile URL remains environment configuration.
   driver observation. Render it with a distinct static marker, show its
   `observed_at` value in the sheet, and provide an explicit authoritative refresh.
   The marker disappears with terminal ride state; it is not a location stream.
+* Before assignment, do not render real or simulated online taxis, supply counts,
+  candidate markers, queues, or driver heatmaps. A published fixed-route line is
+  static catalog geometry and must use route/direction labeling rather than a
+  vehicle marker.
 * Attribution remains visible and unobscured.
 * One-shot location permission prompts use platform UI; denial keeps map-tap + manual entry.
 * While a platform location request is pending, its FAB/button exposes localized
@@ -471,8 +479,11 @@ MapLibre is the renderer. Style/tile URL remains environment configuration.
 | Mode | Map shows | Sheet shows |
 | --- | --- | --- |
 | Idle | User/context area, no fake taxis | “Where to?” search/destination entry |
+| Fixed-route catalog | Selected static route direction, start/finish, optional stops; no taxis | Direction + flat fare + Book now / Schedule |
 | Pickup set | Pickup pin | Confirm pickup / set destination |
 | Both set | Pins + estimate route after API | Fare estimate + Request |
+| Scheduled review | Route/pins or published fixed route; no taxis | Pickup time, timezone, surcharge, operator fee, cancellation terms |
+| Scheduled upcoming | Static route context; no driver marker before commitment/handoff | Booking status, time, driver commitment status, cancel policy |
 | Matching | Pickup pulse | Finding taxi… |
 | Assigned / en route | Route plus optional static last-known driver marker | Driver card + status + observation time |
 | Active trip | Route plus optional static last-known driver marker | In-trip status + observation time + support |
@@ -505,7 +516,9 @@ Root
 ├─ Auth (login / register)
 ├─ Home (map + sheet) ← default signed-in
 │  ├─ Place selection
+│  ├─ Fixed-route catalog / direction detail
 │  ├─ Estimate
+│  ├─ Schedule review / upcoming bookings
 │  ├─ Matching
 │  ├─ Active ride
 │  └─ Completion / receipt / rating
@@ -532,6 +545,7 @@ Root
 │  ├─ Offline setup (vehicle, location)
 │  ├─ Online idle
 │  ├─ Offer
+│  ├─ Upcoming scheduled commitments
 │  └─ Active ride transitions
 ├─ Earnings
 ├─ Inbox
@@ -591,6 +605,8 @@ Uber-like composition:
 3. Bottom sheet peek:
    - Title `Where to?`
    - Destination field (opens expanded place entry)
+   - Persistent **Fixed routes** entry for the selected city; it remains useful
+     when no taxi is online
    - Up to three unique recent destinations derived from completed backend
      history summaries when available; selecting one still requires pickup and a
      fresh backend fare estimate
@@ -614,6 +630,11 @@ Uber-like composition:
 * Tariff version caption
 * Primary: **Request taxi**
 * Changing either point discards estimate and route immediately
+* A Now / Schedule choice appears only when enabled by the backend city catalog
+* Scheduled review adds city-local pickup time, scheduling surcharge, operator
+  service fee, passenger total, and cancellation/refund terms from the quote
+* Fixed-route review replaces arbitrary destination editing with direction,
+  ordered start/finish, static line, and locked flat transport fare
 
 ### H. Passenger — Matching
 
@@ -622,6 +643,7 @@ Uber-like composition:
 * Indeterminate progress + pulse on pickup pin
 * Secondary: **Cancel request** (confirm dialog)
 * Do not show fake nearby cars
+* Do not show real online cars, available counts, candidate identities, or queues
 * On `UNMATCHED`: replace with info state — “No available taxis were found nearby.” CTA: **Try again**
 
 ### I. Passenger — Assigned / arriving / in trip
@@ -682,6 +704,10 @@ Keep calm list layouts:
 * Accept primary / Decline secondary
 * Medium haptic on appear
 * If multiple offers are not in MVP, design for one focused offer
+* Service label distinguishes immediate, fixed-route, and scheduled work
+* Fixed route shows direction/start/finish and locked flat fare
+* Scheduled work shows pickup time/timezone, commitment/cancellation terms,
+  scheduling surcharge, operator fee/funding mode, and backend expected net
 
 ### P. Driver — Active ride
 
@@ -695,6 +721,82 @@ Keep calm list layouts:
 * Summary header: total, count, settled through
 * List of earning rows from API
 * No client-side fee invention (platform fee may be zero but still server-owned)
+
+### R. Passenger — Fixed Routes
+
+This extends Passenger Home; it is not a new visual language.
+
+* Entry is visible for every city with at least one active published direction,
+  regardless of online supply.
+* List rows show localized route name, explicit direction, start → finish, and
+  flat fare. Do not show taxi counts or availability dots.
+* Detail uses the normal full-bleed neutral MapLibre surface and `TaxiSheet` with
+  static direction geometry, ordered stops, fare components, and **Book now** /
+  **Schedule** actions when enabled.
+* Outbound and inbound are separate selectable directions; color alone must not
+  communicate direction.
+* A paused city keeps the catalog readable with an unavailable status and no
+  enabled booking CTA.
+
+### S. Passenger and Driver — Scheduled Work
+
+Passenger scheduled review reuses `FareBlock`, `StatusPill`, `TaxiSheet`, and
+existing confirmation patterns. Upcoming rows distinguish **Request received**,
+**Finding a driver**, **Driver committed**, **Dispatch approaching**,
+**Cancelled**, and **Unfulfilled**. “Scheduled” alone must never be styled as a
+driver guarantee.
+
+The driver receives a normal high-attention offer with scheduled timing and may
+accept or decline. Accepted commitments appear in a calm upcoming-work list;
+they do not replace the online HUD or active-ride CTA until dispatch handoff.
+Conflicts and expiry are backend responses, not client calendar arithmetic.
+The driver can enable/disable new scheduled offers with a separate city-scoped
+control; it never changes the green immediate Online pill and does not cancel
+existing commitments.
+
+### T. National Operations Web Console
+
+The protected console uses the same fixed palette, Sora/Manrope/IBM Plex Mono
+roles, radii, status colors, icon family, and restrained map style. Desktop
+composition uses:
+
+```text
+Persistent navy sidebar
+Top bar with authenticated identity and market/operator/city scope
+White/neutral work surface
+Tables and cards for review
+Side drawer or full page for editing
+Mustard only for the single primary action
+```
+
+Required destinations are:
+
+* Rollout overview.
+* Cities and activation readiness.
+* Operators and staff grants.
+* Driver/vehicle/credential applications.
+* Rates, scheduling surcharge, and operator fee policies.
+* Fixed routes, directions, stops, geometry, and publication.
+* Scheduled booking exception review.
+* Aggregate operations and financial reports.
+* Audit/security review.
+
+Every page displays the active scope and whether values are draft, under review,
+scheduled for activation, active, replaced, paused, or retired. Rate activation,
+route publication, city lifecycle change, driver decision, and grant mutation
+use a review summary plus explicit confirmation. Success appears only after the
+backend returns the new version/status.
+
+Charts use existing semantic colors and text/table alternatives; they do not
+introduce a dashboard rainbow. Maps use public route/service-area geometry and
+authorized aggregate zones, never participant trails or passenger-facing online
+driver markers. Responsive narrow layouts may collapse the sidebar, but the
+console is desktop-first and must remain keyboard navigable.
+
+The public driver application portal shares brand/auth/onboarding components but
+has no operations navigation. Applicant status uses the same pending/review/
+additional-information/approved/rejected/withdrawn semantics as the driver
+mobile app.
 
 ---
 
@@ -797,6 +899,16 @@ feature/passenger/
 feature/driver/
   DriverHome.kt
   ...
+feature/fixedroutes/
+  FixedRouteCatalog.kt
+  FixedRouteDetail.kt
+feature/scheduling/
+  ScheduledBookingReview.kt
+  UpcomingBookings.kt
+feature/operations/             # web source sets / operations root only
+  OperationsApp.kt
+  OperationsNavigation.kt
+  ...
 ```
 
 Rules:
@@ -824,6 +936,7 @@ Do not implement merely because Uber/Lyft have them:
 * Social/share cards
 * Promotional sticker overlays on the map
 * Fake nearby taxi animation without backend data
+* Real online taxi markers/counts or candidate heatmaps before assignment
 * Chat UI before a documented messaging contract
 * Dark-mode full theme
 * Custom tab-bar dashboard stuffing stats into the first viewport

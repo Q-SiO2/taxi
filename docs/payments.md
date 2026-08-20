@@ -135,7 +135,35 @@ Financial settlement
        └── TaxiMobile/cooperative amount
 ```
 
-The exact revenue model is defined outside this document.
+The operator-fee and scheduling-revenue policy is defined in `pricing.md` and
+`operations.md`; provider payout timing and general-ledger integration remain
+separate operational decisions.
+
+For national operation, settlement is derived only from the immutable fare and
+fee snapshots defined in `pricing.md` and `operations.md`. It records, as
+separate exact-money components:
+
+```text
+transport fare
+scheduling surcharge and beneficiary
+operator service fee and funding mode
+driver gross
+driver adjustments
+driver net
+operator allocation
+```
+
+The operator service fee may be a percentage of the documented transport-fare
+subtotal or a flat per-completed-booking amount. It may be funded by a driver
+settlement deduction or a passenger-visible surcharge. Payment and settlement
+code must not guess the mode from an amount or merge the scheduling surcharge
+into commission.
+
+A scheduled booking may create a payment authorization or fee obligation before
+a live ride exists only after the city policy defines collection, cancellation,
+expiry, refund, and reconciliation behavior. “Driver not yet committed” and
+`UNFULFILLED` are explicit cases; a browser return page or mobile client cannot
+decide whether the scheduling surcharge is retained or refunded.
 
 ## Security
 
@@ -163,3 +191,7 @@ provides the driver's own paginated operational ride history.
 * Historical payments are not silently modified.
 * Refunds and adjustments remain auditable.
 * The client cannot declare a payment successful by itself.
+* Every financial record retains city, operator, and applicable policy versions.
+* Passenger total, driver net, and operator allocation reconcile from immutable components.
+* Scheduling surcharge and operator service fee are distinct records/components.
+* A city/operator change never rewrites a historical settlement.

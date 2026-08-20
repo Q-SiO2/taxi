@@ -16,6 +16,8 @@ It is responsible for:
 * Recording ride completion.
 * Connecting rides to payments.
 * Maintaining a permanent ride history.
+* Connecting scheduled bookings to live rides at dispatch handoff.
+* Preserving fixed-route direction and city/operator policy versions.
 
 The backend is authoritative for ride state.
 
@@ -45,6 +47,11 @@ A ride must have:
 
 A ride cannot be completed without an assigned driver.
 
+A scheduled booking may have a future driver commitment without yet being a
+live ride. That reservation is a separate aggregate and participant relationship;
+it creates or assigns the live ride only during the documented dispatch-handoff
+window.
+
 ---
 
 # 3. Ride Request
@@ -65,6 +72,47 @@ A passenger creates a ride request by providing:
 * Other information required by local operating rules.
 
 The backend validates the request before creating the ride.
+
+Each request resolves exactly one city, operator assignment, and service type:
+
+```text
+ON_DEMAND
+FIXED_ROUTE
+```
+
+The backend derives city scope from the validated pickup/service boundary or the
+selected published fixed-route direction. A client-provided city ID cannot move
+a request into a different tariff, operator, or dispatch pool.
+
+## 3.1 Fixed-route request
+
+A fixed-route request references an immutable published direction version. That
+version supplies the city, operator, start, finish, optional stops, static
+geometry, and flat transport fare. Outbound and inbound are separate directions.
+The passenger may browse this catalog when no taxi is online, but booking still
+requires an eligible driver to accept an offer.
+
+The first fixed-route release books the complete selected direction for one flat
+fare. Segment pricing is not inferred from intermediate stops.
+
+## 3.2 Scheduled booking
+
+A future pickup is stored as a scheduled booking rather than adding a long-lived
+`SCHEDULED` state to the active ride machine. The booking records service type,
+pickup/destination or fixed-route direction, requested pickup time, city/operator,
+passenger, quote/policy snapshots, and its own lifecycle:
+
+```text
+SCHEDULED          → OFFERING | CANCELLED
+OFFERING           → DRIVER_COMMITTED | UNFULFILLED | CANCELLED
+DRIVER_COMMITTED   → DISPATCH_HANDOFF | CANCELLED
+DISPATCH_HANDOFF   → LIVE_RIDE_CREATED | UNFULFILLED | CANCELLED
+```
+
+At handoff, the backend revalidates the committed driver or runs the configured
+fallback matching policy and creates/assigns a normal live ride atomically. The
+passenger must not be told that scheduling guarantees a taxi before the
+corresponding backend state supports that statement.
 
 ---
 
@@ -358,6 +406,11 @@ ON_RIDE
 ```
 
 The application should avoid sending unnecessary high-frequency GPS data.
+
+Before assignment, no passenger endpoint or map receives online-driver
+locations, identities, counts, candidate positions, or availability heatmaps.
+Published fixed-route geometry is static public service information and must not
+be confused with a taxi's current position.
 
 After a ride has been accepted, the owning passenger may retrieve only the latest
 backend-accepted location submitted by that assigned driver after acceptance. The
@@ -689,6 +742,12 @@ Depending on applicable taxi regulations, this may be:
 * A metered fare.
 * A combination.
 
+The same confirmation also shows separate backend components for any scheduling
+surcharge and operator service fee. The operator fee is either a documented
+percentage of the eligible transport-fare subtotal or a flat amount, and its
+funding mode determines whether it is inside driver settlement or added to the
+passenger total. The UI must not collapse these into an unexplained fare.
+
 The application must clearly distinguish an estimate from a final fare.
 
 ---
@@ -751,6 +810,8 @@ A ride history entry may contain:
 * Fare.
 * Payment status.
 * Rating status.
+* Service type and city.
+* Fixed-route direction or scheduled pickup status where applicable.
 
 For a completed passenger ride, `GET /rides/{ride_id}/receipt` is the
 authoritative compact receipt read. It returns the finalized fare and payment
@@ -869,7 +930,13 @@ Ride started
 Destination changed
 Ride completed
 Payment completed
+Fixed-route direction version selected
 ```
+
+Scheduled booking creation, offering, commitment, cancellation, unfulfilled,
+and handoff events belong to the separate booking event history. Only the
+handoff/live-ride link enters ride history; this prevents a future reservation
+from masquerading as an active ride event.
 
 This event history supports:
 
@@ -940,7 +1007,6 @@ The first implementation should focus on making this lifecycle reliable before a
 
 Potential future features include:
 
-* Scheduled rides.
 * Multiple passengers.
 * Multi-stop trips.
 * Accessibility requests.
@@ -955,6 +1021,11 @@ Potential future features include:
 * Emergency workflows.
 
 These features should not be implemented until the core ride lifecycle is stable.
+
+Single future scheduled bookings and city-published fixed routes are now approved
+national-expansion capabilities governed by `operations.md` and `roadmap.md`.
+Recurring schedules, segment-based shared fares, pooled seats, and intercity
+regulatory workflows remain future features.
 
 ---
 

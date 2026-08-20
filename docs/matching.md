@@ -390,8 +390,11 @@ Broadcast offer
 Zone dispatch
 Queue dispatch
 Cooperative dispatch
-Scheduled dispatch
 ```
+
+Scheduled dispatch is now an approved national-expansion strategy. It remains a
+separate strategy from the implemented immediate ranked-offer algorithm and must
+not be silently enabled by changing one timeout.
 
 The matching engine should be designed so that the strategy can be changed without rewriting the entire ride system.
 
@@ -567,13 +570,17 @@ A driver should not be economically punished merely for declining individual rid
 
 The system should avoid creating a situation where drivers feel forced to accept undesirable trips to protect their account.
 
-Any performance system must be based on broader service reliability rather than raw acceptance rate alone.
+An individual driver's decline history or raw acceptance rate must not feed
+ranking, eligibility, earnings, access, or account discipline. Service-reliability
+review may use accepted-ride cancellations, fraud evidence, safety events, and
+other separately governed facts; it must not re-label ordinary declines as
+misconduct.
 
 ---
 
 # 26. Acceptance Rate
 
-Acceptance rate should not be used as a standalone criterion for:
+Individual acceptance rate must not be used as a criterion for:
 
 * Account suspension.
 * Reduced visibility.
@@ -581,7 +588,8 @@ Acceptance rate should not be used as a standalone criterion for:
 * Punitive dispatch.
 * Loss of access to the platform.
 
-If acceptance statistics are used, they must be interpreted alongside other factors.
+Offer outcomes may be reported only as privacy-bounded city/operator aggregates
+for capacity planning. They are not an individual driver score or dispatch input.
 
 ---
 
@@ -753,9 +761,11 @@ This is important because TaxiMobile should complement existing taxi operations 
 
 ---
 
-# 35. Pre-Booked Rides
+# 35. Scheduled Bookings
 
-Future functionality may support scheduled rides.
+Scheduled service is an approved expansion capability and uses a separate
+booking aggregate. It must not place an active ride in `MATCHING` hours or days
+before pickup or keep a driver operationally busy for the entire lead time.
 
 Example:
 
@@ -763,37 +773,50 @@ Example:
 {
   "pickup_time": "2026-08-11T09:00:00Z",
   "pickup": {},
-  "destination": {}
+  "destination": {},
+  "service_type": "ON_DEMAND"
 }
 ```
 
-Scheduled rides should use a separate dispatch process.
-
-They should not be treated as ordinary immediate rides.
+The backend validates the city scheduling policy, lead time, horizon, service
+area, quote, cancellation terms, and optional fixed-route direction before
+accepting the booking. “Scheduled” confirms receipt of a future request, not a
+guaranteed driver.
 
 ---
 
-# 36. Scheduled Ride Assignment
+# 36. Scheduled Booking Assignment
 
-For scheduled rides:
+The city policy defines when offers open, how long they last, when a driver
+commitment is due, conflict buffers, fallback matching, and dispatch handoff:
 
 ```text
-Scheduled
+SCHEDULED
     │
     ▼
-Assignment window
+OFFERING ── decline/expire ──► next eligible driver
     │
     ▼
-Driver assigned
+DRIVER_COMMITTED
     │
     ▼
-Driver notified
+DISPATCH_HANDOFF
     │
-    ▼
-Pickup
+    ├── committed driver revalidated and atomically assigned
+    └── documented fallback matching / UNFULFILLED
 ```
 
-Drivers should have sufficient notice to accept or reject scheduled work.
+Scheduled offers disclose pickup time, city/service type, pickup and destination
+or fixed-route direction, fare/fee/earning components, commitment terms, and
+expiration. Drivers have sufficient notice and may accept or decline without a
+raw-acceptance-rate penalty. An acceptance transaction rejects overlapping
+commitments after configured travel/buffer time. Outside protected windows, a
+committed driver may continue receiving ordinary rides.
+
+Scheduled candidate discovery uses a separate city-scoped driver opt-in and does
+not require or imply immediate `AVAILABLE` status. Opt-in is not assignment or
+passenger-visible supply. Disabling it blocks new future offers but does not
+erase an accepted commitment.
 
 ---
 
@@ -815,6 +838,9 @@ This can help identify:
 * Excess driver concentration.
 * Peak demand periods.
 * Taxi shortages.
+
+Supply observations are internal operational aggregates. They must not power
+passenger-facing online-taxi markers, counts, or candidate heatmaps.
 
 ---
 
@@ -921,6 +947,11 @@ They do not necessarily need:
 * Personal phone number.
 * Continuous location after the ride.
 
+Before one driver accepts, passengers receive no driver location, online count,
+identity, queue position, or candidate list. After acceptance, only the existing
+assigned-driver last-known-location contract applies. Published fixed-route
+geometry is static catalog data, not evidence of live supply.
+
 ---
 
 # 45. Passenger Privacy
@@ -937,6 +968,11 @@ Relevant ride instructions
 ```
 
 Unnecessary personal information should not be exposed.
+
+Passengers always retain access to active published fixed-route directions,
+start/finish points, and flat fares for their selected city even when no driver
+is online. That catalog must clearly distinguish “route is published” from
+“driver is assigned.”
 
 ---
 
@@ -999,6 +1035,10 @@ No available taxis were found nearby.
 
 The application should not claim that a driver is coming until a driver has actually been assigned.
 
+It also does not expose which drivers are online or considering the request.
+Fixed-route and scheduled requests use service-specific status copy while
+preserving the same privacy boundary.
+
 ---
 
 # 49. Driver Experience During Matching
@@ -1014,6 +1054,10 @@ Estimated pickup time
 Estimated fare
 Offer expiration
 ```
+
+Fixed-route offers add direction/start/finish and locked flat fare. Scheduled
+offers add pickup time, commitment and cancellation terms, scheduling surcharge,
+operator fee, and expected driver net supplied by the pricing/settlement domains.
 
 The driver should not be required to accept blindly.
 
@@ -1054,6 +1098,10 @@ Proximity weighting
 ```
 
 These should be centralized.
+
+National configuration is versioned per city and service type. A worker must
+load the configuration version captured for the ride/booking; it must not apply
+another city's radius, offer timing, or fairness settings.
 
 ---
 
@@ -1353,6 +1401,18 @@ Cancelled ride cannot be accepted
 
 ```text
 No available drivers
+```
+
+### National expansion
+
+```text
+Passenger cannot list online drivers or candidate locations
+City A request never offers to City B-only driver
+Fixed-route request requires matching city/route authorization
+Scheduled offer rejects an overlapping commitment
+Scheduled handoff revalidates driver and vehicle eligibility
+Decline/expiry advances without punitive ranking input
+Unfulfilled schedule remains distinct from a cancelled live ride
 ```
 
 ---

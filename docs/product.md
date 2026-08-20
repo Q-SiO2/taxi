@@ -2,7 +2,7 @@
 
 ## 1. Overview
 
-TaxiMobile is a cooperative digital platform designed to allow licensed taxi drivers to collectively provide a modern ride-hailing service without depending on or being displaced by large private ride-hailing companies.
+TaxiMobile is a cooperative digital platform designed to allow licensed taxi drivers to collectively provide a modern ride-hailing service without depending on or being displaced by large private ride-hailing companies. Its approved growth target is a Morocco-wide network introduced through independently governed city deployments rather than one undifferentiated national launch.
 
 The platform is intended to provide passengers with the convenience associated with applications such as Uber and Lyft while preserving the economic position and independence of traditional taxi drivers.
 
@@ -63,14 +63,16 @@ TaxiMobile attempts to address the first group of problems without reproducing t
 
 ## 4. Primary Users
 
-TaxiMobile has three primary categories of users.
+TaxiMobile has four primary categories of users.
 
 ### 4.1 Passengers
 
 Passengers use the application to:
 
-* Find available participating taxis.
+* Request service from the participating taxi network without browsing online taxis.
 * Request rides.
+* Browse published fixed routes, directions, start/finish points, and flat fares even when no taxi is currently online.
+* Request immediate rides or schedule future rides where the selected city enables them.
 * Specify pickup and destination locations.
 * See relevant ride information.
 * Track an approaching taxi.
@@ -84,9 +86,11 @@ Passengers use the application to:
 Taxi drivers use the application to:
 
 * Register as participating drivers.
+* Apply for authorization in one or more recruiting cities.
 * Verify their professional credentials.
 * Indicate when they are available.
 * Receive ride requests.
+* Receive ordinary, fixed-route, and scheduled offers with the information needed to choose.
 * Accept or decline requests according to platform rules.
 * Navigate to passengers.
 * Manage active rides.
@@ -94,7 +98,7 @@ Taxi drivers use the application to:
 * Receive payment.
 * View earnings and ride history.
 
-### 4.3 Cooperative Administration
+### 4.3 Cooperative and City Administration
 
 The cooperative administration uses administrative tools to:
 
@@ -105,9 +109,22 @@ The cooperative administration uses administrative tools to:
 * Monitor platform operation.
 * Manage cooperative policies.
 * Review platform statistics.
+* Configure and gradually activate city services.
+* Publish directional fixed routes and their flat fares.
+* Configure city tariffs, scheduling surcharges, and transparent operator fees.
+* Review city-scoped driver applications and operational readiness.
 * Handle security and moderation issues.
 
 Administrative authority should be limited according to clearly defined cooperative governance rules.
+
+### 4.4 National Platform Operations
+
+National platform operators use a protected web console to coordinate the city
+rollout, assign scoped operator/city authority, review aggregate network health,
+and audit sensitive changes. National access is not an excuse for unrestricted
+routine access to passenger identities, driver documents, exact locations, or
+another city's private operational records. `operations.md` defines this control
+plane and its scope model.
 
 ---
 
@@ -173,6 +190,33 @@ Receipt / Ride History
 ```
 
 The exact dispatch algorithm will be defined separately in `rides.md`.
+
+### 6.1 Passenger supply privacy
+
+Passenger discovery is service-first, not driver-surveillance-first. Before a
+driver accepts a request, the passenger must not see online taxi markers,
+available-driver counts, identities, candidate rankings, or live supply
+heatmaps. The passenger sees the service catalog, fare, published fixed routes,
+and honest request status. Existing limited assigned-driver identity and
+post-assignment location rules begin only after backend-confirmed acceptance.
+
+### 6.2 Fixed-route service
+
+Each city may publish versioned directional taxi routes. A published direction
+has a start, finish, optional ordered stops, static route geometry, and flat
+transport fare. Outbound and inbound are explicit directions. Published routes
+remain discoverable when no driver is online; visibility never promises that a
+driver is currently available. A passenger request still becomes an offer that
+an eligible driver may accept or decline.
+
+### 6.3 Scheduled service
+
+Cities may enable future pickup reservations with explicit booking horizons,
+driver-offer windows, cancellation rules, and a visible scheduling surcharge.
+Scheduling a request does not promise a driver. The passenger sees whether the
+request was received, a driver committed, dispatch is approaching, or the
+booking could not be fulfilled. Future reservations remain separate from the
+live ride state until dispatch handoff.
 
 ---
 
@@ -295,19 +339,32 @@ Potential sources of sustainable revenue may include:
 * Cooperative investment.
 * Other collectively approved revenue mechanisms.
 
-The exact revenue model remains undecided.
+The approved configuration model supports an explicit operator service fee as
+either a bounded percentage of a documented transport-fare subtotal or a flat
+amount per completed booking. City policy also determines whether that amount is
+deducted transparently from settlement or added as a separate passenger-visible
+service fee. Scheduled service may have a separately displayed scheduling
+surcharge. Zero-fee policies are explicit rather than implied.
 
-The software should therefore avoid hard-coding assumptions about a specific commission structure.
+Every policy is city/operator scoped, versioned, effective-dated, auditable, and
+snapshotted on the booking and financial records. The software must not hard-code
+one commission, combine separate fees into an unexplained deduction, or calculate
+a percentage from undefined “profit.”
 
 ---
 
 ## 14. Initial Geographic Scope
 
-The first implementation should be designed with Morocco in mind.
+The first implementation and national expansion should be designed for Morocco.
 
 However, geographic assumptions should not be unnecessarily hard-coded into the application.
 
-The architecture should eventually permit expansion to other cities and jurisdictions with different:
+Deployment proceeds one city at a time through `DRAFT`, `CONFIGURING`, `PILOT`,
+and `ACTIVE` states. Each city owns versioned service boundaries, operator
+assignments, driver requirements, pricing, fixed routes, scheduling policy,
+matching configuration, support ownership, and rollout evidence. The
+architecture should also permit later expansion to other jurisdictions with
+different:
 
 * Taxi regulations.
 * Fare structures.
@@ -375,6 +432,7 @@ TaxiMobile is not initially intended to:
 * Become dependent on a single proprietary technology provider.
 * Build every possible transportation service from the beginning.
 * Replicate every feature of Uber or Lyft.
+* Expose online taxis, driver counts, or candidate locations to passengers before assignment.
 
 The first version should focus on providing a reliable digital dispatch and ride-management system for participating taxi drivers.
 

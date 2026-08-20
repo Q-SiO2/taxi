@@ -83,6 +83,11 @@ Protected endpoints should require authentication.
 
 Sensitive endpoints should additionally enforce authorization and appropriate rate limits.
 
+Operations endpoints receive separate stricter rate limits for authentication,
+search, export, document access, configuration activation, application review,
+and grant changes. Rate-limit keys do not expose raw identities or become an
+authorization decision.
+
 ## Secrets
 
 Never commit:
@@ -129,11 +134,55 @@ or unmatched termination. The payload carries its observation timestamp so the
 client cannot honestly present it as a live stream. No public driver-location
 lookup or historical-location endpoint exists.
 
+National expansion preserves a stricter pre-assignment boundary: passengers
+cannot query online taxi markers, available-driver counts, identities,
+candidate rankings, queues, or precise supply heatmaps. Published fixed-route
+geometry is immutable service-catalog data and contains no driver observation.
+Aggregate supply exists only inside scoped operations reporting with coarse
+zones, time buckets, and small-cell suppression.
+
 ## Data Minimization
 
 Do not collect personal information merely because it might become useful later.
 
 Every stored personal-data field should have a clear purpose.
+
+City rollout analytics use typed operational events and allowlisted dimensions.
+They must not copy arbitrary request bodies, credential/document contents,
+support text, contact identifiers, payment credentials, or exact long-term
+movement histories into an analytics payload. Analysts receive aggregate facts,
+not participant-level exports. Adding a metric requires a purpose, source,
+retention period, scope, late-event policy, and accountable owner.
+
+## National operations web security
+
+The public driver portal and protected operations console are separate security
+surfaces even if they share a web artifact. Neither connects directly to the
+database, object store, routing engine, payment provider, or Firebase.
+
+Before production use, the protected console requires:
+
+* A dedicated administrative authentication audience and mandatory MFA.
+* Short-lived access credentials kept out of persistent browser storage; any
+  refresh/session cookie must be `Secure`, `HttpOnly`, narrowly scoped, and use
+  an appropriate `SameSite` policy.
+* CSRF protection for every cookie-authorized mutation in addition to exact
+  origin checks; CORS is not CSRF protection.
+* A restrictive Content Security Policy, frame denial, MIME protection,
+  dependency review, and no unapproved third-party analytics/tag scripts.
+* Backend permission and market/operator/city scope checks before filtering,
+  pagination, counts, object reads, exports, or mutation.
+* Reauthentication or step-up protection for grant changes, city activation,
+  financial-policy activation, route publication, and sensitive document reads.
+* Append-oriented audit records for authentication, grants, configuration,
+  review decisions, exports, document access, and incident actions.
+* Bounded exports with explicit purpose; exports never include secrets, raw
+  documents, unnecessary exact locations, or data outside the caller's scope.
+
+Browser navigation state, a selected city switcher, hidden controls, and client
+claims are untrusted. A national role does not automatically authorize routine
+access to all personal data. The existing broad `ADMIN` role is transitional and
+must be migrated deliberately to scoped grants.
 
 ## Logging
 
@@ -421,6 +470,11 @@ hidden prompt, serializes concurrent attempts, and refuses both ordinary-account
 promotion and creation of a different second administrator. Production execution
 must occur from an audited trusted terminal after migrations and must not place the
 password in process arguments, environment variables, logs, or shell history.
+
+That account is only bootstrap authority for the implemented single-scope
+system. National rollout requires an audited scoped-grant migration and must not
+silently convert every legacy administrator into an unrestricted market-wide
+reader.
 
 Compromised-account response is an authenticated, audited administrative API
 workflow rather than routine direct database manipulation. A suspension locks

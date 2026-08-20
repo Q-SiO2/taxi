@@ -7,6 +7,7 @@ The driver system manages taxi drivers participating in the TaxiMobile cooperati
 It is responsible for:
 
 * Driver registration.
+* City-scoped driver applications and operating authorizations.
 * Driver identity verification.
 * Professional credential verification.
 * Vehicle registration.
@@ -50,6 +51,18 @@ User
 
 A driver account should not become eligible to receive rides until the required verification process has been completed.
 
+For national operation, driver identity and city eligibility are separate:
+
+```text
+Driver Profile
+  └── City Application
+       └── City Authorization
+```
+
+A driver may eventually hold more than one city authorization, but approval in
+one city never grants eligibility in another and the driver may be online in
+only one city at a time.
+
 ---
 
 # 3. Driver Registration
@@ -66,6 +79,11 @@ Initial registration may require:
 * Agreement to applicable terms.
 
 Registration creates a user account but does not automatically create an active driver.
+
+The same application workflow is available from the driver mobile product and
+the public driver web portal. Web submission does not create a privileged
+operations session; both clients call the same applicant-owned API and receive
+the same backend-authoritative status.
 
 ---
 
@@ -87,6 +105,11 @@ The exact requirements depend on Moroccan law and the jurisdiction in which Taxi
 
 The software should therefore make the verification requirements configurable rather than permanently hard-coding a single document list.
 
+Requirements are versioned per city. A city application snapshots the
+requirement version used when it was submitted so reviewers and applicants can
+understand the decision later. A national default may seed a draft, but it does
+not override city/jurisdiction review.
+
 ---
 
 # 5. Verification States
@@ -100,6 +123,7 @@ UNDER_REVIEW
 ADDITIONAL_INFORMATION_REQUIRED
 APPROVED
 REJECTED
+WITHDRAWN
 SUSPENDED
 EXPIRED
 ```
@@ -126,6 +150,11 @@ APPROVED
 ```
 
 An approved driver may later become suspended or expired.
+
+For a city application, the applicant may enter `WITHDRAWN` before approval.
+Withdrawal is not deletion and does not grant or preserve a city authorization;
+applying again uses a new application against the then-current requirement
+version.
 
 ---
 
@@ -307,6 +336,13 @@ A driver must explicitly enter `AVAILABLE`.
 
 Being logged into the application does not automatically make a driver available.
 
+Scheduled-work discovery is a separate explicit preference. A city-authorized
+driver may opt in or out of future scheduled offers without becoming `AVAILABLE`
+for immediate dispatch. The preference does not expose the driver to passengers,
+reserve a time, or bypass credential/vehicle/conflict checks. Accepting one offer
+creates the commitment; disabling future offers does not cancel commitments
+already accepted.
+
 ---
 
 # 15. Going Online
@@ -419,10 +455,16 @@ Potential information:
 * Destination information where appropriate.
 * Estimated fare where applicable.
 * Passenger requirements where relevant.
+* City and service type.
+* Fixed-route name/direction and flat fare when applicable.
+* Scheduled pickup time, commitment window, and cancellation terms when applicable.
+* Explicit transport fare, scheduling surcharge, operator fee, and expected
+  driver earning components supplied by the backend.
 
-The cooperative should determine whether drivers are allowed to decline individual rides without penalty.
-
-The initial system should support declining.
+Drivers may decline individual offers. A decline by itself must not reduce
+eligibility, pay, account access, or future ranking. Fraud, repeated accepted-ride
+cancellation, and safety behavior are separate evidence-based workflows; they
+must not be disguised as a raw acceptance-rate penalty.
 
 ---
 
@@ -510,7 +552,7 @@ The application should never hide fees from drivers.
 
 ---
 
-# 24. Platform Fees
+# 24. Operator and Platform Fees
 
 Any fee charged to a ride should be clearly represented.
 
@@ -529,6 +571,13 @@ The exact percentages or amounts should not be hard-coded into the mobile applic
 They should be managed by backend configuration and recorded against each ride.
 
 Historical rides must preserve the financial rules that were applicable at the time.
+
+Each city/operator policy chooses one explicit operator service-fee calculation:
+a bounded percentage of the documented transport-fare subtotal or a flat amount
+per completed booking. It also declares whether the fee is deducted from driver
+settlement or added as a passenger-visible surcharge. A scheduling surcharge is
+a separate component. Driver offer, receipt, earning, and settlement views must
+not merge these into an unexplained “commission.”
 
 ---
 
@@ -622,7 +671,8 @@ The platform may collect operational metrics such as:
 
 * Completed rides.
 * Cancellations.
-* Acceptance rate.
+* Aggregate offer outcomes, with raw acceptance rate excluded from eligibility
+  and matching decisions.
 * Customer feedback.
 * Safety reports.
 * Average response time.
@@ -853,6 +903,9 @@ Create account
 Apply as driver
       │
       ▼
+Select recruiting city
+      │
+      ▼
 Provide required information
       │
       ▼
@@ -877,6 +930,10 @@ Driver becomes ACTIVE
 
 The exact sequence may change according to legal and cooperative requirements.
 
+Nationally, `ACTIVE` driver identity is not enough to dispatch. The relevant
+city authorization, selected vehicle, credentials, service eligibility, and
+current location must also pass at online, candidate, and acceptance time.
+
 ---
 
 # 40. Minimum Viable Driver System
@@ -894,6 +951,7 @@ The first implementation should support:
 9. Ride acceptance.
 10. Ride completion.
 11. Driver earnings/history.
+12. City application and authorization status before multi-city activation.
 
 Advanced cooperative governance features should come later.
 
@@ -913,7 +971,7 @@ Potential future features include:
 * Document expiration reminders.
 * Driver training resources.
 * Cooperative financial dashboards.
-* Driver scheduling.
+* Driver shift planning beyond accepted scheduled-booking commitments.
 * Shared dispatch zones.
 * Accessibility-specific vehicle matching.
 
@@ -970,6 +1028,12 @@ them. Approval records a verification decision, activates the driver account, an
 grants the `DRIVER` role; a driver cannot grant that role or approve their own
 application through the mobile API.
 
+The national target replaces implicit global approval with scoped city
+applications and authorizations. Reviewers may act only inside their grants,
+and the decision records the city and requirement version. The existing global
+approval remains a compatibility boundary until the migration and clients are
+delivered; documentation does not pretend the new schema already exists.
+
 The driver mobile product reads availability from the backend after session
 restoration and sends online/offline requests only through the driver API. It
 does not show a local toggle as successful until the backend returns the updated
@@ -979,3 +1043,8 @@ An authenticated account without the backend `DRIVER` role sees an explicit
 driver-application action instead of availability controls. Submitting that action
 creates the pending application through the driver API; verification and role
 approval remain administrative backend operations.
+
+Published fixed-route and scheduled opportunities remain offers. The driver can
+accept or decline them without a raw-acceptance-rate penalty. A future booking
+commitment blocks only documented overlapping time windows; it must not make the
+driver appear to be on an active ride before dispatch handoff.

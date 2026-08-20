@@ -165,24 +165,159 @@ Before public deployment:
 
 ---
 
+# Phase 12 — National Control-Plane Foundation
+
+Goal: introduce city scope without breaking the proven single-city lifecycle.
+
+Implement in bounded migrations/slices:
+
+* Market, operator, city, service-area, and city-lifecycle records.
+* Versioned coherent city configuration bundles.
+* Scoped administrative grants and operations authentication boundary.
+* Dedicated operations API namespace.
+* `webApp` operations shell with market/operator/city scope presentation.
+* Cross-city negative authorization, pagination-count, and audit tests.
+* Compatibility migration for existing rides, tariff, cooperative, and bootstrap
+  administrator data; no historical rewrite.
+
+Do not activate a second city until every high-volume ride, matching, driver,
+pricing, payment, and worker query has an explicit city ownership rule.
+
+---
+
+# Phase 13 — City Driver Recruitment and Review
+
+Implement:
+
+* Public recruiting-city catalog.
+* Driver city application draft/edit/evidence/submit/withdraw/status flows from
+  mobile and web through one API.
+* Versioned city requirement sets and protected document-storage boundary.
+* Scoped reviewer queues, decisions, reasons, and audit.
+* City authorizations and one-city-at-a-time online enforcement.
+* Vehicle/credential/service eligibility per city where policy requires it.
+* Onboarding funnel aggregates without document or identity leakage.
+
+---
+
+# Phase 14 — City Pricing and Operator Economics
+
+Implement:
+
+* City/operator/service-scoped tariff versions.
+* Draft, review, activation, replacement, and rollback-compatible history.
+* Operator service fee modes: percentage of documented transport fare or flat
+  per completed booking.
+* Funding mode: transparent driver settlement deduction or passenger surcharge.
+* Explicit zero-fee policy.
+* Scheduling surcharge policy foundation.
+* Quote, offer, receipt, earning, operator-allocation, and reconciliation
+  components with exact-money tests.
+
+No city rate can go live without an audited complete policy and no mobile/web
+client calculates a fee.
+
+---
+
+# Phase 15 — Published Fixed Routes
+
+Implement:
+
+* City route/version/direction/stop/geometry model.
+* Separate outbound/inbound direction publication.
+* One flat complete-direction fare in the first release.
+* Public route catalog visible independently of live supply.
+* Passenger direction detail and immediate fixed-route request.
+* Driver fixed-route eligibility, informed offers, and normal accept/decline.
+* Operations route editor, review, publication, retirement, and audit.
+* Explicit proof that no catalog/API exposes online drivers or counts.
+
+Segment fares, seat pooling, and intercity route regulation remain out of scope.
+
+---
+
+# Phase 16 — Scheduled Bookings
+
+Implement:
+
+* Separate scheduled-booking lifecycle and immutable quote/policy snapshots.
+* City lead time, horizon, offer, commitment, handoff, conflict, cancellation,
+  surcharge, and refund policies.
+* Passenger schedule/review/upcoming/cancel states with honest guarantee copy.
+* Driver scheduled offers and upcoming commitments with non-punitive decline.
+* City-scoped scheduled-offer opt-in independent of immediate online status.
+* Transaction-safe overlap checks and one live ride per handoff.
+* Revalidation/fallback matching and explicit unfulfilled outcome.
+* Immediate and fixed-route scheduling only where the city enables them.
+
+Recurring bookings are not part of this phase.
+
+---
+
+# Phase 17 — Operations Data and Rollout Intelligence
+
+Implement:
+
+* Typed operational domain events with approved city/operator/service/policy
+  dimensions.
+* Aggregate demand, supply, fulfillment, fixed-route, scheduling, onboarding,
+  financial, and fairness facts.
+* Coarse geographic/time buckets and small-cell suppression.
+* Scoped aggregate-only analyst APIs and operations dashboards.
+* Metric definitions, retention, late-event behavior, data-quality tests, and
+  reconciliation to source-of-truth records.
+* No arbitrary analytics payload, participant trail, document, support text,
+  or payment credential collection.
+
+PostgreSQL aggregate views/fact tables come first. A warehouse or stream system
+requires measured need.
+
+---
+
+# Phase 18 — Repeatable City Pilot and National Expansion
+
+For each city:
+
+1. Complete legal/operational review and assign accountable operator/staff.
+2. Configure service area, requirements, tariffs/fees, matching, payments,
+   fixed routes, scheduling, localization, support, safety, and retention.
+3. Run synthetic and isolated pilot data; verify maps/routing/provider coverage.
+4. Recruit/review a bounded driver cohort.
+5. Enter `PILOT`, measure agreed service and fairness gates, and resolve issues.
+6. Activate publicly only through the audited readiness bundle.
+7. Monitor, preserve an emergency city-pause path, and conduct a post-launch
+   review before starting the next city.
+
+There is one application and schema, not a fork per city.
+
+---
+
 # Future Features
 
 These are explicitly not MVP requirements:
 
-* Scheduled rides
 * Taxi-stand queues
 * Advanced dispatch zones
 * Cooperative governance features
 * Advanced fraud detection
 * Demand forecasting
 * Institutional/corporate accounts
-* Multiple cities
 * Multiple countries
 * Advanced payment providers
 * Physical taxi-meter integration
 * Advanced analytics
+* Recurring scheduled bookings
+* Fixed-route segment pricing and pooled-seat inventory
+* Multi-operator revenue sharing on one ride
+* Intercity regulatory workflows
 
 Future features should not be implemented merely because the architecture can support them.
+
+Multiple Moroccan cities, the operations web platform, city driver applications,
+fixed-route catalogs, single scheduled bookings, transparent percentage-or-flat
+operator fees, and privacy-bounded rollout aggregates are approved expansion
+phases above. They remain post-hardening scope and are not claims about current
+implementation.
 
 ---
 
@@ -215,6 +350,8 @@ The implementation sequence is:
 ```text
 foundation → accounts → drivers → rides → matching → pricing → payments
           → maps → passenger experience → driver experience → hardening
+          → national control plane → city recruitment → city economics
+          → fixed routes → scheduling → rollout data → repeatable city pilots
 ```
 
 ## Current implementation gates

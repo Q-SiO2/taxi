@@ -8,6 +8,7 @@ TaxiMobile is a cooperative taxi ride-hailing platform consisting of:
 
 * A passenger mobile application.
 * A driver mobile application.
+* A public driver-application and protected national operations web platform.
 * A backend API.
 * A PostgreSQL database with geographic capabilities.
 * Real-time communication infrastructure.
@@ -37,6 +38,7 @@ The system is divided into five major layers:
 │                  CLIENTS                    │
 │                                             │
 │  Passenger App       Driver App             │
+│  Driver Web Portal   Operations Console     │
 │       │                   │                 │
 └───────┼───────────────────┼─────────────────┘
         │                   │
@@ -100,12 +102,19 @@ desktopApp/
 webApp/
 ```
 
-The initial production targets are:
+The passenger-service production targets are:
 
 * Android.
 * iOS.
 
 Desktop and web targets may remain available for development or future applications but are not initial production targets.
+
+The approved national expansion promotes the existing `webApp` module to a
+separate production operations application. It hosts the public driver
+application portal and protected operations console, does not render the mobile
+passenger/driver root, and never receives business authority from browser state.
+It reuses approved design tokens and narrow shared value types without coupling
+mobile navigation to desktop administration.
 
 ---
 
@@ -216,6 +225,10 @@ The backend is responsible for:
 * Notifications.
 * Ride history.
 * Cooperative administration.
+* Market, operator, city, and service-area configuration.
+* Fixed-route publication and scheduled-booking policy.
+* City-scoped tariffs, scheduling surcharges, and operator fee policies.
+* Purpose-limited operational aggregation and rollout evidence.
 * Data protection.
 * Audit logging.
 
@@ -240,6 +253,11 @@ backend/
 │   ├── maps/
 │   ├── notifications/
 │   ├── cooperative/
+│   ├── operations/
+│   ├── cities/
+│   ├── fixed_routes/
+│   ├── scheduling/
+│   ├── analytics/
 │   └── administration/
 │
 ├── database/
@@ -249,6 +267,26 @@ backend/
 ```
 
 The detailed required structure is defined in `implementation.md`; the diagram above is retained only as a domain map. New code must use the required structure there.
+
+## 7.1 National control plane and city-scoped data plane
+
+The protected operations console is a control plane. It creates and activates
+versioned city/operator configuration, reviews scoped applications, and reads
+authorized aggregates. Immediate rides, matching, bookings, fares, and payments
+form the data plane. Both initially remain modules in the same backend and
+PostgreSQL database; this boundary does not justify premature microservices.
+
+Every data-plane request resolves one authoritative city and operator assignment.
+Every control-plane mutation carries an explicit permission and scope check,
+configuration version, and audit record. City activation publishes one coherent
+configuration bundle so API replicas and workers never select an arbitrary mix
+of old tariff, fee, matching, route, or scheduling rules.
+
+The public driver portal and protected console may share a web deployment, but
+their route trees, session requirements, API permissions, and response data are
+separate. The console uses an exact configured browser origin, strengthened
+administrative authentication, and backend-enforced scope. It does not connect
+to the database, payment provider, or document store directly.
 
 ---
 
@@ -394,6 +432,8 @@ The system will need to represent:
 * Ride routes.
 * Service areas.
 * Taxi operating areas.
+* Markets, cities, and versioned city service boundaries.
+* Published fixed-route directions, stops, and static geometry.
 
 PostgreSQL with PostGIS should be used for geographic database operations.
 
@@ -405,6 +445,13 @@ The system should be able to perform queries such as:
 Find available participating drivers
 within X kilometers of a pickup location.
 ```
+
+The city is resolved from the validated pickup point or selected fixed-route
+direction, not trusted solely from a client field. Available-driver geometry is
+private dispatch data. Passenger catalog queries may return public city
+boundaries and published route geometry but never online-driver locations or
+counts. High-volume geographic indexes include city scope so one city's dispatch
+does not scan the national fleet.
 
 ---
 
@@ -494,6 +541,13 @@ Authorization must be enforced by the backend.
 
 The client application should never be trusted to enforce permissions by itself.
 
+National operations add scoped administrative grants such as platform
+administrator, operator administrator, city manager, driver reviewer, pricing
+manager, support agent, and aggregate-only analyst. A role name without its
+market/operator/city scope is insufficient. The current `ADMIN` is transitional
+bootstrap authority; it must not become an implicit unrestricted national data
+reader. `auth.md` and `operations.md` define the target grant model.
+
 ---
 
 # 15. Driver Availability
@@ -533,12 +587,20 @@ Initial factors may include:
 * Vehicle eligibility.
 * Driver eligibility.
 * Relevant cooperative dispatch rules.
+* Authoritative city and service type.
+* Fixed-route eligibility or scheduled commitment when applicable.
 
 The first implementation should favor a simple, understandable dispatch algorithm.
 
 Optimization can be introduced later after real-world behavior is understood.
 
 The dispatch system should not initially rely on opaque machine-learning decisions.
+
+Passengers never receive the candidate set, online-driver count, queue, or
+pre-assignment positions. Every service type creates an expiring driver offer;
+the driver chooses whether to accept. Scheduled commitments use a separate
+booking lifecycle until dispatch handoff so future work does not occupy a live
+ride state.
 
 ---
 
@@ -585,7 +647,12 @@ Users
 Drivers
 Vehicles
 Cooperative Membership
+Markets / Operators / Cities
+Scoped Administrative Grants
+Driver City Applications / Authorizations
 Rides
+Scheduled Bookings
+Published Fixed Routes
 Ride Locations
 Payments
 Ratings
@@ -630,6 +697,8 @@ Potential background jobs include:
 * Cleaning expired temporary data.
 * Processing analytics.
 * Administrative reports.
+* Opening scheduled-offer and dispatch-handoff windows.
+* Building privacy-bounded city/route/time aggregates from typed domain events.
 
 The initial implementation should avoid unnecessary infrastructure.
 
@@ -870,6 +939,12 @@ identifier, ride/payment/location data, custom business keys, or Analytics
 breadcrumbs. Provider processing terms, retention, access control, incident
 ownership, privacy notice, and role/environment isolation remain release gates.
 
+National operational dashboards consume low-cardinality city, operator, service,
+route-direction, booking-type, policy-version, time-bucket, and outcome
+aggregates. Metrics and charts do not contain user identifiers, exact location
+histories, driver documents, support text, or payment credentials and cannot
+authorize business actions.
+
 ---
 
 # 27. Testing Strategy
@@ -955,11 +1030,17 @@ The system should be capable of running on:
 
 Docker Compose is the required local integration environment. It starts the PostGIS database and optional local-only support services. The API may run in the Compose stack or directly from a Python virtual environment. Production is packaged as immutable API and worker images and uses managed TLS termination or a standard reverse proxy; it must not expose PostgreSQL publicly.
 
+The operations web application is a separately deployable static/browser
+artifact on an exact HTTPS origin with a restrictive content-security policy.
+Its deployment is independently promotable from the mobile applications and
+backend, while API compatibility and permission tests remain release gates.
+
 ---
 
 # 30. Scalability
 
-The first version should optimize for simplicity rather than massive scale.
+The first version should optimize for simplicity, while the approved growth
+target is country-wide operation through isolated city rollouts.
 
 The architecture should nevertheless avoid obvious blockers to future growth.
 
@@ -977,7 +1058,16 @@ Shared PostgreSQL
 Redis / background workers
 ```
 
-The system should not prematurely introduce distributed infrastructure before there is a real requirement.
+National scale begins with stateless API replicas, lease-safe workers, and one
+managed PostgreSQL/PostGIS source of truth whose operational rows and indexes
+carry city scope. Immutable configuration/catalog versions may be cached;
+current ride, assignment, booking, eligibility, and money state may not.
+Workers may partition claims by city while preserving database concurrency
+guards. Read replicas, table partitioning, Redis, a durable queue, a reporting
+warehouse, or domain extraction require measured thresholds and documented
+failure/recovery behavior. The system must not create a code or database fork
+per city or introduce distributed infrastructure merely because national scale
+is planned.
 
 ---
 
@@ -1048,7 +1138,9 @@ Critical business behavior should be independently testable.
 
 ### Principle 9 — Document decisions
 
-Significant architectural decisions should be recorded in `decisions.md`.
+Significant architectural decisions should be recorded in the relevant
+authoritative document listed in `README.md`. If an ADR collection is introduced
+later, it must be indexed there rather than referenced as a missing file.
 
 ### Principle 10 — AI-readable architecture
 

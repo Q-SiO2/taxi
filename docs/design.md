@@ -65,9 +65,11 @@ The primary passenger flow should remain simple:
 ```text
 Open app
    ↓
-Choose pickup
+Choose point-to-point or browse fixed routes
    ↓
-Choose destination
+Choose pickup/destination or route direction
+   ↓
+Choose now or schedule (where enabled)
    ↓
 Review fare
    ↓
@@ -81,6 +83,12 @@ Complete ride
    ↓
 Payment / confirmation
 ```
+
+Published fixed routes are a persistent service-discovery surface, not a layer
+of live taxi markers. Their direction, start, finish, static line, and flat fare
+remain browsable when no driver is online. Scheduling adds pickup time, surcharge,
+cancellation terms, and honest booking status to the existing review flow; it
+does not introduce a different visual identity or imply guaranteed assignment.
 
 ## Driver Flow
 
@@ -104,6 +112,12 @@ Complete ride
 Confirm payment
 ```
 
+Offers visibly identify immediate, fixed-route, or scheduled work. Fixed-route
+offers show direction and flat fare; scheduled offers show pickup time,
+commitment/cancellation terms, fee and expected net. The driver still chooses
+Accept or Decline. Accepted future work appears in an upcoming list and does not
+make the driver UI look actively on-trip before dispatch handoff.
+
 ## UI State
 
 UI should reflect backend state rather than inventing its own authoritative state.
@@ -119,6 +133,12 @@ RIDE_COMPLETED
 ```
 
 The application should not display a driver as assigned until the backend confirms the assignment.
+
+Before that assignment, the passenger experience must not display online taxi
+markers, available-driver counts, candidate identities, queues, or supply
+heatmaps. Matching is represented only as the passenger's request state. The
+existing assigned-driver card and optional post-acceptance static last-known
+marker remain the first point at which driver-specific data appears.
 
 The initial shared Compose shell receives explicit render state from a coordinator:
 session restoration, signed-out, offline, passenger-ready, and driver-ready. It
@@ -281,6 +301,30 @@ The shared product screen must remain vertically scrollable. Passenger receipts,
 support history, and the driver vehicle/ride controls can all coexist in one
 backend-confirmed state, so controls must not become unreachable on a small
 screen simply because the view has more content than the viewport.
+
+Fixed-route direction must be communicated by ordered start/finish text and not
+only by a map arrow. Scheduled date/time, city timezone, surcharge, operator fee,
+driver net, and cancellation status require text labels and screen-reader order.
+
+## Operations Web Experience
+
+The national operations console extends the approved identity rather than
+redesigning it. It uses the same navy/mustard/white palette, typography,
+feedback semantics, icon family, restrained MapLibre style, and backend-confirmed
+success behavior. Desktop administration may use a persistent sidebar, city
+scope switcher, tables, map editors, charts, and side drawers rather than mobile
+bottom sheets.
+
+Every protected page visibly identifies the active market/operator/city scope.
+Changing the visual scope triggers a backend-authorized reload; it does not grant
+access. Draft versus active configuration, unsaved edits, review state,
+effective time, and activation impact must be clear. Destructive or public-impact
+actions such as city pause, rate activation, route publication, grant change, or
+driver rejection require a review/confirmation step and backend-confirmed result.
+
+The public driver web portal uses the same applicant flow and status language as
+the driver app. It must not expose operations navigation or suggest that form
+completion equals approval.
 
 ## Design Constraint
 

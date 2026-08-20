@@ -1981,6 +1981,12 @@ grants only the `DRIVER` role. Tariffs are first created inactive; activation is
 audited and closes an earlier overlapping active tariff at the new tariff's effective
 time. The API never rewrites historical fare records.
 
+This is the implemented single-scope compatibility surface. It is not the
+national operations console contract. The planned `/operations` namespace and
+scoped grants in Section 58 replace broad `ADMIN` assumptions incrementally;
+the legacy routes must not be extended into cross-city management merely by
+adding a `city_id` parameter.
+
 Account-security actions require a bounded non-blank reason and write an audit
 record. Revoking sessions invalidates every active server-side session and push
 registration owned by the target account. Suspension performs that revocation in
@@ -2004,7 +2010,244 @@ ordinary account, and refuses a different administrator after bootstrap.
 
 ---
 
-# 58. API Design Principles
+# 58. National Expansion API (planned)
+
+These endpoint families are the approved target contract for
+`operations.md`. They are not present in the current OpenAPI document and must
+be delivered incrementally with migrations, generated OpenAPI, negative scope
+tests, and client contract updates. Existing v1 behavior must not be broken
+silently; any incompatible request/response change requires an additive endpoint
+or a new API version.
+
+## 58.1 Public city and fixed-route catalog
+
+```text
+GET /cities
+GET /cities/{city_id}
+GET /cities/{city_id}/fixed-routes
+GET /fixed-route-directions/{direction_version_id}
+```
+
+Catalog responses expose only publicly activated city identity/status, localized
+route names, explicit direction, start/finish, optional ordered stops, static
+geometry, flat fare/currency, effective dates, and whether booking is currently
+enabled. A paused city may retain route visibility with booking disabled.
+
+These endpoints never return online-driver locations, counts, identities,
+candidate lists, queues, or supply heatmaps. Catalog access is bounded,
+cacheable by immutable version/ETag where appropriate, and rate-limited against
+scraping/abuse. Publication state is backend authority.
+
+## 58.2 Passenger immediate and scheduled service
+
+Existing point-to-point ride creation remains compatible. National expansion
+adds an optional published `fixed_route_direction_version_id` only through a
+reviewed additive contract; when supplied, the backend derives city/operator,
+start/finish, geometry version, and flat fare and rejects conflicting arbitrary
+coordinates.
+
+Scheduled bookings use their own resources:
+
+```text
+POST /scheduled-bookings
+GET  /scheduled-bookings
+GET  /scheduled-bookings/{booking_id}
+POST /scheduled-bookings/{booking_id}/cancel
+```
+
+Creation requires `Idempotency-Key` and includes either validated point-to-point
+locations or one published direction version plus `scheduled_for`. The response
+contains backend-resolved city/operator/service, lifecycle status, city timezone
+presentation data, transport fare, scheduling surcharge, passenger-funded
+operator fee if any, passenger total, policy versions, cancellation terms, and
+whether a driver has committed. It never promises a taxi merely because the
+booking was accepted.
+
+Cancellation is backend-authorized, idempotent, and returns explicit financial
+outcomes such as no charge, retained surcharge, pending refund, or completed
+refund according to the snapshotted policy. The client cannot submit those
+outcomes.
+
+## 58.3 Driver city applications and scheduled work
+
+```text
+GET  /drivers/recruiting-cities
+GET  /drivers/recruiting-cities/{city_id}/requirements
+POST /drivers/me/city-applications
+GET  /drivers/me/city-applications
+GET  /drivers/me/city-applications/{application_id}
+PATCH /drivers/me/city-applications/{application_id}
+POST /drivers/me/city-applications/{application_id}/documents
+DELETE /drivers/me/city-applications/{application_id}/documents/{document_id}
+POST /drivers/me/city-applications/{application_id}/submit
+POST /drivers/me/city-applications/{application_id}/withdraw
+
+GET  /drivers/me/scheduled-offers
+PATCH /drivers/me/scheduled-offer-preference
+POST /scheduled-offers/{offer_id}/accept
+POST /scheduled-offers/{offer_id}/decline
+GET  /drivers/me/scheduled-commitments
+```
+
+The same applicant-owned contract serves driver mobile and public web clients.
+No request field grants a role, approval, city authorization, or online state.
+Application responses expose the requirement version and applicant-safe status,
+not reviewer-private notes or another applicant's data.
+
+The recruiting requirements response contains only the active public requirement
+version, typed item codes, localized explanations, allowed evidence types, and
+whether each item is required. Application creation snapshots that version.
+PATCH accepts only typed answers and owned profile/vehicle/credential references
+defined by that requirement version while the application is editable; it cannot
+set status, reviewer fields, roles, or authorization. Submit validates a complete
+snapshot and is idempotent. Withdraw is applicant-owned, idempotent, allowed only
+before approval, and never deletes the audit/retention record.
+Document upload is a bounded authenticated `multipart/form-data` request through
+the backend's protected storage adapter; it enforces declared and detected media
+type, byte limit, hash, malware-scan quarantine, ownership, requirement-item
+membership, and rate limit before evidence can satisfy a requirement. It never
+returns a durable object-store URL. Deletion is allowed only in editable states,
+is idempotent, and follows the retention/audit policy. These endpoints stay
+disabled until the protected storage and scanning dependencies are configured
+and verified; no client may simulate a successful upload.
+
+The scheduled-offer preference is city-scoped and backend-confirmed. Enabling it
+does not make the driver immediately available or passenger-visible. Disabling
+it stops new future offers and does not cancel accepted commitments.
+
+Scheduled offers contain server time, pickup time, city/service, point-to-point
+or fixed-route direction, offer/commitment expiry, cancellation terms, transport
+fare, scheduling surcharge, operator fee/funding mode, and expected driver net.
+Acceptance atomically checks expiry, city/vehicle/credential eligibility and
+schedule conflicts. Decline is non-punitive and advances the configured offer
+process.
+
+## 58.4 Protected operations control plane
+
+The operations console uses a dedicated `/operations` namespace so participant
+routes do not accidentally inherit administrative reads. Collection, resource,
+and command paths are explicit; clients must not invent a generic mutation
+endpoint:
+
+```text
+POST            /operations/auth/login
+POST            /operations/auth/mfa/verify
+POST            /operations/auth/refresh
+POST            /operations/auth/logout
+
+GET/POST       /operations/cities
+GET/PATCH      /operations/cities/{city_id}
+POST           /operations/cities/{city_id}/lifecycle-transitions
+GET/POST       /operations/operators
+GET/PATCH      /operations/operators/{operator_id}
+GET/POST       /operations/operator-city-assignments
+POST           /operations/operator-city-assignments/{assignment_id}/retire
+GET/POST       /operations/administrative-grants
+DELETE         /operations/administrative-grants/{grant_id}
+
+GET/POST       /operations/cities/{city_id}/service-area-versions
+GET/PATCH      /operations/service-area-versions/{version_id}
+GET/POST       /operations/cities/{city_id}/driver-requirement-versions
+GET/PATCH      /operations/driver-requirement-versions/{version_id}
+POST           /operations/driver-requirement-versions/{version_id}/submit
+POST           /operations/driver-requirement-versions/{version_id}/activate
+
+GET/POST       /operations/cities/{city_id}/configuration-versions
+GET/PATCH      /operations/city-configuration-versions/{version_id}
+POST           /operations/city-configuration-versions/{version_id}/submit
+POST           /operations/city-configuration-versions/{version_id}/approve
+POST           /operations/city-configuration-versions/{version_id}/activate
+
+GET             /operations/driver-applications
+GET             /operations/driver-applications/{application_id}
+GET             /operations/driver-applications/{application_id}/documents/{document_id}
+POST            /operations/driver-applications/{application_id}/decisions
+
+GET/POST         /operations/cities/{city_id}/pricing-rules
+GET/PATCH        /operations/pricing-rules/{version_id}
+POST             /operations/pricing-rules/{version_id}/submit
+POST             /operations/pricing-rules/{version_id}/activate
+GET/POST         /operations/cities/{city_id}/operator-fee-policies
+GET/PATCH        /operations/operator-fee-policies/{version_id}
+GET/POST         /operations/cities/{city_id}/scheduling-policies
+GET/PATCH        /operations/scheduling-policies/{version_id}
+
+GET/POST         /operations/cities/{city_id}/fixed-routes
+GET/PATCH        /operations/fixed-routes/{route_id}
+POST             /operations/fixed-routes/{route_id}/versions
+GET/PATCH        /operations/fixed-route-versions/{version_id}
+POST             /operations/fixed-route-versions/{version_id}/publish
+POST             /operations/fixed-route-versions/{version_id}/retire
+
+GET              /operations/scheduled-bookings
+GET              /operations/scheduled-bookings/{booking_id}
+GET              /operations/rollout-overview
+GET              /operations/cities/{city_id}/operational-aggregates
+GET              /operations/audit-logs
+```
+
+Additive fields may be refined before each slice is implemented, but methods,
+resource ownership, and command semantics change only through a documented API
+revision. The following contract cannot be weakened:
+
+* Every operation requires a named permission plus validated market/operator/city
+  scope; `ADMIN` text alone is insufficient for the target model.
+* Lists are paginated and automatically constrained to the caller's grants.
+* Aggregate endpoints do not return account rows, exact driver/passenger
+  locations, documents, support text, or provider-payment secrets.
+* Draft, review, activation, publication, and lifecycle transition are distinct
+  commands with optimistic version/conflict handling.
+* Configuration activation validates its immutable component references and
+  updates the city active pointer atomically; activating one child policy alone
+  never silently changes a live city's coherent bundle.
+* Financial/configuration activation and grant/review decisions are idempotent,
+  audited, and never rewrite history.
+* Driver-document reads require scoped review permission, reauthentication,
+  no-store delivery, and a document-access audit; list responses never contain
+  storage keys or reusable download URLs.
+* Browser CORS accepts only the exact operations origin. Administrative session,
+  MFA, CSRF, and content-security boundaries must be finalized before the first
+  production console release.
+
+Operations authentication issues a dedicated administrative audience and never
+accepts a normal mobile bearer token as sufficient. Exact MFA method, recovery,
+step-up lifetime, and refresh-cookie protocol must be fixed and threat-modeled in
+`auth.md`/`security.md` before these endpoint schemas are implemented; the route
+names above reserve the boundary rather than inventing an identity-provider
+protocol.
+
+## 58.5 City resolution and response scope
+
+Ride/booking requests may include a catalog-selected city identifier, but the
+backend verifies it against pickup/service geometry and policy. A mismatch is a
+safe validation error, not a fallback to another city. Responses include the
+resolved city/service/operator identifiers and relevant immutable version IDs so
+clients can display facts without selecting rules.
+
+Cross-city object identifiers return `404` or `403` according to the documented
+enumeration policy, never data from another grant. Database filtering is applied
+before pagination/counting so totals cannot leak another city's records.
+
+## 58.6 Expansion idempotency and concurrency tests
+
+Required tests include:
+
+```text
+Two operators cannot become authoritative for one city/service/time.
+Two active equal-specificity financial policies cannot overlap.
+Publishing a route version never mutates the old version.
+Submitting or withdrawing one application cannot approve or alter another.
+Two drivers cannot commit to one scheduled booking.
+One driver cannot accept overlapping scheduled commitments.
+Handoff creates at most one live ride and revalidates eligibility.
+A City A manager cannot count, read, or mutate City B records.
+A passenger cannot enumerate online drivers through any catalog or error.
+Passenger total, driver net, and operator allocation reconcile exactly.
+```
+
+---
+
+# 59. API Design Principles
 
 ## Endpoint delivery checklist
 

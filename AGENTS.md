@@ -28,6 +28,7 @@ The following documents define project decisions:
 
 ```text
 docs/product.md
+docs/operations.md
 docs/architecture.md
 docs/api.md
 docs/auth.md

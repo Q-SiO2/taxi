@@ -8,6 +8,7 @@ plan; it does not replace the domain documents.
 | Area | Document |
 | --- | --- |
 | Product mission and scope | `product.md` |
+| National operations, city rollout, fixed routes, and scheduling | `operations.md` |
 | System boundaries and source of truth | `architecture.md` |
 | Concrete build structure and delivery gates | `implementation.md` |
 | Delivery order and non-MVP features | `roadmap.md` |
@@ -30,7 +31,8 @@ plan; it does not replace the domain documents.
    gate.
 2. `architecture.md` to identify ownership and boundaries.
 3. The relevant domain document (`auth`, `drivers`, `rides`, `matching`,
-   `pricing`, or `payments`).
+   `pricing`, or `payments`); include `operations.md` for city-scoped or
+   operations-console work.
 4. `api.md` and `database.md` for external and persistent contracts.
 5. `security.md` and `design.md` when the slice touches data or UI.
 6. `ui.md` and the relevant section of `extended_ui.md` when the slice changes visual identity, layout chrome, motion, screens, inputs, assets, or shared UI components.

@@ -502,6 +502,24 @@ Additional roles may be introduced later.
 
 Roles should be represented in the backend authorization system rather than trusted from client-provided values.
 
+National operations use scoped administrative grants rather than adding every
+staff function to the global `user_roles` list. Approved role templates include:
+
+```text
+PLATFORM_ADMIN
+OPERATOR_ADMIN
+CITY_MANAGER
+DRIVER_REVIEWER
+PRICING_MANAGER
+SUPPORT_AGENT
+ANALYST
+```
+
+Each grant identifies its market, operator, and/or city scope. A template name
+without a matching scope and permission is not authorization. Passenger,
+driver, and cooperative-member roles remain ordinary product roles; they do not
+inherit administrative access from membership or employment.
+
 ---
 
 # 26. Permissions
@@ -534,6 +552,25 @@ COOPERATIVE_MEMBER
 ADMIN
  └── administrative_permissions
 ```
+
+Target operations permissions are narrower, for example:
+
+```text
+manage_city_lifecycle
+manage_operator_assignments
+review_driver_applications
+manage_city_tariffs
+manage_operator_fee_policies
+manage_fixed_routes
+manage_scheduling_policy
+view_scoped_operational_aggregates
+view_scoped_audit
+manage_scoped_staff_grants
+```
+
+Every permission is evaluated together with the resource's city/operator scope.
+An aggregate analyst permission never grants driver-document, passenger,
+provider-payment, support-text, or exact-location access.
 
 This is conceptual.
 
@@ -600,6 +637,13 @@ Administrators should have:
 * Session management.
 * Potential MFA.
 
+The national operations console is isolated from ordinary mobile UI and uses an
+exact configured browser origin. Production operations accounts require MFA
+before multi-city rollout. Browser code never decides a grant, and a hidden
+navigation item never substitutes for backend scope enforcement. Routine
+cross-city access is forbidden unless an explicit market-scoped grant requires
+it.
+
 ---
 
 # 30. Administrative Actions
@@ -616,6 +660,10 @@ Examples:
 * Viewing sensitive documents.
 * Resolving safety reports.
 * Modifying financial records.
+* Activating, pausing, or retiring a city.
+* Assigning an operator or scoped staff grant.
+* Publishing a fixed-route version.
+* Activating a scheduling or operator-fee policy.
 
 Audit entries should identify:
 
@@ -675,6 +723,12 @@ interactive prompt, and concurrent bootstrap attempts are serialized by the
 database. The command never promotes an existing passenger or driver account and
 cannot be reused to create additional administrators. No public registration or
 profile request may carry a role.
+
+`ADMIN` is the transitional bootstrap authority for the existing single-city
+backend. The national expansion must add an audited migration path from that
+bootstrap account to the first market-scoped `PLATFORM_ADMIN` grant. It must not
+silently grant every historical administrator unrestricted national data access,
+and no driver/public web application may request an operations grant.
 
 ---
 

@@ -129,6 +129,363 @@ Additional entities support:
 * Support.
 * Audit logs.
 
+## 3.1 National expansion target entities
+
+The national model is additive and currently planned. It must be delivered by
+migrations without rewriting existing rides or financial history.
+
+```text
+markets
+├── id
+├── code
+├── name
+├── default_currency
+├── status
+└── timestamps
+
+operators
+├── id
+├── market_id
+├── cooperative_id      # nullable; references existing cooperative when applicable
+├── name
+├── operator_type
+├── status
+└── timestamps
+
+cities
+├── id
+├── market_id
+├── code / slug
+├── localized_name
+├── timezone
+├── presentation_centroid
+├── lifecycle_status
+├── active_configuration_version_id
+└── timestamps
+
+operator_city_assignments
+├── id
+├── operator_id
+├── city_id
+├── service_type
+├── effective_from / effective_until
+├── status
+└── audit timestamps
+```
+
+At most one active operator assignment may be authoritative for a given
+`(city, service_type, effective_time)` in the initial expansion. City lifecycle
+and active configuration pointers change only through audited backend commands.
+When an operator is the existing cooperative, `cooperative_id` references that
+record rather than duplicating membership/governance data. Non-cooperative
+operator identity never grants cooperative membership implicitly.
+
+Service boundaries, driver requirements, and coherent activation bundles are
+first-class versions rather than mutable columns or an unvalidated JSON object:
+
+```text
+city_service_area_versions
+├── id
+├── city_id
+├── version
+├── boundary                 # geography(MultiPolygon, 4326)
+├── status
+├── effective_from / effective_until
+└── audit timestamps
+
+driver_requirement_versions
+├── id
+├── city_id
+├── version
+├── status
+├── effective_from / effective_until
+└── audit fields
+
+driver_requirement_items
+├── id
+├── requirement_version_id
+├── requirement_code
+├── evidence_type
+├── required
+├── validity_rule_code
+├── display_order
+└── localized_copy_key
+
+city_configuration_versions
+├── id
+├── city_id
+├── version
+├── status                   # DRAFT / IN_REVIEW / APPROVED / ACTIVE / REPLACED
+├── service_area_version_id
+├── driver_requirement_version_id
+├── localization_bundle_version_id
+├── optimistic_version
+├── submitted_by / submitted_at
+├── approved_by / approved_at
+└── activated_by / activated_at
+
+city_configuration_services
+├── configuration_version_id
+├── service_type
+├── operator_city_assignment_id
+├── matching_policy_version_id
+├── tariff_version_id
+├── operator_fee_policy_version_id
+├── scheduling_policy_version_id       # nullable when scheduling is disabled
+├── payment_capability_version_id
+└── enabled
+
+city_configuration_routes
+├── configuration_version_id
+├── fixed_route_version_id
+├── immediate_booking_enabled
+└── scheduled_booking_enabled
+
+city_readiness_checks
+├── id
+├── configuration_version_id
+├── gate_code
+├── status
+├── non_secret_evidence_reference
+├── decided_by / decided_at
+└── timestamps
+```
+
+The matching, localization, and payment-capability version tables are delivered
+with their owning domain; the foreign keys above cannot point to arbitrary
+configuration blobs. Support, safety, retention, legal, map/routing, and
+localization readiness are represented by allowlisted gate codes and bounded
+evidence references, never copied documents, secrets, or free-form credentials.
+
+A draft configuration uses optimistic concurrency. Submission freezes its
+component references; approval and activation are explicit audited transitions.
+Activation validates every referenced version, changes the city's active pointer,
+and records the replaced bundle in one transaction. It must not point to draft,
+expired, cross-city, overlapping, or otherwise incompatible components.
+
+Scoped administration uses grants rather than global data access:
+
+```text
+administrative_grants
+├── id
+├── user_id
+├── role_template
+├── market_id          # nullable according to validated scope type
+├── operator_id
+├── city_id
+├── granted_by
+├── granted_at
+├── expires_at
+└── revoked_at
+```
+
+Database shape complements, but never replaces, backend permission checks.
+Constraints require a valid scope for each template and prevent duplicate active
+grants. Grant changes remain append/audit visible.
+
+Driver city participation is separate from driver identity:
+
+```text
+driver_city_applications
+├── id
+├── driver_id
+├── city_id
+├── requirement_version_id
+├── status
+├── submitted_at / reviewed_at
+├── latest_decision_id          # nullable projection to append-only decision
+└── timestamps
+
+driver_application_evidence
+├── id
+├── application_id
+├── requirement_item_id
+├── credential_id             # nullable reusable verified credential
+├── document_id               # nullable protected application document
+├── status
+└── timestamps
+
+driver_application_answers
+├── id
+├── application_id
+├── requirement_item_id
+├── answer_type
+├── boolean_value / date_value / bounded_text_value
+└── timestamps
+
+driver_application_documents
+├── id
+├── application_id
+├── requirement_item_id
+├── opaque_storage_key
+├── media_type / byte_size / sha256
+├── malware_scan_status
+├── uploaded_at / deleted_at
+└── retention_deadline
+
+driver_application_decisions
+├── id
+├── application_id
+├── reviewer_user_id
+├── decision
+├── bounded_reason_code
+├── applicant_safe_message
+└── created_at
+
+driver_city_authorizations
+├── id
+├── driver_id
+├── city_id
+├── application_id
+├── status
+├── scheduled_offers_enabled
+├── valid_from / valid_until
+└── timestamps
+```
+
+Mode checks allow exactly one typed answer value and prevent an answer/evidence
+from satisfying an item outside the application's snapshotted requirement
+version. Applicant edits and document deletion are limited to editable states.
+Submission freezes the applicant snapshot; reviewer decisions are append-only.
+`WITHDRAWN` is applicant initiated before approval and does not delete the
+retention-governed record or confer authorization.
+
+Fixed routes use immutable published versions:
+
+```text
+fixed_routes
+├── id
+├── city_id
+├── operator_id
+├── code
+└── status
+
+fixed_route_versions
+├── id
+├── fixed_route_id
+├── version
+├── localized_name
+├── effective_from / effective_until
+├── publication_status
+└── published_by / published_at
+
+fixed_route_directions
+├── id
+├── route_version_id
+├── direction_code
+├── start_location
+├── finish_location
+├── static_geometry
+└── flat_fare_policy_version_id
+
+fixed_route_stops
+├── id
+├── direction_id
+├── sequence
+├── localized_name
+└── location
+```
+
+Outbound and inbound are different direction rows. Sequence uniqueness and
+valid geometry are database-tested. Historical bookings reference the direction
+version, never the mutable route identity alone.
+
+Scheduled service uses separate records:
+
+```text
+scheduled_bookings
+├── id
+├── passenger_id
+├── city_id / operator_id
+├── service_type
+├── fixed_route_direction_id   # nullable
+├── scheduled_for
+├── status
+├── quote and policy version references
+├── current_commitment_id       # nullable
+├── live_ride_id               # nullable until handoff
+└── lifecycle timestamps
+
+scheduled_booking_offers
+├── id
+├── booking_id
+├── driver_id
+├── offered_at / expires_at / responded_at
+├── response
+└── conflict-policy snapshot
+
+scheduled_booking_commitments
+├── id
+├── booking_id                 # unique active commitment per booking
+├── offer_id
+├── driver_id
+├── protected_window           # tstzrange including configured buffers
+├── status
+├── committed_at
+└── released_at / release_reason
+
+scheduled_booking_events
+├── id
+├── booking_id
+├── event_type
+├── actor_user_id
+├── previous_status / new_status
+├── controlled_metadata
+└── created_at
+```
+
+Constraints prevent a booking from referencing a route in another city, more
+than one accepted commitment, or more than one live ride. Driver commitment
+conflicts use a transaction-safe exclusion/locking strategy over active
+`protected_window` ranges plus migrated-database concurrency tests. The booking's
+current pointer and commitment row change atomically; a cancelled/released row is
+retained for audit rather than overwritten.
+
+Operator compensation and scheduling use independent versioned policies:
+
+```text
+operator_fee_policies
+├── id
+├── city_id / operator_id / service_type
+├── calculation_mode       # percentage or flat
+├── funding_mode           # driver deduction or passenger surcharge
+├── percentage_rate
+├── flat_amount / currency
+├── eligible_base_code
+├── rounding_rule / minimum_driver_net
+├── effective dates / status / version
+└── audit fields
+
+scheduling_policies
+├── id
+├── city_id / operator_id / service_type
+├── lead time / horizon / offer and handoff windows
+├── conflict and cancellation configuration
+├── surcharge amount / currency / allocation
+├── effective dates / status / version
+└── audit fields
+
+operator_allocations
+├── id
+├── operator_id / city_id
+├── ride_id / payment_id / fare_record_id
+├── operator_fee_policy_version_id
+├── funding_mode
+├── amount / currency
+├── status
+└── created_at / settled_at
+```
+
+Mode-specific check constraints prohibit a percentage and flat amount from
+being active simultaneously. Exact calculated components are snapshotted on
+bookings, fare records, earnings, and operator settlements.
+
+Typed domain events and aggregate fact tables include city, operator, service,
+booking, route-direction, policy-version, time-bucket, and controlled outcome
+dimensions. They must not copy arbitrary API bodies, credential documents,
+support text, contact identifiers, payment credentials, or exact long-term
+movement history.
+
 ---
 
 # 4. User
@@ -189,6 +546,10 @@ user_roles
 ```
 
 Authorization remains a backend responsibility.
+
+National staff authority is not added as an unscoped role enum. The target
+`administrative_grants` relationship supplies a role template plus validated
+market/operator/city scope as described in Section 3.1.
 
 ---
 
@@ -481,6 +842,11 @@ rides
 ├── passenger_id
 ├── driver_id
 ├── vehicle_id
+├── city_id
+├── operator_id
+├── service_type
+├── fixed_route_direction_version_id
+├── scheduled_booking_id
 ├── status
 ├── pickup_location_id
 ├── destination_location_id
@@ -497,6 +863,12 @@ rides
 ```
 
 `driver_id` and `vehicle_id` may be null before a driver accepts the ride.
+
+The national fields are planned migration additions. `fixed_route_direction_version_id`
+and `scheduled_booking_id` are nullable only for service types that do not use
+them. City/operator values are backend-derived and immutable once requested;
+foreign keys and service-specific checks prevent cross-city route or policy
+references.
 
 When an offer is accepted, the backend writes both `driver_id` and the driver's
 currently selected, verified `vehicle_id` in the same locked transaction. It
@@ -711,6 +1083,10 @@ Conceptually:
 pricing_rules
 ├── id
 ├── cooperative_id
+├── city_id
+├── operator_id
+├── service_type
+├── fixed_route_direction_id
 ├── name
 ├── version
 ├── configuration
@@ -723,6 +1099,10 @@ pricing_rules
 A ride should reference the applicable pricing-rule version.
 
 Changing pricing rules must not alter historical rides.
+
+The existing cooperative-only rule is the implemented compatibility shape. City,
+operator, service, and route scope are planned additions. Equal-specificity
+active date ranges must not overlap.
 
 ---
 
@@ -776,6 +1156,9 @@ driver_earnings
 ├── ride_id
 ├── gross_amount
 ├── cooperative_fee
+├── operator_fee_policy_version_id
+├── operator_fee_funding_mode
+├── scheduling_surcharge
 ├── adjustments
 ├── net_amount
 ├── currency
@@ -796,7 +1179,13 @@ Ride revenue
       └── Cooperative/platform contribution
 ```
 
-The exact accounting model remains undecided.
+Provider-specific payout and general-ledger integration remain undecided.
+
+The national accounting model preserves transport fare, scheduling surcharge,
+operator allocation, driver gross, adjustments, and driver net as exact separate
+components. A corresponding append-oriented operator settlement/allocation fact
+records the beneficiary and source payment. It must reconcile to the passenger
+charge without inferring fee mode from an amount.
 
 ---
 
@@ -1142,6 +1531,17 @@ Passenger
     └──────── Ratings
 ```
 
+National expansion adds:
+
+```text
+Market
+  └── City ── Operator Assignment ── Operator
+       ├── Driver City Applications / Authorizations
+       ├── Configuration and Financial Policy Versions
+       ├── Fixed Route Versions / Directions / Stops
+       └── Scheduled Bookings ── Offers ── Live Ride
+```
+
 ---
 
 # 36. Geographic Indexing
@@ -1154,6 +1554,12 @@ The database should support queries such as:
 Find available drivers
 within a radius of a pickup point.
 ```
+
+National dispatch, booking, route-catalog, and operations queries should lead
+with `city_id` (and service/route scope where applicable). Fixed-route geometry
+uses spatial indexes only when query evidence requires them; ordinary catalog
+reads should prefer immutable version keys. Passenger APIs never query or expose
+the online-driver index as a catalog.
 
 Geographic indexes should be evaluated during implementation rather than assuming every geographic field requires an index.
 
@@ -1172,6 +1578,12 @@ Examples include:
 * Valid monetary values.
 * Valid rating ranges.
 * Unique active ride assignment where required.
+* One authoritative active operator per city/service/effective time initially.
+* No equal-specificity overlapping active tariff, fee, or scheduling policies.
+* Fixed-route direction and booking city/operator consistency.
+* One accepted driver commitment and one live ride per scheduled booking.
+* Mode-valid percentage or flat operator fee fields.
+* Valid scoped administrative grants.
 
 Application validation should complement database constraints rather than replace them.
 
@@ -1231,11 +1643,21 @@ Location data
 Safety reports
 Audit logs
 Notifications
+Administrative grants
+Driver city applications and documents
+Scheduled bookings
+Operational aggregate facts
 ```
 
 Retention periods will be defined in `security.md`.
 
 The database design must support deletion, anonymization, or archival where required.
+
+Aggregate reporting must not become a permanent shadow copy of personal data.
+Typed facts use city/zone/route/time dimensions and controlled outcomes; small
+cells are suppressed at the presentation/export boundary. Any source event with
+an account, booking, or ride reference follows the stricter source retention and
+is not exposed as analyst detail.
 
 ---
 
@@ -1276,6 +1698,12 @@ Tests should verify:
 * Fare persistence.
 * Payment relationships.
 * Deletion/anonymization behavior.
+* Cross-city authorization and foreign-key isolation.
+* Coherent city configuration activation.
+* Fixed-route version immutability and direction ordering.
+* Scheduled-booking commitment/handoff concurrency.
+* Operator-fee mode checks and complete financial reconciliation.
+* Aggregate facts contain only approved dimensions.
 
 ---
 
@@ -1352,6 +1780,12 @@ ratings
 ```
 
 Additional security, notification, support, and governance tables can be introduced as their corresponding features are implemented.
+
+The national expansion then adds the Section 3.1 market/operator/city,
+administrative-grant, city-application/authorization, fixed-route, scheduled-
+booking, fee-policy, configuration-version, and aggregate-fact tables in the
+roadmap sequence. They are not part of the already implemented minimum schema
+and must not be created as one unreviewable migration.
 
 ---
 
