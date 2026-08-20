@@ -7,6 +7,12 @@ the API/worker/database/routing boundaries here while using Render-generated
 staging secrets and private networking. It is not the production manifest and
 must not be promoted by changing `TAXIMOBILE_ENV`.
 
+When no testing budget exists, the isolated temporary alternative is documented
+in [`RENDER_FREE_TESTING.md`](RENDER_FREE_TESTING.md) and
+[`render.free-testing.yaml`](render.free-testing.yaml). It combines API and
+workers on one sleeping free web instance and uses public fair-use Valhalla, so
+it is restricted to small synthetic tests and expires with the free database.
+
 This directory is a provider-neutral single-host Linux deployment template. It
 does not choose a registry, cloud, DNS provider, TLS proxy, managed PostgreSQL
 service, secret store, or monitoring platform. Those remain deployment-owner

@@ -10,9 +10,11 @@ It never prints connection values or weakens the application's own validation.
 from __future__ import annotations
 
 import argparse
+import asyncio
 from collections.abc import MutableMapping, Sequence
 import os
 import re
+import subprocess
 import sys
 from urllib.parse import urlparse
 
@@ -148,15 +150,80 @@ def command_for(
     raise RenderConfigurationError("Unknown Render process role.")
 
 
+def run_free_staging_migration() -> None:
+    """Apply idempotent migrations before a free service starts.
+
+    Render's dedicated pre-deploy command is a paid feature. The free testing
+    service therefore migrates before binding its public port. Alembic upgrades
+    are repeatable, and a failed migration prevents traffic from reaching an
+    incompatible application revision.
+    """
+
+    result = subprocess.run(["alembic", "upgrade", "head"], check=False)
+    if result.returncode != 0:
+        raise RenderConfigurationError("The free staging database migration failed.")
+
+
+def bootstrap_free_staging_administrator(environment: MutableMapping[str, str]) -> bool:
+    """Create (or verify) the single administrator for a free test deployment.
+
+    Render free services do not provide an interactive shell. The Blueprint
+    therefore asks the owner for an email and secret password at creation time.
+    The established bootstrap domain service remains the authority: it creates
+    only the first administrator, is idempotent for the same email, and refuses
+    role escalation or replacement. The plaintext password is removed from the
+    child API process environment immediately after it is read.
+    """
+
+    email = environment.get("TAXIMOBILE_FREE_TEST_ADMIN_EMAIL", "").strip()
+    password = environment.pop("TAXIMOBILE_FREE_TEST_ADMIN_PASSWORD", "")
+    if not email or not password:
+        raise RenderConfigurationError(
+            "The free staging administrator email and password are required."
+        )
+
+    # Import application configuration only after the Render adapter has
+    # installed the async database URL in the environment.
+    from pydantic import ValidationError
+    from sqlalchemy.exc import SQLAlchemyError
+
+    from taximobile_api.cli.bootstrap_admin import run
+    from taximobile_api.core.config import ConfigurationError
+    from taximobile_api.domains.auth.bootstrap import (
+        AdministratorAccountConflict,
+        InitialAdministratorExists,
+    )
+
+    try:
+        return asyncio.run(run(email, password))
+    except (
+        ValidationError,
+        ConfigurationError,
+        InitialAdministratorExists,
+        AdministratorAccountConflict,
+        SQLAlchemyError,
+    ) as error:
+        raise RenderConfigurationError(
+            "The free staging administrator bootstrap failed; verify its secret settings."
+        ) from error
+
+
 def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Start one guarded TaxiMobile Render process.")
-    parser.add_argument("role", choices=("migrate", "api", "worker", "bootstrap-admin"))
+    parser.add_argument(
+        "role",
+        choices=("migrate", "api", "worker", "bootstrap-admin", "free-staging"),
+    )
     parser.add_argument("--email", help="Initial administrator email for bootstrap-admin only.")
     parsed = parser.parse_args(arguments)
 
     try:
-        configure_render_environment(os.environ, entrypoint_role=parsed.role)
-        command = command_for(parsed.role, os.environ, administrator_email=parsed.email)
+        effective_role = "api" if parsed.role == "free-staging" else parsed.role
+        configure_render_environment(os.environ, entrypoint_role=effective_role)
+        if parsed.role == "free-staging":
+            run_free_staging_migration()
+            bootstrap_free_staging_administrator(os.environ)
+        command = command_for(effective_role, os.environ, administrator_email=parsed.email)
     except RenderConfigurationError as error:
         print(f"TaxiMobile Render configuration refused: {error}", file=sys.stderr)
         return 2

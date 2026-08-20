@@ -18,10 +18,12 @@ class ValhallaRoutingProvider:
         base_url: str,
         *,
         timeout_seconds: float = 5,
+        client_id: str = "taximobile.q-sio2.github",
         client: httpx.AsyncClient | None = None,
     ) -> None:
         self._owns_client = client is None
         self._client = client or httpx.AsyncClient(base_url=base_url, timeout=timeout_seconds)
+        self._client_id = client_id
 
     async def route(
         self,
@@ -32,6 +34,7 @@ class ValhallaRoutingProvider:
         try:
             response = await self._client.post(
                 "/route",
+                headers={"X-Client-Id": self._client_id},
                 json={
                     "locations": [
                         {"lat": origin.latitude, "lon": origin.longitude, "type": "break"},

@@ -1,0 +1,57 @@
+# Zero-cost, temporary user-testing Blueprint. This intentionally combines the
+# API and background loops in one free web process and uses the public Valhalla
+# fair-use demo. It is forbidden for production or sensitive real-user data.
+previews:
+  generation: "off"
+
+services:
+  - type: web
+    name: taximobile-free-test-api
+    runtime: docker
+    region: frankfurt
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    dockerCommand: python -m taximobile_api.operations.render_entrypoint free-staging
+    healthCheckPath: /ready
+    autoDeployTrigger: commit
+    envVars:
+      - key: TAXIMOBILE_ENV
+        value: staging
+      - key: TAXIMOBILE_PROCESS_ROLE
+        value: all
+      - key: TAXIMOBILE_JWT_SECRET
+        generateValue: true
+      - key: TAXIMOBILE_MONITORING_TOKEN
+        generateValue: true
+      - key: TAXIMOBILE_FREE_TEST_ADMIN_EMAIL
+        sync: false
+      - key: TAXIMOBILE_FREE_TEST_ADMIN_PASSWORD
+        sync: false
+      - key: TAXIMOBILE_ROUTING_PROVIDER
+        value: valhalla
+      - key: TAXIMOBILE_ROUTING_BASE_URL
+        value: https://valhalla1.openstreetmap.de
+      - key: TAXIMOBILE_ROUTING_TIMEOUT_SECONDS
+        value: "8"
+      - key: TAXIMOBILE_ROUTING_RATE_LIMIT_PER_MINUTE
+        value: "10"
+      - key: TAXIMOBILE_MATCHING_POLL_SECONDS
+        value: "2"
+      - key: TAXIMOBILE_OUTBOX_POLL_SECONDS
+        value: "2"
+      - key: TAXIMOBILE_CREDENTIAL_POLL_SECONDS
+        value: "300"
+      - key: RENDER_DATABASE_URL
+        fromDatabase:
+          name: taximobile-free-test-db
+          property: connectionString
+
+databases:
+  - name: taximobile-free-test-db
+    region: frankfurt
+    plan: free
+    postgresMajorVersion: "16"
+    databaseName: taximobile_free_test
+    user: taximobile_free_test
+    ipAllowList: []

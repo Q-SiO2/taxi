@@ -658,6 +658,20 @@ and must remain `TAXIMOBILE_ENV=staging`. A guarded entrypoint converts only
 Render-generated private connection values into the existing application
 configuration formats without logging them or weakening normal startup checks.
 
+For an owner with no staging budget, `infra/deploy/render.free-testing.yaml` is
+the deliberately reduced, zero-cost acceptance path. It runs API and workers in
+one free Render web process, uses one expiring free PostgreSQL/PostGIS database,
+and routes only low-volume synthetic test coordinates through the public
+Valhalla fair-use demo with an identifying client header. Sleep/cold starts,
+stopped background loops while asleep, no database backups, 30-day expiry, and
+public-routing availability are accepted test limitations—not production
+architecture. Because the free service has no interactive shell, its startup
+accepts owner-supplied Blueprint secrets and invokes the existing first-admin
+bootstrap after migrations. The transaction-locked bootstrap is idempotent only
+for the same administrator, refuses promotion/replacement, and removes the
+plaintext password from the child API environment before serving traffic.
+`infra/deploy/RENDER_FREE_TESTING.md` is the controlling runbook.
+
 The production Compose container-health contract now probes `/ready`, not the
 weaker liveness endpoint. API health therefore includes PostgreSQL reachability
 and supplies the first exact configured allowed host while connecting over

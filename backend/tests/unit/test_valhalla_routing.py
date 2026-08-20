@@ -35,6 +35,7 @@ def test_valhalla_adapter_normalizes_route_geometry_and_maneuvers() -> None:
     captured_request: dict = {}
 
     def handler(request: httpx.Request) -> httpx.Response:
+        captured_request["client_id"] = request.headers["X-Client-Id"]
         captured_request.update(json.loads(request.content))
         return httpx.Response(
             200,
@@ -74,6 +75,7 @@ def test_valhalla_adapter_normalizes_route_geometry_and_maneuvers() -> None:
     asyncio.run(client.aclose())
 
     assert captured_request["costing"] == "auto"
+    assert captured_request["client_id"] == "taximobile.q-sio2.github"
     assert captured_request["shape_format"] == "polyline6"
     assert captured_request["directions_options"] == {
         "units": "kilometers",

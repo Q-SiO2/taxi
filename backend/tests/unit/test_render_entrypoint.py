@@ -3,9 +3,11 @@ import pytest
 from taximobile_api.operations.render_entrypoint import (
     RenderConfigurationError,
     async_database_url,
+    bootstrap_free_staging_administrator,
     command_for,
     configure_render_environment,
     private_routing_url,
+    run_free_staging_migration,
 )
 
 
@@ -104,3 +106,43 @@ def test_bootstrap_admin_command_preserves_hidden_password_prompt() -> None:
         "operator@example.test",
         "--confirm-initial-admin",
     ]
+
+
+def test_free_staging_migration_is_fail_closed(monkeypatch: pytest.MonkeyPatch) -> None:
+    class FailedMigration:
+        returncode = 1
+
+    monkeypatch.setattr(
+        "taximobile_api.operations.render_entrypoint.subprocess.run",
+        lambda *args, **kwargs: FailedMigration(),
+    )
+
+    with pytest.raises(RenderConfigurationError, match="migration failed"):
+        run_free_staging_migration()
+
+
+def test_free_staging_bootstrap_is_idempotent_and_removes_plaintext_password(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[tuple[str, str]] = []
+
+    async def fake_run(email: str, password: str) -> bool:
+        calls.append((email, password))
+        return False
+
+    monkeypatch.setattr("taximobile_api.cli.bootstrap_admin.run", fake_run)
+    environment = {
+        "TAXIMOBILE_FREE_TEST_ADMIN_EMAIL": "owner@example.test",
+        "TAXIMOBILE_FREE_TEST_ADMIN_PASSWORD": "a-secret-test-password",
+    }
+
+    created = bootstrap_free_staging_administrator(environment)
+
+    assert created is False
+    assert calls == [("owner@example.test", "a-secret-test-password")]
+    assert "TAXIMOBILE_FREE_TEST_ADMIN_PASSWORD" not in environment
+
+
+def test_free_staging_bootstrap_requires_both_secret_values() -> None:
+    with pytest.raises(RenderConfigurationError, match="email and password are required"):
+        bootstrap_free_staging_administrator({})
