@@ -1,0 +1,706 @@
+TaxiMobile — Graphic Asset Production Requirements
+===================================================
+
+PURPOSE
+-------
+This file lists the custom graphic assets that should be created for the TaxiMobile passenger and driver applications.
+
+The goal is to avoid relying on mismatched stock icons, random emoji, generic illustrations, inconsistent vehicle renders, or assets with incompatible perspective.
+
+Brand palette:
+- White: #FFFFFF
+- Navy: #0B1F3A
+- Secondary navy: #163A63
+- Mustard yellow: #D6A800
+- Light mustard: #F3D76A
+- Deep navy: #071426
+
+GENERAL RULES
+-------------
+1. All assets must belong to one visual family.
+2. Vehicle renders must share the same camera angle.
+3. Lighting direction must be consistent.
+4. Shadows must be consistent.
+5. Stroke width must be consistent for vector icons.
+6. Avoid tiny details that disappear at mobile scale.
+7. Design at high resolution, then export required sizes.
+8. Keep master files editable.
+9. Prefer SVG for flat vector illustrations/icons.
+10. Prefer transparent PNG/WebP for rendered vehicle assets.
+11. Keep source 3D models if 3D renders are used.
+12. Avoid baking text into images.
+13. Do not bake localized labels into graphics.
+14. Export light-background-safe assets by default.
+15. Test every asset at actual UI size before final approval.
+
+A. CORE BRAND ASSETS
+====================
+
+A01. Primary logo mark
+- Standalone app symbol
+- Works at 24 px, 48 px, 96 px, and app-icon scale
+- Must remain legible on white and navy
+- Provide vector master
+- Exports:
+  - SVG
+  - PNG transparent 512x512
+  - PNG transparent 1024x1024
+
+A02. Full wordmark
+- Logo + product name
+- Horizontal version
+- Dark/navy version for white backgrounds
+- White version for navy backgrounds
+- SVG preferred
+
+A03. App icon
+- Simplified logo mark
+- No tiny text
+- Must survive Android adaptive-icon mask
+- Create:
+  - foreground
+  - background
+  - monochrome variant if supported
+
+A04. Splash logo
+- Clean centered mark
+- No baked background
+- Transparent SVG/PNG
+
+B. LANDING / ONBOARDING ILLUSTRATIONS
+=====================================
+
+B01. Main landing-page transport illustration
+Purpose:
+- first visual identity moment
+
+Composition:
+- simplified city/map environment
+- one highlighted taxi
+- white dominant background
+- navy city/map geometry
+- mustard taxi/route highlight
+
+Avoid:
+- generic photos
+- overly detailed city skyline
+- copyrighted city landmarks unless intentionally licensed
+- low-contrast pastel look
+
+Preferred format:
+- SVG if flat vector
+- otherwise high-resolution PNG/WebP
+
+B02. Location permission illustration
+Elements:
+- phone/map
+- location pin
+- subtle route geometry
+
+B03. Notification permission illustration
+Elements:
+- taxi arriving
+- small notification indicator
+- no OS-specific copyrighted UI imitation
+
+B04. Empty trips illustration
+Elements:
+- road/route
+- small taxi
+- no trip cards
+
+B05. Empty saved places illustration
+Elements:
+- map pin/home/work motif
+
+B06. Driver onboarding illustration
+Elements:
+- taxi
+- driver/profile/document motif
+
+B07. Driver verification illustration
+Elements:
+- document cards/checkmark
+- taxi silhouette
+
+C. MAP PINS AND MARKERS
+=======================
+
+C01. User location marker
+- Distinct from taxi markers
+- Navy + white
+- Optional accuracy halo is implemented separately in UI
+- SVG
+
+C02. Pickup pin
+- Mustard primary
+- Strong navy outline or inner symbol
+- Bottom-tip anchor point clearly defined
+- SVG
+
+C03. Destination pin
+- Navy primary
+- White interior icon
+- Must not be visually confusable with pickup
+- SVG
+
+C04. Saved Home marker
+- Small home glyph in branded map-pin shape
+- SVG
+
+C05. Saved Work marker
+- Small briefcase/building glyph in branded pin
+- SVG
+
+C06. Search result map marker
+- Neutral/simple marker
+- SVG
+
+C07. Selected map marker halo
+- Circular/radial selection indicator
+- SVG or generated programmatically
+
+D. TAXI VEHICLE MAP MARKERS
+===========================
+
+IMPORTANT:
+Do not use random car icons from different sets.
+
+All vehicle marker assets must:
+- point upward at 0 degrees in the source image
+- have transparent backgrounds
+- use the same visual projection
+- use consistent shadow/no-shadow policy
+- have a known anchor
+- be readable at approximately 32–48 dp
+
+D01. Standard city taxi — top-down
+Recommended:
+- nearly top-down
+- slight isometric depth permitted
+- strong roof silhouette
+- mustard body or mustard accent depending on real service branding requirements
+
+Exports:
+- 128x128
+- 256x256
+- 512x512 transparent PNG/WebP
+- vector only if visual quality remains strong
+
+D02. Large/shared taxi — top-down
+Must visibly differ from standard taxi:
+- larger body
+- van/MPV/sedan form as appropriate
+- distinct roof/cabin silhouette
+
+D03. Intercity taxi — top-down
+If visually distinct from shared taxi:
+- separate asset
+Otherwise use same vehicle geometry with a clear service badge outside the vehicle asset.
+
+D04. Selected standard taxi
+Options:
+- same vehicle with programmatic halo preferred
+- avoid creating unnecessary duplicate files
+
+D05. Selected large taxi
+Same rule.
+
+D06. Driver-offline vehicle marker
+Only if driver app visually shows own vehicle differently.
+Prefer programmatic opacity/status ring.
+
+E. SERVICE SELECTION VEHICLE RENDERS
+====================================
+
+These are NOT the same as map markers.
+
+Use a controlled 3D or high-quality isometric render set.
+
+CAMERA SPEC
+-----------
+Recommended camera:
+- shallow 3/4 front-side or shallow isometric
+- camera height and focal length locked for every vehicle
+- vehicle faces the same direction
+- same framing
+- same ground plane
+- same scale relationship
+
+LIGHTING SPEC
+-------------
+- large soft key light from upper-left
+- mild fill from opposite side
+- subtle contact shadow
+- white/transparent background
+- no dramatic reflections
+- no nighttime environment maps
+
+E01. Standard city taxi hero render
+Use:
+- service picker card
+- booking confirmation
+- optional landing composition
+
+Exports:
+- transparent PNG/WebP
+- 1024 px longest side master export
+- 512 px UI export
+- 256 px UI export
+
+E02. Large/shared taxi hero render
+Must be proportionally larger and clearly distinct.
+
+E03. Intercity taxi hero render
+Only if materially different.
+
+E04. Vehicle silhouette fallback
+Flat navy/mustard vector version for:
+- low-bandwidth mode
+- skeleton/loading
+- compact cards
+
+F. ROUTE GRAPHICS
+=================
+
+F01. Pickup-to-destination route mini-illustration
+Used in empty/onboarding contexts only.
+Do not use as actual map route.
+
+F02. Decorative route curve
+- navy line
+- mustard endpoint
+- reusable background element
+- SVG
+
+F03. Route-progress motif
+- simple segment/arrow family
+- may be programmatic instead of raster
+
+G. AUTHENTICATION ICONS
+=======================
+
+Prefer a coherent custom icon family or one reputable icon set with custom missing icons.
+
+Needed:
+- phone
+- email
+- lock
+- eye
+- eye-off
+- back
+- close
+- check
+- warning
+- country/chevron
+- edit
+- resend/refresh
+
+Do not redraw common UI icons if Compose Material icons already provide a suitable consistent version.
+Custom assets should be reserved for distinctive brand-specific needs.
+
+H. LOCATION / SEARCH ICONS
+==========================
+
+Needed:
+- search
+- current location/recenter
+- location pin
+- pickup dot
+- destination
+- recent/history
+- home
+- work
+- favorite/star
+- map-select
+- clear input
+- swap origin/destination if supported
+
+I. RIDE STATUS ASSETS
+=====================
+
+I01. Searching animation asset
+Preferred:
+- programmatic Compose animation
+- pulsing concentric rings
+- rotating/radar motif optional
+
+If pre-rendered:
+- Lottie only if supported intentionally
+- keep file small
+
+I02. Driver matched icon/state
+- check/taxi combination
+- ideally programmatic
+
+I03. Driver arriving motif
+- compact taxi + direction indicator
+
+I04. Driver arrived status graphic
+- stronger mustard emphasis
+
+I05. Trip completed graphic
+- check + route endpoint
+- SVG
+
+I06. Payment success
+- custom branded check if needed
+- otherwise use vector icon programmatically
+
+I07. Payment failure
+- error icon
+- preferably programmatic/vector
+
+J. PAYMENT ASSETS
+=================
+
+Needed:
+- cash
+- bank card
+- CMI/payment provider mark ONLY if trademark usage is permitted and official assets are used
+- add card
+- receipt
+- wallet if supported later
+
+Do not manually recreate third-party payment logos.
+Use official brand assets where licensing permits.
+
+K. PASSENGER PROFILE / ACCOUNT
+==============================
+
+Needed:
+- default avatar
+- profile photo placeholder
+- trips
+- saved places
+- payments
+- language
+- notifications
+- privacy
+- safety
+- help
+- legal
+- logout
+
+Most should come from the same vector icon system.
+
+L. DRIVER DOCUMENT ASSETS
+=========================
+
+Needed:
+- national ID / identity document
+- driver license
+- vehicle registration
+- insurance
+- taxi authorization/license
+- camera
+- gallery
+- upload
+- document
+- approved
+- rejected
+- processing
+- expired
+- warning
+
+Create document-category illustrations only where generic icons are insufficient.
+
+M. DRIVER STATUS ASSETS
+=======================
+
+Needed:
+- offline
+- online
+- incoming request
+- pickup
+- arrived
+- passenger
+- start ride
+- active navigation
+- complete ride
+- earnings
+- payout
+- vehicle
+- documents
+
+N. EARNINGS AND TRIP ASSETS
+===========================
+
+Needed:
+- earnings/coins
+- calendar
+- weekly summary
+- trend
+- receipt
+- deduction/fee
+- payout
+- bank/payment
+
+Prefer vectors.
+
+O. SAFETY ASSETS
+================
+
+Needed:
+- shield/safety
+- emergency call
+- share trip
+- report issue
+- support
+- lost item
+- warning
+
+Safety icons must be immediately understandable.
+Avoid overly stylized decorative symbols.
+
+P. NAVIGATION ICON FAMILY
+=========================
+
+Passenger bottom navigation:
+- Home
+- Trips
+- Saved
+- Account
+
+Driver bottom navigation:
+- Home/Online
+- Earnings
+- Trips
+- Account
+
+Specifications:
+- 24x24 design grid
+- 2 px equivalent stroke at base size
+- rounded or moderately geometric stroke style
+- filled selected variant optional
+- navy default
+- mustard selected accent handled preferably by UI tint rather than separate files
+
+Q. FLAGS / COUNTRY SELECTOR
+===========================
+
+If flags are used for phone country selection:
+- use a consistent licensed/open flag set
+- do not manually improvise
+- keep small enough to avoid visual dominance
+
+Alternative:
+- show ISO country code + dialing code without flag.
+
+R. ILLUSTRATION STYLE GUIDE
+===========================
+
+All illustrations should share:
+
+Geometry:
+- clean
+- moderately geometric
+- not childish
+- slightly simplified
+
+Stroke:
+- 1 consistent family
+- navy outlines where used
+
+Palette ratio recommendation:
+- 65–75% white/negative space
+- 15–25% navy
+- 5–15% mustard
+- semantic colors only where required
+
+Shadows:
+- soft
+- subtle
+- cool-neutral
+- no heavy black drop shadows
+
+Perspective:
+- flat or shallow isometric
+- never mix flat people/icons with photoreal cars on the same illustration
+
+People:
+- if used, keep neutral and simplified
+- avoid unnecessary detailed facial features
+- ensure cultural context feels natural for Morocco without caricature
+
+S. 3D MODEL REQUIREMENTS
+========================
+
+If actual runtime 3D cars are eventually used:
+
+Create/source:
+- one standard taxi model
+- one large/shared taxi model
+- optional intercity variant
+
+Requirements:
+- low-poly/mobile appropriate
+- clean topology
+- PBR materials
+- separate body material for recoloring
+- wheel geometry optimized
+- origin centered properly
+- forward axis documented
+- scale in real-world units
+- LOD versions if required
+
+Suggested deliverables:
+- `.glb` master runtime export
+- source `.blend` file or original modeling file
+- texture maps
+- 1K textures maximum initially unless visual testing proves higher resolution necessary
+
+Important:
+Runtime 3D should only be adopted if it produces a real UX benefit.
+For map markers, pre-rendered top-down assets are usually cheaper and more predictable.
+
+T. EXPORT NAMING CONVENTION
+===========================
+
+Use predictable names.
+
+Examples:
+
+brand_logo_mark.svg
+brand_wordmark_dark.svg
+brand_wordmark_light.svg
+
+map_pin_pickup.svg
+map_pin_destination.svg
+map_marker_user.svg
+
+vehicle_marker_standard_256.webp
+vehicle_marker_large_256.webp
+
+vehicle_render_standard_512.webp
+vehicle_render_large_512.webp
+
+illustration_landing.svg
+illustration_empty_trips.svg
+illustration_location_permission.svg
+
+icon_nav_home.svg
+icon_nav_trips.svg
+icon_nav_saved.svg
+icon_nav_account.svg
+
+Avoid:
+final2.png
+newcar.png
+icon-copy.svg
+taxi3_fixed_final.png
+
+U. SOURCE FILE ORGANIZATION
+===========================
+
+Suggested design-assets repository structure:
+
+assets/
+  brand/
+    logo/
+    app-icon/
+  illustrations/
+    onboarding/
+    empty-states/
+    permissions/
+  icons/
+    navigation/
+    actions/
+    ride/
+    driver/
+    payments/
+    safety/
+  map/
+    pins/
+    markers/
+    route/
+  vehicles/
+    markers/
+    renders/
+    models/
+  third-party/
+    payment/
+    flags/
+
+V. ASSET PRIORITY ORDER
+=======================
+
+HIGH PRIORITY — build first
+1. Logo/app icon
+2. Landing illustration
+3. Pickup pin
+4. Destination pin
+5. User marker
+6. Standard taxi map marker
+7. Large/shared taxi map marker
+8. Standard taxi service-card render
+9. Large/shared taxi service-card render
+10. Bottom navigation icon family
+11. Empty trips illustration
+12. Location permission illustration
+13. Driver onboarding illustration
+
+MEDIUM PRIORITY
+14. Saved place illustrations
+15. Trip complete illustration
+16. Payment state graphics
+17. Driver document illustrations
+18. Earnings empty state
+19. Safety icons
+20. Ride-status motifs
+
+LOW PRIORITY / ONLY IF NEEDED
+21. Runtime 3D models
+22. Animated Lottie assets
+23. Promotional illustrations
+24. Seasonal graphics
+
+W. QUALITY CONTROL CHECKLIST
+============================
+
+For every final asset verify:
+
+[ ] It uses the approved palette.
+[ ] It looks correct on white.
+[ ] It remains readable at target mobile size.
+[ ] It has no accidental transparent padding.
+[ ] The anchor point is documented for map markers.
+[ ] Vehicle forward direction is documented.
+[ ] Perspective matches sibling vehicle assets.
+[ ] Lighting matches sibling renders.
+[ ] Stroke weight matches the icon family.
+[ ] No text is baked into localized graphics.
+[ ] No trademark is recreated improperly.
+[ ] Export file is optimized.
+[ ] Source file is preserved.
+[ ] Naming convention is correct.
+[ ] Dark/navy background version exists where necessary.
+[ ] Asset has been tested inside the real Compose UI.
+
+X. MOST IMPORTANT VISUAL WARNING
+================================
+
+Do not solve a layout problem with artwork.
+
+If:
+- proportions are wrong,
+- sheet height is wrong,
+- spacing is wrong,
+- typography hierarchy is wrong,
+- input behavior is wrong,
+- map camera padding is wrong,
+- marker anchoring is wrong,
+
+then replacing assets will not fix the screen.
+
+Assets should strengthen an already-correct interface.
+
+The correct workflow is:
+1. Define screen behavior.
+2. Define layout.
+3. Define component sizing.
+4. Define interaction states.
+5. Add approved placeholder geometry.
+6. Produce final artwork to those exact dimensions.
+7. Integrate.
+8. Test at actual device sizes.

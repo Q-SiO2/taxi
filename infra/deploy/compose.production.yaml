@@ -1,0 +1,128 @@
+name: taximobile-production
+
+x-common-environment: &common-environment
+  TAXIMOBILE_ENV: production
+  TAXIMOBILE_DATABASE_URL: ${TAXIMOBILE_DATABASE_URL:?Set the managed PostgreSQL/PostGIS URL through the deployment secret boundary}
+  TAXIMOBILE_MONITORING_TOKEN: ${TAXIMOBILE_MONITORING_TOKEN:?Set a separate 32+ character monitoring token}
+  TAXIMOBILE_MATCHING_RADIUS_METERS: ${TAXIMOBILE_MATCHING_RADIUS_METERS:-3000}
+  TAXIMOBILE_MATCHING_LOCATION_FRESHNESS_SECONDS: ${TAXIMOBILE_MATCHING_LOCATION_FRESHNESS_SECONDS:-30}
+  TAXIMOBILE_MATCHING_CANDIDATE_LIMIT: ${TAXIMOBILE_MATCHING_CANDIDATE_LIMIT:-10}
+  TAXIMOBILE_MATCHING_IDLE_CAP_SECONDS: ${TAXIMOBILE_MATCHING_IDLE_CAP_SECONDS:-1800}
+  TAXIMOBILE_MATCHING_FAIRNESS_LOOKBACK_HOURS: ${TAXIMOBILE_MATCHING_FAIRNESS_LOOKBACK_HOURS:-24}
+  TAXIMOBILE_MATCHING_ASSUMED_PICKUP_SPEED_MPS: ${TAXIMOBILE_MATCHING_ASSUMED_PICKUP_SPEED_MPS:-6.944}
+  TAXIMOBILE_MATCHING_PROXIMITY_WEIGHT: ${TAXIMOBILE_MATCHING_PROXIMITY_WEIGHT:-0.55}
+  TAXIMOBILE_MATCHING_IDLE_WEIGHT: ${TAXIMOBILE_MATCHING_IDLE_WEIGHT:-0.30}
+  TAXIMOBILE_MATCHING_FAIRNESS_WEIGHT: ${TAXIMOBILE_MATCHING_FAIRNESS_WEIGHT:-0.15}
+  TAXIMOBILE_MATCHING_ALGORITHM_VERSION: ${TAXIMOBILE_MATCHING_ALGORITHM_VERSION:-mvp-v1}
+  TAXIMOBILE_MATCHING_TIMEOUT_SECONDS: ${TAXIMOBILE_MATCHING_TIMEOUT_SECONDS:-300}
+  TAXIMOBILE_RIDE_OFFER_SECONDS: ${TAXIMOBILE_RIDE_OFFER_SECONDS:-45}
+
+x-api-environment: &api-environment
+  <<: *common-environment
+  TAXIMOBILE_JWT_SECRET: ${TAXIMOBILE_JWT_SECRET:?Set a 32+ character JWT secret through the deployment secret boundary}
+  TAXIMOBILE_ALLOWED_HOSTS: ${TAXIMOBILE_ALLOWED_HOSTS:?Set the public API host allowlist}
+  TAXIMOBILE_CORS_ORIGINS: ${TAXIMOBILE_CORS_ORIGINS:-}
+  TAXIMOBILE_ROUTING_PROVIDER: ${TAXIMOBILE_ROUTING_PROVIDER:?Set valhalla or graphhopper}
+  TAXIMOBILE_ROUTING_BASE_URL: ${TAXIMOBILE_ROUTING_BASE_URL:?Set the selected private routing service URL}
+  TAXIMOBILE_ROUTING_TIMEOUT_SECONDS: ${TAXIMOBILE_ROUTING_TIMEOUT_SECONDS:-5}
+  TAXIMOBILE_ROUTING_RATE_LIMIT_PER_MINUTE: ${TAXIMOBILE_ROUTING_RATE_LIMIT_PER_MINUTE:-30}
+  TAXIMOBILE_REGISTRATION_RATE_LIMIT_PER_MINUTE: ${TAXIMOBILE_REGISTRATION_RATE_LIMIT_PER_MINUTE:-5}
+  TAXIMOBILE_LOGIN_RATE_LIMIT_PER_MINUTE: ${TAXIMOBILE_LOGIN_RATE_LIMIT_PER_MINUTE:-5}
+  TAXIMOBILE_RIDE_CREATION_RATE_LIMIT_PER_MINUTE: ${TAXIMOBILE_RIDE_CREATION_RATE_LIMIT_PER_MINUTE:-5}
+  TAXIMOBILE_SUPPORT_TICKET_RATE_LIMIT_PER_MINUTE: ${TAXIMOBILE_SUPPORT_TICKET_RATE_LIMIT_PER_MINUTE:-5}
+  TAXIMOBILE_LOCATION_UPDATE_RATE_LIMIT_PER_MINUTE: ${TAXIMOBILE_LOCATION_UPDATE_RATE_LIMIT_PER_MINUTE:-60}
+  TAXIMOBILE_VERIFICATION_SUBMISSION_RATE_LIMIT_PER_HOUR: ${TAXIMOBILE_VERIFICATION_SUBMISSION_RATE_LIMIT_PER_HOUR:-5}
+
+x-worker-environment: &worker-environment
+  <<: *common-environment
+  TAXIMOBILE_FIREBASE_PROJECT_ID: ${TAXIMOBILE_FIREBASE_PROJECT_ID:?Set the production Firebase project ID}
+  TAXIMOBILE_FCM_TIMEOUT_SECONDS: ${TAXIMOBILE_FCM_TIMEOUT_SECONDS:-5}
+  TAXIMOBILE_OUTBOX_POLL_SECONDS: ${TAXIMOBILE_OUTBOX_POLL_SECONDS:-1}
+  TAXIMOBILE_OUTBOX_MAX_ATTEMPTS: ${TAXIMOBILE_OUTBOX_MAX_ATTEMPTS:-8}
+  TAXIMOBILE_MATCHING_POLL_SECONDS: ${TAXIMOBILE_MATCHING_POLL_SECONDS:-1}
+  TAXIMOBILE_CREDENTIAL_POLL_SECONDS: ${TAXIMOBILE_CREDENTIAL_POLL_SECONDS:-60}
+  TAXIMOBILE_CREDENTIAL_EXPIRY_WARNING_DAYS: ${TAXIMOBILE_CREDENTIAL_EXPIRY_WARNING_DAYS:-30}
+
+x-container-hardening: &container-hardening
+  image: ${TAXIMOBILE_API_IMAGE:?Set an immutable API image reference including @sha256 digest}
+  pull_policy: always
+  read_only: true
+  tmpfs:
+    - /tmp:size=64m,mode=1777
+  cap_drop:
+    - ALL
+  security_opt:
+    - no-new-privileges:true
+
+services:
+  migrate:
+    <<: *container-hardening
+    profiles: [migration]
+    environment:
+      TAXIMOBILE_ENV: production
+      TAXIMOBILE_DATABASE_URL: ${TAXIMOBILE_DATABASE_URL:?Set the managed PostgreSQL/PostGIS URL through the deployment secret boundary}
+    command: ["alembic", "upgrade", "head"]
+    restart: "no"
+
+  api:
+    <<: *container-hardening
+    environment:
+      <<: *api-environment
+      TAXIMOBILE_PROCESS_ROLE: api
+    command:
+      - uvicorn
+      - taximobile_api.main:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      # The application emits one privacy-bounded structured completion event;
+      # Uvicorn's raw access event would duplicate it and may expose raw paths.
+      - --no-access-log
+      # One process per container keeps metrics scrapeable per replica.
+      - --workers
+      - "1"
+      - --proxy-headers
+      - --forwarded-allow-ips
+      - ${TAXIMOBILE_TRUSTED_PROXY_CIDRS:?Set only the reverse proxy addresses/CIDRs}
+    ports:
+      - 127.0.0.1:${TAXIMOBILE_API_PORT:-8000}:8000
+    healthcheck:
+      # Readiness includes the authoritative PostgreSQL dependency. Liveness is
+      # intentionally left to the orchestrator's process/container state.
+      test: ["CMD", "python", "-c", "import os, urllib.request; host=next(value.strip().lower() for value in os.environ['TAXIMOBILE_ALLOWED_HOSTS'].split(',') if value.strip()); request=urllib.request.Request('http://127.0.0.1:8000/ready', headers={'Host': host}); urllib.request.urlopen(request, timeout=5).read()"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+    restart: unless-stopped
+    stop_grace_period: 30s
+
+  worker:
+    <<: *container-hardening
+    environment:
+      <<: *worker-environment
+      TAXIMOBILE_PROCESS_ROLE: worker
+    command:
+      - uvicorn
+      - taximobile_api.worker:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8001"
+      - --no-access-log
+      - --workers
+      - "1"
+    ports:
+      # Private host-loopback operations surface for readiness and scraping.
+      - 127.0.0.1:${TAXIMOBILE_WORKER_PORT:-8001}:8001
+    healthcheck:
+      # Worker readiness requires PostgreSQL, a running supervisor, and one
+      # successful iteration from matching, outbox, and credential lifecycle.
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/ready', timeout=5).read()"]
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+    restart: unless-stopped
+    stop_grace_period: 30s

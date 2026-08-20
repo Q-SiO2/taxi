@@ -1,0 +1,102 @@
+# Render staging Blueprint. Select this file when creating a Blueprint from the
+# Git repository. No production or provider credential belongs in this file.
+previews:
+  generation: "off"
+
+services:
+  - type: web
+    name: taximobile-staging-api
+    runtime: docker
+    region: frankfurt
+    plan: starter
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    dockerCommand: python -m taximobile_api.operations.render_entrypoint api
+    preDeployCommand: python -m taximobile_api.operations.render_entrypoint migrate
+    healthCheckPath: /ready
+    autoDeployTrigger: commit
+    envVars:
+      - key: TAXIMOBILE_ENV
+        value: staging
+      - key: TAXIMOBILE_PROCESS_ROLE
+        value: api
+      - key: TAXIMOBILE_JWT_SECRET
+        generateValue: true
+      - key: TAXIMOBILE_MONITORING_TOKEN
+        generateValue: true
+      - key: TAXIMOBILE_ROUTING_PROVIDER
+        value: valhalla
+      - key: RENDER_DATABASE_URL
+        fromDatabase:
+          name: taximobile-staging-db
+          property: connectionString
+      - key: RENDER_ROUTING_HOSTPORT
+        fromService:
+          type: pserv
+          name: taximobile-staging-routing
+          property: hostport
+
+  - type: worker
+    name: taximobile-staging-worker
+    runtime: docker
+    region: frankfurt
+    plan: starter
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    dockerCommand: python -m taximobile_api.operations.render_entrypoint worker
+    autoDeployTrigger: commit
+    envVars:
+      - key: TAXIMOBILE_ENV
+        value: staging
+      - key: TAXIMOBILE_PROCESS_ROLE
+        value: worker
+      - key: TAXIMOBILE_MONITORING_TOKEN
+        fromService:
+          type: web
+          name: taximobile-staging-api
+          envVarKey: TAXIMOBILE_MONITORING_TOKEN
+      - key: RENDER_DATABASE_URL
+        fromDatabase:
+          name: taximobile-staging-db
+          property: connectionString
+
+  - type: pserv
+    name: taximobile-staging-routing
+    runtime: image
+    region: frankfurt
+    plan: standard
+    image:
+      url: ghcr.io/valhalla/valhalla-scripted:3.8.3@sha256:24ef7955899dececb94e26c6dfb89d64fabfae875f980432694b0261eb6c251b
+    autoDeployTrigger: "off"
+    envVars:
+      - key: tile_urls
+        value: https://download.geofabrik.de/africa/morocco-260819.osm.pbf
+      - key: use_tiles_ignore_pbf
+        value: "True"
+      - key: force_rebuild
+        value: "False"
+      - key: build_elevation
+        value: "False"
+      - key: build_admins
+        value: "True"
+      - key: build_time_zones
+        value: "True"
+      - key: build_transit
+        value: "False"
+      - key: build_tar
+        value: "True"
+      - key: server_threads
+        value: "2"
+    disk:
+      name: taximobile-staging-routing-data
+      mountPath: /custom_files
+      sizeGB: 5
+
+databases:
+  - name: taximobile-staging-db
+    region: frankfurt
+    plan: basic-256mb
+    postgresMajorVersion: "16"
+    databaseName: taximobile_staging
+    user: taximobile_staging
+    ipAllowList: []

@@ -1,0 +1,37 @@
+graphhopper:
+  datareader.file: ""
+  graph.location: graph-cache
+  profiles:
+    - name: car
+      custom_model_files: [car.json]
+  profiles_ch:
+    - profile: car
+  profiles_lm: []
+  graph.encoded_values: car_access, car_average_speed, road_access
+  prepare.min_network_size: 200
+  prepare.subnetworks.threads: 1
+  routing.snap_preventions_default: tunnel, bridge, ferry
+  routing.timeout_ms: 15000
+  routing.non_ch.max_waypoint_distance: 250000
+  import.osm.ignored_highways: footway,construction,cycleway,path,steps
+  graph.dataaccess.default_type: MMAP
+
+server:
+  application_connectors:
+    - type: http
+      port: 8989
+      bind_host: 0.0.0.0
+      max_request_header_size: 16k
+  admin_connectors:
+    - type: http
+      port: 8990
+      bind_host: 127.0.0.1
+  request_log:
+    appenders: []
+
+logging:
+  level: INFO
+  appenders:
+    - type: console
+      time_zone: UTC
+      log_format: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"

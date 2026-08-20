@@ -1,0 +1,299 @@
+# TaxiMobile — Design and UI Guidelines
+
+## Purpose
+
+Define the boundaries between product functionality and visual design.
+
+The visual design should remain flexible while the application's interaction model remains consistent.
+
+## Design Ownership
+
+Interaction rules, backend-authoritative state presentation, and accessibility constraints live in this document.
+
+The approved visual identity — colors, typography, branding, layout chrome, icons, motion, and screen composition — lives in `ui.md`.
+
+The project owner retains final control over visual changes. Coding agents must follow `ui.md` when implementing UI polish and must not invent a competing palette, type system, or interaction language.
+
+Until a UI wave in `ui.md` is explicitly scheduled, keep the shared Compose shell minimal and functional. Do not apply the polished map-first chrome merely because tokens exist on paper.
+
+## Platforms
+
+TaxiMobile is intended to support:
+
+* Android
+* iOS
+* Desktop development/testing where useful
+* Web tooling where required by the project
+
+Shared business logic should remain separate from platform-specific UI.
+
+## Core UX Principles
+
+The application should prioritize:
+
+* Clarity
+* Speed
+* Accessibility
+* Minimal unnecessary interaction
+* Clear ride status
+* Clear pricing
+* Clear driver information
+* Reliable navigation
+
+Account creation disables submission until the shared client checks pass and
+shows a non-dismissible progress state while the backend request is in flight.
+On success, both native apps return to sign-in, prefill the submitted email or
+phone identifier, clear the password, and show an explicit confirmation. On
+failure, they retain the account form and show the safe actionable network,
+validation, conflict, or throttling message supplied by application state.
+
+Authenticated product actions use the same interaction rule. A synchronous
+shared gate runs before coroutine launch, allows only one backend action at a
+time, and rejects overlapping taps. The initiating control replaces its label
+with the localized loading indicator while all competing backend controls are
+disabled. Completion always releases the gate; it never implies success without
+the backend response and authoritative reconciliation.
+Only a non-error authenticated result emits shared success presentation. Cash
+settlement and rating show the documented check animation and static confirmation;
+support and vehicle drafts clear only after their creation is backend-confirmed.
+Rejected or uncertain results retain the draft and never display success.
+
+## Passenger Flow
+
+The primary passenger flow should remain simple:
+
+```text
+Open app
+   ↓
+Choose pickup
+   ↓
+Choose destination
+   ↓
+Review fare
+   ↓
+Request taxi
+   ↓
+Wait for driver
+   ↓
+Track ride
+   ↓
+Complete ride
+   ↓
+Payment / confirmation
+```
+
+## Driver Flow
+
+```text
+Open app
+   ↓
+Go online
+   ↓
+Receive ride offer
+   ↓
+Review ride
+   ↓
+Accept / decline
+   ↓
+Navigate to passenger
+   ↓
+Start ride
+   ↓
+Complete ride
+   ↓
+Confirm payment
+```
+
+## UI State
+
+UI should reflect backend state rather than inventing its own authoritative state.
+
+For example:
+
+```text
+MATCHING
+DRIVER_ASSIGNED
+DRIVER_ARRIVING
+RIDE_ACTIVE
+RIDE_COMPLETED
+```
+
+The application should not display a driver as assigned until the backend confirms the assignment.
+
+The initial shared Compose shell receives explicit render state from a coordinator:
+session restoration, signed-out, offline, passenger-ready, and driver-ready. It
+maps backend ride and driver status to accessible text and deliberately has no
+local command that can advance a ride or make a driver available.
+
+The signed-out state switches between login and account-creation forms and
+submits only to the authentication coordinator. Registration explains the
+backend's 12-character minimum and requires an email address or Moroccan phone
+number before enabling submission. The form checks the same basic email and
+accepted Moroccan-number shapes for immediate feedback, but the API repeats all
+validation and remains authoritative. Password text is never logged, persisted as
+UI state, or treated as evidence of a signed-in session; the screen advances only
+after the backend validates the session and account role.
+Registration failures distinguish duplicate identifiers, invalid form data, and
+rate limiting with fixed actionable text. The client does not display raw
+framework validation payloads or submitted values.
+
+Authenticated passenger and driver views include an explicit sign-out control.
+It always clears secure local credentials, attempts backend session revocation
+when connected, and returns to the signed-out state even if that network call
+cannot be completed.
+
+The driver-ready view identifies the signed-in driver only with the display name
+returned by the authenticated driver-profile API. It does not infer a driver
+identity from a vehicle, a ride offer, or locally entered text.
+
+The passenger-ready view includes a compact profile form limited to the
+authenticated passenger's display name. It sends an explicit profile update to
+the backend and refreshes server-confirmed state; it does not expose or edit
+roles, contact identifiers, authentication credentials, or any other account.
+
+MapLibre is the selected map renderer for Android and iOS. The passenger flow
+should use an accessible MapLibre map to select pickup and destination, with clear
+text summaries and a non-map fallback so the flow remains usable when location,
+tiles, or rendering are unavailable. Validated latitude and longitude fields may
+remain in development builds until the production style/tile source and mobile
+permission flows are configured. The client asks the backend for a fare estimate,
+discards that estimate whenever either point changes, and creates the ride only
+through the authoritative ride API.
+
+Route geometry and maneuver summaries come from the provider-neutral backend
+routing contract backed by Valhalla. A map route is guidance, not evidence that a
+ride progressed, a fare was finalized, or a payment succeeded.
+
+Once a ride is created, the passenger product reloads its authorized detailed
+ride and renders the confirmed pickup, destination, route line, distance,
+duration, and short maneuver summary throughout the active lifecycle. Server
+refreshes replace status and assigned-driver data; route failure leaves those
+authoritative facts visible and never invents driver movement.
+
+After session restoration, the passenger product retrieves the passenger's rides
+and renders a non-terminal backend-confirmed ride as active. Cancellation is
+offered only for states permitted by the documented server-side state machine;
+the final cancellation status always comes from the API.
+
+Once the backend assigns a driver, the active passenger view presents the
+authorized driver display name and bound vehicle make, model, color, and taxi
+identifier where supplied. It never infers these details from an offer or shows
+private driver information.
+
+When no ride is active, both products display a compact backend-owned recent
+ride history (up to ten status/identifier summaries). Detailed receipts, driver
+identity, vehicle presentation, and route visualization remain authorized API
+work for their corresponding product slices rather than client-side inference.
+
+For the most recent completed passenger ride, the app fetches and displays the
+backend-finalized fare and payment method/status as a minimal receipt. It never
+derives a final fare from the quoted estimate or from local distance data, and
+does not present pending cash settlement as a successful payment.
+When the receipt includes stored fare components, the app renders those values
+and the captured tariff version without reconstructing a breakdown locally.
+
+The driver product retrieves currently valid backend offers after availability
+refresh. It displays pickup, approximate backend pickup distance/time, locked
+estimated fare, and expiry information. It accepts or declines through the offer
+API before reloading server-confirmed driver state. Offer actions are never
+treated as successful solely because a button was tapped, and the client does
+not reconstruct ranking scores.
+Malformed or non-positive server timing fails closed: Accept is disabled, the
+card states that timing is unavailable, and the app requests an authoritative
+offer refresh instead of trusting the device clock or a raw timestamp.
+
+An exhausted bounded search returns the passenger to the new-ride surface with
+the `UNMATCHED` journey retained in history and the explicit status “No available
+taxis were found nearby.” The app never claims that a driver is coming merely
+because matching started.
+
+The approved driver view exposes a compact vehicle-registration and selection
+surface. It shows backend verification state and allows selection only after
+the server has verified a vehicle; the application explains that registration
+does not grant dispatch eligibility.
+
+Both products render a compact notification inbox from the authenticated
+backend history. Marking an item read is an explicit API action; the text and
+resource ID are only a prompt to refresh authorized ride or driver data.
+Foreground and background FCM callbacks feed the same bounded shared refresh
+relay as a wake-up signal. If the app screen is active and authenticated, it
+reloads the full product state through the API; otherwise normal startup/session
+restore catches up. Push payloads never directly change a ride, offer,
+availability, fare, payment, notification read state, or visible identity.
+
+Both passenger and approved-driver views also show up to ten of the
+authenticated account's support-ticket summaries and provide the same minimal
+ticket form. The client displays only its own category, subject, and
+server-owned status; it does not expose ticket triage, another participant's
+information, safety-case handling, or financial adjustments. Ticket creation
+and the refreshed history remain API-confirmed. When either participant has an
+active ride, the app sends that server-issued ride identifier as the optional
+ticket association and says so without exposing the identifier; the backend
+still rejects an association the caller is not authorized to use.
+
+A backend-confirmed passenger cancellation immediately returns the app to the
+new-ride flow and keeps the cancelled journey in history. The terminal ride must
+not remain in the active-ride slot or require an app restart before another
+request can be started.
+
+For an active assigned ride, the driver UI exposes only the next documented
+server transition: en route, arrived, start, then complete with an explicitly
+reviewed completion coordinate. Android and iOS offer a one-shot foreground
+location request after a user action; they do not silently start background
+tracking. Manual coordinate entry remains a visible fallback when permission,
+location services, or device positioning is unavailable. Cash settlement remains
+a separate, explicit confirmation after completion and is never inferred from the
+ride-completion action.
+The current-location control is disabled and shows loading while its one-shot
+platform request is pending. Repeated taps are ignored; they must not cancel or
+replace the callback owned by the first request.
+
+The passenger can use the same one-shot platform location flow to set pickup,
+then choose the destination on MapLibre or through validated coordinate fields.
+Permission denial keeps the map/manual flow usable and displays an actionable
+message. The driver reviews the returned coordinate and explicitly submits it
+before going online or completing a ride. Shared code stamps the observation time
+when posting a driver update; backend freshness and movement validation remain
+authoritative.
+
+The latest backend-accepted foreground coordinate remains available only for the
+current signed-in app process. This prevents a normal availability, offer, or
+ride refresh from erasing the driver's MapLibre/Valhalla guidance. Signing out
+clears it, and a refresh never turns it into a client-authoritative availability
+or dispatch decision.
+
+“Go online” remains a separate action and fails visibly if that accepted location
+has become stale. Loading a phone coordinate into the form does not change driver
+availability, and submitting it does not itself make the driver dispatchable.
+
+## Accessibility
+
+The UI should account for:
+
+* Readable text
+* Sufficient contrast
+* Touch-friendly controls
+* Screen readers where applicable
+* Clear status indicators
+* Avoiding color as the only source of information
+
+The shared product screen must remain vertically scrollable. Passenger receipts,
+support history, and the driver vehicle/ride controls can all coexist in one
+backend-confirmed state, so controls must not become unreachable on a small
+screen simply because the view has more content than the viewport.
+
+## Design Constraint
+
+Do not add unnecessary screens, animations, features, or UI complexity merely because they are common in other ride-hailing applications.
+
+TaxiMobile should remain focused on its actual users and requirements. When polish is scheduled, implement only the motion and interaction set defined in `ui.md`, and keep decorative work out of business-rule slices.
+
+## UI delivery gate
+
+Keep UI work separate from business-rule changes. Reuse existing Compose conventions and documented flows. Visual identity and navigation chrome follow `ui.md`; do not invent a second brand system. Every screen must account for loading, empty, error, offline, and backend-confirmed states, with accessibility considered in the same slice.
+
+The shared `Offline` screen presents an explicit `Retry connection` action. Retry
+does not replay the failed ride, payment, availability, or profile command. It
+re-runs secure session restoration and reloads backend-authoritative product
+state; a retained valid session returns to the appropriate passenger/driver
+screen, while an absent or rejected session returns to sign-in.

@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "taximobile-api"
+version = "0.1.0"
+description = "Authoritative backend for the TaxiMobile cooperative taxi platform."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "alembic==1.19.1",
+    "argon2-cffi==25.1.0",
+    "asyncpg==0.31.0",
+    "fastapi==0.141.1",
+    "GeoAlchemy2==0.20.0",
+    "google-auth==2.56.0",
+    "httpx==0.28.1",
+    "pydantic==2.13.4",
+    "PyJWT==2.13.0",
+    "requests==2.34.2",
+    "sqlalchemy==2.0.51",
+    "uvicorn[standard]==0.52.1",
+]
+
+[project.scripts]
+taximobile-bootstrap-admin = "taximobile_api.cli.bootstrap_admin:main"
+taximobile-matching-simulation = "taximobile_api.operations.matching_simulation:main"
+taximobile-performance-smoke = "taximobile_api.operations.performance_smoke:main"
+taximobile-routing-acceptance = "taximobile_api.operations.routing_acceptance:main"
+taximobile-outbox-replay = "taximobile_api.operations.outbox_replay:main"
+taximobile-ux-demo-seed = "taximobile_api.operations.ux_demo_seed:main"
+
+[project.optional-dependencies]
+dev = [
+    "pip-audit==2.10.1",
+    "pytest==8.4.2",
+    "pytest-asyncio==0.26.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+cache_dir = "test-results/pytest-cache"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "integration: requires the explicitly configured migrated PostGIS test database",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"

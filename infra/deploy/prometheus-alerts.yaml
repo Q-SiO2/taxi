@@ -1,0 +1,94 @@
+groups:
+  - name: taximobile-api
+    interval: 30s
+    rules:
+      - alert: TaxiMobileUnhandledErrors
+        expr: sum(increase(taximobile_unhandled_errors_total[5m])) > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: TaxiMobile API reported an unhandled exception
+          description: Review bounded request logs using the server-generated request ID.
+
+      - alert: TaxiMobileHighServerErrorRate
+        expr: >-
+          sum(rate(taximobile_http_requests_total{status_class="5xx"}[5m]))
+          /
+          clamp_min(sum(rate(taximobile_http_requests_total[5m])), 0.001)
+          > 0.05
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: TaxiMobile API 5xx ratio exceeds five percent
+          description: Confirm readiness and inspect bounded exception and request telemetry.
+
+      - alert: TaxiMobileHighP95Latency
+        expr: >-
+          histogram_quantile(0.95,
+            sum by (le) (rate(taximobile_http_request_duration_seconds_bucket[5m])))
+          > 0.5
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: TaxiMobile API p95 latency exceeds 500 milliseconds
+          description: Compare API, database, and routing dependency latency before scaling or rollback.
+
+      - alert: TaxiMobileOutboxMetricsUnavailable
+        expr: absent(taximobile_outbox_metrics_available) or min(taximobile_outbox_metrics_available) < 1
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: TaxiMobile cannot read aggregate outbox delivery state
+          description: Confirm database readiness and connectivity without querying private payloads.
+
+      - alert: TaxiMobileOutboxDeadLetters
+        expr: max(taximobile_outbox_dead_letter_events) > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: TaxiMobile has dead-lettered delivery events
+          description: Resolve the dependency failure and follow the reviewed selective replay procedure.
+
+      - alert: TaxiMobileOutboxDeliveryStalled
+        expr: max(taximobile_outbox_oldest_pending_age_seconds) > 300
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: TaxiMobile outbox delivery has remained pending for over five minutes
+          description: Check worker leases, database health, live-event transport, and FCM availability.
+
+      - alert: TaxiMobileWorkerErrors
+        expr: sum by (worker) (increase(taximobile_worker_iterations_total{outcome="error"}[5m])) > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: A TaxiMobile background worker is retrying failed iterations
+          description: Inspect the bounded worker error class and dependency health; exception messages are intentionally omitted.
+
+      - alert: TaxiMobileWorkerMetricsMissing
+        expr: >-
+          absent(taximobile_worker_last_success_unixtime{worker="matching"})
+          or absent(taximobile_worker_last_success_unixtime{worker="outbox"})
+          or absent(taximobile_worker_last_success_unixtime{worker="credentials"})
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: TaxiMobile worker metrics are missing
+          description: Confirm the private worker process and its authenticated monitoring scrape target are available.
+
+      - alert: TaxiMobileWorkerStalled
+        expr: time() - taximobile_worker_last_success_unixtime > 300
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: A TaxiMobile background worker has not completed an iteration for five minutes
+          description: Confirm the worker process is running and inspect database, matching, credential lifecycle, outbox, and FCM dependency health.

@@ -1,0 +1,43 @@
+# Local secrets and environment files
+**/.env
+**/.env.*
+!**/.env.example
+**/local.properties
+**/*.jks
+**/*.keystore
+**/google-services.json
+**/GoogleService-Info.plist
+**/*.pem
+**/*.key
+**/*service-account*.json
+
+# Python runtimes and generated state
+**/.venv/
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.coverage
+**/htmlcov/
+**/*.egg-info/
+
+# Kotlin, Gradle, Android, and IDE output
+**/.gradle/
+**/build/
+**/*.apk
+**/*.aab
+.idea/
+**/*.iml
+
+# Workspace-local tools, databases, logs, and backups
+.tools/
+**/backups/
+**/*.log
+**/*.pid
+**/*.osm.pbf
+**/graph-cache/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp

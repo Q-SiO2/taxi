@@ -1,0 +1,18 @@
+TEAM_ID=
+
+PRODUCT_NAME=TaxiMobile
+PRODUCT_BUNDLE_IDENTIFIER=org.example.taximobile.TaxiMobile$(TEAM_ID)
+
+CURRENT_PROJECT_VERSION=1
+MARKETING_VERSION=1.0
+TAXIMOBILE_RELEASE_VERSION_CODE=0
+TAXIMOBILE_RELEASE_VERSION_NAME=0.0-invalid
+
+// Each product target sets this to PASSENGER or DRIVER. An invalid default
+// prevents an accidentally signed release from contacting an unknown API.
+TAXIMOBILE_APP_ROLE=PASSENGER
+TAXIMOBILE_API_BASE_URL=https:/$()/api.taximobile.invalid
+TAXIMOBILE_MAP_STYLE_URL=https:/$()/maps.taximobile.invalid/style.json
+// Debug and providerless verification stay fail-closed. A distributable Release
+// must override this to YES after privacy/retention approval.
+TAXIMOBILE_CRASH_REPORTING_ENABLED=NO

@@ -1,0 +1,124 @@
+name: taximobile
+
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-taximobile}
+      POSTGRES_USER: ${POSTGRES_USER:-taximobile}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in infra/.env}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - taximobile_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  api:
+    build:
+      context: ../backend
+    environment:
+      TAXIMOBILE_ENV: development
+      TAXIMOBILE_PROCESS_ROLE: all
+      TAXIMOBILE_DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-taximobile}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-taximobile}
+      TAXIMOBILE_JWT_SECRET: ${TAXIMOBILE_JWT_SECRET:?Set TAXIMOBILE_JWT_SECRET in infra/.env}
+      TAXIMOBILE_MATCHING_RADIUS_METERS: ${TAXIMOBILE_MATCHING_RADIUS_METERS:-3000}
+      TAXIMOBILE_MATCHING_LOCATION_FRESHNESS_SECONDS: ${TAXIMOBILE_MATCHING_LOCATION_FRESHNESS_SECONDS:-30}
+      TAXIMOBILE_MATCHING_CANDIDATE_LIMIT: ${TAXIMOBILE_MATCHING_CANDIDATE_LIMIT:-10}
+      TAXIMOBILE_MATCHING_IDLE_CAP_SECONDS: ${TAXIMOBILE_MATCHING_IDLE_CAP_SECONDS:-1800}
+      TAXIMOBILE_MATCHING_FAIRNESS_LOOKBACK_HOURS: ${TAXIMOBILE_MATCHING_FAIRNESS_LOOKBACK_HOURS:-24}
+      TAXIMOBILE_MATCHING_ASSUMED_PICKUP_SPEED_MPS: ${TAXIMOBILE_MATCHING_ASSUMED_PICKUP_SPEED_MPS:-6.944}
+      TAXIMOBILE_MATCHING_PROXIMITY_WEIGHT: ${TAXIMOBILE_MATCHING_PROXIMITY_WEIGHT:-0.55}
+      TAXIMOBILE_MATCHING_IDLE_WEIGHT: ${TAXIMOBILE_MATCHING_IDLE_WEIGHT:-0.30}
+      TAXIMOBILE_MATCHING_FAIRNESS_WEIGHT: ${TAXIMOBILE_MATCHING_FAIRNESS_WEIGHT:-0.15}
+      TAXIMOBILE_MATCHING_ALGORITHM_VERSION: ${TAXIMOBILE_MATCHING_ALGORITHM_VERSION:-mvp-v1}
+      TAXIMOBILE_MATCHING_POLL_SECONDS: ${TAXIMOBILE_MATCHING_POLL_SECONDS:-1}
+      TAXIMOBILE_CREDENTIAL_POLL_SECONDS: ${TAXIMOBILE_CREDENTIAL_POLL_SECONDS:-60}
+      TAXIMOBILE_CREDENTIAL_EXPIRY_WARNING_DAYS: ${TAXIMOBILE_CREDENTIAL_EXPIRY_WARNING_DAYS:-30}
+      TAXIMOBILE_MATCHING_TIMEOUT_SECONDS: ${TAXIMOBILE_MATCHING_TIMEOUT_SECONDS:-300}
+      TAXIMOBILE_RIDE_OFFER_SECONDS: ${TAXIMOBILE_RIDE_OFFER_SECONDS:-45}
+      TAXIMOBILE_ROUTING_PROVIDER: ${TAXIMOBILE_ROUTING_PROVIDER:-valhalla}
+      TAXIMOBILE_ROUTING_BASE_URL: ${TAXIMOBILE_ROUTING_BASE_URL:-http://valhalla:8002}
+      TAXIMOBILE_ROUTING_TIMEOUT_SECONDS: ${TAXIMOBILE_ROUTING_TIMEOUT_SECONDS:-5}
+      TAXIMOBILE_ROUTING_RATE_LIMIT_PER_MINUTE: ${TAXIMOBILE_ROUTING_RATE_LIMIT_PER_MINUTE:-30}
+      TAXIMOBILE_FIREBASE_PROJECT_ID: ${TAXIMOBILE_FIREBASE_PROJECT_ID:-}
+      TAXIMOBILE_FCM_TIMEOUT_SECONDS: ${TAXIMOBILE_FCM_TIMEOUT_SECONDS:-5}
+      TAXIMOBILE_MONITORING_TOKEN: ${TAXIMOBILE_MONITORING_TOKEN:-}
+      TAXIMOBILE_OUTBOX_POLL_SECONDS: ${TAXIMOBILE_OUTBOX_POLL_SECONDS:-1}
+      TAXIMOBILE_OUTBOX_MAX_ATTEMPTS: ${TAXIMOBILE_OUTBOX_MAX_ATTEMPTS:-8}
+      TAXIMOBILE_REGISTRATION_RATE_LIMIT_PER_MINUTE: ${TAXIMOBILE_REGISTRATION_RATE_LIMIT_PER_MINUTE:-5}
+      TAXIMOBILE_LOGIN_RATE_LIMIT_PER_MINUTE: ${TAXIMOBILE_LOGIN_RATE_LIMIT_PER_MINUTE:-5}
+      TAXIMOBILE_RIDE_CREATION_RATE_LIMIT_PER_MINUTE: ${TAXIMOBILE_RIDE_CREATION_RATE_LIMIT_PER_MINUTE:-5}
+      TAXIMOBILE_SUPPORT_TICKET_RATE_LIMIT_PER_MINUTE: ${TAXIMOBILE_SUPPORT_TICKET_RATE_LIMIT_PER_MINUTE:-5}
+      TAXIMOBILE_LOCATION_UPDATE_RATE_LIMIT_PER_MINUTE: ${TAXIMOBILE_LOCATION_UPDATE_RATE_LIMIT_PER_MINUTE:-60}
+      TAXIMOBILE_VERIFICATION_SUBMISSION_RATE_LIMIT_PER_HOUR: ${TAXIMOBILE_VERIFICATION_SUBMISSION_RATE_LIMIT_PER_HOUR:-5}
+      TAXIMOBILE_ALLOWED_HOSTS: ${TAXIMOBILE_ALLOWED_HOSTS:-localhost,127.0.0.1}
+      TAXIMOBILE_CORS_ORIGINS: ${TAXIMOBILE_CORS_ORIGINS:-}
+    command: ["/bin/sh", "-c", "alembic upgrade head && uvicorn taximobile_api.main:app --host 0.0.0.0 --port 8000 --no-access-log"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${API_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health').read()"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  valhalla:
+    profiles: ["routing-valhalla"]
+    # Official Valhalla scripted image, version and multi-architecture manifest
+    # digest pinned so local/prod-like graph builds are reproducible.
+    image: ghcr.io/valhalla/valhalla-scripted:3.8.3@sha256:24ef7955899dececb94e26c6dfb89d64fabfae875f980432694b0261eb6c251b
+    environment:
+      tile_urls: ${VALHALLA_TILE_URL:-}
+      use_tiles_ignore_pbf: "True"
+      force_rebuild: "False"
+      build_elevation: "False"
+      build_admins: "True"
+      build_time_zones: "True"
+      build_transit: "False"
+      build_tar: "True"
+      server_threads: ${VALHALLA_SERVER_THREADS:-2}
+    volumes:
+      - taximobile_valhalla_data:/custom_files
+    ports:
+      - "127.0.0.1:8002:8002"
+    restart: unless-stopped
+
+  graphhopper:
+    profiles: ["routing-graphhopper"]
+    build:
+      context: routing/graphhopper
+    environment:
+      GRAPHHOPPER_OSM_URL: ${GRAPHHOPPER_OSM_URL:-}
+      GRAPHHOPPER_OSM_SHA256: ${GRAPHHOPPER_OSM_SHA256:-}
+    volumes:
+      - taximobile_graphhopper_data:/data
+    ports:
+      # Both alternative engines intentionally claim the same loopback port so
+      # an accidental dual-profile activation fails instead of running both.
+      - "127.0.0.1:8002:8989"
+    read_only: true
+    tmpfs:
+      - /tmp:size=128m,mode=1777
+    cap_drop: ["ALL"]
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:8989/info"]
+      interval: 15s
+      timeout: 5s
+      retries: 240
+      start_period: 120s
+    restart: unless-stopped
+
+volumes:
+  taximobile_postgres_data:
+  taximobile_valhalla_data:
+  taximobile_graphhopper_data:

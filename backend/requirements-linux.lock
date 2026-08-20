@@ -1,0 +1,7 @@
+# Linux-only runtime dependencies omitted when the canonical lock is compiled on Windows.
+# Hashes cover the CPython 3.12 manylinux wheels for x86_64 and aarch64, the two
+# architectures supported by the production container definition.
+
+uvloop==0.22.1 \
+    --hash=sha256:700e674a166ca5778255e0e1dc4e9d79ab2acc57b9171b79e65feba7184b3370 \
+    --hash=sha256:7b5b1ac819a3f946d3b2ee07f09149578ae76066d70b44df3fa990add49a82e4
