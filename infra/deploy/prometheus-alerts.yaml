@@ -36,6 +36,64 @@ groups:
           summary: TaxiMobile API p95 latency exceeds 500 milliseconds
           description: Compare API, database, and routing dependency latency before scaling or rollback.
 
+      - alert: TaxiMobileLegacyAdminRouteServed
+        expr: >-
+          sum(increase(taximobile_legacy_admin_http_requests_total{outcome="served"}[5m])) > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: TaxiMobile routed a request to the retired administration surface
+          description: Stop promotion, identify the caller from bounded request evidence, and keep the legacy API disabled.
+
+      - alert: TaxiMobileSecurityIncidentMetricsUnavailable
+        expr: absent(taximobile_security_incident_metrics_available) or min(taximobile_security_incident_metrics_available) < 1
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: TaxiMobile cannot read aggregate security incident deadlines
+          description: Restore database visibility before relying on incident deadline alerts or operating a live service.
+
+      - alert: TaxiMobileHighSeveritySecurityIncidentOpen
+        expr: >-
+          max by (incident_severity) (taximobile_security_incidents_open{incident_severity=~"SEV1|SEV2"}) > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: TaxiMobile has an open {{ $labels.incident_severity }} security incident
+          description: Start the restricted incident runbook, assign a lead, and record containment evidence immediately.
+
+      - alert: TaxiMobileCriticalSecurityContainmentOverdue
+        expr: >-
+          max by (incident_severity) (taximobile_security_incidents_containment_overdue{incident_severity=~"SEV1|SEV2"}) > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: TaxiMobile missed a {{ $labels.incident_severity }} containment deadline
+          description: Escalate to platform duty, reassess service exposure, and preserve the incident timeline without placing private details in alerts.
+
+      - alert: TaxiMobileSecurityContainmentOverdue
+        expr: >-
+          max by (incident_severity) (taximobile_security_incidents_containment_overdue{incident_severity=~"SEV3|SEV4"}) > 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: TaxiMobile missed a {{ $labels.incident_severity }} containment deadline
+          description: Assign the overdue incident and follow the restricted containment runbook before the severity can increase.
+
+      - alert: TaxiMobileSecurityPostmortemOverdue
+        expr: max by (incident_severity) (taximobile_security_incidents_postmortem_overdue) > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: TaxiMobile has an overdue {{ $labels.incident_severity }} security postmortem
+          description: Complete the one-time referenced postmortem or record the approved follow-up owner and evidence.
+
       - alert: TaxiMobileOutboxMetricsUnavailable
         expr: absent(taximobile_outbox_metrics_available) or min(taximobile_outbox_metrics_available) < 1
         for: 2m
@@ -45,17 +103,92 @@ groups:
           summary: TaxiMobile cannot read aggregate outbox delivery state
           description: Confirm database readiness and connectivity without querying private payloads.
 
-      - alert: TaxiMobileOutboxDeadLetters
-        expr: max(taximobile_outbox_dead_letter_events) > 0
+      - alert: TaxiMobileDatabaseMetricsUnavailable
+        expr: absent(taximobile_database_metrics_available) or min(taximobile_database_metrics_available) < 1
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: TaxiMobile cannot read aggregate PostgreSQL capacity state
+          description: Confirm private database connectivity and monitoring permissions before relying on capacity evidence.
+
+      - alert: TaxiMobileDatabaseConnectionUtilizationHigh
+        expr: max(taximobile_database_connection_utilization_ratio) > 0.8
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: TaxiMobile PostgreSQL connection use exceeds eighty percent
+          description: Inspect fixed pool and database capacity evidence, stop new load, and follow the reviewed scaling or rollback decision.
+
+      - alert: TaxiMobileDatabaseLockWaiters
+        expr: max(taximobile_database_waiting_locks) > 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: TaxiMobile PostgreSQL has ungranted locks
+          description: Inspect bounded lock and latency evidence without exposing query text or session identities.
+
+      - alert: TaxiMobileDatabaseDeadlocks
+        expr: max(increase(taximobile_database_deadlocks_total[5m])) > 0
         for: 1m
         labels:
           severity: critical
         annotations:
-          summary: TaxiMobile has dead-lettered delivery events
-          description: Resolve the dependency failure and follow the reviewed selective replay procedure.
+          summary: TaxiMobile PostgreSQL recorded a deadlock
+          description: Stop promotion and reconcile the affected commands before replaying the concurrency pack.
+
+      - alert: TaxiMobileDatabasePoolMetricsUnavailable
+        expr: absent(taximobile_database_pool_metrics_available) or min(taximobile_database_pool_metrics_available) < 1
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: TaxiMobile cannot read local database pool state
+          description: Confirm each API and worker process exposes its fixed pool snapshot before relying on capacity evidence.
+
+      - alert: TaxiMobileDatabasePoolOverflow
+        expr: max(taximobile_database_pool_overflow) > 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: A TaxiMobile process is using database pool overflow
+          description: Inspect per-process checkout, request latency and server connection headroom before increasing load.
+
+      - alert: TaxiMobileDatabasePoolCheckoutWaitHigh
+        expr: >-
+          ((histogram_quantile(0.95, sum by (le) (rate(taximobile_database_pool_checkout_wait_seconds_bucket[5m])))
+          and on() (sum(rate(taximobile_database_pool_checkout_wait_seconds_count[5m])) > 0))
+          or vector(0)) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: TaxiMobile database pool checkout p95 exceeds one hundred milliseconds
+          description: Stop load growth and inspect per-process pool occupancy, database latency and connection headroom.
+
+      - alert: TaxiMobileDatabasePoolCheckoutTimeouts
+        expr: sum(increase(taximobile_database_pool_checkout_timeouts_total[5m])) > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: TaxiMobile exhausted a database connection pool
+          description: Stop promotion, preserve aggregate evidence and reconcile failed commands before retrying load.
+
+      - alert: TaxiMobileOutboxDeadLetters
+        expr: max by (owner) (taximobile_outbox_owner_dead_letter_events) > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: TaxiMobile has dead-lettered delivery events owned by {{ $labels.owner }}
+          description: The named owner must resolve the dependency failure and follow the reviewed selective replay procedure.
 
       - alert: TaxiMobileOutboxDeliveryStalled
-        expr: max(taximobile_outbox_oldest_pending_age_seconds) > 300
+        expr: max(taximobile_outbox_owner_oldest_pending_age_seconds) > 300
         for: 5m
         labels:
           severity: critical
@@ -77,6 +210,11 @@ groups:
           absent(taximobile_worker_last_success_unixtime{worker="matching"})
           or absent(taximobile_worker_last_success_unixtime{worker="outbox"})
           or absent(taximobile_worker_last_success_unixtime{worker="credentials"})
+          or absent(taximobile_worker_last_success_unixtime{worker="scheduling"})
+          or absent(taximobile_worker_last_success_unixtime{worker="analytics"})
+          or absent(taximobile_worker_last_success_unixtime{worker="case_alerts"})
+          or absent(taximobile_worker_last_success_unixtime{worker="case_retention"})
+          or absent(taximobile_worker_last_success_unixtime{worker="driver_document_retention"})
         for: 2m
         labels:
           severity: critical
@@ -91,4 +229,35 @@ groups:
           severity: critical
         annotations:
           summary: A TaxiMobile background worker has not completed an iteration for five minutes
-          description: Confirm the worker process is running and inspect database, matching, credential lifecycle, outbox, and FCM dependency health.
+          description: Confirm the worker process is running and inspect database, matching, credential lifecycle, scheduling, analytics, case-pager, case retention, driver-document storage/retention, outbox, and FCM dependency health.
+
+      - alert: TaxiMobileScrapeTargetDown
+        expr: min by (job) (up{job=~"taximobile-(api|worker|loki|alloy)"}) < 1
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: A required TaxiMobile application or monitoring target is down
+          description: Restore the named fixed scrape target and confirm its private-network readiness before relying on dashboards or alerts.
+
+      - alert: TaxiMobileLogCollectorDroppedLines
+        expr: >-
+          sum(increase(loki_process_dropped_lines_total{component_id="loki.process.taximobile"}[5m])) > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: TaxiMobile rejected malformed or oversized structured log lines
+          description: Inspect aggregate collector diagnostics and the emitting role without exposing rejected line contents.
+
+      - alert: TaxiMobileLogDeliveryFailures
+        expr: >-
+          sum(increase(loki_write_dropped_entries_total{component_id="loki.write.taximobile"}[5m])) > 0
+          or
+          sum(increase(loki_write_batch_retries_total{component_id="loki.write.taximobile"}[5m])) > 3
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: TaxiMobile structured logs are not reaching the internal store reliably
+          description: Check Alloy, Loki, private monitoring networking, ingestion limits, and persistent storage capacity.

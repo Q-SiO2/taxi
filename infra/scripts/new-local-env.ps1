@@ -32,10 +32,14 @@ function New-LocalSecret {
 $postgresPassword = New-LocalSecret -ByteCount 32
 $jwtSecret = New-LocalSecret -ByteCount 48
 $monitoringToken = New-LocalSecret -ByteCount 32
+$driverDocumentKey = New-LocalSecret -ByteCount 32
 $contents = Get-Content -LiteralPath $templatePath -Raw
 $contents = $contents -replace '(?m)^POSTGRES_PASSWORD=.*$', "POSTGRES_PASSWORD=$postgresPassword"
 $contents = $contents -replace '(?m)^TAXIMOBILE_JWT_SECRET=.*$', "TAXIMOBILE_JWT_SECRET=$jwtSecret"
 $contents = $contents -replace '(?m)^TAXIMOBILE_MONITORING_TOKEN=.*$', "TAXIMOBILE_MONITORING_TOKEN=$monitoringToken"
+$contents = $contents -replace '(?m)^TAXIMOBILE_DRIVER_DOCUMENT_STORAGE_ROOT=.*$', 'TAXIMOBILE_DRIVER_DOCUMENT_STORAGE_ROOT=/var/lib/taximobile/driver-documents'
+$contents = $contents -replace '(?m)^TAXIMOBILE_DRIVER_DOCUMENT_ENCRYPTION_KEY=.*$', "TAXIMOBILE_DRIVER_DOCUMENT_ENCRYPTION_KEY=$driverDocumentKey"
+$contents = $contents -replace '(?m)^TAXIMOBILE_DRIVER_DOCUMENT_CLAMAV_HOST=.*$', 'TAXIMOBILE_DRIVER_DOCUMENT_CLAMAV_HOST=clamav'
 
 [System.IO.File]::WriteAllText(
     $environmentFile,

@@ -41,8 +41,15 @@ class PushRefreshHintRelay {
             "DRIVER_ASSIGNED",
             "RIDE_CANCELLED",
             "RIDE_UNMATCHED",
+            "RIDE_COORDINATION_MESSAGE",
+            "SCHEDULED_OFFER",
+            "SCHEDULED_DRIVER_COMMITTED",
+            "SCHEDULED_DISPATCH_STARTED",
+            "SCHEDULED_FALLBACK_MATCHING",
+            "SCHEDULED_UNFULFILLED",
             "DRIVER_CREDENTIAL_EXPIRING",
             "DRIVER_CREDENTIAL_EXPIRED",
+            "DRIVER_CITY_AUTHORIZATION_CHANGED",
         )
         val RESOURCE_ID = Regex(
             "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89aAbB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",

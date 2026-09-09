@@ -1,5 +1,14 @@
 # TaxiMobile — Pricing and Fare Specification
 
+## Current standing — 2026-09-02
+
+Versioned city/operator/service tariffs, flat fixed-route fares, scheduling and
+operator-fee policies, server-authoritative estimates, and immutable
+ride/payment/earning snapshots are implemented in source. No city tariff has
+been approved against current local regulation or an operator agreement, and no
+controlled field receipt/reconciliation exercise has been accepted. See
+[`gaps.md`](gaps.md).
+
 ## 1. Purpose
 
 This document defines how TaxiMobile calculates, displays, records, and settles fares for taxi rides.
@@ -201,6 +210,31 @@ fare. Outbound and inbound directions are priced explicitly even when they share
 geometry. The first fixed-route release prices the complete selected direction;
 it does not infer segment fares from optional stops. Route/fare edits create new
 versions and never alter historical bookings.
+
+Route geometry and fare review are separate permissions, but the immutable
+direction and fare must form an exact one-to-one link before either can go live.
+Both review sequences are supported without guessing identifiers:
+
+```text
+Fare first
+draft/review unbound FIXED_ROUTE fare
+→ route version binds that fare while DRAFT
+→ activate fare
+→ submit/publish route version
+
+Geometry first
+create unpriced DRAFT route direction
+→ pricing editor selects that direction ID when creating the fare
+→ submit/activate fare
+→ submit/publish route version
+```
+
+An unpriced direction may exist only as a draft. A fixed-route fare may remain
+unbound only in `DRAFT` or `IN_REVIEW`; activation requires the reciprocal
+direction link. Route submission requires a linked reviewed fare, and
+publication requires an active fare whose effective range covers the complete
+route-version range. Activating another direction's fare in the same city and
+operator does not replace the first direction's fare.
 
 ---
 
@@ -484,6 +518,12 @@ Adjustment:    -5 MAD
 Final charge:  30 MAD
 ```
 
+The launch implementation supports a post-settlement downward correction as an
+append-only payment refund with reason `FARE_CORRECTION`. It never rewrites the
+finalized fare and does not support a post-ride increase or automatic new debit.
+Before settlement, the client cannot alter the finalized amount; an exceptional
+case enters support rather than creating local adjusted pricing.
+
 ---
 
 # 21. Fare Breakdown
@@ -505,10 +545,13 @@ Total                     23 MAD
 
 The exact breakdown depends on the tariff.
 
-For the initial fixed-tariff MVP, the completed-fare and receipt APIs expose one
-immutable `BASE_FARE` component and the tariff version captured when the ride
-was confirmed. They do not invent distance, time, supplement, or adjustment
-components that were not part of the stored calculation.
+For the delivered fixed-tariff model, the completed-fare and receipt APIs expose
+an immutable `TRANSPORT_FARE` component, any nonzero scheduled surcharge, and a
+nonzero operator fee only when the passenger funds it. Driver-funded operator
+fees remain visible in the economics snapshot and driver settlement but are not
+presented as a passenger charge. The APIs do not invent distance, time,
+supplement, or adjustment components that were not part of the stored
+calculation.
 
 ---
 
@@ -1084,6 +1127,13 @@ Net charge:      30 MAD
 
 The original transaction remains intact.
 
+The implemented launch refund taxonomy and authorization are defined in
+`payments.md`. A refund is recorded only after confirmed return of funds. Partial
+and cumulative amounts are exact two-decimal money, cannot exceed the original
+completed payment, and remain operator-funded. Phase 14 city/operator economics
+does not infer driver recovery from a passenger refund; any later recovery must
+be a separately authorized, append-only driver adjustment.
+
 ---
 
 # 50. Payment Separation
@@ -1176,11 +1226,22 @@ DISPUTED
 
 # 54. Electronic Payments
 
-For electronic payments, the application should use a dedicated payment provider or backend payment system.
+The launch electronic method is external bank/M-Wallet transfer with a
+backend-issued reference and authorized manual reconciliation. This avoids a
+TaxiMobile gateway subscription/integration fee; it does not imply that the
+passenger's or operator's financial institution charges no transfer or account
+fee.
+
+Fare calculation is independent of payment method. The transfer claim cannot
+change amount, currency, tariff, scheduling surcharge, operator fee, driver net,
+or any other immutable fare component. External financial-institution charges
+are excluded from the TaxiMobile fare unless a later lawful, approved, versioned
+pricing policy explicitly represents them as a passenger-visible component.
 
 Sensitive card information should not be stored directly by TaxiMobile unless there is a compelling, legally compliant reason to do so.
 
-Prefer tokenized payment systems.
+If card processing is introduced later, prefer an approved hosted/tokenized
+provider. CMI is deferred and must not influence the current tariff model.
 
 ---
 
@@ -1193,9 +1254,9 @@ Conceptually:
 ```text
 Payment Service
       │
-      ├── Provider A
-      ├── Provider B
-      └── Cash
+      ├── Cash settlement
+      ├── Manual bank/M-Wallet reconciliation
+      └── Future hosted provider adapter
 ```
 
 This makes regional deployment easier.
@@ -1498,19 +1559,33 @@ Authoritative monetary values must use precise representations.
 
 Tariffs must be changeable without rewriting application logic.
 
-## MVP tariff administration
+## Delivered tariff and city-economics administration
 
-The initial backend supports fixed tariffs only. An administrator creates an
-inactive, versioned rule and explicitly activates it. Activation is audited and
+The backend supports fixed tariffs only. An authorized scoped operator creates a
+draft, versioned rule, submits it for review, and explicitly activates it.
+Activation is audited and
 prevents overlapping active schedules by ending an earlier active rule at the new
 rule's effective time. Retrospective activation is rejected so a new configuration
 cannot silently alter which tariff a historical fare would have selected.
 
-When a passenger confirms a ride, the backend persists the selected tariff and
-quoted fixed amount on the ride. Completion finalizes the fare from that locked
-rule, rather than selecting whichever tariff happens to be active later.
+Phase 14 adds city/operator/service/booking scope, optimistic concurrency,
+percentage-or-flat operator-fee policies, driver-deduction-or-passenger-surcharge
+funding, an explicit zero-fee compatibility policy, and the scheduling-surcharge
+foundation. Percentage calculation uses only `TRANSPORT_FARE`, applies the
+versioned half-up cent rule, and rejects a result below the configured minimum
+driver net instead of silently capping or changing the fee. All authoritative
+money uses decimal arithmetic and API decimal strings.
 
-This remains the implemented single-scope compatibility boundary. The national
-model in `operations.md` requires additive city/operator/policy migrations and
-new API/UI slices; documenting it does not make the current global tariff
-endpoint multi-city safe.
+When a passenger confirms a ride, the backend persists the selected tariff,
+operator-fee policy, optional scheduling policy, modes, and every exact financial
+component in an immutable ride snapshot. Offers reuse that snapshot; completion
+finalizes fare and driver earning from it rather than selecting whichever policy
+happens to be active later. Database reconciliation constraints cover passenger
+total, driver gross/deduction/net, operator allocation, and funding mode.
+
+The legacy administrator tariff endpoints remain a compatibility surface. New
+city economics uses the permission-gated `/api/v1/operations` contracts and the
+operations web editor. Phase 15 extends those contracts with independently
+reviewed, one-to-one complete-direction fixed-route fares and reciprocal draft
+link validation. Scheduling policy configuration here still does not make the
+scheduled-booking lifecycle available before Phase 16.

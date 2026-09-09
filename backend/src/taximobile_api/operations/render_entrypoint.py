@@ -101,6 +101,8 @@ def command_for(
     environment: MutableMapping[str, str],
     *,
     administrator_email: str | None = None,
+    market_code: str = "MA",
+    replace_existing_mfa: bool = False,
 ) -> list[str]:
     """Return the fixed executable command for a declared deployment role."""
 
@@ -115,6 +117,32 @@ def command_for(
             administrator_email,
             "--confirm-initial-admin",
         ]
+    if role == "bootstrap-operations":
+        if not administrator_email or any(character.isspace() for character in administrator_email):
+            raise RenderConfigurationError("A single administrator email is required.")
+        normalized_market = market_code.strip().upper()
+        if not re.fullmatch(r"[A-Z0-9_-]{2,16}", normalized_market):
+            raise RenderConfigurationError("A valid market code is required.")
+        return [
+            "taximobile-bootstrap-operations",
+            "--admin-email",
+            administrator_email,
+            "--market-code",
+            normalized_market,
+            "--confirm-market-scope",
+        ]
+    if role == "enroll-mfa":
+        if not administrator_email or any(character.isspace() for character in administrator_email):
+            raise RenderConfigurationError("A single operations account email is required.")
+        command = [
+            "taximobile-enroll-operations-mfa",
+            "--email",
+            administrator_email,
+            "--confirm-enrollment",
+        ]
+        if replace_existing_mfa:
+            command.append("--replace-existing")
+        return command
     if role == "worker":
         return [
             "uvicorn",
@@ -155,13 +183,33 @@ def run_free_staging_migration() -> None:
 
     Render's dedicated pre-deploy command is a paid feature. The free testing
     service therefore migrates before binding its public port. Alembic upgrades
-    are repeatable, and a failed migration prevents traffic from reaching an
-    incompatible application revision.
+    are repeatable sequentially. The Alembic advisory guard rejects overlapping
+    executors; any failure (including contention) prevents traffic from reaching
+    an incompatible application revision. The deployment owns bounded retry.
     """
 
     result = subprocess.run(["alembic", "upgrade", "head"], check=False)
     if result.returncode != 0:
         raise RenderConfigurationError("The free staging database migration failed.")
+
+
+async def bootstrap_free_staging_platform_grant(email: str) -> None:
+    """Map the free-test administrator to the existing Morocco market scope."""
+
+    from taximobile_api.core.config import Settings
+    from taximobile_api.db.session import create_session_factory
+    from taximobile_api.domains.administration.bootstrap import (
+        bootstrap_initial_platform_grant,
+    )
+
+    sessions = create_session_factory(Settings.from_environment())
+    async with sessions() as session:
+        async with session.begin():
+            await bootstrap_initial_platform_grant(
+                session,
+                admin_email=email,
+                market_code="MA",
+            )
 
 
 def bootstrap_free_staging_administrator(environment: MutableMapping[str, str]) -> bool:
@@ -195,7 +243,7 @@ def bootstrap_free_staging_administrator(environment: MutableMapping[str, str]) 
     )
 
     try:
-        return asyncio.run(run(email, password))
+        created = asyncio.run(run(email, password))
     except (
         ValidationError,
         ConfigurationError,
@@ -206,15 +254,32 @@ def bootstrap_free_staging_administrator(environment: MutableMapping[str, str]) 
         raise RenderConfigurationError(
             "The free staging administrator bootstrap failed; verify its secret settings."
         ) from error
+    try:
+        asyncio.run(bootstrap_free_staging_platform_grant(email))
+    except (ConfigurationError, SQLAlchemyError, ValueError) as error:
+        raise RenderConfigurationError(
+            "The free staging operations-grant bootstrap failed; verify migrations and market data."
+        ) from error
+    return created
 
 
 def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Start one guarded TaxiMobile Render process.")
     parser.add_argument(
         "role",
-        choices=("migrate", "api", "worker", "bootstrap-admin", "free-staging"),
+        choices=(
+            "migrate",
+            "api",
+            "worker",
+            "bootstrap-admin",
+            "bootstrap-operations",
+            "enroll-mfa",
+            "free-staging",
+        ),
     )
     parser.add_argument("--email", help="Initial administrator email for bootstrap-admin only.")
+    parser.add_argument("--market-code", default="MA")
+    parser.add_argument("--replace-existing", action="store_true")
     parsed = parser.parse_args(arguments)
 
     try:
@@ -223,7 +288,13 @@ def main(arguments: Sequence[str] | None = None) -> int:
         if parsed.role == "free-staging":
             run_free_staging_migration()
             bootstrap_free_staging_administrator(os.environ)
-        command = command_for(effective_role, os.environ, administrator_email=parsed.email)
+        command = command_for(
+            effective_role,
+            os.environ,
+            administrator_email=parsed.email,
+            market_code=parsed.market_code,
+            replace_existing_mfa=parsed.replace_existing,
+        )
     except RenderConfigurationError as error:
         print(f"TaxiMobile Render configuration refused: {error}", file=sys.stderr)
         return 2

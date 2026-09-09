@@ -7,6 +7,40 @@ This file lists the custom graphic assets that should be created for the TaxiMob
 
 The goal is to avoid relying on mismatched stock icons, random emoji, generic illustrations, inconsistent vehicle renders, or assets with incompatible perspective.
 
+IMPLEMENTATION STATUS (2026-08-20)
+----------------------------------
+The high-priority production family and the distinct medium-priority graphics in
+this brief are now implemented under `assets/`.
+
+Authoritative handoff files:
+- `assets/README.md` — usage, visual contract, fallbacks, and export workflow
+- `assets/manifest.json` — machine-readable status, source/export/runtime mapping,
+  marker anchors, and forward-axis metadata
+- `assets/asset_catalog.png` — visual contact sheet for review
+- `assets/vehicles/renders/prompts.md` — accepted generated-render prompts and
+  rejection criteria
+
+Build-ready copies live in
+`TaxiMobile/shared/src/commonMain/composeResources/drawable`. Validate source and
+runtime parity with `TaxiMobile/scripts/validate_graphic_assets.py`.
+
+AUDIT NOTE (2026-09-01)
+-----------------------
+This is source-delivery evidence only. Store-icon mask/crop review, launch-screen
+review, low/high-density physical-device rendering, dark/light surroundings,
+accessibility semantics where assets convey meaning, and final owner approval
+remain release gates. Missing optional art must continue to use the documented
+programmatic or Material fallback and must never crash or block a core flow.
+
+Deliberate decisions:
+- common controls continue to use the existing Compose/Material icon family;
+  custom files cover brand, transport, map, safety, payment, and status needs,
+- selected/offline/searching visuals remain programmatic state layers,
+- intercity reuses the large/shared vehicle until fleet policy identifies a
+  materially different body type,
+- no unofficial payment-provider mark or improvised flags are included,
+- runtime 3D, Lottie, promotional, and seasonal assets remain deferred.
+
 Brand palette:
 - White: #FFFFFF
 - Navy: #0B1F3A
@@ -356,11 +390,12 @@ J. PAYMENT ASSETS
 
 Needed:
 - cash
-- bank card
-- CMI/payment provider mark ONLY if trademark usage is permitted and official assets are used
-- add card
+- generic bank/M-Wallet transfer (first-party, no institution branding)
+- bank card and add-card assets only for a future approved hosted-card flow
+- payment provider mark ONLY after its integration is approved and only if
+  trademark usage is permitted and official assets are used
 - receipt
-- wallet if supported later
+- wallet/provider brand only if supported and officially licensed later
 
 Do not manually recreate third-party payment logos.
 Use official brand assets where licensing permits.

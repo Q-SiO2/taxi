@@ -82,6 +82,12 @@ class AuthenticationSessionCoordinator(
         return AuthenticationState.Unauthenticated
     }
 
+    /** Clear already-revoked local credentials without issuing another command. */
+    suspend fun clearLocalSession(): AuthenticationState {
+        tokenStore.clear()
+        return AuthenticationState.Unauthenticated
+    }
+
     private suspend fun refreshOrSignOut(refreshToken: String): AuthenticationState = try {
         val refreshed = gateway.refresh(refreshToken)
         tokenStore.save(refreshed.accessToken, refreshed.refreshToken)

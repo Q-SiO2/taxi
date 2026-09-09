@@ -1,0 +1,221 @@
+{
+  "schema_version": 1,
+  "catalog_revision": "2026-09-08",
+  "phases": [
+    {
+      "id": "T0",
+      "predecessor": null,
+      "environment_classes": ["SOURCE_TREE", "CLEAN_CI"],
+      "participant_modes": ["NONE"],
+      "public_users_allowed": false,
+      "live_money_allowed": false,
+      "intentional_failure_injection_allowed": false,
+      "required_authorities": ["ENGINEERING"],
+      "required_evidence": [
+        "CANDIDATE_PROVENANCE",
+        "CLEAN_CI_REPORT",
+        "SOURCE_CONTRACT_INVENTORY",
+        "MIGRATION_GRAPH_REPORT",
+        "DEPENDENCY_AND_SECRET_SCAN",
+        "ARTIFACT_SBOM_AND_SCAN"
+      ],
+      "required_gap_closures": []
+    },
+    {
+      "id": "T1",
+      "predecessor": "T0",
+      "environment_classes": ["UNIT_HARNESS", "COMPONENT_HARNESS"],
+      "participant_modes": ["GENERATED"],
+      "public_users_allowed": false,
+      "live_money_allowed": false,
+      "intentional_failure_injection_allowed": true,
+      "required_authorities": ["ENGINEERING"],
+      "required_evidence": [
+        "UNIT_AND_COMPONENT_REPORT",
+        "NEGATIVE_BRANCH_MATRIX",
+        "AUTHORITY_AND_SCOPE_REPORT",
+        "LOCALIZATION_AND_SEMANTICS_REPORT",
+        "PRIVACY_REDACTION_REPORT"
+      ],
+      "required_gap_closures": []
+    },
+    {
+      "id": "T2",
+      "predecessor": "T1",
+      "environment_classes": ["SIMULATION_HARNESS", "FAKE_PROVIDER_HARNESS"],
+      "participant_modes": ["SIMULATED"],
+      "public_users_allowed": false,
+      "live_money_allowed": false,
+      "intentional_failure_injection_allowed": true,
+      "required_authorities": ["ENGINEERING", "SECURITY"],
+      "required_evidence": [
+        "SIMULATED_PERSONA_MATRIX",
+        "CRITICAL_JOURNEY_REPORT",
+        "ADVERSARIAL_SECURITY_REPORT",
+        "STATE_AND_MONEY_RECONCILIATION",
+        "TEST_DATA_MINIMIZATION_REPORT"
+      ],
+      "required_gap_closures": []
+    },
+    {
+      "id": "T3",
+      "predecessor": "T2",
+      "environment_classes": ["FRESH_POSTGIS", "LOCAL_MULTI_PROCESS"],
+      "participant_modes": ["SYNTHETIC"],
+      "public_users_allowed": false,
+      "live_money_allowed": false,
+      "intentional_failure_injection_allowed": true,
+      "required_authorities": ["ENGINEERING"],
+      "required_evidence": [
+        "FULL_BACKEND_REPORT",
+        "FRESH_DATABASE_MIGRATION_REPORT",
+        "CONCURRENCY_AND_LOCK_REPORT",
+        "WORKER_KILL_AND_RECLAIM_REPORT",
+        "DATABASE_RECONCILIATION",
+        "LOCAL_BACKUP_RESTORE_REPORT"
+      ],
+      "required_gap_closures": []
+    },
+    {
+      "id": "T4",
+      "predecessor": "T3",
+      "environment_classes": ["DEVICE_LAB", "BROWSER_LAB"],
+      "participant_modes": ["TESTERS"],
+      "public_users_allowed": false,
+      "live_money_allowed": false,
+      "intentional_failure_injection_allowed": true,
+      "required_authorities": ["PRODUCT", "ACCESSIBILITY_DEVICE"],
+      "required_evidence": [
+        "SUPPORTED_MATRIX",
+        "ANDROID_DEVICE_REPORT",
+        "IOS_DEVICE_REPORT",
+        "BROWSER_COMPATIBILITY_REPORT",
+        "ACCESSIBILITY_AND_RTL_REPORT",
+        "DEGRADED_NETWORK_AND_LIFECYCLE_REPORT",
+        "CRASH_SYMBOLICATION_REPORT"
+      ],
+      "required_gap_closures": []
+    },
+    {
+      "id": "T5",
+      "predecessor": "T4",
+      "environment_classes": ["HOSTED_STAGING"],
+      "participant_modes": ["SYNTHETIC"],
+      "public_users_allowed": false,
+      "live_money_allowed": false,
+      "intentional_failure_injection_allowed": true,
+      "required_authorities": ["ENGINEERING", "SECURITY", "OPERATIONS"],
+      "required_evidence": [
+        "HOSTED_TOPOLOGY_AND_IAM_REVIEW",
+        "FROZEN_WORKLOAD_PROFILE",
+        "CAPACITY_AND_SOAK_REPORT",
+        "PROVIDER_FAILURE_REPORT",
+        "RESTORE_FAILOVER_ROLLBACK_REPORT",
+        "ALERT_DELIVERY_AND_ACK_REPORT",
+        "SECURITY_REVIEW_AND_RETEST",
+        "RPO_RTO_AND_COST_ACCEPTANCE"
+      ],
+      "required_gap_closures": []
+    },
+    {
+      "id": "T6",
+      "predecessor": "T5",
+      "environment_classes": ["HOSTED_STAGING"],
+      "participant_modes": ["TRAINED_STAFF"],
+      "public_users_allowed": false,
+      "live_money_allowed": false,
+      "intentional_failure_injection_allowed": true,
+      "required_authorities": ["OPERATIONS", "CITY_OPERATOR"],
+      "required_evidence": [
+        "STAFF_ROSTER_AND_MFA_REGISTER",
+        "END_TO_END_OPERATIONS_REHEARSAL",
+        "FINANCE_RECONCILIATION_DRILL",
+        "SUPPORT_AND_SAFETY_DRILL",
+        "JOINER_MOVER_LEAVER_DRILL",
+        "INCIDENT_RESPONSIBILITY_HANDOFF",
+        "CITY_PAUSE_AND_RELEASE_ROLLBACK_DRILL"
+      ],
+      "required_gap_closures": []
+    },
+    {
+      "id": "T7",
+      "predecessor": "T6",
+      "environment_classes": ["CLOSED_FIELD"],
+      "participant_modes": ["CONSENTING_STAFF_AND_LICENSED_DRIVERS"],
+      "public_users_allowed": false,
+      "live_money_allowed": false,
+      "intentional_failure_injection_allowed": false,
+      "required_authorities": ["PRODUCT", "CITY_OPERATOR", "SAFETY_LEGAL"],
+      "required_evidence": [
+        "LEGAL_INSURANCE_AND_CONSENT_APPROVAL",
+        "FIELD_ROUTE_AND_PICKUP_REPORT",
+        "GPS_NETWORK_AND_BATTERY_REPORT",
+        "MAP_ROUTING_AND_NARRATION_REPORT",
+        "FIELD_SUPPORT_PAUSE_AND_RECOVERY_REPORT",
+        "PARTICIPANT_FEEDBACK_AND_WITHDRAWAL_CLOSEOUT"
+      ],
+      "required_gap_closures": []
+    },
+    {
+      "id": "T8",
+      "predecessor": "T7",
+      "environment_classes": ["BOUNDED_PRODUCTION_CITY"],
+      "participant_modes": ["INVITED_REAL_USERS"],
+      "public_users_allowed": false,
+      "live_money_allowed": true,
+      "intentional_failure_injection_allowed": false,
+      "required_authorities": ["GO_NO_GO_BOARD"],
+      "required_evidence": [
+        "P0_GAP_CLOSURE_REGISTER",
+        "FROZEN_CITY_SCOPE_AND_THRESHOLDS",
+        "REAL_USER_COHORT_APPROVAL",
+        "PILOT_SERVICE_AND_SAFETY_REPORT",
+        "PILOT_MONEY_RECONCILIATION",
+        "PILOT_SUPPORT_AND_INCIDENT_REVIEW",
+        "PILOT_STOP_GO_DECISION"
+      ],
+      "required_gap_closures": [
+        "GAP-001", "GAP-002", "GAP-003", "GAP-004", "GAP-005",
+        "GAP-006", "GAP-007", "GAP-008", "GAP-009", "GAP-010",
+        "GAP-011", "GAP-012", "GAP-013", "GAP-014", "GAP-015",
+        "GAP-016", "GAP-017", "GAP-018", "GAP-019"
+      ]
+    },
+    {
+      "id": "T9",
+      "predecessor": "T8",
+      "environment_classes": ["GUARDED_PUBLIC_CITY"],
+      "participant_modes": ["PUBLIC_USERS"],
+      "public_users_allowed": true,
+      "live_money_allowed": true,
+      "intentional_failure_injection_allowed": false,
+      "required_authorities": ["GO_NO_GO_BOARD", "CITY_OPERATOR"],
+      "required_evidence": [
+        "T8_CLOSEOUT_AND_PUBLIC_AUTHORIZATION",
+        "EXPOSURE_STEP_PLAN",
+        "DAILY_SERVICE_AND_STOP_THRESHOLD_REPORTS",
+        "CAPACITY_STAFFING_PROVIDER_AND_COST_REVIEW",
+        "PUBLIC_CITY_STABILIZATION_DECISION"
+      ],
+      "required_gap_closures": []
+    },
+    {
+      "id": "T10",
+      "predecessor": "T9",
+      "environment_classes": ["MULTI_CITY_PRODUCTION"],
+      "participant_modes": ["MULTI_CITY_PUBLIC_USERS"],
+      "public_users_allowed": true,
+      "live_money_allowed": true,
+      "intentional_failure_injection_allowed": false,
+      "required_authorities": ["NATIONAL_OWNER", "CITY_OPERATOR"],
+      "required_evidence": [
+        "SECOND_CITY_APPROVAL_AND_CLOSEOUT",
+        "MULTI_CITY_SCOPE_ISOLATION_REPORT",
+        "SIMULTANEOUS_CITY_LOAD_AND_INCIDENT_REPORT",
+        "NATIONAL_OPERATIONS_REPEATABILITY_REPORT",
+        "NATIONAL_CAPACITY_COST_AND_EXPANSION_DECISION"
+      ],
+      "required_gap_closures": []
+    }
+  ]
+}

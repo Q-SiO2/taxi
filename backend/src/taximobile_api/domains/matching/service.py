@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
+from collections.abc import Collection
+from uuid import UUID
 
-from sqlalchemy import exists, func, select
+from sqlalchemy import exists, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from taximobile_api.core.config import Settings
+from taximobile_api.domains.auth.authority import active_user_exists, user_account_is_active
 from taximobile_api.domains.drivers.models import (
     AvailabilityStatus,
     DriverAccountStatus,
@@ -19,6 +22,12 @@ from taximobile_api.domains.drivers.models import (
     VerificationStatus,
 )
 from taximobile_api.domains.drivers.service import invalid_driver_credentials
+from taximobile_api.domains.driver_applications.models import (
+    CityAuthorizationStatus,
+    DriverCityAuthorization,
+    DriverCityAuthorizationService,
+)
+from taximobile_api.domains.markets.models import ServiceType
 from taximobile_api.domains.matching.scoring import CandidateSignals, MatchingPolicy, rank_candidates
 from taximobile_api.domains.notifications.service import notify
 from taximobile_api.domains.outbox.service import enqueue
@@ -29,6 +38,10 @@ from taximobile_api.domains.rides.models import (
     RideOffer,
     RideOfferStatus,
     RideStatus,
+)
+from taximobile_api.domains.scheduled_bookings.protection import (
+    driver_has_protected_commitment,
+    protected_commitment_exists,
 )
 
 
@@ -52,21 +65,20 @@ def matching_policy(settings: Settings) -> MatchingPolicy:
     )
 
 
-async def dispatch_ride(database_session: AsyncSession, ride_id, settings: Settings) -> RideOffer | None:
+async def dispatch_ride(
+    database_session: AsyncSession, ride_id, settings: Settings,
+    *, excluded_driver_ids: Collection[UUID] = (),
+) -> RideOffer | None:
     """Offer a locked matching ride to its highest-ranked untried candidate.
 
     One active offer is used in the MVP. Declined and expired drivers are
     excluded for this ride, so each subsequent invocation advances through the
     bounded candidate set instead of repeatedly selecting the same driver.
     """
+    ride = await database_session.scalar(select(Ride).where(Ride.id == ride_id)
+        .with_for_update().execution_options(populate_existing=True))
     now = datetime.now(UTC)
-    ride = await database_session.scalar(select(Ride).where(Ride.id == ride_id).with_for_update())
-    if ride is None or ride.status in {
-        RideStatus.CANCELLED,
-        RideStatus.COMPLETED,
-        RideStatus.UNMATCHED,
-        RideStatus.ACCEPTED,
-    }:
+    if ride is None or ride.status not in {RideStatus.REQUESTED, RideStatus.MATCHING}:
         return None
     if ride.status == RideStatus.REQUESTED:
         ride.status = RideStatus.MATCHING
@@ -111,6 +123,7 @@ async def dispatch_ride(database_session: AsyncSession, ride_id, settings: Setti
         select(func.count(Ride.id))
         .where(
             Ride.driver_id == DriverProfile.id,
+            Ride.city_id == ride.city_id,
             Ride.accepted_at >= now - timedelta(hours=settings.matching_fairness_lookback_hours),
         )
         .correlate(DriverProfile)
@@ -129,31 +142,59 @@ async def dispatch_ride(database_session: AsyncSession, ride_id, settings: Setti
             RideOffer.driver_id == DriverProfile.id,
         )
     )
-    candidate_rows = (
-        await database_session.execute(
+    has_protected_commitment = protected_commitment_exists(DriverProfile.id, now)
+    candidate_query = (
             select(DriverProfile, distance_meters, recent_assignments)
             .join(Vehicle, Vehicle.id == DriverProfile.active_vehicle_id)
             .join(DriverLocation, DriverLocation.id == latest_location_id)
+            .join(
+                DriverCityAuthorization,
+                DriverCityAuthorization.driver_id == DriverProfile.id,
+            )
+            .join(
+                DriverCityAuthorizationService,
+                DriverCityAuthorizationService.authorization_id
+                == DriverCityAuthorization.id,
+            )
             .where(
                 DriverProfile.account_status == DriverAccountStatus.ACTIVE,
+                active_user_exists(DriverProfile.user_id),
+                DriverProfile.id.not_in(excluded_driver_ids),
                 DriverProfile.verification_status == VerificationStatus.APPROVED,
                 DriverProfile.availability_status == AvailabilityStatus.AVAILABLE,
+                DriverProfile.online_city_id == ride.city_id,
+                DriverProfile.online_service_type == ride.service_type,
+                DriverCityAuthorization.city_id == ride.city_id,
+                DriverCityAuthorization.status == CityAuthorizationStatus.ACTIVE,
+                DriverCityAuthorization.valid_from <= now,
+                or_(
+                    DriverCityAuthorization.valid_until.is_(None),
+                    DriverCityAuthorization.valid_until > now,
+                ),
+                or_(
+                    DriverCityAuthorization.vehicle_id.is_(None),
+                    DriverCityAuthorization.vehicle_id == DriverProfile.active_vehicle_id,
+                ),
+                DriverCityAuthorizationService.service_type == ride.service_type,
                 Vehicle.status == VehicleStatus.ACTIVE,
                 Vehicle.verification_status == VehicleVerificationStatus.VERIFIED,
                 ~invalid_driver_credentials(DriverProfile.id, now),
                 DriverLocation.observed_at >= now
                 - timedelta(seconds=settings.matching_location_freshness_seconds),
+                DriverLocation.observed_at <= now + timedelta(seconds=60),
                 func.ST_DWithin(DriverLocation.point, ride.pickup_point, settings.matching_radius_meters),
                 ~has_active_ride,
+                ~has_protected_commitment,
                 ~already_considered,
             )
             # Bound the scoring set geographically before applying the policy.
             .order_by(distance_meters, DriverProfile.id)
             .limit(settings.matching_candidate_limit)
-            .with_for_update(of=DriverProfile, skip_locked=True)
-        )
-    ).all()
-    profiles = {profile.id: profile for profile, _, _ in candidate_rows}
+            .execution_options(populate_existing=True)
+    )
+    # Discovery must not reserve every eligible taxi. A concurrent request may
+    # otherwise mistake SKIP LOCKED's empty result for actual supply exhaustion.
+    candidate_rows = (await database_session.execute(candidate_query)).all()
     ranked = rank_candidates(
         [
             CandidateSignals(
@@ -171,8 +212,53 @@ async def dispatch_ride(database_session: AsyncSession, ride_id, settings: Setti
         await mark_ride_unmatched(database_session, ride)
         return None
 
-    selected = ranked[0]
-    candidate = profiles[selected.driver_id]
+    candidate = selected = None
+    for choice in ranked:
+        # Refresh the complete eligibility predicate under a lock on only this
+        # candidate. Another ride may have taken it since discovery; skip it and
+        # try the next ranked candidate without blocking or sharing an offer.
+        locked = (await database_session.execute(
+            candidate_query.where(DriverProfile.id == choice.driver_id)
+            .with_for_update(of=DriverProfile, skip_locked=True)
+        )).one_or_none()
+        if locked is None:
+            continue
+        proposed, distance, assignment_count = locked
+        # Authentication happened in a separate transaction. Hold shared global
+        # account authority through this assignment so a concurrent suspension
+        # either wins first and excludes the driver or waits for this commit.
+        if not await user_account_is_active(
+            database_session,
+            proposed.user_id,
+            serialize_with_status_change=True,
+        ):
+            continue
+        # The joined lock query can have started before a restriction committed.
+        # Take a fresh READ COMMITTED statement snapshot after acquiring driver
+        # and global account authority; those locks serialize supported writers.
+        # A rejected proposal must never become the selected candidate.
+        refreshed = (await database_session.execute(
+            candidate_query.where(DriverProfile.id == proposed.id)
+        )).one_or_none()
+        if refreshed is None:
+            continue
+        proposed, distance, assignment_count = refreshed
+        if await driver_has_protected_commitment(database_session, proposed.id, at=now):
+            continue
+        candidate = proposed
+        selected = rank_candidates([
+            CandidateSignals(
+                driver_id=candidate.id, distance_meters=float(distance),
+                available_since=candidate.available_since,
+                recent_assignment_count=int(assignment_count),
+            ),
+        ], now=now, policy=matching_policy(settings))[0]
+        break
+    if candidate is None:
+        # Eligible discovery is not proof of absence when every contender was
+        # locked/changed. Leave MATCHING for the bounded worker retry/deadline.
+        return None
+    assert selected is not None
     candidate.availability_status = AvailabilityStatus.OFFERED_RIDE
     offer = RideOffer(
         ride_id=ride.id,

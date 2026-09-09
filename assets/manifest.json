@@ -1,0 +1,376 @@
+{
+  "schema_version": 1,
+  "brief": "docs/graphic_assets.txt",
+  "runtime_root": "TaxiMobile/shared/src/commonMain/composeResources/drawable",
+  "palette": [
+    "#FFFFFF",
+    "#0B1F3A",
+    "#163A63",
+    "#D6A800",
+    "#F3D76A",
+    "#071426",
+    "#F7F9FC",
+    "#E6ECF3",
+    "#E2E9F1",
+    "#DCE5EF",
+    "#CBD6E3",
+    "#9AAABE"
+  ],
+  "marker_contract": {
+    "forward_axis": "up_at_zero_degrees",
+    "vehicle_anchor": [0.5, 0.5],
+    "pin_anchor": [0.5, 1.0],
+    "vehicle_target_dp": "32-48",
+    "selection": "programmatic_halo_or_status_ring"
+  },
+  "assets": [
+    {
+      "id": "A01",
+      "name": "Primary logo mark",
+      "priority": "high",
+      "status": "ready",
+      "sources": [
+        "assets/brand/logo/brand_logo_mark.svg",
+        "assets/brand/logo/brand_logo_mark_light.svg"
+      ],
+      "exports": [
+        "assets/brand/logo/exports/brand_logo_mark_512.png",
+        "assets/brand/logo/exports/brand_logo_mark_1024.png"
+      ],
+      "runtime": "mirrored_by_basename",
+      "fallback": "TaxiBrandArtwork keeps a code-drawn fallback path."
+    },
+    {
+      "id": "A02",
+      "name": "Horizontal wordmark",
+      "priority": "high",
+      "status": "ready",
+      "sources": [
+        "assets/brand/logo/brand_wordmark_dark.svg",
+        "assets/brand/logo/brand_wordmark_light.svg"
+      ],
+      "runtime": "mirrored_by_basename"
+    },
+    {
+      "id": "A03",
+      "name": "Adaptive app icon source set",
+      "priority": "high",
+      "status": "ready",
+      "sources": [
+        "assets/brand/app-icon/app_icon_foreground.svg",
+        "assets/brand/app-icon/app_icon_background.svg",
+        "assets/brand/app-icon/app_icon_monochrome.svg"
+      ],
+      "runtime": "mirrored_by_basename",
+      "note": "Existing role-specific Android and iOS launcher exports remain authoritative and were not overwritten."
+    },
+    {
+      "id": "A04",
+      "name": "Splash logo",
+      "priority": "high",
+      "status": "ready",
+      "sources": ["assets/brand/logo/brand_splash_logo.svg"],
+      "runtime": "mirrored_by_basename"
+    },
+    {
+      "id": "B01",
+      "name": "Landing transport illustration",
+      "priority": "high",
+      "status": "ready",
+      "sources": ["assets/illustrations/onboarding/illustration_landing.svg"],
+      "runtime": "mirrored_by_basename",
+      "fallback": "Existing Compose Canvas artwork."
+    },
+    {
+      "id": "B02",
+      "name": "Location permission illustration",
+      "priority": "high",
+      "status": "ready",
+      "sources": ["assets/illustrations/permissions/illustration_location_permission.svg"],
+      "runtime": "mirrored_by_basename"
+    },
+    {
+      "id": "B03",
+      "name": "Notification permission illustration",
+      "priority": "medium",
+      "status": "ready",
+      "sources": ["assets/illustrations/permissions/illustration_notification_permission.svg"],
+      "runtime": "mirrored_by_basename"
+    },
+    {
+      "id": "B04",
+      "name": "Empty trips illustration",
+      "priority": "high",
+      "status": "ready",
+      "sources": ["assets/illustrations/empty-states/illustration_empty_trips.svg"],
+      "runtime": "mirrored_by_basename"
+    },
+    {
+      "id": "B05",
+      "name": "Empty saved places illustration",
+      "priority": "medium",
+      "status": "ready",
+      "sources": ["assets/illustrations/empty-states/illustration_empty_saved_places.svg"],
+      "runtime": "mirrored_by_basename"
+    },
+    {
+      "id": "B06",
+      "name": "Driver onboarding illustration",
+      "priority": "high",
+      "status": "ready",
+      "sources": ["assets/illustrations/onboarding/illustration_driver_onboarding.svg"],
+      "runtime": "mirrored_by_basename"
+    },
+    {
+      "id": "B07",
+      "name": "Driver verification illustration",
+      "priority": "medium",
+      "status": "ready",
+      "sources": ["assets/illustrations/onboarding/illustration_driver_verification.svg"],
+      "runtime": "mirrored_by_basename"
+    },
+    {
+      "id": "C01-C07",
+      "name": "Map pin family",
+      "priority": "high",
+      "status": "ready",
+      "sources": [
+        "assets/map/pins/map_marker_user.svg",
+        "assets/map/pins/map_pin_pickup.svg",
+        "assets/map/pins/map_pin_destination.svg",
+        "assets/map/pins/map_pin_home.svg",
+        "assets/map/pins/map_pin_work.svg",
+        "assets/map/pins/map_marker_search_result.svg",
+        "assets/map/pins/map_marker_selected_halo.svg"
+      ],
+      "runtime": "mirrored_by_basename",
+      "fallback": "MapLibre keeps its existing programmatic circles and selection halo if image registration fails."
+    },
+    {
+      "id": "D01-D02",
+      "name": "Top-down vehicle marker family",
+      "priority": "high",
+      "status": "ready",
+      "sources": [
+        "assets/vehicles/markers/vehicle_marker_standard.svg",
+        "assets/vehicles/markers/vehicle_marker_large.svg"
+      ],
+      "exports": [
+        "assets/vehicles/markers/exports/vehicle_marker_standard_128.png",
+        "assets/vehicles/markers/exports/vehicle_marker_standard_256.png",
+        "assets/vehicles/markers/exports/vehicle_marker_standard_512.png",
+        "assets/vehicles/markers/exports/vehicle_marker_large_128.png",
+        "assets/vehicles/markers/exports/vehicle_marker_large_256.png",
+        "assets/vehicles/markers/exports/vehicle_marker_large_512.png"
+      ],
+      "runtime": "mirrored_by_basename",
+      "metadata": {
+        "forward_axis": "up_at_zero_degrees",
+        "anchor": [0.5, 0.5],
+        "rotation_policy": "rotate_around_center_using_backend_or_navigation_bearing"
+      }
+    },
+    {
+      "id": "D03",
+      "name": "Intercity vehicle map marker",
+      "priority": "conditional",
+      "status": "shared",
+      "uses": "D02",
+      "note": "Use the large geometry with a service badge outside the marker until fleet policy proves a distinct vehicle silhouette."
+    },
+    {
+      "id": "D04-D06",
+      "name": "Selected and offline marker states",
+      "priority": "high",
+      "status": "programmatic",
+      "uses": "C07",
+      "note": "Selection halo, status ring, and opacity are state, not duplicate vehicle artwork."
+    },
+    {
+      "id": "E01-E02",
+      "name": "Service selection vehicle renders",
+      "priority": "high",
+      "status": "ready",
+      "sources": [
+        "assets/vehicles/renders/source/vehicle_render_standard_generated_master.png",
+        "assets/vehicles/renders/source/vehicle_render_large_generated_master.png"
+      ],
+      "exports": [
+        "assets/vehicles/renders/exports/vehicle_render_standard_1024.png",
+        "assets/vehicles/renders/exports/vehicle_render_standard_512.png",
+        "assets/vehicles/renders/exports/vehicle_render_standard_256.png",
+        "assets/vehicles/renders/exports/vehicle_render_large_1024.png",
+        "assets/vehicles/renders/exports/vehicle_render_large_512.png",
+        "assets/vehicles/renders/exports/vehicle_render_large_256.png"
+      ],
+      "runtime_files": [
+        {
+          "source": "assets/vehicles/renders/exports/vehicle_render_standard_512.png",
+          "destination": "TaxiMobile/shared/src/commonMain/composeResources/drawable/vehicle_render_standard_512.png"
+        },
+        {
+          "source": "assets/vehicles/renders/exports/vehicle_render_large_512.png",
+          "destination": "TaxiMobile/shared/src/commonMain/composeResources/drawable/vehicle_render_large_512.png"
+        }
+      ],
+      "generation_record": "assets/vehicles/renders/prompts.md",
+      "fallback": "E04 vector silhouette family."
+    },
+    {
+      "id": "E03",
+      "name": "Intercity service render",
+      "priority": "conditional",
+      "status": "shared",
+      "uses": "E02",
+      "note": "Do not invent a third body until the intercity fleet is materially distinct."
+    },
+    {
+      "id": "E04",
+      "name": "Vehicle silhouette fallbacks",
+      "priority": "high",
+      "status": "ready",
+      "sources": [
+        "assets/vehicles/renders/vehicle_silhouette_standard.svg",
+        "assets/vehicles/renders/vehicle_silhouette_large.svg"
+      ],
+      "runtime": "mirrored_by_basename"
+    },
+    {
+      "id": "F01-F03",
+      "name": "Decorative route family",
+      "priority": "medium",
+      "status": "ready",
+      "sources": [
+        "assets/map/route/route_mini.svg",
+        "assets/map/route/route_decorative_curve.svg",
+        "assets/map/route/route_progress_motif.svg"
+      ],
+      "runtime": "mirrored_by_basename",
+      "note": "Never substitute these decorative routes for actual Valhalla or GraphHopper geometry."
+    },
+    {
+      "id": "G-H-K-L-M-N",
+      "name": "Common application iconography",
+      "priority": "high",
+      "status": "provided_by_compose",
+      "note": "Use the existing Compose/Material family for common actions, authentication, location, profile, document, driver, and earnings symbols. Custom artwork is limited to distinct brand states."
+    },
+    {
+      "id": "I01",
+      "name": "Searching animation",
+      "priority": "medium",
+      "status": "programmatic",
+      "note": "Compose pulsing rings respect reduced-motion settings and avoid a Lottie runtime dependency."
+    },
+    {
+      "id": "I02-I04",
+      "name": "Driver status motifs",
+      "priority": "medium",
+      "status": "ready",
+      "sources": [
+        "assets/icons/ride/icon_driver_matched.svg",
+        "assets/icons/ride/icon_driver_arriving.svg",
+        "assets/icons/ride/icon_driver_arrived.svg"
+      ],
+      "runtime": "mirrored_by_basename"
+    },
+    {
+      "id": "I05-I07",
+      "name": "Completion and payment state illustrations",
+      "priority": "medium",
+      "status": "ready",
+      "sources": [
+        "assets/illustrations/status/illustration_trip_completed.svg",
+        "assets/illustrations/status/illustration_payment_success.svg",
+        "assets/illustrations/status/illustration_payment_failure.svg"
+      ],
+      "runtime": "mirrored_by_basename"
+    },
+    {
+      "id": "J01",
+      "name": "First-party payment icons",
+      "priority": "medium",
+      "status": "ready",
+      "sources": [
+        "assets/icons/payments/icon_payment_cash.svg",
+        "assets/icons/payments/icon_payment_bank_card.svg",
+        "assets/icons/payments/icon_payment_receipt.svg"
+      ],
+      "runtime": "mirrored_by_basename"
+    },
+    {
+      "id": "J02",
+      "name": "Future payment-provider mark",
+      "priority": "conditional",
+      "status": "deferred_with_provider_integration",
+      "required_for_build": false,
+      "fallback": "Show a first-party generic bank/M-Wallet transfer label for the implemented flow and always retain cash.",
+      "note": "CMI and card providers are deferred. No unofficial third-party logo is stored or recreated."
+    },
+    {
+      "id": "L01",
+      "name": "Driver document-category illustration",
+      "priority": "medium",
+      "status": "ready",
+      "sources": ["assets/illustrations/documents/illustration_driver_documents.svg"],
+      "runtime": "mirrored_by_basename"
+    },
+    {
+      "id": "N01",
+      "name": "Empty earnings illustration",
+      "priority": "medium",
+      "status": "ready",
+      "sources": ["assets/illustrations/empty-states/illustration_empty_earnings.svg"],
+      "runtime": "mirrored_by_basename"
+    },
+    {
+      "id": "O01",
+      "name": "Safety icon family",
+      "priority": "medium",
+      "status": "ready",
+      "sources": [
+        "assets/icons/safety/icon_safety_shield.svg",
+        "assets/icons/safety/icon_emergency_call.svg",
+        "assets/icons/safety/icon_share_trip.svg",
+        "assets/icons/safety/icon_report_issue.svg",
+        "assets/icons/safety/icon_support.svg",
+        "assets/icons/safety/icon_lost_item.svg"
+      ],
+      "runtime": "mirrored_by_basename"
+    },
+    {
+      "id": "P01",
+      "name": "Passenger and driver bottom navigation family",
+      "priority": "high",
+      "status": "ready",
+      "sources": [
+        "assets/icons/navigation/icon_nav_home.svg",
+        "assets/icons/navigation/icon_nav_trips.svg",
+        "assets/icons/navigation/icon_nav_saved.svg",
+        "assets/icons/navigation/icon_nav_account.svg",
+        "assets/icons/navigation/icon_nav_earnings.svg",
+        "assets/icons/navigation/icon_nav_online.svg"
+      ],
+      "runtime": "mirrored_by_basename",
+      "metadata": {
+        "grid": "24x24",
+        "stroke_width": 1.75,
+        "selected_color_policy": "UI tint uses mustard; do not duplicate files."
+      }
+    },
+    {
+      "id": "Q01",
+      "name": "Country selector",
+      "priority": "medium",
+      "status": "provided_by_ui",
+      "note": "Use ISO country code plus dialing code. No improvised or unlicensed flag files."
+    },
+    {
+      "id": "S01",
+      "name": "Runtime 3D models",
+      "priority": "low",
+      "status": "deferred",
+      "note": "Pre-rendered markers and service images are cheaper and predictable; add GLB sources only after measured UX benefit."
+    }
+  ]
+}

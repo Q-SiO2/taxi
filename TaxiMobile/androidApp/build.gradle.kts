@@ -70,7 +70,7 @@ abstract class ValidateTaxiMobileReleaseConfiguration : DefaultTask() {
         if (versionCodeValue.get().toIntOrNull()?.let { it > 0 } != true) {
             throw GradleException("Release builds require a positive integer taximobileVersionCode.")
         }
-        if (!Regex("[0-9]+(\\.[0-9]+){1,3}([+-][A-Za-z0-9.-]+)?").matches(versionNameValue.get())) {
+        if (!Regex("(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(\\.(0|[1-9][0-9]*))?").matches(versionNameValue.get())) {
             throw GradleException("Release builds require a versioned taximobileVersionName such as 1.0.0.")
         }
         if (!firebaseConfigurationPresent.get() && !allowMissingFirebaseVerification.get()) {
@@ -220,7 +220,8 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = releaseVersionCode.orElse("1").get().toInt()
-        versionName = releaseVersionName.orElse("1.0-development").get()
+        versionName = releaseVersionName.orElse("1.0.0").get()
+        buildConfigField("String", "CLIENT_VERSION", "\"1.0.0\"")
     }
     flavorDimensions += "role"
     productFlavors {
@@ -259,6 +260,11 @@ android {
             )
             isMinifyEnabled = true
             isShrinkResources = true
+            buildConfigField(
+                "String",
+                "CLIENT_VERSION",
+                releaseVersionName.orInvalid("0.0.0").get().buildConfigString(),
+            )
             buildConfigField(
                 "String",
                 "API_BASE_URL",

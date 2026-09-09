@@ -66,6 +66,19 @@ $routingInternalUrl = $null
 $routingLoopbackUrl = $null
 $routingHost = $null
 
+$documentSettings = @(
+    $environment["TAXIMOBILE_DRIVER_DOCUMENT_STORAGE_ROOT"],
+    $environment["TAXIMOBILE_DRIVER_DOCUMENT_ENCRYPTION_KEY"],
+    $environment["TAXIMOBILE_DRIVER_DOCUMENT_CLAMAV_HOST"]
+)
+$configuredDocumentSettings = @($documentSettings | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+if ($configuredDocumentSettings.Count -ne 0 -and $configuredDocumentSettings.Count -ne $documentSettings.Count) {
+    throw "Driver-document root, encryption key, and ClamAV host must be configured together or all left empty."
+}
+if ($configuredDocumentSettings.Count -eq $documentSettings.Count) {
+    $composeArguments += @("--profile", "driver-documents")
+}
+
 switch ($RoutingProvider) {
     "valhalla" {
         $tileUrl = Get-RequiredLocalValue -Values $environment -Name "VALHALLA_TILE_URL"

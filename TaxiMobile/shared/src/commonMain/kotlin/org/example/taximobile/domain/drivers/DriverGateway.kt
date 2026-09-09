@@ -18,7 +18,12 @@ data class DriverApplication(
     val accountStatus: String,
 )
 
-data class DriverAvailability(val status: DriverAvailabilityStatus, val activeVehicleId: String?)
+data class DriverAvailability(
+    val status: DriverAvailabilityStatus,
+    val activeVehicleId: String?,
+    val cityId: String? = null,
+    val serviceType: String? = null,
+)
 
 data class DriverVehicle(
     val id: String,
@@ -44,6 +49,8 @@ data class VehicleRegistration(
     val year: Int,
     val color: String,
     val registrationNumber: String,
+    val taxiIdentifier: String? = null,
+    val passengerCapacity: Int? = null,
 )
 
 /** Commands return the server-confirmed availability, never an optimistic local state. */
@@ -53,7 +60,10 @@ interface DriverGateway {
     suspend fun verificationStatus(): String
     suspend fun submitVerification(): String
     suspend fun currentAvailability(): DriverAvailability
-    suspend fun goOnline(): DriverAvailability
+    suspend fun goOnline(
+        cityId: String? = null,
+        serviceType: String = "ON_DEMAND",
+    ): DriverAvailability
     suspend fun goOffline(): DriverAvailability
     suspend fun credentials(): List<DriverCredential>
     suspend fun vehicles(): List<DriverVehicle>

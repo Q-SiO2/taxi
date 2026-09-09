@@ -52,4 +52,34 @@ class PushRefreshHintRelayTest {
             relay.hints.first(),
         )
     }
+
+    @Test
+    fun `city authorization hint prompts authoritative refresh without carrying decision state`() = runBlocking {
+        val relay = PushRefreshHintRelay()
+        val authorizationId = "9f4f11f6-b67f-4a2d-9ae8-0d32d7e506a4"
+
+        assertTrue(relay.submit("DRIVER_CITY_AUTHORIZATION_CHANGED", authorizationId))
+        assertEquals(
+            PushRefreshHint("DRIVER_CITY_AUTHORIZATION_CHANGED", authorizationId),
+            relay.hints.first(),
+        )
+    }
+
+    @Test
+    fun `scheduled event hints are allowlisted only as authoritative refresh triggers`() = runBlocking {
+        val relay = PushRefreshHintRelay()
+        val bookingId = "9f4f11f6-b67f-4a2d-9ae8-0d32d7e506a4"
+        val eventTypes = listOf(
+            "SCHEDULED_OFFER",
+            "SCHEDULED_DRIVER_COMMITTED",
+            "SCHEDULED_DISPATCH_STARTED",
+            "SCHEDULED_FALLBACK_MATCHING",
+            "SCHEDULED_UNFULFILLED",
+        )
+
+        eventTypes.forEach { eventType ->
+            assertTrue(relay.submit(eventType, bookingId))
+            assertEquals(PushRefreshHint(eventType, bookingId), relay.hints.first())
+        }
+    }
 }

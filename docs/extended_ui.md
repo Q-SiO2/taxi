@@ -1,4 +1,3 @@
-# extended_ui.md
 # TaxiMobile — Extended UI/UX Specification
 
 ## 0. Purpose
@@ -11,7 +10,7 @@ The product is a Kotlin Compose Multiplatform taxi-service application with:
 - city taxi services,
 - larger/shared or intercity taxi services,
 - map-based pickup and route selection,
-- real-time driver discovery and ride tracking,
+- service discovery and backend-authorized post-assignment driver tracking,
 - payment handling,
 - ride history and account management.
 
@@ -26,12 +25,28 @@ mustard, navy, and white visual system supersedes the earlier blue-accent values
 in `ui.md`; the two documents must be kept synchronized. It does not override
 backend authority, domain state machines, security, privacy, or roadmap gates.
 
-A screen may expose only capabilities supported by the documented API. CMI card
-entry, OTP verification, saved places, geocoding, continuous tracking, document
-image upload, messaging, emergency integration, and service-category selection
-remain unavailable until their corresponding product and backend contracts are
-approved. Their reusable controls may exist without being connected to fake
-actions or invented success states.
+A screen may expose only capabilities supported by the documented API. CMI and
+other hosted-card entry, OTP verification, saved places, continuous
+tracking, general-purpose image upload, messaging, emergency integration, and
+service-category selection remain unavailable until their corresponding product
+and backend contracts are approved. The exception is the implemented protected
+driver city-application PDF/JPEG/PNG workflow described in D02; it remains hidden
+when storage/scanning is unconfigured. Reusable controls may exist without being
+connected to fake actions or invented success states.
+
+Provider-neutral address/landmark search and explicit reverse geocoding are now
+implemented behind authenticated backend routes. They remain behind a collapsed
+“Find a place” launcher until used, debounce text by 450 ms, offer an explicit
+retry, distinguish result types, show attribution and pickup-area eligibility,
+and preserve exact coordinates. Provider failure always retains map and
+manual-coordinate selection. Production provider/license/coverage acceptance
+and saved Home/Work persistence remain open gates.
+
+**Current standing (2026-09-03):** the passenger, driver, applicant, and national
+operations surfaces described here are broadly implemented in source. Any item
+marked “delivered” means source-delivered only. Browser/device accessibility,
+usability, protected-document, production-provider, and real-workflow acceptance
+remain open and are enumerated in [`gaps.md`](gaps.md).
 
 ## 0.2 Required asset fail-safes
 
@@ -77,8 +92,11 @@ Examples:
 - Phone numbers use a phone-number component.
 - Email uses an email component.
 - OTP uses a segmented code-entry component.
-- CMI card payments use the provider-hosted entry surface; TaxiMobile forms do
-  not render card-number or CVV inputs.
+- Manual bank/M-Wallet transfer uses backend-issued, read-only recipient and
+  payment-reference fields plus one optional constrained payer reference. It
+  never requests credentials, OTPs, or statement screenshots.
+- Any future card payment uses the approved provider-hosted entry surface;
+  TaxiMobile forms do not render card-number or CVV inputs.
 - Search locations use a location-search component.
 - Driver document numbers use constrained field formats.
 - Dates use date pickers.
@@ -750,6 +768,20 @@ If code:
 If password:
 - use password field and recovery flow.
 
+The implemented password recovery path is provider-independent and requires a
+previously saved offline code. The signed-out passenger and driver shells expose
+email/phone identifier, full recovery code, and new password fields in EN/FR/AR.
+Submit is shape-gated, secret fields are cleared after the generic accepted
+response, and the message never confirms account existence or code validity.
+The recovery path must not be presented as email/phone verification. Passenger
+and driver account panels now expose password-reauthenticated code creation,
+one-time code display, session list/confirmed revocation, and password change.
+One-time code display now requires a saved-all-codes checkbox before **Clear
+codes from this screen** removes the secret bundle from render state. No
+automatic clipboard copy is offered. A reviewed physical-device secure-save,
+background/process-death, accessibility, screenshot and secret-lifecycle test
+remains required before deployment acceptance.
+
 ---
 
 ## P06 — Basic Profile Setup
@@ -1025,21 +1057,61 @@ If final fare is metered rather than fixed:
 ## P16 — Payment Method
 
 Methods may include:
-- Cash
-- CMI-supported card/payment flow
-- saved card if supported later
+- Cash, always when rides are bookable
+- Bank/M-Wallet transfer, only when advertised by the fare estimate
+- Provider-hosted card or saved card only in a later approved release
 
 Each method:
 - icon
 - label
-- short status
+- short, honest status or timing
 - selected indicator
+- full-row tap target and radio semantics
 
-CMI card entry:
-- opens the configured CMI-hosted HTTPS payment experience,
+The list comes from the backend's `payment_methods` estimate field. The client
+must not render `MANUAL_TRANSFER`, `CARD`, or `MOBILE_PAYMENT` from local feature
+assumptions. If a selected capability disappears before confirmation, retain the
+form, explain the server rejection, and require a new estimate/selection.
+
+Bank/M-Wallet transfer selection explains that:
+- the transfer occurs in the passenger's own external bank/wallet service after
+  ride completion,
+- TaxiMobile charges no gateway fee but an external institution may charge one,
+- submitting a reference starts review and does not mean paid,
+- cash is the fallback for a new ride when transfer is unavailable.
+
+The finalized transfer receipt shows:
+- exact fare amount and currency,
+- read-only recipient name,
+- bank account and/or M-Wallet identifier,
+- prominent backend-issued `TM-...` reference,
+- instruction to include that reference where the external service permits,
+- one optional 3–80 character payer reference constrained to ASCII letters,
+  digits, `.`, `_`, `/`, and `-`,
+- `Submit for review` only while authoritative status is `PENDING`.
+
+Submission changes presentation to `PROCESSING` with clear “awaiting operator
+verification” copy. It must not trigger paid artwork, a success receipt, or a
+driver earning animation. Only an authoritative `COMPLETED` response renders
+verified/paid. A safe latest-claim `REJECTED` status returns to pending with an
+actionable generic retry/support message; ordinary passenger UI does not expose
+internal reason text, reviewer identity, or raw statement evidence.
+
+After an authorized refund, the same receipt preserves the original fare and
+shows the authoritative refunded total, net paid amount, and localized reason for
+each confirmed refund. Full `REFUNDED` status is informational, not a failed or
+retryable transfer state. Never expose settlement references, private operator
+notes, reviewer identity, or support-case text.
+
+Never add card, bank-password, wallet-PIN, OTP, statement-login, or screenshot
+fields. If immutable transfer instructions are missing, show a bounded service
+error and support path; never substitute the deployment's current account or
+invent success.
+
+Any future hosted-card entry:
+- opens the configured provider-controlled HTTPS payment experience,
 - keeps card number, expiration, CVV, and cardholder entry outside TaxiMobile,
-- treats the provider return as pending until the backend verifies and
-  reconciles the callback,
+- treats the return as pending until the backend verifies and reconciles it,
 - offers a safe return/retry or cash path without displaying invented success.
 
 Never simulate security with fake shield graphics or unsupported claims.
@@ -1231,10 +1303,16 @@ If cash:
 - clear “Pay driver in cash” status
 - confirmation behavior only if backend requires it
 
-If electronic:
+If bank/M-Wallet transfer:
+- `PENDING`: show immutable instructions and submit-for-review action
+- `PROCESSING`: show operator review pending, not paid
+- `COMPLETED`: show verified payment
+- rejected/failed: show correction, support, or permitted alternative path
+
+If a future provider-hosted electronic method is enabled:
 - payment progress
-- success
-- failure + retry / alternative method
+- backend-verified success
+- failure + safe retry / permitted alternative method
 
 ---
 
@@ -1373,14 +1451,19 @@ Emergency/help UI must be:
 - distinct from normal support
 - explicit about what each action does
 
-Possible actions:
-- Call emergency services
-- Contact platform support
-- Share ride
-- Report driver
-- Report lost item after trip
+Implemented actions:
+- create ordinary support for an active or optional authorized ride,
+- create a separate safety report for an active, selected, or recent authorized
+  ride,
+- choose a controlled safety category,
+- review reporter-safe status and participant messages.
 
-Only include actions actually supported.
+The surface says TaxiMobile reporting is not an emergency service and directs a
+person in immediate danger to move to a safe place and contact local emergency
+services. It does not claim to place a call, dispatch help, share a trip, upload
+evidence, or open messaging because those integrations are not implemented.
+Optional safety artwork may be absent; text, warning tone, fields, and controls
+remain complete and accessible.
 
 ---
 
@@ -2176,16 +2259,46 @@ Before implementation approval, verify:
 11. scheduled offers/upcoming commitments
 
 ## Stage G — National operations web (after backend control plane)
-1. operations authentication and scope shell
-2. rollout overview
-3. city readiness/lifecycle
-4. operator assignments and staff grants
-5. driver application review
-6. pricing/scheduling/operator-fee versions
-7. fixed-route map editor and publication review
-8. scheduled exceptions
-9. aggregate reporting
-10. audit/security review
+1. operations authentication and scope shell — dedicated password/TOTP challenge,
+   recovery-code entry, session strength, and explicit recent-MFA step-up delivered
+2. rollout overview — Phase 12 delivered
+3. city readiness/lifecycle — Phase 12 city creation, service-area point editor,
+   coherent configuration assembly, staged review/activation, evidence, and
+   guarded lifecycle transition delivered
+4. operators, assignments, and staff grants — Phase 12 operator creation/status
+   and exact-scope assignment create/retire workflows delivered; staff grant
+   create/revoke requests derive selected scope, show expiry/recertification,
+   require typed confirmation, and enter a durable queue. The maker may cancel,
+   the target cannot decide, and another administrator may approve/reject with a
+   reason and version; backend authority and continuity are revalidated at commit.
+   Roster, recertification and hosted staff acceptance remain open
+5. driver application review — Phase 13 requirement editor, scoped queue,
+   decision confirmation, applicant-safe timeline, and recent-MFA protected
+   document retrieval delivered; deployment configuration remains fail-closed
+6. pricing/scheduling/operator-fee versions — Phase 14 editor expanded with the
+   complete Phase 16 scheduling policy contract
+7. payment capability/recipient versions, scoped transfer reconciliation, and
+   refund ledger — delivered with backend-authoritative lifecycle and MFA prompts
+8. fixed-route map editor and publication review — Phase 15 direction, stop,
+   geometry, fare, review, and publication workflow delivered
+9. scheduled exceptions — Phase 16 scoped read-only list/detail delivered
+10. aggregate reporting — Phase 17 rollout-intelligence destination delivered
+    with family/service filters, source/definition metadata, summary cards,
+    aggregate fact table, and visible all-measure small-cell suppression; a
+    suppressed cell is never rendered as zero
+11. audit/security review — scoped append-oriented audit view delivered; security
+    incident actions remain pending
+12. support and safety operations — city-scoped queues, protected detail,
+    triage/transition confirmations, minimal safety handoff, and durable overdue
+    alert acknowledgement delivered; market-admin legal-hold placement/release
+    and immutable erasure-evidence review are delivered without exposing erased
+    content; emergency-service limitations remain visible
+
+Items without a delivery note remain future-stage UI and must not appear as
+enabled placeholder navigation. Local/test password-only mode remains visibly
+labeled; hosted mode uses the implemented MFA and secure-cookie/CSRF protocol.
+The console never automatically retries the sensitive command that triggered a
+step-up prompt.
 
 ---
 
@@ -2208,6 +2321,18 @@ Required rules:
 - route/fare/config previews show the version and effective time,
 - city pause, rate activation, route publication, staff grant, and driver
   decision require a review summary and explicit confirmation,
+- recipient/payment-capability activation shows operator/city scope, effective
+  time, cash fallback, destination, reviewer evidence, and a deliberate
+  confirmation; no credential field exists,
+- the manual-transfer queue defaults oldest-first and shows only scoped claim ID,
+  backend payment reference, optional payer reference, exact amount/currency,
+  recipient, submission age, and status,
+- verification requires a constrained unique settlement reference plus a review
+  summary; rejection requires a bounded reason. Neither action accepts an edited
+  amount, fare, passenger-supplied success state, or uploaded statement,
+- verify/reject controls stay pending until the backend responds. Verified rows
+  become immutable and show the audit reference; rejected rows preserve history
+  and explain that the passenger may retry,
 - charts have text/table alternatives and use a restrained semantic palette,
 - city/route maps show service geometry or authorized aggregates, never
   participant trails or passenger-facing online taxis,

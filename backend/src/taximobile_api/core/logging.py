@@ -2,12 +2,16 @@
 
 import json
 import logging
-from time import perf_counter
 from datetime import UTC, datetime
+from logging.handlers import RotatingFileHandler
+from os import chmod
+from pathlib import Path
+from time import perf_counter
+from uuid import UUID, uuid4
+
 from starlette.datastructures import Headers, MutableHeaders
 from starlette.requests import Request
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
-from uuid import UUID, uuid4
 
 from taximobile_api.core.metrics import MetricsRegistry
 
@@ -42,10 +46,20 @@ class RequestAuditMiddleware:
     raw path. WebSockets bypass this HTTP-only layer.
     """
 
-    def __init__(self, app: ASGIApp, *, metrics: MetricsRegistry, logger: logging.Logger) -> None:
+    def __init__(
+        self,
+        app: ASGIApp,
+        *,
+        metrics: MetricsRegistry,
+        logger: logging.Logger,
+        api_prefix: str,
+        legacy_admin_api_enabled: bool,
+    ) -> None:
         self.app = app
         self.metrics = metrics
         self.logger = logger
+        self.legacy_admin_prefix = f"{api_prefix.rstrip('/')}/admin"
+        self.legacy_admin_api_enabled = legacy_admin_api_enabled
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         if scope["type"] != "http":
@@ -56,12 +70,30 @@ class RequestAuditMiddleware:
         scope.setdefault("state", {})["request_id"] = request_id
         started_at = perf_counter()
         response_status: int | None = None
+        raw_path = str(scope.get("path", ""))
+        targets_legacy_admin = raw_path == self.legacy_admin_prefix or raw_path.startswith(
+            f"{self.legacy_admin_prefix}/"
+        )
+        served_legacy_admin = False
 
         async def audited_send(message: Message) -> None:
-            nonlocal response_status
+            nonlocal response_status, served_legacy_admin
             if message["type"] == "http.response.start":
                 response_status = int(message["status"])
-                MutableHeaders(scope=message)["X-Request-ID"] = request_id
+                response_headers = MutableHeaders(scope=message)
+                response_headers["X-Request-ID"] = request_id
+                route_path = request_route_template(Request(scope))
+                served_legacy_admin = (
+                    targets_legacy_admin
+                    and self.legacy_admin_api_enabled
+                    and route_path != "_unmatched"
+                )
+                if served_legacy_admin:
+                    response_headers["Deprecation"] = "true"
+                    response_headers["Warning"] = (
+                        '299 TaxiMobile "Legacy /admin API is local/test-only and '
+                        'scheduled for removal"'
+                    )
             await send(message)
 
         await self.app(scope, receive, audited_send)
@@ -70,6 +102,10 @@ class RequestAuditMiddleware:
             return
         route_path = request_route_template(Request(scope))
         duration_seconds = perf_counter() - started_at
+        if targets_legacy_admin:
+            self.metrics.record_legacy_admin_request(
+                "served" if served_legacy_admin else "blocked"
+            )
         self.metrics.observe_request(
             method=str(scope.get("method", "OTHER")),
             route=route_path,
@@ -111,12 +147,74 @@ class JsonFormatter(logging.Formatter):
         return json.dumps(payload, separators=(",", ":"))
 
 
-def configure_logging(level: str) -> logging.Logger:
+class SecureRotatingFileHandler(RotatingFileHandler):
+    """Keep the active JSON-lines file group-readable and otherwise private."""
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        chmod(self.baseFilename, 0o640)
+
+    def doRollover(self) -> None:  # noqa: N802 - inherited logging API
+        super().doRollover()
+        chmod(self.baseFilename, 0o640)
+
+
+def _rotating_json_handler(
+    path: Path,
+    *,
+    max_bytes: int,
+    backup_count: int,
+) -> SecureRotatingFileHandler:
+    """Build one bounded UTF-8 JSON-lines sink for an application-owned volume."""
+
+    handler = SecureRotatingFileHandler(
+        path,
+        maxBytes=max_bytes,
+        backupCount=backup_count,
+        encoding="utf-8",
+    )
+    handler.setFormatter(JsonFormatter())
+    setattr(handler, "_taximobile_file_sink", True)
+    return handler
+
+
+def configure_logging(
+    level: str,
+    *,
+    log_file: Path | None = None,
+    log_file_max_bytes: int = 10_485_760,
+    log_file_backup_count: int = 5,
+) -> logging.Logger:
     logger = logging.getLogger("taximobile_api")
     logger.setLevel(level)
-    if not logger.handlers:
+    if not any(
+        isinstance(handler, logging.StreamHandler)
+        and not isinstance(handler, logging.FileHandler)
+        for handler in logger.handlers
+    ):
         handler = logging.StreamHandler()
         handler.setFormatter(JsonFormatter())
         logger.addHandler(handler)
-        logger.propagate = False
+
+    requested_path = log_file.resolve() if log_file is not None else None
+    for handler in list(logger.handlers):
+        if not getattr(handler, "_taximobile_file_sink", False):
+            continue
+        active_path = Path(getattr(handler, "baseFilename", "")).resolve()
+        if requested_path is None or active_path != requested_path:
+            logger.removeHandler(handler)
+            handler.close()
+    if requested_path is not None and not any(
+        getattr(handler, "_taximobile_file_sink", False)
+        and Path(getattr(handler, "baseFilename", "")).resolve() == requested_path
+        for handler in logger.handlers
+    ):
+        logger.addHandler(
+            _rotating_json_handler(
+                requested_path,
+                max_bytes=log_file_max_bytes,
+                backup_count=log_file_backup_count,
+            )
+        )
+    logger.propagate = False
     return logger

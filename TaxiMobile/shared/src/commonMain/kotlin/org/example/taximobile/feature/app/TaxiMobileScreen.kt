@@ -26,11 +26,17 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.platform.testTag
 import org.example.taximobile.app.AppRole
 import org.example.taximobile.domain.drivers.DriverRideAction
+import org.example.taximobile.domain.drivers.DriverApplicationAnswerDraft
+import org.example.taximobile.domain.drivers.DriverApplicationEvidenceDraft
 import org.example.taximobile.domain.drivers.VehicleRegistration
 import org.example.taximobile.domain.rides.Coordinates
+import org.example.taximobile.domain.rides.RidePaymentMethod
+import org.example.taximobile.domain.safety.SafetyCategory
+import org.example.taximobile.domain.scheduling.ScheduledBookingEstimate
 import org.example.taximobile.domain.support.SupportCategory
 import org.example.taximobile.feature.auth.registrationInputValidity
 import org.example.taximobile.feature.driver.DriverHome
+import org.example.taximobile.feature.driver.onboarding.DriverOnboardingScreen
 import org.example.taximobile.feature.passenger.PassengerHome
 import org.example.taximobile.feature.ui.components.StatusTone
 import org.example.taximobile.feature.ui.components.EmailField
@@ -57,36 +63,76 @@ fun TaxiMobileScreen(
     showManualCoordinateEntry: Boolean = true,
     onLogin: (String, String) -> Unit = { _, _ -> },
     onRegister: (String, String?, String?, String) -> Unit = { _, _, _, _ -> },
+    onRecoverAccount: (String, String, String) -> Unit = { _, _, _ -> },
+    onLoadAccountSecurity: () -> Unit = {},
+    onCreateRecoveryCodes: (String) -> Unit = {},
+    onAcknowledgeRecoveryCodes: () -> Unit = {},
+    onRevokeAccountSession: (String) -> Unit = {},
+    onChangeAccountPassword: (String, String) -> Unit = { _, _ -> },
     onRetry: () -> Unit = {},
     onRefresh: () -> Unit = {},
     onLogout: () -> Unit = {},
     onRequestCurrentLocation: ((Coordinates?) -> Unit) -> Unit = { result -> result(null) },
-    onSetDriverOnline: (Boolean) -> Unit = {},
+    onSetDriverOnline: (Boolean, String?, String?) -> Unit = { _, _, _ -> },
     onUpdateDriverLocation: (Coordinates) -> Unit = {},
     onRegisterDriverVehicle: (VehicleRegistration) -> Unit = {},
     onSelectDriverVehicle: (String) -> Unit = {},
     onDeactivateDriverVehicle: (String) -> Unit = {},
+    onSearchPlaces: (String, String) -> Unit = { _, _ -> },
+    onReversePlace: (String, Coordinates) -> Unit = { _, _ -> },
     onEstimateRide: (Coordinates, Coordinates) -> Unit = { _, _ -> },
-    onRequestRide: (Coordinates, Coordinates) -> Unit = { _, _ -> },
+    onRequestRide: (Coordinates, Coordinates, RidePaymentMethod) -> Unit = { _, _, _ -> },
+    onLoadFixedRoutes: (String) -> Unit = {},
+    onEstimateFixedRoute: (String) -> Unit = {},
+    onRequestFixedRoute: (String, RidePaymentMethod) -> Unit = { _, _ -> },
+    onEstimateScheduledPointToPoint: (String, String?, Coordinates, Coordinates) -> Unit = { _, _, _, _ -> },
+    onEstimateScheduledFixedRoute: (String, String) -> Unit = { _, _ -> },
+    onSchedulePointToPoint: (String, String?, Coordinates, Coordinates, String?, ScheduledBookingEstimate) -> Unit = { _, _, _, _, _, _ -> },
+    onScheduleFixedRoute: (String, String, String?, ScheduledBookingEstimate) -> Unit = { _, _, _, _ -> },
+    onCancelScheduledBooking: (String) -> Unit = {},
+    onSubmitManualTransfer: (String, String?) -> Unit = { _, _ -> },
     onCancelRide: (String) -> Unit = {},
+    onSendRideCoordination: (String, org.example.taximobile.domain.rides.RideCoordinationCode) -> Unit = { _, _ -> },
     onSelectPassengerRide: (String) -> Unit = {},
     onSelectDriverRide: (String) -> Unit = {},
     onUpdatePassengerProfile: (String) -> Unit = {},
     onSubmitRating: (String, Int, String?) -> Unit = { _, _, _ -> },
     onCreateSupportTicket: (SupportCategory, String, String, String?) -> Unit = { _, _, _, _ -> },
+    onCreateSafetyReport: (String, SafetyCategory, String) -> Unit = { _, _, _ -> },
     onRespondToOffer: (String, Boolean) -> Unit = { _, _ -> },
+    onSetScheduledOfferPreference: (String, Boolean) -> Unit = { _, _ -> },
+    onRespondToScheduledOffer: (String, Boolean) -> Unit = { _, _ -> },
     onAdvanceDriverRide: (String, DriverRideAction) -> Unit = { _, _ -> },
     onCancelDriverRide: (String, String) -> Unit = { _, _ -> },
     onCompleteDriverRide: (String, Coordinates) -> Unit = { _, _ -> },
     onSettleDriverCash: (String) -> Unit = {},
     onApplyToDrive: (String) -> Unit = {},
     onSubmitDriverVerification: () -> Unit = {},
+    onCreateDriverCityApplication: (String, String) -> Unit = { _, _ -> },
+    onSelectDriverCityApplication: (String, String) -> Unit = { _, _ -> },
+    onSaveDriverCityApplication: (
+        String,
+        Int,
+        String,
+        List<DriverApplicationAnswerDraft>,
+        List<DriverApplicationEvidenceDraft>,
+        List<String>,
+        List<String>,
+    ) -> Unit = { _, _, _, _, _, _, _ -> },
+    onSubmitDriverCityApplication: (String, String) -> Unit = { _, _ -> },
+    onWithdrawDriverCityApplication: (String, String) -> Unit = { _, _ -> },
+    driverDocumentPickerAvailable: Boolean = false,
+    onUploadDriverApplicationDocument: (String, String, Int, String) -> Unit = { _, _, _, _ -> },
+    onDeleteDriverApplicationDocument: (String, String, Int, String) -> Unit = { _, _, _, _ -> },
+    onRegisterApplicantVehicle: (String, VehicleRegistration) -> Unit = { _, _ -> },
     onMarkNotificationRead: (String) -> Unit = {},
 ) {
     val authenticationForm = remember { AuthenticationFormState() }
     when (state) {
         AppUiState.RestoringSession -> SessionLoadingScreen(stringResource(Res.string.loading_check_session))
         AppUiState.RegisteringAccount -> SessionLoadingScreen(stringResource(Res.string.loading_create_account))
+        AppUiState.RecoveringAccount -> SessionLoadingScreen(stringResource(Res.string.loading_recover_account))
+        is AppUiState.UpgradeRequired -> UpgradeRequiredScreen(appRole, state, onRetry)
         is AppUiState.Offline -> OfflineScreen(state.message.resolve(), onRetry)
         is AppUiState.SignedOut -> GatePage(appRole) {
             SignedOutContent(
@@ -95,6 +141,7 @@ fun TaxiMobileScreen(
                 form = authenticationForm,
                 onLogin = onLogin,
                 onRegister = onRegister,
+                onRecoverAccount = onRecoverAccount,
             )
         }
         is AppUiState.DriverApplicationRequired -> GatePage(appRole) {
@@ -111,6 +158,21 @@ fun TaxiMobileScreen(
                 onSubmitDriverVerification,
             )
         }
+        is AppUiState.DriverOnboarding -> DriverOnboardingScreen(
+            state = state,
+            pendingAction = pendingAction,
+            onRefresh = onRefresh,
+            onLogout = onLogout,
+            onCreateApplication = onCreateDriverCityApplication,
+            onSelectApplication = onSelectDriverCityApplication,
+            onSaveApplication = onSaveDriverCityApplication,
+            onSubmitApplication = onSubmitDriverCityApplication,
+            onWithdrawApplication = onWithdrawDriverCityApplication,
+            documentPickerAvailable = driverDocumentPickerAvailable,
+            onUploadDocument = onUploadDriverApplicationDocument,
+            onDeleteDocument = onDeleteDriverApplicationDocument,
+            onRegisterVehicle = onRegisterApplicantVehicle,
+        )
         is AppUiState.PassengerReady -> PassengerHome(
             state,
             pendingAction,
@@ -120,14 +182,32 @@ fun TaxiMobileScreen(
             onLogout,
             onRefresh,
             onRequestCurrentLocation,
+            onSearchPlaces,
+            onReversePlace,
             onEstimateRide,
             onRequestRide,
+            onLoadFixedRoutes,
+            onEstimateFixedRoute,
+            onRequestFixedRoute,
+            onEstimateScheduledPointToPoint,
+            onEstimateScheduledFixedRoute,
+            onSchedulePointToPoint,
+            onScheduleFixedRoute,
+            onCancelScheduledBooking,
+            onSubmitManualTransfer,
             onCancelRide,
+            onSendRideCoordination,
             onSelectPassengerRide,
             onUpdatePassengerProfile,
             onSubmitRating,
             onCreateSupportTicket,
+            onCreateSafetyReport,
             onMarkNotificationRead,
+            onLoadAccountSecurity,
+            onCreateRecoveryCodes,
+            onAcknowledgeRecoveryCodes,
+            onRevokeAccountSession,
+            onChangeAccountPassword,
         )
         is AppUiState.DriverReady -> DriverHome(
             state,
@@ -142,14 +222,23 @@ fun TaxiMobileScreen(
             onSelectDriverVehicle,
             onDeactivateDriverVehicle,
             onRespondToOffer,
+            onSetScheduledOfferPreference,
+            onRespondToScheduledOffer,
             onAdvanceDriverRide,
             onCancelDriverRide,
+            onSendRideCoordination,
             onCompleteDriverRide,
             onSettleDriverCash,
             onCreateSupportTicket,
+            onCreateSafetyReport,
             onMarkNotificationRead,
             onSelectDriverRide,
             onRefresh,
+            onLoadAccountSecurity,
+            onCreateRecoveryCodes,
+            onAcknowledgeRecoveryCodes,
+            onRevokeAccountSession,
+            onChangeAccountPassword,
         )
     }
 }
@@ -196,19 +285,41 @@ private fun SignedOutContent(
     form: AuthenticationFormState,
     onLogin: (String, String) -> Unit,
     onRegister: (String, String?, String?, String) -> Unit,
+    onRecoverAccount: (String, String, String) -> Unit,
 ) {
     var authenticationStarted by remember {
-        mutableStateOf(state.showRegistrationForm || state.registrationCompleted || state.message != null)
+        mutableStateOf(
+            state.showRegistrationForm || state.showRecoveryForm ||
+                state.registrationCompleted || state.recoveryCompleted || state.message != null,
+        )
     }
-    LaunchedEffect(state.registrationCompleted, state.showRegistrationForm) {
+    var recoveringAccount by remember { mutableStateOf(state.showRecoveryForm) }
+    LaunchedEffect(
+        state.registrationCompleted,
+        state.showRegistrationForm,
+        state.showRecoveryForm,
+        state.recoveryCompleted,
+    ) {
         if (state.registrationCompleted) {
             authenticationStarted = true
+            recoveringAccount = false
             form.creatingAccount = false
             form.identifier = state.suggestedIdentifier.orEmpty()
             form.phoneLogin = false
             form.password = ""
+        } else if (state.recoveryCompleted) {
+            authenticationStarted = true
+            recoveringAccount = false
+            form.creatingAccount = false
+            form.password = ""
+            form.recoveryCode = ""
+            form.newPassword = ""
+        } else if (state.showRecoveryForm) {
+            authenticationStarted = true
+            recoveringAccount = true
         } else if (state.showRegistrationForm) {
             authenticationStarted = true
+            recoveringAccount = false
             form.creatingAccount = true
         }
     }
@@ -223,6 +334,54 @@ private fun SignedOutContent(
                 form.creatingAccount = false
                 authenticationStarted = true
             },
+        )
+        return
+    }
+    if (recoveringAccount) {
+        ToastBanner(
+            message = state.message?.resolve()
+                ?: stringResource(Res.string.account_recovery_help),
+            tone = if (state.message == null) StatusTone.Info else StatusTone.Danger,
+        )
+        Text(stringResource(Res.string.account_recovery_title), style = MaterialTheme.typography.titleLarge)
+        TaxiTextField(
+            form.identifier,
+            { form.identifier = it },
+            stringResource(Res.string.account_identifier),
+        )
+        TaxiTextField(
+            form.recoveryCode,
+            { form.recoveryCode = it },
+            stringResource(Res.string.recovery_code),
+        )
+        PasswordField(
+            form.newPassword,
+            { form.newPassword = it },
+            stringResource(Res.string.new_password),
+            supportingText = stringResource(Res.string.password_minimum),
+        )
+        TaxiButton(
+            label = stringResource(Res.string.reset_password),
+            modifier = Modifier.testTag("account-recovery-submit"),
+            onClick = {
+                onRecoverAccount(
+                    form.identifier.trim(),
+                    form.recoveryCode.trim(),
+                    form.newPassword,
+                )
+            },
+            enabled = form.identifier.isNotBlank() &&
+                form.recoveryCode.count(Char::isLetterOrDigit) >= 20 &&
+                form.newPassword.length >= 12,
+        )
+        TaxiButton(
+            label = stringResource(Res.string.back_to_sign_in),
+            onClick = {
+                form.recoveryCode = ""
+                form.newPassword = ""
+                recoveringAccount = false
+            },
+            style = org.example.taximobile.feature.ui.components.TaxiButtonStyle.Tertiary,
         )
         return
     }
@@ -318,6 +477,16 @@ private fun SignedOutContent(
         },
         enabled = if (form.creatingAccount) validity.canSubmit else form.identifier.isNotBlank() && form.password.isNotEmpty(),
     )
+    if (!form.creatingAccount) {
+        TaxiButton(
+            label = stringResource(Res.string.use_recovery_code),
+            onClick = {
+                form.password = ""
+                recoveringAccount = true
+            },
+            style = org.example.taximobile.feature.ui.components.TaxiButtonStyle.Tertiary,
+        )
+    }
 }
 
 @Composable
@@ -361,6 +530,8 @@ private class AuthenticationFormState {
     var phoneNumber by mutableStateOf("")
     var identifier by mutableStateOf("")
     var password by mutableStateOf("")
+    var recoveryCode by mutableStateOf("")
+    var newPassword by mutableStateOf("")
     var phoneLogin by mutableStateOf(true)
 }
 
@@ -411,6 +582,36 @@ private fun OfflineScreen(message: String, onRetry: () -> Unit) {
     ) {
         Text(stringResource(Res.string.connection_unavailable), style = MaterialTheme.typography.displaySmall)
         Text(message, Modifier.padding(vertical = TaxiSpacing.Xl), style = MaterialTheme.typography.bodyLarge)
+        TaxiButton(stringResource(Res.string.retry_connection), onRetry)
+    }
+}
+
+@Composable
+private fun UpgradeRequiredScreen(
+    appRole: AppRole,
+    state: AppUiState.UpgradeRequired,
+    onRetry: () -> Unit,
+) {
+    GatePage(appRole) {
+        Text(
+            stringResource(Res.string.client_upgrade_required_title),
+            modifier = Modifier.semantics { heading() },
+            style = MaterialTheme.typography.headlineMedium,
+        )
+        Text(
+            stringResource(
+                Res.string.client_upgrade_required_body,
+                state.minimumVersion,
+            ),
+            style = MaterialTheme.typography.bodyLarge,
+        )
+        Text(
+            stringResource(
+                Res.string.client_upgrade_policy_reference,
+                state.policyRevision,
+            ),
+            style = MaterialTheme.typography.bodySmall,
+        )
         TaxiButton(stringResource(Res.string.retry_connection), onRetry)
     }
 }

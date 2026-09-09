@@ -19,12 +19,15 @@ import org.example.taximobile.data.auth.AuthenticationNetworkException
 import org.example.taximobile.data.auth.AuthenticationRejectedException
 import org.example.taximobile.data.network.ApiRequestException
 import org.example.taximobile.data.network.newIdempotencyKey
+import org.example.taximobile.data.rides.FixedRouteRideSummaryResponse
 import org.example.taximobile.domain.drivers.DriverRideGateway
 import org.example.taximobile.domain.drivers.DriverEarningItem
 import org.example.taximobile.domain.drivers.DriverEarnings
 import org.example.taximobile.domain.drivers.DriverRideSummary
 import org.example.taximobile.domain.rides.Coordinates
 import org.example.taximobile.domain.rides.RideStatus
+import org.example.taximobile.domain.rides.RidePaymentMethod
+import org.example.taximobile.domain.rides.RideServiceType
 
 class KtorDriverRideGateway(
     private val client: HttpClient,
@@ -50,6 +53,10 @@ class KtorDriverRideGateway(
                 settledThrough = it.settledThrough,
                 count = it.count,
                 items = it.items.map { item -> item.toDomain() },
+                transportFare = it.transportFare?.content ?: it.gross.content,
+                schedulingSurcharge = it.schedulingSurcharge?.content ?: "0.00",
+                operatorServiceFee = it.operatorServiceFee?.content ?: it.fees.content,
+                operatorAllocation = it.operatorAllocation?.content ?: "0.00",
             )
         }
     }
@@ -85,7 +92,12 @@ class KtorDriverRideGateway(
             if (response.status == HttpStatusCode.Unauthorized) throw AuthenticationRejectedException()
             if (!response.status.isSuccess()) throw ApiRequestException(response.status.value, "The server could not complete this ride.")
             val completed = response.body<CompletionResponse>()
-            DriverRideSummary(completed.rideId, RideStatus.valueOf(completed.status))
+            DriverRideSummary(
+                completed.rideId,
+                RideStatus.valueOf(completed.status),
+                paymentMethod = runCatching { RidePaymentMethod.valueOf(completed.paymentMethod) }
+                    .getOrDefault(RidePaymentMethod.UNKNOWN),
+            )
         }
     }
 
@@ -119,7 +131,16 @@ class KtorDriverRideGateway(
     private suspend fun io.ktor.client.statement.HttpResponse.driverRideListOrThrow(): List<DriverRideSummary> {
         if (status == HttpStatusCode.Unauthorized) throw AuthenticationRejectedException()
         if (!status.isSuccess()) throw ApiRequestException(status.value, "The server could not load driver rides.")
-        return body<DriverRideListResponse>().items.map { DriverRideSummary(it.id, RideStatus.valueOf(it.status), it.completedAt) }
+        return body<DriverRideListResponse>().items.map {
+            DriverRideSummary(
+                id = it.id,
+                status = RideStatus.valueOf(it.status),
+                completedAt = it.completedAt,
+                serviceType = runCatching { RideServiceType.valueOf(it.serviceType) }
+                    .getOrDefault(RideServiceType.UNKNOWN),
+                fixedRoute = it.fixedRoute?.toDomain(),
+            )
+        }
     }
 
     private suspend fun <T> request(block: suspend () -> T): T = try {
@@ -159,6 +180,8 @@ private data class DriverRideResponse(
     val id: String,
     val status: String,
     @SerialName("completed_at") val completedAt: String? = null,
+    @SerialName("service_type") val serviceType: String = "ON_DEMAND",
+    @SerialName("fixed_route") val fixedRoute: FixedRouteRideSummaryResponse? = null,
 )
 
 @Serializable
@@ -168,6 +191,10 @@ internal data class DriverEarningsResponse(
     val fees: JsonPrimitive,
     val adjustments: JsonPrimitive,
     val net: JsonPrimitive,
+    @SerialName("transport_fare") val transportFare: JsonPrimitive? = null,
+    @SerialName("scheduling_surcharge") val schedulingSurcharge: JsonPrimitive? = null,
+    @SerialName("operator_service_fee") val operatorServiceFee: JsonPrimitive? = null,
+    @SerialName("operator_allocation") val operatorAllocation: JsonPrimitive? = null,
     @SerialName("settled_through") val settledThrough: String? = null,
     val count: Int = 0,
     val items: List<DriverEarningItemResponse> = emptyList(),
@@ -181,6 +208,11 @@ internal data class DriverEarningItemResponse(
     val fees: JsonPrimitive,
     val adjustments: JsonPrimitive,
     val net: JsonPrimitive,
+    @SerialName("transport_fare") val transportFare: JsonPrimitive? = null,
+    @SerialName("scheduling_surcharge") val schedulingSurcharge: JsonPrimitive? = null,
+    @SerialName("operator_service_fee") val operatorServiceFee: JsonPrimitive? = null,
+    @SerialName("operator_fee_funding_mode") val operatorFeeFundingMode: String? = null,
+    @SerialName("operator_allocation") val operatorAllocation: JsonPrimitive? = null,
     val currency: String,
     @SerialName("settled_at") val settledAt: String,
 ) {
@@ -193,6 +225,11 @@ internal data class DriverEarningItemResponse(
         net = net.content,
         currency = currency,
         settledAt = settledAt,
+        transportFare = transportFare?.content ?: gross.content,
+        schedulingSurcharge = schedulingSurcharge?.content ?: "0.00",
+        operatorServiceFee = operatorServiceFee?.content ?: fees.content,
+        operatorFeeFundingMode = operatorFeeFundingMode,
+        operatorAllocation = operatorAllocation?.content ?: "0.00",
     )
 }
 
@@ -206,4 +243,8 @@ private data class CompletionRequest(val latitude: Double, val longitude: Double
 private data class CancellationRequest(val reason: String)
 
 @Serializable
-private data class CompletionResponse(@SerialName("ride_id") val rideId: String, val status: String)
+private data class CompletionResponse(
+    @SerialName("ride_id") val rideId: String,
+    val status: String,
+    @SerialName("payment_method") val paymentMethod: String = "CASH",
+)

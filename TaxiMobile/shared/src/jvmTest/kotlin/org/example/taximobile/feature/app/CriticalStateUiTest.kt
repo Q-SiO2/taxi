@@ -6,6 +6,7 @@ import androidx.compose.ui.test.assertAll
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onNodeWithTag
@@ -17,6 +18,8 @@ import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
@@ -27,6 +30,8 @@ import java.util.Locale
 import org.example.taximobile.App
 import org.example.taximobile.app.AppRole
 import org.example.taximobile.domain.drivers.DriverAvailabilityStatus
+import org.example.taximobile.domain.auth.AccountRecoveryCodes
+import org.example.taximobile.domain.auth.AccountSession
 import org.example.taximobile.domain.drivers.DriverCredential
 import org.example.taximobile.domain.drivers.DriverEarningItem
 import org.example.taximobile.domain.drivers.DriverEarnings
@@ -37,11 +42,24 @@ import org.example.taximobile.domain.rides.AssignedDriver
 import org.example.taximobile.domain.rides.AssignedVehicle
 import org.example.taximobile.domain.rides.Coordinates
 import org.example.taximobile.domain.rides.FinalRideFare
+import org.example.taximobile.domain.rides.FixedRouteCatalog
 import org.example.taximobile.domain.rides.LastKnownDriverLocation
+import org.example.taximobile.domain.rides.LocalizedText
+import org.example.taximobile.domain.rides.ManualTransferInstructions
 import org.example.taximobile.domain.rides.RideReceipt
+import org.example.taximobile.domain.rides.RideRefund
+import org.example.taximobile.domain.rides.RideRefundSummary
 import org.example.taximobile.domain.rides.RideRating
 import org.example.taximobile.domain.rides.RideSummary
 import org.example.taximobile.domain.rides.RideStatus
+import org.example.taximobile.domain.rides.PublicRideCity
+import org.example.taximobile.domain.rides.PublishedFixedRouteDirection
+import org.example.taximobile.domain.places.PlaceAttribution
+import org.example.taximobile.domain.places.PlaceKind
+import org.example.taximobile.domain.places.PlaceResult
+import org.example.taximobile.domain.places.PlaceSearch
+import org.example.taximobile.domain.safety.SafetyCategory
+import org.example.taximobile.domain.safety.SafetyReport
 import org.example.taximobile.domain.cooperatives.CooperativeMembership
 import org.example.taximobile.feature.ui.text.UiMessage
 import org.example.taximobile.feature.connectivity.ConnectivityStatus
@@ -53,6 +71,97 @@ import taximobile.shared.generated.resources.message_registration_failed
 
 @OptIn(ExperimentalTestApi::class)
 class CriticalStateUiTest {
+    @Test
+    fun passenger_can_choose_a_serviceable_backend_place_result() = runComposeUiTest {
+        val city = PublicRideCity(
+            id = "city-rabat",
+            code = "rabat",
+            name = LocalizedText("Rabat", "Rabat", "الرباط"),
+            timezone = "Africa/Casablanca",
+            lifecycleStatus = "PILOT",
+            bookingAvailable = true,
+        )
+        setContent {
+            App(
+                state = AppUiState.PassengerReady(
+                    serviceCities = listOf(city),
+                    placeDiscovery = PlaceDiscoveryUiState(
+                        revision = 1,
+                        search = PlaceSearch(
+                            cityId = city.id,
+                            query = "Gare",
+                            items = listOf(
+                                PlaceResult(
+                                    id = "result",
+                                    primaryText = "Gare Rabat Ville",
+                                    secondaryText = "Hassan, Rabat",
+                                    coordinate = Coordinates(34.0209, -6.8416),
+                                    kind = PlaceKind.POI,
+                                    pickupServiceable = true,
+                                ),
+                            ),
+                            attribution = PlaceAttribution(
+                                "© OpenStreetMap contributors",
+                                "https://www.openstreetmap.org/copyright",
+                            ),
+                        ),
+                    ),
+                ),
+            )
+        }
+
+        onNodeWithText("Find a place").performScrollTo().performClick()
+        onNodeWithText("Gare Rabat Ville").performScrollTo().assertIsDisplayed().performClick()
+        onNodeWithTag("passenger-pickup-selection")
+            .performScrollTo()
+            .assertTextContains("Gare Rabat Ville, Hassan, Rabat")
+        onNodeWithText("Review fare").assertIsNotEnabled()
+    }
+
+    @Test
+    fun passenger_cannot_choose_an_outside_area_place_as_pickup() = runComposeUiTest {
+        val city = PublicRideCity(
+            id = "city-casablanca",
+            code = "casablanca",
+            name = LocalizedText("Casablanca", "Casablanca", "الدار البيضاء"),
+            timezone = "Africa/Casablanca",
+            lifecycleStatus = "PILOT",
+            bookingAvailable = true,
+        )
+        setContent {
+            App(
+                state = AppUiState.PassengerReady(
+                    serviceCities = listOf(city),
+                    placeDiscovery = PlaceDiscoveryUiState(
+                        revision = 1,
+                        search = PlaceSearch(
+                            cityId = city.id,
+                            query = "Temara",
+                            items = listOf(
+                                PlaceResult(
+                                    id = "outside",
+                                    primaryText = "Temara",
+                                    secondaryText = "Rabat-Sale-Kenitra",
+                                    coordinate = Coordinates(33.9287, -6.9066),
+                                    kind = PlaceKind.LOCALITY,
+                                    pickupServiceable = false,
+                                ),
+                            ),
+                            attribution = PlaceAttribution(
+                                "© OpenStreetMap contributors",
+                                "https://www.openstreetmap.org/copyright",
+                            ),
+                        ),
+                    ),
+                ),
+            )
+        }
+
+        onNodeWithText("Find a place").performScrollTo().performClick()
+        onNodeWithTag("place-result-outside").performScrollTo().assertIsNotEnabled()
+        onNodeWithText("Outside this city’s pickup area").performScrollTo().assertIsDisplayed()
+    }
+
     @Test
     fun signed_out_passenger_starts_on_a_purpose_built_welcome_surface() = runComposeUiTest {
         setContent { App(state = AppUiState.SignedOut()) }
@@ -71,6 +180,44 @@ class CriticalStateUiTest {
         onNodeWithText("Display name").assertIsDisplayed()
         onNodeWithTag("auth-submit").assertIsNotEnabled()
     }
+
+    @Test
+    fun recovery_form_requires_complete_inputs_and_submits_without_claiming_success() =
+        runComposeUiTest {
+            data class RecoverySubmission(
+                val identifier: String,
+                val code: String,
+                val newPassword: String,
+            )
+
+            var submission: RecoverySubmission? = null
+            setContent {
+                App(
+                    state = AppUiState.SignedOut(),
+                    onRecoverAccount = { identifier, code, newPassword ->
+                        submission = RecoverySubmission(identifier, code, newPassword)
+                    },
+                )
+            }
+
+            onNodeWithText("Sign in", useUnmergedTree = true).performClick()
+            onNodeWithText("Use a recovery code").performClick()
+            onNodeWithTag("account-recovery-submit").assertIsNotEnabled()
+            onNodeWithText("Email or Moroccan phone number")
+                .performTextInput("  passenger@example.test  ")
+            onNodeWithText("Recovery code").performTextInput("23456-789AB-CDEFG-HJKLM")
+            onNodeWithText("New password").performTextInput("replacement-password")
+            onNodeWithTag("account-recovery-submit").assertIsEnabled().performClick()
+
+            assertEquals(
+                RecoverySubmission(
+                    "passenger@example.test",
+                    "23456-789AB-CDEFG-HJKLM",
+                    "replacement-password",
+                ),
+                submission,
+            )
+        }
 
     @Test
     fun valid_registration_form_submits_trimmed_identity_without_inventing_phone() = runComposeUiTest {
@@ -231,6 +378,47 @@ class CriticalStateUiTest {
     }
 
     @Test
+    fun passenger_safety_report_is_separate_from_support_and_ride_bound() = runComposeUiTest {
+        var submission: Triple<String, SafetyCategory, String>? = null
+        setContent {
+            App(
+                state = AppUiState.PassengerReady(
+                    activeRideId = "ride-active-1234",
+                    activeRide = RideStatus.IN_PROGRESS,
+                    safetyReports = listOf(
+                        SafetyReport(
+                            id = "report-1",
+                            rideId = "ride-active-1234",
+                            category = SafetyCategory.UNSAFE_DRIVING,
+                            status = "ACKNOWLEDGED",
+                            createdAt = "2026-08-24T12:00:00Z",
+                            latestPublicMessage = "A safety specialist is reviewing your report.",
+                        )
+                    ),
+                ),
+                onCreateSafetyReport = { rideId, category, description ->
+                    submission = Triple(rideId, category, description)
+                },
+            )
+        }
+
+        onNodeWithText("Safety").performClick()
+        onNodeWithText(
+            "TaxiMobile safety reports are not an emergency service. If you are in immediate danger, move to a safe place and contact local emergency services."
+        ).performScrollTo().assertIsDisplayed()
+        onNodeWithText("Latest response: A safety specialist is reviewing your report.")
+            .performScrollTo().assertIsDisplayed()
+        onNodeWithText("Describe the safety concern").performScrollTo()
+            .performTextInput("Vehicle door would not close")
+        onNodeWithText("Send safety report").performScrollTo().assertIsEnabled().performClick()
+
+        assertEquals(
+            Triple("ride-active-1234", SafetyCategory.OTHER_SAFETY, "Vehicle door would not close"),
+            submission,
+        )
+    }
+
+    @Test
     fun driver_secondary_panels_keep_the_backend_active_ride_status_visible() = runComposeUiTest {
         setContent {
             App(
@@ -249,6 +437,33 @@ class CriticalStateUiTest {
 
         onNodeWithText("Driver account").performClick()
         onNodeWithText("Ride in progress").assertIsDisplayed()
+    }
+
+    @Test
+    fun driver_safety_shortcut_submits_only_a_bound_controlled_report() = runComposeUiTest {
+        var submission: Triple<String, SafetyCategory, String>? = null
+        setContent {
+            App(
+                appRole = AppRole.DRIVER,
+                state = AppUiState.DriverReady(
+                    availability = DriverAvailabilityStatus.ON_RIDE,
+                    activeRideId = "driver-ride-1234",
+                    activeRide = RideStatus.IN_PROGRESS,
+                ),
+                onCreateSafetyReport = { rideId, category, description ->
+                    submission = Triple(rideId, category, description)
+                },
+            )
+        }
+
+        onNodeWithText("Safety").performClick()
+        onNodeWithText("Describe the safety concern").performTextInput("Passenger made a threat")
+        onNodeWithText("Send safety report").assertIsEnabled().performClick()
+
+        assertEquals(
+            Triple("driver-ride-1234", SafetyCategory.OTHER_SAFETY, "Passenger made a threat"),
+            submission,
+        )
     }
 
     @Test
@@ -312,6 +527,52 @@ class CriticalStateUiTest {
     }
 
     @Test
+    fun passenger_fixed_route_catalog_shows_static_direction_and_requests_backend_quote() = runComposeUiTest {
+        var estimatedDirection: String? = null
+        val city = PublicRideCity(
+            id = "city-1",
+            code = "RABAT",
+            name = LocalizedText("Rabat", "Rabat", "الرباط"),
+            timezone = "Africa/Casablanca",
+            lifecycleStatus = "ACTIVE",
+            bookingAvailable = true,
+        )
+        val direction = PublishedFixedRouteDirection(
+            id = "direction-1",
+            routeVersionId = "version-1",
+            routeCode = "RABAT_01",
+            routeName = LocalizedText("Station route", "Ligne de la gare", "خط المحطة"),
+            directionCode = "OUTBOUND",
+            startName = LocalizedText("Station", "Gare", "المحطة"),
+            finishName = LocalizedText("University", "Université", "الجامعة"),
+            start = Coordinates(34.02, -6.84),
+            finish = Coordinates(34.00, -6.80),
+            geometry = listOf(Coordinates(34.02, -6.84), Coordinates(34.00, -6.80)),
+            flatFare = "8.00",
+            currency = "MAD",
+            immediateBookingEnabled = true,
+            scheduledBookingEnabled = false,
+            stops = emptyList(),
+        )
+        setContent {
+            App(
+                state = AppUiState.PassengerReady(
+                    serviceCities = listOf(city),
+                    fixedRouteCatalog = FixedRouteCatalog(city, listOf(direction)),
+                ),
+                showManualCoordinateEntry = false,
+                onEstimateFixedRoute = { estimatedDirection = it },
+            )
+        }
+
+        onNodeWithText("Browse fixed routes").performClick()
+        onNodeWithText("Station → University").assertIsDisplayed().performClick()
+        onNodeWithText("8.00 MAD · OUTBOUND").assertIsDisplayed()
+        onNodeWithText("Review flat fare").assertIsEnabled().performClick()
+        assertEquals("direction-1", estimatedDirection)
+    }
+
+    @Test
     fun passenger_location_fab_admits_only_one_pending_platform_request() = runComposeUiTest {
         var requestCount = 0
         setContent {
@@ -352,7 +613,9 @@ class CriticalStateUiTest {
 
         onNodeWithText("Recent destinations").performScrollTo().assertIsDisplayed()
         onNodeWithText("Casa Voyageurs").performScrollTo().performClick()
-        onNodeWithText("Destination selected.").assertIsDisplayed()
+        // The destination field now presents the useful backend address instead
+        // of replacing it with the generic selected-state copy.
+        onAllNodesWithText("Casa Voyageurs").assertCountEquals(2)
         onNodeWithText("Review fare").assertIsNotEnabled()
     }
 
@@ -380,6 +643,20 @@ class CriticalStateUiTest {
                             fare = FinalRideFare("42.00", "MAD", "casablanca-v1"),
                             paymentMethod = "CASH",
                             paymentStatus = "COMPLETED",
+                            refunds = RideRefundSummary(
+                                refundedAmount = "5.00",
+                                netPaidAmount = "37.00",
+                                currency = "MAD",
+                                items = listOf(
+                                    RideRefund(
+                                        id = "refund-1",
+                                        amount = "5.00",
+                                        currency = "MAD",
+                                        reason = "FARE_CORRECTION",
+                                        refundedAt = "2026-08-13T13:00:00Z",
+                                    ),
+                                ),
+                            ),
                         ),
                     )
                 },
@@ -393,6 +670,9 @@ class CriticalStateUiTest {
         onNodeWithText("Destination: Casa Voyageurs").performScrollTo().assertIsDisplayed()
         onNodeWithText("Receipt").performScrollTo().assertIsDisplayed()
         onNodeWithText("42.00").performScrollTo().assertIsDisplayed()
+        onNodeWithText("Refunded: 5.00 MAD").performScrollTo().assertIsDisplayed()
+        onNodeWithText("Net paid after refunds: 37.00 MAD").performScrollTo().assertIsDisplayed()
+        onNodeWithText("Fare correction · −5.00 MAD").performScrollTo().assertIsDisplayed()
     }
 
     @Test
@@ -414,6 +694,97 @@ class CriticalStateUiTest {
         onNodeWithText("Account").performClick()
         onNodeWithText("Cash settlement is awaiting the driver’s backend confirmation.").assertIsDisplayed()
         onAllNodesWithText("Paid").assertCountEquals(0)
+    }
+
+    @Test
+    fun manual_transfer_receipt_requires_operator_review_before_success() = runComposeUiTest {
+        var submittedRideId: String? = null
+        var submittedReference: String? = null
+        setContent {
+            App(
+                state = AppUiState.PassengerReady(
+                    latestCompletedReceipt = RideReceipt(
+                        rideId = "ride-transfer",
+                        completedAt = "2026-08-23T12:00:00Z",
+                        fare = FinalRideFare("42.00", "MAD", "casablanca-v1"),
+                        paymentMethod = "MANUAL_TRANSFER",
+                        paymentStatus = "PENDING",
+                        manualTransfer = ManualTransferInstructions(
+                            recipientName = "TaxiMobile Pilot",
+                            bankAccount = "ACCOUNT-123",
+                            walletId = null,
+                            paymentReference = "TM-REFERENCE-123",
+                            latestClaimStatus = "REJECTED",
+                        ),
+                    ),
+                ),
+                onSubmitManualTransfer = { rideId, reference ->
+                    submittedRideId = rideId
+                    submittedReference = reference
+                },
+            )
+        }
+
+        onNodeWithText("Account").performClick()
+        onNodeWithText("Required payment reference: ${ltrIsolate("TM-REFERENCE-123")}")
+            .performScrollTo()
+            .assertIsDisplayed()
+        onNodeWithText(
+            "The previous transfer could not be matched. Check the reference or contact support, then submit again."
+        ).assertIsDisplayed()
+        onNodeWithText("Bank transaction reference (optional)").performTextInput("A")
+        onNodeWithText("Use at least 3 characters, or leave this field empty.").assertIsDisplayed()
+        onNodeWithText("I sent the transfer").assertIsNotEnabled()
+        onNodeWithText("Bank transaction reference (optional)").performTextInput("BC")
+        onNodeWithText("I sent the transfer").performScrollTo().assertIsEnabled().performClick()
+        assertEquals("ride-transfer", submittedRideId)
+        assertEquals("ABC", submittedReference)
+        onAllNodesWithText("Paid").assertCountEquals(0)
+    }
+
+    @Test
+    fun fully_refunded_transfer_is_not_presented_as_unverified_or_retryable() = runComposeUiTest {
+        setContent {
+            App(
+                state = AppUiState.PassengerReady(
+                    latestCompletedReceipt = RideReceipt(
+                        rideId = "ride-refunded-transfer",
+                        completedAt = "2026-08-24T12:00:00Z",
+                        fare = FinalRideFare("42.00", "MAD", "casablanca-v1"),
+                        paymentMethod = "MANUAL_TRANSFER",
+                        paymentStatus = "REFUNDED",
+                        manualTransfer = ManualTransferInstructions(
+                            recipientName = "TaxiMobile Pilot",
+                            bankAccount = "ACCOUNT-123",
+                            walletId = null,
+                            paymentReference = "TM-REFUNDED-123",
+                            latestClaimStatus = "VERIFIED",
+                        ),
+                        refunds = RideRefundSummary(
+                            refundedAmount = "42.00",
+                            netPaidAmount = "0.00",
+                            currency = "MAD",
+                            items = listOf(
+                                RideRefund(
+                                    id = "refund-full",
+                                    amount = "42.00",
+                                    currency = "MAD",
+                                    reason = "SERVICE_RECOVERY",
+                                    refundedAt = "2026-08-24T13:00:00Z",
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            )
+        }
+
+        onNodeWithText("Account").performClick()
+        onNodeWithText("Transfer verified by the operator.").performScrollTo().assertIsDisplayed()
+        onNodeWithText("Net paid after refunds: 0.00 MAD").performScrollTo().assertIsDisplayed()
+        onAllNodesWithText("This transfer needs attention. Review the status or contact support.")
+            .assertCountEquals(0)
+        onAllNodesWithText("I sent the transfer").assertCountEquals(0)
     }
 
     @Test
@@ -492,6 +863,48 @@ class CriticalStateUiTest {
         onNodeWithText("No trips yet").performScrollTo().assertIsDisplayed()
         onNodeWithText("Completed and cancelled rides will appear here after your first request.")
             .performScrollTo().assertIsDisplayed()
+    }
+
+    @Test
+    fun passenger_account_displays_sessions_and_one_time_recovery_codes() = runComposeUiTest {
+        var state by mutableStateOf<AppUiState>(
+            AppUiState.PassengerReady(
+                accountSecurity = AccountSecurityUiState(
+                    loaded = true,
+                    sessions = listOf(
+                        AccountSession(
+                            id = "session-1",
+                            deviceLabel = "Android passenger app",
+                            current = true,
+                            createdAt = "2026-09-02T10:00:00Z",
+                            expiresAt = "2026-10-02T10:00:00Z",
+                        ),
+                    ),
+                    recoveryCodes = AccountRecoveryCodes(
+                        listOf("23456-789AB-CDEFG-HJKLM"),
+                        "2027-03-01T10:00:00Z",
+                    ),
+                ),
+            ),
+        )
+        setContent {
+            App(
+                state = state,
+                onAcknowledgeRecoveryCodes = {
+                    state = state.clearVisibleRecoveryCodes()
+                },
+            )
+        }
+
+        onNodeWithText("Account").performClick()
+        onNodeWithText("Account security").performScrollTo().assertIsDisplayed()
+        onNodeWithText("Android passenger app").performScrollTo().assertIsDisplayed()
+        onNodeWithText(ltrIsolate("23456-789AB-CDEFG-HJKLM"))
+            .performScrollTo().assertIsDisplayed()
+        onNodeWithTag("clear-recovery-codes").performScrollTo().assertIsNotEnabled()
+        onNodeWithTag("recovery-codes-saved-check").performClick()
+        onNodeWithTag("clear-recovery-codes").assertIsEnabled().performClick()
+        onAllNodesWithText(ltrIsolate("23456-789AB-CDEFG-HJKLM")).assertCountEquals(0)
     }
 
     @Test

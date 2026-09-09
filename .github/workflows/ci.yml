@@ -8,11 +8,71 @@ permissions:
   contents: read
 
 jobs:
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Reject newly introduced high or critical dependencies
+        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: high
+          license-check: false
+          retry-on-snapshot-warnings: true
+          retry-on-snapshot-warnings-timeout: 600
+
+  gradle-dependency-submission:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: Resolve and submit the complete Gradle dependency graph
+        uses: gradle/actions/dependency-submission@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6
+        with:
+          build-root-directory: TaxiMobile
+          cache-provider: basic
+          dependency-graph: generate-and-submit
+
   gradle-wrapper-integrity:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: gradle/actions/wrapper-validation@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6
+
+  documentation-and-provenance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - run: python infra/scripts/validate_docs.py
+      - run: python infra/scripts/validate_test_phase_evidence.py
+      - run: python infra/scripts/validate_ci_security.py
+      - run: python infra/scripts/validate_legacy_admin_retirement.py
+      - run: python -m unittest discover -s infra/scripts/tests -p 'test_*.py'
+      - name: Generate immutable source-candidate evidence
+        shell: bash
+        run: >-
+          python infra/scripts/generate_release_evidence.py
+          --label "github-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          --output "${RUNNER_TEMP}/taximobile-source-evidence.json"
+      - name: Publish evidence in the run summary
+        shell: bash
+        run: |
+          echo '## TaxiMobile source-candidate evidence' >> "${GITHUB_STEP_SUMMARY}"
+          echo '```json' >> "${GITHUB_STEP_SUMMARY}"
+          cat "${RUNNER_TEMP}/taximobile-source-evidence.json" >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"
 
   backend:
     runs-on: ubuntu-24.04
@@ -48,25 +108,295 @@ jobs:
       - run: python -m pip_audit --no-deps --requirement requirements.lock
       - run: python ../infra/scripts/validate_source_credentials.py
       - run: python ../infra/scripts/validate_mobile_api_contract.py
+      - run: python ../infra/scripts/validate_web_api_contract.py
+      - name: Generate API, migration, and permission inventory
+        run: >-
+          python ../infra/scripts/generate_source_contract_inventory.py
+          --output /tmp/taximobile-source-contract-inventory.json
+      - run: python ../infra/scripts/validate_legacy_admin_retirement.py
       - run: python -m compileall -q src tests migrations
       - run: python ../infra/scripts/validate_prometheus_rules.py
+      - run: python ../infra/scripts/validate_monitoring_deployment.py
       - run: python ../infra/scripts/validate_production_compose.py
       - run: alembic upgrade head
       - run: python -m pytest
       - run: alembic upgrade head --sql > /tmp/taximobile-schema.sql
       - run: docker build --tag taximobile-api:ci .
+      - name: Generate the built backend image SPDX SBOM
+        uses: anchore/sbom-action@3ad7283483fc7af8ff2b4ea19663c2d5ca935e26 # v0.24.2
+        with:
+          image: taximobile-api:ci
+          format: spdx-json
+          output-file: /tmp/taximobile-api.spdx.json
+          artifact-name: taximobile-api-${{ github.sha }}.spdx.json
+          upload-artifact: true
+          upload-artifact-retention: 30
+          upload-release-assets: false
+      - name: Bind the backend SBOM to immutable source evidence
+        shell: bash
+        run: >-
+          python ../infra/scripts/generate_release_evidence.py
+          --label "backend-image-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          --artifact /tmp/taximobile-api.spdx.json
+          --artifact /tmp/taximobile-source-contract-inventory.json
+          --output /tmp/taximobile-backend-evidence.json
+      - name: Publish backend image evidence in the run summary
+        shell: bash
+        run: |
+          echo '## TaxiMobile generated source-contract inventory' >> "${GITHUB_STEP_SUMMARY}"
+          echo '```json' >> "${GITHUB_STEP_SUMMARY}"
+          cat /tmp/taximobile-source-contract-inventory.json >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"
+          echo '## TaxiMobile backend image evidence' >> "${GITHUB_STEP_SUMMARY}"
+          echo '```json' >> "${GITHUB_STEP_SUMMARY}"
+          cat /tmp/taximobile-backend-evidence.json >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"
+      - name: Reject high or critical backend image vulnerabilities
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: taximobile-api:ci
+          format: table
+          exit-code: "1"
+          ignore-unfixed: false
+          vuln-type: os,library
+          severity: CRITICAL,HIGH
       - name: Validate separated production API and worker manifest
         run: docker compose -f ../infra/deploy/compose.production.yaml config --quiet
         env:
           TAXIMOBILE_API_IMAGE: registry.example.test/taximobile/api@sha256:0000000000000000000000000000000000000000000000000000000000000000
+          TAXIMOBILE_CLAMAV_IMAGE: clamav/clamav@sha256:1111111111111111111111111111111111111111111111111111111111111111
           TAXIMOBILE_DATABASE_URL: postgresql+asyncpg://taxi:secret@database.internal/taxi
           TAXIMOBILE_JWT_SECRET: ci-jwt-secret-that-is-at-least-32-characters
+          TAXIMOBILE_OPERATIONS_MFA_ENCRYPTION_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+          TAXIMOBILE_DRIVER_DOCUMENT_ENCRYPTION_KEY: BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
           TAXIMOBILE_MONITORING_TOKEN: ci-monitoring-token-at-least-32-characters
           TAXIMOBILE_ALLOWED_HOSTS: api.example.test
           TAXIMOBILE_ROUTING_PROVIDER: valhalla
           TAXIMOBILE_ROUTING_BASE_URL: http://routing.internal:8002
           TAXIMOBILE_FIREBASE_PROJECT_ID: taximobile-ci
+          TAXIMOBILE_CASE_PAGER_URL: https://pager.example.test/taximobile
+          TAXIMOBILE_CASE_PAGER_TOKEN: ci-case-pager-token-at-least-32-characters
           TAXIMOBILE_TRUSTED_PROXY_CIDRS: 10.0.0.0/24
+      - name: Validate merged self-hosted monitoring manifest
+        run: >-
+          docker compose
+          -f ../infra/deploy/compose.production.yaml
+          -f ../infra/deploy/compose.monitoring.yaml
+          config --quiet
+        env:
+          TAXIMOBILE_API_IMAGE: registry.example.test/taximobile/api@sha256:0000000000000000000000000000000000000000000000000000000000000000
+          TAXIMOBILE_CLAMAV_IMAGE: clamav/clamav@sha256:1111111111111111111111111111111111111111111111111111111111111111
+          TAXIMOBILE_PROMETHEUS_IMAGE: prom/prometheus@sha256:5ce7540c3c00ef4ab0c9d2c995c6a5b9c421f44b4a115d97a2c7af3b1c21cbb0
+          TAXIMOBILE_ALERTMANAGER_IMAGE: prom/alertmanager@sha256:9e082985f56f4c8c9f724e18f2288c6708f472e56a5286b8863d080434ea065d
+          TAXIMOBILE_GRAFANA_IMAGE: grafana/grafana@sha256:f772d434e8fab0049deb2b1b30abd43342bcfca1537614aa8d36080232cf4283
+          TAXIMOBILE_LOKI_IMAGE: grafana/loki@sha256:c316b7c7589a5eeca843b6926c7446149d18300b79ac8538dc4ae063bc478da2
+          TAXIMOBILE_ALLOY_IMAGE: grafana/alloy@sha256:491b0578c04983fd54fe99b587b6fab4404dc46d0dc16677bd6b00cc1140b308
+          TAXIMOBILE_DATABASE_URL: postgresql+asyncpg://taxi:secret@database.internal/taxi
+          TAXIMOBILE_JWT_SECRET: ci-jwt-secret-that-is-at-least-32-characters
+          TAXIMOBILE_OPERATIONS_MFA_ENCRYPTION_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+          TAXIMOBILE_DRIVER_DOCUMENT_ENCRYPTION_KEY: BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+          TAXIMOBILE_MONITORING_TOKEN: ci-monitoring-token-at-least-32-characters
+          TAXIMOBILE_MONITORING_TOKEN_FILE: /dev/null
+          TAXIMOBILE_GRAFANA_ADMIN_PASSWORD_FILE: /dev/null
+          TAXIMOBILE_ALLOWED_HOSTS: api.example.test
+          TAXIMOBILE_ROUTING_PROVIDER: valhalla
+          TAXIMOBILE_ROUTING_BASE_URL: http://routing.internal:8002
+          TAXIMOBILE_FIREBASE_PROJECT_ID: taximobile-ci
+          TAXIMOBILE_CASE_PAGER_URL: https://pager.example.test/taximobile
+          TAXIMOBILE_CASE_PAGER_TOKEN: ci-case-pager-token-at-least-32-characters
+          TAXIMOBILE_TRUSTED_PROXY_CIDRS: 10.0.0.0/24
+          TAXIMOBILE_PLATFORM_ALERT_WEBHOOK_URL_FILE: /dev/null
+          TAXIMOBILE_DISPATCH_ALERT_WEBHOOK_URL_FILE: /dev/null
+          TAXIMOBILE_SCHEDULING_ALERT_WEBHOOK_URL_FILE: /dev/null
+          TAXIMOBILE_DRIVER_COMPLIANCE_ALERT_WEBHOOK_URL_FILE: /dev/null
+      - name: Parse monitoring configuration with pinned official tools
+        shell: bash
+        env:
+          PROMETHEUS_IMAGE: prom/prometheus@sha256:5ce7540c3c00ef4ab0c9d2c995c6a5b9c421f44b4a115d97a2c7af3b1c21cbb0
+          ALERTMANAGER_IMAGE: prom/alertmanager@sha256:9e082985f56f4c8c9f724e18f2288c6708f472e56a5286b8863d080434ea065d
+          GRAFANA_IMAGE: grafana/grafana@sha256:f772d434e8fab0049deb2b1b30abd43342bcfca1537614aa8d36080232cf4283
+          LOKI_IMAGE: grafana/loki@sha256:c316b7c7589a5eeca843b6926c7446149d18300b79ac8538dc4ae063bc478da2
+          ALLOY_IMAGE: grafana/alloy@sha256:491b0578c04983fd54fe99b587b6fab4404dc46d0dc16677bd6b00cc1140b308
+        run: |
+          set -euo pipefail
+          token_file="$RUNNER_TEMP/taximobile-monitoring-token"
+          webhook_file="$RUNNER_TEMP/taximobile-monitoring-webhook"
+          grafana_admin_file="$RUNNER_TEMP/taximobile-grafana-admin-password"
+          grafana_container="taximobile-grafana-ci-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          grafana_volume="taximobile-grafana-ci-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          cleanup_grafana() {
+            docker rm --force "$grafana_container" >/dev/null 2>&1 || true
+            docker volume rm "$grafana_volume" >/dev/null 2>&1 || true
+          }
+          trap cleanup_grafana EXIT
+          printf '%s\n' 'ci-monitoring-token-at-least-32-characters' > "$token_file"
+          printf '%s\n' 'https://alerts.example.test/taximobile' > "$webhook_file"
+          printf '%s\n' 'Ci-Grafana-Password-2026!' > "$grafana_admin_file"
+          docker run --rm --entrypoint /bin/promtool \
+            --volume "$PWD/../infra/deploy/prometheus.yaml:/etc/prometheus/prometheus.yaml:ro" \
+            --volume "$PWD/../infra/deploy/prometheus-alerts.yaml:/etc/prometheus/rules/taximobile-alerts.yaml:ro" \
+            --volume "$token_file:/run/secrets/taximobile_monitoring_token:ro" \
+            "$PROMETHEUS_IMAGE" check config /etc/prometheus/prometheus.yaml
+          docker run --rm --entrypoint /bin/amtool \
+            --volume "$PWD/../infra/deploy/alertmanager.yaml:/etc/alertmanager/alertmanager.yaml:ro" \
+            --volume "$webhook_file:/run/secrets/taximobile_platform_alert_webhook_url:ro" \
+            --volume "$webhook_file:/run/secrets/taximobile_dispatch_alert_webhook_url:ro" \
+            --volume "$webhook_file:/run/secrets/taximobile_scheduling_alert_webhook_url:ro" \
+            --volume "$webhook_file:/run/secrets/taximobile_driver_compliance_alert_webhook_url:ro" \
+            "$ALERTMANAGER_IMAGE" check-config /etc/alertmanager/alertmanager.yaml
+          docker run --rm \
+            --volume "$PWD/../infra/deploy/loki.yaml:/etc/loki/taximobile.yaml:ro" \
+            "$LOKI_IMAGE" \
+            -config.file=/etc/loki/taximobile.yaml -verify-config=true
+          docker run --rm --entrypoint /bin/alloy \
+            --volume "$PWD/../infra/deploy/alloy/config.alloy:/etc/alloy/config.alloy:ro" \
+            "$ALLOY_IMAGE" validate /etc/alloy/config.alloy
+          docker volume create "$grafana_volume" >/dev/null
+          docker run --detach --name "$grafana_container" \
+            --user 472:472 \
+            --read-only \
+            --tmpfs /tmp:size=64m,mode=1777 \
+            --tmpfs /var/log/grafana:size=32m,mode=0750,uid=472,gid=472 \
+            --cap-drop ALL \
+            --security-opt no-new-privileges:true \
+            --network none \
+            --mount "type=volume,source=$grafana_volume,target=/var/lib/grafana" \
+            --volume "$PWD/../infra/deploy/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro" \
+            --volume "$PWD/../infra/deploy/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro" \
+            --volume "$PWD/../infra/deploy/grafana/dashboards:/etc/grafana/dashboards:ro" \
+            --volume "$grafana_admin_file:/run/secrets/taximobile_grafana_admin_password:ro" \
+            --env GF_SECURITY_ADMIN_USER=taximobile-admin \
+            --env GF_SECURITY_ADMIN_PASSWORD__FILE=/run/secrets/taximobile_grafana_admin_password \
+            --env GF_AUTH_ANONYMOUS_ENABLED=false \
+            --env GF_USERS_ALLOW_SIGN_UP=false \
+            --env GF_AUTH_BASIC_PASSWORD_POLICY=true \
+            --env GF_ANALYTICS_REPORTING_ENABLED=false \
+            --env GF_ANALYTICS_CHECK_FOR_UPDATES=false \
+            --env GF_ANALYTICS_CHECK_FOR_PLUGIN_UPDATES=false \
+            --env GF_UNIFIED_ALERTING_ENABLED=false \
+            --env GF_ALERTING_ENABLED=false \
+            --env GF_LOG_MODE=console \
+            "$GRAFANA_IMAGE" >/dev/null
+          grafana_ready=false
+          for attempt in $(seq 1 30); do
+            if docker exec "$grafana_container" /usr/bin/wget --spider -q \
+              http://127.0.0.1:3000/api/health; then
+              grafana_ready=true
+              break
+            fi
+            sleep 1
+          done
+          if [ "$grafana_ready" != true ]; then
+            docker logs "$grafana_container"
+            exit 1
+          fi
+          if docker logs "$grafana_container" 2>&1 | grep -Eiq \
+            'failed to provision|provisioning.*error|failed to save dashboard'; then
+            docker logs "$grafana_container"
+            exit 1
+          fi
+          docker exec "$grafana_container" /bin/sh -c \
+            'password="$(cat /run/secrets/taximobile_grafana_admin_password)"; printf "user = \"taximobile-admin:%s\"\n" "$password" | /usr/bin/curl --silent --show-error --fail --config - http://127.0.0.1:3000/api/dashboards/uid/taximobile-operations' \
+            | python -c 'import json, sys; dashboard = json.load(sys.stdin)["dashboard"]; assert dashboard["uid"] == "taximobile-operations"; assert len(dashboard["panels"]) == 13'
+          docker exec "$grafana_container" /bin/sh -c \
+            'password="$(cat /run/secrets/taximobile_grafana_admin_password)"; printf "user = \"taximobile-admin:%s\"\n" "$password" | /usr/bin/curl --silent --show-error --fail --config - http://127.0.0.1:3000/api/dashboards/uid/taximobile-logs' \
+            | python -c 'import json, sys; dashboard = json.load(sys.stdin)["dashboard"]; assert dashboard["uid"] == "taximobile-logs"; assert len(dashboard["panels"]) == 3'
+      - name: Smoke test hardened structured-log ingestion
+        shell: bash
+        env:
+          LOKI_IMAGE: grafana/loki@sha256:c316b7c7589a5eeca843b6926c7446149d18300b79ac8538dc4ae063bc478da2
+          ALLOY_IMAGE: grafana/alloy@sha256:491b0578c04983fd54fe99b587b6fab4404dc46d0dc16677bd6b00cc1140b308
+        run: |
+          set -euo pipefail
+          suffix="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          network="taximobile-log-ci-${suffix}"
+          loki_container="taximobile-loki-ci-${suffix}"
+          alloy_container="taximobile-alloy-ci-${suffix}"
+          api_logs="taximobile-api-logs-ci-${suffix}"
+          worker_logs="taximobile-worker-logs-ci-${suffix}"
+          loki_data="taximobile-loki-data-ci-${suffix}"
+          alloy_data="taximobile-alloy-data-ci-${suffix}"
+          cleanup_logs() {
+            docker rm --force "$alloy_container" "$loki_container" >/dev/null 2>&1 || true
+            docker volume rm "$api_logs" "$worker_logs" "$loki_data" "$alloy_data" >/dev/null 2>&1 || true
+            docker network rm "$network" >/dev/null 2>&1 || true
+          }
+          trap cleanup_logs EXIT
+          docker network create --internal "$network" >/dev/null
+          docker volume create "$api_logs" >/dev/null
+          docker volume create "$worker_logs" >/dev/null
+          docker volume create "$loki_data" >/dev/null
+          docker volume create "$alloy_data" >/dev/null
+          docker run --rm --mount "type=volume,source=$api_logs,target=/var/log/taximobile" \
+            --entrypoint /bin/true taximobile-api:ci
+          docker run --rm --mount "type=volume,source=$worker_logs,target=/var/log/taximobile" \
+            --entrypoint /bin/true taximobile-api:ci
+          docker run --detach --name "$loki_container" --entrypoint /usr/bin/loki \
+            --user 10001:10001 --read-only --tmpfs /tmp:size=64m,mode=1777 \
+            --cap-drop ALL --security-opt no-new-privileges:true \
+            --network "$network" --network-alias loki \
+            --mount "type=volume,source=$loki_data,target=/loki" \
+            --volume "$PWD/../infra/deploy/loki.yaml:/etc/loki/taximobile.yaml:ro" \
+            "$LOKI_IMAGE" -config.file=/etc/loki/taximobile.yaml >/dev/null
+          loki_ready=false
+          for attempt in $(seq 1 30); do
+            if docker run --rm --network "$network" --entrypoint python taximobile-api:ci \
+              -c 'import urllib.request; urllib.request.urlopen("http://loki:3100/ready", timeout=3).read()'; then
+              loki_ready=true
+              break
+            fi
+            sleep 1
+          done
+          if [ "$loki_ready" != true ]; then
+            docker logs "$loki_container"
+            exit 1
+          fi
+          docker run --detach --name "$alloy_container" --entrypoint /bin/alloy \
+            --user 473:473 --group-add 2000 --read-only --tmpfs /tmp:size=64m,mode=1777 \
+            --cap-drop ALL --security-opt no-new-privileges:true \
+            --network "$network" --network-alias alloy \
+            --mount "type=volume,source=$api_logs,target=/var/log/taximobile-api,readonly" \
+            --mount "type=volume,source=$worker_logs,target=/var/log/taximobile-worker,readonly" \
+            --mount "type=volume,source=$alloy_data,target=/var/lib/alloy/data" \
+            --volume "$PWD/../infra/deploy/alloy/config.alloy:/etc/alloy/config.alloy:ro" \
+            "$ALLOY_IMAGE" run /etc/alloy/config.alloy \
+            --storage.path=/var/lib/alloy/data \
+            --server.http.listen-addr=0.0.0.0:12345 \
+            --server.http.enable-pprof=false \
+            --server.http.disable-support-bundle --disable-reporting >/dev/null
+          alloy_ready=false
+          for attempt in $(seq 1 30); do
+            if docker run --rm --network "$network" --entrypoint python taximobile-api:ci \
+              -c 'import urllib.request; urllib.request.urlopen("http://alloy:12345/-/ready", timeout=3).read()'; then
+              alloy_ready=true
+              break
+            fi
+            sleep 1
+          done
+          if [ "$alloy_ready" != true ]; then
+            docker logs "$alloy_container"
+            exit 1
+          fi
+          docker run --rm --mount "type=volume,source=$api_logs,target=/var/log/taximobile" \
+            --entrypoint python taximobile-api:ci \
+            -c 'from pathlib import Path; from taximobile_api.core.logging import configure_logging; p=Path("/var/log/taximobile/events.jsonl"); logger=configure_logging("INFO", log_file=p); logger.info("pipeline-api-safe-event"); [h.flush() for h in logger.handlers]; f=p.open("a", encoding="utf-8"); f.write("not-json\n"); f.write("{\"timestamp\":\"2026-09-06T08:00:00+00:00\",\"level\":\"INFO\",\"message\":\"" + "x"*17000 + "\"}\n"); f.close()'
+          docker run --rm --mount "type=volume,source=$worker_logs,target=/var/log/taximobile" \
+            --entrypoint python taximobile-api:ci \
+            -c 'from pathlib import Path; from taximobile_api.core.logging import configure_logging; logger=configure_logging("INFO", log_file=Path("/var/log/taximobile/events.jsonl")); logger.error("pipeline-worker-safe-event", extra={"worker":"outbox"}); [h.flush() for h in logger.handlers]'
+          ingestion_verified=false
+          for attempt in $(seq 1 40); do
+            if docker run --rm --network "$network" --entrypoint python taximobile-api:ci \
+              -c 'import json,time,urllib.parse,urllib.request; now=time.time_ns(); q=urllib.parse.urlencode({"query":"{service=~\"api|worker\"}","start":str(now-3600_000_000_000),"end":str(now),"limit":"100"}); data=json.load(urllib.request.urlopen("http://loki:3100/loki/api/v1/query_range?"+q, timeout=5)); values=[line for stream in data["data"]["result"] for _,line in stream["values"]]; assert any("pipeline-api-safe-event" in line for line in values); assert any("pipeline-worker-safe-event" in line for line in values); assert all("not-json" not in line and len(line)<16384 for line in values)'; then
+              ingestion_verified=true
+              break
+            fi
+            sleep 1
+          done
+          if [ "$ingestion_verified" != true ]; then
+            docker logs "$alloy_container"
+            docker logs "$loki_container"
+            exit 1
+          fi
 
   mobile:
     runs-on: ubuntu-24.04
@@ -79,6 +409,9 @@ jobs:
         with:
           distribution: temurin
           java-version: "21"
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
       - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3
       - run: sdkmanager --install "platforms;android-36" "build-tools;36.1.0"
       - run: yes | sdkmanager --licenses
@@ -91,11 +424,34 @@ jobs:
           '-PtaximobileReleaseApiBaseUrl=https://api.example.test'
           '-PtaximobileReleaseMapStyleUrl=https://maps.example.test/style.json'
           '-PtaximobileVersionCode=1'
-          '-PtaximobileVersionName=1.0.0-ci'
+          '-PtaximobileVersionName=1.0.0'
           '-PtaximobileAllowUnsignedReleaseForVerification=true'
           '-PtaximobileAllowMissingFirebaseForVerification=true'
       - shell: pwsh
-        run: ./scripts/verify-android-release-artifacts.ps1 -ExpectedVersionCode 1 -ExpectedVersionName 1.0.0-ci
+        run: ./scripts/verify-android-release-artifacts.ps1 -ExpectedVersionCode 1 -ExpectedVersionName 1.0.0
+
+  web:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: TaxiMobile
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - run: ./gradlew --no-daemon :webApp:jsBrowserTest :webApp:wasmJsBrowserTest
+      - run: ./gradlew --no-daemon :webApp:composeCompatibilityBrowserDistribution
+      - name: Package reviewed web distribution without public source maps
+        run: >-
+          python ../infra/scripts/package_web_release.py
+          --input webApp/build/dist/composeWebCompatibility/productionExecutable
+          --output "${RUNNER_TEMP}/taximobile-web-release"
 
   ios-shared:
     runs-on: macos-15

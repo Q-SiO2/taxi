@@ -1,6 +1,99 @@
 # Implementation Blueprint
 
+For task sequencing and executable verification, use [workflow.md](workflow.md).
+For the dated requirement comparison and weighted source-completion estimate,
+use [readiness.md](readiness.md). The detailed implementation contract below
+remains subordinate to the owning domain rules.
+
 This document fixes the implementation choices required to turn the TaxiMobile product documents into working software. It is subordinate to the domain rules in `product.md`, `operations.md`, `auth.md`, `rides.md`, `matching.md`, `pricing.md`, and `payments.md`. If a technical choice conflicts with one of those rules, the domain rule wins and the conflict must be resolved in documentation first.
+
+## Current implementation standing — 2026-09-08
+
+The repository contains the provider-independent implementation described here,
+including migrations through `20260908_0052`. Local backend unit/API/integration
+tests, Android/shared compilation, JavaScript and Kotlin/Wasm compilation, and
+portable source-contract checks have passed in the current workspace. The
+latest completed full fresh-PostGIS run (2026-09-08) passed 990 backend tests with no
+failures, errors or skips, including the paired cash workload and deterministic
+dispatch-contention cases. That report also includes fixed-owner outbox
+aggregation, privacy-bounded Prometheus alert validation, aggregate security-
+incident deadline snapshots and real-PostGIS city-authorization provider-failure
+recovery. The shared JVM suite contains
+183 tests, and contract gates cover 83 mobile HTTP plus one WebSocket operation
+and 112 web HTTP operations. The city-authorization slice passed 33
+focused backend cases, also included in that full backend regression, and both
+web browser suites. These are local dirty-workspace results, not release
+certification. Both `jsBrowserDistribution` and `wasmJsBrowserDistribution`
+also completed locally from the current source; bundle-size warnings remain
+performance evidence to review, not failed correctness gates. The
+current CI definition covers backend, Android/shared, iOS simulator compilation,
+documentation/provenance validation, and JavaScript/Wasm browser tests plus a
+production compatibility distribution. It also defines immutable-action
+dependency review, resolved Gradle graph submission, backend image SPDX SBOM and
+source-hash binding, a generated 244-operation/52-migration/22-permission/nine-role
+source-contract inventory, and a blocking high/critical image scan. The inventory
+is deterministic, validates the migration graph and role mapping, is printed in
+the CI run summary, and is hash-bound into backend candidate evidence. The new and changed
+jobs still require a passing remote run on an immutable commit; their presence in
+YAML is not a clean vulnerability report or signed release provenance.
+The production deployment now has an optional hardened Prometheus/Alertmanager/
+Loki/Alloy/Grafana overlay with internal-only API/worker scraping, bounded
+application-owned JSON log volumes, Docker-secret bearer
+authentication, loopback operator ports, fixed owner receivers and digest-pinned
+parser/runtime validation in CI. It has passed local structural, mutation,
+merged-Compose, `promtool`, `amtool`, Loki/Alloy parser, hardened Grafana
+provisioning, and real two-role ingestion checks. The committed immutable
+26-panel operations dashboard and three-panel log dashboard use only reviewed
+service, worker, fixed-owner and fixed incident-severity telemetry. No hosted
+target, populated dashboard
+review, webhook receiver, retention/capacity result or on-call drill is thereby
+accepted.
+The operations web console also includes a modular account-security command
+surface backed by the scoped containment API. It is permission-hidden, case-led,
+typed-confirmed, and non-replaying; JS/Wasm tests cover permission routing, input
+validation, and response decoding. A production-like staff drill remains required.
+The staff-access destination now has separate request-validation, gateway,
+coordinator, and Compose review modules. It supports all closed backend role
+templates, exact selected scope, expiry/manual-recertification display, typed
+request/decision confirmation, recent-MFA non-replay and authoritative reload.
+Migration `20260907_0049` and the administration service implement a durable
+pending queue, distinct maker/target/checker identities, optimistic decisions,
+per-market serialization, transactional revalidation, production direct-write
+refusal and two-admin continuity. The bounded offline initial-quorum command
+closes after the third administrator. GAP-022 remains open only for roster,
+recertification, broader sensitive-command policy and real hosted staff evidence.
+
+Migration `20260907_0050` adds a platform-admin-only, market-scoped security
+incident register and append-only timeline. The API requires recent MFA and
+idempotency for every write, uses optimistic versions for a strict forward-only
+lifecycle, permits evidence links only to same-scope immutable audits or bounded
+external references, and keeps timeline narrative out of audit metadata. A
+focused unit/PostGIS coverage passed. Migration `20260907_0051` adds a one-time,
+versioned postmortem completion command with controlled outcome, completion
+actor/time, same-scope audit or bounded external evidence, append-only timeline
+fact and database completion-shape checks. The protected web workspace now adds
+permission-hidden queue loading, incident creation/detail, append-only timeline
+forms, exact next-state actions, postmortem completion, typed confirmation, stale
+reload and MFA non-replay behavior; both browser targets pass 57 tests. Migration
+`20260908_0052` adds four closed responsibility types, one active assignee per
+type, immutable assignment facts with a one-time release transition, initial-lead
+backfill and generated responsibility timeline events. Assignment accepts only an
+exact active user with live platform-administrator authority in the incident
+market, requires a controlled roster/shift reference and updates the response
+lead/version atomically. The protected web workspace displays active and released
+tenures and uses a fail-closed four-value route selector. Both
+protected scrape roles now run a five-second-bounded aggregate deadline query and
+emit only SEV1-SEV4 open, containment-overdue, postmortem-pending and postmortem-
+overdue counts. Five immutable Prometheus rules and three dashboard panels cover
+snapshot failure, high-severity open incidents and deadline breaches. Real
+receiver delivery/escalation acceptance, containment orchestration, notification
+approval, authoritative duty-roster staffing and a hosted drill remain open under
+GAP-031.
+
+This is not a production-readiness statement. The repository has no accepted
+hosted environment, real city evidence, signed mobile release, provider
+credentials, production operations roster, or completed security/capacity/device
+acceptance. [`gaps.md`](gaps.md) is the authoritative open-work register.
 
 ## 1. Repository Structure
 
@@ -47,34 +140,77 @@ TaxiMobile/shared/src/commonMain/kotlin/<package>/
 
 ### Operations web application
 
-`TaxiMobile/webApp` must stop calling the passenger/driver `App()` root when the
-national control-plane phase begins. It owns a dedicated `OperationsApp` and web
-navigation tree with two route groups: a public applicant portal and a protected
-operations console. It may reuse shared localization, exact-money/coordinate
-types, API error mapping, and the approved UI tokens, but it must not import
-mobile ride-screen composition or mobile secure-storage assumptions.
+`TaxiMobile/webApp` no longer calls the passenger/driver `App()` root. Phase 12
+boots a dedicated `OperationsApp`; Phase 13 adds a separate public applicant
+composition root selected by `/apply` or `#/apply`. The module may reuse shared
+localization, exact-money/coordinate types, API error mapping, and approved UI
+tokens, but it must not import mobile ride-screen composition or mobile
+secure-storage assumptions.
 
-Initial structure:
+Implemented Phase 12–17 structure:
 
 ```text
 TaxiMobile/webApp/src/
 |- webMain/kotlin/<package>/
-|  |- application/             # browser boot and environment config
-|  |- auth/                    # operations/applicant session presentation
-|  |- navigation/
-|  |- operations/
-|  |  |- rollout/
-|  |  |- cities/
-|  |  |- operators/
-|  |  |- driverreview/
-|  |  |- pricing/
-|  |  |- fixedroutes/
-|  |  |- scheduling/
-|  |  |- analytics/
-|  |  `- audit/
-|  `- applicant/
-`- webTest/
+|  |- main.kt                         # browser composition root
+|  |- application/
+|  |  |- OperationsEnvironment.kt     # local/same-origin API resolution
+|  |  `- WebSurface.kt                # explicit operations/applicant routing
+|  |- applicant/
+|  |  |- state/ApplicantPortalCoordinator.kt
+|  |  `- ui/                          # account, catalog, application editor/status
+|  `- operations/
+|     |- model/OperationsModels.kt    # DTOs, scope, permissions, destinations
+|     |- model/ControlPlaneModels.kt  # typed create/transition contracts + geometry validation
+|     |- model/PricingEconomicsModels.kt # exact-string policy contracts
+|     |- model/AnalyticsModels.kt    # strict definitions/facts and nullable suppressed measures
+|     |- data/OperationsGateway.kt    # Ktor API boundary and bounded read batches
+|     |- data/ControlPlaneGateway.kt  # city/operator/assignment/area/config commands
+|     |- data/PricingEconomicsGateway.kt # isolated scoped economics API
+|     |- state/OperationsCoordinator.kt
+|     `- ui/
+|        |- OperationsApp.kt          # auth/scope/navigation shell
+|        |- OperationsComponents.kt
+|        |- OperationsScreens.kt      # rollout/city/operator + Phase 18 staged readiness
+|        |- ControlPlaneEditors.kt    # bounded control-plane dialogs and bundle resolver
+|        |- DriverRecruitmentScreen.kt # delivered Phase 13 module
+|        |- PricingEconomicsScreen.kt # delivered Phase 14 module
+|        |- PricingEconomicsEditors.kt # small draft/editor components
+|        |- ScheduledExceptionsScreen.kt # delivered Phase 16 scoped inspection
+|        `- AnalyticsScreen.kt        # Phase 17 filters, summaries, fact table, definitions
+`- webTest/                            # routing, permission, state, formatting tests
 ```
+
+Driver review and applicant packages now exist because their Phase 13 backend
+slice is delivered. Phase 14 adds a separate pricing-economics model, gateway,
+screen, and editor package rather than enlarging the general operations files.
+Fixed-route and scheduled-booking packages now exist as their owning roadmap
+slices are delivered. Phase 17 adds a separate analytics model and screen rather
+than enlarging the control-plane files. The
+scheduling-policy editor covers the full Phase 16 timing, conflict, cancellation,
+refund, and fallback contract, while the exception screen remains read-only and
+scope-authorized.
+This keeps the browser module reviewable for a smaller context window and
+prevents dead navigation from implying unavailable authority. Applicant
+bearer/refresh tokens are memory-only; page refresh signs out. Protected document
+controls remain disabled until the backend advertises and actually provides the
+reviewed secure storage boundary.
+
+Phase 18 deliberately reuses the market/configuration aggregate instead of
+creating a second rollout state machine. Backend constants define separate
+pilot-entry and public-activation gate sets plus post-launch evidence. Lifecycle
+commands choose the set by target state; configuration replacement uses the
+city's current state. `OperationsScreens.kt` presents the three stages, while the
+gateway/coordinator own the typed optimistic command and authoritative reload.
+The same application and schema therefore deploy every city without a city fork.
+The city/operator destinations are no longer inspection-only: authorized staff
+can create a city and operator, activate/deactivate the operator, create or
+retire exact-scope service assignments, enter a WGS84 polygon without editing
+GeoJSON, review the service-area lifecycle, and assemble a configuration from
+compatible active authoritative versions. The browser disables incomplete
+bundles and displays missing policy/payment/recruitment/route dependencies; the
+backend independently revalidates scope, lifecycle, effective time, optimistic
+version, and recent MFA before mutation.
 
 The browser client calls only HTTPS `/api/v1` contracts. Administrative access
 uses a dedicated audience/session policy, exact operations origin, mandatory MFA
@@ -339,13 +475,22 @@ backend result only in the driver's private account sheet.
 Professional credentials now have an ownership-indexed, privacy-minimized table
 and `GET /drivers/me/credentials` self-read endpoint. Credential types remain
 configurable because jurisdictional requirements are not yet fixed; the response
-omits numbers and all document/storage references. Secure upload, encrypted
-document storage, retention, and administrator verification remain policy-gated.
+omits numbers and all document/storage references. Those reusable credential
+records remain metadata-only. City-application document upload is a separate
+implemented boundary using encrypted private-volume storage, malware scanning,
+retention, and MFA-gated administrator retrieval; it does not add raw files or
+storage references to the credential endpoint.
 Driver verification reads and submissions also return the authoritative optional
 `submitted_at` timestamp documented by the API instead of making the client infer
 it from local state.
 Android and iOS load credential metadata through the shared driver gateway and
 render it only in the private driver account sheet.
+City-application document controls use native bounded file selection on both
+platforms: Android's storage access framework and iOS's security-scoped document
+picker accept only PDF/JPEG/PNG files up to 10 MiB, hold bytes transiently, and
+then call the same authenticated shared upload mutation. Cancellation makes no
+request, invalid local input is rejected, and the backend independently repeats
+type, size, ownership, version, and malware checks.
 That sheet also presents the backend profile name, verification status, and
 account status instead of dropping those already-authorized profile fields.
 Backend availability, matching, and offer acceptance reject any recorded
@@ -360,12 +505,22 @@ environment settings, and the worker has the same low-cardinality success/error
 telemetry as matching and outbox processing.
 
 Android uses runtime coarse/fine foreground permission and `LocationManager` for
-an explicit one-shot lookup. iOS uses Core Location with when-in-use authorization
-and `requestLocation`. Neither app requests background location or subscribes to
-continuous updates in this phase. A denial, timeout, or disabled provider returns
-control to the shared UI without submitting a coordinate; map-tap and validated
-manual entry remain available. Passenger pickup, driver operational updates, and
-ride completion each require a separate user action before backend submission.
+one-shot lookup. iOS uses Core Location with when-in-use authorization and
+`requestLocation`. Neither app requests background location or subscribes to
+continuous OS updates. A denial, timeout, or disabled provider returns control to
+the shared UI without submitting an invented coordinate; map-tap and validated
+manual entry remain available. Passenger pickup, the driver's initial staged
+location, manual driver fallback, and ride completion require explicit user
+actions before backend submission.
+
+After backend-confirmed online entry, a tested shared policy schedules the same
+one-shot adapter every 15 seconds for `AVAILABLE`/`OFFERED_RIDE` and every 10
+seconds for active-ride states. Android/iOS lifecycle callbacks disarm it on
+background; offline/paused/disconnected state, an active platform lookup, or an
+ordinary pending command suppresses each attempt. The automatic requester never
+opens permission UI. Unavailable observations trigger localized guidance and a
+60-second backoff. The backend continues to decide freshness, movement,
+service-area validity, eligibility and matching.
 Both platform requesters use the tested common `OneShotLocationGate`: a second
 tap is rejected instead of calling the first pending callback with failure or
 launching another permission/location request. Shared passenger and driver
@@ -412,7 +567,7 @@ domains/
 |- administration/      # scoped grants and audited control-plane commands
 |- driver_applications/ # city requirements, applications, authorizations
 |- fixed_routes/        # immutable route/direction/stop publication
-|- scheduling/          # future booking, offers, commitments, handoff
+|- scheduled_bookings/  # future booking, offers, commitments, handoff
 |- pricing/             # city tariffs, scheduling surcharge, operator fees
 `- analytics/           # typed facts and privacy-bounded aggregates
 ```
@@ -433,7 +588,47 @@ market/operator/city + service-area/configuration versions + backfill
 → fixed-route versions/directions
 → scheduled bookings/offers/overlap-safe commitments
 → typed aggregate facts/views
+→ city-scoped support/safety cases → durable overdue alerts
+→ legal holds + verified case minimization evidence
+→ operations MFA → versioned payment capabilities + scoped reconciliation
 ```
+
+These slices are delivered as `20260824_0033` (control-plane records
+and deterministic compatibility backfill), `20260824_0034` (scoped grants,
+operations sessions, and scoped audit columns), and `20260824_0035` (versioned
+city driver requirements, applications/evidence/decisions/authorizations,
+city/service online scope, and compatibility backfill), `20260824_0036`
+(city/operator/service pricing, fee and scheduling-policy versions plus
+immutable ride economics), and `20260827_0037` (published fixed routes,
+directions/stops, reciprocal direction-scoped fares, city route allowlists, and
+route-scoped rides), and `20260829_0038` (expanded scheduling policies, scheduled
+bookings/offers/events, city-scoped driver preferences, exclusion-protected
+commitments, and one scheduled-booking link per live ride), and
+`20260829_0039` (coarse hourly supply snapshots, an allowlisted typed-event SQL
+projection, and refreshable privacy-bounded aggregate facts), `20260830_0040`
+(immutable support/safety city scope and city-aware queue indexes), and
+`20260830_0041` (durable deduplicated overdue-case alert delivery and
+acknowledgement state), and `20260830_0042` (city-scoped legal holds, nullable
+post-erasure participant/ride links, case retention state, and immutable
+minimization evidence), and `20260830_0043` (encrypted operations TOTP,
+single-use recovery codes, bounded password challenges, accepted-counter replay
+state, CSRF-bound operations sessions, and MFA method state), and
+`20260831_0044` (verified city/operator recipient accounts,
+city/operator/service payment-capability versions, coherent configuration links,
+and ride/payment/refund settlement provenance), `20260831_0045` (protected
+driver-document retention state/evidence), `20260902_0046` (expiring,
+single-use mobile account-recovery code digests), `20260903_0047`
+(closed-code active-ride coordination messages), `20260903_0048`
+(one active live ride per driver, with conflict-refusing preflight), and
+`20260907_0049` (staff-grant maker-checker state and uniqueness), and
+`20260907_0050` (scoped security incidents, immutable timeline and lifecycle
+constraints), and `20260907_0051` (one-time security-incident postmortem
+completion and deadline indexes), and `20260908_0052` (closed incident
+responsibilities, one-active-role uniqueness, append-visible tenure history and
+initial response-lead backfill). The Phase 15 constraint compares Phase 14's
+new native-enum lifecycle values through their text representation so a clean
+multi-revision PostgreSQL `upgrade head` remains valid without revising the
+delivered Phase 14 migration.
 
 Backfills use reviewed deterministic mappings for existing pilot data and retain
 historical IDs/amounts. A migration must not guess a city from an old arbitrary
@@ -454,23 +649,60 @@ JWTs require the fixed TaxiMobile issuer/mobile audience and every subject,
 session, type, issued-at, and expiration claim in addition to HS256 signature
 validation; server-side session and user-status checks remain authoritative.
 
+Account recovery is isolated behind a separate shared `AccountSecurityGateway`
+instead of expanding the login/session gateway. The backend owns recovery-code
+generation, hashing, expiry, consumption, password replacement, and revocation;
+Compose owns only shape validation and conditional generic presentation. Android
+and iOS inject the same Ktor gateway. The signed-out recovery form and both
+authenticated account sheets connect password-reauthenticated code creation,
+one-time code display, session list/confirmed revocation, and password change.
+Current-session revocation and password change clear native secure-token storage
+and return to sign-in. The one-time bundle now requires an explicit saved-all-
+codes acknowledgement before a local clear action removes it from passenger or
+driver render state; the app does not silently copy secrets to a clipboard.
+Physical-device save, background/process-death, accessibility, screenshot and
+secret-lifecycle acceptance remain deployment work.
+
 The shared mobile `RideGateway` exposes fare estimation as a backend call. A client may render the returned amount and tariff version, but it does not calculate, select, or lock the authoritative fare; the API locks the quote when the passenger creates the ride.
+
+The same gateway now exposes a closed-code coordination command and decodes the
+latest authorized message from detailed ride state. A dedicated backend
+`ride_communications` domain owns role/code policy, authorization, active-state
+validation, idempotency, rate/cap enforcement, persistence, recipient
+notification, and minimized outbox creation. The mobile coordinator sends one
+command and then performs a full authoritative refresh; it never appends a local
+message optimistically. A modular shared Compose section renders the latest
+signal and only the three actions for the current role. The action resource key
+contains both ride ID and code, so only the initiating button shows progress
+while competing choices stay readable but disabled. English, French, and Arabic
+resources localize every known code; unknown future values fail to generic text
+and are never offered as actions.
 
 National quotes extend that response with backend-resolved city/operator,
 service type, scheduling surcharge, operator fee calculation/funding mode,
 passenger total, expected driver net, and immutable policy versions. Fixed-route
 requests reference a published direction version. Scheduled requests use a
 separate gateway/aggregate and do not add a long-lived scheduled state to the
-live `Ride` model.
+live `Ride` model. The scheduled gateway first obtains a non-mutating review
+estimate. Confirmation echoes the reviewed policy versions, and the backend
+rejects stale terms before persisting the immutable booking snapshot.
 
 ## 4. Real-Time and Background Work
 
-The API writes the business transaction first. Beginning with ride offers and notifications, it writes an outbox record in that same transaction. A worker delivers the resulting WebSocket and push notifications, retries safely, and records delivery outcomes. A failed notification never rolls back a ride or payment fact.
+The API writes the business transaction first. Beginning with ride offers,
+notifications, and ride-coordination signals, it writes an outbox record in that
+same transaction. A worker delivers the resulting WebSocket and push
+notifications, retries safely, and records delivery outcomes. A failed
+notification never rolls back a ride, coordination message, or payment fact.
 
 The MVP persists `ride.offer.created` and `ride.accepted` events in an
 `outbox_events` table in the same transaction as their source state changes.
 The records deliberately carry only IDs; the delivery worker authorizes and
 loads current notification data rather than trusting a copied business payload.
+For `ride.coordination.message`, the worker rechecks active ride state and a
+five-minute freshness bound, then emits only the generic
+`RIDE_COORDINATION_MESSAGE` hint. The persistent message/notification and the
+subsequent authorized REST reload, not live delivery, are the user-visible truth.
 
 Matching runs as a separate authoritative background processor alongside the
 non-authoritative delivery worker. The ranked MVP filters eligibility in
@@ -479,11 +711,37 @@ proximity, uninterrupted idle-time, and recent-assignment fairness weights. New
 offers persist distance, ETA, component scores, recent assignment count, and the
 algorithm version. Decline and expiry preserve the driver's waiting timestamp,
 exclude already-tried drivers for that ride, and advance sequentially. The
-processor claims expired offers with row locks and `SKIP LOCKED`, so horizontal
-replicas cannot both expire the same offer. Candidate exhaustion records
+processor claims rides having expired pending offers with row locks and
+`SKIP LOCKED`, then rechecks/locks their offers before the driver; horizontal
+replicas cannot both expire the same claimed ride's offer. Candidate exhaustion records
 `UNMATCHED`; it never leaves the passenger in an indefinite matching state.
 
-The scheduled-booking phase adds a separate lease-safe processor for opening
+`rides/locking.py` supplies current-state ride, owned-offer and driver locks.
+Acceptance, decline, cancellation and expiry use ride-first order; assigned
+driver cancel/transition/complete also refresh their locked profile. Acceptance
+checks competing active rides without locking another aggregate after the driver.
+Dispatch's state allowlist prevents re-opening en-route, arrived or in-progress
+rides, and locked candidate profile rows refresh the ORM identity map. Eleven
+isolated migrated-database cases in `test_live_ride_concurrency.py` cover seven
+observed lock-wait races, expiry-worker skip/retry and three operational-state
+dispatch rejections. The synthetic ORM fixture tests service/transaction behavior,
+not the complete recruitment/HTTP/provider journey. No schema migration or new
+dependency was required. Independent processes, broader administrative
+revocation races and representative load remain open in `GAP-018`.
+
+The subsequent assignment-invariant slice adds a database backstop:
+`uq_rides_one_active_per_driver` covers all four active states across city and
+booking origin. Its transactional migration refuses duplicate active data without
+rewriting history and requires a measured maintenance window for the index build.
+Two service races prove one winner for competing drivers or rides. Two mixed
+scheduled/immediate races reuse the API-built city/booking fixture and a synthetic
+outstanding live offer; each waits on the driver lock, refreshes stale state and
+produces one active assignment. Four direct-write cases verify index enforcement
+and terminal slot release, and a downgrade/conflict-refusal/reapply case proves
+the migration does not silently repair records. These tests add defense and
+bounded local evidence, not certification of all competing writers or workloads.
+
+The scheduled-booking phase uses a separate lease-safe processor for opening
 offer windows and performing dispatch handoff. It uses database time, row locks,
 idempotent transitions, and bounded batches. A commitment does not change the
 driver's live availability outside its configured protected window. Candidate
@@ -492,11 +750,163 @@ never treats immediate `AVAILABLE` state, push reachability, or passenger-facing
 state as scheduling authority. Acceptance writes an active commitment with the
 configured protected `tstzrange`; the transaction-safe overlap constraint/lock
 rejects conflicting work and concurrent acceptance by another driver. At handoff,
-the processor revalidates city authorization, credentials, vehicle, and
-location/conflict policy, then creates at most one live ride or records the
-documented fallback/unfulfilled outcome.
-Scheduling notifications remain refresh hints; authorized polling is the
-delivery fallback.
+the processor revalidates city authorization, active account/approved driver
+verification, selected/owned/active/verified vehicle, known credentials and
+active-ride conflicts, then creates at most one live ride or records the documented
+fallback/unfulfilled outcome. The professional checks are shared with offering
+and acceptance in `scheduled_bookings/eligibility.py`. The separate
+`scheduled_bookings/readiness.py` guard requires available state, matching live
+city/service and a fresh, bounded-clock-skew observation inside the active
+PostGIS service area. Readiness failure uses the configured fallback/unfulfilled
+path; the initial fallback candidate query excludes the failed committed driver.
+Normal candidate filtering now also bounds future observations to the same
+60-second online-admission tolerance. `GAP-007` retains device/field acceptance.
+
+Scheduling mutations now acquire the booking lock before offer/commitment/driver
+locks and refresh ORM state after waiting. Direct service callers use the same
+lock helper as HTTP/worker paths. Driver online/offline/location and vehicle
+mutation routes also lock and reload their profile; changing the active vehicle
+is offline-only. Five deterministic two-session PostgreSQL races in
+`tests/integration/scheduling_concurrency.py` prove a real lock wait with
+`pg_blocking_pids`, retain deliberately stale ORM references, commit both actors
+and inspect durable outcomes. They cover duplicate handoff, both cancellation
+orders, offline-before-handoff and cancellation-before-acceptance. They do not
+replace multi-instance HTTP/load or cross-domain revocation testing.
+
+The separate `scheduled_acceptance_fixtures.py` fixture enables synthetic
+on-demand scheduling and uses the real preference, quote, creation and offering
+services. Five cases in `test_scheduled_acceptance_concurrency.py` prove one
+winner per booking, one active commitment per buffered driver window, allowed
+exact adjacency, committed cancellation releasing capacity, and the database
+exclusion backstop against a concurrent direct writer. Four ASGI/PostGIS cases
+in `test_scheduled_acceptance_http.py` cover overlap `409`, successful adjacent
+acceptance and duplicate rejection, a real foreign-key failure, and rollback
+after notification/outbox SQL flush. Nine metadata-classification unit cases
+cover the narrow translation in `scheduled_bookings/conflicts.py`. Unexpected
+integrity failures now remain sanitized internal errors instead of a misleading
+overlap conflict. These source tests do not change the scheduling policy,
+database schema, public endpoint set, or live availability, and do not prove
+physical-device behavior or independent API-process failover.
+
+`scheduled_bookings/protection.py` now supplies the one correlated Postgres range
+predicate used by matching discovery, post-driver-lock selection and live-offer
+acceptance. Scheduled acceptance performs the reciprocal current-window active-
+ride check under the same driver lock. This closes the currently overlapping
+assignment race without adding client authority or changing a commitment into a
+live ride. Seven migrated-PostGIS service/concurrency cases and three authenticated
+ASGI cases cover exact half-open boundaries, candidate exclusion, cancellation
+release, stale offers, both acceptance orderings, `SKIP LOCKED`, client errors,
+and allowed work outside the current window. Predicted immediate-trip overlap,
+independent processes and device/field behavior remain open.
+
+`auth/authority.py` now defines global account-status predicates and the paired
+PostgreSQL locks used at assignment commit points and account containment.
+Matching discovery filters inactive users; locked candidate selection, live-offer
+acceptance, scheduled-offer acceptance and scheduled handoff hold `FOR SHARE` on
+the user row. Both administration surfaces suspend through the refreshing
+`FOR UPDATE` helper and the existing all-session/device revocation transaction.
+Seven unit cases verify closed status and SQL lock shape. Six isolated PostGIS
+cases verify suspended candidate/offer behavior plus both observed-wait winner
+orders for live acceptance and scheduled handoff. This narrows the account subset
+of `RACE-07`; it does not prove credential/vehicle/configuration races, independent
+processes, device behavior or operational incident acceptance.
+
+The location subset of `RACE-07` now has two migrated PostGIS contention cases
+in `test_scheduled_location_authority.py`. Location writes and handoff already
+serialize on the driver row. The tests prove that a waiting handoff sees a newer
+outside-area observation and records unfulfilled/no-supply, while a handoff that
+owns the lock first retains its accepted ride when the next location arrives.
+Both inspect durable commitment, ride, notification and outbox results after an
+observed lock wait. A reusable handoff fixture also serves the account tests;
+the combined 15-case authority pack passed on 2026-09-05. Device, independent
+process, service-area configuration and field acceptance remain required.
+
+`driver_applications/authorization_lifecycle.py` and `authorization_router.py`
+implement suspension, revocation and reviewed reinstatement of city authority.
+The API uses existing review permission/scope, recent MFA, application versions,
+idempotency with a fresh scope check even on replay, and transactional audit.
+The reviewer console adds a separate status/expiry panel and typed confirmation.
+Reinstatement rechecks global/professional status, owned vehicle, credentials,
+application evidence, reviewed services, validity and competing authorization.
+Approval now locks the driver before checking for active city authority, closing
+its race with reinstatement. The focused 33-case backend run and JS/Wasm browser
+tasks pass; the full 990-test backend regression includes this slice. Operational
+acceptance remains open in `testing.md`. No schema change or automated live-ride
+cancellation is added.
+
+The immediate-authority follow-up adds ten city-restriction tests and two global
+account/dispatch tests. It closes a reproduced assertion when discovery saw an
+active global account but its later shared authority lock observed suspension:
+the proposed driver is now separate from the selected candidate. Dispatch
+rechecks its full eligibility query in a fresh statement snapshot after acquiring
+driver/global authority, then finalizes selection only after all guards pass.
+It can select other ranked eligible supply or leave the ride for bounded retry
+without creating an offer for the rejected driver. All 30 focused tests pass;
+full regression evidence is tracked in `testing.md`. No API/schema/UI change is
+required. Independent-process and other revocation/configuration races remain.
+
+Mobile and applicant web share `CityAuthorizationSummary` for localized recorded
+status, supplied expiry and the server-eligibility/refresh notice. The presence
+of an authorization no longer renders it as verified/active; unknown status has
+an explicit unavailable label. Shared resources stay inside the shared module,
+with a public composable rather than exposing generated resource internals to
+web. Two shared tests cover the status mapping; all 183 shared tests, both Android
+role compiles and 47 tests in each web browser target pass. EN/FR/AR catalogs
+have parity at 610 strings. Physical-device refresh and accessibility remain
+acceptance requirements, not inferred from compilation or model tests.
+
+Every city-authorization decision now writes a generic driver-owned notification
+and `driver.city_authorization.changed` outbox event in the same transaction as
+status, application version and audit. The event contains only authorization ID;
+delivery reloads the authorization/profile to derive the user and publishes the
+allowlisted `DRIVER_CITY_AUTHORIZATION_CHANGED` push refresh. The mobile relay
+causes a complete authenticated restore, and EN/FR/AR inbox copy avoids embedding
+possibly stale action/status. Replay adds no rows and an injected failure after
+outbox flush rolls everything back. The focused 71-test backend pack, 183 shared
+tests and both Android role compiles pass. Provider/device delivery and explicit
+human acknowledgment remain operational gaps.
+
+`test_city_authorization_notification_delivery.py` exercises the real migrated
+outbox row and processor. A failing push provider produces `DELIVERY_RETRY`,
+clears worker lease fields and retains the singular inbox notice. After making
+the bounded retry due, a newly constructed processor delivers it and records two
+attempts without duplicating source state. The related 27-test focused pack
+passes. This is in-process processor-lifetime recovery; a separate-process death
+and real-provider drill remains a T5 gate.
+
+The companion OS-process case starts a child using the production outbox
+processor, waits until its claim transaction commits, forcibly terminates it,
+then starts a distinct replacement process with an immediately stale test lease.
+The replacement derives the driver from migrated source records and delivers the
+same minimized hint once. Tests assert no database URL in child output and no
+user/reason/status in the hint. This validates disconnect plus lease recovery;
+it does not substitute for separate deployed services, orchestration metrics or
+real-provider/device acceptance.
+
+Scheduling notifications are persisted with the booking transaction and now
+enqueue one of five classified push-refresh topics for offer, commitment,
+dispatch, fallback matching, or unfulfilled outcomes. The worker reloads the
+offer/booking, rejects expired or superseded state, and addresses only the
+authoritative driver/passenger. Shared mobile code allowlists those hints and
+localizes their persistent inbox copy in English, French, and Arabic. Authorized
+polling and inbox history remain the fallback; no scheduled notification is
+assignment authority.
+
+A central notification policy is the only source of approved outbox hints. It
+defines channels, urgency, maximum delivery age, fallback, quiet-hour eligibility,
+and dead-letter ownership. Live and FCM allowlists derive from it, FCM applies a
+bounded Android TTL, iOS queue expiration, and informational versus immediate
+Android priority, and the worker
+consumes expired events before provider access. Unclassified topics raise a fixed
+error for bounded retry/dead-letter visibility instead of disappearing as
+successful delivery. Live failure does not suppress the push attempt; a partial
+failure still retries, so duplicate hints are expected. The worker passes an
+absolute deadline derived from durable event creation and capped by offer or
+coordination source expiry. FCM recomputes remaining Android TTL before each HTTP
+attempt, preserves the absolute APNs deadline and suppresses expired/sub-second
+submissions, including after credential refresh. Per-device failures no longer
+skip later registrations, but durable per-device retry progress and measured
+device-visible expiry remain open in GAP-028.
 
 City configuration activation emits an invalidation hint containing only city
 and immutable configuration version. Replicas still load and validate the
@@ -520,12 +930,29 @@ completion and participant ownership. Ratings do not feed matching, eligibility,
 or earnings. Safety reports and support cases must remain separate domains with
 their own access rules.
 
-The support-ticket MVP allows an authenticated passenger or driver to create,
-list, and retrieve only their own tickets. A ticket can link to a ride only when
-the caller participated in it. Support text is not logged, and ticket creation
-is rate-limited. Administrative triage and safety-response workflows are
-deliberately deferred because they require documented operational authority,
-not just a database status field.
+An authenticated passenger or driver can create, list, and retrieve only their
+own support tickets. Ride association requires participation. Creation is
+rate-limited and idempotent. Restricted support routes add priority, response
+deadline, active-administrator assignment, append-only internal/participant
+notes, a strict lifecycle, controlled resolution codes, overdue filters, fixed-
+field audit, and a 730-day post-closure retention projection. First triage must
+include a participant-visible acknowledgement.
+
+Safety is a separate module and table family. A reporter submits only a ride,
+controlled category, and description; the backend derives the other participant.
+Reporter-facing responses omit description, identities, priority, assignment,
+deadlines, retention, and notes. Restricted transitions require a public message
+every time and support an audited one-to-one escalation from a ride-linked
+support case. `IMMEDIATE_DANGER` receives an urgent five-minute acknowledgement
+target; other safety categories receive a high-priority 30-minute target. The
+app explicitly says reporting is not an emergency service. Migration
+`20260824_0032` owns this schema. City-scoped case authority, durable paging, and
+legal-hold-aware retention are added by `0040`–`0042`. The retention processor
+erases direct personal links, free text, and notes from due closed cases only
+after a locked active-hold check, then records immutable non-content evidence.
+Placement/release belongs only to market-scoped platform administrators through
+the operations API and requires the implemented recent-MFA step-up. Named legal-
+review ownership, pager drills, and backup-expiry proof remain release gates.
 
 Ride-offer and driver-assignment transactions also create durable participant
 notification records. The API exposes only the owner's notification history and
@@ -584,6 +1011,14 @@ production publish a versioned, four-field hint through private PostgreSQL
 `LISTEN/NOTIFY`; every API process validates it and addresses only the named
 user's local sockets. FCM delivery requires environment-provided application default
 credentials, bounded retry, invalid-registration revocation, and device validation.
+
+The same supervisor owns scheduling handoff and operational-analytics refresh
+loops. Analytics takes a transaction-scoped PostgreSQL advisory lock, records
+only coarse `CITY_WIDE` eligible/available supply, purges expired supply
+snapshots, and refreshes `operational_metric_facts_hourly_v1` from normalized
+records. The default cadence is 300 seconds and is bounded to 30–3,600 seconds.
+Recomputation through the 730-day retention window incorporates late events and
+provides deterministic reconciliation; the materialized view is reporting-only.
 
 `TAXIMOBILE_OUTBOX_MAX_ATTEMPTS` is a required positive deployment setting
 (default `8`). A failed event is rescheduled with bounded exponential backoff
@@ -649,22 +1084,27 @@ Public fixed-route catalog versions may be cached; driver applications,
 operations pages, city drafts, reports, and exports are not shared-cacheable.
 
 Production starts with a small Linux deployment containing one public API
-container, one private background-worker container owning matching, outbox, and
-credential lifecycle, one private self-hosted routing service loaded
+container, one private background-worker container owning matching, outbox,
+credential lifecycle, scheduling, analytics refresh, case-alert paging, and
+case retention and driver-document retention, one private self-hosted routing service loaded
 with versioned Morocco extracts (Valhalla by default or the approved GraphHopper
 replacement), managed
-PostgreSQL/PostGIS with encrypted backups, object storage only when verified driver
-documents are implemented, and managed TLS/load balancing or a standard reverse
+PostgreSQL/PostGIS with encrypted backups, a shared private volume containing
+only AES-256-GCM driver-document ciphertext, a private ClamAV service and signature
+volume, and managed TLS/load balancing or a standard reverse
 proxy. PostgreSQL and the selected routing engine are private to application
 services. Secrets live in the deployment secret store, never in images, source,
 or mobile builds. MapLibre
 tile/style configuration is public client configuration but still varies by
-environment. CMI and FCM credentials remain backend/deployment secrets.
+environment. FCM credentials, manual-transfer recipient configuration, and any
+future payment-provider credentials remain backend/deployment secrets.
 
 `infra/deploy/compose.production.yaml` is the provider-neutral single-host release
-template. It requires an immutable API image digest and externally supplied
+template. It requires immutable API and ClamAV image digests and externally supplied
 managed PostGIS, a validated routing provider and private URL, Firebase,
-host/proxy, JWT, and monitoring configuration. It never starts migrations as part
+host/proxy, JWT, monitoring, and independent driver-document encryption
+configuration. API and worker mount the same document volume; ClamAV has no host
+port and never receives the encryption key. It never starts migrations as part
 of API boot. The API is
 loopback-bound for same-host TLS proxying, read-only, capability-free, and fixed
 to one Uvicorn worker per container so metrics remain independently scrapeable.
@@ -677,6 +1117,124 @@ health check only; readiness remains the deployment's database-aware gate. The
 application image does not run migrations automatically in production. A
 release pipeline must run `alembic upgrade head` as a controlled pre-rollout
 step, then roll out a compatible API image.
+
+`operations/migration_lock.py` now guards all online Alembic execution with a
+fail-fast PostgreSQL transaction advisory lock before version reads or schema
+changes. The fixed two-integer namespace is stable between releases and scoped
+to the connected database. Contention produces a fixed actionable Alembic error;
+the free-testing startup path remains fail-closed before opening the public port.
+Generated offline SQL includes the equivalent lock check inside its transaction.
+Commit, rollback and connection loss release ownership without a stale lock file.
+The chain must stay in one transaction; source checks reject known explicit
+commit/autocommit/per-migration transaction APIs. Future nontransactional DDL
+requires a new reviewed lock lifetime. This does not authorize parallel migration
+jobs or remove the need to measure DDL lock/build time under hosted traffic.
+Tests include actual upgrade/downgrade subprocess refusal and recovery after a
+separate lock-owner process is terminated, not only mocked command return codes.
+
+`operations/migration_limits.py` adds validated transaction-local lock-wait and
+statement limits for online Alembic and generated offline SQL. Defaults are 5s
+and 300s; configurable bounds are 1–120s and 1–7200s respectively, with statement
+greater than lock wait. Zero/invalid configuration is refused before engine
+creation without echoing values. Known PostgreSQL lock/statement cancellation
+states become fixed actionable Alembic messages. Production Compose exposes the
+two timeout variables only to the migration service; API/worker DB limits are
+unchanged. Tests exercise a real CLI upgrade blocked by an ordinary writer,
+unchanged schema/version after timeout, ownership release, successful retry,
+online/offline statement cancellation, setting restoration and invalid CLI
+configuration. Outer process/connection/idle deadlines and hosted maintenance
+acceptance remain deployment responsibilities.
+
+The modular synthetic workload
+entrypoint `operations/passenger_workload.py` uses `operations/workload/` for
+configuration, aggregate evidence and real passenger HTTP journeys. It creates
+only explicitly confirmed synthetic test accounts, exercises ordinary quote,
+request, idempotent replay, restore and cancellation endpoints, and never writes
+SQL or uses administrative authority. Its test fixture separately provisions
+tariff/eligible driver facts in isolated PostGIS. Per-step and whole-run
+deadlines, bounded same-key recovery, admission limits and conservative unresolved
+command counts prevent failed runs from being mistaken for success. The actual
+CLI/socket test found and fixed dispatch locking the entire nearby candidate
+set. Dispatch now rechecks individual ranked candidates under profile locks;
+offerless matching rides are retried by the worker within the original matching
+deadline. Source/location/provider/field limitations and the executable phases
+are in [testing_workloads.md](testing_workloads.md).
+
+`operations/capacity_workload.py` now adds the first open-loop capacity baseline
+without changing the journey contract. It pre-admits bounded synthetic passengers,
+releases up to 1,000 request/cancel arrivals on an absolute constant-rate schedule,
+uses the actor pool as the hard in-flight limit, and reports schedule lag,
+backpressure, admission/measurement time and peak concurrency separately from
+HTTP latency. A first failed invariant halts new release, while already ambiguous
+writes remain subject to conservative same-key recovery and reconciliation. Unit
+tests cover bounded/private evidence, saturation, fail-fast release and invalid
+controls; an actual child CLI/Uvicorn/fresh-PostGIS test reconciles all four local
+arrivals. Sustained/burst mixes, multi-role load, resource telemetry, multiple
+replicas, soak and failover remain open under GAP-018.
+
+The capacity runner now also has a strict target-independent profile and
+`operations/capacity_plan.py` orchestrator. It requires exactly four ordered
+WARMUP/STEADY/BURST/RECOVERY phases, approved-status and evidence-reference
+attestations, validates every phase before I/O, and caps the combined plan at
+1,000 arrivals and 2,400 seconds. Unknown fields, unsafe files and non-finite or
+out-of-range controls fail closed. Aggregate evidence contains a canonical
+profile SHA-256 and unexecuted phases but no target origin, city UUID or
+coordinates. Unit tests cover profile mutation, bounds, file safety, complete
+execution and fail-stop behavior; a real CLI/Uvicorn/PostGIS case executes and
+reconciles all four phases. The DRAFT template is not an approved workload.
+
+The profile now binds monitoring cadence and 21 operational thresholds into the
+same semantic digest. `operations/workload/monitoring.py` samples 22 fixed,
+aggregate-only Prometheus expressions concurrently during each phase and emits
+only numeric summaries and closed failure codes. It refuses credentials/paths,
+requires HTTPS plus explicit confirmation for nonlocal targets, disables
+redirects and environment proxies, bounds responses to 64 KiB, rejects all
+series labels and requires one finite value per expression per round. A threshold
+breach or missing sample marks the phase incomplete and stops the plan. Unit
+coverage includes malformed/labelled/oversized/multiple/non-finite responses,
+counter restarts, target guards, all four monitored phases and sampler cleanup;
+the local real-HTTP/PostGIS case explicitly declares itself a harness run without
+monitoring. `db/metrics.py` adds one five-second-bounded aggregate PostgreSQL
+statement over the current database: snapshot availability, connection count and
+server limit, active connections, ungranted locks and the database deadlock
+counter. Rendering has no database/session/user/query labels; malformed, timed-out
+or failed snapshots expose only an availability zero and omit stale values. The
+same endpoint adds fixed per-process pool availability, configured size,
+checked-in, checked-out and overflow gauges, a cumulative checkout-wait
+histogram and timeout counter without caller or connection labels. API and worker
+settings now explicitly bound pool size, maximum overflow and checkout timeout;
+deployment owners must budget `(size + overflow) * replicas` below PostgreSQL's
+connection limit with migration and operator reserve. Eight immutable database/
+pool alerts and nine dashboard panels cover snapshot and pool availability,
+utilization, checked-out connections, overflow, checkout-wait p95, checkout
+timeouts, lock waiters and deadlocks. Unit and real isolated-PostGIS tests cover
+the database collector and prove a size-one pool records one bounded timeout
+while a connection is held. Host resources, query-plan telemetry and
+representative hosted thresholds are intentionally not claimed.
+
+That full regression initially exposed a clone-teardown race rather than a
+product assertion failure: the database-owner test role attempted to terminate a
+transient superuser auxiliary and received insufficient privilege. The integration
+fixture now disables new clone connections, terminates only owner client sessions,
+and retries SQLSTATE `55006` while auxiliary work drains; it does not grant
+superuser authority. Three repetitions of the exact former failure, the initial
+941-test, 952-test, 956-test, 957-test and 970-test reruns, and the current
+990-test rerun passed.
+
+`operations/cash_workload.py` extends that evidence with paired driver/passenger
+cash journeys. `workload/client.py` is the shared bounded HTTP boundary;
+`drivers.py` handles distinct secret-supplied synthetic identities, read-only
+preflight, normal location/online commands and run-owned offer discovery;
+`cash_journey.py` checks acceptance through completion, idempotent cash settlement,
+receipt and exact driver/operator economic conservation. Driver polling reads
+do not hold a lease, avoiding synchronized opposite-offer starvation inside
+the test harness. Only optional scheduling-version null/absence is normalized
+between estimate and receipt; required fields and monetary values remain strict.
+The normal backend eligibility and financial authority are unchanged. Real
+CLI/socket/PostGIS tests cover three fee modes and two post-commit HTTP failures;
+unconfirmed active/financial state stays failed and visible without manufactured
+completion, money movement or destructive cleanup. Full hosted, physical,
+independent-supply, manual-transfer/refund and provider acceptance remain open.
 
 Each API replica and the separate worker expose authenticated
 Prometheus-compatible metrics at `/internal/metrics` on their own operations
@@ -694,12 +1252,37 @@ logs retain the request ID needed to investigate an alert without copying privat
 data into metric labels. Request and exception logs use the same bounded route
 templates as metrics and collapse unknown paths to `_unmatched`, so ride/user IDs
 and attacker-controlled paths do not become observability labels or fields.
+The request boundary separately detects only the exact configured legacy
+administration namespace and records a fixed `served` or `blocked` outcome. It
+never labels or logs a blocked raw path. Local/test routed responses are marked
+deprecated, a client-source scanner rejects new mobile/web callers, and the
+production alert set treats any served legacy route as critical.
 Every launcher disables Uvicorn's separate raw access log because the application
 already emits one privacy-bounded structured completion event. This prevents
 duplicate per-request I/O and avoids reintroducing raw paths outside the reviewed
 logging boundary.
 
-The matching, outbox, and credential-lifecycle loops share one cancellation-safe polling
+Production API and worker processes additionally configure separate
+`/var/log/taximobile/events.jsonl` sinks. `SecureRotatingFileHandler` keeps the
+active file and rollover chain at mode `0640`; configuration bounds one file to
+10 MiB and five backups by default. The Linux image fixes the application owner
+at UID/GID `2000`. Production Compose mounts one role-specific named volume into
+each process, never a shared API/worker file.
+
+Alloy runs as UID `473` with supplemental group `2000`, mounts both log volumes
+read-only, tails `events.jsonl*`, parses event time/level, drops malformed JSON
+and lines over 16 KiB, and retains only `service=api|worker` as an index label.
+It has no Docker socket, host log path, remote import, public network, or alert-
+egress network. Loki runs as UID `10001`, stores TSDB v13 index/chunks/WAL in its
+own volume, rejects data older than and queries beyond 30 days, and enables
+compactor retention. It has no authentication and therefore remains internal
+with loopback-only operator access. The runtime validator uses candidate images
+to prove native config parsing, HTTP readiness, Linux volume permissions, two
+queryable role streams, and rejection of malformed/oversized fixtures; CI mirrors
+the ingestion smoke.
+
+The matching, outbox, credential-lifecycle, scheduling, analytics, case-alert,
+and case-retention loops share one cancellation-safe polling
 runtime. Every successful or failed iteration updates fixed-name, low-cardinality
 metrics; successful iterations also update processed-item counters and a
 last-success timestamp. A failed iteration logs only the fixed worker name and
@@ -708,7 +1291,14 @@ provider responses, event payloads, user/resource IDs, coordinates, and tokens
 never enter worker telemetry. Matching/outbox poll intervals are constrained to
 0.1–60 seconds and credential polling to 1–300 seconds, so Prometheus can
 reliably alert on new iteration errors and on a worker that has not completed an
-iteration for five minutes.
+iteration for five minutes. Analytics polling is separately bounded to 30–3,600
+seconds because its materialized-view rebuild is intentionally less frequent.
+Case-alert polling is bounded and its HTTPS pager uses a separately configured
+token and timeout. Missing configuration means durable alerts remain pending; it
+never produces a false delivery. Case-retention polling is bounded to a slower
+300–86,400 second interval with a 1–1,000 row batch per case kind; each claim is transaction-
+locked and skips active legal holds. Production requires a complete pager URL/token
+pair on the worker and the API process receives neither value.
 
 Each authenticated scrape also reads one aggregate outbox snapshot: pending,
 dead-lettered, and currently locked row counts plus the oldest pending age. It
@@ -719,12 +1309,27 @@ counts. The deployment verifier requires an available snapshot and all four
 gauges, while alerting should treat any dead-letter count, prolonged oldest age,
 or unavailable snapshot as an operational incident.
 
-The provider-neutral deployment directory includes initial Prometheus alert
-rules for those outbox and worker conditions, unhandled errors, sustained 5xx ratio, and the
-documented 500 ms p95 latency budget. CI validates the required rule structure;
+The provider-neutral deployment directory includes Prometheus alerts for those
+outbox and worker conditions, unhandled errors, sustained 5xx ratio, the
+documented 500 ms p95 latency budget, all four scrape targets, collector line
+rejection, Loki write retry/drop failures, and any routed legacy-administration
+request. CI validates the required rule structure;
 staging must run the selected Prometheus-compatible service's semantic rule
 validator and provide a separate `/ready` probe. Alert destinations, named
 responders, and escalation timing remain deployment-owner inputs.
+
+The same optional overlay provisions Grafana with internal Prometheus and Loki
+datasources plus immutable `TaxiMobile Operations` and `TaxiMobile Logs`
+dashboards. It runs as the
+image's fixed unprivileged UID with read-only root, a dedicated state volume and
+loopback-only UI; its initial administrator password comes from a separate Docker
+secret. Anonymous access, signup, telemetry, plugin/update traffic and duplicate
+Grafana-managed alerting are disabled. Offline validation rejects unknown/private
+query dimensions or panel drift, while the runtime preflight starts disposable
+hardened components and fails on readiness, provisioning, ownership, ingestion,
+or filter errors. This proves the package starts and preserves its source
+boundary, not that real staging series, retention/capacity, backup/restore, or
+staff diagnosis are accepted.
 
 Continuous integration provisions an isolated PostGIS service, applies the full
 migration chain live, also renders offline migration SQL for review, runs the
@@ -746,12 +1351,21 @@ unsigned/providerless verification switches. This is the required compiler gate
 for Core Location, MapLibre, FCM, APNs entitlements, and release validation; it
 does not create distributable archives.
 
-The backend integration gate drives one complete cash-ride lifecycle through the
+The backend integration gate clones the pristine migrated `taximobile_ci`
+template per integration test and drops each clone afterward; the guarded local
+entry point grants and always revokes the test role's temporary `CREATEDB`
+authority. This prevents administrator/session/catalog state from leaking across
+otherwise independent lifecycle evidence. The gate drives one complete cash ride and a second
+manual-transfer ride through the
 HTTP boundary on migrated PostGIS: account creation and login, driver application
 and human approval, vehicle verification, fresh location and availability,
 tariff activation, geographic matching, atomic offer acceptance, every ride
 transition, fare finalization, pending and settled cash receipts, rating, and
-driver earnings. The rating portion also proves that the assigned driver can
+driver earnings. The transfer portion proves capability advertisement, immutable
+recipient/reference receipt data, rejection of the cash endpoint, idempotent
+passenger submission without completion, forbidden passenger reconciliation,
+administrator queue/rejection/retry/verification, and exactly reconciled earnings.
+The rating portion also proves that the assigned driver can
 read the passenger feedback while an unrelated driver receives `403` and no
 reviewer identity is returned. It includes the negative proof that an eligible driver still
 cannot go online without a backend-accepted fresh location. The test is guarded
@@ -850,13 +1464,14 @@ guarded `taximobile_restore_` name, and never drops or overwrites a database.
 `verify-portable-restore.ps1` independently requires one source migration head,
 checks PostGIS, compares privacy-bounded aggregate counts, and runs a no-op
 migration using the application role without printing credentials or row data. A
-live workspace drill restored migration head `20260813_0029`, matched source
+historical live workspace drill restored migration head `20260813_0029`, matched source
 aggregate counts for users, rides, payments, driver credentials, cooperatives,
 and memberships,
 reported PostGIS 3.5, and accepted `alembic upgrade head` through the application
 role. Production backups remain the managed database provider's
 encrypted, access-controlled responsibility and must be validated with a staging
-restore.
+restore. That historical drill predates the current `20260908_0052` head and must
+not be treated as current-head restore acceptance.
 
 Continuous integration runs Python compilation/tests and migration SQL generation,
 then the shared JVM test suite and both Android product-flavor Kotlin compiles with
@@ -905,7 +1520,7 @@ button, text field, sheet, status pill, fare block, passenger-safe driver card,
 offer card, map FAB, toast banner, confirmation dialog, skeleton, and segmented
 control. The extended foundation adds specialized email, Moroccan-phone,
 password, numeric, OTP, and star-rating controls; reusable cards; a cash
-payment-method card; and deterministic code-drawn brand, empty-state, and vehicle
+and manual-transfer payment-method card; and deterministic code-drawn brand, empty-state, and vehicle
 placeholders. Optional raster assets are enhancements rather than screen
 dependencies. Session restoration and account creation use a dedicated dark progress
 surface; signed-out and offline states use the light product chrome and shared
@@ -919,13 +1534,24 @@ pickup/destination flow, one-shot location FAB, backend fare estimate and route,
 backend-confirmed active-ride/driver status, explicit cancellation confirmation,
 final receipt/payment facts, account/support/history, and inbox access. It does
 not render fake nearby cars or treat route, push, fare, cash, or payment display as
-authority. Map tap and one-shot location are the production place-selection
-controls; exact editable coordinate fields are compiled into Android/iOS debug
+authority. Map tap, one-shot location, and the provider-neutral place-search
+picker are the production place-selection controls; exact editable coordinate fields are compiled into Android/iOS debug
 presentation by default, with localized selected/unselected summaries retained in
 release UI. A native map-style failure promotes the fields in release as the
-required non-map fallback. A future geocoding/place-search adapter may replace those summaries
-without changing the coordinate contract. The remaining UI test/screenshot matrix
+required non-map fallback. Search is city-focused, debounced and explicitly
+retryable; results distinguish address/street/locality/landmark, expose provider
+attribution, and disable an outside-area result when pickup is selected. A
+settled map point has an explicit reverse-address action; the returned label never
+replaces its authoritative coordinate. Disabled/provider-failure/no-match states
+retain map/manual selection. Saved-place labels remain deferred. The remaining UI test/screenshot matrix
 is a later validation slice scheduled in `ui.md`.
+
+The account surface also presents a visually separate safety section for
+passenger and driver roles. It can bind a report to the active, selected, or
+recent authorized ride, cycles only through the backend category vocabulary,
+shows reporter-safe status/public messages, and cannot submit without a ride and
+description. English, French, and Arabic carry the same emergency-service
+warning. Internal notes and reported-user identity have no mobile model fields.
 
 The Android and iOS MapLibre surfaces now share deterministic camera-focus
 rules: a backend route takes priority, otherwise selected endpoints are framed,
@@ -1012,15 +1638,44 @@ models have been removed. They had no product references and are not alternative
 domain contracts; all ride and platform behavior now lives under the documented
 TaxiMobile packages.
 
-Handwritten mobile API calls now have a repository-level drift gate. It reads the
-actual Ktor gateway call sites, accepts only versioned literal endpoint fragments
-plus reviewed identifier/driver-transition interpolation, and compares every
-expanded HTTP method/path with FastAPI's generated OpenAPI document. The
-live-event WebSocket is checked directly against registered FastAPI routes.
-Unknown call shapes fail closed so adding a gateway cannot accidentally bypass
-coverage. The gate runs in backend CI and before the portable migrated-database
-suite; payload schema behavior remains covered by focused Kotlin and backend API
-tests.
+Handwritten mobile and operations-web API calls now have repository-level drift
+gates. They read actual Ktor call sites, accept only versioned literal endpoint
+fragments plus reviewed identifiers and finite fail-closed transitions, and
+compare every expanded HTTP method/path with FastAPI's generated OpenAPI
+document. The mobile live-event WebSocket is checked directly against registered
+FastAPI routes. Operations gateways share `OperationsApiEndpoints`, which
+requires an HTTP(S) base ending in exactly one `/api/v1` and rejects absolute,
+query-bearing, fragmented, or empty-segment route input. This removed duplicate
+version-prefix construction from the control-plane and payment modules.
+
+Unknown calls, arbitrary runtime routes, and unreviewed action selectors fail
+closed so a new gateway cannot silently bypass coverage. Both gates run in
+backend CI and before the portable migrated-database suite; payload-schema and
+authorization behavior remain covered by focused Kotlin and backend API tests.
+
+Promotion evidence now has a separate executable control under `infra/testing/`.
+Its closed T0–T10 catalog defines environment/population boundaries, exact
+evidence classes, approval functions and P0 prerequisites. The standard-library
+validator requires one clean hash-addressed candidate, ordered predecessor
+acceptance, controlled evidence references, defect disposition and all GAP-001–
+GAP-019 closure references before T8. It refuses public users before T9, live
+money before T8, real-user evidence before T8 and intentional failure injection
+in field/user phases. CI validates the catalog and deliberately empty template;
+only authorized people verifying retained external evidence can accept a phase.
+
+The release lifecycle now has an executable source boundary. Android passenger,
+Android driver, iOS passenger, iOS driver, applicant web and operations web each
+send a strict numeric version and positive build under a closed surface header.
+Production-like settings require a complete minimum/recommended map for all six
+surfaces and cannot disable compatibility enforcement. The command-free
+preflight runs before mobile session restoration and before either web workspace;
+mobile renders localized mandatory-upgrade/retry states and web renders branded
+reload/retry states. The same backend policy still rejects every ordinary v1
+request and live-event connection, so bypassing the presentation cannot bypass
+enforcement. Release web packaging and Android/iOS release guards validate the
+metadata shape. This advances GAP-036 in source; approved support windows,
+distribution channels, signed obsolete/current artifacts and a hosted policy
+raise/rollback drill remain external T4/T5 evidence.
 
 Shared presentation copy is now externalized into exact-parity English, French,
 and Arabic Compose catalogs. `UiMessage` keeps resource identity and substitution
@@ -1043,16 +1698,74 @@ therefore remains a route-provider acceptance gate, not a completed claim.
 ## 7. Selected and Deferred Integrations
 
 The selected integrations are MapLibre Native for map rendering, self-hosted
-Valhalla for routing, CMI hosted checkout for cards, FCM for background push, and
-the existing explicit cash flow. They remain behind narrow integration interfaces.
+Valhalla for routing, FCM for background push, explicit cash settlement, and
+external bank/M-Wallet transfer with manual reconciliation. They remain behind
+narrow integration interfaces.
 GraphHopper is the approved routing fallback behind the same normalized backend
 contract. Both server adapters are implemented; Valhalla remains the default and
 mobile clients never select or call a routing engine directly. Deployment accepts
 only `valhalla` or `graphhopper` and must pair that choice with the corresponding
 private base URL and accepted Morocco graph artifact.
 
-Still deferred are the production MapLibre tile/style source, geocoding provider,
-CMI merchant-specific protocol and credentials, Firebase project credentials/APNs
-configuration, SMS provider, hosting provider, Redis, task queue, and microservice
-extraction. Do not invent missing provider contracts or add infrastructure until
-the corresponding operational input exists.
+Still deferred are the production MapLibre tile/style source, acceptance and
+operation of a production geocoding deployment/data license,
+CMI and every card-provider merchant protocol/credential, Firebase project
+credentials/APNs configuration, SMS provider, hosting provider, Redis, task queue,
+and microservice extraction. CMI is deferred until well after the functional
+cash/transfer launch and must not be represented by a simulator or fake success.
+Do not invent missing provider contracts or add infrastructure until the
+corresponding operational input exists.
+
+The geocoding source boundary itself is implemented. The backend exposes
+authenticated `GET /places/search` and `GET /places/reverse`, normalizes an
+approved Nominatim-compatible response, applies independent per-account limits,
+and uses the active versioned PostGIS city polygon for pickup serviceability.
+`TAXIMOBILE_GEOCODING_PROVIDER=disabled` is the default; selecting `nominatim`
+requires a base URL, timeout and identifying user agent. Hosted environments
+require HTTPS and reject `nominatim.openstreetmap.org`. This is source closure,
+not provider, license, coverage, capacity, privacy, or field acceptance.
+
+Migration `20260820_0030` adds `MANUAL_TRANSFER`, immutable recipient snapshots,
+and append-oriented transfer claims. The estimate endpoint advertises only methods
+available from fail-closed backend settings; ride creation stores the selected
+method. Completion creates a pending payment. Passenger submission changes it to
+processing only, while isolated administrative verify/reject routes own statement
+reconciliation. Verification and driver-earning creation share one locked,
+idempotent, audited transaction. Mobile renders the returned instructions and
+authoritative pending/processing/completed states without collecting financial
+credentials or images.
+
+Migration `20260824_0031` adds append-only `payment_refunds` with closed reason
+and settlement-method enums, unique evidence, positive-money and launch-funding
+constraints, and administrator/payment ownership. The administrator create
+command locks the completed payment, totals earlier refunds, rejects duplicate or
+excess evidence, records audit and idempotency state in the same transaction, and
+marks only a fully exhausted payment `REFUNDED`. The passenger receipt exposes
+safe refund totals/items while retaining the original fare. Shared mobile UI
+localizes reason/status presentation. Launch refunds are fully operator-funded;
+driver earnings remain immutable until the later city economics phase defines a
+separate driver-adjustment authority.
+
+Migration `20260831_0044` replaces deployment-wide payment selection for every
+non-legacy city with versioned city/operator/service capabilities and verified
+recipient accounts. An active city-configuration service must reference the exact
+active/effective capability; estimate and ride creation resolve it independently
+and fail closed on any mismatch. Ride, payment, and refund facts retain explicit
+city/operator provenance, while ride/payment rows also retain capability and
+recipient provenance. The four manual-transfer environment variables remain only
+as a disabled-by-default compatibility fallback for the deterministic legacy
+city. Cash remains mandatory in every capability.
+
+The operations application includes a payment module for recipient and
+capability lifecycle commands, scoped manual-transfer reconciliation, and the
+append-only refund ledger. Configuration requires
+`MANAGE_PAYMENT_CAPABILITIES`; settlement requires `RECONCILE_PAYMENTS`.
+Recipient verification/retirement, capability activation, and refund recording
+require recent operations MFA as applicable, and all mutations preserve backend
+scope, optimistic concurrency, idempotency, and audit authority.
+
+FCM and Crashlytics remain because Firebase lists both as no-cost Spark-plan
+products. This implementation does not use Firestore, Realtime Database, Cloud
+Functions, Storage, Hosting, phone authentication, or Firebase Analytics. Adding
+one requires a separate cost/privacy/architecture decision; push failure never
+blocks WebSocket refresh or authoritative API behavior.

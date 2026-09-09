@@ -48,6 +48,7 @@ def test_cancellation_hint_is_enqueued_in_the_business_transaction() -> None:
     session = AsyncMock()
     session.add = MagicMock()
     session.flush = AsyncMock()
+    session.scalar.return_value = ride
     enqueue = AsyncMock()
 
     with patch("taximobile_api.domains.rides.service.enqueue", new=enqueue):

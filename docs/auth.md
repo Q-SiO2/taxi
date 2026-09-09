@@ -1,5 +1,29 @@
 # TaxiMobile — Authentication and Authorization Specification
 
+## Current standing — 2026-09-03
+
+Mobile registration/login, access and rotating refresh sessions,
+revocation/suspension, role checks, scoped operations grants, separate operations
+sessions, TOTP/recovery-code MFA, recent-MFA step-up, secure-cookie/CSRF web
+flows, and provider-independent mobile offline-code reset are implemented in
+source. Backend self-service APIs list/revoke active sessions and change the
+password after re-authentication; the signed-out recovery form is localized for
+English, French, and Arabic. Both mobile account screens expose password-
+reauthenticated recovery-code creation, active-session listing/revocation, and
+password change. Source now requires an explicit saved-all-codes check before
+the user can clear the one-time secret bundle from render state on Android or
+iOS; no automatic clipboard path is used. Physical-device secure-save behavior
+still needs UX acceptance. Verified email/phone ownership, delivery-based password reset, account deletion, and personal-
+data export are not implemented. Production recovery has not been exercised.
+See [`gaps.md`](gaps.md).
+
+The operations console now provides reviewed create/revoke controls for scoped
+staff grants. It derives scope from the active selector, requires typed
+confirmation and reasons, surfaces expiry/manual-recertification state, and does
+not replay a command after MFA step-up. The backend rejects self-grant and
+self-revocation and remains authoritative for target status, scope and
+permissions. Independent approval and last-admin continuity remain open.
+
 ## 1. Purpose
 
 This document defines how TaxiMobile authenticates users and determines what authenticated users are allowed to do.
@@ -374,7 +398,12 @@ User
  └── Session C — Desktop
 ```
 
-A user should eventually be able to view and revoke active sessions.
+`GET /auth/sessions` returns the authenticated account's active, non-expired
+sessions, newest first, bounded to 100 records, and marks the current session.
+`DELETE /auth/sessions/{session_id}` can revoke only a session owned by that
+account and atomically revokes push registrations still bound to it. Passenger
+and driver account screens expose this list, require confirmation before
+revocation, and clear local credentials when the current session is revoked.
 
 ---
 
@@ -393,18 +422,30 @@ Reasons may include:
 
 Revoking one session should not necessarily revoke every other session unless required.
 
+Operations-wide account actions must use the operations audience, a scoped
+permission, recent MFA where required by incident policy, a controlled reason,
+and a fixed-field audit event. The older server-role-only
+`/admin/users/{user_id}/*` actions are local/test compatibility routes and are
+not mounted in staging or production. The scoped operations account commands
+under `/operations/markets/{market_id}/users/{user_id}` implement account-wide containment only for a
+`PLATFORM_ADMIN` holding `manage_account_security` across every market associated
+with the target. Unrelated accounts are hidden and incomplete cross-market
+coverage fails closed. Staff must never re-enable the legacy API as a workaround.
+
 ---
 
 # 20. Password Reset
 
 A password reset process should verify control over an approved recovery method.
 
-Possible recovery methods include:
+Possible delivery recovery methods include:
 
 * Verified phone number.
 * Verified email address.
 
-The exact mechanism depends on available infrastructure.
+The exact delivery mechanism depends on available infrastructure. TaxiMobile
+does not currently claim verified ownership of either contact channel and does
+not use Firebase phone authentication.
 
 Password reset links or codes must:
 
@@ -412,6 +453,28 @@ Password reset links or codes must:
 * Be single-use.
 * Not expose the existing password.
 * Be rate limited.
+
+Migration `20260902_0046` implements a provider-independent fallback for ordinary
+passenger/driver accounts: a password-authenticated endpoint rotates eight
+offline recovery codes. Each code contains 100 bits of cryptographic randomness,
+is displayed only in the creation response, is stored only as a domain-separated
+SHA-256 digest, and expires after 180 days. Rotating the set invalidates every
+older code. Staff identities, including accounts with historical operations
+grants, cannot use this mobile path and must follow the separately controlled
+operations-MFA recovery procedure.
+
+`POST /auth/recovery/reset` accepts an identifier, one saved code, and a new
+password. Code lookup and consumption are serialized under the account lock. A
+valid reset deletes the whole code set, replaces the Argon2 password hash, and
+revokes all mobile sessions, operations sessions, and push registrations in the
+same transaction. Invalid, expired, replayed, missing-account, suspended-account,
+and staff-account requests return the same `202 {"accepted": true}` body. The
+rate limit is keyed by client and normalized identifier; logs and persistence
+retain only a hash of the limiter key.
+
+This offline mechanism is usable only after a user has safely saved codes. It is
+not evidence that a registration email/phone is verified, and it is not a safe
+support override for a user who never created or has lost every code.
 
 ---
 
@@ -425,9 +488,13 @@ For example:
 Password reset requested.
 ```
 
-should be returned whether or not the identifier exists.
+is returned whether or not the identifier exists or the code is valid.
 
 This reduces account enumeration.
+
+The implementation also performs the new Argon2 password hash before account
+lookup so the missing-account path does not skip the dominant reset work.
+Production-like statistical timing and abuse tests remain required.
 
 ---
 
@@ -511,7 +578,9 @@ OPERATOR_ADMIN
 CITY_MANAGER
 DRIVER_REVIEWER
 PRICING_MANAGER
+PAYMENT_RECONCILER
 SUPPORT_AGENT
+SAFETY_RESPONDER
 ANALYST
 ```
 
@@ -519,6 +588,27 @@ Each grant identifies its market, operator, and/or city scope. A template name
 without a matching scope and permission is not authorization. Passenger,
 driver, and cooperative-member roles remain ordinary product roles; they do not
 inherit administrative access from membership or employment.
+
+The browser may construct only these role/scope combinations and may submit a
+request only from its currently selected scope. That is a mistake-reduction
+control, not authorization. In staging and production, direct grant creation and
+revocation fail closed. Each change starts as a durable `PENDING` request carrying
+an immutable target, role, scope, expiry/source-grant and reason snapshot.
+
+Approval or rejection requires another recently MFA-verified market-scoped
+`PLATFORM_ADMIN`; requester, target and decider must be three distinct accounts.
+Cancellation belongs only to the requester. The decision supplies the expected
+request version and a separate reason. Under a market row lock, the API rechecks
+the decider's live authority, target state, scope, expiry, duplicate/source-grant
+state and platform-admin continuity before changing authority and request state in
+one transaction. Replays return the stored response; a new stale decision is
+rejected. A failed or MFA-blocked browser command is never implicitly replayed.
+
+Revoking a platform administrator may not leave fewer than two active,
+non-expired platform administrators in that market. An expiring platform-admin
+grant requires two other active administrators whose authority outlasts its
+expiry. This is a source-level continuity invariant; authoritative staff-roster
+linkage and periodic recertification remain required by [`gaps.md`](gaps.md).
 
 ---
 
@@ -644,6 +734,50 @@ navigation item never substitutes for backend scope enforcement. Routine
 cross-city access is forbidden unless an explicit market-scoped grant requires
 it.
 
+The operations authentication boundary is implemented through migration
+`20260830_0043`. Operations access
+JWTs use issuer `taximobile-api`, audience `taximobile-operations`, token type
+`operations_access`, a 10-minute lifetime, and a database-backed operations
+session ID. Opaque refresh tokens live for at most eight hours, are stored only
+as SHA-256 digests, rotate on use, and revoke the refresh family when reuse is
+detected. Login requires an active user and at least one unexpired, unrevoked
+scoped grant; the session response expands only backend-resolved permissions and
+covered IDs. Mobile-audience tokens are rejected at this boundary.
+
+Hosted sign-in verifies the password first but issues no bearer or refresh
+credential until a second factor succeeds. The implemented factor is RFC 6238
+TOTP with six digits, a 30-second period, one step of clock skew, and persisted
+counter replay prevention. Five failures consume the five-minute password
+challenge. Seeds are generated randomly and encrypted with AES-256-GCM using a
+deployment key independent from JWT signing; authenticated encryption is bound
+to the user ID. Ten high-entropy recovery codes are shown once, stored only as
+SHA-256 digests, and consumed once.
+
+Enrollment is available only from a trusted operator terminal through
+`taximobile-enroll-operations-mfa --email <account> --confirm-enrollment` after
+the account has an active scoped grant. `--replace-existing` is the explicit
+security-owner recovery path: the new authenticator must be confirmed before
+commit, old recovery material is deleted, the replacement is audited, and every
+operations session for the account is revoked. The identity-verification and
+approval evidence that authorizes replacement remains an organizational
+runbook responsibility; it must not be bypassed merely because the CLI is
+reachable.
+
+In staging/production, the browser keeps only the short-lived access token and
+CSRF token in process memory. The rotating refresh token is emitted only as a
+`Secure`, `HttpOnly`, `SameSite=Strict` cookie scoped to
+`/api/v1/operations/auth`. Refresh requires the matching `X-CSRF-Token`, rotates
+both values, and rejects reuse. The browser fetch engine explicitly includes
+credentials and never persists any token. Development/test may explicitly use
+password-only login and a JSON refresh token; production startup rejects both
+password-only mode and disabling the secure cookie.
+
+High-impact commands require an MFA verification no older than ten minutes.
+This includes grant changes, operator authority/status changes, city/configuration
+activation, financial-policy activation, route publication, driver decisions,
+protected document reads, and legal-hold changes. The console prompts for TOTP
+or one recovery code and does not automatically replay the blocked command.
+
 ---
 
 # 30. Administrative Actions
@@ -725,9 +859,15 @@ cannot be reused to create additional administrators. No public registration or
 profile request may carry a role.
 
 `ADMIN` is the transitional bootstrap authority for the existing single-city
-backend. The national expansion must add an audited migration path from that
-bootstrap account to the first market-scoped `PLATFORM_ADMIN` grant. It must not
-silently grant every historical administrator unrestricted national data access,
+backend. `taximobile-bootstrap-operations` maps exactly that account to the first
+market-scoped `PLATFORM_ADMIN`. Because the online workflow requires a distinct
+maker and checker while preserving two administrators after removal, deployment
+then registers and separately reviews two named accounts and invokes
+`taximobile-bootstrap-operations-quorum` for each with a change reference and
+explicit confirmation. The offline command is advisory-lock serialized, audited,
+accepts only active existing users, creates only non-expiring market grants, and
+closes permanently once the three-person initial quorum exists. All later changes
+use the maker-checker API. Neither command silently maps historical administrators,
 and no driver/public web application may request an operations grant.
 
 ---
@@ -1059,16 +1199,38 @@ In the event of an account compromise, administrators should be able to:
 
 Security incidents should not require direct database manipulation as the normal response.
 
-The initial administrative incident workflow exposes authenticated `ADMIN`-only
-operations to revoke all sessions for one user, suspend that user, and reactivate
-a suspended user after review. Session revocation also revokes the user's push
-registrations. Suspension and revocation are transactional and audited with the
-administrator, target, bounded reason, timestamp, and affected counts. Existing
-access and refresh tokens remain invalid after reactivation; a new login is
-required. Self-suspension and reactivation of a deactivated account are refused.
-Administrators can review the append-oriented records through a bounded,
-filterable administrator-only endpoint, allowing incident review without normal
-direct database access. The endpoint cannot edit or delete audit history.
+The production-oriented incident workflow exposes operations-authenticated
+commands to revoke all sessions for one user, suspend that user, and reactivate a
+suspended user after verified review. It requires the dedicated account-security
+permission, complete coverage of every market where the account has history,
+recent MFA, idempotency, a controlled reason code, and a case reference. Session
+revocation includes mobile sessions, operations sessions, and push registrations.
+Suspension and revocation are transactional and audited with actor, target,
+market, reason code, case reference, old/new status, timestamp, and affected
+counts. Existing access and refresh credentials remain invalid after
+reactivation; a new login is required. Self-action and reactivation of a
+deactivated account are refused. Scoped staff can review append-oriented audit
+records through the bounded operations audit endpoint; the endpoint cannot edit
+or delete audit history. The older `ADMIN` routes remain local/test fixtures only.
+
+Global user status and driver-profile operating status are separate facts, and
+both must permit any new driver assignment. Candidate discovery excludes a
+suspended global account even if its driver profile still says `ACTIVE` and
+`AVAILABLE`. Immediate acceptance, scheduled-offer acceptance and scheduled
+handoff acquire shared authority on the user row after their aggregate/driver
+locks; suspension acquires the complementary exclusive user-row lock. If
+suspension commits first, the waiting assignment reloads `SUSPENDED` and is
+refused or follows scheduled fallback. If an already-authorized assignment owns
+the shared lock first, it may commit before suspension, after which containment
+revokes every session and blocks later protected requests. Suspension does not
+delete or silently rewrite that committed ride; support/safety handling follows
+the recorded ride and incident state.
+
+Session-only revocation invalidates the next authentication check but does not
+retroactively roll back a business transaction that already passed
+authentication. Account suspension is the stronger synchronized control for new
+assignment commit points. This distinction must be exercised through separate
+processes and devices before production incident-response acceptance.
 
 ---
 

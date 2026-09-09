@@ -8,10 +8,18 @@ data. The receiving app must authenticate and reload the referenced resource.
 from __future__ import annotations
 
 import asyncio
+from datetime import datetime
+from time import time
 from typing import Any, Protocol
 from urllib.parse import quote
 
 import httpx
+
+from taximobile_api.core.notification_policy import (
+    DeliveryUrgency,
+    PUSH_EVENT_TYPES,
+    notification_policy_for_hint,
+)
 
 
 FCM_SCOPE = "https://www.googleapis.com/auth/firebase.messaging"
@@ -84,7 +92,19 @@ class FcmPushProvider:
         registration_kind: str,
         event_type: str,
         resource_id: str,
+        expires_at: datetime,
     ) -> None:
+        if event_type not in PUSH_EVENT_TYPES:
+            raise ValueError("Push event type is not allowed.")
+        if expires_at.utcoffset() is None:
+            raise ValueError("Push expiry must be timezone-aware.")
+        # Never extend a source deadline during credential refresh or retry.
+        deadline = min(
+            expires_at.timestamp(),
+            time() + notification_policy_for_hint(event_type).max_delivery_age_seconds,
+        )
+        if deadline - time() < 1:
+            return
         access_token = await self._token_provider.access_token()
         response = await self._send(
             access_token,
@@ -92,7 +112,10 @@ class FcmPushProvider:
             registration_kind,
             event_type,
             resource_id,
+            deadline,
         )
+        if response is None:
+            return
         if response.status_code == 401:
             access_token = await self._token_provider.access_token(force_refresh=True)
             response = await self._send(
@@ -101,7 +124,10 @@ class FcmPushProvider:
                 registration_kind,
                 event_type,
                 resource_id,
+                deadline,
             )
+        if response is None:
+            return
         if response.is_success:
             return
         if _is_invalid_registration_response(response, registration_kind):
@@ -115,8 +141,14 @@ class FcmPushProvider:
         registration_kind: str,
         event_type: str,
         resource_id: str,
-    ) -> httpx.Response:
+        deadline: float,
+    ) -> httpx.Response | None:
         try:
+            policy = notification_policy_for_hint(event_type)
+            remaining_seconds = int(deadline - time())
+            # Do not turn expiry into TTL=0 (which means immediate delivery).
+            if remaining_seconds < 1:
+                return None
             target_field = (
                 "fid"
                 if registration_kind == "FIREBASE_INSTALLATION_ID"
@@ -125,9 +157,20 @@ class FcmPushProvider:
             message = {
                 target_field: registration_id,
                 "data": {"type": event_type, "resource_id": resource_id},
-                "android": {"priority": "HIGH"},
+                "android": {
+                    "priority": (
+                        "HIGH"
+                        if policy.urgency == DeliveryUrgency.IMMEDIATE
+                        else "NORMAL"
+                    ),
+                    "ttl": f"{remaining_seconds}s",
+                },
                 "apns": {
-                    "headers": {"apns-priority": "5", "apns-push-type": "background"},
+                    "headers": {
+                        "apns-priority": "5",
+                        "apns-push-type": "background",
+                        "apns-expiration": str(int(deadline)),
+                    },
                     "payload": {"aps": {"content-available": 1}},
                 },
             }

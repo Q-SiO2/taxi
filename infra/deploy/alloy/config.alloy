@@ -1,0 +1,64 @@
+logging {
+  level  = "info"
+  format = "json"
+}
+
+local.file_match "taximobile_api" {
+  path_targets = [{
+    "__path__" = "/var/log/taximobile-api/events.jsonl*",
+    "service"  = "api",
+  }]
+  sync_period = "10s"
+}
+
+local.file_match "taximobile_worker" {
+  path_targets = [{
+    "__path__" = "/var/log/taximobile-worker/events.jsonl*",
+    "service"  = "worker",
+  }]
+  sync_period = "10s"
+}
+
+loki.source.file "taximobile_api" {
+  targets    = local.file_match.taximobile_api.targets
+  forward_to = [loki.process.taximobile.receiver]
+}
+
+loki.source.file "taximobile_worker" {
+  targets    = local.file_match.taximobile_worker.targets
+  forward_to = [loki.process.taximobile.receiver]
+}
+
+loki.process "taximobile" {
+  stage.drop {
+    longer_than         = "16KB"
+    drop_counter_reason = "oversize"
+  }
+
+  stage.json {
+    expressions = {
+      event_timestamp = "timestamp",
+      event_level     = "level",
+    }
+    drop_malformed = true
+  }
+
+  stage.timestamp {
+    source            = "event_timestamp"
+    format            = "RFC3339Nano"
+    action_on_failure = "skip"
+  }
+
+  stage.label_keep {
+    values = ["service"]
+  }
+
+  forward_to = [loki.write.taximobile.receiver]
+}
+
+loki.write "taximobile" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}
+

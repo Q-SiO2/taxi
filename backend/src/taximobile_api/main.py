@@ -13,34 +13,62 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
-from taximobile_api.api.v1.router import router as v1_router
+from taximobile_api.api.v1.router import create_v1_router
 from taximobile_api.core.config import ConfigurationError, Settings
+from taximobile_api.core.client_compatibility import (
+    ClientCompatibilityMiddleware,
+    ClientCompatibilityPolicy,
+    ClientCompatibilityStatus,
+    ClientIdentityError,
+    parse_client_identity,
+)
 from taximobile_api.core.errors import error_response, register_error_handlers
 from taximobile_api.core.http_security import ResponseSecurityMiddleware
 from taximobile_api.core.rate_limit import InMemoryRateLimiter, PostgresRateLimiter, RateLimiter
+from taximobile_api.core.request_limits import DriverDocumentBodyLimitMiddleware
 from taximobile_api.core.logging import configure_logging, RequestAuditMiddleware
 from taximobile_api.core.live_events import (
     LocalLiveEventPublisher,
     PostgresLiveEventListener,
     PostgresLiveEventPublisher,
 )
-from taximobile_api.core.metrics import MetricsRegistry, OutboxMetrics
-from taximobile_api.domains.outbox.metrics import collect_outbox_metrics, OutboxMetricsUnavailable
+from taximobile_api.core.metrics import (
+    DatabaseMetrics,
+    DatabasePoolMetrics,
+    MetricsRegistry,
+    OutboxMetrics,
+    SecurityIncidentMetrics,
+)
+from taximobile_api.db.metrics import (
+    collect_database_metrics,
+    collect_database_pool_metrics,
+)
+from taximobile_api.domains.outbox.metrics import collect_outbox_metrics
+from taximobile_api.domains.security_incidents.metrics import (
+    collect_security_incident_metrics,
+)
 from taximobile_api.core.realtime import EventHub
 from taximobile_api.db.session import create_session_factory
 from taximobile_api.domains.auth.models import Session, User, UserStatus
 from taximobile_api.domains.auth.security import InvalidAccessToken, TokenService
 from taximobile_api.workers.application import BackgroundWorkerRuntime
 from taximobile_api.integrations.routing import RoutingProvider, create_routing_provider
+from taximobile_api.integrations.geocoding import GeocodingProvider, create_geocoding_provider
 from taximobile_api.integrations.push import FcmPushProvider, GoogleAdcAccessTokenProvider, PushProvider
+from taximobile_api.integrations.driver_documents import (
+    ProtectedDriverDocumentStore,
+    create_driver_document_store,
+)
 
 
 def create_app(
     settings: Settings | None = None,
     session_factory: async_sessionmaker | None = None,
     routing_provider: RoutingProvider | None = None,
+    geocoding_provider: GeocodingProvider | None = None,
     push_provider: PushProvider | None = None,
     rate_limiter: RateLimiter | None = None,
+    driver_document_store: ProtectedDriverDocumentStore | None = None,
 ) -> FastAPI:
     active_settings = settings or Settings.from_environment()
     if active_settings.process_role == "worker":
@@ -52,6 +80,12 @@ def create_app(
         active_settings.routing_provider,
         active_settings.routing_base_url,
         timeout_seconds=active_settings.routing_timeout_seconds,
+    )
+    geocoding = geocoding_provider or create_geocoding_provider(
+        active_settings.geocoding_provider,
+        active_settings.geocoding_base_url,
+        timeout_seconds=active_settings.geocoding_timeout_seconds,
+        user_agent=active_settings.geocoding_user_agent,
     )
     push = push_provider
     if (
@@ -78,8 +112,22 @@ def create_app(
         live_event_listener = PostgresLiveEventListener(active_settings.database_url, event_hub)
     else:
         live_event_publisher = LocalLiveEventPublisher(event_hub)
+    documents = driver_document_store or create_driver_document_store(
+        root=active_settings.driver_document_storage_root,
+        encryption_key=active_settings.driver_document_encryption_key,
+        clamav_host=active_settings.driver_document_clamav_host,
+        clamav_port=active_settings.driver_document_clamav_port,
+        clamav_timeout_seconds=active_settings.driver_document_clamav_timeout_seconds,
+        max_bytes=active_settings.driver_document_max_bytes,
+    )
     worker_runtime = (
-        BackgroundWorkerRuntime(sessions, active_settings, live_event_publisher, push)
+        BackgroundWorkerRuntime(
+            sessions,
+            active_settings,
+            live_event_publisher,
+            push,
+            documents,
+        )
         if active_settings.process_role == "all"
         else None
     )
@@ -114,6 +162,7 @@ def create_app(
                 except asyncio.CancelledError:
                     pass
             await routing.aclose()
+            await geocoding.aclose()
             if push is not None:
                 await push.aclose()
 
@@ -124,17 +173,35 @@ def create_app(
         lifespan=lifespan,
     )
     app.state.settings = active_settings
+    app.state.client_compatibility_policy = ClientCompatibilityPolicy(
+        revision=active_settings.client_policy_revision,
+        minimum_versions=active_settings.client_minimum_versions,
+        recommended_versions=active_settings.client_recommended_versions,
+    )
     app.state.session_factory = sessions
     app.state.rate_limiter = limiter
     app.state.metrics = MetricsRegistry(workers_enabled=worker_runtime is not None)
     app.state.event_hub = event_hub
     app.state.live_event_publisher = live_event_publisher
     app.state.routing_provider = routing
+    app.state.geocoding_provider = geocoding
     app.state.push_provider = push
+    app.state.driver_document_store = documents
     app.state.worker_runtime = worker_runtime
-    logger = configure_logging(active_settings.log_level)
+    logger = configure_logging(
+        active_settings.log_level,
+        log_file=active_settings.log_file,
+        log_file_max_bytes=active_settings.log_file_max_bytes,
+        log_file_backup_count=active_settings.log_file_backup_count,
+    )
     register_error_handlers(app)
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=list(active_settings.allowed_hosts))
+    app.add_middleware(
+        ClientCompatibilityMiddleware,
+        policy=app.state.client_compatibility_policy,
+        api_prefix=active_settings.api_prefix,
+        enforced=active_settings.client_compatibility_enforced,
+    )
     if active_settings.cors_origins:
         app.add_middleware(
             CORSMiddleware,
@@ -145,15 +212,39 @@ def create_app(
                 "Authorization",
                 "Content-Type",
                 "Idempotency-Key",
+                "X-CSRF-Token",
                 "X-Request-ID",
+                "X-TaxiMobile-Client",
+                "X-TaxiMobile-Version",
+                "X-TaxiMobile-Build",
+            ],
+            expose_headers=[
+                "X-TaxiMobile-Client-Policy",
+                "X-TaxiMobile-Minimum-Version",
+                "X-TaxiMobile-Recommended-Version",
             ],
         )
     app.add_middleware(
         ResponseSecurityMiddleware,
         hsts_enabled=active_settings.environment == "production",
     )
-    app.add_middleware(RequestAuditMiddleware, metrics=app.state.metrics, logger=logger)
-    app.include_router(v1_router, prefix=active_settings.api_prefix)
+    app.add_middleware(
+        DriverDocumentBodyLimitMiddleware,
+        max_file_bytes=active_settings.driver_document_max_bytes,
+    )
+    app.add_middleware(
+        RequestAuditMiddleware,
+        metrics=app.state.metrics,
+        logger=logger,
+        api_prefix=active_settings.api_prefix,
+        legacy_admin_api_enabled=active_settings.legacy_admin_api_enabled,
+    )
+    app.include_router(
+        create_v1_router(
+            legacy_admin_api_enabled=active_settings.legacy_admin_api_enabled,
+        ),
+        prefix=active_settings.api_prefix,
+    )
 
     @app.get("/health", tags=["system"])
     async def health() -> dict[str, str]:
@@ -194,20 +285,59 @@ def create_app(
             )
             response.headers["WWW-Authenticate"] = "Bearer"
             return response
-        try:
-            outbox_metrics = await collect_outbox_metrics(sessions)
-        except OutboxMetricsUnavailable:
+        (
+            outbox_result,
+            database_result,
+            security_incident_result,
+        ) = await asyncio.gather(
+            collect_outbox_metrics(sessions),
+            collect_database_metrics(sessions),
+            collect_security_incident_metrics(sessions),
+            return_exceptions=True,
+        )
+        if not isinstance(outbox_result, OutboxMetrics):
             # HTTP/process telemetry remains scrapeable during a database
             # incident; an explicit gauge marks the aggregate snapshot absent.
             outbox_metrics = OutboxMetrics(available=False)
+        else:
+            outbox_metrics = outbox_result
+        if not isinstance(database_result, DatabaseMetrics):
+            database_metrics = DatabaseMetrics(available=False)
+        else:
+            database_metrics = database_result
+        if not isinstance(security_incident_result, SecurityIncidentMetrics):
+            security_incident_metrics = SecurityIncidentMetrics(available=False)
+        else:
+            security_incident_metrics = security_incident_result
+        try:
+            database_pool_metrics = collect_database_pool_metrics(sessions)
+        except Exception:
+            database_pool_metrics = DatabasePoolMetrics(available=False)
         return PlainTextResponse(
-            app.state.metrics.render_prometheus(outbox=outbox_metrics),
+            app.state.metrics.render_prometheus(
+                outbox=outbox_metrics,
+                database=database_metrics,
+                database_pool=database_pool_metrics,
+                security_incidents=security_incident_metrics,
+            ),
             media_type="text/plain; version=0.0.4",
         )
 
     @app.websocket(f"{active_settings.api_prefix}/events")
     async def live_events(websocket: WebSocket) -> None:
         """Connected apps receive hints and must reload REST resources afterward."""
+        if active_settings.client_compatibility_enforced:
+            try:
+                identity = parse_client_identity(
+                    {key.lower(): value for key, value in websocket.headers.items()}
+                )
+                compatibility = app.state.client_compatibility_policy.assess(identity)
+            except ClientIdentityError:
+                await websocket.close(code=4406)
+                return
+            if compatibility.status == ClientCompatibilityStatus.UPGRADE_REQUIRED:
+                await websocket.close(code=4406)
+                return
         authorization = websocket.headers.get("authorization", "")
         if not authorization.lower().startswith("bearer ") or active_settings.jwt_secret is None:
             await websocket.close(code=4401)

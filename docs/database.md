@@ -11,6 +11,12 @@ The primary database will be:
 
 The database is the authoritative persistent store for important application data.
 
+**Current standing (2026-09-07):** the Alembic chain contains 51 ordered
+migrations through `20260908_0052`; the current workspace has exercised upgrade,
+targeted downgrade/re-upgrade, and isolated PostGIS integration lifecycles. This
+does not establish managed-provider backup, point-in-time recovery, production
+capacity, or backup-expiry compliance. See [`gaps.md`](gaps.md).
+
 The schema should prioritize:
 
 * Data integrity.
@@ -131,8 +137,27 @@ Additional entities support:
 
 ## 3.1 National expansion target entities
 
-The national model is additive and currently planned. It must be delivered by
-migrations without rewriting existing rides or financial history.
+The national model is additive. Its Phase 12 through 14 foundation is implemented by
+migrations `20260824_0033`, `20260824_0034`, `20260824_0035`, and
+`20260824_0036` without
+rewriting existing ride amounts or financial history. The first two migrations
+add market/operator/city, operator assignment, service-area/configuration/
+readiness, scoped grant, operations-session, and scoped-audit records and
+backfill the known Casablanca control-plane scope deterministically. Migration
+`0035` adds versioned driver requirements, typed answers and evidence, protected
+document metadata, append-only decisions, city/service authorizations, online
+city/service state, and its compatibility requirement/application records.
+Migration `0036` adds scoped tariff lifecycle fields, versioned operator-fee and
+scheduling-surcharge policies, configuration references, immutable ride financial
+snapshots, and exact driver-earning components. Migrations `0037`, `0038`, and
+`0039` then deliver fixed routes, scheduled bookings, and privacy-bounded
+operational analytics. Migration `20260831_0044` delivers payment recipients and
+capability versions, `20260831_0045` completes protected driver-document
+retention evidence, `20260902_0046` adds mobile account-recovery code digests,
+`20260903_0047` adds closed-code active-ride coordination messages, and
+`20260903_0048` enforces one active live ride per driver. The
+separate operator settlement/payout ledger below remains target
+schema and is not implemented.
 
 ```text
 markets
@@ -179,6 +204,49 @@ and active configuration pointers change only through audited backend commands.
 When an operator is the existing cooperative, `cooperative_id` references that
 record rather than duplicating membership/governance data. Non-cooperative
 operator identity never grants cooperative membership implicitly.
+
+Migration `20260831_0044` delivers immutable recipient accounts and reviewed
+payment-capability versions for national rollout:
+
+```text
+payment_recipient_accounts
+├── id
+├── city_id
+├── operator_id
+├── label
+├── recipient_name
+├── bank_account                 # nullable
+├── wallet_id                    # nullable
+├── status                       # DRAFT / VERIFIED / RETIRED
+├── optimistic_version
+├── created_by / verified_by / retired_by
+└── verified_at / retired_at / timestamps
+
+payment_capability_versions
+├── id
+├── city_id
+├── operator_id
+├── service_type
+├── version
+├── status                       # DRAFT / IN_REVIEW / APPROVED / ACTIVE / REPLACED
+├── cash_enabled                 # constrained true
+├── manual_transfer_enabled
+├── recipient_account_id         # required exactly when transfer is enabled
+├── effective_from / effective_until
+├── optimistic_version
+├── created/submitted/approved/activated actors and times
+└── audit fields
+```
+
+Recipient labels are unique within a city/operator scope. Verification freezes
+the recipient identity and destination; retirement is blocked while an active
+capability references it. A capability must include cash. Manual transfer points
+to a verified recipient account with the same city and operator. Capability
+activation verifies assignment, operator state, effective time, scope, and recent
+MFA. Passenger visibility additionally requires the exact capability foreign key
+in the active city-configuration service. Future provider credentials are secret-
+manager references, never columns in these tables. Rides and payments retain the
+selected capability/recipient IDs and immutable display instructions.
 
 Service boundaries, driver requirements, and coherent activation bundles are
 first-class versions rather than mutable columns or an unvalidated JSON object:
@@ -251,17 +319,43 @@ city_readiness_checks
 └── timestamps
 ```
 
+The Phase 12 table initially contains the city, service-area reference, status,
+optimistic version, and review/activation audit fields. Phase 13 adds the owned
+`driver_requirement_version_id` reference and deterministically backfills the
+legacy Casablanca bundle. Phase 14 adds owned operator-fee and optional
+scheduling-policy references to each configuration service and backfills the
+legacy service with an explicit zero-fee policy. References to localization and
+matching are added only with their owning-domain migrations; nullable or fake IDs
+are not created merely to imitate the final bundle early. Migration
+`20260831_0044` adds the payment-capability foreign key. The current
+`city_configuration_services` slice owns service type, operator assignment,
+tariff, operator-fee policy, optional scheduling policy, optional payment
+capability, and enabled state. A non-legacy enabled service cannot be activated
+without an exact active/effective capability.
+
 The matching, localization, and payment-capability version tables are delivered
 with their owning domain; the foreign keys above cannot point to arbitrary
 configuration blobs. Support, safety, retention, legal, map/routing, and
 localization readiness are represented by allowlisted gate codes and bounded
 evidence references, never copied documents, secrets, or free-form credentials.
 
+Phase 18 uses the existing `city_readiness_checks` rows rather than adding a
+parallel rollout checklist. Ten allowlisted configuration/operations gates form
+the pre-pilot set. `PILOT_SERVICE_AND_FAIRNESS` extends that set for public
+activation, and `POST_LAUNCH_REVIEW` is a recognized post-activation closeout
+record. All decisions remain configuration-version scoped: replacing a bundle
+does not copy or inherit evidence. Stage constraints are enforced by commands,
+while the existing unique configuration/gate row and optimistic configuration
+version prevent duplicate or stale decisions. No schema migration is needed for
+the additive allowlist and response semantics.
+
 A draft configuration uses optimistic concurrency. Submission freezes its
 component references; approval and activation are explicit audited transitions.
 Activation validates every referenced version, changes the city's active pointer,
 and records the replaced bundle in one transaction. It must not point to draft,
 expired, cross-city, overlapping, or otherwise incompatible components.
+For an already operating city, activation also verifies the replacement bundle's
+pilot-entry or public-activation evidence before changing the active pointer.
 
 Scoped administration uses grants rather than global data access:
 
@@ -279,11 +373,59 @@ administrative_grants
 └── revoked_at
 ```
 
+Migration `20260907_0049` adds the durable maker-checker state:
+
+```text
+administrative_grant_change_requests
+├── id
+├── action                    # CREATE | REVOKE
+├── status                    # PENDING | APPROVED | REJECTED | CANCELLED
+├── requester_user_id
+├── decided_by_user_id
+├── target_user_id
+├── role_template
+├── market_id | operator_id | city_id
+├── source_grant_id           # required only for REVOKE
+├── resulting_grant_id        # required only for approved CREATE
+├── reason | decision_reason
+├── requested_grant_expires_at
+├── requested_at | decided_at
+└── optimistic_version
+```
+
+Checks enforce exact template/scope and action/source shape, prohibit a
+requester from targeting themselves, require complete terminal decision state,
+require approve/reject deciders to differ from requester and target, bind
+cancellation to the requester, validate requested expiry and positive version,
+and preserve grant foreign keys. Partial unique indexes allow only one pending
+create for a target/role/exact scope and one pending revoke per source grant.
+The resulting grant ID is globally unique. Market-row locking and application
+checks add live-authority, target, duplicate, stale-version and two-admin
+continuity protection that cannot be expressed as static row constraints.
+
+`operations_sessions` stores a hashed rotating refresh token, refresh-family ID,
+optional hashed CSRF token, expiry/revocation timestamps, optional device label,
+and the verified MFA time/method. Migration `20260830_0043` adds one encrypted
+AES-GCM TOTP credential per operations user, single-use hashed recovery-code
+rows, and short-lived password challenge rows with bounded attempts. Accepted
+TOTP counters are persisted under row lock to reject replay. Raw seeds, recovery
+codes, refresh tokens, and CSRF tokens are never stored.
+
+Deleting/replacing an MFA credential cascades its old recovery rows. The trusted-
+terminal replacement transaction creates the confirmed new credential, audits
+the event, and revokes every live operations session for that user.
+
 Database shape complements, but never replaces, backend permission checks.
-Constraints require a valid scope for each template and prevent duplicate active
-grants. Grant changes remain append/audit visible.
+Constraints require a valid scope for each template and prevent duplicate
+unrevoked grants. Grant requests and resulting mutations remain append/audit
+visible; no terminal request is rewritten into another outcome.
 
 Driver city participation is separate from driver identity:
+
+The application structures in this subsection are delivered by `20260824_0035`.
+Migration `20260831_0045` completes the protected document retention evidence.
+Document evidence is created only after the encrypted store and malware scanner
+accept the bytes; disabled or unavailable dependencies fail closed.
 
 ```text
 driver_city_applications
@@ -323,6 +465,15 @@ driver_application_documents
 ├── uploaded_at / deleted_at
 └── retention_deadline
 
+driver_document_retention_actions
+├── id
+├── original_document_id          # unique, no FK after hard deletion
+├── application_id / city_id
+├── reason                        # applicant deletion / replacement / expiry
+├── retention_policy_version
+├── retention_due_at / executed_at
+└── created_at
+
 driver_application_decisions
 ├── id
 ├── application_id
@@ -349,6 +500,11 @@ version. Applicant edits and document deletion are limited to editable states.
 Submission freezes the applicant snapshot; reviewer decisions are append-only.
 `WITHDRAWN` is applicant initiated before approval and does not delete the
 retention-governed record or confer authorization.
+Document replacement/deletion first removes active evidence and sets
+`deleted_at`; the retention worker locks due rows, deletes ciphertext
+idempotently, removes residual evidence, writes one immutable content-free action,
+and only then hard-deletes document metadata. The action intentionally preserves
+no filename, hash, object key, document bytes, or reviewer note.
 
 Fixed routes use immutable published versions:
 
@@ -389,6 +545,15 @@ fixed_route_stops
 Outbound and inbound are different direction rows. Sequence uniqueness and
 valid geometry are database-tested. Historical bookings reference the direction
 version, never the mutable route identity alone.
+
+`flat_fare_policy_version_id` is nullable only while route geometry is in
+`DRAFT`, allowing geometry review and financial review to begin in either order.
+`pricing_rules.fixed_route_direction_id` is the reciprocal unique foreign key.
+Before route review, both fields must reference each other and match the exact
+city/operator/FIXED_ROUTE/IMMEDIATE scope. An active fare cannot be unbound, and
+a published route direction cannot reference a non-active or time-incomplete
+fare. The active pricing exclusion scope includes the direction ID, so different
+directions in one city can retain independent active fares without overlap.
 
 Scheduled service uses separate records:
 
@@ -441,7 +606,76 @@ conflicts use a transaction-safe exclusion/locking strategy over active
 current pointer and commitment row change atomically; a cancelled/released row is
 retained for audit rather than overwritten.
 
+Scheduling mutation lock order starts with `scheduled_bookings`, followed by the
+relevant offer/commitment and driver rows. `scheduled_bookings/locking.py` reloads
+the booking with `FOR UPDATE` and `populate_existing`; accepting/declining an
+offer must resolve its booking ID before locking the offer. Driver command locks
+also refresh cached state. Five real two-session tests observe
+`pg_blocking_pids` before releasing the first transaction and verify durable
+duplicate-handoff, cancellation and offline outcomes. Five additional commitment
+tests use observed PostgreSQL waits to cover two-driver acceptance, buffered
+overlap, adjacent half-open windows, cancellation releasing a window only after
+commit, and a direct concurrent insert without application locks. The existing
+`ex_scheduled_commitments_driver_window` exclusion constraint rejects that bypass.
+No constraint or migration was changed for this evidence. Application error
+mapping recognizes only SQLSTATE `23P01` for this exact constraint; foreign-key,
+unique, check and unknown integrity faults remain internal errors and roll back.
+This is application
+transaction hardening, not a schema migration or proof of every domain's lock
+order; multi-instance HTTP/load and administrative-revocation races remain open.
+
+Cross-domain live/scheduled exclusion is application-enforced because a
+PostgreSQL exclusion constraint cannot directly span `rides` and
+`scheduled_booking_commitments`. Both acceptance paths serialize on the driver
+profile. Immediate candidate and acceptance queries require no active commitment
+whose half-open `protected_window @> server_time`; scheduled acceptance rejects
+an active live ride when its proposed range contains server time. Matching
+re-queries commitment state after locking its candidate and uses `SKIP LOCKED`
+while scheduling owns that driver. A direct database writer that bypasses these
+services is not supported authority. The separate unique live-ride index and
+scheduled range exclusion remain database backstops within their own tables.
+
+Global account containment uses another cross-domain application lock contract.
+New assignment paths first lock their normal ride/booking and driver rows, then
+take `FOR SHARE` on `users`; both scoped operations and compatibility suspension
+take `FOR UPDATE` on that user row and refresh cached ORM state. Candidate and
+scheduled-offer discovery also require `users.status = ACTIVE`, but the locked
+commit-point read is authoritative. This creates a deterministic winner without
+copying suspension into `driver_profiles` or deleting an assignment that committed
+first. Six migrated PostgreSQL cases cover suspended discovery/acceptance and
+both observed-wait orders for live acceptance and scheduled handoff. Credential,
+vehicle, authorization/configuration, separate-process and failover races remain
+distinct tests rather than inferred from this user-row lock.
+
+Location ingestion locks and refreshes the driver row before appending an
+observation. Scheduled handoff acquires that same row before selecting the
+latest observation. Two observed-wait PostGIS cases prove the ordering: a new
+outside-area location committed first prevents direct handoff; handoff committed
+first retains its accepted ride when the subsequent location is appended.
+The observation order is `observed_at DESC, id DESC` for handoff readiness;
+the location-write guard rejects non-increasing timestamps. This contract
+assumes the supported write path acquires the driver lock and does not establish
+serialization against service-area configuration changes.
+
+City-authorization lifecycle commands use the existing application version as
+their optimistic token and append a scoped `audit_logs` event with authorization
+ID, application ID, old/new status, reason and resulting application version.
+They lock application -> driver -> authorization and refresh ORM state after
+waits. Approval now takes the driver lock before its active-authorization query;
+reinstatement checks competing active authority under that same lock. Two
+observed-wait races prove that approval and reinstatement cannot both activate
+the same driver's city permission through supported commands. No new migration
+is required. This is an application lock invariant; direct database writes are
+not a supported authorization workflow.
+
 Operator compensation and scheduling use independent versioned policies:
+
+Migration `20260824_0036` delivers `operator_fee_policies` and the Phase 14
+surcharge/allocation subset of `scheduling_policies`. Migration
+`20260829_0038` expands those rows with lead time, booking horizon, offer and
+handoff windows, protected/conflict buffers, cancellation/refund behavior, and
+fallback authority, then adds the scheduled booking/offer/commitment/event and
+driver city-preference tables. Existing Phase 14 policy IDs remain stable.
 
 ```text
 operator_fee_policies
@@ -477,14 +711,72 @@ operator_allocations
 ```
 
 Mode-specific check constraints prohibit a percentage and flat amount from
-being active simultaneously. Exact calculated components are snapshotted on
-bookings, fare records, earnings, and operator settlements.
+being active simultaneously. `ride_financial_snapshots` stores the selected
+tariff/fee/scheduling IDs, modes, exact transport/surcharge/fee/passenger-total/
+driver-gross/driver-deduction/driver-net/operator-allocation amounts, currency,
+and immutable policy snapshot before dispatch. Database checks reconcile those
+amounts and enforce immediate-versus-scheduled consistency. Phase 14 snapshots
+the same components into fare records and driver earnings; Phase 16 copies them
+into each scheduled booking before any offer exists and links at most one live
+ride at handoff. A separate operator settlement ledger remains a later phase.
 
 Typed domain events and aggregate fact tables include city, operator, service,
 booking, route-direction, policy-version, time-bucket, and controlled outcome
 dimensions. They must not copy arbitrary API bodies, credential documents,
 support text, contact identifiers, payment credentials, or exact long-term
 movement history.
+
+Migration `20260829_0039` implements that boundary without making analytics a
+second source of truth:
+
+```text
+operational_supply_snapshots_hourly
+├── city_id / operator_id / service_type
+├── zone_code                     # constrained to CITY_WIDE in v1
+├── bucket_start / observed_at
+├── available_driver_count
+├── eligible_driver_count
+└── retention_until
+
+operational_domain_events_v1      # allowlisted SQL projection view
+operational_metric_facts_hourly_v1 # refreshable materialized aggregate view
+```
+
+The event projection derives typed ride, offer, scheduling, onboarding, settled-
+payment, refund, support-category, and safety-category events from normalized
+tables. It contains no account/driver/passenger ID, coordinate, note, document,
+contact, provider reference, credential, or arbitrary JSON column. The
+materialized view adds settled financial component facts, matching-fairness
+averages, and driver assignment distribution (count, average, min/max, and Gini)
+without retaining driver identity. A transaction-scoped advisory lock serializes
+refresh, snapshots eligible/available supply at city-wide/hour granularity,
+deletes expired snapshots, and rebuilds the materialized facts from authoritative
+source records. That full recomputation is the v1 late-event and reconciliation
+policy until 730-day retention; no dashboard row is business authority.
+
+Migrations `20260830_0040` and `20260830_0041` complete the first city-scoped
+support/safety operations slice. `0040` adds immutable, non-null `city_id`
+foreign keys to support tickets and safety reports, backfilled only through
+their authoritative ride/city relationship, plus city-aware queue indexes.
+`0041` adds durable overdue-delivery state:
+
+```text
+case_overdue_alerts
+├── id
+├── city_id
+├── case_kind / case_id
+├── response_due_at
+├── severity
+├── status
+├── attempt_count / next_attempt_at
+├── last_attempt_at / delivered_at / acknowledged_at
+├── acknowledged_by_user_id
+└── created_at / updated_at
+```
+
+A unique `(case_kind, case_id, response_due_at)` key prevents duplicate alerts
+for the same deadline. The case remains authoritative; pager delivery and alert
+acknowledgement cannot change case status, assignment, payment, or eligibility.
 
 ---
 
@@ -858,6 +1150,10 @@ rides
 ├── cancellation_reason
 ├── fare_amount
 ├── currency
+├── payment_method
+├── transfer_recipient_name
+├── transfer_bank_account
+├── transfer_wallet_id
 ├── created_at
 └── updated_at
 ```
@@ -876,6 +1172,12 @@ also snapshots the limited passenger-facing driver name and vehicle make,
 model, color, and taxi identifier onto the ride. The ID preserves relational
 integrity; the snapshot preserves historical passenger identity even if profile
 or vehicle records change later.
+
+`payment_method` is selected only from the backend-advertised capability list.
+For `MANUAL_TRANSFER`, recipient name and the configured bank account and/or
+M-Wallet identifier are snapshotted when the ride is created. They are nullable
+for cash and legacy rows. A current deployment setting must never be joined onto
+a historical receipt as though it had been the original destination.
 
 ---
 
@@ -1005,6 +1307,40 @@ This provides an audit trail of the ride lifecycle.
 
 ---
 
+## 20.1 Ride Coordination Messages
+
+Migration `20260903_0047` adds a narrow durable record for assigned-ride
+coordination:
+
+```text
+ride_coordination_messages
+├── id
+├── ride_id
+├── sender_user_id
+├── code
+└── created_at
+```
+
+`ride_id` references `rides` with cascade deletion; `sender_user_id` references
+`users` with restricted deletion so the sender cannot disappear while the
+message is retained. `code` is constrained to the six approved passenger/driver
+signals. There is intentionally no free-text body, recipient field, phone number,
+attachment, arbitrary metadata, edit timestamp, or delivery-provider payload.
+
+An index on `(ride_id, created_at)` supports the latest authorized active-ride
+read. An index on `(sender_user_id, ride_id)` supports the absolute per-participant
+ride cap. The application enforces role ownership, allowed ride state, rate limit,
+idempotency, and the 100-message sender/ride cap under the ride transaction lock.
+The other participant's persistent `notifications` row and minimized outbox event
+are separate records so notification delivery does not become message authority.
+
+Only the latest signal is exposed by the active detailed ride API; this table is
+not a participant transcript surface. A lawful retention period, erasure timing,
+legal-hold interaction, and managed-backup expiry must be approved before real-user
+deployment; source delivery alone does not settle those policies.
+
+---
+
 # 21. Ride Offers
 
 Ride offers should be stored separately from the ride itself.
@@ -1082,27 +1418,33 @@ Conceptually:
 ```text
 pricing_rules
 ├── id
-├── cooperative_id
 ├── city_id
 ├── operator_id
 ├── service_type
-├── fixed_route_direction_id
+├── booking_type
+├── fixed_route_direction_id   # nullable; unique when present
 ├── name
 ├── version
-├── configuration
+├── model / fixed_amount / currency
 ├── effective_from
 ├── effective_until
 ├── status
-└── created_at
+├── optimistic_version
+├── created/submitted/activated actor and time
+└── created_at / updated_at
 ```
 
 A ride should reference the applicable pricing-rule version.
 
 Changing pricing rules must not alter historical rides.
 
-The existing cooperative-only rule is the implemented compatibility shape. City,
-operator, service, and route scope are planned additions. Equal-specificity
-active date ranges must not overlap.
+City, operator, service, booking type, and optional immutable fixed-route
+direction are implemented scope columns. `fixed_route_direction_id` is null for
+on-demand rules and uniquely identifies one complete-direction fare for
+fixed-route rules. Equal-specificity active date ranges must not overlap;
+different direction IDs are intentionally different specificity scopes.
+Historical compatibility rows are backfilled to the deterministic Casablanca
+city/platform-operator on-demand scope rather than rewritten.
 
 ---
 
@@ -1117,6 +1459,10 @@ payments
 ├── id
 ├── ride_id
 ├── payer_id
+├── city_id
+├── operator_id
+├── payment_capability_version_id     # nullable only for historical/legacy rows
+├── payment_recipient_account_id      # nullable for cash and legacy rows
 ├── amount
 ├── currency
 ├── method
@@ -1132,14 +1478,83 @@ Possible statuses:
 
 ```text
 PENDING
-AUTHORIZED
+PROCESSING
 COMPLETED
 FAILED
-REFUNDED
 CANCELLED
+DISPUTED
+REFUNDED
 ```
 
-The exact payment lifecycle will be defined in `payments.md`.
+Implemented methods are `CASH` and `MANUAL_TRANSFER`; `CARD` and
+`MOBILE_PAYMENT` remain reserved values and are not current passenger
+capabilities. For a manual transfer, `provider` is
+`MANUAL_RECONCILIATION` and `provider_reference` is the unique backend-issued
+`TM-...` reference shown on the historical receipt. It is not an external
+settlement identifier.
+
+Passenger assertions are deliberately separate from payments:
+
+```text
+manual_transfer_claims
+├── id
+├── payment_id
+├── claimant_user_id
+├── payer_reference
+├── status                    # SUBMITTED / VERIFIED / REJECTED
+├── submitted_at
+├── reviewed_at
+├── reviewed_by_user_id
+├── review_reason
+└── settlement_reference
+```
+
+At most one `SUBMITTED` claim may exist for one payment. A verified external
+`settlement_reference` is globally unique so one statement transaction cannot
+complete two payments. Passenger submission creates no earning and changes the
+payment only to `PROCESSING`. Authorized verification marks the claim verified,
+marks the payment completed, and creates the unique driver earning in one
+transaction. Rejection records its reviewer evidence and returns the payment to
+`PENDING` without deleting claim history.
+
+Migration `20260820_0030` adds this launch-compatible structure and immutable
+ride instructions. Migration `20260831_0044` adds the owning
+`payment_recipient_accounts` and `payment_capability_versions` tables, links the
+exact capability into city-configuration services, and adds nullable historical
+capability/recipient provenance to `rides` and `payments`. It also adds non-null
+city/operator provenance to payments and refunds, backfilled through the existing
+ride/payment relationships. The environment recipient remains only for the
+deterministic legacy city; new cities must use the versioned tables.
+
+Confirmed passenger refunds are separate append-only accounting facts:
+
+```text
+payment_refunds
+├── id
+├── payment_id
+├── city_id
+├── operator_id
+├── amount
+├── currency
+├── reason                       # closed approved taxonomy
+├── settlement_method            # CASH / EXTERNAL_TRANSFER
+├── settlement_reference         # globally unique evidence reference
+├── operator_note                # restricted; never passenger-visible
+├── driver_recovery_amount       # launch value is exactly zero
+├── operator_funded_amount       # launch value equals amount
+├── authorized_by_user_id
+└── refunded_at
+```
+
+Migration `20260824_0031` creates the reason and settlement-method enums, positive
+amount and launch-funding reconciliation constraints, payment/administrator
+foreign keys, and indexes. The application locks the payment before calculating
+the cumulative total, so concurrent refunds cannot exceed the immutable payment
+amount. A partial refund leaves the payment `COMPLETED`; a complete cumulative
+refund sets `REFUNDED` and `payments.refunded_at`. The original payment, fare,
+manual-transfer claim, and driver earning remain unchanged.
+
+The exact lifecycle and evidence rules are defined in `payments.md`.
 
 ---
 
@@ -1155,7 +1570,11 @@ driver_earnings
 ├── driver_id
 ├── ride_id
 ├── gross_amount
-├── cooperative_fee
+├── transport_fare_amount
+├── scheduling_surcharge_amount
+├── operator_fee_amount
+├── operator_allocation_amount
+├── fee_amount
 ├── operator_fee_policy_version_id
 ├── operator_fee_funding_mode
 ├── scheduling_surcharge
@@ -1183,9 +1602,11 @@ Provider-specific payout and general-ledger integration remain undecided.
 
 The national accounting model preserves transport fare, scheduling surcharge,
 operator allocation, driver gross, adjustments, and driver net as exact separate
-components. A corresponding append-oriented operator settlement/allocation fact
-records the beneficiary and source payment. It must reconcile to the passenger
-charge without inferring fee mode from an amount.
+components. Migration `20260824_0036` delivers those earning columns and database
+checks for `net = gross - fee + adjustment` and funding-mode fee consistency. A
+corresponding append-oriented operator settlement/allocation ledger remains a
+later accounting slice; until then the immutable ride snapshot and earning row
+retain the operator allocation fact without inferring fee mode from an amount.
 
 ---
 
@@ -1209,35 +1630,54 @@ ratings
 
 The database should enforce appropriate uniqueness rules to prevent duplicate ratings where applicable.
 
-The MVP `ride_ratings` table implements the passenger-to-driver subset: one
+The `ride_ratings` table implements the passenger-to-driver subset: one
 row per `(ride_id, reviewer_id)`, a database-enforced score range of 1–5, and
 foreign keys for the ride, reviewer, and reviewed driver user. It holds no
-safety classification; safety reporting remains a separate future table and
+safety classification; safety reporting uses its separate restricted table and
 access policy.
 
 ---
 
 # 27. Safety Reports
 
-Safety reports should be separated from ordinary ratings.
+Safety reports are separated from ordinary ratings and support tickets.
 
 Conceptual structure:
 
 ```text
 safety_reports
 ├── id
+├── city_id
 ├── ride_id
-├── reporter_id
+├── reporter_user_id
 ├── reported_user_id
+├── source_support_ticket_id
 ├── category
 ├── description
 ├── status
+├── priority
+├── assigned_to_user_id
+├── response_due_at
+├── first_acknowledged_at
+├── escalated_at
+├── resolution_code
+├── latest_public_message
+├── latest_public_message_at
+├── retention_policy_version
+├── retention_until
 ├── created_at
-├── reviewed_at
-└── resolved_at
+├── updated_at
+├── resolved_at
+└── closed_at
 ```
 
-Access to these records should be highly restricted.
+`safety_report_notes` contains append-only `INTERNAL` or `PARTICIPANT` messages
+with author and creation time. A unique nullable source-support-ticket foreign
+key prevents duplicate support escalation. Reporter and reported-user foreign
+keys are server-derived from ride participation. Queue indexes cover status plus
+response deadline, priority, assignee, ride, and reporter. Participant queries
+never project description, identities, assignment, deadlines, retention, or
+notes. Access to these records is highly restricted.
 
 ---
 
@@ -1250,25 +1690,38 @@ Conceptual structure:
 ```text
 support_tickets
 ├── id
+├── city_id
 ├── user_id
 ├── ride_id
 ├── category
 ├── subject
 ├── status
 ├── priority
-├── assigned_to
+├── assigned_to_user_id
+├── response_due_at
+├── first_responded_at
+├── resolution_code
+├── latest_public_message
+├── latest_public_message_at
+├── retention_policy_version
+├── retention_until
 ├── created_at
 ├── updated_at
-└── resolved_at
+├── resolved_at
+└── closed_at
 ```
 
 A support ticket may optionally reference a ride.
 
-The implemented MVP stores participant-owned support tickets with a controlled
-category, subject, description, optional ride reference, and `OPEN` status.
-Assignment, priority, and resolution fields remain deferred until cooperative
-support operations define the people, permissions, retention, and escalation
-rules that would make those fields meaningful.
+`support_ticket_notes` stores append-only `INTERNAL` or `PARTICIPANT` messages,
+their author, and creation time. The ticket projects only the latest participant
+message for owner-facing APIs. Queue indexes cover city, status plus response
+deadline, priority, and assignee. Migration `20260824_0032` adds the lifecycle
+fields, notes, and separate safety tables after the support/safety operating
+policy was defined; migration `20260830_0040` adds their immutable city boundary.
+Assignment mutations verify an active user with the corresponding city-scoped
+operations grant (or authorized market-level platform administration) in the
+same command path.
 
 ---
 
@@ -1419,6 +1872,24 @@ rotation lineage, and the rotation marker lets the backend distinguish reuse of
 an old rotated token from an ordinary logout. Detected reuse revokes only the
 still-active sessions in that family.
 
+Migration `20260902_0046` adds a separate ordinary-account offline recovery
+collection:
+
+```text
+account_recovery_codes
+├── id
+├── user_id                 # cascading owner foreign key
+├── code_hash               # unique 64-character domain-separated SHA-256 digest
+├── expires_at
+└── created_at
+```
+
+Raw recovery codes are never stored. The user/expiry index supports bounded
+account lookup, expiry must be later than creation, replacement deletes the
+previous set, and successful consumption deletes every code in the set while
+the user row is locked. Operations MFA recovery rows remain a distinct security
+domain and cannot be substituted for these mobile codes.
+
 ---
 
 # 32. Audit Logs
@@ -1445,6 +1916,52 @@ The initial operational read path is an `ADMIN`-only paginated API with exact
 actor, action, resource-type, and resource-ID filters. It orders by creation time
 and ID newest first and exposes no update or delete operation. Passenger and
 driver sessions cannot read the collection.
+
+## 32.1 Security incidents and immutable timeline
+
+Migration `20260907_0050` adds `security_incidents` and
+`security_incident_timeline_entries`. An incident belongs to one market and may
+optionally narrow to one city. It stores a server-generated non-personal
+reference, severity/category, bounded operational summary, reporting lead,
+detection/containment milestones, postmortem deadline and optimistic version.
+Database checks enforce the ordered lifecycle timestamp shape.
+
+Timeline rows have a unique positive sequence per incident, controlled event
+kind, actor and occurrence/recording timestamps, bounded summary, and optional
+same-scope audit or external runbook reference. A PostgreSQL trigger rejects
+`UPDATE` and `DELETE`; corrections are appended as new events. Audit entries for
+incident commands contain only status/category/severity, sequence, reference
+presence and deadline facts, never the incident summary. Secrets, credentials,
+raw provider payloads and unnecessary participant identifiers must not be stored
+in either table.
+
+Migration `20260907_0051` adds one-time postmortem completion fields: completion
+time, completing user and a closed outcome (`CONTROL_CHANGED`,
+`FOLLOW_UP_REQUIRED`, or `NO_FURTHER_ACTION`). A database constraint requires all
+three fields together, only on a closed incident, and never before its closure.
+The completion command appends a referenced `POSTMORTEM_ACTION`; corrections
+remain new timeline rows rather than parent-record rewrites. Partial indexes
+support overdue open-containment and closed/pending-postmortem discovery without
+scanning participant content.
+
+Migration `20260908_0052` adds
+`security_incident_responsibility_assignments`. Its responsibility is one of
+`SECURITY_RESPONSE_LEAD`, `COMMUNICATIONS_LEAD`, `OPERATIONS_LIAISON`, or
+`POSTMORTEM_OWNER`. Each tenure stores the incident, assignee, assigning actor,
+approved roster/shift reference and assignment time; a completed tenure also
+stores all three release fields together. A partial unique index permits only one
+active tenure for each incident/responsibility pair. The reporting lead is
+backfilled as the initial response lead, and new incidents create that assignment
+in the opening transaction.
+
+Responsibility history is append-visible rather than freely mutable. A database
+trigger prohibits deletion, prohibits changes to identity/assignment facts, and
+allows an active row to make exactly one all-fields release transition. A released
+row is immutable. Reassigning the response lead also updates the incident's
+current `lead_user_id`; every assignment increments the incident optimistic
+version and appends a `RESPONSIBILITY_CHANGED` timeline fact. Candidate existence,
+grant eligibility and current incident state remain API-authoritative checks, so
+the database constraint is necessary but not sufficient authorization.
 
 ---
 
@@ -1584,8 +2101,55 @@ Examples include:
 * One accepted driver commitment and one live ride per scheduled booking.
 * Mode-valid percentage or flat operator fee fields.
 * Valid scoped administrative grants.
+* One payment per ride and one driver earning per payment/ride.
+* At most one active submitted manual-transfer claim per payment.
+* Unique non-null manual-transfer settlement references.
+* Historical manual-transfer instructions remain ride snapshots rather than
+  references to mutable deployment configuration.
 
 Application validation should complement database constraints rather than replace them.
+
+Migration `20260903_0048` adds `uq_rides_one_active_per_driver`, a partial unique
+index on non-null `driver_id` while status is `ACCEPTED`, `DRIVER_EN_ROUTE`,
+`DRIVER_ARRIVED` or `IN_PROGRESS`. The rule is global across cities and immediate/
+scheduled origins. Matching/unassigned and terminal history rows do not consume
+the slot. Application driver locks and eligibility checks remain required; the
+index is a final defense against another writer bypassing them.
+
+Upgrade refuses existing duplicate active assignments with a fixed, non-personal
+diagnostic and never cancels, deletes or reassigns rides automatically. Resolve
+such conflicts through an approved operational investigation before retrying.
+The transactional index build takes a write-blocking table lock: schedule a
+maintenance window and measure duration against the candidate dataset before a
+live upgrade. The Alembic environment now acquires a database-scoped PostgreSQL
+transaction advisory lock before version reads or DDL. A concurrent executor
+fails immediately with a fixed retry diagnostic rather than waiting indefinitely
+or racing schema changes. Commit, rollback and connection loss release the lock.
+Generated offline SQL acquires the same lock inside its outer transaction when
+executed; generating the SQL itself does not contact a database.
+
+The lock is cooperative: keep the separate production migration job, and do not
+bypass Alembic with unguarded manual DDL. The complete chain must remain in one
+transaction. Explicit commits, autocommit blocks or per-migration transactions
+require a reviewed replacement locking design and release tests; existing source
+tests reject the known transaction-breaking APIs. This guard is not a migration
+duration/DDL timeout or maintenance-window substitute. Separate migration limits
+now default to 5 seconds for each database lock wait and 300 seconds per SQL
+statement. `TAXIMOBILE_MIGRATION_LOCK_TIMEOUT_SECONDS` accepts 1–120;
+`TAXIMOBILE_MIGRATION_STATEMENT_TIMEOUT_SECONDS` accepts 1–7200 and must exceed
+the lock limit. Zero, malformed and out-of-range values fail before connection.
+Online execution uses transaction-local settings; generated offline SQL emits
+equivalent `SET LOCAL` statements before ownership acquisition and schema work.
+Rollback restores prior connection settings. SQLSTATE `55P03` and `57014` receive
+fixed online Alembic diagnostics without echoing SQL, parameters or pasted config
+values; unknown database failures retain their existing error path.
+
+These are per-wait/per-statement limits, not a connection, idle-session or total
+migration-chain deadline. The deployment must still own an outer job deadline,
+maintenance window, blocker investigation and bounded retry; do not cancel
+unrelated sessions automatically. Execute generated scripts as one transaction
+with the SQL client's stop-on-error option enabled. Downgrade removes only the index and does not modify ride rows;
+it removes this database safety net and is not permission to run unsafe writers.
 
 ---
 
@@ -1638,6 +2202,7 @@ Potential categories include:
 Account data
 Ride data
 Payment records
+Manual-transfer claims and reconciliation evidence
 Driver credentials
 Location data
 Safety reports
@@ -1649,7 +2214,27 @@ Scheduled bookings
 Operational aggregate facts
 ```
 
-Retention periods will be defined in `security.md`.
+The launch policy versions are explicit: `support-launch-v1` projects deletion
+or approved archival 730 days after case closure, and `safety-launch-v1`
+projects it 1,825 days after closure. Open records have no `retention_until`.
+Migration `20260830_0042` makes legal hold and verified minimization controlled
+operations. `case_legal_holds` references exactly one support ticket or safety
+report, duplicates immutable city scope, and records controlled placement,
+review, status, and release facts. Partial unique indexes permit at most one
+active hold for each case. `case_retention_actions` also references exactly one
+case and permits exactly one `PERSONAL_DATA_ERASED` evidence row per case.
+
+Closed due cases are minimized in place only when no active legal hold exists.
+Participant and ride foreign keys become nullable solely for this process;
+assignment, descriptions/subjects, latest public messages, and child notes are
+removed. `retention_action` and `retention_processed_at` identify the remaining
+non-identifying shell, while the action row preserves city, policy version,
+retention due time, execution time, and erased-note count. This shell preserves
+support-to-safety links, audit resource IDs, and category aggregates without
+retaining case content or participant identity. An expiry timestamp alone is
+not proof that minimization ran; the action row is the database evidence. Other
+record classes retain the periods defined in `security.md` or remain policy-
+gated.
 
 The database design must support deletion, anonymization, or archival where required.
 
@@ -1695,6 +2280,8 @@ Tests should verify:
 * Migrations.
 * Geographic queries.
 * Ride assignment consistency.
+* Live-command ride-first lock ordering, post-wait ORM refresh, and expiry-worker
+  `SKIP LOCKED` recovery without duplicate audit/outbox effects.
 * Fare persistence.
 * Payment relationships.
 * Deletion/anonymization behavior.
@@ -1704,10 +2291,21 @@ Tests should verify:
 * Scheduled-booking commitment/handoff concurrency.
 * Operator-fee mode checks and complete financial reconciliation.
 * Aggregate facts contain only approved dimensions.
+* Staff-grant maker/checker identity separation, stale decisions, duplicate
+  pending requests, target changes, and platform-admin continuity.
 
 ---
 
 # 44. Performance
+
+Live-ride transaction evidence currently includes seven actual two-session lock
+waits, an expiry worker that skips a held ride and processes it once after release,
+and rejection of dispatch on three operational states. The tests retain stale ORM
+references deliberately and inspect final rows through a fresh connection. They
+do not establish whole-system deadlock freedom: administrative mutations,
+cross-domain transactions, separate processes and representative contention must
+also be exercised before release. No additional database migration accompanies
+this application lock-order hardening.
 
 The initial database should prioritize correctness.
 

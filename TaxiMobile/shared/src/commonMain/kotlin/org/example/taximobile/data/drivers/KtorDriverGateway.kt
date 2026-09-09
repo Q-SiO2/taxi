@@ -68,8 +68,12 @@ class KtorDriverGateway(
         client.get(api.endpoint("drivers/me/availability")) { authorize() }.availabilityOrThrow()
     }
 
-    override suspend fun goOnline(): DriverAvailability = request {
-        client.post(api.endpoint("drivers/me/availability/online")) { authorize() }.availabilityOrThrow()
+    override suspend fun goOnline(cityId: String?, serviceType: String): DriverAvailability = request {
+        client.post(api.endpoint("drivers/me/availability/online")) {
+            authorize()
+            contentType(ContentType.Application.Json)
+            setBody(OnlineAvailabilityRequest(cityId, serviceType))
+        }.availabilityOrThrow()
     }
 
     override suspend fun goOffline(): DriverAvailability = request {
@@ -94,7 +98,17 @@ class KtorDriverGateway(
         val response = client.post(api.endpoint("drivers/me/vehicles")) {
             authorize()
             contentType(ContentType.Application.Json)
-            setBody(VehicleCreateRequest(vehicle.make, vehicle.model, vehicle.year, vehicle.color, vehicle.registrationNumber))
+            setBody(
+                VehicleCreateRequest(
+                    vehicle.make,
+                    vehicle.model,
+                    vehicle.year,
+                    vehicle.color,
+                    vehicle.registrationNumber,
+                    vehicle.taxiIdentifier,
+                    vehicle.passengerCapacity,
+                ),
+            )
         }
         if (response.status == HttpStatusCode.Unauthorized) throw AuthenticationRejectedException()
         if (!response.status.isSuccess()) throw ApiRequestException(response.status.value, "The server could not register this vehicle.")
@@ -134,7 +148,14 @@ class KtorDriverGateway(
     private suspend fun io.ktor.client.statement.HttpResponse.availabilityOrThrow(): DriverAvailability {
         if (status == HttpStatusCode.Unauthorized) throw AuthenticationRejectedException()
         if (!status.isSuccess()) throw ApiRequestException(status.value, "The server could not change availability.")
-        return body<AvailabilityResponse>().let { DriverAvailability(DriverAvailabilityStatus.valueOf(it.status), it.vehicleId) }
+        return body<AvailabilityResponse>().let {
+            DriverAvailability(
+                status = DriverAvailabilityStatus.valueOf(it.status),
+                activeVehicleId = it.vehicleId,
+                cityId = it.cityId,
+                serviceType = it.serviceType,
+            )
+        }
     }
 
     private suspend fun <T> request(block: suspend () -> T): T = try {
@@ -149,7 +170,18 @@ class KtorDriverGateway(
 }
 
 @Serializable
-private data class AvailabilityResponse(val status: String, @SerialName("vehicle_id") val vehicleId: String? = null)
+private data class AvailabilityResponse(
+    val status: String,
+    @SerialName("vehicle_id") val vehicleId: String? = null,
+    @SerialName("city_id") val cityId: String? = null,
+    @SerialName("service_type") val serviceType: String? = null,
+)
+
+@Serializable
+private data class OnlineAvailabilityRequest(
+    @SerialName("city_id") val cityId: String? = null,
+    @SerialName("service_type") val serviceType: String,
+)
 
 @Serializable
 private data class DriverApplicationRequest(@SerialName("display_name") val displayName: String)
@@ -209,6 +241,8 @@ private data class VehicleCreateRequest(
     val year: Int,
     val color: String,
     @SerialName("registration_number") val registrationNumber: String,
+    @SerialName("taxi_identifier") val taxiIdentifier: String? = null,
+    @SerialName("passenger_capacity") val passengerCapacity: Int? = null,
 )
 
 @Serializable

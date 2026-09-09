@@ -56,14 +56,47 @@ ignored `infra/.env`, `TaxiMobile/local.properties`, builds, caches, backups, or
 generated environments. Findings report only a relative path and rule name, never
 the matching value.
 
-It then runs `validate_mobile_api_contract.py`, which extracts the real
-handwritten Kotlin gateway operations and proves that every HTTP method/path is
-present in FastAPI OpenAPI. The live-event WebSocket is checked against the
-application route table because OpenAPI does not represent WebSockets. A new
-unparsed client call or unreviewed dynamic route segment stops the suite.
+The T0–T10 promotion map is executable without backend dependencies. CI checks
+the closed catalog and deliberately empty template with:
 
-The test script uses only the isolated `taximobile_ci` database. It starts and
-stops PostgreSQL itself when the development stack is not already running. Stop
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/validate_test_phase_evidence.py
+```
+
+For a controlled candidate evidence file, pass `--evidence <path>` and optionally
+`--require-through T3` (or another exact phase). The validator checks metadata,
+ordered predecessor acceptance, candidate/artifact digests, required evidence
+classes, sign-off functions, defects, exposure limits and P0 gap closures. It
+does not validate signatures or external artifact truth and cannot promote the
+all-`NOT_STARTED` repository template. Do not place credentials, identity files,
+precise participant locations or payment instructions in the evidence index.
+
+Production-like manifests also fail closed on client lifecycle configuration.
+They require `TAXIMOBILE_CLIENT_COMPATIBILITY_ENFORCED=true`, one controlled
+policy revision, and minimum/recommended versions for all six Android/iOS/web
+surfaces. Keep the API and worker environment boundaries distinct: compatibility
+policy belongs on the public API only. The production Compose validator rejects
+missing surfaces, disabled enforcement, or policy copied onto the worker. The
+`baseline-1`/`1.0.0` examples are not an approval to support that version in a
+real launch; freeze and test the actual policy through the T0/T4/T5 matrix before
+promotion.
+
+It then runs `validate_mobile_api_contract.py` and
+`validate_web_api_contract.py`, which extract the real handwritten Kotlin
+gateway operations and prove that every HTTP method/path is present in FastAPI
+OpenAPI. The mobile live-event WebSocket is checked against the application
+route table because OpenAPI does not represent WebSockets. The web gate also
+requires the shared exactly-once `/api/v1` URL builder and finite rejecting
+action selectors. A new unparsed call, runtime route variable, or unreviewed
+dynamic route segment stops the suite.
+
+The test script uses only the isolated `taximobile_ci` database. It recreates
+that exact CI database as a pristine migrated template, temporarily grants the
+application test role database-creation authority, clones one database per
+integration test, and revokes the authority in a `finally` boundary. Each clone
+is terminated and dropped after its test, so bootstrap administrators, sessions,
+rate limits, and lifecycle records cannot contaminate another case. The script
+starts and stops PostgreSQL itself when the development stack is not already running. Stop
 the development API and database with:
 
 ```powershell
@@ -84,12 +117,15 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\seed-ux-demo.ps1 -
 
 The two-step guard allows only `TAXIMOBILE_ENV=development` with loopback
 PostgreSQL. Each invocation creates new accounts instead of deleting or rewriting
-existing data. It prints one generated password and four unique local-only
-emails: rich passenger, approved active driver, pending driver application, and
-empty passenger. The rich pair shares an en-route ride and has completed rides,
-cash receipt states, notifications, support tickets, a verified vehicle and
-credential, cooperative membership, rating, and settled earnings. These are
-synthetic review records—not migration seeds or production fixtures.
+existing data. It prints one generated password and five unique local-only
+emails: rich passenger, approved active driver, pending driver application,
+empty passenger, and a city-scoped operations recruitment reviewer. The rich
+pair shares an en-route ride and has completed rides, cash receipt states,
+notifications, support tickets, a verified vehicle and credential, cooperative
+membership, rating, and settled earnings. Additional submitted applications
+produce both visible and suppressed onboarding aggregate cells for reviewer UX
+testing. These are synthetic review records—not migration seeds or production
+fixtures.
 
 ### Docker Compose stack
 
@@ -99,6 +135,17 @@ with:
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\start-local-stack.ps1
 ```
+
+Newly generated local environments also create an independent driver-document
+encryption key and enable the `driver-documents` profile. That profile starts a
+private ClamAV daemon, persists only its signature database in a separate volume,
+and mounts the encrypted document volume into the API. The scanner has no host
+port. Existing `.env` files keep uploads safely disabled until all three
+`TAXIMOBILE_DRIVER_DOCUMENT_STORAGE_ROOT`,
+`TAXIMOBILE_DRIVER_DOCUMENT_ENCRYPTION_KEY`, and
+`TAXIMOBILE_DRIVER_DOCUMENT_CLAMAV_HOST` values are deliberately added; the
+startup script rejects partial configuration. The portable Windows stack does
+not silently install ClamAV, so its document capability remains unavailable.
 
 The default command starts PostgreSQL/PostGIS and the API without downloading a
 routing dataset. Select exactly one engine to download the configured dated
@@ -179,7 +226,8 @@ The environment generator also creates a dedicated monitoring bearer token witho
 printing it. `GET /internal/metrics` requires that token and should be scraped only
 from a restricted monitoring network. Staging and production require a separate
 32+ character `TAXIMOBILE_MONITORING_TOKEN`; it must not be reused as the JWT,
-database, Firebase, or CMI secret.
+database, Firebase, manual-transfer recipient configuration, or future payment-
+provider secret.
 
 The matching radius, location freshness, candidate limit, idle cap, fairness
 lookback, assumed pickup speed, score weights, algorithm version, processor poll
@@ -195,6 +243,11 @@ Professional credential expiry scanning is configured separately with
 `TAXIMOBILE_CREDENTIAL_EXPIRY_WARNING_DAYS` (1–365). Local defaults are 60
 seconds and 30 days; production should choose reviewed operational values.
 
+Operational aggregate refresh uses `TAXIMOBILE_ANALYTICS_POLL_SECONDS`
+(30–3,600; default 300). The worker snapshots only city-wide supply and rebuilds
+the reporting materialized view from normalized records; this interval does not
+change ride, payment, eligibility, or rollout authority.
+
 `TAXIMOBILE_ROUTING_PROVIDER` accepts exactly `valhalla` or `graphhopper`, and
 `TAXIMOBILE_ROUTING_BASE_URL` points to the matching private self-hosted service.
 Portable scripts deliberately select Valhalla and do not download routing data.
@@ -207,6 +260,17 @@ The repository does not silently download an OSM extract or ship a country data
 image. If the selected engine is unavailable or returns an invalid route, the API
 stays healthy and the authenticated routing endpoint returns a safe `503`;
 ride/payment authority is not transferred to the client.
+
+Place discovery is a separate API-only boundary and is disabled by default.
+Set `TAXIMOBILE_GEOCODING_PROVIDER=nominatim` only with a reviewed compatible
+deployment, then provide `TAXIMOBILE_GEOCODING_BASE_URL`, the bounded timeout,
+an identifying `TAXIMOBILE_GEOCODING_USER_AGENT`, and the search/reverse request
+limits. Staging and production require HTTPS and reject the shared public
+`nominatim.openstreetmap.org` host. The provider supplies display candidates;
+the exact selected coordinate and active PostGIS service-area polygon remain
+authoritative. Provider outage returns a safe fallback to map/manual selection.
+This wiring does not approve an extract, license, privacy terms, capacity, or
+city-language quality; those require the acceptance track in `../docs/testing.md`.
 
 ## Initial administrator
 
@@ -222,12 +286,121 @@ allows only the first administrator, and never promotes a passenger or driver
 account. Run it from a trusted operator terminal before approving drivers or
 activating tariffs.
 
+To exercise the Phase 12 operations console, first set the exact local browser
+origin in `.env` and restart the API:
+
+```text
+TAXIMOBILE_CORS_ORIGINS=http://127.0.0.1:8080
+TAXIMOBILE_OPERATIONS_PASSWORD_LOGIN_ENABLED=true
+TAXIMOBILE_OPERATIONS_SECURE_COOKIE_ENABLED=false
+```
+
+Then map the same reviewed bootstrap administrator to the first Morocco-scoped
+platform grant:
+
+```powershell
+docker compose exec api python -m taximobile_api.cli.bootstrap_operations `
+  --admin-email admin@example.com `
+  --market-code MA `
+  --confirm-market-scope
+```
+
+For a hosted-style local rehearsal, register and review two additional active
+staff accounts, then establish the bounded initial quorum from the trusted
+terminal:
+
+```powershell
+docker compose exec api python -m taximobile_api.cli.bootstrap_operations_quorum `
+  --user-email operator-b@example.com `
+  --market-code MA `
+  --change-reference CHG-INITIAL-QUORUM-B `
+  --confirm-initial-quorum
+
+docker compose exec api python -m taximobile_api.cli.bootstrap_operations_quorum `
+  --user-email operator-c@example.com `
+  --market-code MA `
+  --change-reference CHG-INITIAL-QUORUM-C `
+  --confirm-initial-quorum
+```
+
+This bootstrap path closes after three platform administrators and cannot be used
+for ongoing access management. Enroll MFA for each member and use the operations
+maker-checker queue for all later grant creation/revocation. Staging and
+production reject the direct mutation routes.
+
+The password-only switch is local/test scaffolding and production configuration
+rejects it. See `../backend/README.md` for the operations session boundary and
+`../TaxiMobile/README.md` for the web launch command.
+
+Hosted staging/production instead sets password-only mode to `false`, secure
+cookies to `true`, an independent base64url-encoded 32-byte
+`TAXIMOBILE_OPERATIONS_MFA_ENCRYPTION_KEY`, and one exact HTTPS operations web
+origin. After the initial three-person scoped quorum is established, enroll every
+operations account through the trusted-terminal command in
+`../backend/README.md`. The API and operations
+web origins must be same-site (for example `api.example.ma` and
+`operations.example.ma`) or be placed behind one HTTPS reverse proxy; the strict
+refresh cookie is intentionally not sent across unrelated sites.
+
+Local development may leave the external case pager disabled; overdue alerts
+remain durable and visible in the operations console. A live staging/production
+pilot must configure the worker-only `TAXIMOBILE_CASE_PAGER_URL` as HTTPS
+and an independent 32+ character `TAXIMOBILE_CASE_PAGER_TOKEN`, plus the
+bounded poll/attempt/timeout settings shown in `.env.example`. A missing or
+failed adapter never marks an alert delivered.
+
+The `case_retention` loop uses
+`TAXIMOBILE_CASE_RETENTION_POLL_SECONDS` (300–86,400; default 3,600) and
+`TAXIMOBILE_CASE_RETENTION_BATCH_SIZE` (1–1,000 per case kind; default 100). It minimizes only
+closed due cases after a transaction-locked active-hold check. Local demo data
+must not be used to claim that production backup expiry or legal-review
+operations have been proved.
+
+## Legacy-city manual-transfer compatibility
+
+Cash requires no provider configuration. The following variables are disabled by
+default and can advertise external bank/M-Wallet transfer only for the
+deterministic legacy city:
+
+```text
+TAXIMOBILE_MANUAL_TRANSFER_ENABLED=true
+TAXIMOBILE_TRANSFER_RECIPIENT_NAME=<verified recipient>
+TAXIMOBILE_TRANSFER_BANK_ACCOUNT=<bank destination, optional with wallet>
+TAXIMOBILE_TRANSFER_WALLET_ID=<wallet destination, optional with bank>
+```
+
+An enabled configuration requires the recipient and at least one destination;
+startup otherwise fails rather than publishing incomplete instructions. These
+values are displayed to the owning passenger after a transfer ride, so they are
+not authentication credentials. They are still controlled operational
+configuration: do not commit them and never put a bank password, wallet PIN, OTP,
+statement login, or provider secret in them.
+
+Every new city/operator/service must instead use a verified recipient account,
+active payment-capability version, and exact active city-configuration link
+managed through the operations platform. The legacy variables never satisfy that
+requirement.
+
+After a passenger submits a transfer claim, use only the authenticated scoped
+operations reconciliation API and the recipient institution's independent
+statement. A claim is `PROCESSING`, not paid. Verification requires a unique
+external settlement reference and creates the earning atomically; rejection
+returns the payment to pending. The transitional `/admin/payments` routes exist
+for the legacy administrator only; national operations use
+`/operations/payments` with city/operator grants and recent MFA where required.
+
 Leave `TAXIMOBILE_FIREBASE_PROJECT_ID` empty for WebSocket-only local development.
 When set, the worker sends minimized data messages through FCM HTTP v1 and obtains
 OAuth credentials from Google Application Default Credentials. Prefer workload
 identity in hosted environments. If a service-account file is unavoidable for
 local staging, keep it outside the repository and expose it only through the
 process/container secret boundary. Never copy it into the image or `.env`.
+
+FCM and Crashlytics are no-cost Firebase Spark-plan products. This stack does not
+need Firestore, Realtime Database, Cloud Functions, Storage, Hosting, phone auth,
+or Analytics. Do not enable a metered Firebase product without a separate cost,
+privacy, and architecture decision. WebSockets remain the foreground fallback
+when FCM is absent.
 
 `TAXIMOBILE_OUTBOX_MAX_ATTEMPTS` bounds WebSocket/FCM refresh-hint delivery. A
 row that reaches the limit is marked `DELIVERY_DEAD_LETTERED` and is not claimed
@@ -242,6 +415,40 @@ The authenticated metrics endpoint exposes aggregate gauges named
 failed and the count gauges are intentionally absent. Alert on any dead-letter,
 an unavailable snapshot, and a pending age beyond the deployment's reviewed
 delivery objective. The deployment verifier requires a successful snapshot.
+Fixed low-cardinality `taximobile_outbox_owner_pending_events`,
+`taximobile_outbox_owner_dead_letter_events`,
+`taximobile_outbox_owner_locked_events`, and
+`taximobile_outbox_owner_oldest_pending_age_seconds` series attribute work to
+`dispatch_operations`, `scheduling_operations`, `driver_compliance`, or the
+fail-closed `unclassified` bucket. Topic, payload, resource and user labels are
+deliberately absent. Dead-letter alerts retain the owner label for routing.
+The same protected endpoint emits an unlabelled current-database capacity
+snapshot: `taximobile_database_metrics_available`, connections, active
+connections, server connection limit, utilization ratio, waiting locks and a
+deadlock counter. Collection is bounded to five seconds. On timeout, permission,
+driver or malformed-result failure, only availability zero is emitted; database
+name, role/session identity and query text are never selected or rendered. The
+same endpoint exposes fixed, unlabelled per-process pool availability, configured
+size, checked-in, checked-out and overflow gauges, a cumulative checkout-wait
+histogram and timeout counter. Production API/worker engines
+receive explicit bounded size, maximum-overflow and checkout-timeout settings;
+budget their worst-case connection count across all replicas before scaling.
+These series support staging load diagnosis but do not replace host CPU/IO/
+storage or query-plan evidence, and their thresholds still require approval and
+measurement under a representative hosted workload.
+The provider-neutral self-hosted collector/routing template is documented in
+`deploy/README.md` and composed by layering `deploy/compose.monitoring.yaml` over
+the base production manifest. The same overlay provisions the immutable
+`TaxiMobile Operations` and `TaxiMobile Logs` Grafana dashboards from reviewed
+files and keeps Grafana on the internal monitoring network. Prometheus,
+Alertmanager, Loki, Alloy, and Grafana bind
+only to host loopback and are not part of the local development stack. Run
+`infra/scripts/validate-monitoring-runtime.ps1` with the exact candidate images
+and secret files before staging startup; this includes native config parsers,
+disposable hardened Grafana provisioning, real Loki/Alloy readiness, role-volume
+ownership, and malformed/oversize-filtering ingestion. Loki remains an
+unauthenticated internal single-node filesystem service; it must not be exposed
+publicly or mistaken for a high-availability national log service.
 
 ```sql
 SELECT id, topic, attempts, last_error, created_at, dead_lettered_at

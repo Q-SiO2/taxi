@@ -14,21 +14,27 @@ mustard token is authoritative.
 
 ---
 
-## Relationship to the current minimal shell
+## Current implementation standing — 2026-09-02
 
-The shared Compose shell is intentionally minimal while core backend behavior stabilizes. That is correct.
+The former minimal shared shell has been replaced by the approved map-first
+passenger and driver experiences. Shared tokens/components, bottom-sheet flows,
+driver offer and active-ride surfaces, history/receipts, fixed routes, scheduling,
+driver application surfaces, and the national operations web extensions are
+implemented in source. They must retain the mustard/navy/white identity defined
+with `extended_ui.md`.
 
-This plan is **not** an instruction to polish the UI immediately. Implement visual work only in the phases below, after the corresponding product slice is backend-complete and tested.
-
-| UI wave | When | Goal |
+| UI wave | Source standing | Remaining acceptance |
 | --- | --- | --- |
-| Wave 0 — Keep minimal | Now through Phase 7 stability | Functional scrollable shell; no brand redesign |
-| Wave 1 — Design system | Start of Phase 8–9 polish | Tokens, type, components, theme, motion primitives |
-| Wave 2 — Map-first passenger shell | Phase 8–9 | Full-bleed map + bottom sheet passenger home |
-| Wave 3 — Driver operational shell | Phase 10 | Offer cards, availability HUD, active-ride controls |
-| Wave 4 — Delight & density | Late Phase 9–10 | Micro-interactions, empty states, receipt theater |
-| Wave 5 — Production polish | Phase 11 | Reduced-motion QA, localization layout, device acceptance |
-| Wave 6 — National service extensions | National expansion phases | Fixed routes, scheduling, city onboarding, and operations web console using the established identity |
+| Wave 0 — Functional shell | Superseded by later waves | Preserve only as loading/error fallback, not as the product identity. |
+| Wave 1 — Design system | Implemented in source | Complete contrast, typography-scale, screen-reader, and component-state audit. |
+| Wave 2 — Map-first passenger shell | Map selection, place search/reverse lookup, routing and fallbacks implemented in source | Accept production tiles/routing/geocoder, multilingual place quality, location behavior, network loss, and representative devices. |
+| Wave 3 — Driver operational shell | Implemented in source | Accept real dispatch, navigation, safety, battery, and weak-network behavior. |
+| Wave 4 — Delight and density | Substantially implemented | Run reduced-motion and performance review; remove any non-authoritative celebratory state. |
+| Wave 5 — Production polish | Partially implemented | Physical Android/iOS/browser matrix, accessibility, RTL clipping, crash and store screenshot acceptance remain open. |
+| Wave 6 — National extensions | Implemented in source through payment/case operations | Browser E2E, production hosting, protected-document, scoped-operator, and real city workflow acceptance remain open. |
+
+Source presence is not proof of consumer-grade UX. The release gate is the
+evidence in [`gaps.md`](gaps.md), not completion of this visual specification.
 
 Do not rebuild business logic while applying visual layers. Theme and layout wrap existing coordinators and gateways.
 
@@ -102,7 +108,7 @@ All product UI uses this palette only. Do not introduce purple gradients, cream 
 | `accent.500` | `#D6A800` | Primary CTA, taxi selection, pickup and route emphasis |
 | `accent.400` | `#F3D76A` | Light selection and compact highlights |
 | `accent.100` | `#FFF5C2` | Selected-card and accent soft fill |
-| `success.600` | `#14804A` | Online, settled cash, completed |
+| `success.600` | `#14804A` | Online, settled cash, verified transfer, completed |
 | `success.100` | `#DDF5E8` | Success banner background |
 | `warning.600` | `#B7791F` | Expiring offer, stale location |
 | `warning.100` | `#FFF3D6` | Warning banner background |
@@ -139,6 +145,7 @@ All product UI uses this palette only. Do not introduce purple gradients, cream 
 | Driver offline | `ink.500` |
 | Offer expiring (<15s) | `warning.600` |
 | Payment pending | `warning.600` (with text, never color alone) |
+| Transfer review processing | `info.600` + explicit “not yet verified” text |
 | Payment completed | `success.600` |
 | Unmatched / failed match | `info.600` + explicit copy from `design.md` |
 
@@ -315,6 +322,7 @@ Every important action needs a non-color confirmation:
 | Cancel | Confirm modal first | Terminal status in history; return to new-ride sheet |
 | Go online | Switch animates; “Updating…” | Green Online pill only after API success |
 | Settle cash | Confirm modal | Success banner + earnings refresh |
+| Submit transfer reference | Button progress | Processing/review copy only; no payment-success animation |
 | Push hint received | No business mutation | Soft top toast “Updating ride…” then refresh |
 
 ### Reduced motion
@@ -342,9 +350,10 @@ Haptics are progressive enhancement; UI must work without them.
 ## Iconography & illustration
 
 * Style: 1.75 px stroke, rounded joins, 24 dp grid, navy-forward.
-* Prefer a single icon set (for example Phosphor or custom outlined set) — do not mix filled Material icons with duotone sets randomly.
+* Common controls use the existing Compose/Material family. Distinct brand, transport, map, payment, safety, and status symbols use the approved 1.75 px custom family; do not introduce another icon set or mix styles ad hoc.
 * Status icons always pair with text labels.
 * Empty states: one navy taxi mark + one sentence + one CTA. No collage, no floating promo stickers on the map.
+* Editable masters, runtime mappings, fallbacks, and the visual catalog are maintained in `assets/README.md` and `assets/manifest.json`.
 
 ---
 
@@ -452,8 +461,8 @@ MapLibre is the renderer. Style/tile URL remains environment configuration.
 
 * Full-bleed map under chrome.
 * Soft bottom gradient (`overlay.map`) behind the sheet for contrast.
-* Pickup pin: navy teardrop + white glyph; selection pulse in `accent.500`.
-* Destination pin: outlined navy with hollow center.
+* Pickup pin: mustard teardrop + navy/white center; selection pulse in `accent.500`.
+* Destination pin: navy teardrop with a clearly differentiated white/checkered center.
 * Route: `navy.900`, width 5 dp, white halo; pickup uses `accent.500`.
 * Debug builds use the restrained OpenFreeMap Positron style. If a configured
   provider style cannot load, Android and iOS switch to a bundled neutral
@@ -590,6 +599,26 @@ Copy below is English product copy for implementation; final legal/support wordi
 * Non-dismissible progress on submit
 * Keep form values on failure; never show raw framework payloads
 
+### C2. Auth — Offline recovery code
+
+* Entry point: tertiary **Use a recovery code** action below password sign-in
+* Fields: account email/Moroccan phone, complete saved recovery code, new password
+* Submit disabled until identifier/code/password have a complete client-side shape
+* Non-dismissible progress while the backend evaluates the request
+* Success copy is deliberately conditional: it says that the password changed
+  only if the account and code were valid, then returns to sign-in and clears both
+  secret fields
+* Invalid, expired, replayed, absent-account, suspended-account, staff-account,
+  and successful requests must not receive distinguishable UI copy
+* Network/format/throttle failure keeps the editable recovery form; no raw API
+  detail, recovery code, or password enters logs, screenshots, analytics, or crash
+  metadata
+* Both authenticated account screens expose active sessions, confirmed
+  revocation, code creation, one-time code display, and password change. The
+  one-time bundle requires a saved-all-codes check before it can be cleared from
+  render state and is never automatically copied; the complete secure-save
+  interaction remains a physical-device acceptance item
+
 ### D. Offline
 
 * Illustration: broken connection glyph in navy
@@ -616,10 +645,21 @@ Uber-like composition:
 ### F. Passenger — Place selection
 
 * Expanded sheet
-* Pickup row with dot (navy) + editable
-* Destination row with dot (accent) + editable
+* Pickup row with dot (`accent.500`) + editable
+* Destination row with dot (`navy.900`) + editable
+* A collapsed **Find a place** launcher opens an authenticated city-focused
+  address/landmark picker; text is debounced and an explicit retry remains
+* Results distinguish address, street, area and landmark; outside-area pickup
+  results stay visible with a warning but cannot be selected as pickup
+* Selecting a result stores its returned coordinate plus display label; the
+  coordinate remains authoritative
+* A selected map point offers explicit reverse lookup; the nearest returned
+  address may label but never move that point
+* Show provider attribution with the returned source URL
 * Map tap sets the active row
 * Manual lat/lon only in development builds if still required; hide in polished production UI once place selection is solid
+* Disabled, empty, rate-limited or failed search keeps map selection and manual
+  coordinates available and never invents a result
 * Primary disabled until both points valid
 
 ### G. Passenger — Estimate
@@ -658,7 +698,12 @@ Uber-like composition:
 ### J. Passenger — Completed
 
 * Final fare from receipt API (never local recompute)
-* Payment method + status (Pending cash ≠ paid)
+* Payment method + status (`PENDING` cash or transfer and `PROCESSING`
+  transfer are not paid)
+* For transfer: selectable immutable recipient/reference details, optional
+  constrained payer reference, and submit action only while pending
+* Confirmed refund total, net paid, and localized closed reason rows when the
+  receipt API supplies them; retain the original fare above for audit clarity
 * Rating 1–5 stars + optional comment
 * Primary: **Done** / **Rate and close**
 * History updates from API refresh
@@ -671,6 +716,9 @@ Keep calm list layouts:
   detail and completed receipt rather than acting as static text
 * Inbox: notification rows; mark read explicit; tap triggers authorized refresh
 * Support: ticket list + create form (category, subject, body)
+* Safety: separate warning, authorized ride selector, controlled category,
+  description, reporter-safe history, and latest participant response. Never
+  present it as emergency dispatch or expose internal case data.
 * Profile: display name edit only; sign out always available
 
 ### L. Driver — Application gates
@@ -769,6 +817,21 @@ Side drawer or full page for editing
 Mustard only for the single primary action
 ```
 
+The web implementation includes the responsive shell, in-memory access/CSRF
+state, password-to-MFA challenge, recovery-code entry, explicit step-up dialog,
+permission-aware navigation, active scope selectors, rollout/readiness, city and
+operator creation, operator status/service assignments, service-area version
+entry/review, coherent configuration assembly/review/activation, guarded city
+lifecycle review, staff-grant create/revoke with expiry review, and scoped audit. Configuration forms
+select compatible loaded records by label and lifecycle; they never ask an
+operator to construct arbitrary JSON or treat a pasted identifier as authority.
+Later destinations below are added only as their backend phases exist. The delivered payment destination
+manages recipient/capability lifecycle, scoped oldest-first transfer
+reconciliation, and the append-only refund ledger with explicit backend pending,
+success, conflict, and recent-MFA states. The first slice includes loading,
+empty, actionable error, conflict, and narrow-layout behavior. Hosted deployment
+still requires the reviewed web CSP; full RTL/localization remains a release gate.
+
 Required destinations are:
 
 * Rollout overview.
@@ -776,16 +839,18 @@ Required destinations are:
 * Operators and staff grants.
 * Driver/vehicle/credential applications.
 * Rates, scheduling surcharge, and operator fee policies.
+* Payment recipients/capabilities, transfer reconciliation, and refund ledger.
 * Fixed routes, directions, stops, geometry, and publication.
 * Scheduled booking exception review.
 * Aggregate operations and financial reports.
 * Audit/security review.
 
 Every page displays the active scope and whether values are draft, under review,
-scheduled for activation, active, replaced, paused, or retired. Rate activation,
-route publication, city lifecycle change, driver decision, and grant mutation
-use a review summary plus explicit confirmation. Success appears only after the
-backend returns the new version/status.
+scheduled for activation, active, replaced, paused, or retired. Configuration
+activation, service-area approval, operator status/assignment, rate activation,
+route publication, city lifecycle change, driver decision, and
+grant mutation use a review summary plus explicit confirmation. Success appears
+only after the backend returns the new version/status.
 
 Charts use existing semantic colors and text/table alternatives; they do not
 introduce a dashboard rainbow. Maps use public route/service-area geometry and
@@ -922,6 +987,8 @@ Rules:
 ## Asset & build notes
 
 * Bundle Sora / Manrope / IBM Plex Mono under shared compose resources with license files retained.
+* Bundle the OFL-licensed Noto Sans Arabic fallback used for Arabic-script text;
+  do not rely on browser/system fallback inside the Compose canvas.
 * App icons: passenger and driver variants share mark; driver adds a small “wheel” or “D” badge in navy.
 * Splash aligns with `navy.950` to avoid white flash.
 * Map style should harmonize with navy chrome (cool greys/blues). Final production style remains an ops gate in `roadmap.md`.

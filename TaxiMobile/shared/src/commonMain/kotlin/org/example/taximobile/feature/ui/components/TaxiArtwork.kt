@@ -1,12 +1,14 @@
 package org.example.taximobile.feature.ui.components
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -18,25 +20,48 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import org.example.taximobile.feature.ui.theme.TaxiColors
 import org.example.taximobile.feature.ui.theme.TaxiRadii
 import org.example.taximobile.feature.ui.theme.TaxiSpacing
+import org.jetbrains.compose.resources.painterResource
+import taximobile.shared.generated.resources.Res
+import taximobile.shared.generated.resources.brand_logo_mark
+import taximobile.shared.generated.resources.illustration_landing
 
 /**
- * Asset-independent brand artwork. Screens use this whenever no approved
- * illustration is bundled, so missing optional images never create blank or
- * inaccessible states.
+ * Approved landing artwork with an asset-independent Compose fallback. The
+ * fallback remains available to preview and to reuse in stripped-down builds.
  */
 @Composable
 fun TaxiBrandArtwork(
     contentDescriptionText: String,
     modifier: Modifier = Modifier,
+    useBundledAsset: Boolean = true,
+) {
+    val artworkModifier = modifier.fillMaxWidth().heightIn(max = 220.dp).aspectRatio(1.55f)
+    if (useBundledAsset) {
+        Image(
+            painter = painterResource(Res.drawable.illustration_landing),
+            contentDescription = contentDescriptionText,
+            modifier = artworkModifier,
+            contentScale = ContentScale.Fit,
+        )
+        return
+    }
+    TaxiBrandFallbackArtwork(contentDescriptionText, artworkModifier)
+}
+
+@Composable
+private fun TaxiBrandFallbackArtwork(
+    contentDescriptionText: String,
+    modifier: Modifier,
 ) {
     Canvas(
-        modifier = modifier.fillMaxWidth().heightIn(max = 220.dp).aspectRatio(1.55f).semantics {
+        modifier = modifier.semantics {
             contentDescription = contentDescriptionText
         },
     ) {
@@ -83,6 +108,7 @@ fun EmptyState(
     modifier: Modifier = Modifier,
     actionLabel: String? = null,
     onAction: (() -> Unit)? = null,
+    useBundledBrandMark: Boolean = true,
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -98,7 +124,17 @@ fun EmptyState(
             Box(
                 Modifier.background(TaxiColors.Accent100, RoundedCornerShape(TaxiRadii.Pill)).padding(TaxiSpacing.Md),
                 contentAlignment = Alignment.Center,
-            ) { Text(title.take(1), color = TaxiColors.Navy900, style = MaterialTheme.typography.titleLarge) }
+            ) {
+                if (useBundledBrandMark) {
+                    Image(
+                        painter = painterResource(Res.drawable.brand_logo_mark),
+                        contentDescription = null,
+                        modifier = Modifier.size(32.dp),
+                    )
+                } else {
+                    Text(title.take(1), color = TaxiColors.Navy900, style = MaterialTheme.typography.titleLarge)
+                }
+            }
             Text(title, style = MaterialTheme.typography.titleMedium)
             Text(body, style = MaterialTheme.typography.bodyMedium, color = TaxiColors.Ink500)
             if (actionLabel != null && onAction != null) {

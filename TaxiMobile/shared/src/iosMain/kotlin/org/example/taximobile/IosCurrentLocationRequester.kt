@@ -40,6 +40,21 @@ internal class IosCurrentLocationRequester : NSObject(), CLLocationManagerDelega
         }
     }
 
+    fun requestAuthorized(onResult: (Coordinates?) -> Unit): Boolean {
+        val authorized = CLLocationManager.authorizationStatus() in setOf(
+            kCLAuthorizationStatusAuthorizedAlways,
+            kCLAuthorizationStatusAuthorizedWhenInUse,
+        )
+        if (!authorized) {
+            onResult(null)
+            return true
+        }
+        if (!requestGate.tryStart()) return false
+        pendingResult = onResult
+        manager.requestLocation()
+        return true
+    }
+
     override fun locationManager(
         manager: CLLocationManager,
         didChangeAuthorizationStatus: CLAuthorizationStatus,

@@ -10,11 +10,19 @@ import org.jetbrains.compose.resources.Font
 import taximobile.shared.generated.resources.Res
 import taximobile.shared.generated.resources.ibm_plex_mono_medium
 import taximobile.shared.generated.resources.manrope_variable
+import taximobile.shared.generated.resources.noto_sans_arabic_variable
 import taximobile.shared.generated.resources.sora_variable
 
 data class TaxiAdditionalTypography(
     val monoMedium: TextStyle,
     val monoSmall: TextStyle,
+)
+
+@Composable
+fun taxiArabicFontFamily(): FontFamily = FontFamily(
+    Font(Res.font.noto_sans_arabic_variable, FontWeight.Normal),
+    Font(Res.font.noto_sans_arabic_variable, FontWeight.Medium),
+    Font(Res.font.noto_sans_arabic_variable, FontWeight.Bold),
 )
 
 @Composable

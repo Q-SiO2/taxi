@@ -7,7 +7,7 @@ without rolling back the business transaction that created the event.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from typing import Protocol
 from uuid import UUID, uuid4
@@ -23,6 +23,7 @@ class ClaimedOutboxEvent:
     id: UUID
     topic: str
     payload: dict
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 class OutboxDelivery(Protocol):
@@ -93,7 +94,15 @@ class OutboxProcessor:
                     record.locked_at = now
                     record.locked_by = self._worker_id
                     record.last_error = None
-                return [ClaimedOutboxEvent(record.id, record.topic, dict(record.payload)) for record in records]
+                return [
+                    ClaimedOutboxEvent(
+                        record.id,
+                        record.topic,
+                        dict(record.payload),
+                        record.created_at,
+                    )
+                    for record in records
+                ]
 
     async def _mark_delivered(self, event_id: UUID) -> None:
         async with self._sessions() as session:

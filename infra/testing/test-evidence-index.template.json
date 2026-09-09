@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "catalog_revision": "2026-09-08",
+  "candidate": null,
+  "phase_records": [
+    {"id": "T0", "status": "NOT_STARTED"},
+    {"id": "T1", "status": "NOT_STARTED"},
+    {"id": "T2", "status": "NOT_STARTED"},
+    {"id": "T3", "status": "NOT_STARTED"},
+    {"id": "T4", "status": "NOT_STARTED"},
+    {"id": "T5", "status": "NOT_STARTED"},
+    {"id": "T6", "status": "NOT_STARTED"},
+    {"id": "T7", "status": "NOT_STARTED"},
+    {"id": "T8", "status": "NOT_STARTED"},
+    {"id": "T9", "status": "NOT_STARTED"},
+    {"id": "T10", "status": "NOT_STARTED"}
+  ]
+}

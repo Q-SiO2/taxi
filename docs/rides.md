@@ -1,5 +1,18 @@
 # TaxiMobile — Ride System Specification
 
+## Current standing — 2026-09-03
+
+Immediate rides, sequential offers, cancellation/completion, payment linkage,
+fixed-route direction booking, and the scheduled-booking-to-live-ride handoff
+are implemented with backend-owned state and local automated coverage. No
+controlled end-to-end ride with real passengers, licensed drivers, production
+routing/push, real money reconciliation, support, and network-loss recovery has
+been accepted. Closed-code assigned-ride coordination is implemented in source,
+but physical-device delivery and real pickup usability remain unaccepted.
+Mainstream address/geocoding provider acceptance also remains open; normalized
+search/reverse source paths and map fallbacks are implemented. See
+[`gaps.md`](gaps.md).
+
 ## 1. Purpose
 
 The ride system manages the complete lifecycle of a taxi ride from passenger request to completion or cancellation.
@@ -84,6 +97,22 @@ The backend derives city scope from the validated pickup/service boundary or the
 selected published fixed-route direction. A client-provided city ID cannot move
 a request into a different tariff, operator, or dispatch pool.
 
+Live cancellation, acceptance and driver-state commands use refreshed row locks,
+with the ride acquired before offer/driver rows. A passenger cancellation that
+waits behind ride start must reject the now-in-progress ride; it cannot overwrite
+it using an earlier matching/arrived view. Acceptance followed by cancellation is
+permitted before start, preserving both audit events and releasing the driver.
+Duplicate acceptance, acceptance after decline/cancellation/offline, and start
+after cancellation cannot revive the closed or unavailable work. Expiry and
+dispatch follow the same aggregate lock order. See the live-command race matrix
+in `testing.md` for verified source behavior and remaining deployment evidence.
+
+Migration `20260903_0048` also enforces at most one active live ride per driver
+directly in PostgreSQL. `ACCEPTED`, `DRIVER_EN_ROUTE`, `DRIVER_ARRIVED` and
+`IN_PROGRESS` occupy the slot; terminal history and unassigned matching requests
+do not. This applies across immediate and scheduled assignments and city scopes.
+It complements current-state application locks, not the other way around.
+
 ## 3.1 Fixed-route request
 
 A fixed-route request references an immutable published direction version. That
@@ -113,6 +142,74 @@ At handoff, the backend revalidates the committed driver or runs the configured
 fallback matching policy and creates/assigns a normal live ride atomically. The
 passenger must not be told that scheduling guarantees a taxi before the
 corresponding backend state supports that statement.
+
+Scheduled offer creation, acceptance, and handoff share a professional-eligibility
+check: the account must be active, driver verification approved, the selected
+vehicle owned/active/verified, and every known professional credential verified
+and unexpired at the decision time. City/service authorization remains an
+additional requirement, not a substitute for those facts. Loss of eligibility
+after commitment invokes the snapshotted fallback/unfulfilled policy; it cannot
+assign a live ride to the suspended or expired participant.
+
+“Account active” includes both the global `users.status` and the independent
+driver-profile operating status. Immediate and scheduled assignment commit points
+hold shared global-account authority through their transaction, ordered after
+the driver lock. Account suspension holds the exclusive user-row lock. A
+suspension that commits first blocks immediate acceptance and sends handoff
+through fallback/unfulfilled; if assignment commits first, the later suspension
+revokes access but preserves that ride as authoritative history. Automatic ride
+cancellation or reassignment on suspension is not invented by this lock rule and
+must follow the approved support/safety workflow.
+
+Direct committed-driver handoff additionally requires `AVAILABLE` in the booked
+city/service and the newest observation to satisfy the configured matching
+freshness window and active PostGIS service-area boundary. The existing online
+admission tolerance permits at most 60 seconds of future clock skew. Missing,
+older, excessively future-dated or outside-area observations, offline/paused/
+offered drivers and mismatched live scope invoke fallback/unfulfilled rather
+than direct assignment. Initial fallback excludes the failed committed driver;
+a future matching cycle still applies normal current-state eligibility. Missing
+readiness configuration raises an explicit conflict without changing the booking.
+These server checks do not prove road readiness or physical pickup effectiveness;
+device/field acceptance remains required under `GAP-007`.
+
+Scheduling commands acquire and reload the booking row before locking its offer,
+commitment or driver. Acceptance, decline, cancellation, opening and handoff must
+use this order even when invoked directly by a worker/service caller. Reloading
+after a lock wait prevents a cached pre-cancellation/pre-handoff state from
+authorizing a second transition. Duplicate successful handoff returns the same
+live ride; cancellation that wins first prevents handoff, while cancellation
+after a completed handoff is rejected and must use the live-ride workflow.
+Driver availability and location commands lock and refresh the driver row;
+handoff rechecks that row after waiting. Candidate discovery also excludes an
+inactive global user. Immediate acceptance, scheduled acceptance and handoff
+recheck that global row under the shared status lock. These guarantees have
+bounded two-session PostgreSQL evidence, not certification of every cross-domain
+race.
+
+Acceptance also has observed-wait evidence for two drivers competing for one
+booking and one driver competing for two buffered windows. Exactly adjacent
+half-open windows remain allowed. Cancellation frees a protected window only
+when its transaction commits; the old commitment remains as cancelled history.
+The database exclusion constraint still protects direct writers. Only that
+specific overlap is a scheduling conflict; unrelated integrity failures are
+rolled back and reported as sanitized internal errors. The acceptance test pack
+in `testing.md` records the remaining device/process/field promotion gates.
+
+Immediate dispatch and acceptance now use the active scheduled commitment's
+half-open protected range as current authority. Candidate discovery filters a
+driver whose range contains server time; after locking a candidate, matching
+loads the commitment again. Acceptance performs the same post-lock check to
+reject an offer that crossed into the window. Scheduled acceptance holds that
+same driver lock and refuses a current-window commitment if a live ride won the
+race first. These rules prevent two currently conflicting assignments without
+turning a future commitment into live availability or showing supply to a
+passenger.
+
+The initial rule has no authoritative predicted completion time for an immediate
+ride accepted before the protected range begins. Preventing that ride from later
+intruding into the buffer remains a policy and route-duration acceptance item;
+source tests may not claim that current-time exclusion solves it.
 
 ---
 
@@ -302,6 +399,49 @@ The system should distinguish between:
 
 ---
 
+## 7.9 Participant coordination during an assigned ride
+
+TaxiMobile provides a deliberately constrained coordination channel after a
+driver is assigned. It is available only in `ACCEPTED`, `DRIVER_EN_ROUTE`,
+`DRIVER_ARRIVED`, and `IN_PROGRESS`, and ends immediately when the ride becomes
+terminal. `REQUESTED` and `MATCHING` do not reveal or contact candidate drivers.
+
+Passengers may send only:
+
+* `PASSENGER_AT_PICKUP`
+* `PASSENGER_NEEDS_MORE_TIME`
+* `PASSENGER_CANNOT_FIND_DRIVER`
+
+Drivers may send only:
+
+* `DRIVER_ON_MY_WAY`
+* `DRIVER_AT_PICKUP`
+* `DRIVER_CANNOT_FIND_PASSENGER`
+
+There is no free-text field, media attachment, calling feature, or personal phone
+number disclosure. This reduces unnecessary personal-data exposure and avoids
+creating an unstaffed moderation channel. A later communication mode requires a
+separate approved privacy, abuse, retention, provider, and operations policy.
+
+The backend is authoritative. It verifies the caller is the ride passenger or
+the assigned driver, locks the ride while validating state, enforces role-specific
+codes, idempotency, a per-user/per-ride minute limit, and an absolute per-participant
+ride cap. The recipient receives a durable account-owned notification and a
+privacy-minimized live/push refresh hint. The client then reloads the ride through
+the authorized API; a notification payload never changes ride or communication
+state directly.
+
+Only the latest accepted signal is included in an active detailed ride response.
+It is omitted after completion or cancellation, and delayed delivery is suppressed
+after terminal state or the bounded freshness window. Persistence, deletion, and
+backup expiry still require a deployment-approved retention schedule.
+
+These signals are convenience aids, not an emergency service. Safety reporting
+remains a separate controlled flow, and participants must use local emergency
+services when immediate help is required.
+
+---
+
 # 8. Ride State Authority
 
 Only the backend may authoritatively change ride state.
@@ -417,9 +557,17 @@ backend-accepted location submitted by that assigned driver after acceptance. Th
 value includes its observation timestamp and optional accuracy and is presented
 as “last known,” not as continuous or guaranteed-current tracking. The backend
 does not expose pre-assignment dispatch history, another driver's location, or a
-location on a terminal ride. Driver updates remain explicit foreground actions in
-the current mobile phase; background tracking requires a separate permission,
-battery, retention, and operational review.
+location on a terminal ride. The first coordinate and any manual fallback remain
+explicit driver-reviewed foreground actions. Once the driver is backend-confirmed
+online, the mobile apps schedule already-authorized one-shot observations every
+15 seconds while available/offered and every 10 seconds during an active ride.
+This heartbeat runs only while the driver app is in the foreground, stops when
+offline/paused/backgrounded/disconnected, never opens a permission prompt, and
+backs off for 60 seconds when a platform observation is unavailable. It is not
+background or continuous OS tracking. The backend still validates each sample
+and stale coordinates never establish dispatch eligibility. Adding background
+tracking requires a separate permission, battery, retention, privacy and store
+review.
 
 ---
 
@@ -793,6 +941,14 @@ A ride should not be considered successfully paid merely because the passenger a
 
 The backend must receive authoritative payment confirmation.
 
+Ride creation stores one method from the estimate's backend-advertised capability
+list. For `MANUAL_TRANSFER`, it also freezes the recipient name and bank and/or
+M-Wallet destination so later account rotation cannot rewrite the ride. Ride
+completion creates a pending payment. A passenger transfer claim changes only
+that payment to processing; authorized statement reconciliation is required for
+completion and earning creation. Cash remains independent and uses driver
+settlement confirmation.
+
 ---
 
 # 29. Ride History
@@ -817,6 +973,8 @@ For a completed passenger ride, `GET /rides/{ride_id}/receipt` is the
 authoritative compact receipt read. It returns the finalized fare and payment
 method/status only after both records exist. The mobile client must not compose a
 receipt from a quote, locally inferred distance, or a presumed cash settlement.
+For a manual transfer it also returns the immutable destination and unique
+backend reference. `PENDING` and `PROCESSING` must not be shown as paid.
 
 Drivers should similarly be able to view their own ride history.
 

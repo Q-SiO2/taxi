@@ -1,0 +1,43 @@
+route:
+  receiver: platform-duty
+  group_by:
+    - alertname
+    - owner
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  routes:
+    - receiver: dispatch-operations
+      matchers:
+        - 'owner = "dispatch_operations"'
+    - receiver: scheduling-operations
+      matchers:
+        - 'owner = "scheduling_operations"'
+    - receiver: driver-compliance
+      matchers:
+        - 'owner = "driver_compliance"'
+    - receiver: platform-duty
+      matchers:
+        - 'owner = "unclassified"'
+
+receivers:
+  - name: platform-duty
+    webhook_configs:
+      - url_file: /run/secrets/taximobile_platform_alert_webhook_url
+        send_resolved: true
+        max_alerts: 20
+  - name: dispatch-operations
+    webhook_configs:
+      - url_file: /run/secrets/taximobile_dispatch_alert_webhook_url
+        send_resolved: true
+        max_alerts: 20
+  - name: scheduling-operations
+    webhook_configs:
+      - url_file: /run/secrets/taximobile_scheduling_alert_webhook_url
+        send_resolved: true
+        max_alerts: 20
+  - name: driver-compliance
+    webhook_configs:
+      - url_file: /run/secrets/taximobile_driver_compliance_alert_webhook_url
+        send_resolved: true
+        max_alerts: 20

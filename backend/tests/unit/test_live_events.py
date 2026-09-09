@@ -39,6 +39,19 @@ def test_unmatched_refresh_is_an_explicit_allowlisted_minimal_hint() -> None:
     assert decode_hint(encode_hint(hint)) == hint
 
 
+def test_coordination_refresh_is_an_explicit_allowlisted_minimal_hint() -> None:
+    hint = LiveEventHint(
+        user_id=uuid4(),
+        ride_id=uuid4(),
+        event_type="RIDE_COORDINATION_MESSAGE",
+    )
+
+    payload = encode_hint(hint)
+
+    assert decode_hint(payload) == hint
+    assert set(json.loads(payload)) == {"version", "user_id", "ride_id", "type"}
+
+
 @pytest.mark.parametrize(
     "payload",
     [

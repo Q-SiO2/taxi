@@ -108,6 +108,43 @@ def test_bootstrap_admin_command_preserves_hidden_password_prompt() -> None:
     ]
 
 
+def test_scoped_operations_bootstrap_command_is_fixed_and_confirmed() -> None:
+    command = command_for(
+        "bootstrap-operations",
+        {},
+        administrator_email="operator@example.test",
+        market_code="ma",
+    )
+
+    assert command == [
+        "taximobile-bootstrap-operations",
+        "--admin-email",
+        "operator@example.test",
+        "--market-code",
+        "MA",
+        "--confirm-market-scope",
+    ]
+
+
+def test_mfa_enrollment_and_replacement_commands_require_explicit_intent() -> None:
+    assert command_for(
+        "enroll-mfa",
+        {},
+        administrator_email="operator@example.test",
+    ) == [
+        "taximobile-enroll-operations-mfa",
+        "--email",
+        "operator@example.test",
+        "--confirm-enrollment",
+    ]
+    assert command_for(
+        "enroll-mfa",
+        {},
+        administrator_email="operator@example.test",
+        replace_existing_mfa=True,
+    )[-1] == "--replace-existing"
+
+
 def test_free_staging_migration_is_fail_closed(monkeypatch: pytest.MonkeyPatch) -> None:
     class FailedMigration:
         returncode = 1
@@ -130,7 +167,16 @@ def test_free_staging_bootstrap_is_idempotent_and_removes_plaintext_password(
         calls.append((email, password))
         return False
 
+    grant_calls: list[str] = []
+
+    async def fake_grant(email: str) -> None:
+        grant_calls.append(email)
+
     monkeypatch.setattr("taximobile_api.cli.bootstrap_admin.run", fake_run)
+    monkeypatch.setattr(
+        "taximobile_api.operations.render_entrypoint.bootstrap_free_staging_platform_grant",
+        fake_grant,
+    )
     environment = {
         "TAXIMOBILE_FREE_TEST_ADMIN_EMAIL": "owner@example.test",
         "TAXIMOBILE_FREE_TEST_ADMIN_PASSWORD": "a-secret-test-password",
@@ -140,6 +186,7 @@ def test_free_staging_bootstrap_is_idempotent_and_removes_plaintext_password(
 
     assert created is False
     assert calls == [("owner@example.test", "a-secret-test-password")]
+    assert grant_calls == ["owner@example.test"]
     assert "TAXIMOBILE_FREE_TEST_ADMIN_PASSWORD" not in environment
 
 

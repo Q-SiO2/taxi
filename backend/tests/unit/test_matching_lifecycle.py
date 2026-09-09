@@ -76,7 +76,7 @@ async def test_decline_releases_driver_without_erasing_wait_and_records_event() 
         expires_at=datetime.now(UTC) + timedelta(minutes=1),
     )
     original_wait = profile.available_since
-    session = ScalarSequenceSession(scalar_values=(offer, profile, ride))
+    session = ScalarSequenceSession(scalar_values=(ride.id, ride, offer, profile))
 
     ride_id = await decline_offer(session, offer.id, profile.id, "Pickup is unsuitable")
 
@@ -101,7 +101,13 @@ async def test_expiration_processor_releases_driver_and_advances_same_ride(monke
         expires_at=datetime.now(UTC) - timedelta(seconds=1),
     )
     original_wait = profile.available_since
-    session = ScalarSequenceSession(scalar_values=(profile, ride), scalar_list=(offer,))
+    session = ScalarSequenceSession(scalar_values=(profile,))
+    lists = iter(((ride,), (offer,)))
+
+    async def scalar_lists(_statement):
+        return next(lists)
+
+    session.scalars = scalar_lists
 
     class Factory:
         def __call__(self):

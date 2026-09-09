@@ -1,5 +1,26 @@
 # TaxiMobile — Ride Matching and Dispatch Specification
 
+## Current standing — 2026-09-03
+
+Deterministic eligibility, ordered offers, decline/expiry handling, leases,
+fairness counters, aggregate simulation, worker execution, and city/service
+configuration are implemented and locally tested. The system has not passed
+representative production load, multi-replica soak, field dispatch, weak-network,
+supply-scarcity, or pilot fairness review. A foreground-only online heartbeat is
+implemented in source, but its device battery, weak-network and field dispatch
+outcomes are not accepted. See [`gaps.md`](gaps.md).
+
+The 2026-09-05 immediate-authority follow-up verifies city suspension/revocation
+against immediate offer creation and acceptance in independent PostGIS sessions.
+A restriction that wins the driver lock prevents new acceptance; an assignment
+that commits first remains history. A locked candidate is skipped for bounded
+retry rather than declared absent. Dispatch repeats eligibility after obtaining
+driver/global account authority and only then finalizes the candidate. A
+regression that previously asserted when global suspension won after discovery
+now chooses other eligible supply or safely defers to the matching worker.
+The 30-case focused pack is local evidence only; hosted concurrency, performance,
+notification timing and field acceptance remain open in `testing.md`.
+
 ## 1. Purpose
 
 This document defines how TaxiMobile connects passenger ride requests with available taxi drivers.
@@ -520,6 +541,34 @@ This must be enforced using a database transaction or equivalent concurrency mec
 
 The client must never determine the winner.
 
+Live command transactions lock and refresh the ride before its offer and driver
+rows. This applies to acceptance, decline, passenger cancellation and expiry;
+assigned-driver transitions/completion also reload the locked ride and profile.
+The ORM's pre-wait cached state cannot authorize a transition. Acceptance's
+active-ride lookup is read-only under the driver lock, avoiding a second ride
+lock in the opposite order. Matching dispatch admits only `REQUESTED` or
+`MATCHING`, never an already operational ride.
+
+Global account containment is also assignment authority. Discovery requires an
+active `users` row in addition to the operational driver-profile state. After a
+candidate or accepting driver is locked, the command takes `FOR SHARE` on that
+user row and retains it through commit; account suspension takes `FOR UPDATE`.
+A suspension that wins first removes the candidate or rejects the stale offer.
+An assignment that owns shared authority first is allowed to commit before the
+subsequent suspension, which revokes later access without erasing ride history.
+Clients, bearer-token age and cached profile state cannot choose that winner.
+
+Seven observed two-session PostgreSQL races cover cancellation/acceptance in
+both orders, duplicate acceptance, decline before acceptance, offline before
+acceptance, and start/cancellation in both orders. Unlike a scheduled booking
+after handoff, a live ride remains passenger-cancellable after acceptance until
+it starts: acceptance then cancellation are both valid, with an audited terminal
+cancellation and released driver. Start that wins first rejects cancellation;
+cancellation that wins first rejects start. These are source transaction proofs.
+A separate account-authority pack covers candidate exclusion and both
+suspension/assignment lock orders for live and scheduled work; neither pack is
+independent-process, load, device or public-road acceptance.
+
 ---
 
 # 23. Failed Acceptance
@@ -806,12 +855,40 @@ DISPATCH_HANDOFF
     └── documented fallback matching / UNFULFILLED
 ```
 
+Direct handoff now requires the committed driver to be `AVAILABLE` in the booked
+city/service with a current observation inside the active service area, in
+addition to professional eligibility and no conflicting active ride. Observation
+age uses the configured matching threshold and existing 60-second future-skew
+tolerance. If this fails, the first fallback dispatch excludes that committed
+driver so the failed direct check cannot be bypassed by immediately offering
+the same ride back. Subsequent ordinary matching cycles still check current
+eligibility. Normal matching also rejects observations beyond the future-skew
+bound. Fallback creates an offer, not an assignment or a guaranteed taxi.
+
 Scheduled offers disclose pickup time, city/service type, pickup and destination
 or fixed-route direction, fare/fee/earning components, commitment terms, and
 expiration. Drivers have sufficient notice and may accept or decline without a
 raw-acceptance-rate penalty. An acceptance transaction rejects overlapping
 commitments after configured travel/buffer time. Outside protected windows, a
 committed driver may continue receiving ordinary rides.
+
+An **active scheduled protected window at the decision instant** removes that
+driver from immediate candidate discovery. Matching repeats the check after it
+owns the driver lock, and immediate offer acceptance repeats it again so an
+offer created before the window began cannot become an overlapping assignment.
+Scheduled acceptance takes the reciprocal driver lock: when its proposed window
+already contains the current instant, a concurrently committed active live ride
+wins and the scheduled acceptance is refused. If scheduling owns the driver,
+matching uses `SKIP LOCKED`, leaves the immediate ride matching, then evaluates
+the committed window on retry. Cancellation/release makes the driver eligible
+again; terminal commitment history is not deleted.
+
+This instant-of-decision rule does not predict the completion time of an
+immediate ride accepted shortly before a future protected window. A wider guard
+requires an approved, conservative live-trip-duration/route policy and field
+evidence; the backend must not invent an ETA or silently extend city conflict
+buffers. Until that policy exists, operations and pilot tests must measure and
+stop on immediate rides intruding into committed pickup windows.
 
 Scheduled candidate discovery uses a separate city-scoped driver opt-in and does
 not require or imply immediate `AVAILABLE` status. Opt-in is not assignment or
@@ -1269,8 +1346,20 @@ Each offer records the component snapshot and `matching_algorithm_version`.
 Only one offer is pending at a time in this initial strategy. Decline or expiry
 returns that driver to availability without erasing accumulated wait, excludes
 the driver from another offer for the same ride, and immediately advances the
-search. The expiration processor uses row locks with `SKIP LOCKED`, allowing
-multiple API replicas without duplicate handling. Exhaustion produces an
+search. Candidate discovery/ranking is read-only; dispatch then tries candidates
+in that order, locking and refreshing one driver's full eligibility query at a
+time with `SKIP LOCKED`. It does not reserve the whole candidate set. If all
+discovered candidates are locked or have changed, the ride remains `MATCHING`
+without an offer until the worker retries. A genuinely empty discovery remains
+terminal, and the existing overall deadline still bounds deferred searches.
+The expiration processor claims a bounded set of rides with due offers or
+matching rides without a pending offer
+using `SKIP LOCKED`, then locks/rechecks their pending expired offers and driver
+profiles in ride-first order. A locked ride is left for a later pass, not processed
+through an offer-first lock inversion. The batch bound counts rides, while the
+processed count reports expired offers plus offerless matching retry attempts.
+Multiple replicas cannot handle the same
+claimed ride simultaneously. Exhaustion produces an
 explicit terminal `UNMATCHED` ride, notification, and refresh hint. A configured
 overall matching timeout (five minutes by default) also bounds a search even if
 new drivers continue appearing.

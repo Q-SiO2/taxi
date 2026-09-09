@@ -21,7 +21,19 @@ launch, load testing, real passenger journeys, or sensitive personal data.
 * Render can restart either free resource at any time.
 * Public Valhalla is rate-limited and can return `503`; it is not an SLA-backed
   routing dependency.
-* FCM and CMI remain disabled. WebSockets and cash-payment testing remain usable.
+* FCM is disabled in this Blueprint because a sleeping all-in-one process is not
+  a reliable background-delivery environment; FCM itself and Crashlytics are
+  no-cost Spark-plan products. WebSockets remain usable while the service is
+  awake.
+* External overdue-case paging is intentionally disabled. Alerts remain durable
+  and visible while the service is awake, but this topology must not carry a
+  live safety pilot or depend on unattended response.
+* The retention loop runs only while the service is awake. The expiring database
+  has no backups and cannot demonstrate production legal-hold review, backup
+  expiry, or restore behavior.
+* CMI/card processing is deferred, not simulated. Cash works immediately.
+  Manual bank/M-Wallet transfer is present but disabled until a verified pilot
+  recipient and reconciliation owner are configured.
 
 ## Deploy
 
@@ -35,11 +47,31 @@ launch, load testing, real passenger journeys, or sensitive personal data.
    Neither value is committed to Git. On every start the service verifies the
    same single administrator and removes the plaintext password from the API
    process environment before accepting traffic. It refuses to promote an
-   existing normal account or replace a different administrator.
+   existing normal account or replace a different administrator. The same
+   guarded startup maps that administrator to the existing Morocco-scoped
+   platform grant so the temporary operations console can be exercised; hosted
+   MFA remains disabled only in this synthetic password-only topology.
 6. Confirm that the plan lists exactly one free web service and one free database.
    If any resource shows a price, cancel instead of applying it.
 7. Apply the Blueprint and wait for the migration, guarded administrator
    bootstrap, and `/ready` health check.
+
+To exercise manual-transfer UI and reconciliation with controlled test data,
+add these service environment values in Render and redeploy:
+
+```text
+TAXIMOBILE_MANUAL_TRANSFER_ENABLED=true
+TAXIMOBILE_TRANSFER_RECIPIENT_NAME=<verified test recipient label>
+TAXIMOBILE_TRANSFER_BANK_ACCOUNT=<test destination, optional with wallet>
+TAXIMOBILE_TRANSFER_WALLET_ID=<test destination, optional with bank>
+```
+
+Use only one recipient in this topology. Never enter a password, PIN, OTP,
+statement credential, card number, or provider secret. The passenger claim moves
+the payment to `PROCESSING`; the controlled test administrator must use the
+authenticated reconciliation endpoint to verify or reject it. Synthetic
+verification proves UI/state wiring only and is not financial-settlement evidence.
+Do not use this expiring, backup-free deployment for real fares or live money.
 
 The resulting API URL resembles:
 

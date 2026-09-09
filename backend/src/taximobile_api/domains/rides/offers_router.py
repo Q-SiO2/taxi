@@ -10,8 +10,10 @@ from taximobile_api.domains.auth.dependencies import CurrentPrincipal, authentic
 from taximobile_api.domains.auth.router import database_session
 from taximobile_api.domains.drivers.service import DriverMissing, driver_for_user
 from taximobile_api.domains.rides.models import Ride, RideOffer, RideOfferStatus
-from taximobile_api.domains.rides.schemas import Coordinate, RideOfferAcceptResponse, RideOfferDeclineRequest, RideOfferDeclineResponse, RideOfferFareResponse, RideOfferListResponse, RideOfferResponse
+from taximobile_api.domains.rides.schemas import Coordinate, FareEconomicsResponse, RideOfferAcceptResponse, RideOfferDeclineRequest, RideOfferDeclineResponse, RideOfferFareResponse, RideOfferListResponse, RideOfferResponse
+from taximobile_api.domains.pricing.models import RideFinancialSnapshot
 from taximobile_api.domains.rides.service import RideOfferUnavailable, accept_offer_atomically, decline_offer
+from taximobile_api.domains.fixed_routes.service import fixed_route_ride_summary
 from taximobile_api.domains.matching.service import dispatch_ride
 
 
@@ -19,7 +21,7 @@ router = APIRouter(tags=["ride-offers"])
 
 
 async def offer_response(session: AsyncSession, offer: RideOffer) -> RideOfferResponse:
-    ride_id, latitude, longitude, address, quoted_amount, quoted_currency = (
+    ride_id, latitude, longitude, address, quoted_amount, quoted_currency, service_type, direction_id = (
         await session.execute(
             select(
                 Ride.id,
@@ -28,6 +30,8 @@ async def offer_response(session: AsyncSession, offer: RideOffer) -> RideOfferRe
                 Ride.pickup_address,
                 Ride.quoted_amount,
                 Ride.quoted_currency,
+                Ride.service_type,
+                Ride.fixed_route_direction_id,
             ).where(Ride.id == offer.ride_id)
         )
     ).one()
@@ -36,13 +40,39 @@ async def offer_response(session: AsyncSession, offer: RideOffer) -> RideOfferRe
         if quoted_amount is not None and quoted_currency is not None
         else None
     )
+    snapshot = await session.get(RideFinancialSnapshot, ride_id)
+    economics = None
+    if snapshot is not None:
+        economics = FareEconomicsResponse(
+            transport_fare=str(snapshot.transport_fare_amount),
+            scheduling_surcharge=str(snapshot.scheduling_surcharge_amount),
+            operator_service_fee=str(snapshot.operator_fee_amount),
+            passenger_total=str(snapshot.passenger_total_amount),
+            expected_driver_net=str(snapshot.driver_net_amount),
+            operator_allocation=str(snapshot.operator_allocation_amount),
+            operator_fee_policy_version=str(snapshot.snapshot["operator_fee_policy_version"]),
+            operator_fee_calculation_mode=snapshot.operator_fee_calculation_mode.value,
+            operator_fee_funding_mode=snapshot.operator_fee_funding_mode.value,
+            scheduling_policy_version=(
+                str(snapshot.snapshot["scheduling_policy_version"])
+                if snapshot.snapshot.get("scheduling_policy_version") is not None
+                else None
+            ),
+        )
     return RideOfferResponse(
         id=offer.id,
         ride_id=ride_id,
+        service_type=service_type.value,
+        fixed_route=(
+            await fixed_route_ride_summary(session, direction_id)
+            if direction_id is not None
+            else None
+        ),
         pickup=Coordinate(latitude=latitude, longitude=longitude, address=address),
         estimated_pickup_distance_meters=offer.estimated_pickup_distance_meters,
         estimated_pickup_time_seconds=offer.estimated_pickup_time_seconds,
         estimated_fare=estimated_fare,
+        economics=economics,
         matching_algorithm_version=offer.matching_algorithm_version,
         issued_at=offer.created_at,
         expires_at=offer.expires_at,

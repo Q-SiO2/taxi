@@ -1,7 +1,7 @@
 This is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop (JVM).
 
-The shared UI bundles Sora, Manrope, and IBM Plex Mono from the upstream Google
-Fonts repositories. Their Open Font License texts are packaged under
+The shared UI bundles Sora, Manrope, IBM Plex Mono, and an explicit Noto Sans
+Arabic fallback from the upstream Google Fonts repositories. Their Open Font License texts are packaged under
 `shared/src/commonMain/composeResources/files/font-licenses/`.
 
 Android and iOS package distinct passenger and driver launcher icons around the
@@ -37,6 +37,51 @@ options:
     - Wasm target (faster, modern browsers): `./gradlew :webApp:wasmJsBrowserDevelopmentRun`
     - JS target (slower, supports older browsers): `./gradlew :webApp:jsBrowserDevelopmentRun`
 - iOS app: open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+
+The web target now hosts two separate roots, neither of which is a browser copy
+of the passenger/driver mobile app: the protected operations console at `/` and
+the public driver applicant portal at `#/apply`. The operations console includes
+city/operator creation, operator activation, service assignment, reviewed
+service-area boundary, and coherent city-configuration workflows. It resolves
+compatible backend versions rather than asking staff to paste raw configuration
+JSON, and the backend remains authoritative for every mutation. It also includes
+permission-gated city/operator tariff, operator-fee, and scheduling-surcharge
+draft/review/activation tools plus fixed-route identity, direction geometry,
+fare-link, review, publication, and retirement workflows; it never calculates
+authoritative money in the browser. It also provides city-scoped support and
+safety queues, protected case detail, controlled transitions, minimal safety
+handoff, and durable overdue-alert acknowledgement without exposing restricted
+safety text to support-only staff. Market-scoped platform administrators can
+place/release controlled legal holds and review immutable case-minimization
+evidence; erased content is never returned to the browser. The same restricted
+role can use the security-incident workspace for a bounded queue, creation,
+detail/timeline review, referenced append-only facts and the next valid lifecycle
+transition plus one-time postmortem completion. Typed confirmation, recent MFA
+and optimistic versions protect each
+write; the browser does not page staff, rotate provider keys, notify users or
+execute containment. The incident workspace also shows active and released
+security-response, communications, operations-liaison and postmortem ownership.
+Assignment accepts an exact approved responder UUID and roster/shift reference,
+uses current-version typed confirmation, and does not expose staff search. A draft direction may be created before its
+fare, or it may bind an unbound reviewed fare; publication remains backend-
+validated. Start the local backend on
+`http://127.0.0.1:8000` with exact CORS origin `http://127.0.0.1:8080`, create the
+initial administrator and scoped operations grant as documented in
+`../backend/README.md`, then run:
+
+```powershell
+.\gradlew.bat :webApp:jsBrowserDevelopmentRun --no-parallel
+```
+
+Open `http://127.0.0.1:8080` for operations or
+`http://127.0.0.1:8080/#/apply` for applicant testing. Localhost builds resolve
+`/api/v1` at port 8000; hosted builds expect `/api/v1` on the same HTTPS origin
+through the deployment reverse proxy. Both surfaces keep access and refresh
+tokens memory-only, so a page reload requires sign-in. Password-only operations
+access is intentionally labeled local/test and production remains disabled until
+MFA, step-up, secure refresh-cookie/CSRF, CSP, and deployment review are
+implemented. Applicant document controls fail closed until protected storage
+and scanning are configured; they never pretend a file was accepted.
 
 ### Testing on a physical Android device
 
@@ -99,9 +144,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -File ..\infra\scripts\seed-ux-dem
 The command prints the generated local-only login details and the purpose of
 each account. It is additive and refuses non-development or non-loopback database
 targets. Use the rich passenger and driver accounts to inspect the same en-route
-ride, history, cash receipt states, inbox/support, vehicle/credential, cooperative,
-and earnings surfaces; use the other accounts for pending-driver and empty-state
-review.
+ride, history, cash receipt states, inbox/support, vehicle/credential,
+cooperative, earnings, and city-authorized driver surfaces; use the other
+accounts for pending-driver, empty-state, and passenger fixed-route catalog and
+direction review. It also creates a published Casablanca sample route, enables
+the rich driver for fixed-route service, and creates a city-scoped operations
+account plus a mixed application funnel so route publication, reviewer,
+requirement, and suppression-aware aggregate UX can be exercised.
 
 `setup-portable-postgis.ps1` is idempotent and needed only initially or when its
 pinned runtime changes. Docker users may instead run `start-local-stack.ps1`.
@@ -162,6 +211,18 @@ matching artifact for crash deobfuscation. CI's documented
 unsigned, non-distributable artifacts; ordinary releases reject missing signing
 or Firebase configuration.
 
+Every packaged client also sends a closed role-specific release identity. Android
+uses the validated `taximobileVersionName` and version code; iOS uses
+`MARKETING_VERSION` and `CURRENT_PROJECT_VERSION`; the web release reads the
+strict `taximobile-client-version` and `taximobile-client-build` meta values and
+the packaging script records them. On startup, native and browser products call
+the command-free compatibility preflight before restoring or creating a session.
+An obsolete native build shows the localized required-upgrade gate; applicant and
+operations web show reload guidance. If policy cannot be checked, sign-in and
+backend actions remain disabled with retry guidance. The backend independently
+enforces the same policy on every v1 request and event socket, so client headers
+are not an authorization mechanism.
+
 Passenger pickup and driver location controls can request the phone's current
 location. Android asks for coarse/fine foreground permission at the moment the
 user selects that action; iOS asks for when-in-use authorization. The apps do not
@@ -196,6 +257,42 @@ After the app has genuinely moved to the background, its next foreground start
 also performs one authoritative refresh for an authenticated session. Initial or
 duplicate start events do not duplicate startup restoration.
 
+Passenger and driver account surfaces keep ordinary support and safety separate.
+Safety reports can reference the active, selected, or one of the recent
+backend-authorized rides; the app sends only the ride ID, controlled category,
+and description. History contains only reporter-safe status and the latest
+participant-visible response. It cannot display internal notes, priority,
+responder identity, reported-user identity, or the submitted description because
+those fields are absent from the mobile domain model. English, French, and Arabic
+all state that TaxiMobile reporting is not an emergency service and direct a
+person in immediate danger to move to a safe place and contact local emergency
+services. The section uses standard controls when optional safety artwork is
+missing.
+
+### Cash and manual-transfer testing
+
+The fare estimate supplies the payment methods the passenger may select. Cash is
+always available. `MANUAL_TRANSFER` appears only when the connected backend
+resolves the ride's exact active city/operator/service capability and its verified
+recipient plus bank account and/or M-Wallet destination. The app never invents
+that capability locally or reuses methods from another city/operator.
+
+After a transfer ride completes, the receipt shows the immutable recipient,
+destination, amount/currency, and backend-issued `TM-...` reference. The optional
+payer reference accepts 3–80 ASCII letters/digits or `.`, `_`, `/`, `-` after
+trimming. Submitting it changes authoritative state to `PROCESSING`; the app says
+operator review is pending and does not show payment success. Only backend admin
+reconciliation can return `COMPLETED`. The app never asks for card data, banking
+credentials, wallet PINs, OTPs, or screenshots. If transfer instructions are
+unavailable, it shows an actionable error instead of substituting current
+configuration.
+
+When the receipt API includes confirmed refunds, the app keeps the original fare
+visible and displays the backend's refunded total, net paid amount, and localized
+reason rows. A full `REFUNDED` payment is not presented as an unverified transfer
+or another instruction to send money. Settlement evidence, private operator
+notes, and administrator identity are intentionally absent from mobile models.
+
 ### Crash/error monitoring
 
 Firebase Crashlytics is linked without Firebase Analytics for Android and iOS.
@@ -211,6 +308,11 @@ approve the processor terms, data region/retention/access policy, incident owner
 and privacy notice. Force one controlled test crash in each passenger/driver
 staging app and confirm that the event is isolated to the correct Firebase app and
 is symbolicated. Never force a test crash in production.
+
+Crashlytics and FCM are both no-cost Firebase Spark-plan products. TaxiMobile
+does not require Firestore, Realtime Database, Cloud Functions, Storage, Hosting,
+phone authentication, or Firebase Analytics; enabling one requires a separate
+cost/privacy/architecture decision.
 
 ### Firebase Cloud Messaging setup
 
@@ -272,6 +374,7 @@ Use the run button in your IDE's editor gutter, or run tests using Gradle tasks:
 - Connectivity/foreground/command/double-submit source gate: `..\.tools\python312\python.exe scripts\validate_mobile_recovery.py`
 - Native MapLibre style-composition source gate: `..\.tools\python312\python.exe scripts\validate_maplibre_composition.py`
 - Mobile/backend route-method drift gate (run from `backend/` with its environment): `python ..\infra\scripts\validate_mobile_api_contract.py`
+- Operations-web/backend route-method and versioned-URL drift gate (run from `backend/` with its environment): `python ..\infra\scripts\validate_web_api_contract.py`
 - Android tests: `./gradlew :shared:testAndroidHostTest`
 - Android release artifact metadata: `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-android-release-artifacts.ps1 -ExpectedVersionCode <code> -ExpectedVersionName <version>`
 - Desktop tests: `./gradlew :shared:jvmTest`

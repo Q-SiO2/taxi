@@ -12,11 +12,13 @@ dependencies = [
     "alembic==1.19.1",
     "argon2-cffi==25.1.0",
     "asyncpg==0.31.0",
+    "cryptography==50.0.0",
     "fastapi==0.141.1",
     "GeoAlchemy2==0.20.0",
     "google-auth==2.56.0",
     "httpx==0.28.1",
     "pydantic==2.13.4",
+    "python-multipart==0.0.32",
     "PyJWT==2.13.0",
     "requests==2.34.2",
     "sqlalchemy==2.0.51",
@@ -25,8 +27,15 @@ dependencies = [
 
 [project.scripts]
 taximobile-bootstrap-admin = "taximobile_api.cli.bootstrap_admin:main"
+taximobile-bootstrap-operations = "taximobile_api.cli.bootstrap_operations:main"
+taximobile-bootstrap-operations-quorum = "taximobile_api.cli.bootstrap_operations_quorum:main"
+taximobile-enroll-operations-mfa = "taximobile_api.cli.enroll_operations_mfa:main"
 taximobile-matching-simulation = "taximobile_api.operations.matching_simulation:main"
 taximobile-performance-smoke = "taximobile_api.operations.performance_smoke:main"
+taximobile-passenger-workload = "taximobile_api.operations.passenger_workload:main"
+taximobile-cash-workload = "taximobile_api.operations.cash_workload:main"
+taximobile-capacity-workload = "taximobile_api.operations.capacity_workload:main"
+taximobile-capacity-plan = "taximobile_api.operations.capacity_plan:main"
 taximobile-routing-acceptance = "taximobile_api.operations.routing_acceptance:main"
 taximobile-outbox-replay = "taximobile_api.operations.outbox_replay:main"
 taximobile-ux-demo-seed = "taximobile_api.operations.ux_demo_seed:main"

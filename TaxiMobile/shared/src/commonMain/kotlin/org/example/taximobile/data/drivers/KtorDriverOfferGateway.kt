@@ -17,9 +17,13 @@ import org.example.taximobile.core.network.ApiConfiguration
 import org.example.taximobile.data.auth.AuthenticationNetworkException
 import org.example.taximobile.data.auth.AuthenticationRejectedException
 import org.example.taximobile.data.network.ApiRequestException
+import org.example.taximobile.data.rides.FareEconomicsResponse
+import org.example.taximobile.data.rides.FixedRouteRideSummaryResponse
+import org.example.taximobile.data.rides.toDomainEconomics
 import org.example.taximobile.domain.drivers.DriverOfferGateway
 import org.example.taximobile.domain.drivers.DriverRideOffer
 import org.example.taximobile.domain.rides.Coordinates
+import org.example.taximobile.domain.rides.RideServiceType
 
 class KtorDriverOfferGateway(
     private val client: HttpClient,
@@ -31,21 +35,7 @@ class KtorDriverOfferGateway(
         if (response.status == HttpStatusCode.Unauthorized) throw AuthenticationRejectedException()
         if (!response.status.isSuccess()) throw ApiRequestException(response.status.value, "The server could not load ride offers.")
         val payload = response.body<OfferListResponse>()
-        payload.offers.map {
-            DriverRideOffer(
-                id = it.id,
-                rideId = it.rideId,
-                pickup = Coordinates(it.pickup.latitude, it.pickup.longitude),
-                estimatedPickupDistanceMeters = it.estimatedPickupDistanceMeters,
-                estimatedPickupTimeSeconds = it.estimatedPickupTimeSeconds,
-                estimatedFareAmount = it.estimatedFare?.amount,
-                estimatedFareCurrency = it.estimatedFare?.currency,
-                matchingAlgorithmVersion = it.matchingAlgorithmVersion,
-                issuedAt = it.issuedAt,
-                expiresAt = it.expiresAt,
-                serverTimeAtFetch = payload.serverTime,
-            )
-        }
+        payload.offers.map { it.toDomain(payload.serverTime) }
     }
 
     override suspend fun accept(offerId: String) = request {
@@ -81,29 +71,59 @@ class KtorDriverOfferGateway(
 }
 
 @Serializable
-private data class OfferListResponse(
+internal data class OfferListResponse(
     @SerialName("server_time") val serverTime: String,
     val offers: List<OfferResponse>,
 )
 
 @Serializable
-private data class OfferResponse(
+internal data class OfferResponse(
     val id: String,
     @SerialName("ride_id") val rideId: String,
     val pickup: CoordinateResponse,
     @SerialName("estimated_pickup_distance_meters") val estimatedPickupDistanceMeters: Int? = null,
     @SerialName("estimated_pickup_time_seconds") val estimatedPickupTimeSeconds: Int? = null,
     @SerialName("estimated_fare") val estimatedFare: OfferFareResponse? = null,
+    val economics: FareEconomicsResponse? = null,
+    @SerialName("service_type") val serviceType: String = "ON_DEMAND",
+    @SerialName("fixed_route") val fixedRoute: FixedRouteRideSummaryResponse? = null,
     @SerialName("matching_algorithm_version") val matchingAlgorithmVersion: String? = null,
     @SerialName("issued_at") val issuedAt: String,
     @SerialName("expires_at") val expiresAt: String,
-)
+) {
+    fun toDomain(serverTime: String): DriverRideOffer {
+        val domainEconomics = economics?.toDomainEconomics()
+        if (
+            domainEconomics != null && estimatedFare != null &&
+            domainEconomics.passengerTotal != estimatedFare.amount
+        ) {
+            throw ApiRequestException(409, "The offer fare does not reconcile with its economics snapshot.")
+        }
+        return DriverRideOffer(
+            id = id,
+            rideId = rideId,
+            pickup = Coordinates(pickup.latitude, pickup.longitude),
+            estimatedPickupDistanceMeters = estimatedPickupDistanceMeters,
+            estimatedPickupTimeSeconds = estimatedPickupTimeSeconds,
+            estimatedFareAmount = estimatedFare?.amount,
+            estimatedFareCurrency = estimatedFare?.currency,
+            matchingAlgorithmVersion = matchingAlgorithmVersion,
+            issuedAt = issuedAt,
+            expiresAt = expiresAt,
+            serverTimeAtFetch = serverTime,
+            economics = domainEconomics,
+            serviceType = runCatching { RideServiceType.valueOf(serviceType) }
+                .getOrDefault(RideServiceType.UNKNOWN),
+            fixedRoute = fixedRoute?.toDomain(),
+        )
+    }
+}
 
 @Serializable
-private data class CoordinateResponse(val latitude: Double, val longitude: Double)
+internal data class CoordinateResponse(val latitude: Double, val longitude: Double)
 
 @Serializable
-private data class OfferFareResponse(val amount: String, val currency: String)
+internal data class OfferFareResponse(val amount: String, val currency: String)
 
 @Serializable
 private data class OfferDeclineRequest(val reason: String)

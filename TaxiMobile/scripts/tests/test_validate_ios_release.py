@@ -44,6 +44,7 @@ class ValidateIosReleaseTest(unittest.TestCase):
             ("https://maps.taximobile.invalid/style.json", "1", "1.0.0"),
             ("http://maps.example.ma/style.json", "1", "1.0.0"),
             ("https://maps.example.ma/style.json", "0", "1.0.0"),
+            ("https://maps.example.ma/style.json", "1", "1.0"),
             ("https://maps.example.ma/style.json", "1", "1.0.0-ci"),
         )
         for map_url, build_number, version in invalid_values:

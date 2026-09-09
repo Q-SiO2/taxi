@@ -1,5 +1,6 @@
 """Public auth request/response schemas. Client input never carries roles or status."""
 
+from datetime import datetime
 from uuid import UUID
 import re
 
@@ -116,3 +117,59 @@ class PassengerProfileUpdateRequest(BaseModel):
 
 class LogoutResponse(BaseModel):
     success: bool = True
+
+
+class RecoveryCodesCreateRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    current_password: str = Field(min_length=1, max_length=256)
+
+
+class RecoveryCodesResponse(BaseModel):
+    codes: list[str]
+    expires_at: datetime
+
+
+class AccountRecoveryResetRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    identifier: str = Field(min_length=3, max_length=320)
+    recovery_code: str = Field(min_length=20, max_length=64)
+    new_password: str = Field(min_length=12, max_length=256)
+
+    @field_validator("identifier")
+    @classmethod
+    def normalize_identifier(cls, value: str) -> str:
+        return normalized_login_identifier(value)
+
+
+class AccountRecoveryResetResponse(BaseModel):
+    accepted: bool = True
+
+
+class PasswordChangeRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    current_password: str = Field(min_length=1, max_length=256)
+    new_password: str = Field(min_length=12, max_length=256)
+
+
+class PasswordChangeResponse(BaseModel):
+    changed: bool = True
+    sessions_revoked: int
+    device_registrations_revoked: int
+
+
+class AccountSessionResponse(BaseModel):
+    id: UUID
+    device_label: str | None
+    current: bool
+    created_at: datetime
+    expires_at: datetime
+
+
+class AccountSessionListResponse(BaseModel):
+    items: list[AccountSessionResponse]
+    total: int
+
+
+class AccountSessionRevokeResponse(BaseModel):
+    revoked: bool = True
+    current_session: bool

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from contextlib import asynccontextmanager
 from secrets import compare_digest
 
@@ -14,9 +15,22 @@ from taximobile_api.core.config import ConfigurationError, Settings
 from taximobile_api.core.http_security import ResponseSecurityMiddleware
 from taximobile_api.core.live_events import PostgresLiveEventPublisher
 from taximobile_api.core.logging import configure_logging
-from taximobile_api.core.metrics import MetricsRegistry, OutboxMetrics
+from taximobile_api.core.metrics import (
+    DatabaseMetrics,
+    DatabasePoolMetrics,
+    MetricsRegistry,
+    OutboxMetrics,
+    SecurityIncidentMetrics,
+)
+from taximobile_api.db.metrics import (
+    collect_database_metrics,
+    collect_database_pool_metrics,
+)
 from taximobile_api.db.session import create_session_factory
-from taximobile_api.domains.outbox.metrics import OutboxMetricsUnavailable, collect_outbox_metrics
+from taximobile_api.domains.outbox.metrics import collect_outbox_metrics
+from taximobile_api.domains.security_incidents.metrics import (
+    collect_security_incident_metrics,
+)
 from taximobile_api.integrations.push import FcmPushProvider, GoogleAdcAccessTokenProvider, PushProvider
 from taximobile_api.workers.application import BackgroundWorkerRuntime
 
@@ -70,7 +84,12 @@ def create_worker_app(
     worker_app.state.session_factory = sessions
     worker_app.state.metrics = metrics
     worker_app.state.worker_runtime = runtime
-    configure_logging(active_settings.log_level)
+    configure_logging(
+        active_settings.log_level,
+        log_file=active_settings.log_file,
+        log_file_max_bytes=active_settings.log_file_max_bytes,
+        log_file_backup_count=active_settings.log_file_backup_count,
+    )
     worker_app.add_middleware(
         ResponseSecurityMiddleware,
         hsts_enabled=active_settings.environment == "production",
@@ -111,12 +130,39 @@ def create_worker_app(
             )
             response.headers["WWW-Authenticate"] = "Bearer"
             return response
-        try:
-            outbox = await collect_outbox_metrics(sessions)
-        except OutboxMetricsUnavailable:
+        (
+            outbox_result,
+            database_result,
+            security_incident_result,
+        ) = await asyncio.gather(
+            collect_outbox_metrics(sessions),
+            collect_database_metrics(sessions),
+            collect_security_incident_metrics(sessions),
+            return_exceptions=True,
+        )
+        if not isinstance(outbox_result, OutboxMetrics):
             outbox = OutboxMetrics(available=False)
+        else:
+            outbox = outbox_result
+        if not isinstance(database_result, DatabaseMetrics):
+            database = DatabaseMetrics(available=False)
+        else:
+            database = database_result
+        if not isinstance(security_incident_result, SecurityIncidentMetrics):
+            security_incidents = SecurityIncidentMetrics(available=False)
+        else:
+            security_incidents = security_incident_result
+        try:
+            database_pool = collect_database_pool_metrics(sessions)
+        except Exception:
+            database_pool = DatabasePoolMetrics(available=False)
         return PlainTextResponse(
-            metrics.render_prometheus(outbox=outbox),
+            metrics.render_prometheus(
+                outbox=outbox,
+                database=database,
+                database_pool=database_pool,
+                security_incidents=security_incidents,
+            ),
             media_type="text/plain; version=0.0.4",
         )
 

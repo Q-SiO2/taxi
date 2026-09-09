@@ -16,6 +16,7 @@ import org.example.taximobile.core.network.ApiConfiguration
 import org.example.taximobile.data.auth.AuthenticationNetworkException
 import org.example.taximobile.data.auth.AuthenticationRejectedException
 import org.example.taximobile.data.network.ApiRequestException
+import org.example.taximobile.data.network.newIdempotencyKey
 import org.example.taximobile.domain.support.SupportCategory
 import org.example.taximobile.domain.support.SupportGateway
 import org.example.taximobile.domain.support.SupportTicket
@@ -32,7 +33,15 @@ class KtorSupportGateway(
         if (response.status == HttpStatusCode.Unauthorized) throw AuthenticationRejectedException()
         if (!response.status.isSuccess()) throw ApiRequestException(response.status.value, "The server could not load support tickets.")
         response.body<SupportTicketListResponse>().items.map {
-            SupportTicket(it.id, SupportCategory.valueOf(it.category), it.subject, it.status, it.createdAt)
+            SupportTicket(
+                it.id,
+                SupportCategory.valueOf(it.category),
+                it.subject,
+                it.status,
+                it.createdAt,
+                it.latestPublicMessage,
+                it.updatedAt,
+            )
         }
     }
 
@@ -45,6 +54,7 @@ class KtorSupportGateway(
         request {
             val response = client.post(api.endpoint("support/tickets")) {
                 header(HttpHeaders.Authorization, "Bearer ${accessToken()}")
+                header("Idempotency-Key", newIdempotencyKey())
                 contentType(ContentType.Application.Json)
                 setBody(SupportTicketRequest(category.name, subject, description, rideId))
             }
@@ -81,4 +91,6 @@ private data class SupportTicketRequest(
     val subject: String,
     val status: String,
     @kotlinx.serialization.SerialName("created_at") val createdAt: String,
+    @kotlinx.serialization.SerialName("latest_public_message") val latestPublicMessage: String? = null,
+    @kotlinx.serialization.SerialName("updated_at") val updatedAt: String? = null,
 )

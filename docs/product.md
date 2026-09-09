@@ -1,5 +1,15 @@
 # TaxiMobile — Product Specification
 
+## Current standing — 2026-09-02
+
+The repository implements the broad provider-independent passenger, driver,
+operations, fixed-route, scheduling, payment-record, safety/support, and national
+city-control foundations specified here. That implementation has not established
+product-market fit, cooperative adoption, legal authority in any city, service
+quality with a real driver cohort, or readiness for public deployment. Those are
+evidence gates, not software features. See [`gaps.md`](gaps.md) for audited launch
+blockers and [`roadmap.md`](roadmap.md) for source versus deployment status.
+
 ## 1. Overview
 
 TaxiMobile is a cooperative digital platform designed to allow licensed taxi drivers to collectively provide a modern ride-hailing service without depending on or being displaced by large private ride-hailing companies. Its approved growth target is a Morocco-wide network introduced through independently governed city deployments rather than one undifferentiated national launch.
@@ -270,12 +280,16 @@ The platform should provide appropriate mechanisms for:
 * Vehicle identification.
 * Ride tracking.
 * Ride history.
-* Emergency assistance.
+* Clear direction to local emergency services without claiming platform dispatch.
 * Reporting problems.
 * Dispute handling.
 * Account security.
 
-The exact emergency and safety features will be defined in the security and ride specifications.
+The launch implementation provides ride-bound safety reports, separate
+restricted review, and participant-safe acknowledgements/status. It is not an
+emergency service, does not place calls or dispatch help, and must say so. Any
+future direct emergency, trip-sharing, or evidence-upload integration requires a
+jurisdiction-specific legal, privacy, reliability, and operational decision.
 
 ---
 

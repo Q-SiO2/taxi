@@ -11,10 +11,28 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from taximobile_api.domains.auth.dependencies import CurrentPrincipal, authenticated_principal
 from taximobile_api.domains.auth.router import database_session
 from taximobile_api.domains.drivers.service import DriverMissing, driver_for_user
-from taximobile_api.domains.payments.models import DriverEarning, Payment, PaymentMethod, PaymentStatus
-from taximobile_api.domains.payments.schemas import DriverEarningResponse, EarningsResponse, PaymentResponse
-from taximobile_api.domains.payments.service import InvalidPaymentTransition, create_driver_earning, settle_cash_payment
+from taximobile_api.domains.payments.models import (
+    DriverEarning,
+    ManualTransferClaim,
+    Payment,
+    PaymentMethod,
+    PaymentStatus,
+)
+from taximobile_api.domains.payments.schemas import (
+    DriverEarningResponse,
+    EarningsResponse,
+    ManualTransferClaimRequest,
+    ManualTransferClaimResponse,
+    PaymentResponse,
+)
+from taximobile_api.domains.payments.service import (
+    InvalidPaymentTransition,
+    create_driver_earning,
+    settle_cash_payment,
+    submit_manual_transfer_claim,
+)
 from taximobile_api.domains.rides.models import Ride, RideStatus
+from taximobile_api.domains.pricing.models import RideFinancialSnapshot
 from taximobile_api.domains.idempotency.service import (
     IdempotencyKeyReuse,
     IdempotentReplay,
@@ -29,6 +47,19 @@ router = APIRouter(tags=["payments"])
 
 def payment_response(payment: Payment) -> PaymentResponse:
     return PaymentResponse(id=payment.id, ride_id=payment.ride_id, amount=payment.amount, currency=payment.currency, method=payment.method.value, status=payment.status.value)
+
+
+def manual_transfer_claim_response(
+    claim: ManualTransferClaim,
+    payment: Payment,
+) -> ManualTransferClaimResponse:
+    return ManualTransferClaimResponse(
+        id=claim.id,
+        payment_id=payment.id,
+        ride_id=payment.ride_id,
+        status=claim.status.value,
+        submitted_at=claim.submitted_at,
+    )
 
 
 @router.post("/rides/{ride_id}/payments/cash/settle", response_model=PaymentResponse)
@@ -64,11 +95,92 @@ async def settle_cash(
                 raise InvalidPaymentTransition("Cash payment cannot be settled in its current state.")
             earning = await session.scalar(select(DriverEarning).where(DriverEarning.payment_id == payment.id).with_for_update())
             if earning is None:
-                session.add(create_driver_earning(driver_id=profile.id, payment=payment))
+                snapshot = await session.get(RideFinancialSnapshot, ride.id)
+                session.add(
+                    create_driver_earning(
+                        driver_id=profile.id,
+                        payment=payment,
+                        financial_snapshot=snapshot,
+                    )
+                )
             response = payment_response(payment)
             await finish_command(session, command, status_code=status.HTTP_200_OK, payload=response.model_dump(mode="json"))
     except DriverMissing as error:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(error)) from error
+    except InvalidPaymentTransition as error:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(error)) from error
+    except InvalidIdempotencyKey as error:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error)) from error
+    except IdempotencyKeyReuse as error:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(error)) from error
+    return response
+
+
+@router.post(
+    "/rides/{ride_id}/payments/manual-transfer/submit",
+    response_model=ManualTransferClaimResponse,
+    status_code=status.HTTP_202_ACCEPTED,
+)
+async def submit_manual_transfer(
+    ride_id: UUID,
+    payload: ManualTransferClaimRequest,
+    idempotency_key: str = Header(alias="Idempotency-Key"),
+    principal: CurrentPrincipal = Depends(authenticated_principal),
+    session: AsyncSession = Depends(database_session),
+) -> ManualTransferClaimResponse:
+    """Record a passenger assertion without treating it as proof of payment."""
+
+    try:
+        async with session.begin():
+            command = await begin_command(
+                session,
+                user_id=principal.user_id,
+                operation="payment.manual_transfer.submit",
+                key=idempotency_key,
+                payload={
+                    "ride_id": str(ride_id),
+                    "payer_reference": payload.payer_reference,
+                },
+            )
+            if isinstance(command, IdempotentReplay):
+                return JSONResponse(status_code=command.status_code, content=command.payload)
+            ride = await session.scalar(
+                select(Ride)
+                .where(Ride.id == ride_id, Ride.passenger_id == principal.user_id)
+                .with_for_update()
+            )
+            if ride is None:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="You cannot submit this payment.",
+                )
+            if ride.status != RideStatus.COMPLETED:
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail="Ride must be completed before payment submission.",
+                )
+            payment = await session.scalar(
+                select(Payment).where(Payment.ride_id == ride.id).with_for_update()
+            )
+            if payment is None or payment.method != PaymentMethod.MANUAL_TRANSFER:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Manual transfer payment not found.",
+                )
+            claim = submit_manual_transfer_claim(
+                payment,
+                claimant_user_id=principal.user_id,
+                payer_reference=payload.payer_reference,
+            )
+            session.add(claim)
+            await session.flush()
+            response = manual_transfer_claim_response(claim, payment)
+            await finish_command(
+                session,
+                command,
+                status_code=status.HTTP_202_ACCEPTED,
+                payload=response.model_dump(mode="json"),
+            )
     except InvalidPaymentTransition as error:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(error)) from error
     except InvalidIdempotencyKey as error:
@@ -108,6 +220,10 @@ async def driver_earnings(
                 func.coalesce(func.sum(DriverEarning.fee_amount), 0),
                 func.coalesce(func.sum(DriverEarning.adjustment_amount), 0),
                 func.coalesce(func.sum(DriverEarning.net_amount), 0),
+                func.coalesce(func.sum(DriverEarning.transport_fare_amount), 0),
+                func.coalesce(func.sum(DriverEarning.scheduling_surcharge_amount), 0),
+                func.coalesce(func.sum(DriverEarning.operator_fee_amount), 0),
+                func.coalesce(func.sum(DriverEarning.operator_allocation_amount), 0),
                 func.max(DriverEarning.settled_at),
             ).where(*filters)
         )
@@ -128,7 +244,11 @@ async def driver_earnings(
         fees=Decimal(totals[1]),
         adjustments=Decimal(totals[2]),
         net=Decimal(totals[3]),
-        settled_through=totals[4],
+        transport_fare=Decimal(totals[4]),
+        scheduling_surcharge=Decimal(totals[5]),
+        operator_service_fee=Decimal(totals[6]),
+        operator_allocation=Decimal(totals[7]),
+        settled_through=totals[8],
         count=count,
         page=page,
         limit=limit,
@@ -140,6 +260,15 @@ async def driver_earnings(
                 fees=earning.fee_amount,
                 adjustments=earning.adjustment_amount,
                 net=earning.net_amount,
+                transport_fare=earning.transport_fare_amount,
+                scheduling_surcharge=earning.scheduling_surcharge_amount,
+                operator_service_fee=earning.operator_fee_amount,
+                operator_fee_funding_mode=(
+                    earning.operator_fee_funding_mode.value
+                    if earning.operator_fee_funding_mode is not None
+                    else None
+                ),
+                operator_allocation=earning.operator_allocation_amount,
                 currency=earning.currency,
                 settled_at=earning.settled_at,
             )

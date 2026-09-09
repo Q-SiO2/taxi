@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160">
+  <g transform="translate(12 10) scale(.55)">
+    <path fill="#FFFFFF" d="M35 132h186c12 0 22 10 22 22v42c0 12-10 22-22 22H35c-12 0-22-10-22-22v-42c0-12 10-22 22-22Z"/>
+    <path fill="#FFFFFF" d="m62 136 24-63c4-11 15-18 27-18h30c12 0 23 7 27 18l24 63H62Z"/>
+    <path fill="#163A63" d="m88 122 14-38c2-5 6-8 12-8h9v46H88Zm45-46h9c6 0 10 3 12 8l14 38h-35V76Z"/>
+    <rect width="54" height="20" x="101" y="35" fill="#D6A800" rx="8"/>
+    <circle cx="60" cy="217" r="24" fill="#071426"/>
+    <circle cx="196" cy="217" r="24" fill="#071426"/>
+  </g>
+  <text x="180" y="104" fill="#FFFFFF" font-family="Sora, Manrope, sans-serif" font-size="62" font-weight="700" letter-spacing=".3">TaxiMobile</text>
+</svg>

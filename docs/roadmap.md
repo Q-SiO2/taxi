@@ -6,6 +6,29 @@ Define the intended development order and prevent the coding agent from implemen
 
 The roadmap is directional rather than a rigid schedule.
 
+Use [workflow.md](workflow.md) to execute a scoped task and promote evidence
+through the existing test phases. [readiness.md](readiness.md) measures weighted
+engineering implementation separately from deployment gate closure; phase counts
+must not be used as a completion percentage.
+
+## Current standing — 2026-09-08
+
+This roadmap distinguishes repository delivery from real-world acceptance.
+Phases 1–10 and 12–19 are **implemented in source**. Phase 11 has substantial
+source hardening, but its production outcome cannot be complete until a real
+environment and city pilot satisfy the open evidence in [`gaps.md`](gaps.md).
+
+| Phase | Repository standing | Deployment standing |
+| --- | --- | --- |
+| 1–7 Foundation through payments | Implemented and locally exercised through end-to-end PostGIS lifecycles. | Real accounts, recipient/cash controls, hosted environment, and operational ownership open. |
+| 8 Maps and navigation | MapLibre, normalized place search/reverse lookup, and Valhalla/GraphHopper contracts implemented. | Production tiles/style, routing graph, geocoding provider/data/license and multilingual quality acceptance, narration, and device navigation open. |
+| 9–10 Passenger and driver experience | Shared role-specific product surfaces, foreground-only online driver-location heartbeat, and closed-code assigned-ride coordination implemented. | User research, accessibility, signed-device, battery/dispatch location acceptance, coordination delivery/usability, privacy/store review, and physical-device acceptance open. |
+| 11 Production hardening | CI, rate limits, secure release guards, six-surface client compatibility enforcement and preflight UI, monitoring endpoints, backup scripts, Compose blueprint, and failure recovery implemented in source. | Approved support/deprecation policy, signed old/current client drill, security review, capacity, HA, managed backups, alerting/on-call, incident drills, and production promotion open. |
+| 12–19 National control plane through payment operations | Migrations, APIs, web/mobile surfaces, and focused integration coverage implemented in source. | No city bundle has real legal/provider/operational evidence or measured pilot outcomes. |
+
+No phase status authorizes a public launch. The prioritized release blockers and
+acceptance criteria live in [`gaps.md`](gaps.md).
+
 ---
 
 # Phase 1 — Foundation
@@ -101,7 +124,8 @@ Implement:
 * Cash payment recording
 * Payment states
 * Payment abstraction
-* Initial electronic payment integration when appropriate
+* External bank/M-Wallet transfer with backend reference and manual
+  reconciliation
 * Refund/adjustment support
 
 ---
@@ -132,6 +156,9 @@ Improve:
 * Receipts
 * Ratings
 * Basic support/dispute flows
+* Ride-bound safety reporting distinct from support
+* Participant-safe case acknowledgements and status history
+* Closed-code coordination with the assigned driver during active ride states
 
 ---
 
@@ -145,6 +172,7 @@ Improve:
 * Ride history
 * Availability controls
 * Driver notifications
+* Closed-code coordination with the assigned passenger during active ride states
 
 ---
 
@@ -169,6 +197,15 @@ Before public deployment:
 
 Goal: introduce city scope without breaking the proven single-city lifecycle.
 
+**Status: foundation and production authentication protocol delivered.**
+Migrations `20260824_0033`, `20260824_0034`, and `20260830_0043`, the scoped
+operations API, compatibility backfill, Compose web console, encrypted TOTP and
+single-use recovery, recent-MFA step-up, secure refresh cookie, CSRF rotation,
+and guarded factor replacement are implemented and covered by migrated PostGIS
+integration tests. Hosted release still requires the deployed web CSP, named
+access/recovery reviewers, enrolled operator accounts, and incident/access-review
+evidence; source delivery alone does not authorize privileged production use.
+
 Implement in bounded migrations/slices:
 
 * Market, operator, city, service-area, and city-lifecycle records.
@@ -180,12 +217,38 @@ Implement in bounded migrations/slices:
 * Compatibility migration for existing rides, tariff, cooperative, and bootstrap
   administrator data; no historical rewrite.
 
+Delivered Phase 12 console modules are rollout; city/operator creation;
+operator status; exact-scope assignment creation/retirement; service-area
+creation/review; compatible coherent-configuration assembly/review/activation;
+city lifecycle/readiness; typed-confirmed scoped grant create/revoke and expiry
+review; and scoped audit visibility. Independent grant approval and automated
+recertification remain deployment work rather than a Phase 12 source claim.
+The editor accepts WGS84 point rows instead of raw geometry/configuration JSON,
+shows missing authoritative dependencies, and reloads backend state after every
+accepted command. Driver recruitment and the public applicant portal are delivered in
+Phase 13, pricing policy editors in Phase 14, and published fixed routes in Phase
+15. Scheduling and broader analytics remain in their later phases rather than
+appearing as non-functional navigation.
+
 Do not activate a second city until every high-volume ride, matching, driver,
 pricing, payment, and worker query has an explicit city ownership rule.
 
 ---
 
 # Phase 13 — City Driver Recruitment and Review
+
+**Status: application, review, and protected document lifecycle delivered
+(2026-08-31).** Migrations `20260824_0035` and `20260831_0045`, public/applicant and scoped operations APIs, the driver-mobile
+onboarding flow, separate public web portal, permission-gated review console,
+city/service online enforcement, matching eligibility, and suppression-aware
+onboarding aggregates are implemented and tested. Protected PDF/JPEG/PNG upload,
+replacement, deletion, encrypted private-volume storage, ClamAV scanning,
+retention erasure, recent-MFA/no-store reviewer retrieval, access audit, Android
+and iOS native selection, and JavaScript portal selection are implemented. The capability still
+fails closed when its root, independent encryption key, or private scanner is not
+configured. JavaScript and Kotlin/Wasm use bounded browser file APIs, but both
+still require browser acceptance testing; no client substitutes a free-text file
+reference or claims an upload succeeded.
 
 Implement:
 
@@ -201,6 +264,13 @@ Implement:
 ---
 
 # Phase 14 — City Pricing and Operator Economics
+
+**Status: city pricing and operator economics delivered (2026-08-27).**
+Migration `20260824_0036`, scoped operations APIs and web editors, immutable
+ride financial snapshots, exact quote/offer/receipt/earning components, and
+passenger/driver presentation are implemented and tested. The scheduling-policy
+foundation delivered here is expanded and consumed by the separate Phase 16
+scheduled-booking lifecycle.
 
 Implement:
 
@@ -221,6 +291,15 @@ client calculates a fee.
 
 # Phase 15 — Published Fixed Routes
 
+**Status: published fixed routes delivered (2026-08-29).** Migration
+`20260827_0037`, direction-scoped flat fares, scoped operations lifecycle APIs
+and editor, public supply-private catalog, passenger immediate booking, and
+driver fixed-route authorization/offers/history are implemented. Clean
+migration upgrade, Phase 15 downgrade/re-upgrade, same-city multi-fare PostGIS
+integration, shared/mobile UI tests, and operations-web contract compilation are
+the delivery evidence. Phase 16 now consumes published directions for scheduled
+fixed-route bookings without changing the supply-private catalog.
+
 Implement:
 
 * City route/version/direction/stop/geometry model.
@@ -237,6 +316,15 @@ Segment fares, seat pooling, and intercity route regulation remain out of scope.
 ---
 
 # Phase 16 — Scheduled Bookings
+
+**Status: scheduled bookings delivered (2026-08-29).** Migration
+`20260829_0038`, non-mutating review estimates with version-checked confirmation,
+immutable booking economics/policy snapshots, passenger cancellation, city-scoped
+driver opt-in/offers/commitments, overlap protection, lease-safe opening/handoff,
+eligibility revalidation, normal-matching fallback, explicit unfulfilled state,
+scoped operations exception inspection, localized mobile surfaces, demo data,
+and focused PostGIS lifecycle tests are implemented. Recurring bookings remain
+out of scope.
 
 Implement:
 
@@ -255,6 +343,11 @@ Recurring bookings are not part of this phase.
 ---
 
 # Phase 17 — Operations Data and Rollout Intelligence
+
+**Status: delivered in the repository on 2026-08-29.** Migration
+`20260829_0039`, the analytics refresh worker, scoped aggregate-only API, and
+operations-web rollout-intelligence module implement this phase. Production
+acceptance still requires the Phase 18 pilot evidence and monitoring review.
 
 Implement:
 
@@ -276,6 +369,15 @@ requires measured need.
 
 # Phase 18 — Repeatable City Pilot and National Expansion
 
+**Status: delivered in the repository on 2026-08-29.** The obsolete Phase 12
+second-city block has been replaced by backend-authoritative staged readiness,
+audited operations-web evidence controls, public-activation protection, safe
+configuration replacement rules, emergency pause/resume, post-launch closeout,
+and a migrated two-city integration proof. Real legal approval, provider
+coverage, driver recruitment, pilot observations, and production monitoring
+remain deployment evidence for each city; repository tests cannot fabricate
+those decisions.
+
 For each city:
 
 1. Complete legal/operational review and assign accountable operator/staff.
@@ -288,7 +390,50 @@ For each city:
 7. Monitor, preserve an emergency city-pause path, and conduct a post-launch
    review before starting the next city.
 
+The ten configuration and operations gates are required before `PILOT`.
+For initial launch, `PILOT_SERVICE_AND_FAIRNESS` can pass only on the active
+bundle while the city is actually in `PILOT`, and is additionally required
+before `ACTIVE`. An approved replacement in an already `ACTIVE` or `PAUSED` city
+requires a new decision and evidence that the measured outcome remains
+representative under the proposed bundle; evidence is never copied.
+`POST_LAUNCH_REVIEW` is a separately visible closeout decision that can pass
+only after the city has reached `ACTIVE`; it cannot be falsely used as a
+pre-launch gate. An operating city's replacement configuration must independently
+pass the readiness stage appropriate to the city's current lifecycle before it
+can become active.
+
 There is one application and schema, not a fork per city.
+
+---
+
+# Phase 19 — Versioned Payment Operations
+
+**Status: delivered in the repository on 2026-08-31.** Migration
+`20260831_0044`, scoped backend APIs, the protected operations payment module,
+and clean migrated integration tests implement this phase. Production acceptance
+still requires a verified real recipient, controlled external transfer,
+statement reconciliation, named duty ownership, MFA enrollment/recovery, and
+city-specific legal and commercial approval.
+
+Delivered behavior:
+
+* Immutable-after-verification recipient accounts scoped to city and operator.
+* Versioned cash/manual-transfer capabilities scoped to city, operator, and
+  service type with review, approval, activation, and replacement history.
+* Exact capability linkage in coherent city-configuration services; non-legacy
+  activation, estimates, and ride creation fail closed without it.
+* Immutable ride/payment capability and recipient provenance plus non-null
+  city/operator provenance on payments and refunds.
+* Separate configuration and reconciliation permissions, grant-constrained SQL
+  pagination, idempotent transfer decisions/refunds, recent-MFA controls, and
+  append-oriented audit evidence.
+* A protected web console for recipient/capability lifecycle, transfer queue,
+  and refund ledger without exposing financial credentials to mobile clients.
+* A legacy-city-only environment fallback; no new city/operator may use
+  deployment-wide recipient configuration.
+
+CMI/card processing remains deferred. Cash remains mandatory and a controlled
+external bank/M-Wallet transfer remains the only current electronic method.
 
 ---
 
@@ -352,6 +497,7 @@ foundation → accounts → drivers → rides → matching → pricing → payme
           → maps → passenger experience → driver experience → hardening
           → national control plane → city recruitment → city economics
           → fixed routes → scheduling → rollout data → repeatable city pilots
+          → versioned payment operations
 ```
 
 ## Current implementation gates
@@ -360,7 +506,8 @@ The repository has delivered the provider-independent MVP foundation: secure
 accounts and sessions, driver eligibility and vehicles, authoritative rides and
 versioned fairness-aware matching with sequential decline/expiry handling,
 seeded aggregate-only matching simulation,
-fixed-tariff fares, cash settlement, receipts, ratings, support,
+fixed-tariff fares, cash/manual-transfer settlement, append-only operator-funded
+refunds, receipts, ratings, support,
 notification history, shared passenger/driver applications, migrations, local
 Compose infrastructure, shared production abuse limits, and CI build/test coverage. The CI backend gate now
 includes a migrated PostGIS end-to-end cash ride from registration through
@@ -371,16 +518,26 @@ CI independently validates the committed Gradle wrapper JAR against Gradle's
 trusted checksums, while the wrapper pins the Gradle distribution itself by
 SHA-256. This protects the build entry point without pretending that dependency
 updates are safe to deploy without review.
+Pull requests now reject newly introduced high/critical dependency findings, and
+trusted pushes submit the Gradle action's resolved dependency graph rather than a
+hand-maintained catalog. The backend build emits an SPDX JSON SBOM from the built
+image, records its digest in source-candidate evidence, and blocks on high or
+critical OS/library findings. All actions use immutable commit SHAs and a local
+validator protects the blocking/provenance settings. These controls need a clean
+remote candidate run and do not yet cover every mobile/web artifact or replace
+independent security review.
 The backend CI and portable backend test entry points also run a source credential
 hygiene gate. CI scans Git-tracked files and rejects provider configuration,
 signing containers, private keys, service-account documents, and high-confidence
 live token formats without echoing credential values; local ignored environment
 files and generated runtime directories are not read by the no-Git fallback.
-Those same entry points extract the actual handwritten Kotlin Ktor operations and
-compare every method/path with FastAPI OpenAPI, plus the registered live-event
-WebSocket. Unknown call structures and unreviewed dynamic route segments fail
-closed, preventing a newly added gateway from silently escaping route-drift
-coverage. Payload schemas and authorization behavior remain focused-test gates.
+Those same entry points extract the actual handwritten mobile and operations-web
+Ktor operations and compare every method/path with FastAPI OpenAPI, plus the
+registered mobile live-event WebSocket. Unknown call structures, arbitrary route
+variables, unreviewed dynamic segments, and operations calls outside the single
+exactly-once `/api/v1` builder fail closed, preventing a new gateway from silently
+escaping route-drift coverage. Payload schemas and authorization behavior remain
+focused-test gates.
 
 Android CI also compiles both minified release flavors with fatal lint and checks
 that the resulting passenger and driver APKs have distinct expected application
@@ -405,11 +562,13 @@ archives still require target-matching ignored Firebase plists, production APNs
 entitlements, Apple signing/team configuration, and physical-device acceptance.
 
 The cooperative has selected MapLibre for mobile map rendering, a self-hosted
-Valhalla service by default for routing and turn-by-turn instructions, CMI for
-electronic card payments, and Firebase Cloud Messaging (FCM) for background push.
-The approved GraphHopper replacement is implemented behind the same route contract,
-and cash remains a first-class payment method. These selections do not remove the
-operational proof required before release:
+Valhalla service by default for routing and turn-by-turn instructions, external
+bank/M-Wallet transfer as the launch electronic-payment path, and Firebase Cloud
+Messaging (FCM) for background push. The approved GraphHopper replacement is
+implemented behind the same route contract, and cash remains a first-class
+payment method. CMI/card processing is explicitly deferred until well after the
+functional launch flow. These selections do not remove the operational proof
+required before release:
 
 The mobile presentation layer now includes exact-parity English, French, and
 Arabic catalogs, Arabic RTL layout, localized known notification events, and
@@ -422,19 +581,22 @@ completed localized feature.
 | Requirement | Gate before implementation | Required proof |
 | --- | --- | --- |
 | Map display, place selection, routes, and navigation | MapLibre rendering, normalized Valhalla and GraphHopper adapters, a closed deployment selector, one-shot foreground mobile permission flows, privacy-bounded post-assignment last-known driver visibility, and an opt-in pinned local Valhalla Morocco graph build are implemented. Select one production engine, a MapLibre style/tile source, and approve routing-data refresh, retention, attribution, and artifact-promotion policy. Geocoding and continuous background tracking remain separate optional adapters/capabilities. | Existing provider normalization/configuration and assigned-location authorization/lifecycle tests plus a successful pinned Morocco graph build for the selected engine, tile/style acceptance, narration acceptance in required languages, and Android/iOS device tests. |
-| Electronic payments | CMI hosted card payment and cash are selected. Obtain CMI's merchant integration kit, sandbox credentials, signed-callback specification, settlement reports, and operational dispute/reconciliation rules. | Sandboxed CMI integration, authenticated callback tests, reconciliation evidence, and payment failure/retry tests. |
-| Refunds and fare adjustments | Define the cooperative authority, reason taxonomy, accounting treatment, and passenger communication policy. | Immutable adjustment/refund records, authorization/audit tests, and reconciliation evidence. |
-| Background push and multi-instance delivery | The PostgreSQL cross-instance hint transport, FID-based Android/iOS registration, authorized FCM HTTP v1 `fid` targeting with legacy-token migration support, invalid-registration revocation, bounded retry, persistent dead-letter state, reviewed replay procedure, and allowlisted Android/iOS receive-to-authoritative-refresh path are implemented. Create separate development/staging/production Firebase projects, configure Android and APNs credentials, and define credential rotation. | Existing transport/adapter/ownership/revocation/receive tests plus migrated PostGIS fanout and Android/iOS device validation with environment credentials. |
-| Safety/support triage | Define responsible roles, escalation paths, retention, privacy, and response-time policy. | Restricted workflow, audit/authorization tests, and an operational runbook. |
+| Electronic payments | Cash plus the provider-independent manual bank/M-Wallet transfer claim, verified recipient accounts, versioned city/operator/service capabilities, exact active-bundle linkage, immutable settlement provenance, scoped reconciliation, and protected operations UI are implemented. The deployment-wide recipient is now a legacy-city-only compatibility fallback. Before enabling a pilot, verify the real recipient, transfer limits/fees, statement reference fidelity, scoped reviewers, support ownership, reconciliation cadence, MFA recovery, and cash fallback. CMI/card remains deferred. | Existing unit/API/web/mobile tests and clean migrated payment/national lifecycle tests plus a controlled external transfer located by exact reference/amount/currency, idempotent verify/reject evidence, earning reconciliation, operator runbook exercise, and unresolved-claim alert/ownership proof. |
+| Refunds and fare adjustments | Append-only confirmed refunds are implemented for completed payments with a closed reason taxonomy, cash/external-transfer evidence, payment locking, cumulative over-refund protection, idempotent audited administrator commands, passenger-safe receipt totals, and an explicit launch allocation of zero driver recovery/full operator funding. Before pilot use, assign approval/reconciliation staff and exercise the controlled case, cash-handover/outbound-statement, and passenger-communication runbook. Post-ride increases and driver recovery remain prohibited until a later versioned policy exists. | Existing service/schema/OpenAPI/mobile and migrated two-party lifecycle tests plus a controlled real refund reconciled by exact payment/amount/currency/evidence reference, duplicate/over-refund rejection evidence, daily refund-list/audit reconciliation, and operator ownership proof. |
+| Background push and multi-instance delivery | The PostgreSQL cross-instance hint transport, FID-based Android/iOS registration, authorized FCM HTTP v1 `fid` targeting with legacy-token migration support, invalid-registration revocation, bounded retry, persistent dead-letter state, reviewed replay procedure, and allowlisted Android/iOS receive-to-authoritative-refresh path are implemented. FCM and Crashlytics are no-cost Spark-plan products; do not add metered Firebase databases, functions, storage, hosting, phone auth, or Analytics. Create separate development/staging/production Firebase projects, configure Android and APNs credentials, and define credential rotation. | Existing transport/adapter/ownership/revocation/receive tests plus migrated PostGIS fanout and Android/iOS device validation with environment credentials. |
+| Passenger-driver coordination | Six role-specific closed signals, active-assignment authorization, required idempotency, rate/cap controls, durable recipient notification, generic live/push refresh, latest-message ride detail, and shared localized UI are implemented. Free text, direct phone exposure, and calling are intentionally absent. Approve retention/erasure, support/abuse handling, emergency limitations, and whether this minimal channel meets launch needs. | Existing policy/API/outbox/mobile and fresh-PostGIS lifecycle tests plus physical-device delivery, accessibility/localization, weak-network/provider-failure traces, staff rehearsal, closed-road pickup metrics, and signed pilot thresholds. |
+| Safety/support triage | Separate participant support and safety records, immutable city scope, controlled lifecycles, city-scoped operations queues and mutations, active scoped assignee checks, append-only notes, minimal support-to-safety handoff, durable overdue paging, pager acknowledgement, fixed-field audit, mobile/operations status surfaces, response targets, versioned retention projections, city-scoped legal holds, and verified personal-data minimization are implemented. The operations console exposes hold/release controls and immutable erasure evidence. Before a live pilot, name the duty and legal-review rosters, enroll MFA factors, exercise recovery and the case runbook, prove real pager routing, and approve backup-expiry/restore policy. | Focused service/schema/OpenAPI/web/mobile tests and expanded lifecycle/national-control-plane/MFA integrations pass against migrated PostGIS at `20260831_0044`, including secure-cookie/CSRF rotation, held support data, released-hold processing, safety-case minimization, and payment provenance. Deployment evidence still requires a controlled support acknowledgement, urgent safety page/drill, escalation, legal-hold review, factor-recovery drill, audit-redaction review, backup-expiry/restore exercise, and shift handoff without exposing internal text. |
 
 The integration gate remains required even for provider-independent work. CI is
 configured to apply the migration chain against isolated PostGIS, render offline
 SQL, run tests, and build the backend image; that workflow must pass. A release
 environment must additionally run the migration and readiness checks against its
 own documented database. The checksum-pinned workspace-local Windows
-PostgreSQL/PostGIS runtime has applied every migration and passed the full backend
-suite, including the complete registration-to-cash-settlement lifecycle. This is
-live local database evidence, not release certification. The selected Valhalla or
+PostgreSQL/PostGIS test runtime has applied through migration `20260908_0052`; the
+backend suites include complete registration-to-payment/refund, support/safety,
+legal-hold, and case-retention lifecycles. This is local evidence, not release
+certification.
+The selected Valhalla or
 GraphHopper deployment still requires a separate routing-data build and route
 acceptance gate; generated migration SQL and mocked provider tests do not replace
 that proof. The repository now supplies a guarded fixed-scenario acceptance
@@ -509,12 +671,29 @@ last-success telemetry. Bounded JSON failure logs omit exception messages, and
 the committed alert set detects retries, five-minute worker stalls, and a missing
 standalone worker scrape target.
 
+The same authenticated surface now exposes a five-second-bounded security-
+incident deadline snapshot using only fixed SEV1-SEV4 buckets. Reviewed rules
+alert on snapshot loss, open SEV1/SEV2 incidents, severity-split containment
+breaches and overdue postmortems; immutable dashboard panels show open and
+deadline state without incident or scope identifiers. Real receiver delivery,
+acknowledgement, escalation timing and staffed drills remain release gates.
+
+Security incidents now also have four closed responsibility types with one
+active exact-market-authorized assignee per type and append-visible reassignment
+history. The protected web workspace can review and assign those roles using an
+approved roster/shift reference. This is source coordination, not a production
+duty roster: T5 must prove alert delivery, T6 must prove named role handoff and
+containment/communications/postmortem ownership, and no real-user phase may start
+without both accepted.
+
 The administrative security workflow now supports audited account-wide session
 revocation, suspension, and suspension recovery. Suspension atomically revokes
 server sessions and push registrations, blocks existing access tokens, refresh,
 and login, and never restores old credentials on reactivation. Administrative
 self-suspension and restoration of deactivated accounts are refused. Broader
-role management and support/safety escalation remain separate policy-gated work.
+scoped role management remains policy-gated. Support/safety reads, mutations,
+assignee validation, and overdue alerts now enforce active city-scoped grants;
+the old `/admin` family remains compatibility-only.
 Administrators can now review the resulting append-oriented audit trail through
 a bounded, exact-filtered read endpoint; ordinary users have no audit-log access
 and the API exposes no audit mutation path.
@@ -534,29 +713,30 @@ budget even though direct application measurements pass; staging on the Linux
 release image must establish the real concurrency and latency envelope before
 release rather than weakening the budget to fit one development host.
 
-The workspace-contained database path also completed a guarded backup/restore
-drill. The restored database matched migration head, PostGIS version, and selected
-aggregate counts and accepted the application role plus a no-op migration to
-head. The reusable verifier now covers users, rides, payments, driver credentials,
-cooperatives, and memberships at head `20260813_0029`. This validates the
-repository scripts locally; encrypted managed-provider
-backup retention and a staging restore remain release gates.
+The workspace-contained database path previously completed a guarded
+backup/restore drill at migration `20260813_0029`. The restored database matched
+that head, PostGIS version, and selected aggregate counts and accepted the
+application role plus a no-op migration. The reusable verifier covers users,
+rides, payments, driver credentials, cooperatives, and memberships, but the
+current migration head is `20260908_0052`. A current-head production-like restore,
+encrypted managed-provider backup retention, and a staging restore therefore
+remain release gates.
 
 The repository also contains a hardened provider-neutral production Compose
 template, guarded non-secret input validation, an explicit one-shot migration
 service, non-mutating deployment verification, and forward-only rollback guidance.
-It runs the public API and the matching/outbox/credential processor supervisor as
+It runs the public API and the matching/outbox/credential/scheduling/analytics/case-alert/case-retention/driver-document-retention processor supervisor as
 separate closed process roles from the same immutable image. API and worker have
 independent loopback operations surfaces; deployment verification requires API
-identity/readiness and positive heartbeats from all three worker loops. PostgreSQL
+identity/readiness and positive heartbeats from all eight fixed worker loops. PostgreSQL
 fans minimized hints across horizontally scaled API replicas. A real registry, TLS proxy, managed PostGIS restore drill, secret store,
 monitoring collector, and staging/production rollout remain deployment evidence,
 not facts that source files alone can prove.
 
 Both long-running production containers now report Compose health from their
 readiness boundary. The API requires PostgreSQL; the worker also requires its
-supervisor and one successful iteration from matching, outbox, and credential
-lifecycle. CI rejects replacement with liveness-only probes and also checks the
+supervisor and one successful iteration from matching, outbox, credential,
+scheduling, analytics, case alerts, case retention, and driver-document retention. CI rejects replacement with liveness-only probes and also checks the
 manifest's loopback ingress, process roles, least-privilege environments, and
 container hardening before Docker Compose rendering.
 

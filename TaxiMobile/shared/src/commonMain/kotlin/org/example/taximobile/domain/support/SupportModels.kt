@@ -14,6 +14,8 @@ data class SupportTicket(
     val subject: String,
     val status: String,
     val createdAt: String,
+    val latestPublicMessage: String? = null,
+    val updatedAt: String? = null,
 )
 
 interface SupportGateway {

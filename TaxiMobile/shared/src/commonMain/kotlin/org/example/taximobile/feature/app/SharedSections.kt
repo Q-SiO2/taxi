@@ -14,12 +14,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import org.example.taximobile.domain.notifications.AppNotification
 import org.example.taximobile.domain.rides.Coordinates
+import org.example.taximobile.domain.safety.SafetyCategory
+import org.example.taximobile.domain.safety.SafetyReport
 import org.example.taximobile.domain.support.SupportCategory
 import org.example.taximobile.domain.support.SupportTicket
+import org.example.taximobile.feature.ui.components.StatusTone
 import org.example.taximobile.feature.ui.components.TaxiButton
 import org.example.taximobile.feature.ui.components.TaxiButtonStyle
 import org.example.taximobile.feature.ui.components.TaxiTextField
 import org.example.taximobile.feature.ui.components.SuccessConfirmation
+import org.example.taximobile.feature.ui.components.ToastBanner
+import org.example.taximobile.feature.ui.text.ltrIsolate
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import taximobile.shared.generated.resources.*
@@ -66,6 +71,30 @@ internal fun notificationCopyResources(type: String): Pair<StringResource, Strin
         Res.string.notification_credential_expiring_title to Res.string.notification_credential_expiring_body
     "DRIVER_CREDENTIAL_EXPIRED" ->
         Res.string.notification_credential_expired_title to Res.string.notification_credential_expired_body
+    "DRIVER_CITY_AUTHORIZATION_CHANGED" ->
+        Res.string.notification_city_authorization_title to Res.string.notification_city_authorization_body
+    "SCHEDULED_OFFER" ->
+        Res.string.notification_scheduled_title to Res.string.notification_scheduled_offer_body
+    "SCHEDULED_DRIVER_COMMITTED" ->
+        Res.string.notification_scheduled_title to Res.string.notification_scheduled_driver_committed_body
+    "SCHEDULED_DISPATCH_STARTED" ->
+        Res.string.notification_scheduled_title to Res.string.notification_scheduled_dispatch_started_body
+    "SCHEDULED_FALLBACK_MATCHING" ->
+        Res.string.notification_scheduled_title to Res.string.notification_scheduled_fallback_matching_body
+    "SCHEDULED_UNFULFILLED" ->
+        Res.string.notification_scheduled_title to Res.string.notification_scheduled_unfulfilled_body
+    "PASSENGER_AT_PICKUP" ->
+        Res.string.notification_ride_update_title to Res.string.notification_passenger_at_pickup_body
+    "PASSENGER_NEEDS_MORE_TIME" ->
+        Res.string.notification_ride_update_title to Res.string.notification_passenger_needs_more_time_body
+    "PASSENGER_CANNOT_FIND_DRIVER" ->
+        Res.string.notification_ride_update_title to Res.string.notification_passenger_cannot_find_driver_body
+    "DRIVER_ON_MY_WAY" ->
+        Res.string.notification_ride_update_title to Res.string.notification_driver_on_my_way_body
+    "DRIVER_AT_PICKUP" ->
+        Res.string.notification_ride_update_title to Res.string.notification_driver_at_pickup_body
+    "DRIVER_CANNOT_FIND_PASSENGER" ->
+        Res.string.notification_ride_update_title to Res.string.notification_driver_cannot_find_passenger_body
     else -> null
 }
 
@@ -98,6 +127,9 @@ internal fun SupportTicketSection(
         Text(stringResource(Res.string.support_requests), style = MaterialTheme.typography.bodyLarge)
         tickets.take(10).forEach { ticket ->
             Text(stringResource(Res.string.support_ticket_summary, supportStatusLabel(ticket.status), ticket.subject))
+            ticket.latestPublicMessage?.let {
+                Text(stringResource(Res.string.case_latest_response, it), style = MaterialTheme.typography.bodyMedium)
+            }
         }
     }
     activeRideId?.let {
@@ -123,6 +155,87 @@ internal fun SupportTicketSection(
 }
 
 @Composable
+internal fun SafetyReportSection(
+    reports: List<SafetyReport>,
+    rideIds: List<String>,
+    pendingAction: AppAction?,
+    completedAction: AppActionCompletion?,
+    onCreate: (String, SafetyCategory, String) -> Unit,
+) {
+    val reportableRideIds = rideIds.distinct()
+    var selectedRideId by remember(reportableRideIds) { mutableStateOf(reportableRideIds.firstOrNull()) }
+    var category by remember { mutableStateOf(SafetyCategory.OTHER_SAFETY) }
+    var description by remember { mutableStateOf("") }
+    LaunchedEffect(completedAction?.sequence) {
+        if (completedAction.confirms(AppActionKind.CREATE_SAFETY_REPORT)) {
+            category = SafetyCategory.OTHER_SAFETY
+            description = ""
+        }
+    }
+
+    Text(stringResource(Res.string.safety_reports_title), style = MaterialTheme.typography.titleMedium)
+    ToastBanner(stringResource(Res.string.safety_not_emergency_warning), StatusTone.Warning)
+    if (completedAction.confirms(AppActionKind.CREATE_SAFETY_REPORT)) {
+        SuccessConfirmation(
+            stringResource(Res.string.safety_report_sent_confirmation),
+            requireNotNull(completedAction).sequence,
+        )
+    }
+    if (reports.isNotEmpty()) {
+        Text(stringResource(Res.string.safety_reports_history), style = MaterialTheme.typography.bodyLarge)
+        reports.take(10).forEach { report ->
+            Text(
+                stringResource(
+                    Res.string.safety_report_summary,
+                    safetyStatusLabel(report.status),
+                    safetyCategoryLabel(report.category),
+                    ltrIsolate(report.rideId.take(8)),
+                )
+            )
+            report.latestPublicMessage?.let {
+                Text(stringResource(Res.string.case_latest_response, it), style = MaterialTheme.typography.bodyMedium)
+            }
+        }
+    }
+
+    if (selectedRideId == null) {
+        Text(stringResource(Res.string.safety_requires_ride), style = MaterialTheme.typography.bodyMedium)
+    } else {
+        TextButton(
+            onClick = {
+                val currentIndex = reportableRideIds.indexOf(selectedRideId)
+                selectedRideId = reportableRideIds[(currentIndex + 1) % reportableRideIds.size]
+            },
+            enabled = reportableRideIds.size > 1 && pendingAction == null,
+        ) {
+            Text(stringResource(Res.string.safety_linked_ride, ltrIsolate(requireNotNull(selectedRideId).take(8))))
+        }
+    }
+    TextButton(
+        onClick = {
+            val categories = SafetyCategory.entries.filterNot { it == SafetyCategory.UNKNOWN }
+            category = categories[(categories.indexOf(category) + 1) % categories.size]
+        },
+        enabled = pendingAction == null,
+    ) {
+        Text(stringResource(Res.string.safety_category, safetyCategoryLabel(category)))
+    }
+    OutlinedTextField(
+        value = description,
+        onValueChange = { if (it.length <= 4000) description = it },
+        modifier = Modifier.fillMaxWidth(),
+        label = { Text(stringResource(Res.string.describe_safety_concern)) },
+        minLines = 3,
+    )
+    TaxiButton(
+        label = stringResource(Res.string.send_safety_report),
+        onClick = { onCreate(requireNotNull(selectedRideId), category, description.trim()) },
+        enabled = selectedRideId != null && description.trim().length >= 3 && pendingAction == null,
+        loading = pendingAction.isPending(AppActionKind.CREATE_SAFETY_REPORT),
+    )
+}
+
+@Composable
 private fun supportCategoryLabel(category: SupportCategory): String = stringResource(
     when (category) {
         SupportCategory.RIDE_PROBLEM -> Res.string.support_category_ride_problem
@@ -140,6 +253,32 @@ private fun supportStatusLabel(status: String): String = stringResource(
         "RESOLVED" -> Res.string.support_status_resolved
         "CLOSED" -> Res.string.support_status_closed
         else -> Res.string.support_status_unknown
+    }
+)
+
+@Composable
+private fun safetyCategoryLabel(category: SafetyCategory): String = stringResource(
+    when (category) {
+        SafetyCategory.IMMEDIATE_DANGER -> Res.string.safety_category_immediate_danger
+        SafetyCategory.HARASSMENT -> Res.string.safety_category_harassment
+        SafetyCategory.ASSAULT -> Res.string.safety_category_assault
+        SafetyCategory.UNSAFE_DRIVING -> Res.string.safety_category_unsafe_driving
+        SafetyCategory.DISCRIMINATION -> Res.string.safety_category_discrimination
+        SafetyCategory.VEHICLE_SAFETY -> Res.string.safety_category_vehicle_safety
+        SafetyCategory.OTHER_SAFETY -> Res.string.safety_category_other
+        SafetyCategory.UNKNOWN -> Res.string.safety_category_unknown
+    }
+)
+
+@Composable
+private fun safetyStatusLabel(status: String): String = stringResource(
+    when (status) {
+        "SUBMITTED" -> Res.string.safety_status_submitted
+        "ACKNOWLEDGED" -> Res.string.safety_status_acknowledged
+        "ESCALATED" -> Res.string.safety_status_escalated
+        "RESOLVED" -> Res.string.safety_status_resolved
+        "CLOSED" -> Res.string.safety_status_closed
+        else -> Res.string.safety_status_unknown
     }
 )
 

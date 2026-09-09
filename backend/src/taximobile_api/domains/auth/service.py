@@ -2,24 +2,47 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
 from uuid import UUID, uuid4
 
-from sqlalchemy import or_, select, update
+from sqlalchemy import delete, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from taximobile_api.domains.auth.models import PassengerProfile, Role, Session, User, UserRole, UserStatus
-from taximobile_api.domains.auth.schemas import LoginRequest, RegisterRequest, TokenResponse, normalized_login_identifier
+from taximobile_api.domains.administration.models import AdministrativeGrant
+from taximobile_api.domains.administration.service import revoke_user_access
+from taximobile_api.domains.auth.models import (
+    AccountRecoveryCode,
+    PassengerProfile,
+    Role,
+    Session,
+    User,
+    UserRole,
+    UserStatus,
+)
+from taximobile_api.domains.auth.schemas import (
+    LoginRequest,
+    RegisterRequest,
+    TokenResponse,
+    normalized_login_identifier,
+)
 from taximobile_api.domains.auth.security import (
     ACCESS_TOKEN_TTL,
     REFRESH_TOKEN_TTL,
     TokenService,
+    account_recovery_code_hash,
+    generate_account_recovery_codes,
     hash_password,
     new_refresh_token,
     password_hash_needs_rehash,
     refresh_token_hash,
     verify_login_password,
+    verify_password,
 )
+from taximobile_api.domains.notifications.service import notify
+
+
+ACCOUNT_RECOVERY_TTL = timedelta(days=180)
 
 
 class AccountConflict(ValueError):
@@ -28,6 +51,20 @@ class AccountConflict(ValueError):
 
 class InvalidCredentials(ValueError):
     pass
+
+
+class PasswordReuse(ValueError):
+    pass
+
+
+class StaffRecoveryRequired(ValueError):
+    pass
+
+
+@dataclass(frozen=True)
+class RecoveryCodeBundle:
+    codes: list[str]
+    expires_at: datetime
 
 
 async def register_passenger(database_session: AsyncSession, request: RegisterRequest) -> User:
@@ -110,6 +147,169 @@ async def rotate_refresh_token(
         session.device_label,
         refresh_family_id=session.refresh_family_id,
     )
+
+
+async def user_has_staff_identity(database_session: AsyncSession, user_id: UUID) -> bool:
+    admin_role = await database_session.scalar(
+        select(UserRole.user_id).where(
+            UserRole.user_id == user_id,
+            UserRole.role == Role.ADMIN,
+        )
+    )
+    if admin_role is not None:
+        return True
+    grant = await database_session.scalar(
+        select(AdministrativeGrant.id).where(AdministrativeGrant.user_id == user_id).limit(1)
+    )
+    return grant is not None
+
+
+async def replace_account_recovery_codes(
+    database_session: AsyncSession,
+    *,
+    user_id: UUID,
+    current_password: str,
+    now: datetime | None = None,
+) -> RecoveryCodeBundle:
+    issued_at = now or datetime.now(UTC)
+    user = await database_session.scalar(
+        select(User).where(User.id == user_id).with_for_update()
+    )
+    if user is None or user.status != UserStatus.ACTIVE or not verify_password(
+        current_password,
+        user.password_hash,
+    ):
+        raise InvalidCredentials("Invalid credentials.")
+    if await user_has_staff_identity(database_session, user.id):
+        raise StaffRecoveryRequired("Operations accounts use the staff MFA recovery procedure.")
+
+    codes = generate_account_recovery_codes()
+    expires_at = issued_at + ACCOUNT_RECOVERY_TTL
+    await database_session.execute(
+        delete(AccountRecoveryCode).where(AccountRecoveryCode.user_id == user.id)
+    )
+    database_session.add_all(
+        AccountRecoveryCode(
+            user_id=user.id,
+            code_hash=account_recovery_code_hash(code),
+            expires_at=expires_at,
+            created_at=issued_at,
+        )
+        for code in codes
+    )
+    await notify(
+        database_session,
+        user_id=user.id,
+        notification_type="ACCOUNT_RECOVERY_CODES_REPLACED",
+        title="Recovery codes replaced",
+        body="A new set of offline account recovery codes was created.",
+        data={},
+    )
+    return RecoveryCodeBundle(codes=codes, expires_at=expires_at)
+
+
+async def reset_password_with_recovery_code(
+    database_session: AsyncSession,
+    *,
+    identifier: str,
+    recovery_code: str,
+    new_password: str,
+    now: datetime | None = None,
+) -> bool:
+    """Consume one valid code without revealing whether the account exists."""
+
+    reset_at = now or datetime.now(UTC)
+    # Always perform the expensive password hash before account lookup so the
+    # missing-account path does not become a cheap enumeration oracle.
+    replacement_hash = hash_password(new_password)
+    normalized_identifier = normalized_login_identifier(identifier)
+    user = await database_session.scalar(
+        select(User)
+        .where(
+            or_(
+                User.email == normalized_identifier,
+                User.phone_number == normalized_identifier,
+            )
+        )
+        .with_for_update()
+    )
+    if user is None or user.status != UserStatus.ACTIVE:
+        return False
+    if await user_has_staff_identity(database_session, user.id):
+        return False
+
+    code = await database_session.scalar(
+        select(AccountRecoveryCode)
+        .where(
+            AccountRecoveryCode.user_id == user.id,
+            AccountRecoveryCode.code_hash == account_recovery_code_hash(recovery_code),
+            AccountRecoveryCode.expires_at > reset_at,
+        )
+        .with_for_update()
+    )
+    if code is None:
+        return False
+
+    user.password_hash = replacement_hash
+    user.updated_at = reset_at
+    await database_session.execute(
+        delete(AccountRecoveryCode).where(AccountRecoveryCode.user_id == user.id)
+    )
+    await revoke_user_access(
+        database_session,
+        user_id=user.id,
+        revoked_at=reset_at,
+    )
+    await notify(
+        database_session,
+        user_id=user.id,
+        notification_type="ACCOUNT_PASSWORD_RESET",
+        title="Password reset",
+        body="Your account password was reset with an offline recovery code.",
+        data={},
+    )
+    return True
+
+
+async def change_account_password(
+    database_session: AsyncSession,
+    *,
+    user_id: UUID,
+    current_password: str,
+    new_password: str,
+    now: datetime | None = None,
+) -> tuple[int, int]:
+    changed_at = now or datetime.now(UTC)
+    user = await database_session.scalar(
+        select(User).where(User.id == user_id).with_for_update()
+    )
+    if user is None or user.status != UserStatus.ACTIVE or not verify_password(
+        current_password,
+        user.password_hash,
+    ):
+        raise InvalidCredentials("Invalid credentials.")
+    if verify_password(new_password, user.password_hash):
+        raise PasswordReuse("Choose a password different from the current password.")
+
+    user.password_hash = hash_password(new_password)
+    user.updated_at = changed_at
+    await database_session.execute(
+        delete(AccountRecoveryCode).where(AccountRecoveryCode.user_id == user.id)
+    )
+    sessions_revoked, devices_revoked = await revoke_user_access(
+        database_session,
+        user_id=user.id,
+        revoked_at=changed_at,
+    )
+    await notify(
+        database_session,
+        user_id=user.id,
+        notification_type="ACCOUNT_PASSWORD_CHANGED",
+        title="Password changed",
+        body="Your account password was changed and all sessions were signed out.",
+        data={},
+    )
+    return sessions_revoked, devices_revoked
 
 
 async def _create_session_tokens(

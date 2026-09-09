@@ -1,5 +1,15 @@
 # TaxiMobile — Driver System Specification
 
+## Current standing — 2026-09-03
+
+Driver profiles, vehicles, credentials, availability, city applications,
+requirement versions, protected document metadata/storage adapters, scoped
+decisions, city authorizations, fixed-route authorization, scheduled
+participation, earnings history, and retention workers are implemented in source.
+Real licensing rules, production protected storage and scanning, reviewer
+staffing, driver recruitment, physical-device document flows, and an accepted
+pilot cohort remain open. See [`gaps.md`](gaps.md).
+
 ## 1. Purpose
 
 The driver system manages taxi drivers participating in the TaxiMobile cooperative.
@@ -151,6 +161,21 @@ APPROVED
 
 An approved driver may later become suspended or expired.
 
+The city-authorization decision API now supports scoped reviewer suspension,
+revocation and reviewed reinstatement with recent MFA, version checks and audit.
+Current permission is the nested authorization status; the original application
+approval is retained as history. Only suspended authorization can be reinstated,
+after current eligibility checks and without extending expiry. Revoked authority
+requires a new application. A restriction applies in its city, preserves other
+city permissions, and does not itself cancel an already committed ride.
+
+Each authorization change also creates a persistent driver inbox notice and a
+transactional outbox refresh event. Push contains only the authorization ID and
+is never authority for status; clients restore current server state and localize
+generic copy so a delayed hint cannot announce an obsolete decision as current.
+Inbox `read_at` means only that the read action occurred. It is not an appeal,
+consent, legal acknowledgment or proof that the driver understood the change.
+
 For a city application, the applicant may enter `WITHDRAWN` before approval.
 Withdrawal is not deletion and does not grant or preserve a city authorization;
 applying again uses a new application against the then-current requirement
@@ -172,15 +197,16 @@ The backend must contain the authoritative verification state.
 
 Driver documents may contain highly sensitive information.
 
-Documents should:
+The city-application document capability:
 
-* Be transmitted securely.
-* Be encrypted where appropriate.
-* Not be publicly accessible.
-* Not be exposed to passengers.
-* Only be accessible to authorized personnel.
-* Have defined retention policies.
-* Be deleted when no longer legitimately required.
+* accepts only bounded PDF, JPEG, and PNG bytes whose declared and detected types match;
+* scans before persistence and fails closed if ClamAV cannot establish a clean result;
+* encrypts each file with AES-256-GCM and stores it under a random opaque key on a private shared volume;
+* never returns a public storage URL or exposes it to passengers;
+* authorizes applicant edits by ownership and editable application version;
+* authorizes reviewer reads by permission, city scope, recent MFA, quota, and audit;
+* streams reviewer responses with no-store/nosniff headers and an opaque filename; and
+* soft-deletes transactionally, then physically erases through the retention worker with immutable content-free evidence.
 
 Document URLs should never be guessable public URLs.
 
@@ -372,6 +398,15 @@ approved driver is still offline. The backend accepts this staging update only
 when a verified active vehicle is already selected. It then independently checks
 the latest observation against the configured dispatch-freshness interval when
 processing “Go Online”; client permission state alone is never trusted.
+
+After backend-confirmed online entry, the app maintains freshness through
+foreground-only, already-authorized one-shot observations: 15 seconds while
+available/offered and 10 seconds during an active ride. Offline, paused,
+backgrounded and disconnected states disarm the scheduler. The automatic path
+never asks for permission; if permission/services are unavailable it warns the
+driver and backs off. Stale server state is ignored by matching even if the UI
+has not yet refreshed. Drivers must keep the app visible during this bounded
+pilot model; no background location permission is requested.
 
 ---
 
@@ -865,8 +900,10 @@ kept only in ephemeral render state; another driver cannot read them.
 The same private account view reads professional credential metadata from the
 driver self endpoint. It shows configurable type, backend status, and optional
 issue/expiry timestamps, but never receives credential numbers, document
-references, or document URLs. Document ingestion and administrative review stay
-unavailable until jurisdictional policy and protected storage are selected.
+references, or document URLs. The separate city-application workflow implements
+bounded protected document ingestion and scoped review, but remains fail-closed
+until production storage, encryption, scanning, retention, and jurisdictional
+requirements are configured and accepted.
 
 The driver profile name, verification status, and account status shown in this
 view are also reloaded from the backend profile response; the client does not
@@ -1048,3 +1085,30 @@ Published fixed-route and scheduled opportunities remain offers. The driver can
 accept or decline them without a raw-acceptance-rate penalty. A future booking
 commitment blocks only documented overlapping time windows; it must not make the
 driver appear to be on an active ride before dispatch handoff.
+
+The scheduling service independently checks active account status, approved
+driver verification, selected/owned/active/verified vehicle and known credential
+validity at offer creation, acceptance and handoff. A city authorization cannot
+override suspension or credential/vehicle expiry. A future commitment does not
+require immediate online availability. Actual handoff requires `AVAILABLE` in
+the selected booking scope plus a fresh in-area observation; the server guard
+is implemented, while physical readiness acceptance remains open in `gaps.md`.
+
+Online/offline changes, location updates, vehicle updates/deactivation and active
+vehicle selection acquire a refreshed driver-row lock for their command
+transaction. Active vehicle selection, like vehicle editing, requires the driver
+to be offline; repeating the current selection while online is also rejected.
+This prevents an availability command that waited behind handoff from acting on
+its old cached state. A driver becoming offline before handoff must remain
+offline and trigger fallback/unfulfilled, never be silently assigned. This does
+not establish serialization of every administrative eligibility/configuration
+change; those races remain explicit test requirements.
+
+Two PostGIS contention tests now cover location ingestion versus scheduled
+handoff in both orders. If a credible outside-area update holds the driver lock
+first, handoff waits and uses the new observation for fallback/unfulfilled. If
+handoff owns the lock first, it may assign using the current fresh in-area
+observation; the waiting update then records against the refreshed `EN_ROUTE`
+driver. Moving outside after assignment does not itself cancel a ride. Device
+location quality, background behavior and the operational response to such a
+journey still require the phased checks in `testing.md`.

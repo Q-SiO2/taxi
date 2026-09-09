@@ -28,10 +28,20 @@ def test_free_blueprint_runs_combined_staging_role_and_public_fair_use_routing()
     assert service["healthCheckPath"] == "/ready"
     assert environment["TAXIMOBILE_ENV"]["value"] == "staging"
     assert environment["TAXIMOBILE_PROCESS_ROLE"]["value"] == "all"
+    assert environment["TAXIMOBILE_LEGACY_ADMIN_API_ENABLED"]["value"] == "false"
+    assert environment["TAXIMOBILE_OPERATIONS_PASSWORD_LOGIN_ENABLED"]["value"] == "true"
+    assert environment["TAXIMOBILE_OPERATIONS_SECURE_COOKIE_ENABLED"]["value"] == "false"
     assert environment["TAXIMOBILE_ROUTING_BASE_URL"]["value"] == (
         "https://valhalla1.openstreetmap.de"
     )
     assert environment["TAXIMOBILE_ROUTING_RATE_LIMIT_PER_MINUTE"]["value"] == "10"
+    assert environment["TAXIMOBILE_MANUAL_TRANSFER_ENABLED"]["value"] == "false"
+    assert environment["TAXIMOBILE_CASE_ALERT_POLL_SECONDS"]["value"] == "60"
+    assert environment["TAXIMOBILE_CASE_RETENTION_POLL_SECONDS"]["value"] == "3600"
+    assert environment["TAXIMOBILE_CASE_RETENTION_BATCH_SIZE"]["value"] == "100"
+    assert "TAXIMOBILE_CASE_PAGER_URL" not in environment
+    assert "TAXIMOBILE_CASE_PAGER_TOKEN" not in environment
+    assert "TAXIMOBILE_TRANSFER_RECIPIENT_NAME" not in environment
 
 
 def test_free_blueprint_generates_secrets_without_embedding_values() -> None:

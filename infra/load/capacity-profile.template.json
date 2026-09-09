@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "profile_id": "replace-with-reviewed-profile",
+  "approval_status": "DRAFT",
+  "approval_reference": "REPLACE-WITH-REVIEW-ID",
+  "scenario": "passenger_request_cancel_open_loop_v1",
+  "city_id": "10000000-0000-4000-8000-000000000003",
+  "pickup": [33.5731, -7.5898],
+  "destination": [33.58, -7.61],
+  "request_timeout_seconds": 5,
+  "monitoring_sample_interval_seconds": 5,
+  "monitoring_query_timeout_seconds": 2,
+  "operational_thresholds": {
+    "core_targets_up_min": 1,
+    "http_5xx_ratio_max": 0.01,
+    "http_p95_latency_seconds_max": 1,
+    "worker_seconds_since_success_max": 300,
+    "worker_errors_increase_max": 0,
+    "outbox_pending_events_max": 100,
+    "outbox_oldest_pending_age_seconds_max": 300,
+    "outbox_dead_letter_events_max": 0,
+    "unhandled_errors_increase_max": 0,
+    "log_dropped_lines_increase_max": 0,
+    "log_delivery_failures_increase_max": 0,
+    "database_metrics_up_min": 1,
+    "database_connection_utilization_ratio_max": 0.7,
+    "database_active_connections_max": 70,
+    "database_waiting_locks_max": 0,
+    "database_deadlocks_increase_max": 0,
+    "database_pool_metrics_up_min": 1,
+    "database_pool_checked_out_max": 4,
+    "database_pool_overflow_max": 0,
+    "database_pool_checkout_wait_p95_seconds_max": 0.1,
+    "database_pool_checkout_timeouts_increase_max": 0
+  },
+  "cooldown_seconds": 5,
+  "phases": [
+    {
+      "phase": "WARMUP",
+      "users": 2,
+      "journeys_per_user": 2,
+      "arrival_rate_per_second": 0.25,
+      "duration_seconds": 120,
+      "p95_budget_ms": 1000,
+      "arrival_lag_budget_ms": 250
+    },
+    {
+      "phase": "STEADY",
+      "users": 5,
+      "journeys_per_user": 4,
+      "arrival_rate_per_second": 0.5,
+      "duration_seconds": 180,
+      "p95_budget_ms": 1000,
+      "arrival_lag_budget_ms": 250
+    },
+    {
+      "phase": "BURST",
+      "users": 10,
+      "journeys_per_user": 2,
+      "arrival_rate_per_second": 2,
+      "duration_seconds": 120,
+      "p95_budget_ms": 1000,
+      "arrival_lag_budget_ms": 250
+    },
+    {
+      "phase": "RECOVERY",
+      "users": 2,
+      "journeys_per_user": 2,
+      "arrival_rate_per_second": 0.25,
+      "duration_seconds": 120,
+      "p95_budget_ms": 1000,
+      "arrival_lag_budget_ms": 250
+    }
+  ]
+}

@@ -18,12 +18,20 @@ from taximobile_api.domains.drivers.schemas import (
     DriverRideResponse,
     LocationUpdateRequest,
     LocationUpdateResponse,
+    OnlineAvailabilityRequest,
     VehicleCreateRequest,
     VehicleListResponse,
     VehicleResponse,
     VehicleUpdateRequest,
     VerificationResponse,
 )
+from taximobile_api.domains.driver_applications.service import (
+    RecruitmentConflict,
+    location_is_inside_active_service_area,
+    select_active_authorization,
+)
+from taximobile_api.domains.fixed_routes.service import fixed_route_ride_summary
+from taximobile_api.domains.markets.models import ServiceType
 from taximobile_api.domains.drivers.service import (
     DriverApplicationExists,
     DriverMissing,
@@ -36,6 +44,7 @@ from taximobile_api.domains.drivers.service import (
     apply_to_drive,
     driver_for_user,
     invalid_driver_credentials,
+    invalidate_open_application_vehicle_evidence,
     online_eligibility_failure,
     record_location,
     register_vehicle,
@@ -213,7 +222,7 @@ async def update_vehicle(
 ) -> VehicleResponse:
     try:
         async with session.begin():
-            profile = await driver_for_user(session, principal.user_id)
+            profile = await driver_for_user(session, principal.user_id, lock=True)
             reason = can_change_vehicle(profile)
             if reason:
                 raise VehicleOperationUnavailable(reason)
@@ -243,6 +252,7 @@ async def update_vehicle(
                 setattr(vehicle, field, value)
             # Client edits cannot retain dispatch eligibility without review.
             vehicle.verification_status = VehicleVerificationStatus.PENDING
+            await invalidate_open_application_vehicle_evidence(session, vehicle.id)
     except DriverMissing as error:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(error)) from error
     except VehicleOperationUnavailable as error:
@@ -260,12 +270,13 @@ async def deactivate_vehicle(
 ) -> VehicleResponse:
     try:
         async with session.begin():
-            profile = await driver_for_user(session, principal.user_id)
+            profile = await driver_for_user(session, principal.user_id, lock=True)
             reason = can_change_vehicle(profile)
             if reason:
                 raise VehicleOperationUnavailable(reason)
             vehicle = await owner_vehicle(session, profile, vehicle_id)
             vehicle.status = VehicleStatus.INACTIVE
+            await invalidate_open_application_vehicle_evidence(session, vehicle.id)
             if profile.active_vehicle_id == vehicle.id:
                 profile.active_vehicle_id = None
     except DriverMissing as error:
@@ -283,8 +294,11 @@ async def select_active_vehicle(
 ) -> AvailabilityResponse:
     try:
         async with session.begin():
-            profile = await driver_for_user(session, principal.user_id)
+            profile = await driver_for_user(session, principal.user_id, lock=True)
             vehicle = await session.get(Vehicle, payload.vehicle_id)
+            change_failure = can_change_vehicle(profile)
+            if change_failure:
+                raise VehicleNotEligible(change_failure)
             reason = active_vehicle_eligibility_failure(profile, vehicle)
             if reason == "Vehicle not found.":
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Vehicle not found.")
@@ -295,21 +309,27 @@ async def select_active_vehicle(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(error)) from error
     except VehicleNotEligible as error:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(error)) from error
-    return AvailabilityResponse(status=profile.availability_status.value, vehicle_id=profile.active_vehicle_id)
+    return AvailabilityResponse(
+        status=profile.availability_status.value,
+        vehicle_id=profile.active_vehicle_id,
+        city_id=profile.online_city_id,
+        service_type=profile.online_service_type.value if profile.online_service_type else None,
+    )
 
 
 @router.post("/drivers/me/availability/online", response_model=AvailabilityResponse)
 async def go_online(
     request: Request,
+    payload: OnlineAvailabilityRequest | None = None,
     principal: CurrentPrincipal = Depends(authenticated_principal),
     session: AsyncSession = Depends(database_session),
 ) -> AvailabilityResponse:
     try:
         async with session.begin():
-            profile = await driver_for_user(session, principal.user_id)
+            profile = await driver_for_user(session, principal.user_id, lock=True)
             vehicle = await session.get(Vehicle, profile.active_vehicle_id) if profile.active_vehicle_id else None
-            latest_location_at = await session.scalar(
-                select(DriverLocation.observed_at)
+            latest_location = await session.scalar(
+                select(DriverLocation)
                 .where(DriverLocation.driver_id == profile.id)
                 .order_by(DriverLocation.observed_at.desc())
                 .limit(1)
@@ -322,17 +342,51 @@ async def go_online(
             reason = online_eligibility_failure(
                 profile,
                 vehicle,
-                latest_location_at=latest_location_at,
+                latest_location_at=(
+                    latest_location.observed_at if latest_location is not None else None
+                ),
                 location_freshness_seconds=request.app.state.settings.matching_location_freshness_seconds,
             )
             if reason:
                 raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=reason)
+            requested_service = (
+                payload.service_type
+                if payload is not None
+                else profile.online_service_type or ServiceType.ON_DEMAND
+            )
+            selected = await select_active_authorization(
+                session,
+                profile=profile,
+                requested_city_id=(
+                    payload.city_id if payload is not None else profile.online_city_id
+                ),
+                requested_service_type=requested_service,
+            )
+            assert latest_location is not None
+            if not await location_is_inside_active_service_area(
+                session,
+                city=selected.city,
+                location_id=latest_location.id,
+            ):
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail="Current location is outside the active city service area.",
+                )
             if profile.availability_status != AvailabilityStatus.AVAILABLE or profile.available_since is None:
                 profile.available_since = datetime.now(UTC)
             profile.availability_status = AvailabilityStatus.AVAILABLE
+            profile.online_city_id = selected.city.id
+            profile.online_service_type = selected.service_type
     except DriverMissing as error:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(error)) from error
-    return AvailabilityResponse(status=profile.availability_status.value, vehicle_id=profile.active_vehicle_id)
+    except RecruitmentConflict as error:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(error)) from error
+    return AvailabilityResponse(
+        status=profile.availability_status.value,
+        vehicle_id=profile.active_vehicle_id,
+        city_id=profile.online_city_id,
+        service_type=profile.online_service_type.value if profile.online_service_type else None,
+    )
 
 
 @router.get("/drivers/me/availability", response_model=AvailabilityResponse)
@@ -344,7 +398,12 @@ async def availability(
         profile = await driver_for_user(session, principal.user_id)
     except DriverMissing as error:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(error)) from error
-    return AvailabilityResponse(status=profile.availability_status.value, vehicle_id=profile.active_vehicle_id)
+    return AvailabilityResponse(
+        status=profile.availability_status.value,
+        vehicle_id=profile.active_vehicle_id,
+        city_id=profile.online_city_id,
+        service_type=profile.online_service_type.value if profile.online_service_type else None,
+    )
 
 
 @router.post("/drivers/me/availability/offline", response_model=AvailabilityResponse)
@@ -354,14 +413,21 @@ async def go_offline(
 ) -> AvailabilityResponse:
     try:
         async with session.begin():
-            profile = await driver_for_user(session, principal.user_id)
+            profile = await driver_for_user(session, principal.user_id, lock=True)
             if profile.availability_status in {AvailabilityStatus.EN_ROUTE, AvailabilityStatus.AT_PICKUP, AvailabilityStatus.ON_RIDE}:
                 raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="An active ride must be handled first.")
             profile.availability_status = AvailabilityStatus.OFFLINE
             profile.available_since = None
+            profile.online_city_id = None
+            profile.online_service_type = None
     except DriverMissing as error:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(error)) from error
-    return AvailabilityResponse(status=profile.availability_status.value, vehicle_id=profile.active_vehicle_id)
+    return AvailabilityResponse(
+        status=profile.availability_status.value,
+        vehicle_id=profile.active_vehicle_id,
+        city_id=profile.online_city_id,
+        service_type=profile.online_service_type.value if profile.online_service_type else None,
+    )
 
 
 @router.post("/drivers/me/location", response_model=LocationUpdateResponse)
@@ -379,7 +445,7 @@ async def update_location(
         raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail="Too many location updates. Try again shortly.")
     try:
         async with session.begin():
-            profile = await driver_for_user(session, principal.user_id)
+            profile = await driver_for_user(session, principal.user_id, lock=True)
             location = await record_location(session, profile, payload)
     except DriverMissing as error:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(error)) from error
@@ -406,8 +472,23 @@ async def driver_ride_history(
     statement = select(Ride).where(*filters).order_by(Ride.created_at.desc())
     rides = list(await session.scalars(statement.offset((page - 1) * limit).limit(limit)))
     total = await session.scalar(select(func.count()).select_from(Ride).where(*filters))
+    items = []
+    for ride in rides:
+        items.append(
+            DriverRideResponse(
+                id=ride.id,
+                status=ride.status.value,
+                completed_at=ride.completed_at,
+                service_type=ride.service_type.value,
+                fixed_route=(
+                    await fixed_route_ride_summary(session, ride.fixed_route_direction_id)
+                    if ride.fixed_route_direction_id is not None
+                    else None
+                ),
+            )
+        )
     return DriverRideListResponse(
-        items=[DriverRideResponse(id=ride.id, status=ride.status.value, completed_at=ride.completed_at) for ride in rides],
+        items=items,
         page=page,
         limit=limit,
         total=total or 0,

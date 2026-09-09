@@ -4,6 +4,12 @@
 
 This document defines the technical architecture of TaxiMobile.
 
+**Current standing (2026-09-07):** the provider-independent architecture is
+implemented as a Kotlin Multiplatform client suite, Compose web surfaces,
+FastAPI modular monolith, PostGIS database, and separate worker role. Production
+provider, hosting, capacity, device, and operational acceptance remain open; see
+[`gaps.md`](gaps.md).
+
 TaxiMobile is a cooperative taxi ride-hailing platform consisting of:
 
 * A passenger mobile application.
@@ -110,11 +116,11 @@ The passenger-service production targets are:
 Desktop and web targets may remain available for development or future applications but are not initial production targets.
 
 The approved national expansion promotes the existing `webApp` module to a
-separate production operations application. It hosts the public driver
-application portal and protected operations console, does not render the mobile
-passenger/driver root, and never receives business authority from browser state.
-It reuses approved design tokens and narrow shared value types without coupling
-mobile navigation to desktop administration.
+separate operations application. Phase 12 replaced the mobile root with a
+dedicated protected console shell, and Phase 13 delivered the separate public
+driver-application route group. The web application never receives business authority
+from browser state. It reuses approved design tokens and narrow shared value
+types without coupling mobile navigation to desktop administration.
 
 ---
 
@@ -164,6 +170,13 @@ application. A shared admission gate prevents repeated UI taps from replacing an
 active platform callback; the shared UI owns loading/disabled presentation. This
 does not authorize or submit a coordinate—the backend-facing action remains
 separate and authoritative.
+
+The driver roots also use a pure shared foreground scheduler after backend-
+confirmed online entry. Lifecycle, connectivity, availability, platform-request
+and app-action inputs gate every attempt. It requests only through an already-
+authorized no-prompt path, gives normal commands priority, uses a bounded failure
+backoff, and stops outside foreground operational states. Android and iOS still
+declare no background-location capability.
 
 ---
 
@@ -288,6 +301,27 @@ separate. The console uses an exact configured browser origin, strengthened
 administrative authentication, and backend-enforced scope. It does not connect
 to the database, payment provider, or document store directly.
 
+This boundary is implemented inside the existing modular monolith through
+the `markets` and `administration` domains. It includes isolated operations-token
+audience/session validation, SQL scope-before-pagination filtering, audited
+configuration commands, and the compatibility Casablanca control-plane records.
+Migration `20260830_0043` adds password-to-TOTP challenges, encrypted factors,
+single-use recovery, counter replay prevention, recent-MFA step-up, rotating
+secure refresh cookies, and CSRF binding. Password-only/JSON refresh remains
+explicit local/test compatibility and is rejected by production configuration.
+The same environment boundary applies to the older global `/admin` routers:
+they are included only by the v1 router factory when the local/test compatibility
+switch is enabled. Staging and production configuration reject enablement and
+expose only scoped `/operations` authority. This removes accidental global
+authority. Vehicle verification now occurs only inside an authorized city
+application review. Account-wide containment now begins at an associated market
+but requires a dedicated `PLATFORM_ADMIN` permission across every market in the
+target's participant or staff history. Unrelated targets and partial coverage
+fail closed, so a city/market grant cannot silently gain nationwide suspension
+authority. The operations UI is a separate case-linked command module with no
+broad account search and no automatic replay. Release work still includes access
+review, independent incident rehearsal, and final legacy-caller/removal evidence.
+
 ---
 
 # 8. API
@@ -328,52 +362,77 @@ Example:
 
 Breaking API changes should result in a new API version rather than silently changing existing behavior.
 
+## 8.1 Client release compatibility boundary
+
+Release compatibility is one backend-owned boundary shared by HTTP and the
+live-event socket. Each packaged client declares one of six closed surfaces, a
+strict numeric version and a positive build. Staging and production fail startup
+if enforcement is disabled or any surface lacks minimum/recommended policy.
+
+```text
+Packaged client identity
+        |
+        +--> unauthenticated compatibility preflight
+        |          |
+        |          +--> supported/optional update --> session restoration
+        |          +--> mandatory update ----------> blocked client UI
+        |
+        +--> every v1 HTTP/socket request
+                   |
+                   +--> middleware/socket gate --> normal auth and business rules
+```
+
+The compatibility endpoint is command-free and deliberately available before
+authentication. Compatibility headers are self-declared routing/release facts,
+not proof of identity, app integrity, role, city, or permission. Authentication,
+session status, authorization, eligibility, assignment, pricing and money remain
+separate server-owned checks. Policy changes are operational releases: they need
+a new policy revision, accepted old/current client tests, staged observation and
+a rollback or forward-fix decision. Build numbers support artifact traceability
+but do not replace immutable artifact hashes or signatures.
+
 ---
 
 # 9. Real-Time Communication
 
-Ride-hailing requires real-time information.
-
-Examples include:
-
-* Driver location.
-* Driver availability.
-* Ride acceptance.
-* Driver arrival.
-* Ride status.
-* Passenger cancellation.
-* Driver cancellation.
-* Dispatch notifications.
-
-REST alone is insufficient for all of these use cases.
-
-The architecture should therefore support a real-time communication mechanism, likely using WebSockets.
-
-Conceptually:
+Ride state, offers, participant coordination, and other business commands use
+authenticated REST. PostgreSQL remains authoritative; WebSocket and push paths
+are non-authoritative hints that tell a client to reload the authorized REST
+resource.
 
 ```text
-Passenger App
-      │
-      │ WebSocket
-      ▼
-Backend Real-Time Service
-      ▲
-      │ WebSocket
-      │
-Driver App
+Authenticated command
+        │
+        ▼
+API transaction ── business row + notification + outbox row
+        │ commit
+        ▼
+Outbox worker ── PostgreSQL cross-instance hint / generic FCM hint
+        │
+        ▼
+Authorized client reloads REST state
 ```
 
-The system should not assume that a connection is permanently available.
+This transaction-first design covers driver availability, ride offers,
+acceptance, arrival, cancellation, status changes, and active-ride coordination.
+A failed or duplicate delivery cannot invent, acknowledge, or roll back a ride
+fact. Each API replica can notify locally connected clients after PostgreSQL
+fanout, while a mobile client that misses every hint catches up at foreground,
+reconnect, or explicit refresh.
 
-Mobile applications must be able to recover from:
+Participant coordination uses the same boundary. The passenger and assigned
+driver may send only six documented closed codes during allowed active states.
+The command persists the code and a recipient notification; live and FCM paths
+carry only `RIDE_COORDINATION_MESSAGE`. No free text, phone number, identity
+payload, or transcript travels through the hint. The client localizes the latest
+authorized message after a REST reload. Terminal-state and stale-event checks
+suppress obsolete delivery.
 
-* Network loss.
-* Application suspension.
-* Connection timeout.
-* Server restart.
-* Temporary cellular/Wi-Fi failure.
-
-The server remains the authoritative source of ride state.
+The system must not assume that a connection is permanently available. Mobile
+applications recover from network loss, suspension, timeout, server restart, and
+temporary cellular/Wi-Fi failure by re-reading server state. Failed commands are
+not replayed automatically, and connection restoration is never treated as
+command success.
 
 ---
 
@@ -486,10 +545,28 @@ distance, duration, and maneuvers into the same public contract. Changing the
 selected engine therefore requires server configuration and provider acceptance,
 not a mobile release.
 
-MapLibre does not provide geocoding. Address search and reverse geocoding remain a
-separate, replaceable integration and are not prerequisites for coordinate or
-map-tap selection. Route distance is advisory and does not grant the client
-authority over pricing, ride state, or driver assignment.
+MapLibre does not provide geocoding. TaxiMobile now has a separate authenticated,
+provider-neutral place-discovery boundary with a closed `disabled|nominatim`
+server selector. `disabled` is the fail-closed default. The Nominatim-compatible
+adapter is intended for an approved, preferably self-hosted deployment; staging
+and production configuration rejects the shared public Nominatim host. Mobile
+clients never receive provider credentials or native payloads and never select a
+provider.
+
+Search requires one public, booking-capable city. Its active versioned service
+area supplies only a ranking viewbox; a provider city label is never authority.
+Every returned point is checked in PostGIS against the exact active polygon and
+marked for pickup eligibility. Reverse lookup preserves the exact user-selected
+coordinate even when the geocoder describes a nearby indexed object. Search and
+reverse requests are authenticated, account-rate-limited, bounded, localized to
+`ar|en|fr`, and not persisted or included in request logs. Provider attribution
+travels in the normalized response. Provider timeout, malformed output, no match,
+or disabled configuration leaves map tap and manual coordinates usable.
+
+Saved Home/Work labels and local recent-place persistence remain separate future
+features. No personal label is sent to the provider by this source slice. Route
+and geocoder output is advisory display data and grants no authority over pricing,
+ride state, city resolution, or driver assignment.
 
 ---
 
@@ -508,13 +585,39 @@ The payment system should support, where legally and technically available:
 
 The backend should never store raw payment card information unless there is a compelling legal and technical reason to do so.
 
-CMI is the selected electronic card-payment provider. TaxiMobile uses CMI's hosted
-payment experience so payment-card details are entered into CMI-controlled pages
-and never traverse or reside in TaxiMobile clients, logs, API requests, or storage.
-The exact request signing, callback verification, and reconciliation contract must
-come from the CMI merchant integration kit; it must not be inferred from public
-marketing pages. Cash remains supported and uses the explicit backend settlement
-flow.
+The launch architecture supports cash and an optional provider-independent manual
+bank/M-Wallet transfer adapter. The backend advertises transfer only when it has a
+verified recipient and at least one destination, issues a unique reference, and
+snapshots the instructions on the ride. A passenger claim moves the payment only
+to `PROCESSING`; an authorized, audited reconciliation against the recipient's
+independent settlement statement is the sole launch path to `COMPLETED`. Completion
+and driver-earning creation occur atomically. Cash remains available regardless of
+transfer configuration or external-service availability.
+
+Migration `20260831_0044` makes the national path authoritative: an enabled
+city-configuration service references one active/effective payment capability for
+the same city, operator, and service. That capability always includes cash and
+may reference one immutable verified recipient account for manual transfer.
+Estimate and ride creation resolve the exact active bundle independently and
+fail closed on mismatch. Rides and payments snapshot capability/recipient
+provenance; payments and refunds retain city/operator provenance. The deployment-
+wide recipient settings remain only as a disabled-by-default legacy-city
+compatibility layer and cannot configure a new city or operator.
+
+Refunds are append-only settlement facts in the same payment domain, not edits to
+rides, fares, or earnings. The launch command is restricted to administrators,
+locks a completed payment, requires unique independent return evidence, and
+prevents cumulative over-refund. Passenger receipts receive only safe aggregate
+and closed-reason fields. The launch allocation is wholly operator-funded; a
+future driver recovery belongs to the versioned city economics ledger rather than
+being inferred from the refund.
+
+CMI and every hosted card processor are deferred provider adapters. If one is
+approved later, its hosted entry surface keeps card data outside TaxiMobile and
+its signed callback or authoritative status query—not a browser return—controls
+payment state. The adapter contract, credentials, cancellation/refund rules, and
+reconciliation format must come from the merchant agreement; they must not be
+invented from public material.
 
 ---
 
@@ -547,6 +650,14 @@ manager, support agent, and aggregate-only analyst. A role name without its
 market/operator/city scope is insufficient. The current `ADMIN` is transitional
 bootstrap authority; it must not become an implicit unrestricted national data
 reader. `auth.md` and `operations.md` define the target grant model.
+
+The restricted support and safety modules currently depend on that active
+`ADMIN` authority and bind later transitions to the assigned administrator.
+They are separate persistence/API domains: ordinary support may escalate to one
+linked safety record, but participant responses, notes, categories, lifecycles,
+response targets, and retention versions remain distinct. National rollout must
+replace this dependency with scoped support/safety grants rather than adding
+client-side checks or duplicating the domains into a new service.
 
 ---
 
@@ -618,6 +729,18 @@ Android and iOS. FCM is a best-effort wake-up/refresh channel only. The backend
 sends minimized event type and resource identifiers; the authenticated client
 reloads the authorized resource before displaying sensitive or current state.
 
+FCM remains selected because Cloud Messaging is available at no charge on
+Firebase's Spark plan and does not require replacing the authoritative backend.
+Crashlytics is also a no-cost Firebase product under that plan. TaxiMobile must
+not add Firestore, Cloud Functions, Storage, Hosting, phone authentication, or
+another metered/paid Firebase service merely to enable push or crash reporting;
+any such service requires a separate cost, privacy, and architecture decision.
+WebSocket refresh remains usable when Firebase configuration is absent.
+The deployment owner must recheck Firebase's official [plan
+documentation](https://firebase.google.com/docs/projects/billing/firebase-pricing-plans)
+and [product pricing table](https://firebase.google.com/pricing) before promotion;
+the architecture does not rely on a promotional credit or a Blaze-only service.
+
 Notifications should not be the sole source of truth for ride state.
 
 For example:
@@ -631,6 +754,31 @@ ride.status = ACCEPTED
 ```
 
 If the notification is lost, the application should still obtain the correct state from the backend.
+
+Transactional delivery is governed by one closed policy registry shared by the
+outbox worker, live-event encoder, and FCM adapter. Every topic declares its
+allowlisted hint, channel, urgency, maximum age, fallback, quiet-hour eligibility,
+and dead-letter owner. Immediate ride events use high-priority bounded-TTL push
+and live refresh where a ride WebSocket exists. Scheduled-booking and credential
+events use bounded push plus persistent inbox/API polling; they never pretend a
+ride WebSocket is a booking channel. Informational credential and future
+commitment notices may respect quiet hours, while active dispatch, cancellation,
+matching, coordination, and handoff events do not.
+
+The worker suppresses new submissions after the policy age or stricter source
+expiry and reloads current state before addressing a participant. The same
+absolute source deadline reaches every push call, credential refresh and retry.
+Android uses the floored remaining duration and APNs the absolute Unix deadline;
+expired/sub-second submissions are suppressed. Provider/OS timing and changing
+business state still require an authoritative reload before any action.
+Live and push attempts are independent, with bounded retry on
+partial failure and duplicate refreshes permitted. A failed device does not skip
+later devices; durable per-device delivery progress remains open. An unknown topic is a
+bounded dead-lettered operational defect, not a successful no-op. The mobile
+allowlist contains the same public hint vocabulary and performs one complete
+authenticated restore; it does not interpret the resource ID as business state.
+User-configurable quiet-hour scheduling still requires implementation; measured
+provider delivery SLOs require staging and field acceptance.
 
 ---
 
@@ -927,10 +1075,82 @@ Observability should avoid unnecessarily collecting sensitive personal informati
 
 Backend observability remains self-hosted structured logs, authenticated
 Prometheus metrics, health/readiness, and aggregate business/worker signals.
+Outbox gauges preserve aggregate compatibility while also attributing pending,
+leased, aged and dead-lettered work to a closed operational-owner vocabulary.
+Unknown topics use one fail-closed `unclassified` bucket. Topic, resource,
+payload, authorization, device and user values are forbidden as metric or alert
+grouping labels. Prometheus rules may retain the owner for downstream routing,
+but Alertmanager receivers, staff rosters and human acknowledgement remain
+deployment configuration and acceptance evidence.
+Security-incident telemetry follows the same boundary with one closed
+`incident_severity` label. API and worker independently expose aggregate open,
+containment-overdue, postmortem-pending and postmortem-overdue SEV1-SEV4
+snapshots. Dashboard and alert queries reduce the duplicate role samples with
+`min`/`max`, never sum them; snapshot failure omits counts and becomes an
+explicit availability alert.
+The provider-neutral single-host template supplies Prometheus, Alertmanager,
+Loki, Alloy, and Grafana as an optional hardened overlay. Scrape, log-ingestion,
+and dashboard query traffic use
+an internal monitoring network
+with fixed API/worker aliases; operator ports bind to loopback, configuration and
+secret files are read-only, and time-series/notification/dashboard state use
+separate volumes. Prometheus, Loki, Alloy, and Grafana have no external network. Alertmanager
+alone joins a dedicated
+egress bridge to reach HTTPS receivers and reads one webhook URL file per fixed
+owner. The public TLS proxy must reject the internal scrape hostname. A larger
+orchestrator may replace this topology only if it preserves the same
+authentication, label, routing, egress and evidence contracts.
+Grafana's Prometheus/Loki datasources and operations/log dashboards are immutable
+file-provisioned artifacts. Each datasource reaches only its internal service.
+Dashboard queries
+are statically restricted to emitted low-cardinality service, normalized route/
+status, fixed-worker, fixed-owner, fixed incident-severity and normalized-error
+labels; there are no
+business selectors, external links or query variables. Anonymous access, signup,
+telemetry, plugin update traffic and duplicate Grafana alerting are disabled.
+This diagnostic dashboard does not replace the separately governed aggregate
+national analytics surfaces below.
+
+Each authenticated application/worker scrape also performs one time-bounded,
+fixed current-database capacity query. It exposes snapshot availability,
+connection count/limit/utilization, active connections, ungranted locks and the
+database deadlock counter without database, role, session or query dimensions.
+Failure omits all stale values and emits only availability zero. Each process
+also exposes fixed, unlabelled SQLAlchemy pool availability, configured size,
+checked-in, checked-out and overflow gauges, a cumulative checkout-wait
+histogram and timeout counter. Pool size, maximum overflow and
+checkout timeout are explicit bounded settings on API and worker engines; the
+deployment must reserve `(size + overflow) * replicas` plus migration,
+maintenance and emergency connections below the server limit. This makes the
+single managed database dependency and its application pools observable without
+adding an exporter credential or host mount. Host CPU/IO/storage and query plans
+remain deployment-owned T5 evidence; pool thresholds still require an approved
+representative hosted workload.
+
+The application writes a second copy of its allowlisted JSON events to bounded
+rotating files only when an absolute deployment path is configured. API and
+worker have distinct application-owned volumes; the image fixes their owner to
+UID/GID `2000`, while Alloy has supplemental group-read permission and read-only
+mounts. Alloy tails only those paths, has no container socket or host log access,
+drops malformed or over-16-KiB lines, and indexes only fixed `service` values.
+Request IDs and other allowlisted fields stay inside the JSON line rather than
+becoming index labels. Loki is an internal unauthenticated single-binary TSDB v13
+filesystem store with a 30-day query/ingest/compactor-retention boundary. Its
+loopback port is an operator diagnostic surface, never public ingress.
+
+The committed Compose log path is deliberately a one-API/one-worker single-host
+baseline. Multi-replica deployment must use a per-replica volume and collector
+sidecar/agent, or an equivalent reviewed transport; multiple processes must not
+rotate one shared file. National scale also requires measured log volume,
+capacity alarms, restore, and a supported highly available/object-storage Loki
+topology before the single-node filesystem store becomes a bottleneck or evidence
+risk.
 Native application crash and ANR reporting uses Firebase Crashlytics because the
 same role- and environment-separated Firebase projects are already required for
 FCM. Firebase Analytics is not linked. Crashlytics is an operational adapter and
 does not become a source of ride, payment, identity, or authorization truth.
+Its no-cost Spark availability does not remove the provider-processing, privacy,
+symbol-upload, retention, or release-acceptance gates below.
 
 Mobile debug builds and providerless verification artifacts disable collection.
 A distributable release must explicitly enable it and upload its matching Android

@@ -2,7 +2,12 @@ from fastapi.testclient import TestClient
 import pytest
 
 from taximobile_api.core.config import ConfigurationError, Settings
-from taximobile_api.core.metrics import OutboxMetrics
+from taximobile_api.core.metrics import (
+    DatabaseMetrics,
+    OutboxMetrics,
+    SecurityIncidentMetrics,
+    SecurityIncidentSeverityMetrics,
+)
 from taximobile_api.worker import create_worker_app
 
 
@@ -35,7 +40,16 @@ class RecordingWorkerRuntime:
 
     def start(self, metrics) -> None:
         self.started = True
-        for worker in ("matching", "outbox", "credentials"):
+        for worker in (
+            "matching",
+            "outbox",
+            "credentials",
+            "scheduling",
+            "analytics",
+            "case_alerts",
+            "case_retention",
+            "driver_document_retention",
+        ):
             metrics.record_worker_success(worker, processed=0, observed_at=1_700_000_000)
 
     async def stop(self) -> None:
@@ -50,7 +64,34 @@ def test_worker_operations_surface_is_private_bounded_and_ready(monkeypatch: pyt
     async def available_outbox_metrics(_sessions):
         return OutboxMetrics(available=True, pending_events=1)
 
+    async def available_database_metrics(_sessions):
+        return DatabaseMetrics(
+            available=True,
+            connections=4,
+            active_connections=1,
+            connection_limit=100,
+        )
+
+    async def available_security_incident_metrics(_sessions):
+        return SecurityIncidentMetrics(
+            available=True,
+            severities=(
+                SecurityIncidentSeverityMetrics("SEV1", 1, 1, 0, 0),
+                SecurityIncidentSeverityMetrics("SEV2"),
+                SecurityIncidentSeverityMetrics("SEV3"),
+                SecurityIncidentSeverityMetrics("SEV4"),
+            ),
+        )
+
     monkeypatch.setattr("taximobile_api.worker.collect_outbox_metrics", available_outbox_metrics)
+    monkeypatch.setattr(
+        "taximobile_api.worker.collect_database_metrics",
+        available_database_metrics,
+    )
+    monkeypatch.setattr(
+        "taximobile_api.worker.collect_security_incident_metrics",
+        available_security_incident_metrics,
+    )
     runtime = RecordingWorkerRuntime()
     app = create_worker_app(
         settings=Settings.from_environment(),
@@ -73,7 +114,21 @@ def test_worker_operations_surface_is_private_bounded_and_ready(monkeypatch: pyt
         assert unauthorized.headers["WWW-Authenticate"] == "Bearer"
         assert metrics.status_code == 200
         assert "taximobile_outbox_metrics_available 1" in metrics.text
+        assert "taximobile_database_connection_utilization_ratio 0.04" in metrics.text
+        assert (
+            'taximobile_security_incidents_open{incident_severity="SEV1"} 1'
+            in metrics.text
+        )
+        assert (
+            'taximobile_security_incidents_containment_overdue{incident_severity="SEV1"} 1'
+            in metrics.text
+        )
         assert 'taximobile_worker_iterations_total{worker="credentials",outcome="success"} 1' in metrics.text
+        assert 'taximobile_worker_iterations_total{worker="scheduling",outcome="success"} 1' in metrics.text
+        assert 'taximobile_worker_iterations_total{worker="analytics",outcome="success"} 1' in metrics.text
+        assert 'taximobile_worker_iterations_total{worker="case_alerts",outcome="success"} 1' in metrics.text
+        assert 'taximobile_worker_iterations_total{worker="case_retention",outcome="success"} 1' in metrics.text
+        assert 'taximobile_worker_iterations_total{worker="driver_document_retention",outcome="success"} 1' in metrics.text
         assert token not in metrics.text
 
     assert runtime.started

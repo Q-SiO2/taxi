@@ -14,16 +14,11 @@ from sqlalchemy import text
 from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
+from taximobile_api.core.notification_policy import LIVE_EVENT_TYPES
 from taximobile_api.core.realtime import EventHub
 
 
 LIVE_EVENT_CHANNEL = "taximobile_live_events_v1"
-LIVE_EVENT_TYPES = {
-    "RIDE_OFFER_AVAILABLE",
-    "DRIVER_ASSIGNED",
-    "RIDE_CANCELLED",
-    "RIDE_UNMATCHED",
-}
 logger = logging.getLogger("taximobile_api")
 
 

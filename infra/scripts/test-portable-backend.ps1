@@ -27,8 +27,47 @@ Invoke-CheckedNativeCommand -FilePath $python -Arguments @(
     $apiContractValidator
 ) -FailureMessage "The mobile/backend API contract gate failed."
 
+$webApiContractValidator = Join-Path $PSScriptRoot "validate_web_api_contract.py"
+Invoke-CheckedNativeCommand -FilePath $python -Arguments @(
+    $webApiContractValidator
+) -FailureMessage "The web/backend API contract gate failed."
+
 $startedForTests = Start-PortablePostgres -Layout $layout -Port $DatabasePort -WaitSeconds 30
+$psql = Join-Path $layout.PostgreSqlRoot "bin\psql.exe"
+$dropdb = Join-Path $layout.PostgreSqlRoot "bin\dropdb.exe"
+$createdb = Join-Path $layout.PostgreSqlRoot "bin\createdb.exe"
+$previousPgPassword = $env:PGPASSWORD
+$temporaryCreateDatabaseGranted = $false
 try {
+    # The integration fixture clones this exact migrated template once per test.
+    # Recreate only the explicitly named CI database so migration-seeded baseline
+    # rows are pristine and no test can inherit a prior run's accounts/sessions.
+    $env:PGPASSWORD = $databasePassword
+    Invoke-CheckedNativeCommand -FilePath $psql -Arguments @(
+        "--host=127.0.0.1", "--port=$DatabasePort", "--username=postgres",
+        "--dbname=postgres", "--no-password", "--set=ON_ERROR_STOP=1", "--quiet",
+        "--command=SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'taximobile_ci' AND pid <> pg_backend_pid();"
+    ) -FailureMessage "Could not close prior isolated CI database connections."
+    Invoke-CheckedNativeCommand -FilePath $dropdb -Arguments @(
+        "--host=127.0.0.1", "--port=$DatabasePort", "--username=postgres",
+        "--no-password", "--if-exists", "--force", "taximobile_ci"
+    ) -FailureMessage "Could not reset the isolated taximobile_ci database."
+    Invoke-CheckedNativeCommand -FilePath $createdb -Arguments @(
+        "--host=127.0.0.1", "--port=$DatabasePort", "--username=postgres",
+        "--no-password", "--owner=$databaseUser", "taximobile_ci"
+    ) -FailureMessage "Could not recreate the isolated taximobile_ci database."
+    Invoke-CheckedNativeCommand -FilePath $psql -Arguments @(
+        "--host=127.0.0.1", "--port=$DatabasePort", "--username=postgres",
+        "--dbname=taximobile_ci", "--no-password", "--set=ON_ERROR_STOP=1", "--quiet",
+        "--command=CREATE EXTENSION IF NOT EXISTS postgis;"
+    ) -FailureMessage "Could not enable PostGIS in the isolated CI database."
+    Invoke-CheckedNativeCommand -FilePath $psql -Arguments @(
+        "--host=127.0.0.1", "--port=$DatabasePort", "--username=postgres",
+        "--dbname=postgres", "--no-password", "--set=ON_ERROR_STOP=1", "--quiet",
+        "--command=ALTER ROLE `"$databaseUser`" CREATEDB;"
+    ) -FailureMessage "Could not grant temporary integration clone authority."
+    $temporaryCreateDatabaseGranted = $true
+
     $env:TAXIMOBILE_ENV = "test"
     $env:TAXIMOBILE_RUN_INTEGRATION = "1"
     $env:TAXIMOBILE_DATABASE_URL = Get-LocalDatabaseUrl -User $databaseUser -Password $databasePassword -Database "taximobile_ci" -Port $DatabasePort
@@ -48,6 +87,14 @@ try {
         Pop-Location
     }
 } finally {
+    if ($temporaryCreateDatabaseGranted) {
+        Invoke-CheckedNativeCommand -FilePath $psql -Arguments @(
+            "--host=127.0.0.1", "--port=$DatabasePort", "--username=postgres",
+            "--dbname=postgres", "--no-password", "--set=ON_ERROR_STOP=1", "--quiet",
+            "--command=ALTER ROLE `"$databaseUser`" NOCREATEDB;"
+        ) -FailureMessage "Could not revoke temporary integration clone authority."
+    }
+    $env:PGPASSWORD = $previousPgPassword
     if ($startedForTests) {
         Stop-PortablePostgres -Layout $layout | Out-Null
     }

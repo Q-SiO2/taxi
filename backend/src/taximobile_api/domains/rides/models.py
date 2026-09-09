@@ -5,11 +5,13 @@ from enum import StrEnum
 from uuid import UUID, uuid4
 
 from geoalchemy2 import Geography
-from sqlalchemy import CheckConstraint, DateTime, Enum, Float, ForeignKey, Integer, Numeric, String, Text, UniqueConstraint, func
+from sqlalchemy import CheckConstraint, DateTime, Enum, Float, ForeignKey, Index, Integer, Numeric, String, Text, UniqueConstraint, func, text
 from sqlalchemy.dialects.postgresql import UUID as PostgreSQLUUID
 from sqlalchemy.orm import Mapped, mapped_column
 
 from taximobile_api.db.base import Base
+from taximobile_api.domains.markets.models import ServiceType, bounded_enum
+from taximobile_api.domains.payments.models import PaymentMethod
 
 
 class RideStatus(StrEnum):
@@ -44,8 +46,46 @@ class RideOfferStatus(StrEnum):
 
 class Ride(Base):
     __tablename__ = "rides"
+    __table_args__ = (
+        CheckConstraint(
+            "(service_type = 'ON_DEMAND' AND fixed_route_direction_id IS NULL) OR "
+            "(service_type = 'FIXED_ROUTE' AND fixed_route_direction_id IS NOT NULL)",
+            name="ride_fixed_route_consistency",
+        ),
+        Index(
+            "uq_rides_one_active_per_driver", "driver_id", unique=True,
+            postgresql_where=text(
+                "driver_id IS NOT NULL AND status IN "
+                "('ACCEPTED', 'DRIVER_EN_ROUTE', 'DRIVER_ARRIVED', 'IN_PROGRESS')"
+            ),
+        ),
+    )
 
     id: Mapped[UUID] = mapped_column(PostgreSQLUUID(as_uuid=True), primary_key=True, default=uuid4)
+    city_id: Mapped[UUID] = mapped_column(
+        PostgreSQLUUID(as_uuid=True), ForeignKey("cities.id", ondelete="RESTRICT"), nullable=False, index=True
+    )
+    operator_id: Mapped[UUID] = mapped_column(
+        PostgreSQLUUID(as_uuid=True), ForeignKey("operators.id", ondelete="RESTRICT"), nullable=False, index=True
+    )
+    service_type: Mapped[ServiceType] = mapped_column(
+        bounded_enum(ServiceType, "ride_service_type", 20),
+        nullable=False,
+        default=ServiceType.ON_DEMAND,
+        index=True,
+    )
+    fixed_route_direction_id: Mapped[UUID | None] = mapped_column(
+        PostgreSQLUUID(as_uuid=True),
+        ForeignKey("fixed_route_directions.id", ondelete="RESTRICT"),
+        nullable=True,
+        index=True,
+    )
+    scheduled_booking_id: Mapped[UUID | None] = mapped_column(
+        PostgreSQLUUID(as_uuid=True),
+        ForeignKey("scheduled_bookings.id", name="fk_rides_scheduled_booking", use_alter=True, ondelete="RESTRICT"),
+        nullable=True,
+        unique=True,
+    )
     passenger_id: Mapped[UUID] = mapped_column(PostgreSQLUUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
     driver_id: Mapped[UUID | None] = mapped_column(PostgreSQLUUID(as_uuid=True), ForeignKey("driver_profiles.id"), nullable=True, index=True)
     vehicle_id: Mapped[UUID | None] = mapped_column(PostgreSQLUUID(as_uuid=True), ForeignKey("vehicles.id"), nullable=True, index=True)
@@ -57,6 +97,22 @@ class Ride(Base):
     quoted_pricing_rule_id: Mapped[UUID | None] = mapped_column(PostgreSQLUUID(as_uuid=True), ForeignKey("pricing_rules.id"), nullable=True)
     quoted_amount: Mapped[object | None] = mapped_column(Numeric(12, 2), nullable=True)
     quoted_currency: Mapped[str | None] = mapped_column(String(3), nullable=True)
+    payment_method: Mapped[PaymentMethod] = mapped_column(
+        Enum(PaymentMethod, name="payment_method"), nullable=False, default=PaymentMethod.CASH
+    )
+    payment_capability_version_id: Mapped[UUID | None] = mapped_column(
+        PostgreSQLUUID(as_uuid=True),
+        ForeignKey("payment_capability_versions.id", ondelete="RESTRICT"),
+        nullable=True,
+    )
+    payment_recipient_account_id: Mapped[UUID | None] = mapped_column(
+        PostgreSQLUUID(as_uuid=True),
+        ForeignKey("payment_recipient_accounts.id", ondelete="RESTRICT"),
+        nullable=True,
+    )
+    transfer_recipient_name: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    transfer_bank_account: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    transfer_wallet_id: Mapped[str | None] = mapped_column(String(120), nullable=True)
     status: Mapped[RideStatus] = mapped_column(Enum(RideStatus, name="ride_status"), nullable=False, default=RideStatus.REQUESTED, index=True)
     pickup_point: Mapped[object] = mapped_column(Geography(geometry_type="POINT", srid=4326), nullable=False)
     destination_point: Mapped[object] = mapped_column(Geography(geometry_type="POINT", srid=4326), nullable=False)

@@ -10,14 +10,39 @@ from taximobile_api.domains.auth.router import database_session
 from datetime import UTC, datetime
 
 from taximobile_api.domains.rides.models import Ride, RideRating
+from taximobile_api.domains.ride_communications.models import RideCoordinationMessage
+from taximobile_api.domains.ride_communications.policy import (
+    ACTIVE_COORDINATION_STATUSES,
+    sender_role_for_code,
+)
+from taximobile_api.domains.ride_communications.schemas import RideCoordinationMessageResponse
+from taximobile_api.domains.fixed_routes.service import (
+    FixedRouteConflict,
+    fixed_route_ride_summary,
+    resolve_fixed_route_ride,
+)
 from taximobile_api.domains.drivers.models import DriverLocation, DriverProfile, Vehicle
 from taximobile_api.domains.drivers.service import DriverMissing, driver_for_user
-from taximobile_api.domains.rides.schemas import AssignedDriverResponse, AssignedVehicleResponse, CancellationRequest, Coordinate, LastKnownDriverLocationResponse, RideCompletionRequest, RideCompletionResponse, FareBreakdownResponse, FareEstimate, FareResponse, PaymentReceiptResponse, RideCreateRequest, RideEstimateRequest, RideEstimateResponse, RideListResponse, RideRatingCreateRequest, RideRatingListResponse, RideRatingResponse, RideReceiptResponse, RideResponse, RideTransitionResponse
+from taximobile_api.domains.rides.schemas import AssignedDriverResponse, AssignedVehicleResponse, CancellationRequest, Coordinate, LastKnownDriverLocationResponse, ManualTransferInstructionsResponse, RideCompletionRequest, RideCompletionResponse, FareBreakdownResponse, FareEconomicsResponse, FareEstimate, FareResponse, PaymentReceiptResponse, RideCreateRequest, RideEstimateRequest, RideEstimateResponse, RideListResponse, RideRatingCreateRequest, RideRatingListResponse, RideRatingResponse, RideReceiptResponse, RideResponse, RideTransitionResponse
 from taximobile_api.domains.rides.models import RideStatus
 from taximobile_api.domains.rides.service import InvalidRideTransition, RideForbidden, RideNotFound, assigned_driver_ride, cancel_assigned_driver_ride, cancel_passenger_ride, complete_assigned_ride, create_ride, owned_ride, transition_assigned_ride
 from taximobile_api.domains.pricing.models import FareRecord
-from taximobile_api.domains.payments.models import Payment
-from taximobile_api.domains.pricing.service import NoActiveTariff, active_tariff, finalized_fare_breakdown, fixed_fare_amount
+from taximobile_api.domains.payments.models import ManualTransferClaim, Payment, PaymentMethod, PaymentRefund
+from taximobile_api.domains.payments.service import (
+    PaymentCapabilityUnavailable,
+    resolve_payment_capability,
+)
+from taximobile_api.domains.payments.schemas import (
+    PassengerRefundResponse,
+    PassengerRefundSummaryResponse,
+)
+from taximobile_api.domains.pricing.service import (
+    FinancialQuote,
+    InvalidFinancialPolicy,
+    NoActiveTariff,
+    finalized_fare_breakdown,
+    quote_immediate_ride,
+)
 from taximobile_api.domains.matching.service import dispatch_ride
 from taximobile_api.domains.notifications.service import notify
 from taximobile_api.domains.idempotency.service import (
@@ -27,9 +52,51 @@ from taximobile_api.domains.idempotency.service import (
     begin_command,
     finish_command,
 )
+from taximobile_api.domains.markets.service import (
+    CityServiceUnavailable,
+    resolve_on_demand_service_context,
+)
+from taximobile_api.domains.markets.models import ServiceType
 
 
 router = APIRouter(tags=["rides"])
+
+
+def quote_economics_response(quote: FinancialQuote) -> FareEconomicsResponse:
+    return FareEconomicsResponse(
+        transport_fare=str(quote.transport_fare_amount),
+        scheduling_surcharge=str(quote.scheduling_surcharge_amount),
+        operator_service_fee=str(quote.operator_fee_amount),
+        passenger_total=str(quote.passenger_total_amount),
+        expected_driver_net=str(quote.driver_net_amount),
+        operator_allocation=str(quote.operator_allocation_amount),
+        operator_fee_policy_version=quote.operator_fee_policy_version,
+        operator_fee_calculation_mode=quote.operator_fee_calculation_mode.value,
+        operator_fee_funding_mode=quote.operator_fee_funding_mode.value,
+        scheduling_policy_version=quote.scheduling_policy_version,
+    )
+
+
+def fare_economics_response(fare: FareRecord) -> FareEconomicsResponse | None:
+    snapshot = fare.snapshot
+    if "operator_fee_policy_version" not in snapshot:
+        return None
+    return FareEconomicsResponse(
+        transport_fare=str(snapshot["transport_fare"]),
+        scheduling_surcharge=str(snapshot["scheduling_surcharge"]),
+        operator_service_fee=str(snapshot["operator_fee"]),
+        passenger_total=str(snapshot["passenger_total"]),
+        expected_driver_net=str(snapshot["driver_net"]),
+        operator_allocation=str(snapshot["operator_allocation"]),
+        operator_fee_policy_version=str(snapshot["operator_fee_policy_version"]),
+        operator_fee_calculation_mode=str(snapshot["operator_fee_calculation_mode"]),
+        operator_fee_funding_mode=str(snapshot["operator_fee_funding_mode"]),
+        scheduling_policy_version=(
+            str(snapshot["scheduling_policy_version"])
+            if snapshot.get("scheduling_policy_version") is not None
+            else None
+        ),
+    )
 
 
 async def response_for(
@@ -37,6 +104,7 @@ async def response_for(
     ride: Ride,
     *,
     include_driver_location: bool = False,
+    include_coordination: bool = False,
 ) -> RideResponse:
     pickup_latitude, pickup_longitude, destination_latitude, destination_longitude = (
         await session.execute(
@@ -123,14 +191,40 @@ async def response_for(
                 observed_at=observed_at,
                 accuracy_meters=accuracy_meters,
             )
+    latest_coordination_message = None
+    if include_coordination and ride.driver_id is not None and ride.status in ACTIVE_COORDINATION_STATUSES:
+        latest_message = await session.scalar(
+            select(RideCoordinationMessage)
+            .where(RideCoordinationMessage.ride_id == ride.id)
+            .order_by(RideCoordinationMessage.created_at.desc(), RideCoordinationMessage.id.desc())
+            .limit(1)
+        )
+        if latest_message is not None:
+            latest_coordination_message = RideCoordinationMessageResponse(
+                id=latest_message.id,
+                ride_id=latest_message.ride_id,
+                sender_role=sender_role_for_code(latest_message.code),
+                code=latest_message.code,
+                created_at=latest_message.created_at,
+            )
     return RideResponse(
         id=ride.id,
+        city_id=ride.city_id,
+        operator_id=ride.operator_id,
+        service_type=ride.service_type.value,
+        fixed_route=(
+            await fixed_route_ride_summary(session, ride.fixed_route_direction_id)
+            if ride.fixed_route_direction_id is not None
+            else None
+        ),
         status=ride.status.value,
         pickup=Coordinate(latitude=pickup_latitude, longitude=pickup_longitude, address=ride.pickup_address),
         destination=Coordinate(latitude=destination_latitude, longitude=destination_longitude, address=ride.destination_address),
         completed_at=ride.completed_at,
         driver=assigned_driver,
         last_known_driver_location=last_known_driver_location,
+        latest_coordination_message=latest_coordination_message,
+        payment_method=ride.payment_method.value,
     )
 
 
@@ -159,20 +253,107 @@ async def request_ride(
                 window_seconds=60,
             ):
                 raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail="Too many ride requests. Try again shortly.")
-            quote = await active_tariff(session, datetime.now(UTC))
-            fixed_fare_amount(quote)
-            ride = await create_ride(session, principal.user_id, payload, quote)
+            fixed_route = None
+            if payload.fixed_route_direction_version_id is not None:
+                fixed_context = await resolve_fixed_route_ride(
+                    session,
+                    payload.fixed_route_direction_version_id,
+                    city_hint=payload.city_id,
+                )
+                pickup = Coordinate(
+                    latitude=fixed_context.pickup.latitude,
+                    longitude=fixed_context.pickup.longitude,
+                    address=(
+                        fixed_context.direction.start_location_name.get("fr")
+                        or fixed_context.direction.start_location_name.get("en")
+                        or fixed_context.direction.start_location_name.get("ar")
+                    ),
+                )
+                destination = Coordinate(
+                    latitude=fixed_context.destination.latitude,
+                    longitude=fixed_context.destination.longitude,
+                    address=(
+                        fixed_context.direction.finish_location_name.get("fr")
+                        or fixed_context.direction.finish_location_name.get("en")
+                        or fixed_context.direction.finish_location_name.get("ar")
+                    ),
+                )
+                city_id = fixed_context.city_id
+                operator_id = fixed_context.operator_id
+                quote = fixed_context.quote
+                service_type = ServiceType.FIXED_ROUTE
+                direction_id = fixed_context.direction.id
+                fixed_route = await fixed_route_ride_summary(session, direction_id)
+            else:
+                assert payload.pickup is not None and payload.destination is not None
+                context = await resolve_on_demand_service_context(
+                    session,
+                    pickup_latitude=payload.pickup.latitude,
+                    pickup_longitude=payload.pickup.longitude,
+                    city_hint=payload.city_id,
+                )
+                pickup = payload.pickup
+                destination = payload.destination
+                city_id = context.city_id
+                operator_id = context.operator_id
+                quote = await quote_immediate_ride(
+                    session,
+                    city_id=context.city_id,
+                    operator_id=context.operator_id,
+                    tariff_version_id=context.tariff_version_id,
+                    operator_fee_policy_version_id=context.operator_fee_policy_version_id,
+                    at=datetime.now(UTC),
+                )
+                service_type = ServiceType.ON_DEMAND
+                direction_id = None
+            payment_capability = await resolve_payment_capability(
+                session,
+                city_id=city_id,
+                operator_id=operator_id,
+                service_type=service_type,
+                settings=request.app.state.settings,
+            )
+            if payload.payment_method not in payment_capability.methods:
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail="The selected payment method is not available.",
+                )
+            ride = await create_ride(
+                session,
+                principal.user_id,
+                payload,
+                quote,
+                city_id=city_id,
+                operator_id=operator_id,
+                pickup=pickup,
+                destination=destination,
+                service_type=service_type,
+                fixed_route_direction_id=direction_id,
+            )
+            ride.payment_capability_version_id = payment_capability.capability_version_id
+            ride.payment_recipient_account_id = payment_capability.recipient_account_id
+            if ride.payment_method == PaymentMethod.MANUAL_TRANSFER:
+                ride.transfer_recipient_name = payment_capability.recipient_name
+                ride.transfer_bank_account = payment_capability.bank_account
+                ride.transfer_wallet_id = payment_capability.wallet_id
             offer = await dispatch_ride(session, ride.id, request.app.state.settings)
             response = RideResponse(
                 id=ride.id,
+                city_id=ride.city_id,
+                operator_id=ride.operator_id,
+                service_type=ride.service_type.value,
+                fixed_route=fixed_route,
                 status=ride.status.value,
-                pickup=payload.pickup,
-                destination=payload.destination,
+                pickup=pickup,
+                destination=destination,
                 completed_at=ride.completed_at,
+                payment_method=ride.payment_method.value,
             )
             await finish_command(session, command, status_code=status.HTTP_201_CREATED, payload=response.model_dump(mode="json"))
-    except NoActiveTariff as error:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="No active tariff is available.") from error
+    except (NoActiveTariff, InvalidFinancialPolicy) as error:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(error)) from error
+    except (CityServiceUnavailable, FixedRouteConflict, PaymentCapabilityUnavailable) as error:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(error)) from error
     except InvalidIdempotencyKey as error:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error)) from error
     except IdempotencyKeyReuse as error:
@@ -185,17 +366,68 @@ async def request_ride(
 @router.post("/rides/estimate", response_model=RideEstimateResponse)
 async def estimate_ride(
     payload: RideEstimateRequest,
+    request: Request,
     principal: CurrentPrincipal = Depends(authenticated_principal),
     session: AsyncSession = Depends(database_session),
 ) -> RideEstimateResponse:
-    del payload, principal  # Route validation/authentication are intentional even for an MVP fixed tariff.
+    del principal
     try:
-        rule = await active_tariff(session, datetime.now(UTC))
-        amount = fixed_fare_amount(rule)
-    except NoActiveTariff as error:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="No active tariff is available.") from error
+        fixed_route = None
+        if payload.fixed_route_direction_version_id is not None:
+            fixed_context = await resolve_fixed_route_ride(
+                session,
+                payload.fixed_route_direction_version_id,
+                city_hint=payload.city_id,
+            )
+            quote = fixed_context.quote
+            city_id = fixed_context.city_id
+            operator_id = fixed_context.operator_id
+            service_type = ServiceType.FIXED_ROUTE
+            fixed_route = await fixed_route_ride_summary(
+                session, fixed_context.direction.id
+            )
+        else:
+            assert payload.pickup is not None and payload.destination is not None
+            context = await resolve_on_demand_service_context(
+                session,
+                pickup_latitude=payload.pickup.latitude,
+                pickup_longitude=payload.pickup.longitude,
+                city_hint=payload.city_id,
+            )
+            quote = await quote_immediate_ride(
+                session,
+                city_id=context.city_id,
+                operator_id=context.operator_id,
+                tariff_version_id=context.tariff_version_id,
+                operator_fee_policy_version_id=context.operator_fee_policy_version_id,
+                at=datetime.now(UTC),
+            )
+            city_id = context.city_id
+            operator_id = context.operator_id
+            service_type = ServiceType.ON_DEMAND
+        payment_capability = await resolve_payment_capability(
+            session,
+            city_id=city_id,
+            operator_id=operator_id,
+            service_type=service_type,
+            settings=request.app.state.settings,
+        )
+    except (NoActiveTariff, InvalidFinancialPolicy) as error:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(error)) from error
+    except (CityServiceUnavailable, FixedRouteConflict, PaymentCapabilityUnavailable) as error:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(error)) from error
     return RideEstimateResponse(
-        estimate=FareEstimate(amount=str(amount), currency=rule.currency, pricing_rule_version=rule.version)
+        estimate=FareEstimate(
+            amount=str(quote.passenger_total_amount),
+            currency=quote.currency,
+            pricing_rule_version=quote.pricing_rule_version,
+            city_id=city_id,
+            operator_id=operator_id,
+            service_type=service_type.value,
+            fixed_route=fixed_route,
+            economics=quote_economics_response(quote),
+        ),
+        payment_methods=[method.value for method in payment_capability.methods],
     )
 
 
@@ -211,7 +443,12 @@ async def get_ride(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(error)) from error
     except RideForbidden as error:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You cannot access this ride.") from error
-    return await response_for(session, ride, include_driver_location=True)
+    return await response_for(
+        session,
+        ride,
+        include_driver_location=True,
+        include_coordination=True,
+    )
 
 
 def fare_breakdown_response(fare: FareRecord) -> FareBreakdownResponse:
@@ -221,6 +458,7 @@ def fare_breakdown_response(fare: FareRecord) -> FareBreakdownResponse:
         currency=fare.currency,
         pricing_rule_version=version,
         components=components,
+        economics=fare_economics_response(fare),
     )
 
 
@@ -242,7 +480,11 @@ async def get_ride_fare(
     return fare_breakdown_response(fare)
 
 
-@router.get("/rides/{ride_id}/receipt", response_model=RideReceiptResponse)
+@router.get(
+    "/rides/{ride_id}/receipt",
+    response_model=RideReceiptResponse,
+    response_model_exclude_none=True,
+)
 async def get_ride_receipt(
     ride_id: UUID,
     principal: CurrentPrincipal = Depends(authenticated_principal),
@@ -264,11 +506,83 @@ async def get_ride_receipt(
     payment = await session.scalar(select(Payment).where(Payment.ride_id == ride.id))
     if ride.status != RideStatus.COMPLETED or ride.completed_at is None or fare is None or payment is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="A finalized receipt is not available.")
+    manual_transfer = None
+    if payment.method == PaymentMethod.MANUAL_TRANSFER:
+        if (
+            ride.transfer_recipient_name is None
+            or (ride.transfer_bank_account is None and ride.transfer_wallet_id is None)
+            or payment.provider_reference is None
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Manual transfer instructions are unavailable. Cash support remains available for new rides.",
+            )
+        latest_claim_status = await session.scalar(
+            select(ManualTransferClaim.status)
+            .where(ManualTransferClaim.payment_id == payment.id)
+            .order_by(
+                ManualTransferClaim.submitted_at.desc(),
+                ManualTransferClaim.id.desc(),
+            )
+            .limit(1)
+        )
+        manual_transfer = ManualTransferInstructionsResponse(
+            recipient_name=ride.transfer_recipient_name,
+            bank_account=ride.transfer_bank_account,
+            wallet_id=ride.transfer_wallet_id,
+            payment_reference=payment.provider_reference,
+            latest_claim_status=(
+                latest_claim_status.value if latest_claim_status is not None else None
+            ),
+        )
+    refund_rows = list(
+        await session.scalars(
+            select(PaymentRefund)
+            .where(PaymentRefund.payment_id == payment.id)
+            .order_by(PaymentRefund.refunded_at.asc(), PaymentRefund.id.asc())
+        )
+    )
+    refund_summary = None
+    if refund_rows:
+        if any(refund.currency != payment.currency for refund in refund_rows):
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Refund reconciliation is temporarily unavailable.",
+            )
+        refunded_amount = sum(
+            (refund.amount for refund in refund_rows),
+            start=payment.amount * 0,
+        )
+        if refunded_amount > payment.amount:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Refund reconciliation is temporarily unavailable.",
+            )
+        refund_summary = PassengerRefundSummaryResponse(
+            refunded_amount=refunded_amount,
+            net_paid_amount=payment.amount - refunded_amount,
+            currency=payment.currency,
+            items=[
+                PassengerRefundResponse(
+                    id=refund.id,
+                    amount=refund.amount,
+                    currency=refund.currency,
+                    reason=refund.reason,
+                    refunded_at=refund.refunded_at,
+                )
+                for refund in refund_rows
+            ],
+        )
     return RideReceiptResponse(
         ride_id=ride.id,
         completed_at=ride.completed_at,
         fare=fare_breakdown_response(fare),
-        payment=PaymentReceiptResponse(method=payment.method.value, status=payment.status.value),
+        payment=PaymentReceiptResponse(
+            method=payment.method.value,
+            status=payment.status.value,
+            manual_transfer=manual_transfer,
+            refunds=refund_summary,
+        ),
     )
 
 
@@ -524,6 +838,7 @@ async def complete(
                 ride_id=ride.id,
                 status=ride.status.value,
                 fare=FareResponse(amount=str(fare.total_amount), currency=fare.currency),
+                payment_method=ride.payment_method.value,
             )
             await finish_command(session, command, status_code=status.HTTP_200_OK, payload=response.model_dump(mode="json"))
     except DriverMissing as error:

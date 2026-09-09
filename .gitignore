@@ -10,12 +10,14 @@
 **/*.pem
 **/*.key
 **/*service-account*.json
+infra/deploy/secrets/
 
 # Python runtimes and generated state
 **/.venv/
 **/__pycache__/
 **/*.py[cod]
 **/.pytest_cache/
+**/.pytest_tmp*/
 **/.coverage
 **/htmlcov/
 **/*.egg-info/

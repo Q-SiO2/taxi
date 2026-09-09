@@ -2,6 +2,7 @@ package org.example.taximobile.feature.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.selected
@@ -27,6 +29,9 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import org.example.taximobile.feature.ui.theme.TaxiColors
 import org.example.taximobile.feature.ui.theme.TaxiRadii
 import org.example.taximobile.feature.ui.theme.TaxiSpacing
+import org.jetbrains.compose.resources.painterResource
+import taximobile.shared.generated.resources.Res
+import taximobile.shared.generated.resources.vehicle_silhouette_standard
 
 @Composable
 fun TaxiCard(
@@ -111,8 +116,19 @@ fun PaymentMethodCard(
     detail: String,
     selected: Boolean,
     modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
 ) {
-    TaxiCard(modifier, selected = selected) {
+    val interactionModifier = if (onClick == null) {
+        Modifier
+    } else {
+        Modifier
+            .semantics {
+                role = Role.RadioButton
+                this.selected = selected
+            }
+            .clickable(onClick = onClick)
+    }
+    TaxiCard(modifier.then(interactionModifier), selected = selected) {
         Row(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm),
@@ -140,6 +156,7 @@ fun PaymentMethodCard(
 fun VehicleAssetFallback(
     vehicleLabel: String,
     modifier: Modifier = Modifier,
+    useBundledAsset: Boolean = true,
 ) {
     Surface(
         modifier = modifier.defaultMinSize(minWidth = 72.dp, minHeight = 44.dp),
@@ -148,7 +165,20 @@ fun VehicleAssetFallback(
         border = BorderStroke(1.dp, TaxiColors.Navy200),
     ) {
         Box(Modifier.padding(TaxiSpacing.Xs), contentAlignment = Alignment.Center) {
-            Text(vehicleLabel.take(2).uppercase(), style = MaterialTheme.typography.labelLarge, color = TaxiColors.Navy900)
+            if (useBundledAsset) {
+                Image(
+                    painter = painterResource(Res.drawable.vehicle_silhouette_standard),
+                    contentDescription = vehicleLabel,
+                    modifier = Modifier.size(width = 72.dp, height = 44.dp),
+                    contentScale = ContentScale.Fit,
+                )
+            } else {
+                Text(
+                    vehicleLabel.take(2).uppercase(),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = TaxiColors.Navy900,
+                )
+            }
         }
     }
 }

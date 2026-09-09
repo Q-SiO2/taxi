@@ -16,11 +16,13 @@ import org.example.taximobile.domain.rides.Coordinates
 import org.example.taximobile.feature.location.OneShotLocationGate
 
 /**
- * Performs an explicit, foreground-only location lookup after a user action.
+ * Performs one foreground-only location lookup.
  *
  * It intentionally does not subscribe to continuous updates or retain location
- * history. A recent platform location is used only as a timeout fallback, and
- * the caller decides whether to submit the returned coordinate to the backend.
+ * history. User-initiated requests may ask for when-in-use permission;
+ * foreground online refreshes use [requestAuthorized] and never open permission
+ * UI. A recent platform location is used only as a timeout fallback, and the
+ * caller decides whether to submit the returned coordinate to the backend.
  */
 internal class AndroidCurrentLocationRequester(
     private val activity: ComponentActivity,
@@ -59,6 +61,17 @@ internal class AndroidCurrentLocationRequester(
                 ),
             )
         }
+    }
+
+    fun requestAuthorized(onResult: (Coordinates?) -> Unit): Boolean {
+        if (!hasLocationPermission()) {
+            onResult(null)
+            return true
+        }
+        if (!requestGate.tryStart()) return false
+        pendingResult = onResult
+        loadCurrentLocation()
+        return true
     }
 
     private fun loadCurrentLocation() {

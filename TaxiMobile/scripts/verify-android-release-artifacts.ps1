@@ -6,7 +6,7 @@ param(
 
     [Parameter()]
     [ValidatePattern('^[0-9]+(\.[0-9]+){1,3}([+-][A-Za-z0-9.-]+)?$')]
-    [string]$ExpectedVersionName = "1.0.0-ci"
+    [string]$ExpectedVersionName = "1.0.0"
 )
 
 $ErrorActionPreference = "Stop"

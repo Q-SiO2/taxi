@@ -29,6 +29,30 @@ MOBILE_GATEWAY_ROOT = (
     / "taximobile"
     / "data"
 )
+ANDROID_MOBILE_GATEWAY_ROOT = (
+    WORKSPACE_ROOT
+    / "TaxiMobile"
+    / "shared"
+    / "src"
+    / "androidMain"
+    / "kotlin"
+    / "org"
+    / "example"
+    / "taximobile"
+    / "data"
+)
+IOS_MOBILE_GATEWAY_ROOT = (
+    WORKSPACE_ROOT
+    / "TaxiMobile"
+    / "shared"
+    / "src"
+    / "iosMain"
+    / "kotlin"
+    / "org"
+    / "example"
+    / "taximobile"
+    / "data"
+)
 API_PREFIX = "/api/v1"
 HTTP_METHODS = ("get", "post", "put", "patch", "delete")
 
@@ -117,8 +141,34 @@ def extract_mobile_operations(
 ) -> tuple[list[MobileOperation], list[ContractIssue]]:
     operations: list[MobileOperation] = []
     issues: list[ContractIssue] = []
+    gateway_roots = [gateway_root]
+    if gateway_root.resolve() == MOBILE_GATEWAY_ROOT.resolve():
+        gateway_roots.append(ANDROID_MOBILE_GATEWAY_ROOT)
+        android_adapter = ANDROID_MOBILE_GATEWAY_ROOT / "network" / "KtorClientCompatibilityGateway.kt"
+        ios_adapter = IOS_MOBILE_GATEWAY_ROOT / "network" / "KtorClientCompatibilityGateway.kt"
+        if not android_adapter.is_file() or not ios_adapter.is_file():
+            issues.append(
+                ContractIssue(
+                    _relative(android_adapter, workspace_root),
+                    1,
+                    "Android and iOS compatibility adapters must both exist",
+                )
+            )
+        elif android_adapter.read_bytes() != ios_adapter.read_bytes():
+            issues.append(
+                ContractIssue(
+                    _relative(ios_adapter, workspace_root),
+                    1,
+                    "Android and iOS compatibility adapters must remain byte-identical",
+                )
+            )
 
-    for source in sorted(gateway_root.rglob("*Gateway.kt")):
+    sources = sorted(
+        source
+        for root in gateway_roots
+        for source in root.rglob("*Gateway.kt")
+    )
+    for source in sources:
         text = source.read_text(encoding="utf-8")
         relative = _relative(source, workspace_root)
         http_matches = list(_HTTP_CALL.finditer(text))

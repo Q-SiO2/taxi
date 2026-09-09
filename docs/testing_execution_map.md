@@ -1,0 +1,396 @@
+# TaxiMobile — Test Execution and Promotion Map
+
+## 1. How to use this map
+
+This is the operational control board for taking TaxiMobile from repository
+verification to a deployable city service. The detailed scenario contracts remain
+in [`testing.md`](testing.md), workload mechanics in
+[`testing_workloads.md`](testing_workloads.md), security packs in
+[`threat_model.md`](threat_model.md), and unresolved acceptance criteria in
+[`gaps.md`](gaps.md). This map defines sequence, ownership, entry and exit gates,
+minimum evidence, and when simulated or real participants may be introduced.
+
+No row is a calendar promise. A phase advances only when its exit gate is signed
+for one immutable candidate. Passing a later phase never excuses an earlier one.
+Any material code, provider, city configuration, tariff, service-area, routing
+graph, map style, mobile artifact, infrastructure topology, or security-policy
+change invalidates the affected evidence and sends that scope back to the earliest
+impacted phase.
+
+**Current position (2026-09-08):** most subsystems have broad T1–T3 evidence,
+including a fresh migration-through-`20260908_0052` PostGIS run with 990 passing
+backend tests and no failures, errors or skips. The staff-grant dual-control slice
+also has focused PostGIS, API, JS and Wasm evidence. Migration 0050 and its
+security-incident workflow, one-time postmortem completion and deadline telemetry
+now include four closed responsibilities, exact-market responder eligibility,
+one active assignee per responsibility and append-visible reassignment history.
+The incident slice has dedicated 16-unit/static and two-PostGIS evidence included
+in that complete regression, plus 57 passing tests per JS/Wasm browser target and
+111 validated web HTTP operations after the protected incident workspace was
+extended. The candidate capacity surface
+has 22 fixed Prometheus queries, 21 profile thresholds, explicit per-process
+database-pool bounds, 26 validated alert rules and a 26-panel operations
+dashboard. This remains dirty-workspace local evidence. Some browser/emulator
+evidence has started at T4, and no subsystem has complete T4–T8 acceptance. No
+real-user phase is authorized.
+
+## 2. Promotion path
+
+| Phase | Test population | Environment | Primary question | Exit authority |
+| --- | --- | --- | --- | --- |
+| T0 | None | Source tree | Is the candidate structurally valid and reviewable? | Engineering |
+| T1 | Generated inputs | Unit/component harnesses | Do isolated rules fail safely? | Engineering |
+| T2 | Simulated passenger, driver, applicant, staff and attacker personas | In-process/fake-provider contracts | Are complete journeys and hostile inputs specified consistently? | Engineering + security for security packs |
+| T3 | Synthetic multi-role accounts | Local fresh migrated PostGIS and real child processes | Do API, database and workers preserve authoritative state under concurrency? | Engineering |
+| T4 | Testers on supported devices and browsers | Device/browser laboratory | Can people complete journeys across OS, language, accessibility and network states? | Product + accessibility/device owner |
+| T5 | Synthetic accounts only | Hosted production-like staging | Does the deployable topology meet load, security, recovery and provider-failure budgets? | Engineering + security + operations |
+| T6 | Trained staff using fictional records and journeys | Hosted staging | Can the operating organization run and recover the service without developers editing data? | Operations + city/operator owners |
+| T7 | Consenting staff and invited licensed drivers; no public service | Approved non-public roads/areas | Do devices, GPS, maps, routing and pickup procedures work physically and safely? | Product + operator + safety/legal |
+| T8 | Small invited real passenger and driver cohorts | One bounded production city window | Does the service meet frozen safety, reliability, money and support thresholds with real users? | Go/no-go board |
+| T9 | Guarded public users | One accepted city | Can exposure expand without violating stop thresholds? | Go/no-go board + city operator |
+| T10 | Real users in additional cities | Repeatable national platform | Is isolation, configuration, staffing and capacity repeatable rather than city-specific? | National + each city operator |
+
+## 3. Evidence packet required at every phase
+
+Create one immutable evidence directory per candidate and phase. Its index must
+contain:
+
+1. candidate commit and clean-tree statement, image/web/mobile artifact digests,
+   dependency lock identities, migration head and build provenance;
+2. environment/topology ID, city configuration bundle and versions of tariff,
+   payment capability, fixed routes, schedules, service area, map/style, routing
+   graph and providers used by the tests;
+3. scenario IDs, expected results, data classification, start/end timestamps,
+   executor and accountable reviewer;
+4. machine-readable test reports, sanitized logs, aggregate metrics, database
+   reconciliation and screenshots or recordings where human behavior matters;
+5. every defect, severity, affected population, mitigation, retest result and
+   explicit pass/fail/blocked decision;
+6. stop/rollback actions exercised, actual recovery time, unresolved risk and
+   evidence-retention/erasure date; and
+7. signatures or controlled ticket references from every authority required by
+   the phase. A typed `APPROVED` field or CLI confirmation is not a signature.
+
+Never place tokens, recovery codes, identity documents, precise participant
+location histories, unrestricted case text, payment instructions, or provider
+credentials in the packet. Preserve controlled references instead.
+
+### 3.1 Executable phase evidence
+
+The ordered catalog at
+[`../infra/testing/test-phase-catalog.json`](../infra/testing/test-phase-catalog.json)
+turns the T0–T10 boundaries into a machine-readable promotion contract. Start a
+candidate packet by copying
+[`../infra/testing/test-evidence-index.template.json`](../infra/testing/test-evidence-index.template.json)
+to the controlled evidence store; do not overwrite the repository template.
+Validate metadata with:
+
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/validate_test_phase_evidence.py `
+  --evidence path/to/candidate-test-evidence.json
+```
+
+Use `--require-through T3`, for example, only when the release action truly
+requires every phase through T3 to be accepted. The validator enforces ordered
+promotion, exact evidence kinds and authority functions, clean-candidate
+identity, digest-addressed references, defect disposition and the complete
+GAP-001–GAP-019 closure register before T8. It also rejects public users before
+T9, live money before T8, intentional failure injection in field/user phases,
+real-user evidence before T8, and sensitive credential/document/location fields
+in the index.
+
+This is a metadata integrity gate, not a signature verifier and not evidence
+that an external artifact, person, city, device or provider is genuine. The
+default template truthfully reports every phase `NOT_STARTED`; CI validates that
+catalog/template pair but cannot promote it. An accepted packet must live in an
+access-controlled immutable evidence system whose references and digests are
+verified by the named approvers.
+
+### 3.2 Security-incident promotion track
+
+The incident workflow must advance with the product rather than being tested for
+the first time during a real breach:
+
+| Phase | Required incident exercise | Promotion evidence |
+| --- | --- | --- |
+| T1 | Every valid/invalid state transition, all four responsibility values, initial assignment, eligibility/time/reference/version branches, postmortem completion/outcome/evidence branch, fixed-severity deadline bucket, unavailable snapshot, schema bound and narrative-redaction rule | Unit report and controlled payload corpus |
+| T2 | Simulated compromised passenger, driver, staff and leaked-provider-credential personas; eligible/inactive/expired/revoked/wrong-market responsibility candidates; replay, stale version, cross-scope and reference-confusion attacks | API/security-pack report with expected status/error matrix and generic candidate-refusal proof |
+| T3 | Real PostGIS row locking, concurrent responsibility assignment and timeline appends, one-active-role uniqueness, append-visible tenure trigger, idempotent replay, audit linking, append-only timeline trigger, one-time postmortem completion/deadline transition, account/session containment and staff-grant request linkage | Migrated database report and sanitized responsibility/audit/timeline/metric reconciliation |
+| T4 | Security lead reviews and reassigns responsibility in the web workspace with keyboard/screen reader, narrow viewport, stale state, MFA step-up and network loss | Recordings, accessibility report, role-comprehension result and no-replay proof |
+| T5 | Hosted synthetic incident and time-shifted deadline produce the exact fixed-severity alerts; responders acknowledge/escalate, rotate a disposable provider secret, revoke synthetic sessions, exercise failover and preserve bounded evidence | Prometheus/receiver/incident timestamps, secret-manager audit reference and RTO/RPO result |
+| T6 | Named staff run passenger, driver, staff-account and provider-credential tabletop/technical drills without direct database edits; every exercise assigns response, communications, operations and postmortem ownership from the approved duty roster | Roster/shift references, responsibility handoff history, containment timings, communication decision and postmortem owner |
+| T7 | Field exercise invokes pause/support while synthetic or consenting staff devices are active; no public exposure | Device/field trace, safety handoff and recovery acceptance |
+| T8 | Real-user pilot monitoring proves incident paging, pause and communications governance for the bounded cohort | Signed incident/no-incident review for every pilot window |
+| T9+ | Rehearse one-city containment without leaking or interrupting another city, then repeat on the national duty cadence | Cross-city isolation evidence and closed follow-up actions |
+
+Any exercise that cannot identify the incident lead, current state, next action,
+authoritative containment record and communication owner is a failed exercise.
+Synthetic incident summaries and references are erased under the approved test
+retention policy; immutable audit evidence retains no copied narrative.
+
+## 4. Phase cards
+
+### T0 — source and candidate integrity
+
+**Entry:** a proposed candidate and documented scope exist.
+
+**Execute:** documentation/link/status validators; formatting/lint/static analysis;
+OpenAPI and mobile/web contract generation; migration-chain and offline-SQL checks;
+deterministic OpenAPI-operation, migration-graph and role-permission inventory;
+secret scanning; dependency lock and license checks; Android/iOS/web compile graph;
+container build, SBOM, provenance and vulnerability gates; configuration and
+production-manifest validators. Validate strict client version/build metadata in
+both mobile and web artifacts and a complete six-surface minimum/recommended
+policy in every production-like manifest.
+
+**Exit:** all required jobs pass from the same clean immutable commit; generated
+contracts have no unexplained drift; no committed secret; no unreviewed migration;
+the generated source-contract inventory is hash-bound to candidate evidence;
+high/critical supply-chain findings are fixed or independently accepted within a
+bounded non-launch scope.
+
+### T1 — unit, property and component behavior
+
+**Entry:** T0 passes for the changed scope.
+
+**Execute:** state transitions, authorization and city/operator isolation; fare and
+fee conservation; matching eligibility/fairness; schedule overlap and time zones;
+idempotency/replay; rate and size limits; retention/erasure/hold rules; provider
+adapter timeout/malformed/oversized/redirect behavior; localization parity;
+accessibility semantics; log/metric/push redaction; workload and monitoring parser
+mutation tests.
+For staff authority, generate every request/decision status, identity role,
+scope shape, expiry boundary, expected-version mismatch and continuity count;
+assert that no intermediate database state satisfies only half a decision.
+For security incidents, generate all four responsibility values, every candidate
+eligibility failure, same-assignee conflict, backdated/future assignment, stale
+version, duplicate idempotency key and completed-postmortem refusal. Prove that a
+reassignment changes one active tenure into one released tenure plus one active
+tenure without exposing candidate existence outside the authorized market.
+
+**Exit:** deterministic tests cover every changed success, denial, duplicate,
+timeout and rollback branch; no client can manufacture authoritative state; all
+known S0/S1 defects are closed.
+
+### T2 — simulated personas and adversarial journeys
+
+**Entry:** T1 rules pass and each journey has an expected authoritative end state.
+
+**Execute:** scripted new/returning/disabled passengers; eligible/ineligible/
+offline/busy drivers; applicant/reviewer/finance/support/safety/city/platform roles;
+cross-user, cross-city and cross-operator attackers; immediate, fixed-route and
+scheduled rides; cash and manual-transfer states; cancellation, decline, expiry,
+no-supply, stale UI, duplicate command, lost response and provider outage.
+Include maker, checker, target, wrong-market, suspended-target, expired-admin and
+quorum-bootstrap personas; simulate duplicate pending submissions, competing
+approve/reject decisions and an ambiguous response after commit.
+Add incident commander, communications lead, operations liaison and postmortem
+owner personas. Exercise absent, inactive, expired, revoked and wrong-market
+candidates through the same generic refusal, then reconcile the approved roster
+reference, current lead, responsibility history and generated timeline facts.
+
+**Exit:** every critical journey has a stable scenario ID; API result, database
+facts, audit, notification/outbox and money facts reconcile; the simulator emits
+no personal data and cannot bypass backend authority.
+
+### T3 — fresh-PostGIS multi-role system tests
+
+**Entry:** T2 scripts and synthetic fixtures are frozen; the isolated database can
+be destroyed safely and rebuilt through the current migration head.
+
+**Execute:** full backend suite; real HTTP/CLI/worker child processes; migration
+upgrade/downgrade/preflight and concurrent migrator ownership; lock-order races;
+worker lease/kill/reclaim; dispatch contention; account/city-authorization changes
+during assignment; location/schedule handoff races; cash/transfer/refund database
+conservation; backup and current-head restore rehearsal.
+
+The staff slice must additionally prove migration 0049 upgrade/downgrade,
+partial-unique pending requests, market-lock serialization, stale-authority
+revalidation, request/grant/audit atomicity, two-admin continuity and closure of
+the offline quorum bootstrap after its third member.
+
+The incident slice must prove migration 0052 upgrade/downgrade/backfill, the
+partial unique active-responsibility index, one-time release trigger, concurrent
+assignment serialization, lead-field synchronization, generated timeline order,
+minimized audit metadata and postmortem-complete mutation refusal.
+
+**Exit:** a fresh database run has zero failures/errors/skips except explicitly
+reviewed platform exclusions; every synthetic account/ride/offer/booking/payment/
+outbox/audit row reconciles; no orphan process/database remains; evidence is
+repeatable from a clean checkout.
+
+### T4 — device, browser, accessibility and degraded-network lab
+
+**Entry:** signed or release-equivalent candidate artifacts point only to the test
+environment; supported OS/browser/device/language matrix and test accounts are
+approved.
+
+**Execute:** Android and iOS install/upgrade/restart/background/permission flows;
+narrow/wide operations and applicant browsers; EN/FR/AR and RTL; screen reader,
+font scaling, contrast, focus and touch targets; account recovery secret storage;
+map fallback; GPS freshness/battery; push foreground/background/killed app;
+offline/slow/loss/duplicate responses; crash capture and symbols. Exercise a
+current, optionally outdated, intentionally obsolete, malformed and unreachable-
+preflight build on each applicable surface. Obsolete clients must show the
+approved blocked state without sign-in or command execution; current clients
+must restore normally.
+
+For staff access, test queue comprehension, keyboard-only selection, focus return,
+screen-reader identity/action/version announcements, typed confirmation, narrow
+layouts, stale refresh and MFA-step-up without automatic command replay.
+For incident responsibility, test recognition of active versus released tenure,
+the four role labels, exact-UUID error prevention, confirmation clearing,
+stale-version recovery and screen-reader announcement of the authoritative
+current assignment without a broad user-search or roster-disclosure surface.
+
+**Exit:** all critical journeys are usable on the minimum supported matrix; no
+secret or private data leaks through screen, clipboard, cache, logs or analytics;
+crashes and accessibility blockers are below approved thresholds; unresolved S2
+findings have an owner disposition before T7.
+
+### T5 — hosted staging, capacity, security and failure recovery
+
+**Entry:** production-like hosted topology, protected monitoring, synthetic data,
+named responders, approved SLO/RPO/RTO and an owner-approved workload profile exist.
+
+**Execute:** WARMUP/STEADY/BURST/RECOVERY and soak with independent API/worker
+replicas; all critical read/write and worker loops; database plans, locks, pools,
+CPU/IO/storage/network; queue/dead-letter/oldest-age; route/geocode/tile/push/
+scanner/pager latency and outage; replica kill, connection exhaustion, database
+restart/failover, object-store denial, alert receiver failure, restore, rollback,
+forward-fix, secret rotation and emergency city pause; SEC-01–SEC-11 plus independent
+penetration review. Raise the minimum from an accepted old build to the candidate,
+observe HTTP `426` and WebSocket `4406`, verify mobile/web guidance and support
+communication, then exercise the approved policy rollback or forward-fix without
+weakening authentication or deleting user data.
+
+**Exit:** workload, monitoring and reconciliation all pass the frozen profile;
+resource headroom and cost envelope are accepted; primary and backup responders
+receive and resolve alerts; restore/failover/rollback meet RPO/RTO; no open critical
+or high security issue lacks independently approved bounded treatment.
+
+### T6 — trained-staff synthetic operating rehearsal
+
+**Entry:** T5 passes; named least-privilege staff have MFA, runbooks and on-call
+coverage; all data and payment records remain fictional.
+
+**Execute:** city setup and two-person release; driver application/document review;
+tariff/payment/fixed-route/schedule publication; immediate and scheduled journeys;
+cash/transfer/refund reconciliation; routine support and urgent safety paging;
+shift handoff; joiner/mover/leaver and account containment; provider outage,
+database restore, release rollback and emergency pause.
+Run a shift-handoff incident exercise in which the approved roster changes at
+least two responsibilities, the prior tenures remain visible, the new response
+lead is authoritative, communications and postmortem ownership are understood,
+and no developer or direct SQL intervention is used.
+
+**Exit:** staff diagnose and recover without hidden developer/database edits;
+response times meet targets; every privileged action is scoped/audited; finance,
+safety, privacy, release and shift-handoff reviews are signed.
+
+### T7 — closed-cohort non-public field validation
+
+**Entry:** legal, insurance, participant-consent and safety plan approved; T4–T6
+pass; participants can stop immediately; no public passenger or unapproved money.
+
+**Execute:** dense/edge/weak-network/GPS-obstructed geography; one-way roads and
+landmarks; online/location/offer/decline/expiry; pickup/navigation/arrival/start/
+completion; fixed-route direction recognition; scheduled punctuality and fallback;
+app kill/restart and long-shift battery; delayed/lost push; accessibility/language;
+support contact, pause and rollback while devices are in the field.
+
+**Exit:** pre-approved route, pickup, GPS freshness, battery, notification, crash,
+task-success, comprehension and response thresholds pass; no safety or privacy
+stop event remains unresolved; participant feedback and withdrawals are closed out.
+
+### T8 — bounded real-user city pilot
+
+**Entry:** every applicable P0 gap has a signed closure; production artifacts and
+configuration are frozen; public support, duty roster, rollback and city-pause
+owners are active; participant limits and exposure steps are approved.
+
+**Execute:** invite a small licensed-driver and passenger cohort for one service
+area and operating window. Increase only one of users, hours, geography or feature
+set at a time. Monitor assignment, pickup, completion, cancellation, fairness,
+payments, provider quality, crashes, support/safety and privacy-safe feedback.
+
+**Exit:** minimum sample/exposure and observation window are met; aggregate service,
+safety, money, support and fairness thresholds pass; all incidents and defects have
+signed dispositions; rollback/pause remains proven. T8 is not permission for public
+city-wide service.
+
+### T9 — guarded public city launch
+
+**Entry:** T8 exit review authorizes a named city/configuration/candidate and sets
+daily exposure steps, stop thresholds and decision times.
+
+**Execute:** progressively expand cohort, hours and area; compare every window to
+the frozen T5/T7/T8 baseline; review capacity, supply, cancellations, money,
+support/safety, provider errors and fairness daily; preserve instant city pause,
+feature disablement and rollback.
+
+**Exit:** the defined stabilization window passes with sustainable staffing,
+provider capacity, cost, supply and SLOs; post-launch review records corrections
+and whether expansion is approved, held or rolled back.
+
+### T10 — second-city and national repeatability
+
+**Entry:** first-city closeout is accepted and the next city has its own legal,
+operator, tariff, provider, language, geography, staffing and capacity approvals.
+
+**Execute:** repeat T4–T9 for city-specific behavior; test cross-city/operator data
+and authority isolation; simultaneous city peaks and emergencies; national control
+plane, analytics suppression, support routing, provider quotas, database growth,
+backup/failover and cost forecasts.
+
+**Exit:** at least a second city launches through the same controlled procedure;
+city isolation and simultaneous-load thresholds pass; national operations can
+pause, support, restore and audit one city without affecting another.
+
+## 5. Stop and rollback rules
+
+Stop the current test immediately for suspected safety harm, wrong assignment,
+authorization bypass, cross-scope data exposure, account compromise, money loss
+or misdirection, unrecoverable corruption, missing urgent escalation, or inability
+to pause/rollback. Freeze new arrivals, preserve minimum necessary evidence, keep
+active participants safe, invoke the incident owner, and reconcile authoritative
+state before restarting. Do not erase evidence or retry with new idempotency keys
+to make an ambiguous result appear successful.
+
+T5–T9 additionally stop when workload monitoring is incomplete, a protected
+monitoring surface is publicly reachable, a critical alert reaches neither duty
+receiver, capacity/resource headroom falls below its approved floor, or the run
+uses a different artifact/configuration/profile than the evidence index records.
+
+## 6. Minimum cohort design before real users
+
+Before T7 or T8, freeze—not infer during the run—the participant count, journey
+count, geography, operating hours, device/language/accessibility representation,
+driver supply ratio, observation window, thresholds, confidence/decision rule,
+withdrawal process and compensation. Product, operator, safety and privacy/legal
+owners approve the design. Small samples may discover usability or safety defects,
+but must not be presented as statistical proof of national demand, fairness,
+reliability or capacity.
+
+Use T7 for physical truth without public service. Use T8 only for questions that
+cannot be answered safely with synthetic or trained participants. Never generate
+fake production demand, mix automated load with real cohorts, or expose real users
+to intentional destructive chaos.
+
+## 7. Current next actions
+
+1. Produce one clean immutable T0/T1/T3 candidate run through migration 0052 and
+   retain its provenance, including responsibility migration and concurrency
+   evidence, in a validated candidate evidence index.
+2. Complete the T4 device/browser matrix and decide the foreground driver-location
+   model from measured battery, freshness and dispatch behavior.
+3. Provision production-like T5 staging and protected provider credentials.
+4. Approve SLO/RPO/RTO and replace the DRAFT capacity profile with a controlled,
+   signed pilot-city profile; collect workload, application/queue and host/database
+   resource evidence together.
+5. Complete independent security review, real alert routing, restore/failover and
+   rollback/city-pause exercises.
+6. Establish the authoritative incident duty roster and escalation receiver, then
+   run the T6 responsibility-handoff/containment rehearsal; only afterward approve
+   and recruit a T7 closed cohort.
+7. Close every applicable P0 record before requesting a T8 real-user decision.

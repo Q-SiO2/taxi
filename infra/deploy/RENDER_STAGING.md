@@ -10,7 +10,9 @@ are not application servers and must not be used as the live TaxiMobile API.
 The Blueprint provisions four resources in Frankfurt:
 
 1. One public HTTPS FastAPI web service.
-2. One private background worker for matching, outbox, and credential lifecycle.
+2. One private background worker for matching, outbox, credential lifecycle,
+   scheduling handoff, privacy-bounded analytics refresh, case-alert paging, and
+   legal-hold-aware case retention.
 3. One private, disk-backed Valhalla service with a dated Morocco extract.
 4. One managed PostgreSQL 16 database with no public ingress. Migration `0001`
    enables Render's supported PostGIS extension before the remaining migrations.
@@ -62,14 +64,29 @@ support message. Use the browser credential flow or a credential manager.
 2. Choose **New → Blueprint**.
 3. Select the repository and `main` branch.
 4. Set the Blueprint path to `infra/deploy/render.staging.yaml`.
-5. Review the four resources and the estimated charge before applying.
-6. Wait for the database, Valhalla graph build, migration, API, and worker to
+5. Supply the API's independent
+   `TAXIMOBILE_OPERATIONS_MFA_ENCRYPTION_KEY` as an unpadded base64url encoding
+   of exactly 32 random bytes. Also set `TAXIMOBILE_CORS_ORIGINS` to the exact
+   HTTPS operations-web origin; the operations web and API must be same-site or
+   share a reverse proxy for the strict cookie.
+6. Supply the worker's secret `TAXIMOBILE_CASE_PAGER_URL` (HTTPS) and an
+   independent 32+ character `TAXIMOBILE_CASE_PAGER_TOKEN`. The endpoint
+   must accept the minimal authenticated alert envelope documented in
+   `../../docs/operations.md`; do not route it to a general logging collector.
+7. Review the four resources and the estimated charge before applying.
+8. Wait for the database, Valhalla graph build, migration, API, and worker to
    become healthy. The first routing build is expected to take longer than an API
    redeploy because it downloads and processes the pinned Morocco extract.
 
 Do not make the database or Valhalla service public. Do not replace generated
 secrets with memorable values. If a resource fails, inspect its deployment logs;
 do not copy environment values into an issue or chat.
+
+Cash is ready by default. To enable the single-recipient manual bank/M-Wallet
+pilot, add `TAXIMOBILE_MANUAL_TRANSFER_ENABLED` and the three
+`TAXIMOBILE_TRANSFER_*` settings documented in `../README.md` to the API service only, verify the
+recipient and reconciliation runbook, then redeploy. Never add them to the
+worker, repository, or mobile build. CMI/card processing remains deferred.
 
 ## 4. Verify the public boundary
 
@@ -103,6 +120,19 @@ python -m taximobile_api.operations.render_entrypoint bootstrap-admin --email op
 The command reads the password twice from the hidden prompt. It permits only the
 first administrator and never promotes an existing passenger or driver account.
 Do not use a personal production password in staging.
+
+Map the same account to the first market-scoped operations grant, then enroll
+its authenticator factor from the same trusted Render shell:
+
+```text
+python -m taximobile_api.operations.render_entrypoint bootstrap-operations --email operator@example.com --market-code MA
+python -m taximobile_api.operations.render_entrypoint enroll-mfa --email operator@example.com
+```
+
+The enrollment command prints the provisioning URI and recovery codes exactly
+once. Keep the shell private and store recovery codes offline. For an approved
+factor-loss recovery, rerun the second command with `--replace-existing`; the new
+factor is confirmed before commit and all prior operations sessions are revoked.
 
 ## 6. Point Android user-testing builds at staging
 

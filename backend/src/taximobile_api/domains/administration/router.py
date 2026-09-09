@@ -18,7 +18,12 @@ from taximobile_api.domains.administration.schemas import (
     PricingRuleCreateRequest,
     PricingRuleResponse,
 )
-from taximobile_api.domains.administration.service import audit, revoke_user_access
+from taximobile_api.domains.administration.service import (
+    audit,
+    revoke_user_access,
+    suspend_locked_user_access,
+)
+from taximobile_api.domains.auth.authority import lock_user_for_status_change
 from taximobile_api.domains.auth.dependencies import CurrentPrincipal, administrator
 from taximobile_api.domains.auth.models import Role, User, UserRole, UserStatus
 from taximobile_api.domains.auth.router import database_session
@@ -33,7 +38,13 @@ from taximobile_api.domains.drivers.models import (
     VerificationStatus,
 )
 from taximobile_api.domains.drivers.schemas import DriverProfileResponse, VehicleResponse
-from taximobile_api.domains.pricing.models import PricingModel, PricingRule, PricingRuleStatus
+from taximobile_api.domains.pricing.models import BookingType, PricingModel, PricingRule, PricingRuleStatus
+from taximobile_api.domains.markets.constants import (
+    LEGACY_CITY_ID,
+    LEGACY_CONFIGURATION_VERSION_ID,
+    LEGACY_OPERATOR_ID,
+)
+from taximobile_api.domains.markets.models import CityConfigurationService, ServiceType
 
 
 router = APIRouter(prefix="/admin", tags=["administration"])
@@ -91,7 +102,7 @@ async def list_audit_logs(
 
 
 async def locked_user_or_404(session: AsyncSession, user_id: UUID) -> User:
-    user = await session.scalar(select(User).where(User.id == user_id).with_for_update())
+    user = await lock_user_for_status_change(session, user_id)
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User account not found.")
     return user
@@ -174,13 +185,10 @@ async def suspend_user(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="A deactivated account cannot be suspended.",
             )
-        previous_status = user.status
-        user.status = UserStatus.SUSPENDED
-        user.updated_at = changed_at
-        sessions_revoked, devices_revoked = await revoke_user_access(
+        previous_status, sessions_revoked, devices_revoked = await suspend_locked_user_access(
             session,
-            user_id=user.id,
-            revoked_at=changed_at,
+            user=user,
+            changed_at=changed_at,
         )
         await audit(
             session,
@@ -333,6 +341,16 @@ async def approve_driver(
         )
         if driver_role is None:
             session.add(UserRole(user_id=profile.user_id, role=Role.DRIVER))
+        # The broad MVP route remains only as a Casablanca compatibility
+        # bridge.  It cannot authorize another city; the scoped operations
+        # decision endpoint owns all national approvals.
+        from taximobile_api.domains.driver_applications.service import sync_legacy_approval
+
+        await sync_legacy_approval(
+            session,
+            profile=profile,
+            reviewer_user_id=principal.user_id,
+        )
         await audit(
             session,
             actor_user_id=principal.user_id,
@@ -382,6 +400,10 @@ async def create_pricing_rule(
     session: AsyncSession = Depends(database_session),
 ) -> PricingRuleResponse:
     rule = PricingRule(
+        city_id=LEGACY_CITY_ID,
+        operator_id=LEGACY_OPERATOR_ID,
+        service_type=ServiceType.ON_DEMAND,
+        booking_type=BookingType.IMMEDIATE,
         name=payload.name,
         version=payload.version,
         model=PricingModel.FIXED,
@@ -433,6 +455,10 @@ async def activate_pricing_rule(
                 .where(
                     PricingRule.status == PricingRuleStatus.ACTIVE,
                     PricingRule.id != rule.id,
+                    PricingRule.city_id == rule.city_id,
+                    PricingRule.operator_id == rule.operator_id,
+                    PricingRule.service_type == rule.service_type,
+                    PricingRule.booking_type == rule.booking_type,
                     PricingRule.effective_from < (rule.effective_until or datetime.max.replace(tzinfo=UTC)),
                     or_(PricingRule.effective_until.is_(None), PricingRule.effective_until > rule.effective_from),
                 )
@@ -447,7 +473,22 @@ async def activate_pricing_rule(
             )
         for active in active_rules:
             active.effective_until = rule.effective_from
+        # Persist the closed predecessor ranges before enabling the successor.
+        # PostgreSQL exclusion constraints are checked per statement, so one
+        # unordered ORM flush could otherwise activate the successor first.
+        if active_rules:
+            await session.flush()
         rule.status = PricingRuleStatus.ACTIVE
+        compatibility_service = await session.scalar(
+            select(CityConfigurationService)
+            .where(
+                CityConfigurationService.configuration_version_id == LEGACY_CONFIGURATION_VERSION_ID,
+                CityConfigurationService.service_type == ServiceType.ON_DEMAND,
+            )
+            .with_for_update()
+        )
+        if compatibility_service is not None:
+            compatibility_service.tariff_version_id = rule.id
         await audit(
             session,
             actor_user_id=principal.user_id,

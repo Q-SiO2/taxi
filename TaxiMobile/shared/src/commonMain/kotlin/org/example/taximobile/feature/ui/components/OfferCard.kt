@@ -19,6 +19,8 @@ fun OfferCard(
     pickupSummary: String,
     distanceAndEta: String?,
     fare: String?,
+    /** Backend-authored fare/settlement facts; this component performs no math. */
+    details: List<String> = emptyList(),
     expiryLabel: String,
     expiryFraction: Float? = null,
     acceptEnabled: Boolean = true,
@@ -35,6 +37,9 @@ fun OfferCard(
             Text(pickupSummary, style = MaterialTheme.typography.bodyLarge)
             distanceAndEta?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = TaxiColors.Ink700) }
             fare?.let { Text(it, style = MaterialTheme.typography.titleSmall) }
+            details.forEach { detail ->
+                Text(detail, style = MaterialTheme.typography.bodyMedium, color = TaxiColors.Ink700)
+            }
             Text(expiryLabel, style = MaterialTheme.typography.bodySmall, color = TaxiColors.Ink500)
             expiryFraction?.let { progress ->
                 LinearProgressIndicator(

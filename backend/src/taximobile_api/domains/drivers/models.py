@@ -12,6 +12,7 @@ from sqlalchemy.dialects.postgresql import UUID as PostgreSQLUUID
 from sqlalchemy.orm import Mapped, mapped_column
 
 from taximobile_api.db.base import Base
+from taximobile_api.domains.markets.models import ServiceType, bounded_enum
 
 
 class VerificationStatus(StrEnum):
@@ -85,6 +86,19 @@ class DriverProfile(Base):
         default=AvailabilityStatus.OFFLINE,
     )
     active_vehicle_id: Mapped[UUID | None] = mapped_column(PostgreSQLUUID(as_uuid=True), nullable=True)
+    # The selected operational scope is explicit.  A driver may hold several
+    # city authorizations but can be online in only this one city/service at a
+    # time; OFFLINE clears both fields.
+    online_city_id: Mapped[UUID | None] = mapped_column(
+        PostgreSQLUUID(as_uuid=True),
+        ForeignKey("cities.id", ondelete="RESTRICT"),
+        nullable=True,
+        index=True,
+    )
+    online_service_type: Mapped[ServiceType | None] = mapped_column(
+        bounded_enum(ServiceType, "driver_authorization_service_type", 20),
+        nullable=True,
+    )
     # The beginning of the current uninterrupted waiting period. It is set
     # when an eligible driver explicitly becomes available, preserved across
     # declined/expired offers, and cleared whenever the driver leaves the

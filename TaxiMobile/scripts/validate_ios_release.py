@@ -45,9 +45,13 @@ def validate_release_configuration(
     validate_url("TAXIMOBILE_MAP_STYLE_URL", map_url, origin_only=False)
     if not build_number.isdigit() or int(build_number) < 1:
         raise ReleaseConfigurationError("CURRENT_PROJECT_VERSION must be a positive integer.")
-    if not re.fullmatch(r"[0-9]+(?:\.[0-9]+){1,2}", version):
+    if not re.fullmatch(
+        r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)"
+        r"(?:\.(?:0|[1-9][0-9]*))?",
+        version,
+    ):
         raise ReleaseConfigurationError(
-            "MARKETING_VERSION must contain two or three numeric components, such as 1.0.0."
+            "MARKETING_VERSION must contain three or four numeric components, such as 1.0.0."
         )
     if crash_reporting_enabled not in {"YES", "NO"}:
         raise ReleaseConfigurationError("TAXIMOBILE_CRASH_REPORTING_ENABLED must be YES or NO.")

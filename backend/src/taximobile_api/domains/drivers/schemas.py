@@ -3,6 +3,9 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
+from taximobile_api.domains.fixed_routes.schemas import FixedRouteRideSummary
+from taximobile_api.domains.markets.models import ServiceType
+
 
 class DriverApplicationRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -99,6 +102,14 @@ class ActiveVehicleRequest(BaseModel):
 class AvailabilityResponse(BaseModel):
     status: str
     vehicle_id: UUID | None
+    city_id: UUID | None = None
+    service_type: str | None = None
+
+
+class OnlineAvailabilityRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    city_id: UUID | None = None
+    service_type: ServiceType = ServiceType.ON_DEMAND
 
 
 class LocationUpdateRequest(BaseModel):
@@ -120,6 +131,8 @@ class DriverRideResponse(BaseModel):
     id: UUID
     status: str
     completed_at: datetime | None
+    service_type: str = "ON_DEMAND"
+    fixed_route: FixedRouteRideSummary | None = None
 
 
 class DriverRideListResponse(BaseModel):

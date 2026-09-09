@@ -1,5 +1,14 @@
 # TaxiMobile — Design and UI Guidelines
 
+## Current standing — 2026-09-03
+
+The map-first Compose identity, shared components, passenger and driver flows,
+localized English/French/Arabic content, RTL handling, graphical asset fallbacks,
+applicant web, and operations web are present in source. This is not UX
+acceptance: representative-device layout, screen-reader, keyboard, contrast,
+reduced-motion, weak-network, browser, and real-user usability evidence remains
+open. See [`gaps.md`](gaps.md).
+
 ## Purpose
 
 Define the boundaries between product functionality and visual design.
@@ -14,7 +23,9 @@ The approved visual identity — colors, typography, branding, layout chrome, ic
 
 The project owner retains final control over visual changes. Coding agents must follow `ui.md` when implementing UI polish and must not invent a competing palette, type system, or interaction language.
 
-Until a UI wave in `ui.md` is explicitly scheduled, keep the shared Compose shell minimal and functional. Do not apply the polished map-first chrome merely because tokens exist on paper.
+The map-first identity and national operations extensions are now implemented in
+source. New work must extend that identity instead of reverting to a minimal
+developer shell or inventing a competing visual system.
 
 ## Platforms
 
@@ -46,6 +57,13 @@ On success, both native apps return to sign-in, prefill the submitted email or
 phone identifier, clear the password, and show an explicit confirmation. On
 failure, they retain the account form and show the safe actionable network,
 validation, conflict, or throttling message supplied by application state.
+
+Signed-out recovery uses one previously saved offline code. The shared form is
+localized, validates only input shape, submits through the backend gateway, and
+always describes a reachable backend result conditionally so account/code
+validity cannot be inferred. On accepted response it clears the recovery code
+and new password before returning to sign-in. A network or request-shape failure
+keeps the form but must never echo either secret.
 
 Authenticated product actions use the same interaction rule. A synchronous
 shared gate runs before coroutine launch, allows only one backend action at a
@@ -209,8 +227,20 @@ For the most recent completed passenger ride, the app fetches and displays the
 backend-finalized fare and payment method/status as a minimal receipt. It never
 derives a final fare from the quoted estimate or from local distance data, and
 does not present pending cash settlement as a successful payment.
+For manual bank/M-Wallet transfer, `PENDING` permits a passenger claim and
+`PROCESSING` means operator reconciliation is outstanding; neither is paid.
+Only `COMPLETED` renders verified success. Recipient and payment-reference data
+come only from the ride's backend snapshot, remain selectable/read-only, and are
+never replaced with locally configured values. The app accepts no financial
+credential or statement image.
 When the receipt includes stored fare components, the app renders those values
 and the captured tariff version without reconstructing a breakdown locally.
+When confirmed refunds exist, the receipt retains that original fare and renders
+only backend-returned refunded total, net paid, currency, closed reason labels,
+and refund rows. `REFUNDED` means the complete original payment was returned; it
+does not mean the transfer was unverified or needs to be sent again. Evidence
+references, administrator identity, and private notes never appear in passenger
+presentation.
 
 The driver product retrieves currently valid backend offers after availability
 refresh. It displays pickup, approximate backend pickup distance/time, locked
@@ -241,15 +271,37 @@ reloads the full product state through the API; otherwise normal startup/session
 restore catches up. Push payloads never directly change a ride, offer,
 availability, fare, payment, notification read state, or visible identity.
 
-Both passenger and approved-driver views also show up to ten of the
-authenticated account's support-ticket summaries and provide the same minimal
-ticket form. The client displays only its own category, subject, and
-server-owned status; it does not expose ticket triage, another participant's
-information, safety-case handling, or financial adjustments. Ticket creation
-and the refreshed history remain API-confirmed. When either participant has an
-active ride, the app sends that server-issued ride identifier as the optional
-ticket association and says so without exposing the identifier; the backend
-still rejects an association the caller is not authorized to use.
+During an assigned active ride, both products show the latest backend-confirmed
+coordination signal and three role-specific fixed actions. Passengers see pickup,
+more-time, and cannot-find-driver choices; drivers see on-my-way, at-pickup, and
+cannot-find-passenger choices. The component has no free-text or contact-number
+surface. It is hidden before assignment and after terminal state, and unknown
+future codes render through a safe generic fallback rather than exposing raw
+backend values.
+
+Cancellation and driver state-transition controls remain before coordination
+actions so safety-critical progress is not displaced. While a signal is being
+sent, only the initiating action shows loading; alternative choices remain
+readable but disabled until authoritative refresh completes. Labels,
+notifications, and latest-message presentation must remain semantically usable
+in English, French, and Arabic/RTL, at large text sizes, and with TalkBack or
+VoiceOver. Physical-device acceptance remains a release gate.
+
+Both passenger and approved-driver views show up to ten of the authenticated
+account's support-ticket summaries and provide the same minimal ticket form. The
+client displays only its own category, subject, server-owned status, and latest
+participant-visible response; it does not expose priority, assignment, internal
+notes, another participant's information, or financial adjustments. Ticket
+creation and refreshed history remain API-confirmed. An active ride may be sent
+as an optional association; the backend still verifies participation.
+
+Safety is a distinct section, not a support category. It binds a controlled
+category and description to an active, selected, or recent backend ride, shows
+only reporter-safe status/public messages, and warns that TaxiMobile reporting
+is not an emergency service. The section remains complete without an optional
+illustration or icon. It never displays the reported person, submitted safety
+description after creation, internal notes, priority, responder, or deadline.
+Both creation forms clear only after backend confirmation.
 
 A backend-confirmed passenger cancellation immediately returns the app to the
 new-ride flow and keeps the cancelled journey in history. The terminal ride must
@@ -259,8 +311,10 @@ request can be started.
 For an active assigned ride, the driver UI exposes only the next documented
 server transition: en route, arrived, start, then complete with an explicitly
 reviewed completion coordinate. Android and iOS offer a one-shot foreground
-location request after a user action; they do not silently start background
-tracking. Manual coordinate entry remains a visible fallback when permission,
+location request after a user action. While backend-confirmed online, the same
+authorized one-shot adapter is scheduled only in the foreground and the UI tells
+the driver to keep the app open; it never requests permission automatically or
+starts background tracking. Manual coordinate entry remains a visible fallback when permission,
 location services, or device positioning is unavailable. Cash settlement remains
 a separate, explicit confirmation after completion and is never inferred from the
 ride-completion action.
@@ -285,6 +339,9 @@ or dispatch decision.
 “Go online” remains a separate action and fails visibly if that accepted location
 has become stale. Loading a phone coordinate into the form does not change driver
 availability, and submitting it does not itself make the driver dispatchable.
+After online entry, unavailable automatic observations produce an actionable
+localized warning and a 60-second retry backoff; the UI never implies that an old
+coordinate remains eligible.
 
 ## Accessibility
 

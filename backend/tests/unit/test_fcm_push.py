@@ -1,5 +1,6 @@
 import asyncio
 import json
+from datetime import UTC, datetime
 
 import httpx
 import pytest
@@ -21,7 +22,17 @@ class FakeAccessTokenProvider:
         return "refreshed-token" if force_refresh else "initial-token"
 
 
-def test_fcm_sends_only_minimized_cross_platform_refresh_data() -> None:
+@pytest.fixture(autouse=True)
+def fixed_provider_clock(monkeypatch):
+    monkeypatch.setattr("taximobile_api.integrations.push.fcm.time", lambda: 1800000000)
+
+
+def deadline(seconds=900):
+    return datetime.fromtimestamp(1800000000 + seconds, UTC)
+
+
+def test_fcm_sends_only_minimized_cross_platform_refresh_data(monkeypatch) -> None:
+    monkeypatch.setattr("taximobile_api.integrations.push.fcm.time", lambda: 1800000000)
     captured: dict = {}
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -40,6 +51,7 @@ def test_fcm_sends_only_minimized_cross_platform_refresh_data() -> None:
             registration_kind="FIREBASE_INSTALLATION_ID",
             event_type="DRIVER_ASSIGNED",
             resource_id="ride-id",
+            expires_at=deadline(),
         )
     )
     asyncio.run(client.aclose())
@@ -49,11 +61,60 @@ def test_fcm_sends_only_minimized_cross_platform_refresh_data() -> None:
     assert captured["authorization"] == "Bearer initial-token"
     assert message["fid"] == "firebase-installation-id"
     assert message["data"] == {"type": "DRIVER_ASSIGNED", "resource_id": "ride-id"}
-    assert message["android"] == {"priority": "HIGH"}
-    assert message["apns"]["headers"] == {"apns-priority": "5", "apns-push-type": "background"}
+    assert message["android"] == {"priority": "HIGH", "ttl": "900s"}
+    assert message["apns"]["headers"] == {
+        "apns-priority": "5",
+        "apns-push-type": "background",
+        "apns-expiration": "1800000900",
+    }
     assert message["apns"]["payload"] == {"aps": {"content-available": 1}}
     assert set(message) == {"fid", "data", "android", "apns"}
     assert tokens.calls == [False]
+
+
+def test_fcm_applies_informational_priority_and_bounded_ttl() -> None:
+    captured: dict = {}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        captured.update(json.loads(request.content)["message"])
+        return httpx.Response(200, json={"name": "message"})
+
+    client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+    provider = FcmPushProvider(
+        "taximobile-staging", FakeAccessTokenProvider(), client=client
+    )
+
+    asyncio.run(
+        provider.send_refresh(
+            registration_id="fid",
+            registration_kind="FIREBASE_INSTALLATION_ID",
+            event_type="DRIVER_CREDENTIAL_EXPIRING",
+            resource_id="credential",
+            expires_at=deadline(604800),
+        )
+    )
+    asyncio.run(client.aclose())
+
+    assert captured["android"] == {"priority": "NORMAL", "ttl": "604800s"}
+
+
+def test_fcm_rejects_unclassified_event_before_provider_access() -> None:
+    tokens = FakeAccessTokenProvider()
+    provider = FcmPushProvider("taximobile-staging", tokens)
+
+    with pytest.raises(ValueError, match="not allowed"):
+        asyncio.run(
+            provider.send_refresh(
+                registration_id="fid",
+                registration_kind="FIREBASE_INSTALLATION_ID",
+                event_type="PRIVATE_UNCLASSIFIED_EVENT",
+                resource_id="resource",
+                expires_at=deadline(),
+            )
+        )
+
+    assert tokens.calls == []
+    asyncio.run(provider.aclose())
 
 
 def test_fcm_refreshes_authorization_once_after_unauthorized_response() -> None:
@@ -75,6 +136,7 @@ def test_fcm_refreshes_authorization_once_after_unauthorized_response() -> None:
             registration_kind="FIREBASE_INSTALLATION_ID",
             event_type="RIDE_OFFER_AVAILABLE",
             resource_id="ride",
+            expires_at=deadline(),
         )
     )
     asyncio.run(client.aclose())
@@ -106,6 +168,7 @@ def test_fcm_distinguishes_invalid_registration_from_retryable_failure() -> None
                 registration_kind="LEGACY_FCM_TOKEN",
                 event_type="DRIVER_ASSIGNED",
                 resource_id="ride",
+                expires_at=deadline(),
             )
         )
     with pytest.raises(PushDeliveryUnavailable):
@@ -115,6 +178,7 @@ def test_fcm_distinguishes_invalid_registration_from_retryable_failure() -> None
                 registration_kind="FIREBASE_INSTALLATION_ID",
                 event_type="DRIVER_ASSIGNED",
                 resource_id="ride",
+                expires_at=deadline(),
             )
         )
     asyncio.run(client.aclose())
@@ -136,6 +200,7 @@ def test_fcm_preserves_legacy_token_targeting_during_fid_migration() -> None:
             registration_kind="LEGACY_FCM_TOKEN",
             event_type="DRIVER_ASSIGNED",
             resource_id="ride",
+            expires_at=deadline(),
         )
     )
     asyncio.run(client.aclose())
@@ -159,6 +224,7 @@ def test_fcm_revokes_a_not_found_firebase_installation_id() -> None:
                 registration_kind="FIREBASE_INSTALLATION_ID",
                 event_type="DRIVER_ASSIGNED",
                 resource_id="ride",
+                expires_at=deadline(),
             )
         )
     asyncio.run(client.aclose())

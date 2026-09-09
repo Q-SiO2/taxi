@@ -3,7 +3,7 @@ from math import asin, cos, radians, sin, sqrt
 
 from geoalchemy2 import Geometry
 from geoalchemy2.elements import WKTElement
-from sqlalchemy import and_, exists, func, or_, select
+from sqlalchemy import and_, exists, func, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from taximobile_api.domains.drivers.models import (
@@ -20,6 +20,12 @@ from taximobile_api.domains.drivers.models import (
     DriverLocation,
 )
 from taximobile_api.domains.drivers.schemas import DriverApplicationRequest, LocationUpdateRequest, VehicleCreateRequest
+from taximobile_api.domains.driver_applications.models import (
+    ApplicationEvidenceStatus,
+    CityApplicationStatus,
+    DriverApplicationEvidence,
+    DriverCityApplication,
+)
 
 
 class DriverApplicationExists(ValueError):
@@ -48,6 +54,33 @@ class VerificationSubmissionUnavailable(ValueError):
 
 class LocationRejected(ValueError):
     pass
+
+
+async def invalidate_open_application_vehicle_evidence(
+    database_session: AsyncSession,
+    vehicle_id,
+) -> None:
+    """Require fresh staff review after an applicant changes/deactivates a vehicle."""
+    editable_or_reviewable_applications = select(DriverCityApplication.id).where(
+        DriverCityApplication.status.in_(
+            {
+                CityApplicationStatus.NOT_STARTED,
+                CityApplicationStatus.SUBMITTED,
+                CityApplicationStatus.UNDER_REVIEW,
+                CityApplicationStatus.ADDITIONAL_INFORMATION_REQUIRED,
+            }
+        )
+    )
+    await database_session.execute(
+        update(DriverApplicationEvidence)
+        .where(
+            DriverApplicationEvidence.vehicle_id == vehicle_id,
+            DriverApplicationEvidence.application_id.in_(
+                editable_or_reviewable_applications
+            ),
+        )
+        .values(status=ApplicationEvidenceStatus.PENDING)
+    )
 
 
 def invalid_driver_credentials(driver_id, now: datetime):
@@ -82,6 +115,12 @@ async def apply_to_drive(
     await database_session.flush()
     database_session.add(DriverVerification(driver_id=profile.id, status=VerificationStatus.NOT_STARTED))
     await database_session.flush()
+    # Preserve the original `/drivers/apply` contract by attaching the new
+    # profile to the deterministic Casablanca compatibility application.  New
+    # city-aware clients use the dedicated application endpoint directly.
+    from taximobile_api.domains.driver_applications.service import ensure_legacy_city_application
+
+    await ensure_legacy_city_application(database_session, profile)
     return profile
 
 
@@ -115,11 +154,17 @@ async def submit_verification(database_session: AsyncSession, profile: DriverPro
     )
     database_session.add(verification)
     await database_session.flush()
+    from taximobile_api.domains.driver_applications.service import sync_legacy_submission
+
+    await sync_legacy_submission(database_session, profile)
     return verification
 
 
-async def driver_for_user(database_session: AsyncSession, user_id) -> DriverProfile:
-    profile = await database_session.scalar(select(DriverProfile).where(DriverProfile.user_id == user_id))
+async def driver_for_user(database_session: AsyncSession, user_id, *, lock: bool = False) -> DriverProfile:
+    statement = select(DriverProfile).where(DriverProfile.user_id == user_id)
+    if lock:
+        statement = statement.with_for_update().execution_options(populate_existing=True)
+    profile = await database_session.scalar(statement)
     if profile is None:
         raise DriverMissing("No driver application exists for this account.")
     return profile

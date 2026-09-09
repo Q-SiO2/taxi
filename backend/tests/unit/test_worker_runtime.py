@@ -138,6 +138,20 @@ async def test_background_worker_supervisor_owns_all_loops_and_stops_them(monkey
     monkeypatch.setattr("taximobile_api.workers.application.run_outbox_processor", loop("outbox"))
     monkeypatch.setattr("taximobile_api.workers.application.run_matching_processor", loop("matching"))
     monkeypatch.setattr("taximobile_api.workers.application.run_credential_lifecycle_processor", loop("credentials"))
+    monkeypatch.setattr("taximobile_api.workers.application.run_scheduling_processor", loop("scheduling"))
+    monkeypatch.setattr("taximobile_api.workers.application.run_analytics_processor", loop("analytics"))
+    monkeypatch.setattr(
+        "taximobile_api.workers.application.run_case_alert_processor",
+        loop("case_alerts"),
+    )
+    monkeypatch.setattr(
+        "taximobile_api.workers.application.run_case_retention_processor",
+        loop("case_retention"),
+    )
+    monkeypatch.setattr(
+        "taximobile_api.workers.application.run_driver_document_retention_processor",
+        loop("driver_document_retention"),
+    )
 
     class Publisher:
         async def publish_ride_refresh(self, *_args):
@@ -153,7 +167,16 @@ async def test_background_worker_supervisor_owns_all_loops_and_stops_them(monkey
     await asyncio.sleep(0)
 
     assert runtime.is_running
-    assert started == {"matching", "outbox", "credentials"}
+    assert started == {
+        "matching",
+        "outbox",
+        "credentials",
+        "scheduling",
+        "analytics",
+        "case_alerts",
+        "case_retention",
+        "driver_document_retention",
+    }
 
     await runtime.stop()
     assert not runtime.is_running

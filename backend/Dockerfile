@@ -6,7 +6,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-RUN groupadd --system taximobile && useradd --system --gid taximobile --home-dir /nonexistent --shell /usr/sbin/nologin taximobile
+RUN groupadd --gid 2000 taximobile && useradd --uid 2000 --gid taximobile --no-create-home --home-dir /nonexistent --shell /usr/sbin/nologin taximobile
+RUN install -d -o taximobile -g taximobile -m 0700 /var/lib/taximobile/driver-documents
+RUN install -d -o taximobile -g taximobile -m 0750 /var/log/taximobile
 
 COPY requirements.lock requirements-linux.lock ./
 RUN pip install --require-hashes --requirement requirements.lock --requirement requirements-linux.lock

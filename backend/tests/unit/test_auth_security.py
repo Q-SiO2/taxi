@@ -5,11 +5,14 @@ import jwt
 import pytest
 
 from taximobile_api.domains.auth.security import (
+    ACCOUNT_RECOVERY_CODE_COUNT,
     InvalidAccessToken,
     JWT_ALGORITHM,
     JWT_AUDIENCE,
     JWT_ISSUER,
     TokenService,
+    account_recovery_code_hash,
+    generate_account_recovery_codes,
     hash_password,
     new_refresh_token,
     password_hash_needs_rehash,
@@ -39,6 +42,21 @@ def test_access_token_is_bound_to_user_and_session() -> None:
     )
 
     assert service.parse_access_token(token) == (user_id, session_id)
+
+
+def test_operations_token_uses_a_distinct_audience_and_type() -> None:
+    user_id = uuid4()
+    session_id = uuid4()
+    service = TokenService("a" * 32)
+
+    mobile = service.create_access_token(user_id=user_id, session_id=session_id)
+    operations = service.create_operations_access_token(user_id=user_id, session_id=session_id)
+
+    assert service.parse_operations_access_token(operations) == (user_id, session_id)
+    with pytest.raises(InvalidAccessToken):
+        service.parse_operations_access_token(mobile)
+    with pytest.raises(InvalidAccessToken):
+        service.parse_access_token(operations)
 
 
 def test_access_token_rejects_another_signing_secret() -> None:
@@ -102,6 +120,26 @@ def test_refresh_tokens_are_random_and_only_the_hash_is_persistable() -> None:
     assert first != second
     assert refresh_token_hash(first) != first
     assert len(refresh_token_hash(first)) == 64
+
+
+def test_account_recovery_codes_are_unique_high_entropy_lookup_secrets() -> None:
+    codes = generate_account_recovery_codes()
+
+    assert len(codes) == ACCOUNT_RECOVERY_CODE_COUNT
+    assert len(set(codes)) == ACCOUNT_RECOVERY_CODE_COUNT
+    assert all(len(code) == 23 and code.count("-") == 3 for code in codes)
+    assert account_recovery_code_hash(codes[0]) == account_recovery_code_hash(
+        codes[0].lower().replace("-", " ")
+    )
+    assert account_recovery_code_hash(codes[0]) != account_recovery_code_hash(codes[1])
+
+
+def test_account_and_operations_recovery_codes_use_distinct_hash_domains() -> None:
+    from taximobile_api.domains.administration.operations_mfa import recovery_code_hash
+
+    code = "23456-789AB-CDEFG-HJKLM"
+
+    assert account_recovery_code_hash(code) != recovery_code_hash(code)
 
 
 def test_missing_account_password_uses_dummy_argon2_work_but_never_authenticates() -> None:
