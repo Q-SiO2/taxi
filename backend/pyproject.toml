@@ -15,7 +15,7 @@ dependencies = [
     "cryptography==50.0.0",
     "fastapi==0.141.1",
     "GeoAlchemy2==0.20.0",
-    "google-auth==2.56.0",
+    "google-auth==2.57.1",
     "httpx==0.28.1",
     "pydantic==2.13.4",
     "python-multipart==0.0.32",
