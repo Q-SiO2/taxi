@@ -114,7 +114,8 @@ For a repeatable registration/login acceptance run, use the guarded smoke mode:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run-android-device.ps1 `
-  -Role passenger -RegistrationSmoke -ConfirmClearAppData
+  -Role passenger -RegistrationSmoke -ConfirmClearAppData `
+  -EvidencePath .\build\t4-android-passenger-registration.json
 ```
 
 This explicitly clears only the selected installed debug application's local
@@ -124,7 +125,12 @@ the backend-authorized passenger home or driver application gate. The harness
 uses Android's accessibility hierarchy entirely in memory; it does not capture
 screenshots, write phone files, or print the synthetic email/password. Omit
 `-ConfirmClearAppData` and the launcher fails before touching the device. Run
-each role separately when both products require acceptance evidence.
+each role separately when both products require acceptance evidence. When
+`-EvidencePath` is supplied, the new path must not exist and launch-only mode is
+refused. The JSON records bounded SDK/ABI/model/locale/screen/package facts and
+the two backend-confirmed journeys, but no raw device serial. It supports only
+the Android-device evidence class and explicitly leaves the wider T4 matrix,
+phase acceptance and deployment acceptance false.
 
 Start the local API first. On Windows, the workspace-contained PostGIS path does
 not require Docker:
@@ -370,13 +376,15 @@ Use the run button in your IDE's editor gutter, or run tests using Gradle tasks:
 
 - Localization catalogs/static UI copy: `..\.tools\python312\python.exe scripts\validate_localization.py`
 - Portable script contract tests (including localization): `..\.tools\python312\python.exe -m unittest discover -s scripts/tests -p "test_*.py"`
+- Static web compatibility runtime scenarios: `node scripts/test-web-compatibility-loader.mjs`
 - Crash-reporting source gate: `..\.tools\python312\python.exe scripts\validate_mobile_crash_reporting.py`
 - Connectivity/foreground/command/double-submit source gate: `..\.tools\python312\python.exe scripts\validate_mobile_recovery.py`
 - Native MapLibre style-composition source gate: `..\.tools\python312\python.exe scripts\validate_maplibre_composition.py`
 - Mobile/backend route-method drift gate (run from `backend/` with its environment): `python ..\infra\scripts\validate_mobile_api_contract.py`
 - Operations-web/backend route-method and versioned-URL drift gate (run from `backend/` with its environment): `python ..\infra\scripts\validate_web_api_contract.py`
 - Android tests: `./gradlew :shared:testAndroidHostTest`
-- Android release artifact metadata: `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-android-release-artifacts.ps1 -ExpectedVersionCode <code> -ExpectedVersionName <version>`
+- Android release artifact metadata: `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-android-release-artifacts.ps1 -ExpectedVersionCode <code> -ExpectedVersionName <version> -ManifestPath <new-output.json>`. The generated manifest is explicitly non-distributable and records SHA-256, size, package, role, version, and the unaccepted signing/provider/device limitations of these verification builds.
+- iOS simulator artifact metadata: `python scripts/generate_ios_verification_manifest.py --products-dir <Release-iphonesimulator> --expected-version-code <code> --expected-version-name <version> --output <new-output.json>`. It validates both role bundle IDs, versions, executables, and deterministic bundle hashes while explicitly refusing App Store or device claims.
 - Desktop tests: `./gradlew :shared:jvmTest`
 - Web tests:
     - Wasm target: `./gradlew :shared:wasmJsTest`

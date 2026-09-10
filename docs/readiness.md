@@ -1,6 +1,6 @@
 # TaxiMobile — Repository Readiness Assessment
 
-**Assessment date:** 2026-09-08. **Scope:** the current working tree, including
+**Assessment date:** 2026-09-09. **Scope:** the current working tree, including
 untracked implementation; not just Git HEAD. **Base commit:**
 `f85417bcc8b432477fd88e87f5bd557a43898447`. **Migration head:** `20260908_0052`.
 
@@ -129,27 +129,35 @@ engineering scope rather than counting each feature once per file.
 
 ## Verification performed for this assessment
 
-| Check | Fresh result through 2026-09-08 | Boundary |
+| Check | Fresh result through 2026-09-09 | Boundary |
 | --- | --- | --- |
 | Backend `python -m pytest tests/unit tests/api` | **699 passed**, 173 dependency deprecation warnings, 45.52 seconds | Earlier focused check; superseded for backend breadth by the fresh full-suite row below. |
-| Full backend on fresh isolated PostGIS through `20260908_0052` | **990 passed**, zero failures/errors/skips, 175 dependency warnings, 464.24 seconds | Fresh current-worktree console evidence includes client compatibility, explicit pool bounds/exhaustion, staff dual control, legacy-admin retirement telemetry and security-incident responsibility/postmortem/deadline operations. The duration is not capacity evidence. The preceding generated JUnit remains the 956-test `backend/build/security-incident-full-tests.xml`; neither is immutable CI, hosted, provider, device, or user acceptance. |
+| Full backend on fresh isolated PostGIS through `20260908_0052` | **992 passed**, zero failures/errors/skips, 175 dependency warnings, 1,344.70 seconds | Fresh current-worktree JUnit plus bounded T3 metadata/report evidence includes client compatibility, explicit pool bounds/exhaustion, staff dual control, legacy-admin retirement telemetry, security-incident operations, named lock/race/worker recovery and database reconciliation. One stale clone from an older interruption was removed; zero remained and temporary local `CREATEDB` was revoked. This is not capacity, immutable CI, hosted, provider, device, backup/restore or user acceptance. |
 | Mobile/backend contract validator | **83 HTTP + 1 WebSocket operations passed** | Includes the command-free client compatibility preflight; source operation/path agreement, not device/provider delivery. |
 | Focused staff/control-plane PostGIS integration | **28 passed** through `20260907_0049`; the four new staff scenarios and migration downgrade/re-upgrade also passed separately | Covers national scope, city pricing, fixed routes, staff request/replay/decision, revocation, continuity and bounded quorum bootstrap. |
 | Focused security-incident source/PostGIS | **18 dedicated cases** through `20260908_0052` (16 unit/static and two migrated API/database cases) | Adds initial lead assignment, eligible exact-market reassignment, ineligible refusal, concurrent one-winner serialization, idempotent replay, version authority, generated timeline facts and assignment-history mutation refusal to the existing lifecycle/postmortem/deadline coverage; not an authoritative roster, hosted receiver or staffed drill. |
 | Operations web JS and Wasm browser suites | **57 passed per target** | Adds responsibility-input/history decoding to the seven earlier security-incident permission/lifecycle/input/version/postmortem tests; it does not prove staffed browser journeys or accessibility. |
+| Static web compatibility loader | **6 runtime scenarios passed** | Executes supported/update/forced-upgrade/error/retry/local-origin behavior and proves client headers remain scoped to the exact API origin and `/api/v1/` path; this is not a hosted-browser or ingress test. |
 | Operations web production distributions | **JS and Wasm production distributions built** | Local optimized artifacts exist for source verification; this is not the packaged compatibility release, hosted CSP/TLS proof, browser E2E, or an immutable signed artifact. |
 | Web/backend contract validator | **112 HTTP operations passed** | Includes the fail-closed static compatibility preflight, six staff-request and nine security-incident client operations, with the responsibility path selector restricted to four values; does not prove full browser journeys. |
-| Infrastructure script unit tests | **36 passed** | Includes validator/provenance/package behavior, strict web release identity, generated API/migration/permission inventory, executable T0–T10 evidence controls, legacy-client caller enforcement, and CI-wiring mutation coverage. |
-| Mobile script unit tests | **30 passed** | Source/release/device-harness contracts, not physical-device execution. |
+| Infrastructure script unit tests | **74 passed** | Includes validator/provenance/package behavior, strict web release identity, generated API/migration/permission inventory, executable T0–T10/T2 persona, fail-closed T3 backup/restore, balanced T4 laboratory-map and CI-wiring mutation coverage. |
+| Bounded T2 simulated-persona baseline | **20 scenarios / 60 exact tests passed** | Source-level synthetic authority and state-machine coverage only. The report refuses T2/deployment acceptance and identifies missing adversarial, durable reconciliation, minimization and sign-off evidence. |
+| Bounded T3 system baseline | **992 tests and all six required evidence kinds passed locally** | JUnit, secret-free database metadata and a guarded logical restore reconcile 81 public tables/8,511 aggregate rows at migration 0052. The target and dump were removed. Evidence completeness is true, but the dirty-workspace snapshot has no engineering sign-off or ordered phase acceptance; T3 and deployment acceptance remain false. |
+| T4 laboratory map | **56 reviewed cases; 0 executed** | Exactly eight cases cover each required evidence kind and source targets/locales/browsers are cross-checked. The template is deliberately `NOT_STARTED`; no device, browser, accessibility, failure or crash acceptance is inferred. |
+| Bounded T4 browser boot smoke | **8/8 local scenarios passed** across Chrome 152 and Firefox 155 | Packaged-release preflight, blocked/boot branch selection and screenshot retention passed. Safari, authenticated critical journeys, accessibility/RTL, console/source-map review, hosted headers and independently firewalled browser egress remain absent; zero complete T4 catalog cases and no phase/deployment acceptance are claimed. |
+| Mobile script unit tests | **36 passed** | Adds privacy-bounded, non-overwriting Android registration/login device-report contracts to source/release/device-harness and iOS manifest checks. No phone was attached and no physical-device result is claimed. |
+| Android role release verification artifacts | **Passenger and driver 1.0.0 APKs built and manifest-verified** | Distinct package IDs, versions, sizes and SHA-256 hashes are recorded. The manifest is intentionally `distribution_eligible=false` because signing, Firebase/Crashlytics and physical-device acceptance are absent. |
+| iOS role release verification artifacts | **Manifest generator and three mutation/identity tests passed** | macOS CI now builds into one explicit products directory, validates both role bundles and binds their deterministic manifest to source. The actual iOS build cannot run on Windows and remains unverified until remote macOS CI passes. |
 | Documentation validator | **Passed before and after edits** | Links, standing blocks, gap/test sequences and migration head. |
 | Shared JVM suite | **183 passed**, zero failures/errors/skips | Fresh JVM execution includes client identity and compatibility restore states; both Android role compiles and JS/Wasm compilation pass, while iOS is not executable on Windows. |
 | TeX/PDF build and visual checks | **Passed: 18-page report and 36-slide briefing**, compiled with pdfLaTeX, rendered and visually inspected | No overfull boxes, undefined references or TeX errors in final logs. MiKTeX reports its local update-check notice. |
 
-The latest complete backend evidence is **990 full fresh-PostGIS tests at 0052**,
+The latest complete backend test execution is **992 full fresh-PostGIS tests at 0052**,
 with separate focused migration/control-plane evidence for the staff slice. The
 records also report **183 shared JVM tests**, plus
 Android and JS/Wasm verification. No iOS device, signed release, hosted load,
-provider acceptance, live passenger, or real-money test is claimed here.
+provider acceptance, managed encrypted backup/PITR, live passenger, or real-money
+test is claimed here.
 Deprecation warnings are maintenance work, not failures caused by this change.
 
 ## Updated deliverables

@@ -13,7 +13,7 @@ are validated by `infra/scripts/validate_test_phase_evidence.py`. That gate chec
 promotion metadata and exposure boundaries; it does not authenticate external
 evidence or approve a phase.
 
-**Current standing (2026-09-08):** automated backend, PostGIS, shared/mobile,
+**Current standing (2026-09-09):** automated backend, PostGIS, shared/mobile,
 source-contract, and local web compilation coverage is broad. CI definitions now
 include pinned dependency review, resolved Gradle graph submission, backend image
 SBOM/provenance and a blocking high/critical image scan, but those changed jobs
@@ -21,11 +21,15 @@ still need a clean remote candidate run. CI now also structurally validates the
 self-hosted monitoring overlay, renders it with the production manifest, parses
 Prometheus/Alertmanager/Loki/Alloy configuration with digest-pinned official
 tools, provisions both Grafana dashboards, and runs a hardened two-role
-structured-log ingestion smoke. Initial in-app
-Wasm browser smoke testing now covers operations/applicant entry rendering and
-narrow/wide applicant layout; it found and closed one nested-scroll runtime
-defect. The project is in **Phase T2/T3**, depending on the subsystem, with a
-small part of T4 started. It has not passed the full browser matrix, hosted
+structured-log ingestion smoke. Initial in-app Wasm browser smoke testing covers
+operations/applicant entry rendering and narrow/wide applicant layout; it found
+and closed one nested-scroll runtime defect. A separate packaged-release
+collector passed four bounded boot and preflight scenarios in each of local
+Chrome 152 and Firefox 155 with retained screenshots. It deliberately does not
+claim browser-egress isolation, a complete T4 catalog case, or Safari/critical-
+journey/accessibility acceptance. The project is in **Phase T2/T3**, depending
+on the subsystem, with a small part of T4 started. It has not passed the full
+browser matrix, hosted
 staging, provider, physical-device, staff-rehearsal, closed-cohort, or real-user
 promotion gates.
 
@@ -38,8 +42,8 @@ while real secure-save behavior, verified contact delivery, statistical timing,
 physical devices, compromised-account
 support, and real-user comprehension remain unaccepted.
 
-Latest completed full-suite evidence (2026-09-08): a clean isolated PostGIS rebuild through migration
-`20260908_0052` passed 990 backend tests with no failures, errors or skips; place authority,
+Latest completed full-suite evidence (2026-09-09): an isolated PostGIS rebuild through migration
+`20260908_0052` passed 992 backend tests with no failures, errors or skips; place authority,
 assigned-ride coordination, notification policy, fixed-owner outbox telemetry
 and real live-event fanout are
 included in that run alongside deadline/device-failure contracts and scheduling
@@ -78,7 +82,7 @@ compilation are locally verified in the latest supported Windows run. Both web
 production target distributions also build locally; this does not replace the
 packaged compatibility release or hosted browser checks. Record
 these again from an immutable candidate before they may satisfy a promotion gate.
-The latest 990-test evidence is the guarded console run; the preceding 956-test
+The latest 992-test evidence is the guarded JUnit run; the preceding 956-test
 full backend JUnit report remains
 `backend/build/security-incident-full-tests.xml`. Separate focused runs of all 74
 workload/contention cases also passed in
@@ -86,14 +90,22 @@ workload/contention cases also passed in
 live-protection cases passed in `backend/build/scheduled-live-protection-focused-tests.xml`.
 All 13 account-assignment authority cases passed in
 `backend/build/account-assignment-authority-focused-tests.xml`. These are generated
-evidence, not committed release artifacts. Localization parity covers 610 EN/FR/AR strings, and
-36 infrastructure-script unit tests, 29 monitoring-deployment contract/mutation
-cases, and 21 Prometheus alert-rule regression cases pass. Dependency deprecation
-warnings remain.
+evidence, not committed release artifacts. Localization parity covers 610
+EN/FR/AR strings, and 50 infrastructure-script unit tests, 29 monitoring-
+deployment contract/mutation cases, six dependency-free static web compatibility-
+loader runtime scenarios, and 21 Prometheus alert-rule regression cases pass.
+Dependency deprecation warnings remain.
+
+The bounded T2 simulated-persona catalog currently executes 20 stable scenarios
+through 60 exact unit-test nodes with no external target, real users, providers,
+or live money. Its latest local run passed with zero failures/errors/skips. The
+result deliberately keeps T2 evidence incomplete until adversarial review,
+durable state/money reconciliation, data-minimization evidence, and required
+engineering/security sign-offs exist.
 
 Migration `20260908_0052` is now the repository head. Sixteen dedicated security-
 incident unit/static cases and two migrated PostGIS API/database cases pass as part
-of the 990-test complete regression. They cover one-time postmortem completion,
+of the 992-test complete regression. They cover one-time postmortem completion,
 evidence requirements, idempotent replay, fixed severity buckets, aggregate
 deadline transitions, unavailable snapshots, privacy-safe rendering, exact
 alert-expression mutation refusal, initial response-lead assignment, exact-market
@@ -103,7 +115,7 @@ and append-visible assignment-history protection.
 The city-authorization slice passed 33 focused backend cases in
 `backend/build/city-authorization-complete-focused-tests.xml`, including actual
 MFA and six observed lock waits, plus JS/Wasm compilation and both browser test
-tasks. All 33 cases are also included in the passing 990-test full backend run.
+tasks. All 33 cases are also included in the passing 992-test full backend run.
 The earlier 750-test location-authority report predates this endpoint and is
 retained only as historical evidence.
 
@@ -125,7 +137,7 @@ and both JS and Wasm browser tasks with 57 tests each. It covers request/replay,
 maker/checker/target separation, approval, revocation, rejection, cancellation,
 stale decisions/targets, bounded quorum bootstrap, last-admin refusal and expiry
 continuity. The web/backend source-contract gate covers 112 HTTP operations. This
-slice is included in the passing 990-test full current-head backend regression.
+slice is included in the passing 992-test full current-head backend regression.
 This is component evidence only; authoritative roster, hosted MFA/CSP, accessibility,
 concurrent staff drills and recertification remain promotion gates.
 
@@ -397,6 +409,18 @@ Use a fresh isolated PostGIS database at migration head, real API/worker process
 roles, and local provider adapters or controlled stubs. Run all eight worker loops
 and at least two API replicas for cross-instance paths where practical.
 
+The guarded local runner accepts all-or-none JUnit, database-metadata, backup/
+restore and system-evidence paths. Its generated T3 report requires at least 900 skip-free
+tests; named migration-lock, authority-race, worker-termination/reclaim and
+state/money reconciliation cases; one exact migration head; PostGIS; zero
+residual clone databases; and revoked temporary local clone authority. The
+2026-09-09 run passed 992 tests and these checks. The guarded logical rehearsal
+then restored 81 public tables and 8,511 aggregate rows, matched schema/table/
+PostGIS facts through a no-op migration to head, and deleted the restore target
+and dump. The combined report supports all six required T3 evidence kinds and
+marks evidence complete, while T3 and deployment acceptance remain false pending
+engineering sign-off and ordered promotion evidence.
+
 ### Database lifecycle
 
 * Empty database upgrade through every migration.
@@ -628,6 +652,15 @@ low/mid/high devices, screen sizes/densities, and Chrome/Firefox/Safari versions
 Include at least one lower-memory Android device and one real iPhone. Emulators do
 not replace camera/file picker, location, push, background, battery or map proof.
 
+The executable source of this matrix is
+`infra/testing/t4-lab-catalog.json`, validated by
+`infra/scripts/validate_t4_lab_evidence.py`. It contains 56 closed cases, eight
+for each phase-required evidence class. A populated evidence record must preserve
+catalog order, attach a controlled reference, SHA-256, UTC timestamp and tester
+reference to every case, and link every failed/blocked case to a defect. Evidence
+classes can complete independently, but T4 is complete only at 56/56; this
+validator never grants phase or deployment acceptance.
+
 ### Mobile matrix
 
 For passenger and driver artifacts separately test:
@@ -653,6 +686,15 @@ For passenger and driver artifacts separately test:
   no local sensitive-file leakage;
 * cash/manual transfer/refund/support/safety/fixed-route/scheduled surfaces; and
 * intentional crash, symbol upload, symbolicated report and privacy review.
+
+For the first bounded Android evidence slice, run each role separately through
+`run-android-device.ps1` with `-RegistrationSmoke -ConfirmClearAppData` and a
+new `-EvidencePath`. The report records Android SDK, ABI, manufacturer/model,
+locale, screen dimensions, package identity/version and backend-confirmed
+registration/login gates. It deliberately captures no raw serial, screenshots,
+credentials or submitted values and sets T4/deployment acceptance false. This
+smoke is not evidence for ride, map, push, lifecycle, network-failure,
+accessibility, crash, iOS or browser behavior.
 
 ### Browser matrix
 
@@ -1539,7 +1581,7 @@ authority case first reproduced an assertion in dispatch: a rejected provisional
 candidate remained non-null while its score was unselected. Dispatch now only
 finalizes a candidate after all guards pass, and repeats the eligibility query
 in a fresh statement snapshot after the driver/global-account locks. The current
-990-test run includes this matching-service change; the earlier
+992-test run includes this matching-service change; the earlier
 783-test report does not.
 
 Run with the complete guarded local test configuration and migrated disposable

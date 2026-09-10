@@ -7,13 +7,13 @@ remains subordinate to the owning domain rules.
 
 This document fixes the implementation choices required to turn the TaxiMobile product documents into working software. It is subordinate to the domain rules in `product.md`, `operations.md`, `auth.md`, `rides.md`, `matching.md`, `pricing.md`, and `payments.md`. If a technical choice conflicts with one of those rules, the domain rule wins and the conflict must be resolved in documentation first.
 
-## Current implementation standing — 2026-09-08
+## Current implementation standing — 2026-09-09
 
 The repository contains the provider-independent implementation described here,
 including migrations through `20260908_0052`. Local backend unit/API/integration
 tests, Android/shared compilation, JavaScript and Kotlin/Wasm compilation, and
 portable source-contract checks have passed in the current workspace. The
-latest completed full fresh-PostGIS run (2026-09-08) passed 990 backend tests with no
+latest completed full fresh-PostGIS run (2026-09-09) passed 992 backend tests with no
 failures, errors or skips, including the paired cash workload and deterministic
 dispatch-contention cases. That report also includes fixed-owner outbox
 aggregation, privacy-bounded Prometheus alert validation, aggregate security-
@@ -24,18 +24,41 @@ and 112 web HTTP operations. The city-authorization slice passed 33
 focused backend cases, also included in that full backend regression, and both
 web browser suites. These are local dirty-workspace results, not release
 certification. Both `jsBrowserDistribution` and `wasmJsBrowserDistribution`
-also completed locally from the current source; bundle-size warnings remain
-performance evidence to review, not failed correctness gates. The
+also completed locally from the current source. Six dependency-free runtime
+scenarios now execute the static web compatibility loader's supported, update,
+forced-upgrade, retry, local-origin and exact-origin/path header-scoping behavior
+in CI. The 2026-09-09 compatibility
+candidate's 6,104,171-byte JavaScript fallback is within its narrowly reviewed
+6,250,000-byte ceiling; startup measurements on target networks remain required
+performance evidence. The
 current CI definition covers backend, Android/shared, iOS simulator compilation,
 documentation/provenance validation, and JavaScript/Wasm browser tests plus a
 production compatibility distribution. It also defines immutable-action
 dependency review, resolved Gradle graph submission, backend image SPDX SBOM and
 source-hash binding, a generated 244-operation/52-migration/22-permission/nine-role
-source-contract inventory, and a blocking high/critical image scan. The inventory
+source-contract inventory, and a blocking high/critical image scan. Web and
+Android/iOS verification outputs now produce limitation-marked manifests that
+are hash-bound to the clean source candidate in CI and retained in its run
+summary. The backend job also runs a frozen T2 catalog of 20 simulated persona
+and adversarial scenarios over 60 exact unit tests, retains JSON/JUnit evidence,
+and explicitly refuses phase or deployment acceptance. The inventory
 is deterministic, validates the migration graph and role mapping, is printed in
 the CI run summary, and is hash-bound into backend candidate evidence. The new and changed
 jobs still require a passing remote run on an immutable commit; their presence in
 YAML is not a clean vulnerability report or signed release provenance.
+
+The guarded backend runner and CI definition now also generate bounded T3 JUnit,
+database-metadata and system-evidence artifacts. The local run verified migration
+0052 on PostgreSQL 16.14/PostGIS 3.5.3, 992 skip-free tests, named lock/race/
+worker-reclaim/reconciliation cases, zero residual clone databases and revoked
+temporary local `CREATEDB` authority. One stale disposable clone from an earlier
+interruption was strictly identified and removed before the successful metadata
+check. A guarded custom-format backup subsequently restored 81 public tables and
+8,511 aggregate rows into an ephemeral database, matched migration/PostGIS/
+schema/table totals before and after a no-op upgrade, and removed the database
+and dump. The combined report supports all six T3 evidence kinds and marks
+evidence complete; T3 and deployment acceptance remain false pending engineering
+sign-off and an ordered phase record.
 The production deployment now has an optional hardened Prometheus/Alertmanager/
 Loki/Alloy/Grafana overlay with internal-only API/worker scraping, bounded
 application-owned JSON log volumes, Docker-secret bearer
@@ -265,6 +288,16 @@ entry point (invoke it with `powershell -NoProfile -ExecutionPolicy Bypass
 health, requires exactly one authorized device, establishes and verifies the
 reverse tunnel, injects the loopback debug URL, builds and installs only the
 selected role flavor, and launches its activity.
+With `-RegistrationSmoke -ConfirmClearAppData -EvidencePath <new-json>`, the same
+launcher now records a bounded T4 Android registration/login report containing
+SDK/ABI/model/locale/screen/package metadata and backend-confirmed journey
+results. It does not record raw serials, screenshots, credentials or submitted
+values and cannot claim broader device-matrix or T4 acceptance.
+The broader T4 laboratory is frozen in a 56-case machine-readable catalog with
+eight cases per phase evidence kind. A dependency-free validator checks platform
+targets, browser/locale/RTL coverage, device/browser fidelity flags, safety,
+retained artifact metadata and no-acceptance boundaries. The committed run
+template is intentionally 0/56 `NOT_STARTED`.
 After compilation it waits a bounded 120 seconds for the same authorized device
 serial to recover from a transient USB/ADB reset, re-establishes the reverse
 tunnel, and refuses to install on a replacement device.
@@ -830,7 +863,7 @@ Reinstatement rechecks global/professional status, owned vehicle, credentials,
 application evidence, reviewed services, validity and competing authorization.
 Approval now locks the driver before checking for active city authority, closing
 its race with reinstatement. The focused 33-case backend run and JS/Wasm browser
-tasks pass; the full 990-test backend regression includes this slice. Operational
+tasks pass; the full 992-test backend regression includes this slice. Operational
 acceptance remains open in `testing.md`. No schema change or automated live-ride
 cancellation is added.
 
@@ -1219,7 +1252,7 @@ fixture now disables new clone connections, terminates only owner client session
 and retries SQLSTATE `55006` while auxiliary work drains; it does not grant
 superuser authority. Three repetitions of the exact former failure, the initial
 941-test, 952-test, 956-test, 957-test and 970-test reruns, and the current
-990-test rerun passed.
+992-test rerun passed.
 
 `operations/cash_workload.py` extends that evidence with paired driver/passenger
 cash journeys. `workload/client.py` is the shared bounded HTTP boundary;

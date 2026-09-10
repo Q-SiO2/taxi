@@ -1,0 +1,97 @@
+# TaxiMobile — Release Baseline Record
+
+## Purpose
+
+This record defines the reviewed source scope and verification boundary for the
+first GAP-001 candidate baseline. It is release provenance, not authorization to
+deploy, start a pilot, accept a testing phase, or publish a store artifact.
+
+**Candidate label:** `gap-001-baseline-20260910`
+
+**Recorded:** 2026-09-10
+
+**Migration head:** `20260908_0052`
+
+The immutable source identity is the Git commit that contains this file. Do not
+copy a commit hash into this document: the CI-generated release-evidence record
+binds the checked-out commit and tree without creating a self-referential commit.
+
+## Included source scope
+
+This candidate consolidates the release-evidence and phased-test work that was
+previously present only in the working tree:
+
+* T2's bounded 20-persona/60-test catalog and outbound-network denial guard.
+* T3 JUnit, secret-free database metadata, isolated logical restore and combined
+  evidence generation.
+* T4's closed 56-case device/browser/accessibility/lifecycle/crash laboratory
+  catalog and its deliberately unexecuted template.
+* Android passenger/driver registration-login device-report collection without
+  raw serials, credentials, entered values or automatic acceptance claims.
+* Deterministic Android and iOS verification manifests that identify both role
+  products while marking unsigned/providerless outputs non-distributable.
+* Static web compatibility-loader scenarios, packaged JS/Wasm release checks and
+  bounded real Chrome/Firefox boot evidence.
+* CI controls that retain these records, bind their hashes to exact clean source
+  identity and reject removal of limitation or no-acceptance statements.
+* Documentation that maps T0 through T10 from simulation to national operation.
+
+No product business rule, database migration, public API contract, pricing rule,
+or payment authority is introduced by this candidate.
+
+## Local candidate verification
+
+The following checks passed against the candidate source before this record was
+created. Generated records live under ignored build directories and must be
+recreated by CI for the immutable commit.
+
+| Gate | Result | Acceptance boundary |
+| --- | --- | --- |
+| Source credential hygiene | Passed | Local secret files were excluded; this is not an independent secret-history review. |
+| Documentation and phase validators | Passed | Structural consistency only; no phase was accepted. |
+| Infrastructure script suite | 88 passed | Includes T2/T3/T4 evidence and CI mutation tests. |
+| Mobile release-script suite | 36 passed | No physical device or signed distribution acceptance. |
+| Static compatibility-loader runtime | 6 scenarios passed | Dependency-free loader behavior, not hosted browser E2E. |
+| Shared JVM, Android passenger/driver compile, JS/Wasm browser suites | Gradle build passed | Windows cannot execute iOS simulator tests. |
+| Fresh PostGIS backend suite | 992 passed with zero failures/errors/skips | Current-head local system evidence, not capacity or hosted acceptance. |
+| T3 database reconciliation | 81 tables restored at migration 0052; temporary target/dump removed | Local logical restore, not managed encrypted backup/PITR acceptance. |
+| Packaged browser boot smoke | 4/4 Chrome 152 and 4/4 Firefox 155 scenarios passed with eight screenshots | Safari, authenticated journeys, accessibility, hosted headers and firewalled egress remain open. |
+
+The local T3 report confirms all six required evidence kinds, zero residual test
+clone databases and revoked temporary `CREATEDB` authority. It deliberately keeps
+`phase_accepted=false` and `deployment_accepted=false`.
+
+## Required immutable promotion evidence
+
+GAP-001 remains open until all of the following refer to one clean commit:
+
+1. The complete intended source set is reviewed and committed on a protected
+   branch or pull request, with clean status in a fresh checkout.
+2. Remote CI passes every required job for that exact commit.
+3. CI publishes the generated source-contract inventory, migration head,
+   dependency locks, OpenAPI digest, web manifest, Android/iOS verification
+   manifests, test evidence and backend image SBOM/provenance.
+4. A registry supplies the immutable backend image digest.
+5. Distribution signing produces passenger and driver mobile artifacts whose
+   identities and hashes are added to the release manifest.
+6. A reviewer approves release notes, unresolved limitations and the applicable
+   forward migration decision.
+
+## Migration and rollback decision
+
+This candidate adds no migration beyond head `20260908_0052`. Promotion must run
+`alembic upgrade head` from a production-like copy and verify the no-op/current-
+head path. Once a real environment has executed an accepted migration, schema
+downgrade is not the default rollback mechanism. Application rollback is allowed
+only to a compatibility-tested artifact that supports the current schema;
+otherwise use a reviewed forward fix. Never silently repair conflicting ride,
+financial, authorization, audit or incident history to make a downgrade pass.
+
+## Explicitly unaccepted
+
+This baseline does not establish production hosting, managed-database recovery,
+provider delivery, legal city approval, real tariffs, operations staffing,
+security review, signed mobile distribution, physical-device acceptance,
+accessibility, capacity, failover, staff rehearsal, closed cohort, real-user
+pilot, public city launch, or national rollout. Those remain ordered requirements
+in `gaps.md` and `testing_execution_map.md`.

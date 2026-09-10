@@ -137,10 +137,137 @@ def validate_ci_security(workflow: str) -> None:
             f"candidate evidence: missing {missing_contract_inventory[0]}."
         )
 
+    simulated_persona_requirements = (
+        "python ../infra/scripts/run_simulated_persona_suite.py",
+        "--output /tmp/taximobile-t2-simulated-personas.json",
+        "--junit-output /tmp/taximobile-t2-simulated-personas.junit.xml",
+        "--artifact /tmp/taximobile-t2-simulated-personas.json",
+        "--artifact /tmp/taximobile-t2-simulated-personas.junit.xml",
+        "cat /tmp/taximobile-t2-simulated-personas.json",
+        "cat /tmp/taximobile-t2-simulated-personas.junit.xml",
+        "This result does not accept T2 or any deployment phase.",
+    )
+    missing_simulated_persona = [
+        snippet for snippet in simulated_persona_requirements if snippet not in workflow
+    ]
+    if missing_simulated_persona:
+        raise CiSecurityError(
+            "The bounded T2 simulated-persona report is not executed, limitation-"
+            f"marked, retained, and source-bound: missing {missing_simulated_persona[0]}."
+        )
+
+    t3_system_requirements = (
+        "python -m pytest --junitxml=/tmp/taximobile-t3-full-backend.junit.xml",
+        "python ../infra/scripts/collect_t3_database_metadata.py",
+        "--authority-mode EPHEMERAL_CI_SERVICE_ROLE",
+        "--database-lifecycle EPHEMERAL_SERVICE_DATABASE",
+        "--output /tmp/taximobile-t3-database-metadata.json",
+        "python ../infra/scripts/run_t3_backup_restore_rehearsal.py",
+        "--maintenance-user taximobile",
+        "--output /tmp/taximobile-t3-backup-restore.json",
+        "python ../infra/scripts/generate_t3_system_report.py",
+        "--junit /tmp/taximobile-t3-full-backend.junit.xml",
+        "--database-metadata /tmp/taximobile-t3-database-metadata.json",
+        "--backup-restore /tmp/taximobile-t3-backup-restore.json",
+        "--output /tmp/taximobile-t3-system-evidence.json",
+        "--artifact /tmp/taximobile-t3-full-backend.junit.xml",
+        "--artifact /tmp/taximobile-t3-database-metadata.json",
+        "--artifact /tmp/taximobile-t3-backup-restore.json",
+        "--artifact /tmp/taximobile-t3-system-evidence.json",
+        "cat /tmp/taximobile-t3-system-evidence.json",
+        "cat /tmp/taximobile-t3-database-metadata.json",
+        "cat /tmp/taximobile-t3-backup-restore.json",
+        "This complete evidence set does not accept T3 or deployment; formal engineering sign-off remains required.",
+    )
+    missing_t3_system = [snippet for snippet in t3_system_requirements if snippet not in workflow]
+    if missing_t3_system:
+        raise CiSecurityError(
+            "The bounded T3 full-system report is not executed, limitation-marked, "
+            f"retained, and source-bound: missing {missing_t3_system[0]}."
+        )
+
+    web_candidate_requirements = (
+        "python ../infra/scripts/package_web_release.py",
+        "python ../infra/scripts/run_t4_browser_smoke.py",
+        "--browser chrome",
+        '--output "${RUNNER_TEMP}/taximobile-t4-browser-smoke.json"',
+        '--artifact "${RUNNER_TEMP}/taximobile-web-release/release-manifest.json"',
+        '--artifact "${RUNNER_TEMP}/taximobile-t4-browser-smoke.json"',
+        '--output "${RUNNER_TEMP}/taximobile-web-evidence.json"',
+        'cat "${RUNNER_TEMP}/taximobile-web-release/release-manifest.json"',
+        'cat "${RUNNER_TEMP}/taximobile-t4-browser-smoke.json"',
+        'cat "${RUNNER_TEMP}/taximobile-web-evidence.json"',
+        "does not complete any T4 browser case or accept deployment",
+        "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+        "taximobile-t4-browser-smoke-artifacts",
+    )
+    missing_web_candidate = [
+        snippet for snippet in web_candidate_requirements if snippet not in workflow
+    ]
+    if missing_web_candidate:
+        raise CiSecurityError(
+            "The packaged web manifest is not bound to source and retained in the "
+            f"CI run summary: missing {missing_web_candidate[0]}."
+        )
+
+    android_candidate_requirements = (
+        "-ManifestPath \"$env:RUNNER_TEMP/taximobile-android-verification-manifest.json\"",
+        '--artifact "${RUNNER_TEMP}/taximobile-android-verification-manifest.json"',
+        '--output "${RUNNER_TEMP}/taximobile-android-evidence.json"',
+        'cat "${RUNNER_TEMP}/taximobile-android-verification-manifest.json"',
+        'cat "${RUNNER_TEMP}/taximobile-android-evidence.json"',
+        "unsigned/providerless verification outputs, not distributable releases",
+    )
+    missing_android_candidate = [
+        snippet for snippet in android_candidate_requirements if snippet not in workflow
+    ]
+    if missing_android_candidate:
+        raise CiSecurityError(
+            "Android verification artifacts are not limitation-marked, bound to "
+            f"source, and retained in the CI run summary: missing "
+            f"{missing_android_candidate[0]}."
+        )
+
+    ios_candidate_requirements = (
+        "python scripts/generate_ios_verification_manifest.py",
+        '--products-dir "${RUNNER_TEMP}/taximobile-ios-derived/Build/Products/Release-iphonesimulator"',
+        '--artifact "${RUNNER_TEMP}/taximobile-ios-verification-manifest.json"',
+        '--output "${RUNNER_TEMP}/taximobile-ios-evidence.json"',
+        'cat "${RUNNER_TEMP}/taximobile-ios-verification-manifest.json"',
+        'cat "${RUNNER_TEMP}/taximobile-ios-evidence.json"',
+        "unsigned simulator/providerless verification outputs, not App Store releases",
+    )
+    missing_ios_candidate = [
+        snippet for snippet in ios_candidate_requirements if snippet not in workflow
+    ]
+    if missing_ios_candidate:
+        raise CiSecurityError(
+            "iOS simulator artifacts are not limitation-marked, bound to source, "
+            f"and retained in the CI run summary: missing {missing_ios_candidate[0]}."
+        )
+
     if workflow.count("python infra/scripts/validate_test_phase_evidence.py") != 1:
         raise CiSecurityError(
             "The T0-T10 phase catalog and evidence template must be validated once "
             "in the source job."
+        )
+
+    if workflow.count("python infra/scripts/run_simulated_persona_suite.py --validate-only") != 1:
+        raise CiSecurityError(
+            "The T2 simulated-persona catalog must be validated once in the "
+            "dependency-free source job."
+        )
+
+    if workflow.count("python infra/scripts/validate_t4_lab_evidence.py") != 1:
+        raise CiSecurityError(
+            "The T4 device/browser laboratory catalog and no-claim template must "
+            "be validated once in the dependency-free source job."
+        )
+
+    if workflow.count("node scripts/test-web-compatibility-loader.mjs") != 1:
+        raise CiSecurityError(
+            "The fail-closed web compatibility loader runtime scenarios must run "
+            "once in the web job."
         )
 
     legacy_admin_gates = (
@@ -165,8 +292,9 @@ def main() -> int:
         return 1
     print(
         "CI security validation passed: immutable actions, dependency review, "
-        "image SBOM/provenance, source-contract inventory, test-phase evidence "
-        "control, and blocking scan are present."
+        "image SBOM/provenance, web/mobile candidate binding, source-contract inventory, "
+        "test-phase/T2 persona/T3 system/T4 lab evidence controls, web compatibility runtime coverage, and "
+        "blocking scan are present."
     )
     return 0
 

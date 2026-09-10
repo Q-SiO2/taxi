@@ -50,6 +50,30 @@ Exercise all unit/API tests and the full migrated PostGIS lifecycle with:
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test-portable-backend.ps1
 ```
 
+For a candidate run, provide all three fresh output paths so the runner also
+retains the full JUnit report, collects secret-free post-run database metadata,
+and generates bounded T3 system evidence:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test-portable-backend.ps1 `
+  -JUnitPath ..\backend\build\t3-full-backend.junit.xml `
+  -DatabaseMetadataPath ..\backend\build\t3-database-metadata.json `
+  -BackupRestorePath ..\backend\build\t3-backup-restore.json `
+  -EvidencePath ..\backend\build\t3-system-evidence.json
+```
+
+The runner refuses partial or existing output paths. Before rebuilding
+`taximobile_ci`, it inventories stale clone databases and deletes only names
+matching `taximobile_ci_test_` plus a 32-character lowercase hex identifier. It
+records that count, requires zero clones after the suite, revokes the local
+role's temporary `CREATEDB` authority, and verifies one current migration head
+plus PostgreSQL/PostGIS versions. It then creates a custom-format logical backup,
+restores it into one random guarded database, compares every public table count
+and schema-object totals, applies a no-op migration to head, and removes both
+the target and dump. A green combined report supports all six bounded T3
+evidence classes and sets `phase_evidence_complete=true`; formal phase and
+deployment acceptance remain separate and false.
+
 This entry point first runs `validate_source_credentials.py`. In CI the validator
 uses Git-tracked files; in this no-Git workspace it deliberately does not read the
 ignored `infra/.env`, `TaxiMobile/local.properties`, builds, caches, backups, or
@@ -70,6 +94,58 @@ classes, sign-off functions, defects, exposure limits and P0 gap closures. It
 does not validate signatures or external artifact truth and cannot promote the
 all-`NOT_STARTED` repository template. Do not place credentials, identity files,
 precise participant locations or payment instructions in the evidence index.
+
+The bounded T2 simulated-persona baseline is a separate executable input to that
+promotion process:
+
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/run_simulated_persona_suite.py `
+  --output backend/build/t2-simulated-personas.json `
+  --junit-output backend/build/t2-simulated-personas.junit.xml
+```
+
+Its committed catalog freezes 20 authentication, passenger, driver, applicant,
+matching, ride, route, scheduling, money, staff, support, safety, incident,
+notification, and client-lifecycle scenarios over 60 exact test nodes. It cannot
+contact a target or provider, use real users or money, or mark T2 accepted. Its
+report identifies the remaining T2 database/money reconciliation, adversarial-
+security, and data-minimization evidence instead of silently claiming coverage.
+
+The T4 device/browser laboratory is also a closed executable map:
+
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/validate_t4_lab_evidence.py
+backend/.venv/Scripts/python.exe infra/scripts/validate_t4_lab_evidence.py `
+  --evidence <t4-lab-run.json>
+```
+
+`infra/testing/t4-lab-catalog.json` contains 56 cases: eight for each required
+supported-matrix, Android, iOS, browser, accessibility/RTL, degraded-network/
+lifecycle and crash-symbolication evidence class. The validator cross-checks
+Android SDK 24/36 and iOS 18.2 against build source, requires Chrome/Firefox/
+Safari plus EN/FR/AR and Arabic RTL, rejects public users/live money/production
+credentials/real personal data, and forbids raw serial or sensitive evidence
+keys. The committed template remains `NOT_STARTED`; a complete evidence class is
+credited only after all eight cases have retained passing facts, and even 56
+passes cannot mark T4 or deployment accepted.
+
+After packaging a reviewed web distribution, collect bounded real-browser boot
+evidence without editing the 56-case laboratory record:
+
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/run_t4_browser_smoke.py `
+  --release-dir backend/build/t4-web-release `
+  --browser chrome --browser firefox `
+  --candidate-label local-reviewed-web `
+  --output backend/build/t4-browser-smoke.json `
+  --artifact-dir backend/build/t4-browser-smoke-artifacts
+```
+
+The output and artifact directory must not already exist. The collector requires
+valid screenshots and the exact compatibility/boot network boundary for every
+scenario. Its test origin is loopback, but browser egress is not independently
+firewalled. Safari and full authenticated/accessibility/hosted journeys remain in
+the T4 catalog, so this command never completes a catalog case or accepts T4.
 
 Production-like manifests also fail closed on client lifecycle configuration.
 They require `TAXIMOBILE_CLIENT_COMPATIBILITY_ENFORCED=true`, one controlled

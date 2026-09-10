@@ -6,7 +6,10 @@ param(
 
     [Parameter()]
     [ValidatePattern('^[0-9]+(\.[0-9]+){1,3}([+-][A-Za-z0-9.-]+)?$')]
-    [string]$ExpectedVersionName = "1.0.0"
+    [string]$ExpectedVersionName = "1.0.0",
+
+    [Parameter()]
+    [string]$ManifestPath
 )
 
 $ErrorActionPreference = "Stop"
@@ -17,6 +20,7 @@ $variants = @(
     @{ Role = "driver"; Variant = "driverRelease"; ApplicationId = "ma.taximobile.driver" }
 )
 $seenFiles = @()
+$artifacts = @()
 foreach ($variant in $variants) {
     $outputDirectory = Join-Path $projectRoot "androidApp\build\outputs\apk\$($variant.Role)\release"
     $metadataPath = Join-Path $outputDirectory "output-metadata.json"
@@ -40,9 +44,56 @@ foreach ($variant in $variants) {
         throw "The $($variant.Role) release APK is unexpectedly small."
     }
     $seenFiles += $apk.FullName
+    $artifacts += [ordered]@{
+        role = $variant.Role
+        variant = $variant.Variant
+        application_id = $variant.ApplicationId
+        version_code = $element.versionCode
+        version_name = $element.versionName
+        path = [IO.Path]::GetRelativePath($projectRoot, $apk.FullName).Replace('\', '/')
+        bytes = $apk.Length
+        sha256 = (Get-FileHash -LiteralPath $apk.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+    }
 }
 if ($seenFiles[0] -eq $seenFiles[1]) {
     throw "Passenger and driver release outputs must be distinct artifacts."
+}
+
+if (-not [string]::IsNullOrWhiteSpace($ManifestPath)) {
+    $resolvedManifestPath = if ([IO.Path]::IsPathRooted($ManifestPath)) {
+        [IO.Path]::GetFullPath($ManifestPath)
+    } else {
+        [IO.Path]::GetFullPath((Join-Path (Get-Location).Path $ManifestPath))
+    }
+    if (Test-Path -LiteralPath $resolvedManifestPath) {
+        throw "Refusing to overwrite existing Android verification manifest: $resolvedManifestPath"
+    }
+    $manifestDirectory = Split-Path -Parent $resolvedManifestPath
+    if (-not (Test-Path -LiteralPath $manifestDirectory -PathType Container)) {
+        New-Item -ItemType Directory -Path $manifestDirectory -Force | Out-Null
+    }
+    $manifest = [ordered]@{
+        schema_version = 1
+        generated_at = [DateTimeOffset]::UtcNow.ToString('o')
+        evidence_level = 'ANDROID_VERIFICATION_ARTIFACTS'
+        deployment_accepted = $false
+        distribution_eligible = $false
+        expected_version_code = $ExpectedVersionCode
+        expected_version_name = $ExpectedVersionName
+        limitations = @(
+            'SIGNING_NOT_ACCEPTED'
+            'PUSH_CRASH_PROVIDER_NOT_ACCEPTED'
+            'PHYSICAL_DEVICE_NOT_ACCEPTED'
+        )
+        artifacts = $artifacts
+    }
+    $json = ($manifest | ConvertTo-Json -Depth 6) + "`n"
+    [IO.File]::WriteAllText(
+        $resolvedManifestPath,
+        $json,
+        [Text.UTF8Encoding]::new($false)
+    )
+    Write-Output "Wrote non-distributable Android verification manifest to $resolvedManifestPath."
 }
 
 Write-Output "Verified distinct passenger and driver release APK identities, versions, and files."

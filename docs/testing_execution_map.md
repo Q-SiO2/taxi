@@ -17,8 +17,8 @@ graph, map style, mobile artifact, infrastructure topology, or security-policy
 change invalidates the affected evidence and sends that scope back to the earliest
 impacted phase.
 
-**Current position (2026-09-08):** most subsystems have broad T1–T3 evidence,
-including a fresh migration-through-`20260908_0052` PostGIS run with 990 passing
+**Current position (2026-09-09):** most subsystems have broad T1–T3 evidence,
+including a fresh migration-through-`20260908_0052` PostGIS run with 992 passing
 backend tests and no failures, errors or skips. The staff-grant dual-control slice
 also has focused PostGIS, API, JS and Wasm evidence. Migration 0050 and its
 security-incident workflow, one-time postmortem completion and deadline telemetry
@@ -193,6 +193,23 @@ reference, current lead, responsibility history and generated timeline facts.
 facts, audit, notification/outbox and money facts reconcile; the simulator emits
 no personal data and cannot bypass backend authority.
 
+**Executable baseline:**
+`infra/testing/simulated-persona-catalog.json` freezes 20 source-level scenario
+IDs and 60 exact pytest nodes across authentication, inactive accounts, driver
+eligibility/recruitment, matching, rides, coordination, fixed routes, scheduling,
+cash, transfers, refunds, staff/scope/city authority, notifications, support,
+safety, security incidents, and client lifecycle. Run it only through
+`infra/scripts/run_simulated_persona_suite.py`. The runner rejects unknown fields,
+missing categories, duplicate or non-unit selectors, external-network/real-user/
+live-money flags, skips, count drift, and overwritten evidence paths. Its report
+always leaves `phase_accepted`, `phase_evidence_complete`, and
+`deployment_accepted` false. It supports only the simulated-persona matrix and
+critical-journey report; complete T2 still requires separate adversarial review,
+state/money reconciliation, test-data-minimization evidence, and both required
+sign-offs. A pytest guard denies DNS and non-loopback sockets while allowing only
+literal loopback/Unix-local runtime channels; it does not convert these unit tests
+into real HTTP evidence.
+
 ### T3 — fresh-PostGIS multi-role system tests
 
 **Entry:** T2 scripts and synthetic fixtures are frozen; the isolated database can
@@ -218,6 +235,18 @@ minimized audit metadata and postmortem-complete mutation refusal.
 reviewed platform exclusions; every synthetic account/ride/offer/booking/payment/
 outbox/audit row reconciles; no orphan process/database remains; evidence is
 repeatable from a clean checkout.
+
+The 2026-09-09 bounded local run now has executable JUnit, database metadata and
+system-report records. It passed 992 tests, confirmed PostgreSQL 16.14/PostGIS
+3.5.3 at migration 0052, removed one stale clone left by an earlier interrupted
+run, found zero clones afterward and confirmed local `CREATEDB` authority was
+revoked. A subsequent guarded logical backup restored 81 public tables and 8,511
+aggregate rows into an ephemeral database, matched PostGIS/schema/table counts,
+accepted a no-op upgrade to head, and removed the target and dump. The combined
+report supports all six required T3 evidence kinds and marks evidence complete.
+It does not accept T3 because engineering sign-off and an ordered promotion
+record remain absent; its source binding is a dirty-workspace snapshot, not
+immutable CI evidence.
 
 ### T4 — device, browser, accessibility and degraded-network lab
 
@@ -247,6 +276,34 @@ current assignment without a broad user-search or roster-disclosure surface.
 secret or private data leaks through screen, clipboard, cache, logs or analytics;
 crashes and accessibility blockers are below approved thresholds; unresolved S2
 findings have an owner disposition before T7.
+
+The Android launcher can now retain a bounded registration/login device report
+for either role with `-RegistrationSmoke -ConfirmClearAppData -EvidencePath
+<new-json>`. It records no raw serial, screenshot, credential or entered value
+and recognizes only the two backend-confirmed journeys. This starts
+`ANDROID_DEVICE_REPORT`; it does not satisfy the supported matrix, iOS/browser,
+accessibility/RTL, degraded-network/lifecycle or crash-symbolication records and
+cannot mark T4 accepted.
+
+The machine-readable T4 catalog freezes 56 laboratory cases, exactly eight for
+each of the seven required evidence kinds. It cross-checks source platform
+targets, physical-device and real-browser requirements, locales, RTL, safety
+flags, observations and blocking severity. The evidence validator credits a
+kind only when all eight cases pass with retained SHA-256 evidence; failed or
+blocked cases require defect references. The committed template remains
+`NOT_STARTED` with 0/56 cases and no acceptance claim.
+
+`infra/scripts/run_t4_browser_smoke.py` is a narrower executable precursor to
+the browser evidence class. It validates a packaged release, serves a loopback
+origin with synthetic compatibility responses and runs four fail-closed boot
+scenarios per selected Chrome/Firefox family. Every scenario requires the exact
+surface/version/build preflight, the expected blocked-or-single-runtime-branch
+result and a retained valid screenshot. The report explicitly states that
+browser egress is not independently firewalled, lists Safari as missing and
+leaves catalog-case, phase and deployment acceptance false. The 2026-09-09 local
+run passed 4/4 scenarios in Chrome 152 and 4/4 in Firefox 155; it starts evidence
+collection but does not complete any of the eight `BROWSER_COMPATIBILITY_REPORT`
+catalog cases.
 
 ### T5 — hosted staging, capacity, security and failure recovery
 

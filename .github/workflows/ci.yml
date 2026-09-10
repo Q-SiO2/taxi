@@ -57,6 +57,8 @@ jobs:
           python-version: "3.12"
       - run: python infra/scripts/validate_docs.py
       - run: python infra/scripts/validate_test_phase_evidence.py
+      - run: python infra/scripts/run_simulated_persona_suite.py --validate-only
+      - run: python infra/scripts/validate_t4_lab_evidence.py
       - run: python infra/scripts/validate_ci_security.py
       - run: python infra/scripts/validate_legacy_admin_retirement.py
       - run: python -m unittest discover -s infra/scripts/tests -p 'test_*.py'
@@ -119,7 +121,28 @@ jobs:
       - run: python ../infra/scripts/validate_monitoring_deployment.py
       - run: python ../infra/scripts/validate_production_compose.py
       - run: alembic upgrade head
-      - run: python -m pytest
+      - name: Execute bounded T2 simulated-persona baseline
+        run: >-
+          python ../infra/scripts/run_simulated_persona_suite.py
+          --output /tmp/taximobile-t2-simulated-personas.json
+          --junit-output /tmp/taximobile-t2-simulated-personas.junit.xml
+      - name: Execute full backend and fresh-PostGIS T3 baseline
+        run: python -m pytest --junitxml=/tmp/taximobile-t3-full-backend.junit.xml
+      - name: Collect bounded T3 database and system evidence
+        shell: bash
+        run: |
+          python ../infra/scripts/collect_t3_database_metadata.py \
+            --authority-mode EPHEMERAL_CI_SERVICE_ROLE \
+            --database-lifecycle EPHEMERAL_SERVICE_DATABASE \
+            --output /tmp/taximobile-t3-database-metadata.json
+          python ../infra/scripts/run_t3_backup_restore_rehearsal.py \
+            --maintenance-user taximobile \
+            --output /tmp/taximobile-t3-backup-restore.json
+          python ../infra/scripts/generate_t3_system_report.py \
+            --junit /tmp/taximobile-t3-full-backend.junit.xml \
+            --database-metadata /tmp/taximobile-t3-database-metadata.json \
+            --backup-restore /tmp/taximobile-t3-backup-restore.json \
+            --output /tmp/taximobile-t3-system-evidence.json
       - run: alembic upgrade head --sql > /tmp/taximobile-schema.sql
       - run: docker build --tag taximobile-api:ci .
       - name: Generate the built backend image SPDX SBOM
@@ -139,6 +162,12 @@ jobs:
           --label "backend-image-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           --artifact /tmp/taximobile-api.spdx.json
           --artifact /tmp/taximobile-source-contract-inventory.json
+          --artifact /tmp/taximobile-t2-simulated-personas.json
+          --artifact /tmp/taximobile-t2-simulated-personas.junit.xml
+          --artifact /tmp/taximobile-t3-full-backend.junit.xml
+          --artifact /tmp/taximobile-t3-database-metadata.json
+          --artifact /tmp/taximobile-t3-backup-restore.json
+          --artifact /tmp/taximobile-t3-system-evidence.json
           --output /tmp/taximobile-backend-evidence.json
       - name: Publish backend image evidence in the run summary
         shell: bash
@@ -147,6 +176,34 @@ jobs:
           echo '```json' >> "${GITHUB_STEP_SUMMARY}"
           cat /tmp/taximobile-source-contract-inventory.json >> "${GITHUB_STEP_SUMMARY}"
           echo '```' >> "${GITHUB_STEP_SUMMARY}"
+          echo '## TaxiMobile bounded T2 simulated-persona evidence' >> "${GITHUB_STEP_SUMMARY}"
+          echo 'This result does not accept T2 or any deployment phase.' >> "${GITHUB_STEP_SUMMARY}"
+          echo '```json' >> "${GITHUB_STEP_SUMMARY}"
+          cat /tmp/taximobile-t2-simulated-personas.json >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"
+          echo '<details><summary>T2 JUnit detail</summary>' >> "${GITHUB_STEP_SUMMARY}"
+          echo '' >> "${GITHUB_STEP_SUMMARY}"
+          echo '```xml' >> "${GITHUB_STEP_SUMMARY}"
+          cat /tmp/taximobile-t2-simulated-personas.junit.xml >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"
+          echo '</details>' >> "${GITHUB_STEP_SUMMARY}"
+          echo '## TaxiMobile bounded T3 system evidence' >> "${GITHUB_STEP_SUMMARY}"
+          echo 'This complete evidence set does not accept T3 or deployment; formal engineering sign-off remains required.' >> "${GITHUB_STEP_SUMMARY}"
+          echo '```json' >> "${GITHUB_STEP_SUMMARY}"
+          cat /tmp/taximobile-t3-system-evidence.json >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"
+          echo '<details><summary>T3 isolated backup/restore rehearsal</summary>' >> "${GITHUB_STEP_SUMMARY}"
+          echo '' >> "${GITHUB_STEP_SUMMARY}"
+          echo '```json' >> "${GITHUB_STEP_SUMMARY}"
+          cat /tmp/taximobile-t3-backup-restore.json >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"
+          echo '</details>' >> "${GITHUB_STEP_SUMMARY}"
+          echo '<details><summary>T3 secret-free database metadata</summary>' >> "${GITHUB_STEP_SUMMARY}"
+          echo '' >> "${GITHUB_STEP_SUMMARY}"
+          echo '```json' >> "${GITHUB_STEP_SUMMARY}"
+          cat /tmp/taximobile-t3-database-metadata.json >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"
+          echo '</details>' >> "${GITHUB_STEP_SUMMARY}"
           echo '## TaxiMobile backend image evidence' >> "${GITHUB_STEP_SUMMARY}"
           echo '```json' >> "${GITHUB_STEP_SUMMARY}"
           cat /tmp/taximobile-backend-evidence.json >> "${GITHUB_STEP_SUMMARY}"
@@ -428,7 +485,25 @@ jobs:
           '-PtaximobileAllowUnsignedReleaseForVerification=true'
           '-PtaximobileAllowMissingFirebaseForVerification=true'
       - shell: pwsh
-        run: ./scripts/verify-android-release-artifacts.ps1 -ExpectedVersionCode 1 -ExpectedVersionName 1.0.0
+        run: >-
+          ./scripts/verify-android-release-artifacts.ps1
+          -ExpectedVersionCode 1 -ExpectedVersionName 1.0.0
+          -ManifestPath "$env:RUNNER_TEMP/taximobile-android-verification-manifest.json"
+      - name: Bind Android verification artifacts to immutable source evidence
+        run: >-
+          python ../infra/scripts/generate_release_evidence.py
+          --label "android-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          --artifact "${RUNNER_TEMP}/taximobile-android-verification-manifest.json"
+          --output "${RUNNER_TEMP}/taximobile-android-evidence.json"
+      - name: Publish Android verification evidence in the run summary
+        shell: bash
+        run: |
+          echo '## TaxiMobile Android verification evidence' >> "${GITHUB_STEP_SUMMARY}"
+          echo 'These artifacts are unsigned/providerless verification outputs, not distributable releases.' >> "${GITHUB_STEP_SUMMARY}"
+          echo '```json' >> "${GITHUB_STEP_SUMMARY}"
+          cat "${RUNNER_TEMP}/taximobile-android-verification-manifest.json" >> "${GITHUB_STEP_SUMMARY}"
+          cat "${RUNNER_TEMP}/taximobile-android-evidence.json" >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"
 
   web:
     runs-on: ubuntu-24.04
@@ -445,6 +520,7 @@ jobs:
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
+      - run: node scripts/test-web-compatibility-loader.mjs
       - run: ./gradlew --no-daemon :webApp:jsBrowserTest :webApp:wasmJsBrowserTest
       - run: ./gradlew --no-daemon :webApp:composeCompatibilityBrowserDistribution
       - name: Package reviewed web distribution without public source maps
@@ -452,6 +528,47 @@ jobs:
           python ../infra/scripts/package_web_release.py
           --input webApp/build/dist/composeWebCompatibility/productionExecutable
           --output "${RUNNER_TEMP}/taximobile-web-release"
+      - name: Run bounded Chrome release-boot smoke
+        run: >-
+          python ../infra/scripts/run_t4_browser_smoke.py
+          --release-dir "${RUNNER_TEMP}/taximobile-web-release"
+          --browser chrome
+          --candidate-label "web-browser-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          --output "${RUNNER_TEMP}/taximobile-t4-browser-smoke.json"
+          --artifact-dir "${RUNNER_TEMP}/taximobile-t4-browser-smoke-artifacts"
+      - name: Bind the web release manifest to immutable source evidence
+        run: >-
+          python ../infra/scripts/generate_release_evidence.py
+          --label "web-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          --artifact "${RUNNER_TEMP}/taximobile-web-release/release-manifest.json"
+          --artifact "${RUNNER_TEMP}/taximobile-t4-browser-smoke.json"
+          --output "${RUNNER_TEMP}/taximobile-web-evidence.json"
+      - name: Retain bounded Chrome smoke report and screenshots
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: taximobile-web-browser-smoke-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/taximobile-t4-browser-smoke.json
+            ${{ runner.temp }}/taximobile-t4-browser-smoke-artifacts
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish web candidate evidence in the run summary
+        shell: bash
+        run: |
+          echo '## TaxiMobile web candidate evidence' >> "${GITHUB_STEP_SUMMARY}"
+          echo 'The real-browser smoke covers only release boot and preflight; it does not complete any T4 browser case or accept deployment.' >> "${GITHUB_STEP_SUMMARY}"
+          echo '### Packaged file manifest' >> "${GITHUB_STEP_SUMMARY}"
+          echo '```json' >> "${GITHUB_STEP_SUMMARY}"
+          cat "${RUNNER_TEMP}/taximobile-web-release/release-manifest.json" >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"
+          echo '### Partial Chrome release-boot smoke' >> "${GITHUB_STEP_SUMMARY}"
+          echo '```json' >> "${GITHUB_STEP_SUMMARY}"
+          cat "${RUNNER_TEMP}/taximobile-t4-browser-smoke.json" >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"
+          echo '### Source and manifest binding' >> "${GITHUB_STEP_SUMMARY}"
+          echo '```json' >> "${GITHUB_STEP_SUMMARY}"
+          cat "${RUNNER_TEMP}/taximobile-web-evidence.json" >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"
 
   ios-shared:
     runs-on: macos-15
@@ -464,12 +581,16 @@ jobs:
         with:
           distribution: temurin
           java-version: "21"
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
       - run: sudo xcode-select --switch /Applications/Xcode_26.2.app
       - run: xcodebuild -version
       - run: ./gradlew --no-daemon :shared:iosSimulatorArm64Test
       - run: >-
           xcodebuild -project iosApp/iosApp.xcodeproj -scheme "TaxiMobile Passenger"
           -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator'
+          -derivedDataPath "${RUNNER_TEMP}/taximobile-ios-derived"
           CODE_SIGNING_ALLOWED=NO TAXIMOBILE_ALLOW_UNSIGNED_RELEASE_FOR_VERIFICATION=YES
           TAXIMOBILE_ALLOW_MISSING_FIREBASE_FOR_VERIFICATION=YES
           TAXIMOBILE_API_BASE_URL=https://api.example.test
@@ -478,8 +599,30 @@ jobs:
       - run: >-
           xcodebuild -project iosApp/iosApp.xcodeproj -scheme "TaxiMobile Driver"
           -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator'
+          -derivedDataPath "${RUNNER_TEMP}/taximobile-ios-derived"
           CODE_SIGNING_ALLOWED=NO TAXIMOBILE_ALLOW_UNSIGNED_RELEASE_FOR_VERIFICATION=YES
           TAXIMOBILE_ALLOW_MISSING_FIREBASE_FOR_VERIFICATION=YES
           TAXIMOBILE_API_BASE_URL=https://api.example.test
           TAXIMOBILE_MAP_STYLE_URL=https://maps.example.test/style.json
           TAXIMOBILE_RELEASE_VERSION_CODE=1 TAXIMOBILE_RELEASE_VERSION_NAME=1.0.0 build
+      - name: Inventory both non-distributable iOS simulator products
+        run: >-
+          python scripts/generate_ios_verification_manifest.py
+          --products-dir "${RUNNER_TEMP}/taximobile-ios-derived/Build/Products/Release-iphonesimulator"
+          --expected-version-code 1 --expected-version-name 1.0.0
+          --output "${RUNNER_TEMP}/taximobile-ios-verification-manifest.json"
+      - name: Bind iOS simulator artifacts to immutable source evidence
+        run: >-
+          python ../infra/scripts/generate_release_evidence.py
+          --label "ios-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          --artifact "${RUNNER_TEMP}/taximobile-ios-verification-manifest.json"
+          --output "${RUNNER_TEMP}/taximobile-ios-evidence.json"
+      - name: Publish iOS verification evidence in the run summary
+        shell: bash
+        run: |
+          echo '## TaxiMobile iOS verification evidence' >> "${GITHUB_STEP_SUMMARY}"
+          echo 'These are unsigned simulator/providerless verification outputs, not App Store releases.' >> "${GITHUB_STEP_SUMMARY}"
+          echo '```json' >> "${GITHUB_STEP_SUMMARY}"
+          cat "${RUNNER_TEMP}/taximobile-ios-verification-manifest.json" >> "${GITHUB_STEP_SUMMARY}"
+          cat "${RUNNER_TEMP}/taximobile-ios-evidence.json" >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"

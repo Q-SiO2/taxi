@@ -4,6 +4,24 @@ This is the executable workload companion to [the phase map](testing.md) and
 [GAP-018](gaps.md#gap-018--prove-performance-capacity-availability-and-failover).
 It does not authorize traffic against production or a real-user pilot.
 
+## T2 source-level simulated persona baseline
+
+Before any HTTP workload, run the committed T2 simulation catalog:
+
+```powershell
+python ..\infra\scripts\run_simulated_persona_suite.py `
+  --output build\t2-simulated-personas.json `
+  --junit-output build\t2-simulated-personas.junit.xml
+```
+
+The catalog contains 20 stable scenario IDs backed by 60 exact unit-test nodes.
+It covers closed authority and state-machine behavior for representative
+passenger, driver, applicant, reviewer, finance, staff, support, safety,
+incident, and obsolete-client personas. The command has no base URL, database,
+provider, real-user, or live-money mode. A pass is an executable T2 baseline,
+not T2 acceptance: the report explicitly leaves adversarial review, durable
+state/money reconciliation, and test-data-minimization evidence outstanding.
+
 ## Implemented workload and evidence boundary
 
 `python -m taximobile_api.operations.passenger_workload` executes

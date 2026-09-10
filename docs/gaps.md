@@ -2,7 +2,7 @@
 
 ## 1. Audit status
 
-**Audit date:** 2026-09-08
+**Audit date:** 2026-09-09
 
 **Repository migration head:** `20260908_0052`
 **Decision:** **not ready for a public launch or live city pilot**
@@ -72,8 +72,8 @@ The documentation validator also passed with migration-head and testing-phase
 consistency. These are dirty-workspace local results, not immutable CI, hosted,
 physical-device, security-review, or deployment acceptance.
 
-The latest completed full regression passed a fresh isolated PostGIS rebuild on 2026-09-08 through
-`20260908_0052` with **990 backend tests**, no failures/errors/skips, and dependency
+The latest completed full regression passed a fresh isolated PostGIS rebuild on 2026-09-09 through
+`20260908_0052` with **992 backend tests**, no failures/errors/skips, and dependency
 deprecation warnings. This includes place authority, the active-ride coordination
 lifecycle, notification policy, source-deadline/device-failure contracts,
 scheduling eligibility/readiness, successful handoff/fallback transaction rollback/replay,
@@ -100,7 +100,7 @@ its place-serviceability, recovery-code, foreground driver-location and
 coordination and scheduled-notification cases, the full suite, both Android role compiles, and JS/Wasm
 compilation are locally verified.
 
-The latest full-backend console run is **990 tests**, zero failures, errors, or
+The latest full-backend JUnit run is **992 tests**, zero failures, errors, or
 skips, 175 dependency warnings, and 464.24 seconds. This duration is not capacity
 evidence. The preceding generated
 JUnit evidence remains `backend/build/security-incident-full-tests.xml` at
@@ -181,6 +181,27 @@ provenance from deployment acceptance. The documentation/provenance CI job
 generates this record from a clean checkout. GAP-001 remains open until the full
 working tree is reviewed, committed, built, signed, and accepted.
 
+**Implementation progress (2026-09-09):** the web CI package now emits an
+81-file hash/size manifest and binds that manifest's hash to the exact clean
+commit, tree and migration evidence before retaining both records in the run
+summary. Android does the same for distinct passenger/driver APK metadata and
+iOS does so for deterministic passenger/driver simulator-bundle hashes. Mobile
+verification manifests are explicitly `distribution_eligible=false` and name
+unaccepted signing, provider, device and App Store boundaries. Local records are
+correctly labeled dirty `WORKSPACE_SNAPSHOT`; none substitutes for the still-
+missing immutable remote run, signed artifacts or deployment acceptance.
+
+**Implementation progress (2026-09-10):** `release_baseline.md` now records the
+candidate label, included source scope, migration and rollback boundary, local
+verification matrix, explicit non-acceptance limits and the evidence required
+from one clean commit. A fresh local candidate run passed 992 backend tests,
+restored 81 tables at migration 0052, removed its temporary target/dump and left
+zero test clones with temporary `CREATEDB` authority revoked. The infrastructure
+and mobile release-tool suites, Gradle client gates and eight-scenario packaged
+Chrome/Firefox smoke also passed. This establishes a reviewable local candidate,
+not closure: clean commit/PR status, remote CI, signed distributable artifacts,
+registry image digest and reviewer approval are still required.
+
 ### GAP-002 — Provision and accept a real hosted environment
 
 **Current gap:** deployment files are provider-neutral blueprints. No accepted
@@ -208,6 +229,19 @@ measured recovery time.
 no production database, encrypted backup policy, point-in-time recovery, tested
 staging restore, capacity baseline, or verified expiry of data removed by
 retention workers.
+
+**Implementation progress (2026-09-09):** the guarded fresh-PostGIS runner now
+emits full JUnit, secret-free database metadata and a bounded T3 system report.
+The latest run passed 992 tests, verified migration 0052 and PostGIS, exercised
+named lock/race/worker-reclaim/reconciliation cases, removed one strictly named
+stale test clone, found zero residual clones and confirmed temporary local
+`CREATEDB` authority was revoked. A guarded logical backup then restored 81
+public tables and 8,511 aggregate rows at migration 0052, matched PostGIS and
+schema-object totals, accepted a no-op upgrade, and removed the restore target
+and dump. The combined report supports all six T3 evidence kinds and marks
+evidence complete while refusing T3/deployment acceptance. Measured production
+RPO/RTO, encrypted managed backups, hosted PITR/failover, retention expiry and
+owner approval remain open.
 
 **Risk:** permanent loss, corruption, migration outage, privacy retention breach,
 or unrecoverable city operations.
@@ -531,14 +565,17 @@ approved support matrix; automated auth/MFA, scope, city lifecycle, document,
 pricing, route, payment, case and audit journeys; CSP/header scan; accessibility
 and RTL report; production-like hosted acceptance.
 
-**Implementation progress (2026-09-01):** CI now compiles and launches existing
+**Implementation progress (2026-09-09):** CI now compiles and launches existing
 JavaScript and Wasm browser tests, builds the Compose compatibility distribution,
 and packages it through `package_web_release.py`. The packager rejects missing or
 remote boot resources and inline scripts, enforces reviewed initial raw bundle
 ceilings, excludes `.map` files, emits SHA-256/size records, and records a hosting
-header template requiring exact API/WebSocket restriction. Local production
-packaging passed with 80 files, the required favicon, and three source maps
-excluded. On 2026-09-02 the Gradle JS and Wasm browser suites both passed on the
+header template requiring exact API/WebSocket restriction. The 2026-09-09 local
+production package passed with 81 files and 33,777,513 bytes excluding three
+source maps; its manifest deliberately leaves `deployment_accepted=false` until
+hosted acceptance. Six dependency-free runtime scenarios now exercise the static
+compatibility loader and its fail-closed/header-scoping behavior in the web CI
+job. On 2026-09-09 the Gradle JS and Wasm browser suites both passed on the
 Windows verification host; remote CI, full critical-journey E2E, Firefox/Safari
 or an approved support matrix, and hosted acceptance remain required. An earlier
 in-app Wasm browser smoke test rendered both
@@ -546,10 +583,24 @@ operations and applicant entry surfaces, found and fixed a nested-scroll
 infinite-height exception on the narrow applicant layout, and then passed the
 applicant route at 390 px and 1280 px without horizontal overflow or new runtime
 warnings/errors. The production compatibility output is still large: the current
-fallback JavaScript is about 5.82 MB, the application Wasm about 6.39 MB, and the
-Skiko Wasm runtime about 8.65 MB before transfer compression. The initial budgets
+fallback JavaScript is 6,104,171 bytes (about 5.82 MiB), the application Wasm is
+6,818,646 bytes, and the Skiko Wasm runtime is 8,652,729 bytes before transfer
+compression. The JavaScript ceiling was reviewed at 6,250,000 bytes, leaving
+2.39% headroom over the measured candidate rather than weakening the gate
+broadly. The Wasm and total-release ceilings remain unchanged. These ceilings
 prevent silent growth; measured startup on target networks and further
 optimization remain acceptance work.
+
+The packaged compatibility release now also has a bounded real-browser boot
+collector wired into CI. It serves only a loopback test origin, verifies exact
+applicant/operations client identity, exercises supported, upgrade-required and
+preflight-failure branches, requires exactly one JS/Wasm runtime branch only
+when boot is authorized, and fails closed unless each scenario retains a valid
+screenshot. A local 2026-09-09 run passed all eight scenarios in Chrome 152 and
+Firefox 155 with eight screenshots. Safari, authenticated and privileged
+journeys, accessibility/RTL, console/source-map review, hosted headers and an
+independently firewalled browser-egress environment remain missing. The report
+therefore covers no complete T4 catalog case and cannot accept T4 or deployment.
 
 ### GAP-015 — Connect monitoring, alerting, crash reporting, and on-call
 
@@ -869,7 +920,7 @@ committed ride history remain intact; nested authorization status is current.
 
 All 33 focused cases pass: 17 policy/input cases, nine lifecycle/handoff cases,
 four actual MFA/HTTP/replay/rollback cases, and three approval-race/cross-city
-cases. All 33 are also included in the passing 990-test full regression; the
+cases. All 33 are also included in the passing 992-test full regression; the
 preceding 956-test generated report remains at
 `backend/build/security-incident-full-tests.xml`. The console compiles and its
 56 model tests pass in both JS and Wasm browser tasks; the web contract gate
@@ -967,6 +1018,16 @@ all 19 P0 closure references before T8. It rejects public users before T9, live
 money before T8, unsafe field failure injection and real-user evidence in local
 phases. This prevents a local or synthetic report from being relabeled as city
 acceptance; no controlled city exercise has yet occurred.
+
+**Implementation progress (2026-09-09):** T2 now has a strict executable
+simulated-persona catalog covering 20 stable scenarios with 60 exact unit-test
+nodes. The local run passed without failures, errors, or skips. CI executes it,
+retains its JSON/JUnit records, and binds both to backend candidate evidence. The
+runner has no target URL, provider credential, real-user, persistent-data, or
+live-money mode and always reports T2/deployment acceptance false. Durable
+database and money reconciliation, full adversarial review, data-minimization
+evidence, security sign-off, T3 onward, and the real controlled-city exercise
+remain open.
 
 ## 6. P1 — required before scaled public service
 
@@ -1081,7 +1142,7 @@ quorum closure, direct last-admin refusal and expiry continuity. Migration
 downgrade/re-upgrade passed. Focused backend unit/API/contract tests passed, both
 JS and Wasm browser tasks passed with 57 tests each, and the web/backend source
 contract covers 112 expanded HTTP operations. The complete fresh-PostGIS backend
-regression then passed all 990 tests at migration 0052 with no failures, errors or
+regression then passed all 992 tests at migration 0052 with no failures, errors or
 skips. This is local dirty-workspace
 source evidence, not accessibility, hosted MFA/CSP, authoritative-roster or
 staff-rehearsal acceptance.
@@ -1174,6 +1235,22 @@ passengers, licensed drivers and operations staff.
 **Acceptance evidence:** issue-by-screen matrix with closure; automated checks
 where useful; physical assistive-technology recordings; professional translation
 review for French/Arabic; user-test findings and owner acceptance.
+
+**Implementation progress (2026-09-09):** the guarded Android launcher can now
+emit a non-overwriting, privacy-bounded device report after real registration and
+login. It records supported SDK/ABI/model/locale/screen/package facts and two
+backend-confirmed journey results without a raw serial, screenshot, credential or
+submitted value. Source mutation tests keep the report partial and T4/deployment
+acceptance false. No device was connected for this change, and accessibility,
+RTL, lifecycle, crash, iOS/browser and representative-user evidence remain open.
+
+The T4 laboratory catalog decomposes those open requirements into 56 closed
+cases, eight each for supported matrix, Android, iOS, browser, accessibility/RTL,
+degraded network/lifecycle and crash symbolication. Its validator cross-checks
+actual source platform targets, prevents simulated physical/real-browser claims,
+requires retained hashes and defect links, and credits evidence kinds
+independently. The committed template remains 0/56 `NOT_STARTED`; this improves
+execution discipline but closes none of the human/device acceptance gap by itself.
 
 ### GAP-026 — Accept routing narration and all operational copy
 
@@ -1489,7 +1566,7 @@ version/idempotency authority,
 content-minimized audit metadata and SQLSTATE `55000` on timeline or assignment
 history mutation, fixed zero-filled severity buckets, deadline transitions,
 privacy-safe failure behavior and alert mutation refusal. Migration 0052 upgrade
-and `0052 → 0051 → 0052` round trip passed, followed by all 990 backend tests on
+and `0052 → 0051 → 0052` round trip passed, followed by all 992 backend tests on
 fresh PostGIS.
 This is local dirty-workspace evidence, not a staffed tabletop, web accessibility,
 external containment, communications decision, or production timing result.
@@ -1558,6 +1635,31 @@ The documentation/provenance job now also validates the executable T0–T10 phas
 catalog and its all-`NOT_STARTED` template. Mutation coverage rejects removal of
 that gate. CI validates the promotion contract but cannot create an accepted
 device, hosted, staff, city or real-user phase record.
+
+**Implementation progress (2026-09-09):** six dependency-free runtime scenarios
+now execute the static web compatibility boot and exact-origin/path header
+scoping. The packaged web file manifest and limitation-marked Android/iOS role
+manifests are each hash-bound to clean source evidence and retained in the CI run
+summary; mutation tests reject removal of any binding. The local web package has
+81 files and 33,777,513 bytes excluding three maps. The Android 1.0.0
+verification APKs and their hashes are locally recorded; iOS execution remains a
+macOS CI gate. This is stronger candidate provenance, not signing, SBOM coverage,
+remote-CI success, device acceptance or a public release.
+
+The backend CI job now also executes the bounded 20-scenario/60-test T2 persona
+catalog and retains its JSON plus JUnit evidence under the same clean-candidate
+binding. CI wiring mutation tests reject removing the runner, either artifact,
+or the explicit non-acceptance warning. This makes simulated journey drift
+visible without treating a source-level unit harness as database, provider,
+device, security-review, or field evidence.
+
+The backend job now retains a full-suite JUnit report, collects safe PostGIS/
+migration/clone/authority metadata, runs a guarded logical backup/restore, and
+generates a T3 report that requires named migration-lock, concurrency, worker
+termination/reclaim and reconciliation tests. All four artifacts are bound to candidate provenance, and CI mutation
+tests reject removal of execution, binding, retention or the explicit
+non-acceptance warning. The local 992-test plus restore record passes all six T3
+evidence kinds; a clean remote run and formal engineering acceptance remain open.
 
 ### GAP-034 — Reduce contract and implementation drift
 

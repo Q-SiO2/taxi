@@ -83,6 +83,115 @@ class CiSecurityValidationTests(unittest.TestCase):
         ):
             validate_ci_security(changed)
 
+    def test_web_compatibility_runtime_gate_cannot_be_removed(self) -> None:
+        changed = self.workflow.replace(
+            "      - run: node scripts/test-web-compatibility-loader.mjs\n",
+            "",
+        )
+        with self.assertRaisesRegex(
+            CiSecurityError,
+            "web compatibility loader runtime scenarios",
+        ):
+            validate_ci_security(changed)
+
+    def test_web_manifest_source_binding_cannot_be_removed(self) -> None:
+        changed = self.workflow.replace(
+            '--artifact "${RUNNER_TEMP}/taximobile-web-release/release-manifest.json"',
+            '--artifact "${RUNNER_TEMP}/unrelated.json"',
+        )
+        with self.assertRaisesRegex(
+            CiSecurityError,
+            "packaged web manifest is not bound to source",
+        ):
+            validate_ci_security(changed)
+
+    def test_real_browser_smoke_source_binding_cannot_be_removed(self) -> None:
+        changed = self.workflow.replace(
+            '--artifact "${RUNNER_TEMP}/taximobile-t4-browser-smoke.json"',
+            '--artifact "${RUNNER_TEMP}/unrelated-browser-smoke.json"',
+        )
+        with self.assertRaisesRegex(
+            CiSecurityError,
+            "packaged web manifest is not bound to source",
+        ):
+            validate_ci_security(changed)
+
+    def test_android_manifest_source_binding_cannot_be_removed(self) -> None:
+        changed = self.workflow.replace(
+            '--artifact "${RUNNER_TEMP}/taximobile-android-verification-manifest.json"',
+            '--artifact "${RUNNER_TEMP}/unrelated-android.json"',
+        )
+        with self.assertRaisesRegex(
+            CiSecurityError,
+            "Android verification artifacts are not limitation-marked",
+        ):
+            validate_ci_security(changed)
+
+    def test_ios_manifest_source_binding_cannot_be_removed(self) -> None:
+        changed = self.workflow.replace(
+            '--artifact "${RUNNER_TEMP}/taximobile-ios-verification-manifest.json"',
+            '--artifact "${RUNNER_TEMP}/unrelated-ios.json"',
+        )
+        with self.assertRaisesRegex(
+            CiSecurityError,
+            "iOS simulator artifacts are not limitation-marked",
+        ):
+            validate_ci_security(changed)
+
+    def test_t2_simulated_persona_binding_cannot_be_removed(self) -> None:
+        changed = self.workflow.replace(
+            "          --artifact /tmp/taximobile-t2-simulated-personas.json\n",
+            "",
+        )
+        with self.assertRaisesRegex(
+            CiSecurityError,
+            "bounded T2 simulated-persona report",
+        ):
+            validate_ci_security(changed)
+
+    def test_t2_catalog_source_gate_cannot_be_removed(self) -> None:
+        changed = self.workflow.replace(
+            "      - run: python infra/scripts/run_simulated_persona_suite.py --validate-only\n",
+            "",
+        )
+        with self.assertRaisesRegex(
+            CiSecurityError,
+            "catalog must be validated once",
+        ):
+            validate_ci_security(changed)
+
+    def test_t3_database_metadata_binding_cannot_be_removed(self) -> None:
+        changed = self.workflow.replace(
+            "          --artifact /tmp/taximobile-t3-database-metadata.json\n",
+            "",
+        )
+        with self.assertRaisesRegex(CiSecurityError, "bounded T3 full-system report"):
+            validate_ci_security(changed)
+
+    def test_t3_acceptance_warning_cannot_be_removed(self) -> None:
+        changed = self.workflow.replace(
+            "          echo 'This complete evidence set does not accept T3 or deployment; formal engineering sign-off remains required.' >> \"${GITHUB_STEP_SUMMARY}\"\n",
+            "",
+        )
+        with self.assertRaisesRegex(CiSecurityError, "bounded T3 full-system report"):
+            validate_ci_security(changed)
+
+    def test_t3_backup_restore_binding_cannot_be_removed(self) -> None:
+        changed = self.workflow.replace(
+            "          --artifact /tmp/taximobile-t3-backup-restore.json\n",
+            "",
+        )
+        with self.assertRaisesRegex(CiSecurityError, "bounded T3 full-system report"):
+            validate_ci_security(changed)
+
+    def test_t4_lab_catalog_gate_cannot_be_removed(self) -> None:
+        changed = self.workflow.replace(
+            "      - run: python infra/scripts/validate_t4_lab_evidence.py\n",
+            "",
+        )
+        with self.assertRaisesRegex(CiSecurityError, "T4 device/browser laboratory catalog"):
+            validate_ci_security(changed)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "catalog_revision": "2026-09-09",
+  "catalog_sha256": "a0b23113e80f6fe2107346d6e18b77b87fe335ae00af599069139ef4cfffae64",
+  "phase": "T4",
+  "evidence_level": "T4_LAB_EXECUTION",
+  "status": "NOT_STARTED",
+  "data_classification": "STAFF_CONTROLLED",
+  "public_users_allowed": false,
+  "live_money_allowed": false,
+  "candidate_label": null,
+  "case_results": [],
+  "supported_evidence_kinds": [],
+  "missing_evidence_kinds": [
+    "SUPPORTED_MATRIX",
+    "ANDROID_DEVICE_REPORT",
+    "IOS_DEVICE_REPORT",
+    "BROWSER_COMPATIBILITY_REPORT",
+    "ACCESSIBILITY_AND_RTL_REPORT",
+    "DEGRADED_NETWORK_AND_LIFECYCLE_REPORT",
+    "CRASH_SYMBOLICATION_REPORT"
+  ],
+  "phase_evidence_complete": false,
+  "phase_accepted": false,
+  "deployment_accepted": false,
+  "limitations": [
+    "TEMPLATE_ONLY",
+    "NO_DEVICE_OR_BROWSER_EXECUTION",
+    "NO_PHASE_OR_DEPLOYMENT_ACCEPTANCE_CLAIM"
+  ]
+}

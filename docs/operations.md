@@ -398,7 +398,7 @@ share the driver lock with assignment and preserve committed rides and future
 commitment history. Handoff revalidates eligibility; operations must use existing
 support/safety procedures for an already assigned journey.
 
-The 33-case focused backend pack, current full 990-test backend regression and
+The 33-case focused backend pack, current full 992-test backend regression and
 both 57-case web browser target suites pass locally.
 This includes a same-driver/two-city isolation test and actual MFA/scope/replay
 checks. Independent-process contention, complete driver-facing notification
