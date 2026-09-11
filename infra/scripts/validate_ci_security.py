@@ -229,6 +229,12 @@ def validate_ci_security(workflow: str) -> None:
         )
 
     ios_candidate_requirements = (
+        "Run shared iOS simulator tests with bounded failure capture",
+        "./gradlew --no-daemon :shared:iosSimulatorArm64Test --stacktrace",
+        'tee "${RUNNER_TEMP}/taximobile-ios-shared.log"',
+        "python ../infra/scripts/emit_ci_failure_annotation.py",
+        '--input "${RUNNER_TEMP}/taximobile-ios-shared.log"',
+        '--title "TaxiMobile iOS shared Gradle failure"',
         "python scripts/generate_ios_verification_manifest.py",
         '--products-dir "${RUNNER_TEMP}/taximobile-ios-derived/Build/Products/Release-iphonesimulator"',
         '--artifact "${RUNNER_TEMP}/taximobile-ios-verification-manifest.json"',

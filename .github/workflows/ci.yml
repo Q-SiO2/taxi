@@ -586,7 +586,18 @@ jobs:
           python-version: "3.12"
       - run: sudo xcode-select --switch /Applications/Xcode_26.2.app
       - run: xcodebuild -version
-      - run: ./gradlew --no-daemon :shared:iosSimulatorArm64Test
+      - name: Run shared iOS simulator tests with bounded failure capture
+        shell: bash
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon :shared:iosSimulatorArm64Test --stacktrace 2>&1 \
+            | tee "${RUNNER_TEMP}/taximobile-ios-shared.log"
+      - name: Publish redacted iOS shared-test failure annotation
+        if: failure()
+        run: >-
+          python ../infra/scripts/emit_ci_failure_annotation.py
+          --input "${RUNNER_TEMP}/taximobile-ios-shared.log"
+          --title "TaxiMobile iOS shared Gradle failure"
       - run: >-
           xcodebuild -project iosApp/iosApp.xcodeproj -scheme "TaxiMobile Passenger"
           -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator'

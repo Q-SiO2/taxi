@@ -138,6 +138,17 @@ class CiSecurityValidationTests(unittest.TestCase):
         ):
             validate_ci_security(changed)
 
+    def test_ios_failure_annotation_cannot_be_removed(self) -> None:
+        changed = self.workflow.replace(
+            "          python ../infra/scripts/emit_ci_failure_annotation.py\n",
+            "          python ../infra/scripts/unbounded-diagnostic.py\n",
+        )
+        with self.assertRaisesRegex(
+            CiSecurityError,
+            "iOS simulator artifacts are not limitation-marked",
+        ):
+            validate_ci_security(changed)
+
     def test_t2_simulated_persona_binding_cannot_be_removed(self) -> None:
         changed = self.workflow.replace(
             "          --artifact /tmp/taximobile-t2-simulated-personas.json\n",

@@ -41,6 +41,7 @@ SOURCE_INPUTS = (
     "infra/scripts/generate_release_evidence.py",
     "infra/scripts/generate_source_contract_inventory.py",
     "infra/scripts/collect_t3_database_metadata.py",
+    "infra/scripts/emit_ci_failure_annotation.py",
     "infra/scripts/generate_t3_system_report.py",
     "infra/scripts/package_web_release.py",
     "infra/scripts/run_t4_browser_smoke.py",

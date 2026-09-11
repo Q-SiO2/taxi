@@ -202,6 +202,17 @@ Chrome/Firefox smoke also passed. This establishes a reviewable local candidate,
 not closure: clean commit/PR status, remote CI, signed distributable artifacts,
 registry image digest and reviewer approval are still required.
 
+**Implementation progress (2026-09-11):** the blocking image-scan failure was
+reproduced with CI's Trivy version: the Debian runtime exposed 54 unfixed
+high/critical OS findings while application packages had none. The backend image
+now uses a digest-pinned CPython Alpine runtime, applies Alpine's available
+security upgrades, retains the non-root account and private directory modes, and
+extends the Linux lock with the official CPython 3.12 musllinux `uvloop` hashes
+for both supported architectures. A local production-image build, non-root
+runtime/import smoke and exact high/critical scan passed with zero findings.
+The remote clean-commit scan, registry digest and promotion evidence remain
+required; this implementation progress does not accept GAP-001.
+
 ### GAP-002 — Provision and accept a real hosted environment
 
 **Current gap:** deployment files are provider-neutral blueprints. No accepted

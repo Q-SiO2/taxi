@@ -56,6 +56,7 @@ recreated by CI for the immutable commit.
 | Fresh PostGIS backend suite | 992 passed with zero failures/errors/skips | Current-head local system evidence, not capacity or hosted acceptance. |
 | T3 database reconciliation | 81 tables restored at migration 0052; temporary target/dump removed | Local logical restore, not managed encrypted backup/PITR acceptance. |
 | Packaged browser boot smoke | 4/4 Chrome 152 and 4/4 Firefox 155 scenarios passed with eight screenshots | Safari, authenticated journeys, accessibility, hosted headers and firewalled egress remain open. |
+| Backend image high/critical scan | Alpine candidate passed with zero Trivy findings; runtime ran as UID 2000 and imported the API module | Local image only; CI must rebuild and scan the exact clean commit, then a registry must retain its deployment digest. |
 
 The local T3 report confirms all six required evidence kinds, zero residual test
 clone databases and revoked temporary `CREATEDB` authority. It deliberately keeps
