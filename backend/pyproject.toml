@@ -9,7 +9,7 @@ description = "Authoritative backend for the TaxiMobile cooperative taxi platfor
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "alembic==1.19.1",
+    "alembic==1.20.0",
     "argon2-cffi==25.1.0",
     "asyncpg==0.31.0",
     "cryptography==50.0.0",
