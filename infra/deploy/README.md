@@ -167,7 +167,7 @@ Prometheus removes user/driver/passenger/device/ride/resource/authorization/
 payload/topic labels before an alert can leave the collector. This is defense in
 depth; emitting those labels remains forbidden at source.
 Grafana has immutable internal Prometheus and Loki datasources plus two file-
-provisioned dashboards. The 23-panel `TaxiMobile Operations` dashboard covers target
+provisioned dashboards. The 26-panel `TaxiMobile Operations` dashboard covers target
 health, HTTP rate/error/latency, fixed-worker progress/errors, outbox visibility,
 owner backlog/age/dead letters, database snapshot/connection/lock/deadlock state,
 per-process pool availability/checked-out/overflow state, checkout-wait p95 and

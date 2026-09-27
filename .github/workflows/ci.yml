@@ -276,6 +276,7 @@ jobs:
           ALLOY_IMAGE: grafana/alloy@sha256:491b0578c04983fd54fe99b587b6fab4404dc46d0dc16677bd6b00cc1140b308
         run: |
           set -euo pipefail
+          exec > >(tee "${RUNNER_TEMP}/taximobile-monitoring-validation.log") 2>&1
           token_file="$RUNNER_TEMP/taximobile-monitoring-token"
           webhook_file="$RUNNER_TEMP/taximobile-monitoring-webhook"
           grafana_admin_file="$RUNNER_TEMP/taximobile-grafana-admin-password"
@@ -354,10 +355,16 @@ jobs:
           fi
           docker exec "$grafana_container" /bin/sh -c \
             'password="$(cat /run/secrets/taximobile_grafana_admin_password)"; printf "user = \"taximobile-admin:%s\"\n" "$password" | /usr/bin/curl --silent --show-error --fail --config - http://127.0.0.1:3000/api/dashboards/uid/taximobile-operations' \
-            | python -c 'import json, sys; dashboard = json.load(sys.stdin)["dashboard"]; assert dashboard["uid"] == "taximobile-operations"; assert len(dashboard["panels"]) == 13'
+            | python -c 'import json, sys; dashboard = json.load(sys.stdin)["dashboard"]; assert dashboard["uid"] == "taximobile-operations"; assert len(dashboard["panels"]) == 26'
           docker exec "$grafana_container" /bin/sh -c \
             'password="$(cat /run/secrets/taximobile_grafana_admin_password)"; printf "user = \"taximobile-admin:%s\"\n" "$password" | /usr/bin/curl --silent --show-error --fail --config - http://127.0.0.1:3000/api/dashboards/uid/taximobile-logs' \
             | python -c 'import json, sys; dashboard = json.load(sys.stdin)["dashboard"]; assert dashboard["uid"] == "taximobile-logs"; assert len(dashboard["panels"]) == 3'
+      - name: Publish redacted monitoring-tool failure annotation
+        if: failure()
+        run: >-
+          python infra/scripts/emit_ci_failure_annotation.py
+          --input "${RUNNER_TEMP}/taximobile-monitoring-validation.log"
+          --title "TaxiMobile monitoring validation failure"
       - name: Smoke test hardened structured-log ingestion
         shell: bash
         env:

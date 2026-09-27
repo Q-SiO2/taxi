@@ -149,6 +149,28 @@ class CiSecurityValidationTests(unittest.TestCase):
         ):
             validate_ci_security(changed)
 
+    def test_monitoring_failure_annotation_cannot_be_removed(self) -> None:
+        changed = self.workflow.replace(
+            "      - name: Publish redacted monitoring-tool failure annotation\n",
+            "      - name: Removed monitoring diagnostic\n",
+        )
+        with self.assertRaisesRegex(
+            CiSecurityError,
+            "Monitoring CI failures must publish a bounded redacted diagnostic",
+        ):
+            validate_ci_security(changed)
+
+    def test_monitoring_smoke_requires_full_reviewed_dashboard(self) -> None:
+        changed = self.workflow.replace(
+            'assert len(dashboard["panels"]) == 26',
+            'assert len(dashboard["panels"]) == 13',
+        )
+        with self.assertRaisesRegex(
+            CiSecurityError,
+            "all 26 reviewed operations panels",
+        ):
+            validate_ci_security(changed)
+
     def test_t2_simulated_persona_binding_cannot_be_removed(self) -> None:
         changed = self.workflow.replace(
             "          --artifact /tmp/taximobile-t2-simulated-personas.json\n",

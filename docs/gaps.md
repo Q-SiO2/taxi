@@ -213,6 +213,17 @@ runtime/import smoke and exact high/critical scan passed with zero findings.
 The remote clean-commit scan, registry digest and promotion evidence remain
 required; this implementation progress does not accept GAP-001.
 
+**Implementation progress (2026-09-27):** the next immutable CI run exposed a
+monitoring smoke assertion that still expected 13 operations panels although
+the reviewed provisioned dashboard and its source contract contain 26. The
+runtime assertion, Windows deployment smoke, operator documentation, and MON-T5-13
+acceptance row now agree on 26; a source validator prevents CI from silently
+regressing to the stale count. Monitoring-tool output is captured into a bounded,
+redacted failure annotation, and Gradle diagnostics retain failure summaries and
+root causes ahead of repetitive stack tails. GAP-001 remains open until fresh
+remote checks, including the iOS simulator and repository dependency-graph
+submission, pass on the candidate commit.
+
 ### GAP-002 — Provision and accept a real hosted environment
 
 **Current gap:** deployment files are provider-neutral blueprints. No accepted

@@ -12,7 +12,12 @@ SCRIPTS = Path(__file__).resolve().parents[1]
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
-from emit_ci_failure_annotation import DiagnosticError, diagnostic_tail, emit_annotation
+from emit_ci_failure_annotation import (
+    MAX_ANNOTATION_CHARACTERS,
+    DiagnosticError,
+    diagnostic_tail,
+    emit_annotation,
+)
 
 
 class CiFailureAnnotationTests(unittest.TestCase):
@@ -40,6 +45,24 @@ class CiFailureAnnotationTests(unittest.TestCase):
         self.assertLessEqual(len(diagnostic), 500)
         self.assertIn("line-149", diagnostic)
         self.assertNotIn("line-0-", diagnostic)
+
+    def test_diagnostic_preserves_failure_summary_before_a_long_stack_tail(self) -> None:
+        text = "\n".join(
+            [
+                "* What went wrong:",
+                "Execution failed for task ':shared:iosSimulatorArm64Test'.",
+                "> Native test process returned a non-zero exit code.",
+                "Caused by: org.example.NativeTestFailure: simulator exited 65",
+                *[f"\tat org.gradle.internal.step.Step{index}(Step.java:1)" for index in range(120)],
+                "BUILD FAILED in 2m 56s",
+            ]
+        )
+        diagnostic = diagnostic_tail(text)
+
+        self.assertIn("What went wrong", diagnostic)
+        self.assertIn("NativeTestFailure", diagnostic)
+        self.assertIn("BUILD FAILED", diagnostic)
+        self.assertLessEqual(len(diagnostic), MAX_ANNOTATION_CHARACTERS)
 
     def test_emit_annotation_writes_encoded_stdout_and_bounded_summary(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

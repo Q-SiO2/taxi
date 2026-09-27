@@ -252,6 +252,28 @@ def validate_ci_security(workflow: str) -> None:
             f"and retained in the CI run summary: missing {missing_ios_candidate[0]}."
         )
 
+    monitoring_diagnostic_requirements = (
+        "Parse monitoring configuration with pinned official tools",
+        'exec > >(tee "${RUNNER_TEMP}/taximobile-monitoring-validation.log") 2>&1',
+        "Publish redacted monitoring-tool failure annotation",
+        "python infra/scripts/emit_ci_failure_annotation.py",
+        '--input "${RUNNER_TEMP}/taximobile-monitoring-validation.log"',
+        '--title "TaxiMobile monitoring validation failure"',
+    )
+    missing_monitoring_diagnostic = [
+        snippet for snippet in monitoring_diagnostic_requirements if snippet not in workflow
+    ]
+    if missing_monitoring_diagnostic:
+        raise CiSecurityError(
+            "Monitoring CI failures must publish a bounded redacted diagnostic: "
+            f"missing {missing_monitoring_diagnostic[0]}."
+        )
+
+    if 'assert len(dashboard["panels"]) == 26' not in workflow:
+        raise CiSecurityError(
+            "The Grafana runtime smoke must verify all 26 reviewed operations panels."
+        )
+
     if workflow.count("python infra/scripts/validate_test_phase_evidence.py") != 1:
         raise CiSecurityError(
             "The T0-T10 phase catalog and evidence template must be validated once "

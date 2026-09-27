@@ -20,6 +20,10 @@ MAX_LOG_BYTES = 4 * 1024 * 1024
 MAX_ANNOTATION_CHARACTERS = 3_500
 MAX_DIAGNOSTIC_LINES = 80
 CONTROL_CHARACTERS = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
+FAILURE_ANCHOR = re.compile(
+    r"(?i)^\s*(?:\*\s*what went wrong:|caused by:|execution failed for task|"
+    r"error:|e:\s+.+|exception in thread)"
+)
 SECRET_ASSIGNMENT = re.compile(
     r"(?i)\b(authorization|password|passwd|secret|token|api[_-]?key)"
     r"(\s*(?::|=)\s*)([^\s,;]+)"
@@ -56,7 +60,24 @@ def diagnostic_tail(
         )
     redacted = _redact(text.replace("\r\n", "\n").replace("\r", "\n"), workspace=workspace)
     lines = [line.rstrip() for line in redacted.splitlines() if line.strip()]
-    diagnostic = "\n".join(lines[-MAX_DIAGNOSTIC_LINES:]) or "No diagnostic output was captured."
+    tail = "\n".join(lines[-MAX_DIAGNOSTIC_LINES:]) or "No diagnostic output was captured."
+    anchors = [index for index, line in enumerate(lines) if FAILURE_ANCHOR.search(line)]
+    selected: list[str] = []
+    for index in anchors[:1] + anchors[-2:]:
+        window = lines[max(0, index - 2) : min(len(lines), index + 9)]
+        if window and window not in selected:
+            selected.extend(window)
+    primary = "\n".join(dict.fromkeys(selected))
+    if primary:
+        primary_budget = min(maximum_characters // 2, 1_700)
+        if len(primary) > primary_budget:
+            primary = "…\n" + primary[-(primary_budget - 2) :]
+        tail_budget = maximum_characters - len(primary) - 2
+        if len(tail) > tail_budget:
+            tail = "…\n" + tail[-(tail_budget - 2) :]
+        diagnostic = f"{primary}\n\n{tail}"
+    else:
+        diagnostic = tail
     if len(diagnostic) > maximum_characters:
         diagnostic = "…\n" + diagnostic[-(maximum_characters - 2) :]
     return diagnostic
