@@ -262,6 +262,19 @@ found established PostgreSQL LISTEN disconnect recovery and socket revocation
 coverage needing remediation before release. These findings must not be hidden
 by successful method/path contract validators or compilation alone.
 
+**Keychain follow-up (2026-09-27):** the subsequent macOS run advanced through
+the iOS production-source compile and failed only because a common test used the
+Native experimental `assert` API. Replacing it with `kotlin.test.assertTrue`
+removes that opt-in. The same compile proved the former Kotlin-map-to-
+`CFDictionaryRef` and `CFTypeRef`-to-`NSData` casts could never succeed. The iOS
+store now creates owned Core Foundation query/data values, validates the copied
+type, checks read/update/add/delete status codes, and persists both tokens in one
+versioned Keychain item. Common tests cover envelope corruption and coordinator
+storage failures; source guards reject restoration of the impossible casts or
+split writes. This patch still requires a clean macOS run and physical-device
+locked/unlocked save/restore/logout acceptance before the native credential
+boundary can be accepted.
+
 ### GAP-002 — Provision and accept a real hosted environment
 
 **Current gap:** deployment files are provider-neutral blueprints. No accepted

@@ -255,6 +255,10 @@ environment; supported OS/browser/device/language matrix and test accounts are
 approved.
 
 **Execute:** Android and iOS install/upgrade/restart/background/permission flows;
+on a physical iPhone prove before-first-unlock Keychain unavailability is
+explicit and does not claim success, then verify save/restore/logout unlocked,
+relocked, after process kill, and through an interrupted/retried save with proof
+that no split pair, stale pre-release entry, or silent native error remains;
 narrow/wide operations and applicant browsers; EN/FR/AR and RTL; screen reader,
 font scaling, contrast, focus and touch targets; account recovery secret storage;
 map fallback; GPS freshness/battery; push foreground/background/killed app;

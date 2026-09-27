@@ -145,16 +145,16 @@ engineering scope rather than counting each feature once per file.
 | Bounded T3 system baseline | **992 tests and all six required evidence kinds passed locally** | JUnit, secret-free database metadata and a guarded logical restore reconcile 81 public tables/8,511 aggregate rows at migration 0052. The target and dump were removed. Evidence completeness is true, but the dirty-workspace snapshot has no engineering sign-off or ordered phase acceptance; T3 and deployment acceptance remain false. |
 | T4 laboratory map | **56 reviewed cases; 0 executed** | Exactly eight cases cover each required evidence kind and source targets/locales/browsers are cross-checked. The template is deliberately `NOT_STARTED`; no device, browser, accessibility, failure or crash acceptance is inferred. |
 | Bounded T4 browser boot smoke | **8/8 local scenarios passed** across Chrome 152 and Firefox 155 | Packaged-release preflight, blocked/boot branch selection and screenshot retention passed. Safari, authenticated critical journeys, accessibility/RTL, console/source-map review, hosted headers and independently firewalled browser egress remain absent; zero complete T4 catalog cases and no phase/deployment acceptance are claimed. |
-| Mobile script unit tests | **36 passed** | Adds privacy-bounded, non-overwriting Android registration/login device-report contracts to source/release/device-harness and iOS manifest checks. No phone was attached and no physical-device result is claimed. |
+| Mobile script unit tests | **38 passed** | Includes privacy-bounded Android registration/login evidence contracts and iOS Keychain source guards that reject impossible native casts, split token writes and unchecked status handling. No phone was attached and no physical-device result is claimed. |
 | Android role release verification artifacts | **Passenger and driver 1.0.0 APKs built and manifest-verified** | Distinct package IDs, versions, sizes and SHA-256 hashes are recorded. The manifest is intentionally `distribution_eligible=false` because signing, Firebase/Crashlytics and physical-device acceptance are absent. |
 | iOS role release verification artifacts | **Manifest generator and three mutation/identity tests passed** | macOS CI now builds into one explicit products directory, validates both role bundles and binds their deterministic manifest to source. The actual iOS build cannot run on Windows and remains unverified until remote macOS CI passes. |
 | Documentation validator | **Passed before and after edits** | Links, standing blocks, gap/test sequences and migration head. |
-| Shared JVM suite | **183 passed**, zero failures/errors/skips | Fresh JVM execution includes client identity and compatibility restore states; both Android role compiles and JS/Wasm compilation pass, while iOS is not executable on Windows. |
+| Shared JVM suite | **190 passed**, zero failures/errors/skips | Fresh JVM execution adds atomic token-envelope corruption cases and protected-storage failure behavior, including revocation of newly issued login/refresh sessions after a failed save. iOS remains non-executable on Windows. |
 | TeX/PDF build and visual checks | **Passed: 18-page report and 36-slide briefing**, compiled with pdfLaTeX, rendered and visually inspected | No overfull boxes, undefined references or TeX errors in final logs. MiKTeX reports its local update-check notice. |
 
 The latest complete backend test execution is **992 full fresh-PostGIS tests at 0052**,
 with separate focused migration/control-plane evidence for the staff slice. The
-records also report **183 shared JVM tests**, plus
+records also report **190 shared JVM tests**, plus
 Android and JS/Wasm verification. No iOS device, signed release, hosted load,
 provider acceptance, managed encrypted backup/PITR, live passenger, or real-money
 test is claimed here.

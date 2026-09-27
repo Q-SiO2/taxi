@@ -666,6 +666,11 @@ validator never grants phase or deployment acceptance.
 For passenger and driver artifacts separately test:
 
 * clean install, first launch, registration/login, relaunch and token refresh;
+  on iOS verify that before-first-unlock Keychain unavailability is explicit and
+  does not claim success, then verify save/restore/logout while unlocked, after
+  relock, after process kill and across an interrupted/retried save; prove no
+  split token pair, stale pre-release item or silent Security-framework failure
+  remains;
 * create/save/rotate recovery codes, reset while signed out, revoke another and
   the current session, change password, process death while a secret is shown,
   screenshots/clipboard/accessibility exposure, and recovery with no network;

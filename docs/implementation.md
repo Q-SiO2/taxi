@@ -255,10 +255,16 @@ enough to review and test without loading the entire mobile product.
 Android currently supplies an AES-GCM Android Keystore implementation of the secure token store and constructs its Ktor client with the OkHttp engine. Each product flavor supplies a development API base URL through build configuration; staging and production builds must inject a TLS URL through their protected build/deployment configuration rather than altering shared client code.
 
 iOS uses the same shared gateway/coordinator composition with Ktor's Darwin
-engine and an iOS Keychain token store. Its Swift shell reads the app role and
-API base URL from target build settings, keeping production URLs and role choice
-out of shared Kotlin code. The checked-in default URL is deliberately invalid;
-an iOS release must inject a TLS URL through protected configuration.
+engine and an iOS Keychain token store. The Keychain implementation replaces one
+versioned, length-delimited access/refresh envelope atomically, constructs real
+Core Foundation dictionaries/data rather than casting Kotlin objects, checks
+Security-framework status codes, and releases every object it owns. Storage
+failures are translated by the shared authentication coordinator and a failed
+login save triggers best-effort revocation of the newly issued backend session.
+Its Swift shell reads the app role and API base URL from target build settings,
+keeping production URLs and role choice out of shared Kotlin code. The checked-
+in default URL is deliberately invalid; an iOS release must inject a TLS URL
+through protected configuration.
 
 iOS Release builds enforce the same fail-closed boundary as Android. Both
 targets require explicit HTTPS API and MapLibre style URLs, positive numeric

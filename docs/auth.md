@@ -341,6 +341,16 @@ SecureTokenStorage interface
     └── iOS implementation
 ```
 
+The iOS implementation stores the access/refresh pair as one versioned,
+length-delimited Keychain value so an interrupted save cannot expose only half
+of a session. It builds and validates native Core Foundation values explicitly,
+uses an after-first-unlock/device-only accessibility class, checks every
+Security-framework status, and converts storage failures into a bounded
+authentication error instead of treating them as a missing session. The
+pre-release two-item account names are deleted during save and logout; they are
+not a supported migration source. Physical-device save, restore, locked-device,
+upgrade, and logout behavior remains an acceptance requirement.
+
 ---
 
 # 16. Token Transmission
