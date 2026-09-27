@@ -312,6 +312,7 @@ fun MainViewController(
             requestDriverDocument?.invoke selected@ { fileName, mediaType, base64Content ->
                 if (
                     fileName == null ||
+                    mediaType == null ||
                     mediaType !in IOS_DRIVER_DOCUMENT_MEDIA_TYPES ||
                     base64Content == null
                 ) return@selected

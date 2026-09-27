@@ -29,6 +29,7 @@ import org.example.taximobile.data.cooperatives.KtorCooperativeGateway
 import org.example.taximobile.feature.app.MobileAppCoordinator
 import org.example.taximobile.feature.auth.AuthenticationSessionCoordinator
 import platform.Foundation.NSLocale
+import platform.Foundation.preferredLanguages
 
 /** iOS composition root mirrors Android while retaining native storage/transport. */
 class IosAppDependencies(

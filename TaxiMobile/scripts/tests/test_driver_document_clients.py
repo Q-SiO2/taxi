@@ -20,6 +20,8 @@ class DriverDocumentClientContractTest(unittest.TestCase):
             "IOS_DRIVER_DOCUMENT_MAX_BYTES = 10 * 1024 * 1024",
             'setOf("application/pdf", "image/jpeg", "image/png")',
             "uploadDriverCityApplicationDocument",
+            "mediaType == null ||",
+            "mediaType !in IOS_DRIVER_DOCUMENT_MEDIA_TYPES ||",
         ):
             self.assertIn(required, kotlin)
         for required in (

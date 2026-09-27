@@ -154,10 +154,12 @@ unavailable external system cannot provide the capability.
 
 ### GAP-001 — Establish an immutable release baseline
 
-**Current gap:** the audited implementation is spread across a large dirty working
-tree, including untracked migrations and source. There is no immutable commit,
-reviewed pull request, release tag, signed artifact manifest, or container digest
-that uniquely identifies “the version tested.”
+**Current gap (updated 2026-09-27):** the formerly dirty implementation is now
+committed on the release-baseline branch and CI binds verification records to
+immutable commits. A completely passing candidate, reviewed pull request,
+protected promotion branch, signed distributable artifact manifest and registry
+image digest are still missing. Historical dirty-workspace results below are
+not evidence that the current checkout remains dirty.
 
 **Risk:** tests, migration history, binaries, and deployed source can silently
 refer to different code. Rollback and incident investigation become unreliable.
@@ -246,6 +248,19 @@ missing explicit `platform.Foundation.create` import in the Keychain token
 store; the import is fixed, but iOS compilation requires macOS CI and remains
 unverified until that run completes. The disabled GitHub Dependency Graph is a
 repository setting blocker, not a reason to remove dependency submission.
+
+**Native compilation follow-up (2026-09-27):** the next candidate run passed
+backend and web verification. The macOS compiler then reported missing native
+extension imports for `NSLocale.preferredLanguages` and C pointer-variable
+`value`, plus a nullable document media type passed to the upload model. Those
+imports and an explicit null rejection are now present; the document-picker
+source regression guards both null and unsupported media rejection. This patch
+still requires the macOS compile/test run. It does not certify Keychain runtime
+bridging, error handling or atomic token persistence: the read-only architecture
+audit identified those as separate native authentication risks. The same audit
+found established PostgreSQL LISTEN disconnect recovery and socket revocation
+coverage needing remediation before release. These findings must not be hidden
+by successful method/path contract validators or compilation alone.
 
 ### GAP-002 — Provision and accept a real hosted environment
 
