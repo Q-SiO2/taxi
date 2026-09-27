@@ -661,6 +661,13 @@ reference to every case, and link every failed/blocked case to a defect. Evidenc
 classes can complete independently, but T4 is complete only at 56/56; this
 validator never grants phase or deployment acceptance.
 
+The current MapLibre Compose 0.14.0 iOS KLIB contains a publisher-runner
+framework path (upstream issue `maplibre-compose#824`). Until a reviewed upstream
+fix or dependency upgrade removes it, CI compiles Kotlin production/test sources
+and links both role apps through Xcode but does not execute the Gradle native
+test binary. That limitation is recorded in the run summary and cannot be
+treated as T4 evidence.
+
 ### Mobile matrix
 
 For passenger and driver artifacts separately test:

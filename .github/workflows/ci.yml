@@ -604,18 +604,23 @@ jobs:
           python-version: "3.12"
       - run: sudo xcode-select --switch /Applications/Xcode_26.2.app
       - run: xcodebuild -version
-      - name: Run shared iOS simulator tests with bounded failure capture
+      - name: Compile shared iOS simulator production and test sources with bounded failure capture
         shell: bash
         run: |
           set -o pipefail
-          ./gradlew --no-daemon :shared:iosSimulatorArm64Test --stacktrace 2>&1 \
+          ./gradlew --no-daemon :shared:compileTestKotlinIosSimulatorArm64 --stacktrace 2>&1 \
             | tee "${RUNNER_TEMP}/taximobile-ios-shared.log"
-      - name: Publish redacted iOS shared-test failure annotation
+      - name: Publish redacted iOS shared-compile failure annotation
         if: failure()
         run: >-
           python ../infra/scripts/emit_ci_failure_annotation.py
           --input "${RUNNER_TEMP}/taximobile-ios-shared.log"
           --title "TaxiMobile iOS shared Gradle failure"
+      - name: Record upstream iOS test-link limitation
+        shell: bash
+        run: |
+          echo '### iOS shared test-link limitation' >> "${GITHUB_STEP_SUMMARY}"
+          echo 'Kotlin iOS production and test sources compiled. The native test binary is not linked or executed because MapLibre Compose 0.14.0 publishes an invalid absolute framework path (upstream issue #824). The following Xcode builds remain the iOS application link gate; this run does not claim iOS test execution.' >> "${GITHUB_STEP_SUMMARY}"
       - run: >-
           xcodebuild -project iosApp/iosApp.xcodeproj -scheme "TaxiMobile Passenger"
           -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator'

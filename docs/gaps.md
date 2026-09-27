@@ -275,6 +275,17 @@ split writes. This patch still requires a clean macOS run and physical-device
 locked/unlocked save/restore/logout acceptance before the native credential
 boundary can be accepted.
 
+**iOS linker follow-up (2026-09-27):** production and test Kotlin compilation
+now pass on Xcode 26.2. The Gradle native-test link then fails because MapLibre
+Compose 0.14.0's published iOS KLIB embeds the publisher's absolute
+`/Users/runner/work/maplibre-compose/...` framework path and an Xcode 26.6 Swift
+library path; this is the exact open upstream defect `maplibre-compose#824`, not
+a TaxiMobile source or Keychain link error. CI now keeps compilation blocking,
+links both role applications through their exact-version Xcode Swift package,
+and states explicitly that no iOS test execution occurred. A future reviewed
+MapLibre upgrade or upstream fix must restore native test execution; physical-
+device acceptance remains mandatory.
+
 ### GAP-002 — Provision and accept a real hosted environment
 
 **Current gap:** deployment files are provider-neutral blueprints. No accepted

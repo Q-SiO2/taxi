@@ -389,7 +389,14 @@ Use the run button in your IDE's editor gutter, or run tests using Gradle tasks:
 - Web tests:
     - Wasm target: `./gradlew :shared:wasmJsTest`
     - JS target: `./gradlew :shared:jsTest`
-- iOS tests: `./gradlew :shared:iosSimulatorArm64Test`
+- iOS source compilation: `./gradlew :shared:compileTestKotlinIosSimulatorArm64`
+
+MapLibre Compose 0.14.0 currently prevents Gradle from linking the native test
+binary because its published KLIB contains an absolute framework path from the
+publisher's runner (upstream issue `maplibre-compose#824`). CI therefore compiles
+production and test sources, then links both app roles through Xcode. It must not
+report iOS tests as executed until that upstream boundary is removed or a
+reviewed replacement is adopted.
 
 ---
 
