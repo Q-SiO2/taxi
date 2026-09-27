@@ -224,6 +224,17 @@ root causes ahead of repetitive stack tails. GAP-001 remains open until fresh
 remote checks, including the iOS simulator and repository dependency-graph
 submission, pass on the candidate commit.
 
+**CI compatibility follow-up (2026-09-27):** the fresh run also showed the
+Android SDK setup step failing before Gradle, with the pinned legacy Actions
+runtime being forced to Node 24 after Node 20 retirement. The workflow now pins
+current Node-24-compatible releases of checkout, Java/Python setup and Android
+SDK setup by immutable commit SHA. This addresses action-runtime compatibility;
+the exact Android setup failure still needs confirmation from a rerun because
+GitHub restricts raw job-log access to repository administrators. The same run
+confirmed dependency submission is blocked by the repository's disabled
+Dependency Graph setting; the security job remains required and was not
+weakened.
+
 ### GAP-002 — Provision and accept a real hosted environment
 
 **Current gap:** deployment files are provider-neutral blueprints. No accepted
