@@ -479,7 +479,18 @@ jobs:
       - uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
       - run: sdkmanager --install "platforms;android-36" "build-tools;36.1.0"
       - run: yes | sdkmanager --licenses
-      - run: ./gradlew --no-daemon :shared:jvmTest :shared:testAndroidHostTest
+      - name: Run Android shared tests with bounded failure capture
+        shell: bash
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon :shared:jvmTest :shared:testAndroidHostTest --stacktrace 2>&1 \
+            | tee "${RUNNER_TEMP}/taximobile-mobile-shared-tests.log"
+      - name: Publish redacted Android shared-test failure annotation
+        if: failure()
+        run: >-
+          python ../infra/scripts/emit_ci_failure_annotation.py
+          --input "${RUNNER_TEMP}/taximobile-mobile-shared-tests.log"
+          --title "TaxiMobile Android shared-test failure"
       - run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
       - run: ./gradlew --no-daemon :androidApp:assemblePassengerDebug :androidApp:assembleDriverDebug
       - run: >-

@@ -228,6 +228,24 @@ def validate_ci_security(workflow: str) -> None:
             f"{missing_android_candidate[0]}."
         )
 
+    mobile_diagnostic_requirements = (
+        "Run Android shared tests with bounded failure capture",
+        "./gradlew --no-daemon :shared:jvmTest :shared:testAndroidHostTest --stacktrace",
+        'tee "${RUNNER_TEMP}/taximobile-mobile-shared-tests.log"',
+        "Publish redacted Android shared-test failure annotation",
+        "python ../infra/scripts/emit_ci_failure_annotation.py",
+        '--input "${RUNNER_TEMP}/taximobile-mobile-shared-tests.log"',
+        '--title "TaxiMobile Android shared-test failure"',
+    )
+    missing_mobile_diagnostic = [
+        snippet for snippet in mobile_diagnostic_requirements if snippet not in workflow
+    ]
+    if missing_mobile_diagnostic:
+        raise CiSecurityError(
+            "Android shared-test failures must publish a bounded redacted diagnostic: "
+            f"missing {missing_mobile_diagnostic[0]}."
+        )
+
     ios_candidate_requirements = (
         "Run shared iOS simulator tests with bounded failure capture",
         "./gradlew --no-daemon :shared:iosSimulatorArm64Test --stacktrace",

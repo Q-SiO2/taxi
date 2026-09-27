@@ -140,12 +140,23 @@ class CiSecurityValidationTests(unittest.TestCase):
 
     def test_ios_failure_annotation_cannot_be_removed(self) -> None:
         changed = self.workflow.replace(
-            "          python ../infra/scripts/emit_ci_failure_annotation.py\n",
-            "          python ../infra/scripts/unbounded-diagnostic.py\n",
+            '--title "TaxiMobile iOS shared Gradle failure"',
+            '--title "Removed iOS diagnostic"',
         )
         with self.assertRaisesRegex(
             CiSecurityError,
             "iOS simulator artifacts are not limitation-marked",
+        ):
+            validate_ci_security(changed)
+
+    def test_android_shared_test_failure_annotation_cannot_be_removed(self) -> None:
+        changed = self.workflow.replace(
+            "      - name: Publish redacted Android shared-test failure annotation\n",
+            "      - name: Removed Android shared-test diagnostic\n",
+        )
+        with self.assertRaisesRegex(
+            CiSecurityError,
+            "Android shared-test failures must publish a bounded redacted diagnostic",
         ):
             validate_ci_security(changed)
 

@@ -235,6 +235,18 @@ confirmed dependency submission is blocked by the repository's disabled
 Dependency Graph setting; the security job remains required and was not
 weakened.
 
+**Cross-platform follow-up (2026-09-27):** the Node-24-compatible Android SDK
+setup completed on the next remote run, which advanced into and failed during
+the shared JVM/Android-host test step. Authenticated job-log inspection traced
+that failure to HTTP 500 while fetching the Kotlin compiler dependency, before
+tests executed. The local equivalent
+`:shared:jvmTest :shared:testAndroidHostTest` passes on Windows in 3m17s. CI
+failure output is now captured through the bounded redaction helper. The iOS annotation exposed a
+missing explicit `platform.Foundation.create` import in the Keychain token
+store; the import is fixed, but iOS compilation requires macOS CI and remains
+unverified until that run completes. The disabled GitHub Dependency Graph is a
+repository setting blocker, not a reason to remove dependency submission.
+
 ### GAP-002 — Provision and accept a real hosted environment
 
 **Current gap:** deployment files are provider-neutral blueprints. No accepted
