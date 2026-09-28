@@ -129,6 +129,23 @@ keys. The committed template remains `NOT_STARTED`; a complete evidence class is
 credited only after all eight cases have retained passing facts, and even 56
 passes cannot mark T4 or deployment accepted.
 
+The provider-neutral production environment inventory is the executable GAP-002
+control record:
+
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/validate_production_environment_inventory.py
+backend/.venv/Scripts/python.exe infra/scripts/validate_production_environment_inventory.py `
+  --inventory <protected-production-inventory.json> --require-accepted
+```
+
+The committed template remains `NOT_STARTED` and contains no provider choice or
+secret. A protected accepted copy must reference distinct development, staging
+and production boundaries, exact DNS/TLS and application-origin policy, immutable
+core images, private service/network policy, secret rotation, cost ownership,
+rollback timing and five required approval functions. Passing it closes no
+T5 or deployment gate by itself. See
+[`deploy/README.md`](deploy/README.md#gap-002-environment-inventory).
+
 After packaging a reviewed web distribution, collect bounded real-browser boot
 evidence without editing the 56-case laboratory record:
 

@@ -1,8 +1,9 @@
 # TaxiMobile — Repository Readiness Assessment
 
-**Assessment date:** 2026-09-09. **Scope:** the current working tree, including
-untracked implementation; not just Git HEAD. **Base commit:**
-`f85417bcc8b432477fd88e87f5bd557a43898447`. **Migration head:** `20260908_0052`.
+**Source assessment date:** 2026-09-09. **Standing refreshed:** 2026-09-28.
+**Assessment base commit:** `f85417bcc8b432477fd88e87f5bd557a43898447`.
+**Current verified candidate:** `de69829a649715ad7768756e285fedfde2fa846a`.
+**Migration head:** `20260908_0052`.
 
 ## Decision and percentage
 
@@ -42,7 +43,8 @@ Review combined documentation standing/requirements and gap sections, router and
 worker wiring, critical ride/matching/pricing/payment/scheduling implementation,
 migration constraints, client composition/gateways, tests and release scripts.
 This is a repository-wide structural and targeted implementation review, not a
-line-by-line security audit of all 922 files. No hosted service, remote CI run,
+line-by-line security audit of all 922 files. The current immutable push and
+pull-request CI runs were inspected on 2026-09-28; no hosted production service,
 real provider account, device, legal record, bank statement or staffing roster
 was inspected. Existing documentation's older test results remain historical
 claims unless explicitly rerun below.
@@ -116,16 +118,16 @@ engineering scope rather than counting each feature once per file.
    Treat the generated report and briefing as dated derived artifacts until their
    sources are deliberately revised and rebuilt; this live readiness record and
    the domain documents are authoritative for the current source tree.
-4. `TaxiMobile/README.md` still says operations production access awaits MFA and
-   cookie/CSRF implementation, while current auth source and `docs/auth.md` include
-   them. This non-`docs/` discrepancy is recorded, not silently used to downgrade
-   implemented auth. Its setup text should be reconciled in the next client-doc task.
+4. `TaxiMobile/README.md` previously said operations production access awaited
+   MFA and cookie/CSRF implementation. Its setup text now matches current auth
+   source and `docs/auth.md`: those controls exist, while hosted CSP, enrollment,
+   deployment review and acceptance remain open.
 5. The extended UI introduction's broad “real-time driver discovery” wording can
    be mistaken for pre-assignment supply browsing. Clarified it using the existing
    `product.md` supply-privacy rule, without adding a new product decision.
-6. “CI-wired” previously required a committed definition although this checkout
-   contains modified workflow YAML. The docs now call it a working-tree workflow
-   definition until an immutable remote run is identified.
+6. “CI-wired” previously described only a working-tree workflow definition. The
+   complete push and pull-request workflows now pass at immutable commit
+   `de69829a649715ad7768756e285fedfde2fa846a`; this still is not release approval.
 
 ## Verification performed for this assessment
 
@@ -140,15 +142,16 @@ engineering scope rather than counting each feature once per file.
 | Static web compatibility loader | **6 runtime scenarios passed** | Executes supported/update/forced-upgrade/error/retry/local-origin behavior and proves client headers remain scoped to the exact API origin and `/api/v1/` path; this is not a hosted-browser or ingress test. |
 | Operations web production distributions | **JS and Wasm production distributions built** | Local optimized artifacts exist for source verification; this is not the packaged compatibility release, hosted CSP/TLS proof, browser E2E, or an immutable signed artifact. |
 | Web/backend contract validator | **112 HTTP operations passed** | Includes the fail-closed static compatibility preflight, six staff-request and nine security-incident client operations, with the responsibility path selector restricted to four values; does not prove full browser journeys. |
-| Infrastructure script unit tests | **98 passed** | Includes validator/provenance/package behavior, strict web release identity, generated API/migration/permission inventory, executable T0–T10/T2 persona, fail-closed T3 backup/restore, balanced T4 laboratory-map and CI-wiring mutation coverage. |
+| Infrastructure script unit tests | **115 passed** | Includes validator/provenance/package behavior, strict web release identity, generated API/migration/permission inventory, executable T0–T10/T2 persona, fail-closed T3 backup/restore, balanced T4 laboratory-map, GAP-002 environment inventory and CI-wiring mutation coverage. |
 | Bounded T2 simulated-persona baseline | **20 scenarios / 60 exact tests passed** | Source-level synthetic authority and state-machine coverage only. The report refuses T2/deployment acceptance and identifies missing adversarial, durable reconciliation, minimization and sign-off evidence. |
 | Bounded T3 system baseline | **992 tests and all six required evidence kinds passed locally** | JUnit, secret-free database metadata and a guarded logical restore reconcile 81 public tables/8,511 aggregate rows at migration 0052. The target and dump were removed. Evidence completeness is true, but the dirty-workspace snapshot has no engineering sign-off or ordered phase acceptance; T3 and deployment acceptance remain false. |
 | T4 laboratory map | **56 reviewed cases; 0 executed** | Exactly eight cases cover each required evidence kind and source targets/locales/browsers are cross-checked. The template is deliberately `NOT_STARTED`; no device, browser, accessibility, failure or crash acceptance is inferred. |
 | Bounded T4 browser boot smoke | **8/8 local scenarios passed** across Chrome 152 and Firefox 155 | Packaged-release preflight, blocked/boot branch selection and screenshot retention passed. Safari, authenticated critical journeys, accessibility/RTL, console/source-map review, hosted headers and independently firewalled browser egress remain absent; zero complete T4 catalog cases and no phase/deployment acceptance are claimed. |
-| Remote immutable candidate CI | **Backend, mobile, web, documentation/provenance, and wrapper-integrity jobs passed at `33d699f`** | Both macOS jobs also linked the two iOS role apps, but the candidate remains red: the evidence step correctly rejected Xcode's newly generated untracked package lock, while dependency jobs ran before Dependency Graph was enabled. A new complete run is required; these partial results do not establish a release baseline. |
+| GAP-002 production environment inventory | **Schema/template and ten focused validator cases passed; status `NOT_STARTED`** | The validator requires three isolated environments, 12 reviewed service boundaries, exact TLS origins, digest-pinned core images, private infrastructure, rotation/recovery/cost records and five approvals. No provider or hosted target has supplied that evidence, so GAP-002, T5 and deployment remain unaccepted. |
+| Remote immutable candidate CI | **Complete push and pull-request workflows passed at `de69829a`** | Push run 36430942057 passed dependency submission; PR run 36430946742 passed dependency review. Backend, mobile, web, documentation/provenance, wrapper integrity and iOS jobs were green. This does not supply independent review, branch protection, signed distribution artifacts, a registry digest or release approval. |
 | Mobile script unit tests | **38 passed** | Includes privacy-bounded Android registration/login evidence contracts and iOS Keychain source guards that reject impossible native casts, split token writes and unchecked status handling. No phone was attached and no physical-device result is claimed. |
 | Android role release verification artifacts | **Passenger and driver 1.0.0 APKs built and manifest-verified** | Distinct package IDs, versions, sizes and SHA-256 hashes are recorded. The manifest is intentionally `distribution_eligible=false` because signing, Firebase/Crashlytics and physical-device acceptance are absent. |
-| iOS role release verification artifacts | **Kotlin production/test sources compiled; Passenger and Driver Release simulator applications linked at `33d699f`; the two-product manifest generator completed** | Evidence binding then rejected Xcode's generated untracked `Package.resolved`. The exact 14-package graph is now revision-locked, automatic resolution is disabled, and cache/lock mutation guards pass locally; the corrected remote evidence run remains pending. MapLibre Compose upstream issue #824 still prevents Gradle native-test linking, so no iOS native-test execution, signed archive, provider configuration, physical-device result, or deployment acceptance is claimed. |
+| iOS role release verification artifacts | **Kotlin production/test sources compiled; Passenger and Driver Release simulator applications linked and evidence-bound at `de69829a`** | The exact 14-package graph was restored from the committed lock, automatic resolution stayed disabled, and both immutable runs passed. MapLibre Compose upstream issue #824 still prevents Gradle native-test linking, so no iOS native-test execution, signed archive, provider configuration, physical-device result, or deployment acceptance is claimed. |
 | Documentation validator | **Passed before and after edits** | Links, standing blocks, gap/test sequences and migration head. |
 | Shared JVM suite | **190 passed**, zero failures/errors/skips | Fresh JVM execution adds atomic token-envelope corruption cases and protected-storage failure behavior, including revocation of newly issued login/refresh sessions after a failed save. iOS remains non-executable on Windows. |
 | TeX/PDF build and visual checks | **Passed: 18-page report and 36-slide briefing**, compiled with pdfLaTeX, rendered and visually inspected | No overfull boxes, undefined references or TeX errors in final logs. MiKTeX reports its local update-check notice. |

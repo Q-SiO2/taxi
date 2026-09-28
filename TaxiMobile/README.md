@@ -76,12 +76,13 @@ initial administrator and scoped operations grant as documented in
 Open `http://127.0.0.1:8080` for operations or
 `http://127.0.0.1:8080/#/apply` for applicant testing. Localhost builds resolve
 `/api/v1` at port 8000; hosted builds expect `/api/v1` on the same HTTPS origin
-through the deployment reverse proxy. Both surfaces keep access and refresh
-tokens memory-only, so a page reload requires sign-in. Password-only operations
-access is intentionally labeled local/test and production remains disabled until
-MFA, step-up, secure refresh-cookie/CSRF, CSP, and deployment review are
-implemented. Applicant document controls fail closed until protected storage
-and scanning are configured; they never pretend a file was accepted.
+through the deployment reverse proxy. Applicant sessions remain memory-only, so
+a page reload requires sign-in. Operations access tokens remain memory-only while
+the refresh session uses the backend's strict HttpOnly cookie and CSRF boundary.
+Password-only operations access is local/test only; production requires enrolled
+MFA, step-up, secure cookie/CSRF settings, an exact same-site origin, CSP and
+deployment review. Applicant document controls fail closed until protected
+storage and scanning are configured; they never pretend a file was accepted.
 
 ### Testing on a physical Android device
 

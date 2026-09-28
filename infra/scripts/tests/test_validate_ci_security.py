@@ -294,6 +294,14 @@ class CiSecurityValidationTests(unittest.TestCase):
         with self.assertRaisesRegex(CiSecurityError, "T4 device/browser laboratory catalog"):
             validate_ci_security(changed)
 
+    def test_gap_002_environment_inventory_gate_cannot_be_removed(self) -> None:
+        changed = self.workflow.replace(
+            "      - run: python infra/scripts/validate_production_environment_inventory.py\n",
+            "",
+        )
+        with self.assertRaisesRegex(CiSecurityError, "GAP-002 production environment inventory"):
+            validate_ci_security(changed)
+
 
 if __name__ == "__main__":
     unittest.main()

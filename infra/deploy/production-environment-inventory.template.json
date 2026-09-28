@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "inventory_revision": "2026-09-28",
+  "gap": "GAP-002",
+  "phase": "T5",
+  "status": "NOT_STARTED",
+  "data_classification": "CONTROL_REFERENCES_ONLY",
+  "candidate_label": null,
+  "source_commit": null,
+  "target": {
+    "provider_name": null,
+    "region_code": null,
+    "jurisdiction_code": null,
+    "architecture_approval_reference": null,
+    "data_region_approval_reference": null,
+    "service_owner_role": null,
+    "cost_owner_reference": null,
+    "monthly_cost_limit": null,
+    "currency": null
+  },
+  "environments": [
+    {
+      "name": "development",
+      "account_reference": null,
+      "network_reference": null,
+      "secret_scope_reference": null,
+      "database_reference": null,
+      "isolated": false
+    },
+    {
+      "name": "staging",
+      "account_reference": null,
+      "network_reference": null,
+      "secret_scope_reference": null,
+      "database_reference": null,
+      "isolated": false
+    },
+    {
+      "name": "production",
+      "account_reference": null,
+      "network_reference": null,
+      "secret_scope_reference": null,
+      "database_reference": null,
+      "isolated": false
+    }
+  ],
+  "public_endpoints": [
+    {
+      "name": "API_ORIGIN",
+      "origin": null,
+      "dns_evidence_reference": null,
+      "tls_scan_evidence_reference": null
+    },
+    {
+      "name": "APPLICANT_WEB_ORIGIN",
+      "origin": null,
+      "dns_evidence_reference": null,
+      "tls_scan_evidence_reference": null
+    },
+    {
+      "name": "OPERATIONS_WEB_ORIGIN",
+      "origin": null,
+      "dns_evidence_reference": null,
+      "tls_scan_evidence_reference": null
+    },
+    {
+      "name": "LIVE_EVENTS_ORIGIN",
+      "origin": null,
+      "dns_evidence_reference": null,
+      "tls_scan_evidence_reference": null
+    }
+  ],
+  "application_policy": {
+    "allowed_hosts": [],
+    "cors_origins": [],
+    "trusted_proxy_review_reference": null
+  },
+  "services": [
+    {"name": "PUBLIC_TLS_INGRESS", "exposure": "PUBLIC_HTTPS", "delivery_model": null, "artifact_reference": null, "service_reference": null, "owner_role": null, "network_policy_reference": null},
+    {"name": "API", "exposure": "PRIVATE", "delivery_model": null, "artifact_reference": null, "service_reference": null, "owner_role": null, "network_policy_reference": null},
+    {"name": "WORKER", "exposure": "PRIVATE", "delivery_model": null, "artifact_reference": null, "service_reference": null, "owner_role": null, "network_policy_reference": null},
+    {"name": "MIGRATOR", "exposure": "PRIVATE", "delivery_model": null, "artifact_reference": null, "service_reference": null, "owner_role": null, "network_policy_reference": null},
+    {"name": "APPLICANT_WEB", "exposure": "PUBLIC_HTTPS", "delivery_model": null, "artifact_reference": null, "service_reference": null, "owner_role": null, "network_policy_reference": null},
+    {"name": "OPERATIONS_WEB", "exposure": "PUBLIC_HTTPS", "delivery_model": null, "artifact_reference": null, "service_reference": null, "owner_role": null, "network_policy_reference": null},
+    {"name": "DATABASE", "exposure": "PRIVATE", "delivery_model": null, "artifact_reference": null, "service_reference": null, "owner_role": null, "network_policy_reference": null},
+    {"name": "ARTIFACT_REGISTRY", "exposure": "PRIVATE", "delivery_model": null, "artifact_reference": null, "service_reference": null, "owner_role": null, "network_policy_reference": null},
+    {"name": "SECRET_MANAGER", "exposure": "PRIVATE", "delivery_model": null, "artifact_reference": null, "service_reference": null, "owner_role": null, "network_policy_reference": null},
+    {"name": "MONITORING", "exposure": "PRIVATE", "delivery_model": null, "artifact_reference": null, "service_reference": null, "owner_role": null, "network_policy_reference": null},
+    {"name": "SCANNER", "exposure": "PRIVATE", "delivery_model": null, "artifact_reference": null, "service_reference": null, "owner_role": null, "network_policy_reference": null},
+    {"name": "ROUTING", "exposure": "PRIVATE", "delivery_model": null, "artifact_reference": null, "service_reference": null, "owner_role": null, "network_policy_reference": null}
+  ],
+  "network": {
+    "ingress_policy_reference": null,
+    "egress_policy_reference": null,
+    "iam_review_reference": null,
+    "database_publicly_reachable": false,
+    "worker_publicly_reachable": false,
+    "monitoring_publicly_reachable": false,
+    "scanner_publicly_reachable": false,
+    "routing_publicly_reachable": false,
+    "api_bypasses_tls_ingress": false
+  },
+  "secrets": {
+    "manager_reference": null,
+    "secret_inventory_reference": null,
+    "rotation_evidence_reference": null,
+    "rotation_completed_at": null,
+    "production_secrets_in_repository": false,
+    "application_credentials_embedded": false
+  },
+  "recovery": {
+    "staging_deployment_reference": null,
+    "production_change_reference": null,
+    "migration_record_reference": null,
+    "rollback_rehearsal_reference": null,
+    "forward_fix_reference": null,
+    "measured_rollback_seconds": null,
+    "approved_rto_seconds": null
+  },
+  "approvals": [
+    {"function": "ARCHITECTURE", "approver_role": "PLATFORM_ENGINEERING", "decision": "PENDING", "evidence_reference": null, "decided_at": null},
+    {"function": "DATA_REGION", "approver_role": "PRIVACY_LEGAL", "decision": "PENDING", "evidence_reference": null, "decided_at": null},
+    {"function": "SECURITY", "approver_role": "PLATFORM_SECURITY", "decision": "PENDING", "evidence_reference": null, "decided_at": null},
+    {"function": "OPERATIONS", "approver_role": "PLATFORM_OPERATIONS", "decision": "PENDING", "evidence_reference": null, "decided_at": null},
+    {"function": "COST", "approver_role": "FINANCE_OWNER", "decision": "PENDING", "evidence_reference": null, "decided_at": null}
+  ],
+  "gap_002_accepted": false,
+  "phase_accepted": false,
+  "deployment_accepted": false,
+  "limitations": [
+    "NO_HOST_OR_PROVIDER_ACCEPTED",
+    "NO_PHASE_OR_DEPLOYMENT_ACCEPTANCE"
+  ]
+}

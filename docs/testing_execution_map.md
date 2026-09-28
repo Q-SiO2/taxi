@@ -17,7 +17,7 @@ graph, map style, mobile artifact, infrastructure topology, or security-policy
 change invalidates the affected evidence and sends that scope back to the earliest
 impacted phase.
 
-**Current position (2026-09-09):** most subsystems have broad T1–T3 evidence,
+**Current position (standing refreshed 2026-09-28):** most subsystems have broad T1–T3 evidence,
 including a fresh migration-through-`20260908_0052` PostGIS run with 992 passing
 backend tests and no failures, errors or skips. The staff-grant dual-control slice
 also has focused PostGIS, API, JS and Wasm evidence. Migration 0050 and its
@@ -26,13 +26,16 @@ now include four closed responsibilities, exact-market responder eligibility,
 one active assignee per responsibility and append-visible reassignment history.
 The incident slice has dedicated 16-unit/static and two-PostGIS evidence included
 in that complete regression, plus 57 passing tests per JS/Wasm browser target and
-111 validated web HTTP operations after the protected incident workspace was
+112 validated web HTTP operations after the protected incident workspace was
 extended. The candidate capacity surface
 has 22 fixed Prometheus queries, 21 profile thresholds, explicit per-process
 database-pool bounds, 26 validated alert rules and a 26-panel operations
-dashboard. This remains dirty-workspace local evidence. Some browser/emulator
-evidence has started at T4, and no subsystem has complete T4–T8 acceptance. No
-real-user phase is authorized.
+dashboard. Immutable `de69829a` now passes the complete push and pull-request CI
+workflows, including both iOS Release simulator application links. Historical
+system/load results remain local unless the remote run explicitly produced them.
+Some browser/emulator evidence has started at T4; the GAP-002 environment
+inventory is still `NOT_STARTED`, and no subsystem has complete T4–T8 acceptance.
+No real-user phase is authorized.
 
 ## 2. Promotion path
 
@@ -313,6 +316,9 @@ catalog cases.
 
 **Entry:** production-like hosted topology, protected monitoring, synthetic data,
 named responders, approved SLO/RPO/RTO and an owner-approved workload profile exist.
+The target's protected GAP-002 record must pass
+`validate_production_environment_inventory.py --inventory <record> --require-accepted`;
+the repository's `NOT_STARTED` template is not entry evidence.
 
 **Execute:** WARMUP/STEADY/BURST/RECOVERY and soak with independent API/worker
 replicas; all critical read/write and worker loops; database plans, locks, pools,

@@ -13,11 +13,12 @@ are validated by `infra/scripts/validate_test_phase_evidence.py`. That gate chec
 promotion metadata and exposure boundaries; it does not authenticate external
 evidence or approve a phase.
 
-**Current standing (2026-09-09):** automated backend, PostGIS, shared/mobile,
+**Current standing (refreshed 2026-09-28):** automated backend, PostGIS, shared/mobile,
 source-contract, and local web compilation coverage is broad. CI definitions now
 include pinned dependency review, resolved Gradle graph submission, backend image
-SBOM/provenance and a blocking high/critical image scan, but those changed jobs
-still need a clean remote candidate run. CI now also structurally validates the
+SBOM/provenance and a blocking high/critical image scan. The complete push and
+pull-request workflows passed at immutable `de69829a`; this is not independent
+review, signed release, provider, hosted, or phase acceptance. CI also structurally validates the
 self-hosted monitoring overlay, renders it with the production manifest, parses
 Prometheus/Alertmanager/Loki/Alloy configuration with digest-pinned official
 tools, provisions both Grafana dashboards, and runs a hardened two-role
@@ -732,6 +733,14 @@ security, crash, data-loss or state-authority defect remains. Screenshots and
 recordings are reviewed in all launch languages.
 
 ## 10. Phase T5 — production-like hosted staging
+
+T5 cannot start from an informal cloud-console checklist. The protected target
+record must pass `infra/scripts/validate_production_environment_inventory.py`
+with `--inventory <record> --require-accepted`, binding the immutable source
+commit to distinct environment boundaries, exact DNS/TLS origins, reviewed
+network/IAM policy, digest-pinned core images, secret rotation, cost ownership and
+rollback evidence. This accepts only GAP-002; the phase index must still establish
+every T5 evidence class and sign-off.
 
 The executable [synthetic HTTP workload runbook](testing_workloads.md) maps
 LOAD-01 through LOAD-12 onto T1–T10. Its passenger request/cancel and paired cash

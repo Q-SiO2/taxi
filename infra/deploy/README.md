@@ -21,6 +21,37 @@ decisions. The base manifest enforces the application boundaries; the optional
 Prometheus, Alertmanager, Loki, Alloy, and Grafana path without making any of
 those services public.
 
+## GAP-002 environment inventory
+
+Before treating any provider account as a production candidate, copy
+`production-environment-inventory.template.json` to the access-controlled release
+evidence store and fill it with bounded references only. Do not put secret values,
+connection strings, private endpoints, personal approver names, email addresses,
+or raw provider credentials in the record. Validate the repository's deliberately
+empty template with:
+
+```powershell
+python .\infra\scripts\validate_production_environment_inventory.py
+```
+
+After architecture, privacy/legal, security, operations and cost owners have
+reviewed the real target, validate the protected candidate record with:
+
+```powershell
+python .\infra\scripts\validate_production_environment_inventory.py `
+  --inventory <protected-evidence-directory>\production-environment-inventory.json `
+  --require-accepted
+```
+
+The accepted form requires three distinct environment boundaries; exact public
+DNS/TLS origins and API host/CORS policy; all 12 reviewed service boundaries;
+digest-pinned API/worker/migrator/scanner images; private database, worker,
+monitoring, scanner and routing services; network/IAM review; secret-manager
+rotation; cost ownership; deployment/migration/forward-fix records; and a rollback
+rehearsal within the approved RTO. It can accept only GAP-002. It always leaves
+T5 and deployment acceptance false, which remain controlled by the ordered phase
+evidence and the rest of the gap register.
+
 ## Required inputs
 
 Set deployment values through the host/orchestrator secret and configuration

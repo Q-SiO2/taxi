@@ -500,6 +500,12 @@ def validate_ci_security(workflow: str) -> None:
             "be validated once in the dependency-free source job."
         )
 
+    if workflow.count("python infra/scripts/validate_production_environment_inventory.py") != 1:
+        raise CiSecurityError(
+            "The GAP-002 production environment inventory and no-acceptance template "
+            "must be validated once in the dependency-free source job."
+        )
+
     if workflow.count("node scripts/test-web-compatibility-loader.mjs") != 1:
         raise CiSecurityError(
             "The fail-closed web compatibility loader runtime scenarios must run "
@@ -529,8 +535,8 @@ def main() -> int:
     print(
         "CI security validation passed: immutable actions, dependency review, "
         "image SBOM/provenance, web/mobile candidate binding, source-contract inventory, "
-        "test-phase/T2 persona/T3 system/T4 lab evidence controls, web compatibility runtime coverage, and "
-        "blocking scan are present."
+        "test-phase/T2 persona/T3 system/T4 lab evidence controls, GAP-002 environment "
+        "inventory, web compatibility runtime coverage, and blocking scan are present."
     )
     return 0
 

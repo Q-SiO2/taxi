@@ -62,6 +62,24 @@ The local T3 report confirms all six required evidence kinds, zero residual test
 clone databases and revoked temporary `CREATEDB` authority. It deliberately keeps
 `phase_accepted=false` and `deployment_accepted=false`.
 
+## Current immutable remote evidence
+
+On 2026-09-28, commit `de69829a649715ad7768756e285fedfde2fa846a`
+passed the complete
+[push workflow](https://github.com/Q-SiO2/taxi/actions/runs/36430942057) and
+[pull-request workflow](https://github.com/Q-SiO2/taxi/actions/runs/36430946742).
+The runs covered documentation/provenance, backend/PostGIS, Android/shared,
+JavaScript/Wasm/web packaging, wrapper integrity, dependency submission/review,
+and both Passenger and Driver iOS Release simulator application links. The iOS
+job restored the committed 14-package graph, generated the two-product manifest,
+and bound it to clean-source evidence. MapLibre Compose issue 824 still prevents
+native iOS test linking, and no native iOS test execution is claimed.
+
+This satisfies the remote-CI item below for that source commit only. It does not
+supply independent pull-request approval, branch protection, signed mobile
+distribution artifacts, an immutable registry image digest, or release approval.
+Those controls remain necessary before GAP-001 can close.
+
 ## Required immutable promotion evidence
 
 GAP-001 remains open until all of the following refer to one clean commit:

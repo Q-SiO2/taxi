@@ -59,6 +59,7 @@ jobs:
       - run: python infra/scripts/validate_test_phase_evidence.py
       - run: python infra/scripts/run_simulated_persona_suite.py --validate-only
       - run: python infra/scripts/validate_t4_lab_evidence.py
+      - run: python infra/scripts/validate_production_environment_inventory.py
       - run: python infra/scripts/validate_ci_security.py
       - run: python infra/scripts/validate_legacy_admin_retirement.py
       - run: python -m unittest discover -s infra/scripts/tests -p 'test_*.py'

@@ -6,7 +6,7 @@ the repository. Those are not the same kind of statement.
 
 ## Current project standing
 
-**Audit date:** 2026-09-09
+**Source assessment date:** 2026-09-09. **Standing refreshed:** 2026-09-28.
 
 **Migration head:** `20260908_0052`
 
@@ -21,8 +21,11 @@ remain unaccepted in the gap register.
 local automated verification, but TaxiMobile is **not ready for public or live
 pilot deployment**. The unresolved work is tracked in [`gaps.md`](gaps.md).
 The latest full isolated-PostGIS regression through migration 0052 passed 992 backend
-tests with zero failures, errors or skips; this remains dirty-workspace local
-evidence rather than an immutable release result. It includes the focused
+tests with zero failures, errors or skips; that result remains historical local
+evidence. Immutable commit `de69829a649715ad7768756e285fedfde2fa846a` now passes
+the complete push and pull-request workflows, but GAP-001 remains open because
+independent review, protection, signing, registry digest, and release approval are
+absent. The local regression includes the focused
 security-incident unit/PostGIS slice, aggregate deadline-alert coverage and
 migration upgrade/downgrade coverage, including explicit incident responsibility
 assignment and append-visible reassignment history. Machine-readable T3 evidence
@@ -54,13 +57,13 @@ quality.
 
 | Area | Repository standing | Deployment standing |
 | --- | --- | --- |
-| Passenger and driver mobile | Shared Android/iOS source, role-specific release identity and compatibility preflight, maps, rides, payments, support/safety, fixed routes, scheduling, recruitment, offline-code recovery, active-session controls, and password change are implemented. Android and shared targets compile locally. CI now produces limitation-marked Android and iOS role manifests, hashes their artifacts, and binds those manifests to clean-source evidence. | The iOS path and new evidence wiring have not passed remote macOS CI. Approved support/deprecation policy, intentionally obsolete signed-build testing, verified contact ownership, physical Android/iOS matrix, signed store artifacts, production Firebase/APNs, accessibility, network-loss, navigation, and crash-symbolication acceptance are open. |
-| Public applicant and operations web | JavaScript and Kotlin/Wasm sources, release identity/preflight gate, protected operations authentication, staff maker-checker queue, city control plane, recruitment, pricing, payment, fixed-route, scheduling, case, security-incident, audit, and analytics modules are implemented. CI executes the static preflight, tests both browser targets, packages the compatibility distribution without maps, and binds the file manifest to clean-source evidence. | The changed CI job has not yet passed remotely for an immutable commit. Old/current hosted-release switching, full browser E2E, production CSP/hosting, accessibility/RTL, authoritative staff/incident rosters, protected-document browser acceptance, and production operations-account enrollment remain open. |
+| Passenger and driver mobile | Shared Android/iOS source, role-specific release identity and compatibility preflight, maps, rides, payments, support/safety, fixed routes, scheduling, recruitment, offline-code recovery, active-session controls, and password change are implemented. The immutable `de69829a` push and pull-request runs produced limitation-marked Android/iOS manifests and linked both iOS Release simulator apps. | MapLibre issue 824 still prevents native iOS test linking. Approved support/deprecation policy, intentionally obsolete signed-build testing, verified contact ownership, physical Android/iOS matrix, signed store artifacts, production Firebase/APNs, accessibility, network-loss, navigation, and crash-symbolication acceptance are open. |
+| Public applicant and operations web | JavaScript and Kotlin/Wasm sources, release identity/preflight gate, protected operations authentication, staff maker-checker queue, city control plane, recruitment, pricing, payment, fixed-route, scheduling, case, security-incident, audit, and analytics modules are implemented. Immutable `de69829a` CI passed static preflight, both browser targets, compatibility packaging without maps, and clean-source manifest binding. | Old/current hosted-release switching, full browser E2E, production CSP/hosting, accessibility/RTL, authoritative staff/incident rosters, protected-document browser acceptance, and production operations-account enrollment remain open. |
 | Backend and database | FastAPI modular monolith, six-surface release compatibility enforcement, eight worker loops, PostGIS schema through migration `20260908_0052`, scoped operations APIs including transactional staff dual control and security-incident responsibility/postmortem coordination, mobile recovery/session-control APIs, and local unit/API/integration coverage are implemented. | Approved release policy/drill, managed PostGIS, production migration rehearsal, encrypted backup/PITR, staging restore, capacity/soak, high availability, authoritative duty rosters, staffed incident drills, and production incident evidence are open. |
 | Maps, places, routing, push, and crash reporting | MapLibre composition, normalized place search/reverse lookup with a fail-closed Nominatim-compatible adapter, Valhalla/GraphHopper adapters, FCM/APNs wiring, and Crashlytics release boundaries exist. | No production style/tile or geocoding source, accepted data/license and multilingual place benchmark, accepted routing graph, required-language narration matrix, Firebase credentials, or controlled device delivery/crash proof is recorded. |
 | Payments | Cash, manually reconciled bank/M-Wallet transfer claims, versioned recipients/capabilities, refunds, and immutable financial snapshots exist. | Real recipient verification, controlled transfers/refunds, reconciliation staffing, statement fidelity, cash controls, and payout/settlement operations remain open. CMI/card is deferred. |
 | National rollout | City/operator/configuration models, scoped grants, MFA, readiness gates, analytics, emergency pause, and repeatable rollout workflows exist. | No city has supplied legal/operator approval, real readiness evidence, recruited pilot cohort, measured pilot outcomes, or post-launch review. |
-| Production infrastructure | Local Compose, a provider-neutral production blueprint, health checks, rate limits, explicit database-pool bounds and telemetry, authenticated metrics, bounded rotating JSON logs, hardened Prometheus/Alertmanager/Loki/Alloy/Grafana, immutable metric/log dashboards, validators, and backup scripts exist. | There is no accepted production host, registry image, TLS ingress, DNS, secret manager, hosted monitoring/log evidence, real pager/on-call roster, HA log store, or deployed rollback rehearsal. |
+| Production infrastructure | Local Compose, a provider-neutral production blueprint, a fail-closed GAP-002 environment-inventory validator, health checks, rate limits, explicit database-pool bounds and telemetry, authenticated metrics, bounded rotating JSON logs, hardened Prometheus/Alertmanager/Loki/Alloy/Grafana, immutable metric/log dashboards, validators, and backup scripts exist. | The committed environment inventory is deliberately `NOT_STARTED`; there is no accepted production host, registry image, TLS ingress, DNS, secret manager, hosted monitoring/log evidence, real pager/on-call roster, HA log store, or deployed rollback rehearsal. |
 
 ## Document map
 

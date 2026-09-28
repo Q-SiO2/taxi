@@ -54,11 +54,14 @@ The audit compared all authoritative files in `docs/` with:
 
 The reviewed workspace reports successful backend unit/API tests, all current
 fresh-PostGIS integration slices, Android/shared compilation, JavaScript and
-Kotlin/Wasm compilation, and mobile/source-contract tests. The current CI
-definition covers backend/PostGIS, Android/shared, iOS simulator compilation,
-documentation/provenance checks, JavaScript/Wasm browser tests, and a packaged
-web compatibility distribution. The new jobs have not yet passed remotely on an
-immutable commit. On 2026-09-02 the current workspace completed both Gradle
+Kotlin/Wasm compilation, and mobile/source-contract tests. On 2026-09-28,
+immutable commit `de69829a649715ad7768756e285fedfde2fa846a` passed the complete
+push and pull-request workflows for backend/PostGIS, Android/shared, both iOS
+Release simulator applications, documentation/provenance, wrapper integrity,
+dependency submission/review, JavaScript/Wasm browser tests, and packaged web
+compatibility. This is remote source/build evidence, not review, signing,
+physical-device, provider, hosted-environment, or deployment acceptance. On
+2026-09-02 the workspace completed both Gradle
 `jsBrowserTest` and `wasmJsBrowserTest` locally. That is component/browser-runner
 evidence, not a full critical-journey E2E run or acceptance across the required
 browser matrix.
@@ -118,9 +121,10 @@ closed scrape rendering and immutable alert mutations. Migration `20260908_0052`
 adds four closed incident responsibilities, exact-market assignee eligibility,
 one-active-role uniqueness and append-visible reassignment history.
 
-The working tree contains extensive modified and untracked source, migrations,
-tests, assets, and generated communication artifacts. Therefore none of the
-reviewed results is attached to an immutable commit, signed mobile artifact, or
+The historical audit began from extensive modified and untracked source, but the
+current GAP-001 candidate is committed, clean, and has passing immutable remote
+CI at `de69829a649715ad7768756e285fedfde2fa846a`. It still has no independent
+review approval, signed mobile artifact, protected promotion branch, or registry
 container digest. This audit also did not inspect a live cloud account, production
 database, app-store account, Firebase project, routing host, real payment
 statement, legal authorization, or operator staffing record.
@@ -147,19 +151,20 @@ unavailable external system cannot provide the capability.
 | Fixed routes and scheduling | Versioned routes/directions/stops/geometry/fares, publication, catalog, driver authorization, scheduled review/commitment/opening/fallback | Regulatory approval, map/routing accuracy, service operations, passenger comprehension, punctuality |
 | Analytics | Typed events, aggregate definitions, refresh worker, small-cell suppression, operations views, retention | Production event completeness, threshold ownership, usefulness, fairness governance, monitoring accuracy |
 | Mobile UI | Passenger/driver flavors and schemes, map-first Compose surfaces, English/French/Arabic, RTL, asset fallbacks | Signed store releases, physical-device quality, accessibility, usability, production providers |
-| Web UI | Applicant portal and protected operations modules for rollout, recruitment, pricing, routes, scheduling, analytics, cases, payments, staff approval, security incidents/postmortems, and audit; JS/Wasm CI, compatibility packaging, source-map exclusion and bundle ceilings are now defined | Remote clean-commit CI, full browser E2E, production hosting/CSP, accessibility, authoritative rosters and staff-process acceptance |
+| Web UI | Applicant portal and protected operations modules for rollout, recruitment, pricing, routes, scheduling, analytics, cases, payments, staff approval, security incidents/postmortems, and audit; JS/Wasm CI, compatibility packaging, source-map exclusion and bundle ceilings passed on immutable commit `de69829a` | Full browser E2E, production hosting/CSP, accessibility, authoritative rosters and staff-process acceptance |
 | Infrastructure | Local Compose, production Compose blueprint, separated API/worker roles, health/readiness, validators, backup/restore scripts, bounded role logs, and hardened Prometheus/Alertmanager/Loki/Alloy/Grafana with immutable dashboards | A running production environment, managed database, TLS/DNS, secrets, registry, accepted hosted metric/log targets, real pager, HA or restore RTO |
 
 ## 5. P0 — launch-blocking gaps
 
 ### GAP-001 — Establish an immutable release baseline
 
-**Current gap (updated 2026-09-27):** the formerly dirty implementation is now
-committed on the release-baseline branch and CI binds verification records to
-immutable commits. A completely passing candidate, reviewed pull request,
-protected promotion branch, signed distributable artifact manifest and registry
-image digest are still missing. Historical dirty-workspace results below are
-not evidence that the current checkout remains dirty.
+**Current gap (updated 2026-09-28):** the formerly dirty implementation is now
+committed on the release-baseline branch and the complete push and pull-request
+workflows pass on immutable commit `de69829a649715ad7768756e285fedfde2fa846a`.
+Draft pull request 43 exists, but independent review, protected promotion rules,
+signed distributable artifact manifests, a registry image digest, and release
+approval are still missing. Historical dirty-workspace results below are not
+evidence that the current checkout remains dirty.
 
 **Risk:** tests, migration history, binaries, and deployed source can silently
 refer to different code. Rollback and incident investigation become unreliable.
@@ -314,11 +319,25 @@ commit. This confirms simulator application linking only—not native iOS test
 execution, signing, provider configuration, physical-device behavior, or
 deployment acceptance.
 
+**Immutable candidate follow-up (2026-09-28):** corrected commit
+`de69829a649715ad7768756e285fedfde2fa846a` passed both the push run
+([36430942057](https://github.com/Q-SiO2/taxi/actions/runs/36430942057)) and
+pull-request run
+([36430946742](https://github.com/Q-SiO2/taxi/actions/runs/36430946742)). The
+push submitted the Gradle graph; the pull request passed dependency review. Both
+macOS jobs restored the lock-keyed Swift package cache, compiled Kotlin
+production/test sources, linked Passenger and Driver Release simulator apps,
+generated the two-product manifest, and bound it to clean-source evidence. The
+known MapLibre Compose 0.14.0 defect still prevents native iOS test linking, and
+the run does not supply review, branch protection, signing, physical-device,
+registry-digest, provider, or deployment acceptance. GAP-001 remains open.
+
 ### GAP-002 — Provision and accept a real hosted environment
 
-**Current gap:** deployment files are provider-neutral blueprints. No accepted
-host, domain, TLS ingress, DNS, immutable image registry, secret manager, network
-policy, environment separation, or production configuration inventory exists.
+**Current gap:** deployment files are provider-neutral blueprints and a strict
+inventory schema now exists, but no completed inventory or accepted host, domain,
+TLS ingress, DNS, immutable image registry, secret manager, network policy, or
+separated production environment exists.
 
 **Risk:** the application cannot be safely reached, operated, rotated, or
 reproduced. A free test host is not automatically suitable for identity,
@@ -334,6 +353,20 @@ and cost limits; rehearse deployment and rollback.
 network and IAM review; secret rotation record; staging deployment report;
 production change record; digest-pinned deployment; rollback rehearsal with
 measured recovery time.
+
+**Implementation progress (2026-09-28):**
+`infra/deploy/production-environment-inventory.template.json` and
+`infra/scripts/validate_production_environment_inventory.py` define the missing
+provider-neutral control record. CI validates the deliberately `NOT_STARTED`
+template. An external record can pass `--require-accepted` only with distinct
+development/staging/production account, network, secret and database references;
+exact DNS/TLS origins and host/CORS policy; the reviewed 12-service public/private
+topology; digest-pinned API/worker/migrator/scanner images; network/IAM, secret
+rotation, cost, deployment, migration and rollback evidence; measured rollback
+within the approved RTO; and architecture, data-region, security, operations and
+cost approvals. The record contains references only and can accept GAP-002 only;
+it cannot accept T5 or deployment. The committed template has no provider claims,
+so GAP-002 remains open.
 
 ### GAP-003 — Operate managed PostGIS, migrations, backups, and restoration
 
@@ -782,9 +815,9 @@ health panel covers all four targets.
 Official Loki and Alloy parsers, Linux UID/GID/mode/rotation checks, real HTTP
 readiness, Grafana provisioning, and a disposable API+worker ingestion query all
 pass locally with the pinned images. The smoke proves exactly two safe streams
-arrive and malformed/oversized fixtures do not. CI mirrors the parser,
-provisioning, and ingestion path. This is still dirty-workspace package evidence,
-not hosted retention, disk-pressure, restart-position, backup/restore, staff-
+arrive and malformed/oversized fixtures do not. Immutable `de69829a` CI passed
+the mirrored parser, provisioning, and ingestion path. This is source/candidate
+evidence, not hosted retention, disk-pressure, restart-position, backup/restore, staff-
 access, diagnosis, or on-call acceptance. The single-host file topology is also
 limited to one API and one worker; national replicas require per-replica volumes
 and collectors or another reviewed isolated transport.
@@ -811,11 +844,13 @@ crash; dashboard/privacy review; on-call handoff record.
 
 **Current gap:** source protections, Python `pip-audit`, pull-request dependency
 review, resolved Gradle graph submission, a blocking backend-image scan, an image
-SBOM/provenance definition, and a repository threat/control/test baseline now
-exist in CI. They have not yet passed remotely for an immutable candidate. There
-is no accepted independent threat-model review, abuse-case workshop, penetration
-test, DAST, complete JavaScript/Gradle current-tree vulnerability gate, mobile/web
-artifact SBOM, secret rotation drill, code-signing provenance, or remediation SLA.
+SBOM/provenance definition, and a repository threat/control/test baseline passed
+in immutable `de69829a` CI. Repository Dependabot currently reports 20 unresolved
+alerts (8 high, 9 medium, 3 low), predominantly in generated Kotlin JS/Wasm lock
+files. There is no accepted independent threat-model review, abuse-case workshop,
+penetration test, DAST, complete JavaScript/Gradle current-tree vulnerability
+gate, mobile/web artifact SBOM, secret rotation drill, code-signing provenance,
+or remediation SLA.
 
 **Risk:** authorization flaws, cross-scope leakage, browser attacks, dependency
 compromise, insecure images, and untracked critical vulnerabilities.
@@ -1730,9 +1765,10 @@ distribution and applies release packaging/bundle checks. Existing Python audit,
 credential, OpenAPI/mobile contract, Compose, Prometheus, Android and iOS gates
 remain. CI now also pins and locally validates dependency review, trusted-push
 Gradle graph submission, backend image SPDX SBOM/provenance, and a blocking
-high/critical OS/library image scan. Remote execution, full browser E2E, complete
-Gradle/JavaScript vulnerability coverage, mobile/web SBOMs, coverage policy and
-signed provenance remain open.
+high/critical OS/library image scan. The complete push and pull-request workflows
+passed at immutable `de69829a`; full browser E2E, existing-alert remediation,
+complete Gradle/JavaScript vulnerability coverage, mobile/web SBOMs, coverage
+policy and signed provenance remain open.
 
 **Implementation progress (2026-09-08):** CI now generates one deterministic,
 secret-free source-contract inventory after installing the backend. It enumerates
@@ -1740,8 +1776,9 @@ all 244 FastAPI HTTP operations and the WebSocket path, validates and emits all 
 Alembic revisions with one root/head, and emits all 22 server-owned permissions
 across nine role templates. The inventory is retained in the run summary and its
 hash is bound into the same candidate evidence record as the backend SPDX SBOM.
-Mutation tests reject removal of generation/provenance binding. This is still a
-working-tree definition until a clean immutable GitHub run succeeds.
+Mutation tests reject removal of generation/provenance binding. The clean
+immutable `de69829a` GitHub runs now verify this path; independent review and
+signed promotion evidence remain open.
 
 The documentation/provenance job now also validates the executable T0–T10 phase
 catalog and its all-`NOT_STARTED` template. Mutation coverage rejects removal of
