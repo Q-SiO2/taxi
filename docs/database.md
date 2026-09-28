@@ -353,6 +353,10 @@ the additive allowlist and response semantics.
 
 A draft configuration uses optimistic concurrency. Submission freezes its
 component references; approval and activation are explicit audited transitions.
+The existing submitter and decision-actor fields enforce maker/reviewer
+separation without another table: the configuration submitter cannot approve the
+same bundle or decide any readiness gate for it. The later city lifecycle command
+records the separately authenticated owner-authorizing actor in scoped audit.
 Activation validates every referenced version, changes the city's active pointer,
 and records the replaced bundle in one transaction. It must not point to draft,
 expired, cross-city, overlapping, or otherwise incompatible components.

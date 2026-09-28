@@ -438,6 +438,16 @@ bundle; named accountable people; expiry/review dates; public terms; readiness
 gate review by a person other than the submitter; explicit owner authorization to
 enter `PILOT`.
 
+**Source-control progress (2026-09-28):** configuration approval and all
+allowlisted readiness decisions now reject the recorded configuration submitter,
+the protected web review explains that separation, and the migrated two-city
+integration journey uses a city-manager maker with a platform-admin reviewer.
+The decision remains scoped to the exact configuration version and records the
+reviewer and time in audit while retaining only a bounded evidence reference.
+This does not select a real city/operator, approve a tariff or legal basis, name
+an operational owner, publish terms, or authorize `PILOT`; GAP-004 therefore
+remains externally **NOT STARTED**.
+
 ### GAP-005 — Establish production operations identity and governance
 
 **Current gap:** scoped grants, operations sessions, MFA, bootstrap/enrollment

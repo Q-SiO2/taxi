@@ -74,6 +74,7 @@ from taximobile_api.domains.markets.service import (
     ControlPlaneConflict,
     OptimisticVersionConflict,
     missing_readiness_gates,
+    require_independent_configuration_reviewer,
     require_expected_version,
     validate_configuration_components,
 )
@@ -946,6 +947,8 @@ async def _configuration_command(
             configuration,
             require_live_components=target == ConfigurationStatus.ACTIVE,
         )
+    if target == ConfigurationStatus.APPROVED:
+        require_independent_configuration_reviewer(configuration, principal.user_id)
 
     previous = configuration.status
     now = datetime.now(UTC)
@@ -1174,6 +1177,7 @@ async def decide_city_readiness_gate(
                 raise ControlPlaneConflict(
                     "Readiness decisions require an approved or active configuration bundle."
                 )
+            require_independent_configuration_reviewer(configuration, principal.user_id)
             check = await session.scalar(
                 select(CityReadinessCheck)
                 .where(

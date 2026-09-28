@@ -878,6 +878,9 @@ Run a scripted “city in a day” without real customers or documents:
 2. Configure city/service area/operator/tariff/payment/fixed-route/schedule.
 3. Process fictional driver applications and safe synthetic documents.
 4. Activate a pilot bundle through maker/reviewer controls.
+   The configuration submitter must be rejected from both configuration approval
+   and readiness decisions; use an independently authorized reviewer and retain
+   the controlled evidence record with accountable owners and review/expiry dates.
 5. Run immediate, fixed-route and scheduled synthetic rides.
 6. Reconcile cash/transfer/refund and explain every ledger fact.
 7. Handle routine support and urgent safety cases with pager and shift handoff.

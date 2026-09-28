@@ -294,7 +294,11 @@ internal fun CitiesScreen(
     pendingConfigurationTransition?.let { (configuration, target) ->
         ControlPlaneReviewDialog(
             title = "Review configuration transition",
-            explanation = "${configuration.version} will move from ${configuration.status} to $target. The backend will revalidate every referenced component.",
+            explanation = if (target == "APPROVED") {
+                "${configuration.version} will move from ${configuration.status} to $target. Approval requires an authorized account other than the configuration submitter."
+            } else {
+                "${configuration.version} will move from ${configuration.status} to $target. The backend will revalidate every referenced component."
+            },
             confirmLabel = "Confirm $target",
             busy = state.mutationLabel != null,
             onDismiss = { pendingConfigurationTransition = null },
@@ -580,7 +584,7 @@ private fun ReadinessReviewDialog(
             Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md)) {
                 Text(review.gateCode.replace('_', ' '), fontWeight = FontWeight.Bold, color = TaxiColors.Navy900)
                 Text(
-                    "The backend records this decision against configuration ${review.configuration.version} version ${review.configuration.optimisticVersion}. Use a non-secret ticket, runbook, test-run, or analytics-review reference.",
+                    "The backend records this decision against configuration ${review.configuration.version} version ${review.configuration.optimisticVersion}. The configuration submitter cannot perform this review. Use a non-secret ticket, runbook, test-run, or analytics-review reference that carries accountable owners and review or expiry dates.",
                     color = TaxiColors.Ink700,
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {

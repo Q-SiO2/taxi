@@ -3145,6 +3145,12 @@ rollout API. No generic rollout mutation or city-specific endpoint is added.
 `POST /operations/city-configuration-versions/{version_id}/readiness-decisions`
 accepts only an allowlisted `gate_code`, `PASSED` or `FAILED`, a bounded non-secret
 evidence reference, and the expected optimistic configuration version. For an
+approved bundle, the backend requires the deciding account to differ from the
+recorded configuration submitter. Configuration approval enforces the same
+maker/reviewer boundary; retries of an already-completed transition remain
+idempotent. The evidence reference points to a controlled record containing the
+accountable owners and review or expiry dates rather than copying names, legal
+documents, credentials, or participant data into TaxiMobile. For an
 initial launch, `PILOT_SERVICE_AND_FAIRNESS` is accepted only on the active
 configuration of a city currently in `PILOT`. An approved replacement may
 receive a new change-impact decision while its city is already `ACTIVE` or
