@@ -319,6 +319,9 @@ named responders, approved SLO/RPO/RTO and an owner-approved workload profile ex
 The target's protected GAP-002 record must pass
 `validate_production_environment_inventory.py --inventory <record> --require-accepted`;
 the repository's `NOT_STARTED` template is not entry evidence.
+Its protected GAP-003 record must also pass
+`validate_managed_postgis_evidence.py --evidence <record> --require-accepted`
+before database restore/failover/RPO/RTO claims can satisfy T5 entry.
 
 **Execute:** WARMUP/STEADY/BURST/RECOVERY and soak with independent API/worker
 replicas; all critical read/write and worker loops; database plans, locks, pools,

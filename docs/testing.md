@@ -742,6 +742,14 @@ network/IAM policy, digest-pinned core images, secret rotation, cost ownership a
 rollback evidence. This accepts only GAP-002; the phase index must still establish
 every T5 evidence class and sign-off.
 
+Database claims use the separate protected GAP-003 record. It must pass
+`infra/scripts/validate_managed_postgis_evidence.py` with
+`--evidence <record> --require-accepted` after the real provider's current-head
+migration, encrypted PITR restore, failover, least-privilege, capacity and
+retention-expiry exercises. Passing the record accepts only GAP-003; it does not
+replace the T5 `RESTORE_FAILOVER_ROLLBACK_REPORT`, `RPO_RTO_AND_COST_ACCEPTANCE`,
+security retest, or phase sign-off.
+
 The executable [synthetic HTTP workload runbook](testing_workloads.md) maps
 LOAD-01 through LOAD-12 onto T1–T10. Its passenger request/cancel and paired cash
 completion scenarios are T3 write/dispatch/financial regression baselines. A

@@ -146,6 +146,23 @@ rollback timing and five required approval functions. Passing it closes no
 T5 or deployment gate by itself. See
 [`deploy/README.md`](deploy/README.md#gap-002-environment-inventory).
 
+Managed PostGIS, PITR, restore, failover and backup-expiry acceptance use a
+separate GAP-003 record:
+
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/validate_managed_postgis_evidence.py
+backend/.venv/Scripts/python.exe infra/scripts/validate_managed_postgis_evidence.py `
+  --evidence <protected-managed-postgis-evidence.json> --require-accepted
+```
+
+The committed form is `NOT_STARTED`. A real accepted copy links back to the
+GAP-002 environment, records only bounded references and aggregate timings, and
+must prove the current migration head, PostgreSQL/PostGIS compatibility, private
+encryption, role separation, capacity reserve, PITR, isolated restore, failover,
+RPO/RTO, legal holds and expired-data backup removal. Local T3 logical restore
+reports cannot be relabeled as this evidence. See
+[`deploy/README.md`](deploy/README.md#gap-003-managed-postgis-evidence).
+
 After packaging a reviewed web distribution, collect bounded real-browser boot
 evidence without editing the 56-case laboratory record:
 

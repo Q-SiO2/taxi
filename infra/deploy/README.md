@@ -52,6 +52,37 @@ rehearsal within the approved RTO. It can accept only GAP-002. It always leaves
 T5 and deployment acceptance false, which remain controlled by the ordered phase
 evidence and the rest of the gap register.
 
+## GAP-003 managed PostGIS evidence
+
+After a GAP-002 environment has been accepted, copy
+`managed-postgis-evidence.template.json` into the same protected evidence store.
+Keep connection strings, credentials, provider-private identifiers, row contents,
+personal approver details and query text out of the record. Validate the empty
+repository template with:
+
+```powershell
+python .\infra\scripts\validate_managed_postgis_evidence.py
+```
+
+Validate a real provider exercise only after migration, restore, failover and
+backup-expiry tests have completed:
+
+```powershell
+python .\infra\scripts\validate_managed_postgis_evidence.py `
+  --evidence <protected-evidence-directory>\managed-postgis-evidence.json `
+  --require-accepted
+```
+
+The accepted form is fixed to the tested PostgreSQL 16 line and current Alembic
+head. It requires private TLS/encrypted service controls, least-privilege role
+separation, capacity reserve, approved RPO/RTO, encrypted PITR, migration and
+old/new compatibility evidence, isolated restore integrity, provider failover,
+alert acknowledgement, and proof that legal holds survive while expired personal
+fields leave provider backups after the approved window. The validator checks
+record structure and internally consistent claims; reviewers remain responsible
+for the truth and custody of referenced provider evidence. GAP-003 acceptance
+never grants T5 or deployment acceptance.
+
 ## Required inputs
 
 Set deployment values through the host/orchestrator secret and configuration

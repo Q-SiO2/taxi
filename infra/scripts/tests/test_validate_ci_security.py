@@ -302,6 +302,14 @@ class CiSecurityValidationTests(unittest.TestCase):
         with self.assertRaisesRegex(CiSecurityError, "GAP-002 production environment inventory"):
             validate_ci_security(changed)
 
+    def test_gap_003_managed_postgis_gate_cannot_be_removed(self) -> None:
+        changed = self.workflow.replace(
+            "      - run: python infra/scripts/validate_managed_postgis_evidence.py\n",
+            "",
+        )
+        with self.assertRaisesRegex(CiSecurityError, "GAP-003 managed PostGIS evidence"):
+            validate_ci_security(changed)
+
 
 if __name__ == "__main__":
     unittest.main()

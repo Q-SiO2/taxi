@@ -506,6 +506,12 @@ def validate_ci_security(workflow: str) -> None:
             "must be validated once in the dependency-free source job."
         )
 
+    if workflow.count("python infra/scripts/validate_managed_postgis_evidence.py") != 1:
+        raise CiSecurityError(
+            "The GAP-003 managed PostGIS evidence and no-acceptance template must "
+            "be validated once in the dependency-free source job."
+        )
+
     if workflow.count("node scripts/test-web-compatibility-loader.mjs") != 1:
         raise CiSecurityError(
             "The fail-closed web compatibility loader runtime scenarios must run "
@@ -536,7 +542,8 @@ def main() -> int:
         "CI security validation passed: immutable actions, dependency review, "
         "image SBOM/provenance, web/mobile candidate binding, source-contract inventory, "
         "test-phase/T2 persona/T3 system/T4 lab evidence controls, GAP-002 environment "
-        "inventory, web compatibility runtime coverage, and blocking scan are present."
+        "inventory, GAP-003 managed PostGIS evidence, web compatibility runtime "
+        "coverage, and blocking scan are present."
     )
     return 0
 

@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "evidence_revision": "2026-09-28",
+  "gap": "GAP-003",
+  "phase": "T5",
+  "status": "NOT_STARTED",
+  "data_classification": "CONTROL_REFERENCES_AND_AGGREGATES_ONLY",
+  "candidate_label": null,
+  "source_commit": null,
+  "environment_inventory_reference": null,
+  "database": {
+    "service_reference": null,
+    "network_policy_reference": null,
+    "compatibility_report_reference": null,
+    "postgres_major": null,
+    "postgis_version": null,
+    "private_access_only": false,
+    "tls_in_transit": false,
+    "encryption_at_rest": false,
+    "automated_failover_enabled": false
+  },
+  "least_privilege": {
+    "role_review_reference": null,
+    "application_role_non_superuser": false,
+    "application_role_no_createdb": false,
+    "application_role_no_createrole": false,
+    "migration_role_separate": false,
+    "backup_authority_separate": false,
+    "monitoring_role_read_only": false
+  },
+  "objectives": {
+    "approval_reference": null,
+    "approved_rpo_seconds": null,
+    "approved_rto_seconds": null
+  },
+  "capacity": {
+    "report_reference": null,
+    "monitoring_reference": null,
+    "alerting_reference": null,
+    "server_connection_limit": null,
+    "application_connection_budget": null,
+    "headroom_percent": null
+  },
+  "migration_rehearsal": {
+    "source_copy_reference": null,
+    "report_reference": null,
+    "migration_head": null,
+    "duration_seconds": null,
+    "advisory_lock_verified": false,
+    "timeouts_verified": false,
+    "conflicting_data_count": null,
+    "old_new_compatibility_reference": null,
+    "forward_fix_reference": null
+  },
+  "backup_policy": {
+    "policy_reference": null,
+    "access_review_reference": null,
+    "provider_audit_reference": null,
+    "encrypted": false,
+    "automated_snapshots_enabled": false,
+    "snapshot_frequency_hours": null,
+    "continuous_pitr_enabled": false,
+    "pitr_window_days": null,
+    "backup_retention_days": null,
+    "cross_failure_domain_copy": false
+  },
+  "restore_rehearsal": {
+    "report_reference": null,
+    "restored_at": null,
+    "isolated_staging_target": false,
+    "migration_head": null,
+    "postgis_version_match": false,
+    "table_counts_match": false,
+    "schema_object_counts_match": false,
+    "application_readiness_passed": false,
+    "measured_data_loss_seconds": null,
+    "measured_recovery_seconds": null,
+    "restore_target_disposition_reference": null
+  },
+  "failover_rehearsal": {
+    "report_reference": null,
+    "executed_at": null,
+    "provider_failover_completed": false,
+    "api_recovery_verified": false,
+    "worker_recovery_verified": false,
+    "alerts_acknowledged": false,
+    "measured_data_loss_seconds": null,
+    "measured_recovery_seconds": null
+  },
+  "retention_reconciliation": {
+    "policy_reference": null,
+    "legal_hold_review_reference": null,
+    "expiry_test_reference": null,
+    "held_records_survived_restore": false,
+    "expired_personal_fields_absent_after_backup_expiry": false,
+    "provider_backup_deletion_verified": false
+  },
+  "approvals": [
+    {"function": "ENGINEERING", "decision": "PENDING", "evidence_reference": null, "decided_at": null},
+    {"function": "SECURITY", "decision": "PENDING", "evidence_reference": null, "decided_at": null},
+    {"function": "OPERATIONS", "decision": "PENDING", "evidence_reference": null, "decided_at": null},
+    {"function": "PRIVACY_LEGAL", "decision": "PENDING", "evidence_reference": null, "decided_at": null}
+  ],
+  "gap_003_accepted": false,
+  "phase_accepted": false,
+  "deployment_accepted": false,
+  "limitations": [
+    "NO_MANAGED_DATABASE_ACCEPTED",
+    "NO_PHASE_OR_DEPLOYMENT_ACCEPTANCE"
+  ]
+}

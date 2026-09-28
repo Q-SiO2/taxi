@@ -402,6 +402,22 @@ successful restore report with timings and integrity counts; migration rehearsal
 failover test; backup-retention and legal-hold reconciliation signed by security,
 operations, and legal owners.
 
+**Implementation progress (2026-09-28):**
+`infra/deploy/managed-postgis-evidence.template.json` and
+`infra/scripts/validate_managed_postgis_evidence.py` define the protected
+provider-neutral GAP-003 record. CI validates the deliberately `NOT_STARTED`
+template. An external record can pass `--require-accepted` only when it binds the
+accepted environment and immutable source to private TLS/encrypted PostgreSQL 16
+with recorded PostGIS compatibility; non-superuser application and separated
+migration/backup/monitoring authority; approved RPO/RTO and connection headroom;
+a current-`20260908_0052` production-like migration rehearsal; encrypted PITR and
+cross-failure-domain retention; isolated staging restore and provider failover
+within RPO/RTO; readiness/schema/count reconciliation; retention/legal-hold and
+backup-expiry proof; and engineering, security, operations and privacy/legal
+approval. It records references and aggregate timings only and cannot accept T5
+or deployment. No managed database has supplied that evidence, so GAP-003 remains
+open.
+
 ### GAP-004 — Approve one real city, operator, and launch scope
 
 **Current gap:** the source can record market/operator/city readiness, but no real
