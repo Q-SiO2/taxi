@@ -296,6 +296,24 @@ and explicitly consumes `KotlinUnit`; a source regression guard rejects both the
 former direct pass-through and removal of the adapter. This requires a fresh
 macOS Xcode build for both roles and does not yet establish application linking.
 
+**iOS package-lock and application-link follow-up (2026-09-28):** immutable
+commit `33d699fbcd24c0eb06c5a27c9ea13acddf5ba56e` passed Kotlin production/test
+compilation and linked both Passenger and Driver Release simulator applications
+in independent push and pull-request jobs. Both jobs also generated the
+two-product verification manifest, then correctly refused source evidence
+because Xcode had created a previously absent, untracked `Package.resolved`.
+That failure exposed a real reproducibility gap rather than an application
+failure. The exact 14-package resolution is now committed with immutable
+revisions; both role builds disable automatic package resolution, use a dedicated
+lock-keyed SwiftPM cache, and have a 45-minute outer job bound. Mutation tests
+reject branch pins, revision drift, root-package disagreement, cache-key drift,
+or removal of either no-resolution flag. The repository Dependency Graph and
+Dependabot alerts are now enabled and the repository SBOM endpoint responds, but
+the dependency and iOS evidence jobs still require a passing run on this new
+commit. This confirms simulator application linking only—not native iOS test
+execution, signing, provider configuration, physical-device behavior, or
+deployment acceptance.
+
 ### GAP-002 — Provision and accept a real hosted environment
 
 **Current gap:** deployment files are provider-neutral blueprints. No accepted

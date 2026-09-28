@@ -590,6 +590,7 @@ jobs:
 
   ios-shared:
     runs-on: macos-15
+    timeout-minutes: 45
     defaults:
       run:
         working-directory: TaxiMobile
@@ -604,6 +605,11 @@ jobs:
           python-version: "3.12"
       - run: sudo xcode-select --switch /Applications/Xcode_26.2.app
       - run: xcodebuild -version
+      - name: Restore the immutable iOS Swift package graph
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/taximobile-ios-swift-packages
+          key: taximobile-ios-spm-${{ runner.os }}-xcode-26.2-${{ hashFiles('TaxiMobile/iosApp/iosApp.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
       - name: Compile shared iOS simulator production and test sources with bounded failure capture
         shell: bash
         run: |
@@ -625,6 +631,8 @@ jobs:
           xcodebuild -project iosApp/iosApp.xcodeproj -scheme "TaxiMobile Passenger"
           -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator'
           -derivedDataPath "${RUNNER_TEMP}/taximobile-ios-derived"
+          -clonedSourcePackagesDirPath "${RUNNER_TEMP}/taximobile-ios-swift-packages"
+          -disableAutomaticPackageResolution
           CODE_SIGNING_ALLOWED=NO TAXIMOBILE_ALLOW_UNSIGNED_RELEASE_FOR_VERIFICATION=YES
           TAXIMOBILE_ALLOW_MISSING_FIREBASE_FOR_VERIFICATION=YES
           TAXIMOBILE_API_BASE_URL=https://api.example.test
@@ -634,6 +642,8 @@ jobs:
           xcodebuild -project iosApp/iosApp.xcodeproj -scheme "TaxiMobile Driver"
           -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator'
           -derivedDataPath "${RUNNER_TEMP}/taximobile-ios-derived"
+          -clonedSourcePackagesDirPath "${RUNNER_TEMP}/taximobile-ios-swift-packages"
+          -disableAutomaticPackageResolution
           CODE_SIGNING_ALLOWED=NO TAXIMOBILE_ALLOW_UNSIGNED_RELEASE_FOR_VERIFICATION=YES
           TAXIMOBILE_ALLOW_MISSING_FIREBASE_FOR_VERIFICATION=YES
           TAXIMOBILE_API_BASE_URL=https://api.example.test

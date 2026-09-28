@@ -7,16 +7,50 @@ SCRIPTS = Path(__file__).resolve().parents[1]
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
-from validate_ci_security import CiSecurityError, WORKFLOW_PATH, validate_ci_security
+from validate_ci_security import (
+    CiSecurityError,
+    IOS_PACKAGE_RESOLVED_PATH,
+    IOS_PROJECT_PATH,
+    WORKFLOW_PATH,
+    validate_ci_security,
+    validate_ios_package_lock,
+)
 
 
 class CiSecurityValidationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
+        cls.ios_package_lock = IOS_PACKAGE_RESOLVED_PATH.read_text(encoding="utf-8")
+        cls.ios_project = IOS_PROJECT_PATH.read_text(encoding="utf-8")
 
     def test_committed_workflow_passes(self) -> None:
         validate_ci_security(self.workflow)
+
+    def test_committed_ios_package_lock_passes(self) -> None:
+        validate_ios_package_lock(self.ios_package_lock, self.ios_project)
+
+    def test_ios_package_revision_change_is_rejected(self) -> None:
+        changed = self.ios_package_lock.replace(
+            "bbe8b69694d7873315fd3a4ad41efe043e1c07c5",
+            "0" * 40,
+        )
+        with self.assertRaisesRegex(CiSecurityError, "abseil-cpp-binary"):
+            validate_ios_package_lock(changed, self.ios_project)
+
+    def test_ios_package_branch_pin_is_rejected(self) -> None:
+        changed = self.ios_package_lock.replace(
+            '"revision" : "bbe8b69694d7873315fd3a4ad41efe043e1c07c5",',
+            '"branch" : "main",\n        "revision" : '
+            '"bbe8b69694d7873315fd3a4ad41efe043e1c07c5",',
+        )
+        with self.assertRaisesRegex(CiSecurityError, "mutable branch"):
+            validate_ios_package_lock(changed, self.ios_project)
+
+    def test_ios_root_package_version_drift_is_rejected(self) -> None:
+        changed = self.ios_project.replace("version = 12.17.0;", "version = 12.18.0;")
+        with self.assertRaisesRegex(CiSecurityError, "firebase-ios-sdk"):
+            validate_ios_package_lock(self.ios_package_lock, changed)
 
     def test_mutable_action_reference_is_rejected(self) -> None:
         changed = self.workflow.replace(
@@ -158,6 +192,19 @@ class CiSecurityValidationTests(unittest.TestCase):
             CiSecurityError,
             "iOS simulator artifacts are not limitation-marked",
         ):
+            validate_ci_security(changed)
+
+    def test_ios_automatic_package_resolution_cannot_be_restored(self) -> None:
+        changed = self.workflow.replace("          -disableAutomaticPackageResolution\n", "", 1)
+        with self.assertRaisesRegex(CiSecurityError, "automatic Swift package resolution"):
+            validate_ci_security(changed)
+
+    def test_ios_package_cache_cannot_ignore_the_lock(self) -> None:
+        changed = self.workflow.replace(
+            "project.xcworkspace/xcshareddata/swiftpm/Package.resolved",
+            "project.pbxproj",
+        )
+        with self.assertRaisesRegex(CiSecurityError, "cache key"):
             validate_ci_security(changed)
 
     def test_android_shared_test_failure_annotation_cannot_be_removed(self) -> None:
