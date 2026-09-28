@@ -286,6 +286,16 @@ and states explicitly that no iOS test execution occurred. A future reviewed
 MapLibre upgrade or upstream fix must restore native test execution; physical-
 device acceptance remains mandatory.
 
+**Swift application-link follow-up (2026-09-28):** the first Xcode application
+build resolved and compiled the pinned Swift packages, then correctly failed in
+the checked-in Swift shell before linking. Kotlin/Native exports the driver-
+document completion callback with a `KotlinUnit` result, while the UIKit picker
+coordinator owns a Swift `Void` callback. Passing the exported closure through
+directly therefore failed Swift compilation. The shell now wraps the callback
+and explicitly consumes `KotlinUnit`; a source regression guard rejects both the
+former direct pass-through and removal of the adapter. This requires a fresh
+macOS Xcode build for both roles and does not yet establish application linking.
+
 ### GAP-002 — Provision and accept a real hosted environment
 
 **Current gap:** deployment files are provider-neutral blueprints. No accepted

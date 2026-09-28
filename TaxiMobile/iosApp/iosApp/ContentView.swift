@@ -24,7 +24,9 @@ struct ComposeView: UIViewControllerRepresentable {
             appBuild: appBuild,
             showManualCoordinateEntry: showManualCoordinateEntry,
             requestDriverDocument: { completion in
-                context.coordinator.present(completion: completion)
+                context.coordinator.present { fileName, mediaType, base64Content in
+                    _ = completion(fileName, mediaType, base64Content)
+                }
             }
         )
         context.coordinator.presenter = controller
