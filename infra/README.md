@@ -196,6 +196,28 @@ It contains no names, contacts, credentials, recovery codes or copied documents
 and accepts neither T5 nor deployment. See
 [`deploy/README.md`](deploy/README.md#gap-005-operations-identity-and-governance).
 
+Production maps, routing and device navigation use the separate GAP-006 record:
+
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/validate_maps_routing_navigation.py
+backend/.venv/Scripts/python.exe infra/scripts/validate_maps_routing_navigation.py `
+  --evidence <protected-maps-routing-navigation.json> `
+  --routing-report <exact-redacted-routing-report.json> `
+  --require-accepted
+```
+
+The committed form remains `NOT_STARTED` and chooses no provider or city. An
+accepted protected copy binds one approved Moroccan city configuration to
+immutable MapLibre style/tile and routing graph artifacts, licensing,
+attribution, cache/offline/privacy/cost, refresh, traffic and rollback controls,
+six route benchmark categories, four Android/iOS passenger/driver surfaces in
+Arabic/French/English, seven drills and six approvals. The separately supplied
+backend routing report must match the recorded SHA-256 and pass every language
+for the selected Valhalla or GraphHopper target. The record stores references,
+not raw routes, provider queries, credentials or personal data, and accepts
+neither T5 nor deployment. See
+[`deploy/README.md`](deploy/README.md#gap-006-production-maps-routing-and-navigation).
+
 After packaging a reviewed web distribution, collect bounded real-browser boot
 evidence without editing the 56-case laboratory record:
 

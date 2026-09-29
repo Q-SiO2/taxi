@@ -326,6 +326,14 @@ class CiSecurityValidationTests(unittest.TestCase):
         with self.assertRaisesRegex(CiSecurityError, "GAP-005 operations identity governance"):
             validate_ci_security(changed)
 
+    def test_gap_006_maps_routing_navigation_gate_cannot_be_removed(self) -> None:
+        changed = self.workflow.replace(
+            "      - run: python infra/scripts/validate_maps_routing_navigation.py\n",
+            "",
+        )
+        with self.assertRaisesRegex(CiSecurityError, "GAP-006 maps/routing/navigation"):
+            validate_ci_security(changed)
+
 
 if __name__ == "__main__":
     unittest.main()

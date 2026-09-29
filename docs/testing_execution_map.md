@@ -30,10 +30,10 @@ in that complete regression, plus 57 passing tests per JS/Wasm browser target an
 extended. The candidate capacity surface
 has 22 fixed Prometheus queries, 21 profile thresholds, explicit per-process
 database-pool bounds, 26 validated alert rules and a 26-panel operations
-dashboard. Immutable `004bfb2` now passes the complete push and pull-request CI
+dashboard. Immutable `168c350` now passes the complete push and pull-request CI
 workflows, including both iOS Release simulator application links. Historical
 system/load results remain local unless the remote run explicitly produced them.
-Some browser/emulator evidence has started at T4; the GAP-002, GAP-003, GAP-004 and GAP-005
+Some browser/emulator evidence has started at T4; the GAP-002 through GAP-006
 external acceptance records remain `NOT_STARTED`, and no subsystem has complete T4–T8 acceptance.
 No real-user phase is authorized.
 
@@ -328,6 +328,17 @@ references and four approvals. That gap record never accepts T5 or deployment.
 Its protected GAP-003 record must also pass
 `validate_managed_postgis_evidence.py --evidence <record> --require-accepted`
 before database restore/failover/RPO/RTO claims can satisfy T5 entry.
+
+Any T5 map, routing, tile, narration or provider-failure claim additionally
+requires the protected GAP-006 record to pass
+`validate_maps_routing_navigation.py --evidence <record> --routing-report
+<exact-report> --require-accepted`. Its report digest must match the redacted
+backend acceptance output from the selected target, with every fixed scenario
+passing English, French and Arabic. The same record must bind approved immutable
+style/tile/graph artifacts, policy controls, six pilot-city route categories,
+four role/platform device surfaces, seven drills and six approvals. This gap
+record does not accept T5 and does not replace T4 physical-device or T7 road
+evidence.
 
 **Execute:** WARMUP/STEADY/BURST/RECOVERY and soak with independent API/worker
 replicas; all critical read/write and worker loops; database plans, locks, pools,

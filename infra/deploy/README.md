@@ -148,6 +148,54 @@ legal and product-owner approvals. Assignment, enrollment, drill and approval
 reviews must remain current through the next access review. The record accepts
 only GAP-005 and always leaves T5 and deployment acceptance false.
 
+## GAP-006 production maps, routing and navigation
+
+After GAP-002 through GAP-004 have protected evidence locations, copy
+`maps-routing-navigation.template.json` into the protected store. Do not put
+credentials, personal/device identifiers, provider queries, raw route geometry,
+raw device traces or copied contracts in this JSON. Use bounded references and
+immutable artifact digests. Validate the repository template with:
+
+```powershell
+python .\infra\scripts\validate_maps_routing_navigation.py
+```
+
+Run the existing guarded backend benchmark against the authorized staging or
+production-candidate routing target and retain stdout exactly as a JSON file:
+
+```powershell
+backend\.venv\Scripts\python.exe -m taximobile_api.operations.routing_acceptance `
+  --provider <valhalla-or-graphhopper> `
+  --base-url <authorized-routing-origin> `
+  --confirm-host <exact-hostname> > <protected-routing-report.json>
+```
+
+The command accepts only its fixed public Morocco scenarios, redacts geometry,
+instructions, target details and provider exceptions, and fails unless each
+supported English/French/Arabic route is plausible and localized. The current
+Valhalla catalog explicitly reports Arabic as unsupported, so it cannot be
+papered over by the evidence record; use a target that actually passes the
+required report or leave GAP-006 open.
+
+Validate a completed protected record together with those exact report bytes:
+
+```powershell
+python .\infra\scripts\validate_maps_routing_navigation.py `
+  --evidence <protected-evidence-directory>\maps-routing-navigation.json `
+  --routing-report <protected-evidence-directory>\routing-acceptance.json `
+  --require-accepted
+```
+
+Acceptance requires MapLibre, versioned style/tile artifacts and coverage,
+license/attribution/cache/offline/privacy/capacity reviews, a digest-pinned
+Morocco extract/engine/graph, a bounded refresh and rollback policy, explicit
+traffic-data status, urban/peri-urban/restricted-road/one-way/roundabout/fixed-
+route results within owner-approved tolerances, zero restricted-road violations,
+passenger and driver Android/iOS evidence in Arabic/French/English, seven outage/
+rollback/reroute/network/attribution drills, and six independent owner approvals.
+All evidence must remain current through the acceptance window. The record
+accepts only GAP-006 and always leaves T5 and deployment acceptance false.
+
 ## Required inputs
 
 Set deployment values through the host/orchestrator secret and configuration

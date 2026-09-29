@@ -515,6 +515,23 @@ review; route benchmark with expected tolerances; device traces; navigation and
 reroute matrix in all required languages; provider outage/fallback drill; owner
 approval of map appearance and legibility.
 
+**Evidence-gate progress (2026-09-29):**
+`infra/deploy/maps-routing-navigation.template.json` and
+`infra/scripts/validate_maps_routing_navigation.py` now define a fail-closed
+protected acceptance record for GAP-006. It binds one approved Moroccan city
+configuration to immutable MapLibre style/tile metadata, a digest-pinned Morocco
+routing graph, explicit licensing/attribution/cache/offline/privacy/cost and
+refresh/traffic/rollback controls, all six required route-benchmark categories,
+four passenger/driver Android/iOS surfaces in Arabic/French/English, seven outage,
+reroute, network, rollback and attribution drills, and six owner approvals. An
+accepted record must also be supplied the exact redacted output of the existing
+routing acceptance command and match its SHA-256; every fixed public scenario
+must pass all three languages for the selected Valhalla or GraphHopper provider.
+This preserves the current explicit Valhalla Arabic limitation instead of
+allowing a paper approval to hide it. The committed record is deliberately
+`NOT_STARTED`, contains no provider choice, city claim, raw route trace,
+credential or approval, and accepts neither T5 nor deployment.
+
 ### GAP-007 — Decide and implement the operational driver-location model
 
 **Current gap:** the source now adopts a foreground-only pilot model. After an

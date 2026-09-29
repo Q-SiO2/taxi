@@ -17,7 +17,7 @@ evidence or approve a phase.
 source-contract, and local web compilation coverage is broad. CI definitions now
 include pinned dependency review, resolved Gradle graph submission, backend image
 SBOM/provenance and a blocking high/critical image scan. The complete push and
-pull-request workflows passed at immutable `004bfb2`; this is not independent
+pull-request workflows passed at immutable `168c350`; this is not independent
 review, signed release, provider, hosted, or phase acceptance. CI also structurally validates the
 self-hosted monitoring overlay, renders it with the production manifest, parses
 Prometheus/Alertmanager/Loki/Alloy configuration with digest-pinned official
@@ -756,6 +756,18 @@ referenced roster/JML controls, duty separation, MFA/recovery custody, access
 review, leaver/break-glass drills and owner approvals are structurally complete.
 The repository template is intentionally `NOT_STARTED`; accepting GAP-005 does
 not accept T5, deployment, hosted-browser behavior or staff competence.
+
+Production map/routing/navigation claims use the separate protected GAP-006
+record. Generate a redacted route report against the authorized target with
+`python -m taximobile_api.operations.routing_acceptance --provider <provider>
+--base-url <origin> --confirm-host <host>`, retain its exact bytes, and run
+`validate_maps_routing_navigation.py --evidence <record> --routing-report
+<report> --require-accepted`. The validator binds that passing hash-matched
+Arabic/French/English report to immutable map/graph artifacts, provider and data
+policies, six pilot-city route categories, four physical-device role surfaces,
+outage/rollback/reroute drills and owner approvals. The committed template is
+`NOT_STARTED`; GAP-006 acceptance is necessary evidence but does not accept T5,
+deployment, the complete T4 device catalog or the later T7 road trial.
 
 The executable [synthetic HTTP workload runbook](testing_workloads.md) maps
 LOAD-01 through LOAD-12 onto T1–T10. Its passenger request/cancel and paired cash
