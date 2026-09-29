@@ -17,7 +17,7 @@ evidence or approve a phase.
 source-contract, and local web compilation coverage is broad. CI definitions now
 include pinned dependency review, resolved Gradle graph submission, backend image
 SBOM/provenance and a blocking high/critical image scan. The complete push and
-pull-request workflows passed at immutable `3a1ca42`; this is not independent
+pull-request workflows passed at immutable `004bfb2`; this is not independent
 review, signed release, provider, hosted, or phase acceptance. CI also structurally validates the
 self-hosted monitoring overlay, renders it with the production manifest, parses
 Prometheus/Alertmanager/Loki/Alloy configuration with digest-pinned official
@@ -749,6 +749,13 @@ migration, encrypted PITR restore, failover, least-privilege, capacity and
 retention-expiry exercises. Passing the record accepts only GAP-003; it does not
 replace the T5 `RESTORE_FAILOVER_ROLLBACK_REPORT`, `RPO_RTO_AND_COST_ACCEPTANCE`,
 security retest, or phase sign-off.
+
+T5 entry also requires the protected GAP-005 operations-identity record to pass
+`validate_operations_identity_governance.py --require-accepted`. This proves the
+referenced roster/JML controls, duty separation, MFA/recovery custody, access
+review, leaver/break-glass drills and owner approvals are structurally complete.
+The repository template is intentionally `NOT_STARTED`; accepting GAP-005 does
+not accept T5, deployment, hosted-browser behavior or staff competence.
 
 The executable [synthetic HTTP workload runbook](testing_workloads.md) maps
 LOAD-01 through LOAD-12 onto T1–T10. Its passenger request/cancel and paired cash

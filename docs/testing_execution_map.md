@@ -30,10 +30,10 @@ in that complete regression, plus 57 passing tests per JS/Wasm browser target an
 extended. The candidate capacity surface
 has 22 fixed Prometheus queries, 21 profile thresholds, explicit per-process
 database-pool bounds, 26 validated alert rules and a 26-panel operations
-dashboard. Immutable `3a1ca42` now passes the complete push and pull-request CI
+dashboard. Immutable `004bfb2` now passes the complete push and pull-request CI
 workflows, including both iOS Release simulator application links. Historical
 system/load results remain local unless the remote run explicitly produced them.
-Some browser/emulator evidence has started at T4; the GAP-002, GAP-003 and GAP-004
+Some browser/emulator evidence has started at T4; the GAP-002, GAP-003, GAP-004 and GAP-005
 external acceptance records remain `NOT_STARTED`, and no subsystem has complete T4–T8 acceptance.
 No real-user phase is authorized.
 
@@ -319,6 +319,12 @@ named responders, approved SLO/RPO/RTO and an owner-approved workload profile ex
 The target's protected GAP-002 record must pass
 `validate_production_environment_inventory.py --inventory <record> --require-accepted`;
 the repository's `NOT_STARTED` template is not entry evidence.
+
+T5 entry additionally requires an accepted protected GAP-005 operations identity
+and governance record. It must bind the authoritative staff roster/JML source,
+three-person platform-admin quorum, independent sensitive duties, reviewed MFA
+and recovery custody, current access review, leaver and break-glass drills, audit
+references and four approvals. That gap record never accepts T5 or deployment.
 Its protected GAP-003 record must also pass
 `validate_managed_postgis_evidence.py --evidence <record> --require-accepted`
 before database restore/failover/RPO/RTO claims can satisfy T5 entry.

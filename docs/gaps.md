@@ -481,6 +481,18 @@ launch; schedule access recertification.
 privilege test accounts; access-review sign-off; leaver revocation drill; audit
 records for bootstrap, grants, step-up, and sensitive actions.
 
+**Evidence-gate progress (2026-09-29):**
+`infra/deploy/operations-identity-governance.template.json` and
+`infra/scripts/validate_operations_identity_governance.py` now define a strict
+protected record for these external controls. Acceptance requires an
+authoritative roster/JML source, three distinct platform-administrator quorum
+duties, explicit rollout/pricing/payment/document/support/safety assignments,
+independently reviewed TOTP and recovery custody for every assigned account,
+bounded access-review and leaver policy, eight exercised control drills, fixed
+audit references and four owner approvals. The committed record is deliberately
+`NOT_STARTED`, contains references rather than names or secrets, accepts neither
+T5 nor deployment, and cannot fabricate production accounts or human drills.
+
 ### GAP-006 — Accept production maps, routing, and navigation
 
 **Current gap:** MapLibre rendering, a neutral fallback style, and normalized

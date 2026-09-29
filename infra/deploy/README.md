@@ -116,6 +116,38 @@ approval functions and explicit product-owner authorization. Authority,
 assignments, readiness and approvals must remain current through the pilot end.
 It accepts only GAP-004 and always leaves T6 and deployment acceptance false.
 
+## GAP-005 operations identity and governance
+
+After the production environment and database evidence stores exist, copy
+`operations-identity-governance.template.json` into that protected store. Keep
+personal names, email/phone details, passwords, TOTP seeds, recovery codes,
+credentials and copied policy/legal documents out of the JSON; use bounded
+account and control references instead. Validate the repository template with:
+
+```powershell
+python .\infra\scripts\validate_operations_identity_governance.py
+```
+
+Validate the protected record only after real production staff controls and
+drills exist:
+
+```powershell
+python .\infra\scripts\validate_operations_identity_governance.py `
+  --governance <protected-evidence-directory>\operations-identity-governance.json `
+  --require-accepted
+```
+
+Acceptance requires an authoritative roster and joiner/mover/leaver source,
+review/recovery/break-glass policies, three distinct platform-administrator
+quorum duties, explicit rollout/pricing/payment/document/support/safety duties,
+reviewed TOTP and recovery custody for every assigned account, no shared or
+password-only production accounts, an access-review cadence of at most 90 days,
+a bounded leaver deadline, eight independently reviewed drills, fixed bootstrap/
+grant/MFA/sensitive-action audit references and security, operations, privacy-
+legal and product-owner approvals. Assignment, enrollment, drill and approval
+reviews must remain current through the next access review. The record accepts
+only GAP-005 and always leaves T5 and deployment acceptance false.
+
 ## Required inputs
 
 Set deployment values through the host/orchestrator secret and configuration

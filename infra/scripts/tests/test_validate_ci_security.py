@@ -318,6 +318,14 @@ class CiSecurityValidationTests(unittest.TestCase):
         with self.assertRaisesRegex(CiSecurityError, "GAP-004 pilot-city approval"):
             validate_ci_security(changed)
 
+    def test_gap_005_operations_identity_gate_cannot_be_removed(self) -> None:
+        changed = self.workflow.replace(
+            "      - run: python infra/scripts/validate_operations_identity_governance.py\n",
+            "",
+        )
+        with self.assertRaisesRegex(CiSecurityError, "GAP-005 operations identity governance"):
+            validate_ci_security(changed)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -179,6 +179,23 @@ owner pilot authorization. It stores references rather than legal documents or
 personal data and accepts neither T6 nor deployment. See
 [`deploy/README.md`](deploy/README.md#gap-004-pilot-city-launch-approval).
 
+Production operations identity and governance use a separate GAP-005 record:
+
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/validate_operations_identity_governance.py
+backend/.venv/Scripts/python.exe infra/scripts/validate_operations_identity_governance.py `
+  --governance <protected-operations-governance.json> --require-accepted
+```
+
+The committed form remains `NOT_STARTED`. An accepted protected copy requires
+an authoritative staff roster/JML process, three-person platform-admin quorum,
+explicit maker/checker and sensitive-duty assignments, independently reviewed
+TOTP custody for every assigned account, bounded access-review/leaver policy,
+eight exercised control drills, fixed audit references and four owner approvals.
+It contains no names, contacts, credentials, recovery codes or copied documents
+and accepts neither T5 nor deployment. See
+[`deploy/README.md`](deploy/README.md#gap-005-operations-identity-and-governance).
+
 After packaging a reviewed web distribution, collect bounded real-browser boot
 evidence without editing the 56-case laboratory record:
 
