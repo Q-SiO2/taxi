@@ -464,7 +464,6 @@ def validate_ci_security(workflow: str) -> None:
         "Parse monitoring configuration with pinned official tools",
         'exec > >(tee "${RUNNER_TEMP}/taximobile-monitoring-validation.log") 2>&1',
         "Publish redacted monitoring-tool failure annotation",
-        "python infra/scripts/emit_ci_failure_annotation.py",
         '--input "${RUNNER_TEMP}/taximobile-monitoring-validation.log"',
         '--title "TaxiMobile monitoring validation failure"',
     )
@@ -475,6 +474,19 @@ def validate_ci_security(workflow: str) -> None:
         raise CiSecurityError(
             "Monitoring CI failures must publish a bounded redacted diagnostic: "
             f"missing {missing_monitoring_diagnostic[0]}."
+        )
+    monitoring_annotation_block = (
+        "      - name: Publish redacted monitoring-tool failure annotation\n"
+        "        if: failure()\n"
+        "        run: >-\n"
+        "          python ../infra/scripts/emit_ci_failure_annotation.py\n"
+        "          --input \"${RUNNER_TEMP}/taximobile-monitoring-validation.log\"\n"
+        "          --title \"TaxiMobile monitoring validation failure\""
+    )
+    if monitoring_annotation_block not in workflow:
+        raise CiSecurityError(
+            "Monitoring CI failures must publish a bounded redacted diagnostic "
+            "from the backend working directory."
         )
 
     if 'assert len(dashboard["panels"]) == 26' not in workflow:

@@ -229,6 +229,18 @@ class CiSecurityValidationTests(unittest.TestCase):
         ):
             validate_ci_security(changed)
 
+    def test_monitoring_failure_annotation_uses_backend_relative_path(self) -> None:
+        changed = self.workflow.replace(
+            "python ../infra/scripts/emit_ci_failure_annotation.py",
+            "python infra/scripts/emit_ci_failure_annotation.py",
+            1,
+        )
+        with self.assertRaisesRegex(
+            CiSecurityError,
+            "Monitoring CI failures must publish a bounded redacted diagnostic",
+        ):
+            validate_ci_security(changed)
+
     def test_monitoring_smoke_requires_full_reviewed_dashboard(self) -> None:
         changed = self.workflow.replace(
             'assert len(dashboard["panels"]) == 26',
