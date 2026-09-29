@@ -17,7 +17,7 @@ graph, map style, mobile artifact, infrastructure topology, or security-policy
 change invalidates the affected evidence and sends that scope back to the earliest
 impacted phase.
 
-**Current position (standing refreshed 2026-09-28):** most subsystems have broad T1–T3 evidence,
+**Current position (standing refreshed 2026-09-29):** most subsystems have broad T1–T3 evidence,
 including a fresh migration-through-`20260908_0052` PostGIS run with 992 passing
 backend tests and no failures, errors or skips. The staff-grant dual-control slice
 also has focused PostGIS, API, JS and Wasm evidence. Migration 0050 and its
@@ -30,11 +30,11 @@ in that complete regression, plus 57 passing tests per JS/Wasm browser target an
 extended. The candidate capacity surface
 has 22 fixed Prometheus queries, 21 profile thresholds, explicit per-process
 database-pool bounds, 26 validated alert rules and a 26-panel operations
-dashboard. Immutable `de69829a` now passes the complete push and pull-request CI
+dashboard. Immutable `3a1ca42` now passes the complete push and pull-request CI
 workflows, including both iOS Release simulator application links. Historical
 system/load results remain local unless the remote run explicitly produced them.
-Some browser/emulator evidence has started at T4; the GAP-002 environment
-inventory is still `NOT_STARTED`, and no subsystem has complete T4–T8 acceptance.
+Some browser/emulator evidence has started at T4; the GAP-002, GAP-003 and GAP-004
+external acceptance records remain `NOT_STARTED`, and no subsystem has complete T4–T8 acceptance.
 No real-user phase is authorized.
 
 ## 2. Promotion path
@@ -342,7 +342,10 @@ or high security issue lacks independently approved bounded treatment.
 ### T6 — trained-staff synthetic operating rehearsal
 
 **Entry:** T5 passes; named least-privilege staff have MFA, runbooks and on-call
-coverage; all data and payment records remain fictional.
+coverage; all data and payment records remain fictional. The protected GAP-004
+record passes `validate_pilot_city_launch_approval.py --approval <record> --require-accepted`,
+binding the rehearsal to one reviewed city/operator scope
+without claiming that T6 or deployment has passed.
 
 **Execute:** city setup and two-person release; driver application/document review;
 tariff/payment/fixed-route/schedule publication; immediate and scheduled journeys;

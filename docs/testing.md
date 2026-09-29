@@ -13,11 +13,11 @@ are validated by `infra/scripts/validate_test_phase_evidence.py`. That gate chec
 promotion metadata and exposure boundaries; it does not authenticate external
 evidence or approve a phase.
 
-**Current standing (refreshed 2026-09-28):** automated backend, PostGIS, shared/mobile,
+**Current standing (refreshed 2026-09-29):** automated backend, PostGIS, shared/mobile,
 source-contract, and local web compilation coverage is broad. CI definitions now
 include pinned dependency review, resolved Gradle graph submission, backend image
 SBOM/provenance and a blocking high/critical image scan. The complete push and
-pull-request workflows passed at immutable `de69829a`; this is not independent
+pull-request workflows passed at immutable `3a1ca42`; this is not independent
 review, signed release, provider, hosted, or phase acceptance. CI also structurally validates the
 self-hosted monitoring overlay, renders it with the production manifest, parses
 Prometheus/Alertmanager/Loki/Alloy configuration with digest-pinned official
@@ -861,6 +861,14 @@ responders. Current-head restore, credential rotation and rollback are measured.
 No unresolved critical/high finding lacks approved bounded mitigation.
 
 ## 11. Phase T6 — trained staff rehearsal with synthetic journeys
+
+T6 entry also requires the protected GAP-004 record to pass
+`infra/scripts/validate_pilot_city_launch_approval.py --approval <record> --require-accepted`.
+The repository template is intentionally `NOT_STARTED`.
+Passing the protected record proves that a real city/operator scope, current
+configuration, public terms, accountable owners, pilot limits, independent
+readiness decisions and owner authorization were reviewed; it accepts only
+GAP-004 and does not accept T6, deployment or any rehearsal outcome.
 
 ### Participants
 

@@ -310,6 +310,14 @@ class CiSecurityValidationTests(unittest.TestCase):
         with self.assertRaisesRegex(CiSecurityError, "GAP-003 managed PostGIS evidence"):
             validate_ci_security(changed)
 
+    def test_gap_004_pilot_city_approval_gate_cannot_be_removed(self) -> None:
+        changed = self.workflow.replace(
+            "      - run: python infra/scripts/validate_pilot_city_launch_approval.py\n",
+            "",
+        )
+        with self.assertRaisesRegex(CiSecurityError, "GAP-004 pilot-city approval"):
+            validate_ci_security(changed)
+
 
 if __name__ == "__main__":
     unittest.main()

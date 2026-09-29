@@ -448,6 +448,18 @@ This does not select a real city/operator, approve a tariff or legal basis, name
 an operational owner, publish terms, or authorize `PILOT`; GAP-004 therefore
 remains externally **NOT STARTED**.
 
+**Evidence-gate progress (2026-09-29):**
+`infra/deploy/pilot-city-launch-approval.template.json` and
+`infra/scripts/validate_pilot_city_launch_approval.py` now define a strict
+protected record for the external decision. Acceptance requires one real
+Moroccan city and legal operator, the exact active configuration, explicit
+service/payment scope with cash retained, public Arabic/French/English terms,
+nine accountable functions, bounded pilot exposure, all ten current readiness
+decisions reviewed independently of the submitter, and six approvals including
+product-owner authorization. The committed template is deliberately
+`NOT_STARTED`, accepts neither T6 nor deployment, and cannot be used to invent
+the missing city/operator/legal decisions.
+
 ### GAP-005 — Establish production operations identity and governance
 
 **Current gap:** scoped grants, operations sessions, MFA, bootstrap/enrollment

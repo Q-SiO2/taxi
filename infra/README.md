@@ -163,6 +163,22 @@ RPO/RTO, legal holds and expired-data backup removal. Local T3 logical restore
 reports cannot be relabeled as this evidence. See
 [`deploy/README.md`](deploy/README.md#gap-003-managed-postgis-evidence).
 
+The real city/operator decision uses a separate GAP-004 launch-approval record:
+
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/validate_pilot_city_launch_approval.py
+backend/.venv/Scripts/python.exe infra/scripts/validate_pilot_city_launch_approval.py `
+  --approval <protected-pilot-city-approval.json> --require-accepted
+```
+
+The committed record remains `NOT_STARTED`. An accepted protected copy binds one
+real Moroccan city and legal operator to the exact active configuration, public
+terms, accountable functions, bounded cohort, cash-inclusive payment scope, all
+ten independent readiness reviews and six approvals including explicit product-
+owner pilot authorization. It stores references rather than legal documents or
+personal data and accepts neither T6 nor deployment. See
+[`deploy/README.md`](deploy/README.md#gap-004-pilot-city-launch-approval).
+
 After packaging a reviewed web distribution, collect bounded real-browser boot
 evidence without editing the 56-case laboratory record:
 

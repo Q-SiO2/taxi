@@ -83,6 +83,39 @@ record structure and internally consistent claims; reviewers remain responsible
 for the truth and custody of referenced provider evidence. GAP-003 acceptance
 never grants T5 or deployment acceptance.
 
+## GAP-004 pilot-city launch approval
+
+After GAP-002 and GAP-003 have accepted protected records, copy
+`pilot-city-launch-approval.template.json` into the same access-controlled
+evidence store. This record does not replace the operations control plane: it
+binds the real external approvals to the exact active configuration whose ten
+pilot-entry decisions are recorded by the backend. Keep personal names,
+credentials, participant identifiers, legal-document contents and private
+contact details out of the JSON. Validate the empty repository template with:
+
+```powershell
+python .\infra\scripts\validate_pilot_city_launch_approval.py
+```
+
+Validate the protected record only after the owner has selected one real city
+and legal operator and every reviewer has decided:
+
+```powershell
+python .\infra\scripts\validate_pilot_city_launch_approval.py `
+  --approval <protected-evidence-directory>\pilot-city-launch-approval.json `
+  --require-accepted
+```
+
+The accepted form requires the Moroccan market/country, public city and legal-
+entity facts, an active coherent configuration while the city remains
+`CONFIGURING`, explicit enabled services and payment methods with cash retained,
+approved service area/hours/tariffs, public Arabic/French/English terms, nine
+accountable operational functions, bounded cohort/exposure limits, all ten
+configuration-bound readiness decisions, independent reviewers, six dated
+approval functions and explicit product-owner authorization. Authority,
+assignments, readiness and approvals must remain current through the pilot end.
+It accepts only GAP-004 and always leaves T6 and deployment acceptance false.
+
 ## Required inputs
 
 Set deployment values through the host/orchestrator secret and configuration
