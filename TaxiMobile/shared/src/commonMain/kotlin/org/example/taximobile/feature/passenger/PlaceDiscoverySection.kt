@@ -47,12 +47,18 @@ internal fun PlaceDiscoverySection(
     onSelectResult: (PlaceResult) -> Unit,
 ) {
     val eligibleCities = cities.filter { it.bookingAvailable }
-    var query by remember { mutableStateOf("") }
-    var lastSubmittedKey by remember { mutableStateOf<String?>(null) }
     val activeCityId = selectedCityId?.takeIf { id -> eligibleCities.any { it.id == id } }
         ?: eligibleCities.firstOrNull()?.id
-    val visibleSearch = discovery.search?.takeIf { it.cityId == activeCityId }
+    // Reopening a picker may restore its last query, but a later response must
+    // never replace text the passenger is currently editing.
+    var query by remember {
+        mutableStateOf(discovery.search?.takeIf { it.cityId == activeCityId }?.query.orEmpty())
+    }
+    var lastSubmittedKey by remember { mutableStateOf<String?>(null) }
     val normalizedQuery = query.trim().replace(Regex("\\s+"), " ")
+    val visibleSearch = discovery.search?.takeIf {
+        it.cityId == activeCityId && it.query == normalizedQuery && normalizedQuery.length >= 2
+    }
     val requestKey = activeCityId?.let { "$it|$normalizedQuery" }
 
     fun submitSearch() {
@@ -113,6 +119,7 @@ internal fun PlaceDiscoverySection(
         value = query,
         onValueChange = { query = it.take(120) },
         label = stringResource(Res.string.place_search_field),
+        modifier = Modifier.testTag("place-search-query"),
         enabled = pendingAction == null,
         imeAction = ImeAction.Search,
     )

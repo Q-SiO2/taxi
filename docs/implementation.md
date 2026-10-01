@@ -1592,7 +1592,12 @@ retryable; results distinguish address/street/locality/landmark, expose provider
 attribution, and disable an outside-area result when pickup is selected. A
 settled map point has an explicit reverse-address action; the returned label never
 replaces its authoritative coordinate. Disabled/provider-failure/no-match states
-retain map/manual selection. Saved-place labels remain deferred. The remaining UI test/screenshot matrix
+retain map/manual selection. Search results remain selectable only while their
+city and normalized query match the visible input; query edits hide old or late
+responses immediately. A reverse request captures its city/target/coordinate,
+and completion labels only that still-selected point without moving coordinates
+or displaying stale guidance after a city/point change or a live ride starts.
+Saved-place labels remain deferred. The remaining UI test/screenshot matrix
 is a later validation slice scheduled in `ui.md`.
 
 The account surface also presents a visually separate safety section for

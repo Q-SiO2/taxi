@@ -660,6 +660,19 @@ Arabic/French/Latin benchmark, privacy/egress review, physical accessibility and
 usability evidence, or saved-place design has been accepted. The implemented
 adapter must not be described as a production provider decision.
 
+**Selection-race hardening (2026-10-01):** the passenger picker restores the
+last query when reopened but exposes results only for the visible normalized
+query and city. Editing/clearing/shortening the query hides previous and delayed
+results immediately. Reverse lookup now labels only an unchanged selected point:
+the pending city/target/coordinate is captured, and completion cannot move a
+pickup/destination or label a later selection. No-result guidance is also
+discarded after selection/city changes or a live ride starts. Seven regression
+tests cover query/city response freshness and pickup/destination label-only
+behavior. Local verification passed 204 shared JVM tests with zero failures,
+errors or skips and both passenger/driver Android debug Kotlin compilation.
+Provider selection, multilingual geographic quality, privacy, saved places and
+physical usability remain open; this is source hardening, not GAP-008 acceptance.
+
 ### GAP-009 — Accept FCM/APNs and user-visible notification delivery
 
 **Current gap:** adapters, token ownership, retry/dead-letter state, live refresh,

@@ -294,6 +294,19 @@ At T7 repeat the lifecycle/network cases during the approved closed-cohort shift
 and measure freshness and battery against frozen thresholds. T1 success does not
 accept native timing, T4, T7 or GAP-007; background tracking remains unapproved.
 
+For GAP-008, run the shared reverse-selection and JVM picker regressions before
+T4. On each Android/iOS passenger surface in Arabic/French/English, search a
+landmark, edit/clear/shorten the query, switch city and deliver an older response.
+Only results matching the current city and normalized query may remain
+selectable. Delay reverse lookup for both pickup and destination, move the point
+or switch city before coordinate/no-result completion, and prove that neither
+the new point nor its label is overwritten and no stale completion warning
+appears. An unchanged point must receive its label without moving. Repeat under
+GPS loss, provider outage and slow network with usable map/manual fallback.
+Retain synthetic request/selection assertions, not query or precise participant
+trails. T7 then tests real landmark ambiguity and wrong-city pickups against the
+approved multilingual benchmark; source checks do not accept provider quality.
+
 **Exit:** all critical journeys are usable on the minimum supported matrix; no
 secret or private data leaks through screen, clipboard, cache, logs or analytics;
 crashes and accessibility blockers are below approved thresholds; unresolved S2
