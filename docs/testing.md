@@ -1603,6 +1603,29 @@ T9/T10 replay affected tests for each release and city boundary version; retain
 build identity, configuration version, command IDs, timestamps and reviewer
 decision with minimized location evidence.
 
+#### Live-hint listener recovery and subscription pack
+
+Hints never assign a ride or prove a payment. This pack separates server
+subscription health, client subscription ownership and authoritative catch-up.
+
+| Case | Phase and required result | Evidence boundary |
+| --- | --- | --- |
+| HINT-01 | T1: registration error/timeout or close during registration never marks ready; cleanup finishes and a replacement registers | Controlled connection tests; no real failover claim |
+| HINT-02 | T1: healthy probes retain one connection; probe error/blackhole timeout clears readiness and reconnects; timing values reject non-positive/non-finite input | Unit liveness/timeout cases, fixed error codes without private messages |
+| HINT-03 | T1: a late old termination/notification callback cannot affect the replacement; only the addressed user receives a fresh hint | Recipient and generation-isolation tests |
+| HINT-04 | T1/API: hosted readiness fails when only the listener is unavailable, rechecks after SQL, and recovers; liveness stays healthy; shutdown cancels cooperative stalled sends and releases the connection | Staging/production API tests and bounded cleanup tests |
+| HINT-05 | T3: terminate only the exact test-owned listener PID; observe loss, replacement PID and registered channel, fresh private delivery and complete cleanup | Migrated `test_live_event_recovery.py`; required `LIVE_HINT_RECOVERY` system-report bucket |
+| HINT-06 | T4: unchanged-ready socket failure, foreground/network return, explicit refresh and access-token rotation restore REST state and receive the next hint through a replacement subscription; logout/account switch/expiry/revocation cease old-session hints | Known remaining source gaps; require shared regressions plus physical Android/iOS traces before accepting |
+| HINT-07 | T5: blackhole the dedicated listener while pooled SQL works; remove/re-admit the API through readiness; repeat database restart/failover under concurrent commands and verify missed/duplicate/out-of-order hints reconcile without command replay | Hosted multi-replica, redacted health/recovery timeline, recipient checks and approved RTO; local owned-PID test is insufficient |
+
+Execute HINT-01–04 through `tests/unit/test_live_events.py`,
+`tests/unit/test_realtime.py` and `tests/api/test_system.py`. Execute HINT-05
+inside the full guarded migrated T3 runner so database isolation, clone cleanup,
+authority revocation and restore evidence remain part of the result. HINT-06–07
+stay open; this server patch neither configures FCM/APNs nor proves physical
+delivery, current-session resubscription, ongoing socket authorization or hosted
+failover. Never use a later field phase to bypass those earlier source gates.
+
 #### City-authorization restriction and reinstatement pack
 
 The command is `POST /operations/driver-applications/{application_id}/authorization/decisions`.

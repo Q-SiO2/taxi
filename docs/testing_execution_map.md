@@ -18,7 +18,7 @@ change invalidates the affected evidence and sends that scope back to the earlie
 impacted phase.
 
 **Current position (standing refreshed 2026-10-01):** most subsystems have broad T1–T3 evidence,
-including a fresh migration-through-`20260908_0052` PostGIS run with 1,011 passing
+including a fresh migration-through-`20260908_0052` PostGIS run with 1,042 passing
 backend tests and no failures, errors or skips. The staff-grant dual-control slice
 also has focused PostGIS, API, JS and Wasm evidence. Migration 0050 and its
 security-incident workflow, one-time postmortem completion and deadline telemetry
@@ -46,6 +46,20 @@ kinds; they do not accept T3 or establish clean immutable CI execution. The
 runtime/development audits are locally clean; Linux supplement execution remains
 the Linux CI boundary. Formal sign-offs, ordered evidence and external acceptance
 remain open.
+
+The live-listener follow-up passed 78 focused unit/API cases, 197 infrastructure
+tests and the 20-persona/60-test T2 pack. Its complete guarded T3 regression
+passed 1,042 backend tests with zero failures/errors/skips and three existing
+deprecation warnings, including actual owned-listener PID termination,
+replacement channel registration and addressed-only delivery. Records in
+`backend/build/live-event-recovery-t3-20261001/` prove migration 0052, zero residual
+clones, revoked temporary database authority and an 81-table/8,511-row logical
+restore with cleanup. The system report requires `LIVE_HINT_RECOVERY` and covers
+all six T3 evidence kinds without phase/deployment acceptance. This is local
+workspace evidence, not hosted failover, real delivery, physical UX or immutable
+CI evidence for this patch. The preceding immutable `1f8a9c8` push and PR workflows
+both passed, including the Linux runtime/development audits; this new candidate
+requires its own immutable runs.
 
 ## 2. Promotion path
 
@@ -241,6 +255,14 @@ worker lease/kill/reclaim; dispatch contention; account/city-authorization chang
 during assignment; location/schedule handoff races; cash/transfer/refund database
 conservation; backup and current-head restore rehearsal.
 
+The live-channel slice must terminate only the listener's observed owned backend
+PID in its disposable migrated database, observe readiness loss, verify a
+different replacement PID and actual `LISTEN` channel registration, deliver the
+next minimized hint only to its addressed socket, and leave no connection or
+dispatch task behind. `generate_t3_system_report.py` requires this named case in
+the `LIVE_HINT_RECOVERY` coverage bucket. A TCP reconnection alone is insufficient
+evidence of subscription recovery; this does not prove hosted failover.
+
 After any pytest/async-plugin upgrade, repeat this entire T3 pack with explicit
 function-scoped fixture and test loops. Retain the exact lock identities, full
 skip-free JUnit report, migration/PostGIS metadata, named concurrency and
@@ -306,6 +328,15 @@ For incident responsibility, test recognition of active versus released tenure,
 the four role labels, exact-UUID error prevention, confirmation clearing,
 stale-version recovery and screen-reader announcement of the authoritative
 current assignment without a broad user-search or roster-disclosure surface.
+
+For GAP-009 live subscriptions, disconnect the socket without changing the
+ready-state category, then restore network/foreground and explicitly refresh.
+Require authoritative REST catch-up **and** an observable replacement subscription
+that receives the next hint. Repeat through access-token rotation, account
+switch/logout, server restart and denied/re-enabled push permission. Confirm no
+hint after session revocation/expiry and no automatic replay of a ride/payment
+command. The unchanged-ready reconnect and ongoing socket authorization paths
+are known source gaps, not accepted behavior merely because REST still works.
 
 For GAP-007 automatic lookup races, first run
 `ForegroundDriverLocationResultGuardTest` in T1 with synthetic contexts. At T4,
@@ -406,6 +437,17 @@ penetration review. Raise the minimum from an accepted old build to the candidat
 observe HTTP `426` and WebSocket `4406`, verify mobile/web guidance and support
 communication, then exercise the approved policy rollback or forward-fix without
 weakening authentication or deleting user data.
+
+For live-hint recovery, independently break/blackhole the dedicated listener
+while pooled SQL still works. Observe `/ready` fail closed, load-balancer removal,
+bounded probe/cleanup/re-registration, healthy re-admission and measured recovery
+against the frozen RTO. Exercise database restart/failover under concurrent
+commands, duplicate/out-of-order/missed hints and REST reconciliation; verify no
+command replay, extra assignment, changed economics or unauthorized recipient.
+Retain redacted timing/health/recipient evidence. Repeat mobile unchanged-ready
+reconnection, token refresh, logout/revocation and permission/network/lifecycle
+recovery in T4 before using real participants; current source does not yet prove
+all those subscription/session behaviors.
 
 **Exit:** workload, monitoring and reconciliation all pass the frozen profile;
 resource headroom and cost envelope are accepted; primary and backup responders

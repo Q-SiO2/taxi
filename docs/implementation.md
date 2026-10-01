@@ -1075,6 +1075,32 @@ production publish a versioned, four-field hint through private PostgreSQL
 user's local sockets. FCM delivery requires environment-provided application default
 credentials, bounded retry, invalid-registration revocation, and device validation.
 
+`PostgresLiveEventListener` now observes established connection termination and
+probes liveness every 15 seconds with a five-second operation bound. Connection
+establishment is bounded to ten seconds; retry waits one second after cleanup.
+Registration, removal and graceful close are individually bounded, with hard
+termination if close cannot finish. Per-attempt identity guards ignore late old
+callbacks. Process shutdown/disconnect cancels cooperative socket dispatch tasks
+rather than awaiting stalled sends indefinitely. One listener has one process
+owner; readiness clears throughout loss, cleanup and retry and returns only
+after successful re-registration. These defaults are not an accepted field SLO.
+Hosted API `/ready` checks listener health before and after its SQL probe and
+returns the existing sanitized `503 DEPENDENCY_UNAVAILABLE` on either failure.
+Local/test processes without the PostgreSQL listener retain SQL-only readiness.
+The dedicated migrated integration case terminates only its owned listener PID,
+checks replacement `LISTEN` registration and addressed-recipient delivery, then
+verifies cleanup. Hosted failover, ongoing socket session revocation and mobile
+subscription recovery remain separate acceptance work under GAP-009/GAP-028.
+
+The 2026-10-01 local recovery slice passed 78 focused unit/API cases and the full
+1,042-test guarded migrated backend regression with zero failures/errors/skips.
+Its named live recovery case is mandatory in the T3 report. The same run verified
+zero residual clones, revoked temporary database authority and an 81-table
+logical restore with cleanup; all six bounded evidence kinds are present without
+phase or deployment acceptance. Infrastructure tests passed 197 and T2 passed
+20 personas/60 selected tests. New immutable CI, hosted failover and physical
+subscription/session acceptance remain separate from these local results.
+
 The same supervisor owns scheduling handoff and operational-analytics refresh
 loops. Analytics takes a transaction-scoped PostgreSQL advisory lock, records
 only coarse `CITY_WIDE` eligible/available supply, purges expired supply
@@ -1176,7 +1202,7 @@ input validator rejects mutable image tags, loopback production databases,
 wildcard hosts/proxies, short or reused secrets, and malformed Firebase IDs.
 
 The API image runs as an unprivileged `taximobile` user and includes a local
-health check only; readiness remains the deployment's database-aware gate. The
+health check only; readiness remains the deployment's database-and-listener gate. The
 application image does not run migrations automatically in production. A
 release pipeline must run `alembic upgrade head` as a controlled pre-rollout
 step, then roll out a compatible API image.

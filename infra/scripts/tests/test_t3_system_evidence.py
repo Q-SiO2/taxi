@@ -226,6 +226,13 @@ class T3SystemReportTests(unittest.TestCase):
             with self.assertRaisesRegex(T3SystemEvidenceError, "missing required"):
                 generate_report(junit, metadata)
 
+    def test_missing_live_hint_recovery_is_rejected(self) -> None:
+        missing = REQUIRED_CASES["LIVE_HINT_RECOVERY"][0]
+        with tempfile.TemporaryDirectory() as directory:
+            junit, metadata = self._artifacts(Path(directory), remove_case=missing)
+            with self.assertRaisesRegex(T3SystemEvidenceError, "missing required"):
+                generate_report(junit, metadata)
+
     def test_skipped_test_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             junit, metadata = self._artifacts(Path(directory), skipped=1)

@@ -299,6 +299,15 @@ restart-worthy failure. CI validates these probe targets together with loopback
 ports, process-role separation, least-privilege environment boundaries, and
 container hardening before it renders the manifest with Docker Compose.
 
+Staging/production API readiness additionally requires the process-owned
+PostgreSQL live-hint listener to have a live registered connection. Termination
+or a bounded liveness-probe failure clears that condition until cleanup/retry
+and re-registration succeed, even if another pooled SQL connection still works.
+`/ready` returns the same generic dependency-unavailable response without
+exposing connection details. A healthy replacement does not replay missed hints:
+clients still reload authoritative REST state. Hosted blackhole/failover,
+load-balancer removal/re-admission and recovery-budget evidence remain T5 work.
+
 The Compose environment anchors enforce least privilege: the worker is not given
 the API JWT secret, public host/CORS policy, or routing endpoint, while the API is
 not given the Firebase project configuration used by push delivery. Both receive

@@ -37,6 +37,9 @@ REQUIRED_CASES = {
         "tests.integration.test_city_authorization_notification_delivery::test_terminated_worker_process_releases_authorization_event_for_replacement",
         "tests.integration.test_live_ride_concurrency::test_expiry_worker_skips_locked_ride_then_expires_once",
     ),
+    "LIVE_HINT_RECOVERY": (
+        "tests.integration.test_live_event_recovery::test_live_event_listener_recovers_after_owned_backend_termination",
+    ),
     "STATE_AND_MONEY_RECONCILIATION": (
         "tests.integration.test_cash_workload_http::test_cash_cli_durable_money_and_post_commit_failure",
         "tests.integration.test_capacity_workload_http::test_open_loop_capacity_cli_reconciles_every_released_arrival",

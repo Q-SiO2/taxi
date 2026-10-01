@@ -267,6 +267,12 @@ found established PostgreSQL LISTEN disconnect recovery and socket revocation
 coverage needing remediation before release. These findings must not be hidden
 by successful method/path contract validators or compilation alone.
 
+**Listener recovery follow-up (2026-10-01):** GAP-009 now contains bounded
+termination/probe/re-registration and listener-aware API readiness source plus
+unit/API and owned-connection PostGIS regressions. Ongoing socket authorization,
+mobile unchanged-ready resubscription and hosted failover remain open. A source
+repair does not supersede those separate security/device/operational findings.
+
 **Keychain follow-up (2026-09-27):** the subsequent macOS run advanced through
 the iOS production-source compile and failed only because a common test used the
 Native experimental `assert` API. Replacing it with `kotlin.test.assertTrue`
@@ -680,6 +686,39 @@ and client receive boundaries exist. No development/staging/production Firebase
 projects, APNs configuration, real credentials, device delivery evidence,
 credential rotation, notification permission UX acceptance, or delivery SLO is
 recorded.
+
+**Source recovery progress (2026-10-01):** the API's dedicated PostgreSQL listener
+now detects established termination and half-open/probe failures, clears
+readiness, bounds registration/cleanup/close, ignores stale callbacks, cancels
+cooperative stalled dispatches and retries re-registration. Hosted `/ready`
+requires both SQL and listener health before returning ready; `/health` stays
+liveness-only. Unit/API coverage includes registration failure/timeout, close
+during registration, probe error/timeout, healthy probes, stale callbacks,
+recipient isolation, single ownership, shutdown and sanitized readiness/logs.
+A fresh migrated regression additionally terminates only the test-owned listener
+PID, verifies a new registered channel and addressed-only hint delivery, and
+checks cleanup. The T3 report requires that named recovery case; this local
+connection test is not hosted database failover or provider/device acceptance.
+
+Local verification passed 78 focused unit/API cases, 197 infrastructure tests
+and the 20-persona/60-selected-test T2 pack. The complete guarded fresh-PostGIS
+run passed **1,042 tests with zero failures, errors or skips** and three existing
+dependency deprecation warnings. Its `backend/build/live-event-recovery-t3-20261001/`
+records include the actual owned-PID recovery case, migration 0052 metadata,
+zero residual clones, revoked temporary `CREATEDB`, and an 81-table/8,511-row
+logical restore with temporary target/dump removal. All six bounded T3 evidence
+kinds are present; formal phase/deployment acceptance remains false. Documentation,
+source credentials, mobile/web contracts, phase evidence, CI security and
+production Compose checks pass. Engineering scope remains approximately 84%
+and P0 deployment acceptance remains 0/19; this reliability repair is not a new
+accepted provider or launch gate.
+
+**Remaining source recovery boundaries:** mobile listeners currently exit on
+socket failure and are keyed only by the ready-state category; a REST refresh
+that leaves that category unchanged does not restart the subscription. Ongoing
+socket expiry/revocation is also admission-only. Address both with explicit
+session/lifecycle ownership and regressions before claiming a complete fallback.
+Neither changes REST authorization or permits automatic command replay.
 
 **Risk:** passengers and drivers miss offers, assignments, cancellations,
 scheduled reminders, document decisions, or urgent support updates.

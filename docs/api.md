@@ -2076,6 +2076,20 @@ Clients may supply a canonical UUID in `X-Request-ID`; malformed, non-canonical,
 or free-text values are replaced with a server-generated UUID before entering a
 response or log.
 
+## Operational health and readiness
+
+`GET /health` is process liveness, not dependency or delivery acceptance.
+`GET /ready` probes PostgreSQL; in staging/production it additionally requires a
+live registered process-owned PostgreSQL hint listener before and after that
+probe. Loss, cleanup and retry remain unready until re-registration succeeds.
+Either dependency failure returns `503` using the existing
+`DEPENDENCY_UNAVAILABLE` envelope and message `The service is not ready.`; no
+database, listener, provider or private error detail is disclosed. Success is
+`200 {"status":"ready"}`. Local/test processes without that listener use SQL-only
+readiness. Worker readiness separately requires SQL, a running supervisor and
+successful iterations of all eight fixed worker loops. None of these responses
+proves that a device received a hint or that missed hints were replayed.
+
 ## Operational metrics
 
 `GET /internal/metrics` is outside the public versioned API and excluded from

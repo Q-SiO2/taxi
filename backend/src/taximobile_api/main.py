@@ -253,8 +253,12 @@ def create_app(
     @app.get("/ready", tags=["system"], response_model=None)
     async def ready() -> JSONResponse | dict[str, str]:
         try:
+            if live_event_listener is not None and not live_event_listener.is_ready:
+                raise RuntimeError("The shared live-event listener is not ready.")
             async with sessions() as session:
                 await session.execute(text("SELECT 1"))
+            if live_event_listener is not None and not live_event_listener.is_ready:
+                raise RuntimeError("The shared live-event listener lost readiness.")
         except Exception:
             # Connection/authentication failures are not consistently wrapped
             # by every async database driver. Readiness is a dependency

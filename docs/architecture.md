@@ -420,6 +420,16 @@ fact. Each API replica can notify locally connected clients after PostgreSQL
 fanout, while a mobile client that misses every hint catches up at foreground,
 reconnect, or explicit refresh.
 
+Every staging/production API process owns one dedicated PostgreSQL listener.
+Established termination clears listener readiness; periodic bounded liveness
+probes detect half-open transports. The process cleans up the old connection and
+pending best-effort dispatches before retrying and registering `LISTEN` again.
+Callbacks from an old connection cannot invalidate or dispatch through its
+replacement. API `/ready` requires both SQL availability and listener readiness;
+`/health` remains process liveness. This is source health/recovery behavior, not a
+guarantee that disconnected clients received hints or that hosted failover meets
+an accepted recovery budget. Authoritative REST catch-up remains mandatory.
+
 Participant coordination uses the same boundary. The passenger and assigned
 driver may send only six documented closed codes during allowed active states.
 The command persists the code and a recipient notification; live and FCM paths
