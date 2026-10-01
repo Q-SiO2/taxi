@@ -241,6 +241,17 @@ class CiSecurityValidationTests(unittest.TestCase):
         ):
             validate_ci_security(changed)
 
+    def test_monitoring_failure_annotation_is_scoped_to_the_monitored_step(self) -> None:
+        changed = self.workflow.replace(
+            "if: failure() && steps.monitoring_validation.outcome == 'failure'",
+            "if: failure()",
+        )
+        with self.assertRaisesRegex(
+            CiSecurityError,
+            "Monitoring CI failures must publish a bounded redacted diagnostic",
+        ):
+            validate_ci_security(changed)
+
     def test_monitoring_smoke_requires_full_reviewed_dashboard(self) -> None:
         changed = self.workflow.replace(
             'assert len(dashboard["panels"]) == 26',

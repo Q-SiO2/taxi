@@ -272,6 +272,7 @@ jobs:
           TAXIMOBILE_SCHEDULING_ALERT_WEBHOOK_URL_FILE: /dev/null
           TAXIMOBILE_DRIVER_COMPLIANCE_ALERT_WEBHOOK_URL_FILE: /dev/null
       - name: Parse monitoring configuration with pinned official tools
+        id: monitoring_validation
         shell: bash
         env:
           PROMETHEUS_IMAGE: prom/prometheus@sha256:5ce7540c3c00ef4ab0c9d2c995c6a5b9c421f44b4a115d97a2c7af3b1c21cbb0
@@ -365,7 +366,7 @@ jobs:
             'password="$(cat /run/secrets/taximobile_grafana_admin_password)"; printf "user = \"taximobile-admin:%s\"\n" "$password" | /usr/bin/curl --silent --show-error --fail --config - http://127.0.0.1:3000/api/dashboards/uid/taximobile-logs' \
             | python -c 'import json, sys; dashboard = json.load(sys.stdin)["dashboard"]; assert dashboard["uid"] == "taximobile-logs"; assert len(dashboard["panels"]) == 3'
       - name: Publish redacted monitoring-tool failure annotation
-        if: failure()
+        if: failure() && steps.monitoring_validation.outcome == 'failure'
         run: >-
           python ../infra/scripts/emit_ci_failure_annotation.py
           --input "${RUNNER_TEMP}/taximobile-monitoring-validation.log"

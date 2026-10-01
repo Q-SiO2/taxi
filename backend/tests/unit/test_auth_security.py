@@ -1,4 +1,7 @@
 from datetime import UTC, datetime, timedelta
+from base64 import urlsafe_b64encode
+from hashlib import sha256
+import hmac
 from uuid import uuid4
 
 import jwt
@@ -111,6 +114,35 @@ def test_access_token_requires_every_identity_and_lifecycle_claim() -> None:
 
     with pytest.raises(InvalidAccessToken):
         TokenService("a" * 32).parse_access_token(incomplete)
+
+
+@pytest.mark.parametrize("parser", ["parse_access_token", "parse_operations_access_token"])
+def test_deeply_nested_signed_payload_is_an_invalid_token_not_a_raw_recursion_error(parser) -> None:
+    secret = "a" * 32
+    header = urlsafe_b64encode(b'{"alg":"HS256","typ":"JWT"}').rstrip(b"=")
+    # Construct bytes without recursively encoding Python containers. Signature
+    # validation must succeed so this exercises the hostile JSON payload boundary.
+    payload = b'{"nested":' + b"[" * 2000 + b"0" + b"]" * 2000 + b"}"
+    encoded = header + b"." + urlsafe_b64encode(payload).rstrip(b"=")
+    signature = urlsafe_b64encode(hmac.new(secret.encode(), encoded, sha256).digest()).rstrip(b"=")
+    token = (encoded + b"." + signature).decode("ascii")
+    with pytest.raises(InvalidAccessToken):
+        getattr(TokenService(secret), parser)(token)
+
+
+@pytest.mark.parametrize("claim", ["exp", "iat"])
+@pytest.mark.parametrize("value", [None, [], {}])
+@pytest.mark.parametrize("operations", [False, True])
+def test_malformed_numeric_claims_fail_as_invalid_tokens(claim, value, operations) -> None:
+    service = TokenService("a" * 32)
+    create = service.create_operations_access_token if operations else service.create_access_token
+    parse = service.parse_operations_access_token if operations else service.parse_access_token
+    valid = create(user_id=uuid4(), session_id=uuid4())
+    payload = jwt.decode(valid, options={"verify_signature": False})
+    payload[claim] = value
+    malformed = jwt.encode(payload, "a" * 32, algorithm=JWT_ALGORITHM)
+    with pytest.raises(InvalidAccessToken):
+        parse(malformed)
 
 
 def test_refresh_tokens_are_random_and_only_the_hash_is_persistable() -> None:

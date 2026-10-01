@@ -462,6 +462,7 @@ def validate_ci_security(workflow: str) -> None:
 
     monitoring_diagnostic_requirements = (
         "Parse monitoring configuration with pinned official tools",
+        "        id: monitoring_validation\n",
         'exec > >(tee "${RUNNER_TEMP}/taximobile-monitoring-validation.log") 2>&1',
         "Publish redacted monitoring-tool failure annotation",
         '--input "${RUNNER_TEMP}/taximobile-monitoring-validation.log"',
@@ -477,7 +478,7 @@ def validate_ci_security(workflow: str) -> None:
         )
     monitoring_annotation_block = (
         "      - name: Publish redacted monitoring-tool failure annotation\n"
-        "        if: failure()\n"
+        "        if: failure() && steps.monitoring_validation.outcome == 'failure'\n"
         "        run: >-\n"
         "          python ../infra/scripts/emit_ci_failure_annotation.py\n"
         "          --input \"${RUNNER_TEMP}/taximobile-monitoring-validation.log\"\n"

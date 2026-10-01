@@ -978,6 +978,24 @@ non-blocking, or detached from provenance. This remains source configuration—n
 a passed remote report, complete all-artifact scan/SBOM set, independent review,
 penetration retest, deployed secret drill, or security-owner acceptance.
 
+**Dependency-audit refresh (2026-10-01):** the location candidate's immutable
+CI audit rejected PyJWT 2.14.0 (`CVE-2026-101918`) and urllib3 2.7.0
+(`CVE-2026-97687`, `CVE-2026-97688`, `CVE-2026-97689`). Both runtime and
+development locks now pin PyJWT 2.15.1 and urllib3 2.8.0 with PyPI release hashes;
+the runtime hash-enforced install, `pip check`, and runtime audit passed. Fourteen
+new authentication regressions verify nested signed payloads and non-numeric
+time claims fail as `InvalidAccessToken` for both mobile and operations tokens.
+Local backend unit/API verification passed 860 tests (173 existing warnings),
+and the infrastructure suite passed 194 tests. The monitoring failure annotation
+now depends on the monitoring step's own failure, avoiding a missing-log error
+after an unrelated earlier failure. No vulnerability ignore or weakening of
+the blocking audit was introduced. These local results do not clear existing
+default-branch alerts, all-artifact scans, independent review or GAP-016.
+The separate development-lock audit still reports pytest 8.4.2
+(`PYSEC-2026-1845`, fixed in 9.0.3). The current pytest-asyncio 0.26.0 dependency
+constrains pytest below 9; migrate that pair together and rerun the fresh-PostGIS
+and worker/concurrency suites before claiming a clean development toolchain.
+
 ### GAP-017 — Complete privacy, terms, and regulatory compliance
 
 **Current gap:** data minimization, scoped access, aggregate suppression,
