@@ -991,10 +991,31 @@ now depends on the monitoring step's own failure, avoiding a missing-log error
 after an unrelated earlier failure. No vulnerability ignore or weakening of
 the blocking audit was introduced. These local results do not clear existing
 default-branch alerts, all-artifact scans, independent review or GAP-016.
-The separate development-lock audit still reports pytest 8.4.2
-(`PYSEC-2026-1845`, fixed in 9.0.3). The current pytest-asyncio 0.26.0 dependency
-constrains pytest below 9; migrate that pair together and rerun the fresh-PostGIS
-and worker/concurrency suites before claiming a clean development toolchain.
+**Test-toolchain remediation (2026-10-01):** the separate development-lock audit
+identified pytest 8.4.2 (`PYSEC-2026-1845`, fixed in 9.0.3), while pytest-asyncio
+0.26.0 constrained pytest below 9. The reviewed pair is now pytest 9.0.3 and
+pytest-asyncio 1.4.0, with verified PyPI artifact hashes and explicit
+function-scoped fixture and test loops. Hash-enforced installation and
+`pip check` passed. Separate local runtime/development audits report no known
+vulnerabilities; Windows intentionally does not resolve the Linux-only wheel
+supplement. Linux CI now audits the development lock and supplement in a separate
+blocking step, alongside the existing runtime audit. Mutation tests reject
+removed, commented, duplicated, skipped, pipeline-bypassed and non-blocking audit
+steps or backend jobs.
+
+The upgraded runner passed 20 simulated personas/60 exact selected tests, the
+196-test infrastructure suite, and the full fresh-PostGIS run: **1,011 tests,
+zero failures/errors/skips**, with three existing Starlette deprecation warnings.
+The local evidence bundle at `backend/build/pytest9-t3-20261001/` confirms
+PostgreSQL 16.14/PostGIS 3.5.3 at migration 0052, all named concurrency/worker/
+reconciliation cases, zero residual clones, revoked temporary `CREATEDB`, and a
+guarded restore matching 81 tables and 8,511 aggregate rows with target/dump
+cleanup. All six T3 evidence kinds are present; engineering sign-off, clean
+immutable CI acceptance and ordered promotion remain separate. No audit ignore,
+business-policy or schema change was introduced. These dated local results do
+not clear browser/native/container dependencies, existing default-branch alerts,
+independent security review, provider acceptance or GAP-016. The weighted source
+estimate remains approximately 84%; all 19 P0 deployment gates remain open.
 
 ### GAP-017 — Complete privacy, terms, and regulatory compliance
 

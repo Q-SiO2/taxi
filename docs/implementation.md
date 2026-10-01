@@ -9,6 +9,20 @@ This document fixes the implementation choices required to turn the TaxiMobile p
 
 ## Current implementation standing — 2026-09-09
 
+**Test-toolchain follow-up (2026-10-01):** pytest 9.0.3 and pytest-asyncio 1.4.0
+replace the vulnerable pytest 8 pair while preserving explicit function-scoped
+fixture/test loops. The hash-enforced install, `pip check`, separate local
+runtime/development audits, 20-persona/60-test simulation pack, 196 infrastructure
+tests and complete migrated-PostGIS regression passed. The fresh regression has
+1,011 passing tests with zero failures/errors/skips and three existing
+deprecation warnings. Its `backend/build/pytest9-t3-20261001/` bundle confirms
+migration 0052, zero residual clones, revoked temporary database authority and a
+current-head logical restore matching all 81 tables. CI now separately audits
+the development lock plus the reviewed Linux wheel supplement, with removal/
+bypass mutation protection. Linux audit execution, immutable remote acceptance,
+formal T3 approval and all real-environment/device/provider gates remain distinct
+from this local evidence. No business contract or migration changed.
+
 The repository contains the provider-independent implementation described here,
 including migrations through `20260908_0052`. Local backend unit/API/integration
 tests, Android/shared compilation, JavaScript and Kotlin/Wasm compilation, and

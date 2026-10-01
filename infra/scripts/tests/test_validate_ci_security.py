@@ -27,6 +27,35 @@ class CiSecurityValidationTests(unittest.TestCase):
     def test_committed_workflow_passes(self) -> None:
         validate_ci_security(self.workflow)
 
+    def test_backend_lock_audits_cannot_be_removed_or_bypassed(self) -> None:
+        commands = (
+            "python -m pip_audit --no-deps --requirement requirements.lock",
+            "python -m pip_audit --no-deps --requirement requirements-dev.lock "
+            "--requirement requirements-linux.lock",
+        )
+        for command in commands:
+            step = f"      - run: {command}\n"
+            replacements = (
+                "",
+                step + "        continue-on-error: true\n",
+                step + "        if: false\n",
+                step.rstrip() + " || true\n",
+                "      # " + step.strip() + "\n",
+                step + step,
+            )
+            for replacement in replacements:
+                with self.subTest(command=command, replacement=replacement):
+                    changed = self.workflow.replace(step, replacement)
+                    with self.assertRaisesRegex(CiSecurityError, "dependency audits"):
+                        validate_ci_security(changed)
+
+    def test_backend_job_cannot_skip_or_ignore_dependency_audits(self) -> None:
+        for bypass in ("    if: false\n", "    continue-on-error: true\n"):
+            with self.subTest(bypass=bypass):
+                changed = self.workflow.replace("  backend:\n", "  backend:\n" + bypass)
+                with self.assertRaisesRegex(CiSecurityError, "dependency audits"):
+                    validate_ci_security(changed)
+
     def test_committed_ios_package_lock_passes(self) -> None:
         validate_ios_package_lock(self.ios_package_lock, self.ios_project)
 

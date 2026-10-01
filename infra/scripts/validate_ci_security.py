@@ -202,6 +202,49 @@ def _require(block: str, pattern: str, message: str) -> None:
         raise CiSecurityError(message)
 
 
+def _validate_backend_dependency_audits(workflow: str) -> None:
+    """Require both lock audits in the backend job, without skip/failure bypasses.
+
+    These commands deliberately use the workflow's reviewed single-line run
+    convention. Finding a command in a comment, another job or a shell pipeline
+    does not establish the blocking dependency boundary.
+    """
+    backend_jobs = re.findall(
+        r"^  backend:\s*\n(.*?)(?=^  [A-Za-z0-9_-]+:\s*\n|\Z)",
+        workflow,
+        flags=re.MULTILINE | re.DOTALL,
+    )
+    if len(backend_jobs) != 1:
+        raise CiSecurityError("Dependency audits require exactly one backend job.")
+    backend = backend_jobs[0]
+    if re.search(r"^    (?:if|continue-on-error):", backend, re.MULTILINE):
+        raise CiSecurityError("Backend dependency audits must not be skipped or non-blocking.")
+    commands = (
+        "python -m pip_audit --no-deps --requirement requirements.lock",
+        "python -m pip_audit --no-deps --requirement requirements-dev.lock "
+        "--requirement requirements-linux.lock",
+    )
+    lines = backend.splitlines()
+    for command in commands:
+        expected = f"      - run: {command}"
+        starts = [index for index, line in enumerate(lines) if line == expected]
+        if len(starts) != 1:
+            raise CiSecurityError(
+                "Runtime and development/Linux dependency audits must each run "
+                "exactly once as blocking backend steps."
+            )
+        start = starts[0]
+        end = start + 1
+        while end < len(lines):
+            line = lines[end]
+            if line.strip() and len(line) - len(line.lstrip()) <= 6:
+                break
+            end += 1
+        step = "\n".join(lines[start:end])
+        if re.search(r"^\s+(?:if|continue-on-error):", step, re.MULTILINE):
+            raise CiSecurityError("Backend dependency audits must not be skipped or non-blocking.")
+
+
 def validate_ci_security(workflow: str) -> None:
     try:
         package_lock = IOS_PACKAGE_RESOLVED_PATH.read_text(encoding="utf-8")
@@ -287,6 +330,8 @@ def validate_ci_security(workflow: str) -> None:
         (r"^\s+severity:\s+CRITICAL,HIGH\s*$", "The image gate must include high and critical severity."),
     ):
         _require(trivy, pattern, message)
+
+    _validate_backend_dependency_audits(workflow)
 
     required_provenance = (
         "--artifact /tmp/taximobile-api.spdx.json",
@@ -571,6 +616,7 @@ def main() -> int:
         return 1
     print(
         "CI security validation passed: immutable actions, dependency review, "
+        "blocking runtime/development/Linux dependency audits, "
         "image SBOM/provenance, web/mobile candidate binding, source-contract inventory, "
         "test-phase/T2 persona/T3 system/T4 lab evidence controls, GAP-002 environment "
         "inventory, GAP-003 managed PostGIS evidence, GAP-004 pilot-city approval, "

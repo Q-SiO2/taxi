@@ -17,8 +17,8 @@ graph, map style, mobile artifact, infrastructure topology, or security-policy
 change invalidates the affected evidence and sends that scope back to the earliest
 impacted phase.
 
-**Current position (standing refreshed 2026-09-29):** most subsystems have broad T1–T3 evidence,
-including a fresh migration-through-`20260908_0052` PostGIS run with 992 passing
+**Current position (standing refreshed 2026-10-01):** most subsystems have broad T1–T3 evidence,
+including a fresh migration-through-`20260908_0052` PostGIS run with 1,011 passing
 backend tests and no failures, errors or skips. The staff-grant dual-control slice
 also has focused PostGIS, API, JS and Wasm evidence. Migration 0050 and its
 security-incident workflow, one-time postmortem completion and deadline telemetry
@@ -36,6 +36,16 @@ system/load results remain local unless the remote run explicitly produced them.
 Some browser/emulator evidence has started at T4; the GAP-002 through GAP-006
 external acceptance records remain `NOT_STARTED`, and no subsystem has complete T4–T8 acceptance.
 No real-user phase is authorized.
+
+The latest test-toolchain follow-up passed the complete guarded T3 run with
+pytest 9.0.3/pytest-asyncio 1.4.0, explicit function-scoped loops, zero residual
+clones, revoked temporary database authority and an 81-table logical restore.
+Its local `backend/build/pytest9-t3-20261001/` records cover all six T3 evidence
+kinds; they do not accept T3 or establish clean immutable CI execution. The
+20-persona/60-selected-test T2 pack also passed with its network guard. Separate
+runtime/development audits are locally clean; Linux supplement execution remains
+the Linux CI boundary. Formal sign-offs, ordered evidence and external acceptance
+remain open.
 
 ## 2. Promotion path
 
@@ -146,6 +156,13 @@ production-manifest validators. Validate strict client version/build metadata in
 both mobile and web artifacts and a complete six-surface minimum/recommended
 policy in every production-like manifest.
 
+Run independent blocking audits for the runtime and development Python locks;
+the Linux CI runner includes its reviewed platform supplement. Preserve the
+platform-specific hash boundary: Windows checks do not resolve Linux-only wheels
+or add source-distribution hashes merely to make that audit pass. Retain both
+reports with the candidate; neither one clears browser, container, native SDK or
+default-branch findings by implication.
+
 **Exit:** all required jobs pass from the same clean immutable commit; generated
 contracts have no unexplained drift; no committed secret; no unreviewed migration;
 the generated source-contract inventory is hash-bound to candidate evidence;
@@ -223,6 +240,17 @@ upgrade/downgrade/preflight and concurrent migrator ownership; lock-order races;
 worker lease/kill/reclaim; dispatch contention; account/city-authorization changes
 during assignment; location/schedule handoff races; cash/transfer/refund database
 conservation; backup and current-head restore rehearsal.
+
+After any pytest/async-plugin upgrade, repeat this entire T3 pack with explicit
+function-scoped fixture and test loops. Retain the exact lock identities, full
+skip-free JUnit report, migration/PostGIS metadata, named concurrency and
+worker-recovery cases, zero residual clone count, revoked temporary database
+authority and the current-head restore report. Mixed synchronous `asyncio.run`
+fixtures and marked async tests must still create and dispose engines within
+their owning loop. Passing a narrow unit slice or installing a compatible pair
+is not sufficient evidence of isolation or transaction correctness. The
+existing formal engineering sign-off and ordered promotion record remain
+required; upgrading the runner cannot accept T3 by itself.
 
 The staff slice must additionally prove migration 0049 upgrade/downgrade,
 partial-unique pending requests, market-lock serialization, stale-authority

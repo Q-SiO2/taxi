@@ -161,9 +161,15 @@ Runtime and development installations use `--require-hashes`. The canonical
 Windows-generated locks are `requirements.lock` and `requirements-dev.lock`;
 Linux additionally consumes `requirements-linux.lock` for Uvicorn's
 platform-specific event loop. The Linux supplement contains only reviewed
-CPython 3.12 x86_64/aarch64 wheel hashes. CI also runs
-`python -m pip_audit --no-deps --requirement requirements.lock`. Known published
-vulnerabilities fail the build and must be reviewed rather than silently ignored.
+CPython 3.12 x86_64/aarch64 wheel hashes. CI runs separate blocking audits of
+`requirements.lock` and `requirements-dev.lock` plus `requirements-linux.lock`.
+On Windows audit the canonical runtime/development locks without the Linux-only
+supplement; its reviewed wheel hashes are not Windows/source-distribution hashes.
+Known published vulnerabilities fail the build and must be reviewed rather than
+silently ignored. The test toolchain pins pytest 9.0.3 with pytest-asyncio 1.4.0;
+both fixture and test event loops are explicitly function-scoped. A runner/plugin
+upgrade must pass the complete guarded migrated-PostGIS suite and restore
+rehearsal, not just a selected unit slice, before promotion.
 CI and the portable backend test command also run
 `../infra/scripts/validate_source_credentials.py`, which rejects committed
 provider/signing files, private keys, service-account documents, and recognized
