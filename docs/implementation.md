@@ -560,6 +560,16 @@ ordinary pending command suppresses each attempt. The automatic requester never
 opens permission UI. Unavailable observations trigger localized guidance and a
 60-second backoff. The backend continues to decide freshness, movement,
 service-area validity, eligibility and matching.
+Automatic completion is separately guarded by
+`ForegroundDriverLocationResultGuard`: both successful coordinates and null
+results must still belong to the original operational context. Native roots
+invalidate immediately on background, connectivity change, admitted command and
+composition disposal; completion rechecks foreground, usable network, absence of
+an ordinary command, and unchanged availability/vehicle/city/service/ride. A
+background/network return or logout/login cannot revive the earlier lookup.
+Discarding a result does not revoke permission, cancel OS work, retain a trail or
+change backend authority. The next eligible sampling attempt remains governed by
+the existing cadence and one-shot gate.
 Both platform requesters use the tested common `OneShotLocationGate`: a second
 tap is rejected instead of calling the first pending callback with failure or
 launching another permission/location request. Shared passenger and driver

@@ -10,6 +10,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +40,7 @@ import org.example.taximobile.feature.connectivity.ConnectivityStatus
 import org.example.taximobile.feature.connectivity.ForegroundRecoveryPolicy
 import org.example.taximobile.feature.notifications.PushRefreshSignals
 import org.example.taximobile.feature.location.ForegroundDriverLocationPolicy
+import org.example.taximobile.feature.location.ForegroundDriverLocationResultGuard
 import org.example.taximobile.feature.location.foregroundDriverLocationUnavailableMessage
 import org.example.taximobile.domain.drivers.DriverDocumentUpload
 
@@ -74,14 +76,19 @@ class MainActivity : ComponentActivity() {
             val recoveryPolicy = remember { ConnectivityRecoveryPolicy() }
             val foregroundRecoveryPolicy = remember { ForegroundRecoveryPolicy() }
             val foregroundDriverLocationPolicy = remember { ForegroundDriverLocationPolicy() }
+            val foregroundDriverLocationResultGuard = remember { ForegroundDriverLocationResultGuard() }
             val actionGate = remember { AppActionGate() }
             val scope = rememberCoroutineScope()
+            DisposableEffect(foregroundDriverLocationResultGuard) {
+                onDispose { foregroundDriverLocationResultGuard.invalidate() }
+            }
             fun submitAction(
                 key: AppAction,
                 recoverFailure: Boolean = true,
                 action: suspend () -> AppUiState,
             ) {
                 if (!actionGate.tryStart(key)) return
+                foregroundDriverLocationResultGuard.invalidate()
                 completedAction = null
                 pendingAction = key
                 scope.launch {
@@ -130,6 +137,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
             LifecycleEventEffect(Lifecycle.Event.ON_STOP) {
+                foregroundDriverLocationResultGuard.invalidate()
                 appInForeground = false
                 foregroundRecoveryPolicy.onBackground()
             }
@@ -156,21 +164,21 @@ class MainActivity : ComponentActivity() {
                         appActionInFlight = pendingAction != null,
                     )
                     if (shouldRequest) {
+                        val request = foregroundDriverLocationResultGuard.capture(checkNotNull(driverState))
                         automaticLocationRequestInFlight = true
                         val started = currentLocationRequester.requestAuthorized { location ->
                             automaticLocationRequestInFlight = false
-                            val activeAvailability =
-                                (presentation.state as? AppUiState.DriverReady)?.availability
+                            if (!foregroundDriverLocationResultGuard.canApply(
+                                    request, presentation.state, appInForeground,
+                                    connectivityStatus != ConnectivityStatus.UNAVAILABLE,
+                                    pendingAction != null,
+                                )) return@requestAuthorized
                             if (location == null) {
                                 foregroundDriverLocationPolicy.recordUnavailable(System.currentTimeMillis())
                                 presentation = presentation.copy(
                                     connectionIssue = foregroundDriverLocationUnavailableMessage()
                                 )
-                            } else if (
-                                appInForeground &&
-                                activeAvailability != null &&
-                                activeAvailability in ForegroundDriverLocationPolicy.OPERATIONAL_LOCATION_STATES
-                            ) {
+                            } else {
                                 submitAction(AppAction(AppActionKind.UPDATE_DRIVER_LOCATION)) {
                                     dependencies.appCoordinator.updateDriverLocation(location)
                                 }
@@ -189,6 +197,7 @@ class MainActivity : ComponentActivity() {
             }
             LaunchedEffect(connectivityObserver) {
                 connectivityObserver.status.collect { observedStatus ->
+                    if (observedStatus != connectivityStatus) foregroundDriverLocationResultGuard.invalidate()
                     connectivityStatus = observedStatus
                     if (recoveryPolicy.shouldRefresh(observedStatus)) {
                         presentation = presentation.accept(dependencies.appCoordinator.restore())

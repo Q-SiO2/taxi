@@ -279,6 +279,21 @@ the four role labels, exact-UUID error prevention, confirmation clearing,
 stale-version recovery and screen-reader announcement of the authoritative
 current assignment without a broad user-search or roster-disclosure surface.
 
+For GAP-007 automatic lookup races, first run
+`ForegroundDriverLocationResultGuardTest` in T1 with synthetic contexts. At T4,
+delay an authorized lookup on each physical Android/iOS driver app, then complete
+it after (a) background/foreground return, (b) network loss/recovery, (c) an
+availability command, (d) logout/login, (e) a backend-refreshed city, service,
+vehicle or ride change, and (f) root disposal/recreation. Repeat with a coordinate
+and with null/timeout. The obsolete result must produce neither a location write
+nor unavailable guidance in the later context; a newly started eligible lookup
+must still work. Check pending-command priority and absence of overlapping native
+lookups or recurring permission prompts. Retain sanitized request counts and
+screen-state observations, never precise coordinate trails or account tokens.
+At T7 repeat the lifecycle/network cases during the approved closed-cohort shift
+and measure freshness and battery against frozen thresholds. T1 success does not
+accept native timing, T4, T7 or GAP-007; background tracking remains unapproved.
+
 **Exit:** all critical journeys are usable on the minimum supported matrix; no
 secret or private data leaks through screen, clipboard, cache, logs or analytics;
 crashes and accessibility blockers are below approved thresholds; unresolved S2

@@ -596,6 +596,23 @@ are present. The shared gate still allows only one platform request at a time, a
 ordinary app actions take priority over automatic sampling. This is source and
 simulator/compiler evidence only until the T4/T7 location matrix passes.
 
+**Callback-race hardening (2026-10-01):** Android and iOS now bind each automatic
+lookup to a shared result guard. Backgrounding, connectivity changes, admitted
+commands (including logout), and composition disposal invalidate pending results.
+Callbacks also recheck foreground/network/action state and the original
+availability, vehicle, city, service and ride context before either submitting
+an observation or showing unavailable guidance. This prevents an old lookup from
+being applied after background/return, command completion or account switch.
+It does not cancel native OS work or add background collection. Shared regression
+tests cover invalidation and changed-context cases; physical callback timing,
+permission revocation and actual battery/network behavior remain T4/T7 evidence.
+Local verification for this slice passed 197 shared JVM tests (including seven
+result-guard regressions, zero failures/errors/skips), both passenger/driver
+Android debug Kotlin compilation tasks, documentation consistency, mobile API
+contract validation and source credential hygiene. iOS root verification remains
+subject to macOS CI; native test execution and physical-device acceptance are
+not claimed by these local checks.
+
 **Acceptance evidence:** approved policy in `rides.md`, `matching.md`, `design.md`
 and `security.md`; automated lifecycle/authorization/concurrency tests; Android
 and iOS foreground/background traces proving no hidden updates; battery and weak-
