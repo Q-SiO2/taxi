@@ -158,9 +158,10 @@ unavailable external system cannot provide the capability.
 
 ### GAP-001 — Establish an immutable release baseline
 
-**Current gap (updated 2026-09-28):** the formerly dirty implementation is now
-committed on the release-baseline branch and the complete push and pull-request
-workflows pass on immutable commit `de69829a649715ad7768756e285fedfde2fa846a`.
+**Current gap (updated 2026-10-02):** implementation is committed on the
+release-baseline branch, with complete passing push/PR evidence for server
+commit `cc19776` recorded below. Newer source slices must acquire their own
+complete immutable CI; a passing predecessor does not certify a changed checkout.
 Draft pull request 43 exists, but independent review, protected promotion rules,
 signed distributable artifact manifests, a registry image digest, and release
 approval are still missing. Historical dirty-workspace results below are not
@@ -346,6 +347,37 @@ backend, mobile, web, documentation/security and iOS simulator-build runs certif
 only that source candidate's automated gates, not signing, native iOS execution,
 review approval, physical devices, registry promotion or deployment. The
 subsequent Android protected-storage patch needs independent immutable CI.
+
+**Immutable Android follow-up (2026-10-02):** commit
+`cc19776fdc804093bffdfe92023679258a66a023` subsequently passed both
+[push CI](https://github.com/Q-SiO2/taxi/actions/runs/37023593864) and
+[PR CI](https://github.com/Q-SiO2/taxi/actions/runs/37023603230), including both
+iOS Release simulator application links. These runs supersede the preceding
+pending-CI status for that Android patch only. Native iOS execution, physical
+Keystore/storage, signing, registry promotion and deployment remain unaccepted.
+The subsequent OpenAPI evidence tooling requires its own immutable CI.
+
+**Exact API-contract evidence follow-up (2026-10-02):** the release pipeline now
+exports whole OpenAPI schemas for two explicit route profiles: launch without
+legacy `/admin`, and local compatibility with it. Canonical UTF-8/LF bytes and
+SHA-256 cover full request/response/component/security definitions, not only
+operation names. The exporter isolates import-time configuration from deployment
+settings, never starts a lifespan or contacts providers/database, and refuses
+to overwrite existing reports. The source manifest has no authorization or
+deployment acceptance. CI binds both schemas plus their manifest to backend
+clean-source evidence, uploads the packet for 30 days and summarizes digests.
+Mutation checks prevent dropping either schema, bypassing generation or weakening
+retention. Local real-factory and adversarial fixture tests remain distinct from
+this candidate's required immutable CI, served-staging schema/authorization
+checks, signed artifacts, registry digest and independent approval.
+Local verification passes 15 exporter fixture/worker cases and three CI mutation
+cases within 222 infrastructure tests, 47 focused backend factory/system API
+cases, a fresh zero-failure/error/skip JUnit run for the three new backend cases,
+and actual two-schema/manifest hash reconciliation against an explicitly dirty
+workspace evidence record. No new full migrated-PostGIS or physical/hosted
+acceptance is claimed. Source scope remains approximately 84%; P0 acceptance
+remains 0/19. This fills the OpenAPI-digest prerequisite, not GAP-001 closure or
+a new API policy.
 
 ### GAP-002 — Provision and accept a real hosted environment
 

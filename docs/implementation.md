@@ -9,6 +9,23 @@ This document fixes the implementation choices required to turn the TaxiMobile p
 
 ## Current implementation standing — 2026-10-02
 
+**Exact OpenAPI evidence follow-up (2026-10-02):** the actual application factory
+now exports separate full launch and local-compatibility schemas through a
+bounded configuration-isolated subprocess. The local source export has 223
+launch HTTP operations versus 244 compatibility operations; neither count is
+an authorization guarantee. Whole-schema hashes cover payloads/components as
+well as endpoints. CI retains both canonical schemas, their no-acceptance
+manifest and backend clean-source binding; mutation gates preserve generation,
+both schema bindings and retention. Existing runtime routes, schema and policies
+are unchanged. Local verification passes 15 exporter fixture/worker cases and
+three CI OpenAPI mutation cases within 222 infrastructure tests, plus 47 focused
+backend factory/system API cases. The three new backend tests also have a
+fresh zero-failure/error/skip JUnit run. Actual full-schema files and their
+manifest match the hashes in an explicit dirty `WORKSPACE_SNAPSHOT` record;
+that record is not an immutable release. No new full migrated-database result
+is claimed for this tooling-only patch. The exporter requires its own immutable CI and served-staging
+contract/authorization evidence before release promotion.
+
 **Android protected-session follow-up (2026-10-02):** the adapter now writes one
 encrypted, versioned token-pair envelope with checked synchronous persistence.
 Complete legacy pairs migrate only after validation and a successful commit;
@@ -28,7 +45,11 @@ acceptance. The revised T4 catalog retains 56 cases, strengthens three existing
 Android cases for both products/roles, and invalidates old catalog bindings.
 The template remains `NOT_STARTED`; real native storage, hosted authority,
 staff recovery, field and pilot acceptance remain ordered prerequisites.
-This Android source candidate requires its own immutable CI results. No new
+Android commit `cc19776` now passes both
+[push CI](https://github.com/Q-SiO2/taxi/actions/runs/37023593864) and
+[PR CI](https://github.com/Q-SiO2/taxi/actions/runs/37023603230), including both
+iOS simulator application links, not native iOS test execution. The subsequent
+OpenAPI tooling still requires separate immutable CI. No new
 dependency, schema, wire, UI, pricing or provider policy is introduced.
 
 **Server live-session authority follow-up (2026-10-02):** the final socket hop

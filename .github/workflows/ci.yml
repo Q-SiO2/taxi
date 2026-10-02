@@ -121,6 +121,8 @@ jobs:
         run: >-
           python ../infra/scripts/generate_source_contract_inventory.py
           --output /tmp/taximobile-source-contract-inventory.json
+      - name: Generate exact OpenAPI source contracts
+        run: python ../infra/scripts/generate_openapi_evidence.py --output-dir /tmp/taximobile-openapi
       - run: python ../infra/scripts/validate_legacy_admin_retirement.py
       - run: python -m compileall -q src tests migrations
       - run: python ../infra/scripts/validate_prometheus_rules.py
@@ -168,6 +170,9 @@ jobs:
           --label "backend-image-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           --artifact /tmp/taximobile-api.spdx.json
           --artifact /tmp/taximobile-source-contract-inventory.json
+          --artifact /tmp/taximobile-openapi/launch-api.openapi.json
+          --artifact /tmp/taximobile-openapi/local-compatibility-api.openapi.json
+          --artifact /tmp/taximobile-openapi/openapi-manifest.json
           --artifact /tmp/taximobile-t2-simulated-personas.json
           --artifact /tmp/taximobile-t2-simulated-personas.junit.xml
           --artifact /tmp/taximobile-t3-full-backend.junit.xml
@@ -175,12 +180,26 @@ jobs:
           --artifact /tmp/taximobile-t3-backup-restore.json
           --artifact /tmp/taximobile-t3-system-evidence.json
           --output /tmp/taximobile-backend-evidence.json
+      - name: Retain exact OpenAPI candidate evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: taximobile-openapi-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/taximobile-openapi
+            /tmp/taximobile-backend-evidence.json
+          if-no-files-found: error
+          retention-days: 30
       - name: Publish backend image evidence in the run summary
         shell: bash
         run: |
           echo '## TaxiMobile generated source-contract inventory' >> "${GITHUB_STEP_SUMMARY}"
           echo '```json' >> "${GITHUB_STEP_SUMMARY}"
           cat /tmp/taximobile-source-contract-inventory.json >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"
+          echo '## TaxiMobile exact OpenAPI source contracts' >> "${GITHUB_STEP_SUMMARY}"
+          echo 'Schemas do not accept authorization or deployment. Launch and local compatibility profiles are separate.' >> "${GITHUB_STEP_SUMMARY}"
+          echo '```json' >> "${GITHUB_STEP_SUMMARY}"
+          cat /tmp/taximobile-openapi/openapi-manifest.json >> "${GITHUB_STEP_SUMMARY}"
           echo '```' >> "${GITHUB_STEP_SUMMARY}"
           echo '## TaxiMobile bounded T2 simulated-persona evidence' >> "${GITHUB_STEP_SUMMARY}"
           echo 'This result does not accept T2 or any deployment phase.' >> "${GITHUB_STEP_SUMMARY}"

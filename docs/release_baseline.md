@@ -64,6 +64,15 @@ clone databases and revoked temporary `CREATEDB` authority. It deliberately keep
 
 ## Current immutable remote evidence
 
+The latest complete source candidate with passing immutable automation is
+`cc19776fdc804093bffdfe92023679258a66a023`, verified on 2026-10-02 by
+[push CI](https://github.com/Q-SiO2/taxi/actions/runs/37023593864) and
+[PR CI](https://github.com/Q-SiO2/taxi/actions/runs/37023603230). Both include the
+Android storage patch and both iOS Release simulator links. They do not accept
+real Keystore/disk behavior, native iOS test execution, signed distributions or
+deployment. The subsequent OpenAPI export/binding patch is a new candidate and
+requires separate immutable automation.
+
 The latest verified server source is
 `2d6a68b04eccd793d5d071b8f26bba67568bf63b`, successful on 2026-10-02 in
 [push CI](https://github.com/Q-SiO2/taxi/actions/runs/37000510927) and
@@ -92,6 +101,16 @@ distribution artifacts, an immutable registry image digest, or release approval.
 Those controls remain necessary before GAP-001 can close.
 
 ## Required immutable promotion evidence
+
+The exact OpenAPI packet contains `launch-api.openapi.json`,
+`local-compatibility-api.openapi.json` and `openapi-manifest.json`. Its canonical
+whole-schema digests must be listed in the backend clean-source artifact record,
+not inferred from the source operation inventory. CI retains the packet and
+binding for 30 days; an approved release custodian must preserve it in the
+controlled release evidence store before CI retention expires. The launch
+profile has no legacy global-admin routes. Source export isolation and a matching
+digest do not establish runtime permissions, served topology or acceptance.
+The new export/binding jobs require their own immutable successful execution.
 
 GAP-001 remains open until all of the following refer to one clean commit:
 

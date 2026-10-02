@@ -124,6 +124,33 @@ class CiSecurityValidationTests(unittest.TestCase):
         ):
             validate_ci_security(changed)
 
+    def test_openapi_schema_binding_cannot_be_removed(self) -> None:
+        for name in ("launch-api.openapi.json", "local-compatibility-api.openapi.json", "openapi-manifest.json"):
+            with self.subTest(name=name):
+                changed = self.workflow.replace(f"          --artifact /tmp/taximobile-openapi/{name}\n", "")
+                with self.assertRaisesRegex(CiSecurityError, "OpenAPI evidence"):
+                    validate_ci_security(changed)
+
+    def test_openapi_generation_cannot_be_removed_or_bypassed(self) -> None:
+        command = "        run: python ../infra/scripts/generate_openapi_evidence.py --output-dir /tmp/taximobile-openapi\n"
+        for replacement in ("", "        # " + command.strip() + "\n", command + command,
+                            command + "        if: false\n", command + "        continue-on-error: true\n",
+                            command.rstrip() + " || true\n"):
+            with self.subTest(replacement=replacement):
+                with self.assertRaisesRegex(CiSecurityError, "OpenAPI evidence"):
+                    validate_ci_security(self.workflow.replace(command, replacement))
+
+    def test_openapi_artifact_retention_cannot_be_weakened(self) -> None:
+        for old, new in (
+            ("            /tmp/taximobile-openapi\n", ""),
+            ("            /tmp/taximobile-backend-evidence.json\n", ""),
+            ("          if-no-files-found: error\n", "          if-no-files-found: warn\n"),
+            ("      - name: Retain exact OpenAPI candidate evidence\n",
+             "      - name: Retain exact OpenAPI candidate evidence\n        if: false\n"),
+        ):
+            with self.subTest(old=old), self.assertRaisesRegex(CiSecurityError, "OpenAPI evidence"):
+                validate_ci_security(self.workflow.replace(old, new))
+
     def test_legacy_admin_caller_gate_cannot_be_removed(self) -> None:
         changed = self.workflow.replace(
             "      - run: python ../infra/scripts/validate_legacy_admin_retirement.py\n",

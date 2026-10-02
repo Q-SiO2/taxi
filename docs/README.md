@@ -27,7 +27,8 @@ The latest local full isolated-PostGIS regression through migration 0052 passed
 [PR CI](https://github.com/Q-SiO2/taxi/actions/runs/37000515435), but GAP-001 remains open because
 independent review, protection, signing, registry digest, and release approval are
 absent. The subsequent Android protected-session source patch has local host
-evidence and requires its own immutable CI and physical-device acceptance;
+evidence and complete passing push/PR CI for `cc19776`; physical-device acceptance
+remains open, and the subsequent OpenAPI evidence tooling requires its own CI;
 see `implementation.md` and the ordered native-storage testing pack. Historical
 `168c350` results in the summary table below describe that earlier candidate only.
 The local regression includes the focused

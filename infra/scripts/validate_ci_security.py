@@ -245,6 +245,40 @@ def _validate_backend_dependency_audits(workflow: str) -> None:
             raise CiSecurityError("Backend dependency audits must not be skipped or non-blocking.")
 
 
+def _validate_openapi_evidence(workflow: str) -> None:
+    backend = re.search(r"^  backend:\s*\n(.*?)(?=^  [A-Za-z0-9_-]+:\s*\n|\Z)",
+                        workflow, flags=re.MULTILINE | re.DOTALL)
+    if backend is None:
+        raise CiSecurityError("OpenAPI evidence requires a backend job.")
+    text = backend[1]
+    blocks = {}
+    for name in ("Generate exact OpenAPI source contracts", "Bind the backend SBOM to immutable source evidence",
+                 "Retain exact OpenAPI candidate evidence"):
+        matches = re.findall(rf"^      - name: {re.escape(name)}\n(.*?)(?=^      - |\Z)",
+                             text, flags=re.MULTILINE | re.DOTALL)
+        if len(matches) != 1 or re.search(r"^\s+(?:if|continue-on-error):|\|\|\s*true", matches[0], re.MULTILINE):
+            raise CiSecurityError("OpenAPI evidence steps must be unique, blocking and unskipped.")
+        blocks[name] = matches[0]
+    generation = blocks["Generate exact OpenAPI source contracts"]
+    command = "        run: python ../infra/scripts/generate_openapi_evidence.py --output-dir /tmp/taximobile-openapi"
+    if generation.strip() != command.strip():
+        raise CiSecurityError("OpenAPI evidence generation must use the exact reviewed command.")
+    binding = blocks["Bind the backend SBOM to immutable source evidence"]
+    for name in ("launch-api.openapi.json", "local-compatibility-api.openapi.json", "openapi-manifest.json"):
+        if binding.splitlines().count(f"          --artifact /tmp/taximobile-openapi/{name}") != 1:
+            raise CiSecurityError("OpenAPI evidence must bind both full schemas and their manifest.")
+    retention = blocks["Retain exact OpenAPI candidate evidence"]
+    for line in (
+        "        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2",
+        "            /tmp/taximobile-openapi", "            /tmp/taximobile-backend-evidence.json",
+        "          if-no-files-found: error", "          retention-days: 30",
+    ):
+        if retention.splitlines().count(line) != 1:
+            raise CiSecurityError("OpenAPI evidence retention must preserve schemas and clean-source binding.")
+    if "cat /tmp/taximobile-openapi/openapi-manifest.json" not in text:
+        raise CiSecurityError("OpenAPI evidence digest summary is required.")
+
+
 def validate_ci_security(workflow: str) -> None:
     try:
         package_lock = IOS_PACKAGE_RESOLVED_PATH.read_text(encoding="utf-8")
@@ -332,6 +366,7 @@ def validate_ci_security(workflow: str) -> None:
         _require(trivy, pattern, message)
 
     _validate_backend_dependency_audits(workflow)
+    _validate_openapi_evidence(workflow)
 
     required_provenance = (
         "--artifact /tmp/taximobile-api.spdx.json",

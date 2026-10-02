@@ -96,7 +96,8 @@ The Android protected-storage follow-up passes 22 adapter cases within 208
 Android host tests, 235 freshly rerun JVM tests, both Android debug-role compiles,
 204 infrastructure tests and 41 mobile-script tests. Synthetic cipher/preferences
 tests prove control flow, not real Keystore or disk persistence. Its own immutable
-CI remains required. Revised T4 catalog `2026-10-02` keeps 56 cases but binds
+CI now passes for `cc19776` in both runs recorded in GAP-001; the subsequent
+OpenAPI tooling needs independent CI. Revised T4 catalog `2026-10-02` keeps 56 cases but binds
 stronger native-storage requirements to a new LF-portable exact-byte hash;
 old evidence cannot accept them. All template cases remain `NOT_STARTED`.
 The native-storage T1/T4 packs below retain T5 hosted authority, T6 staff recovery,
@@ -140,6 +141,40 @@ contain:
 Never place tokens, recovery codes, identity documents, precise participant
 location histories, unrestricted case text, payment instructions, or provider
 credentials in the packet. Preserve controlled references instead.
+
+### Exact OpenAPI evidence track (GAP-001)
+
+* **T0/T1:** execute exporter fixtures and CI mutation tests; require both exact
+  profiles, unique operation IDs, deterministic key ordering, digest changes on
+  payload/component/security changes, safe overwrite refusal and sanitized failure.
+  Test actual factory export under denied network connects and hostile parent
+  database/provider/log/auth/Python-path configuration. A schema is not an
+  authorization test, and array ordering must not be normalized away.
+* **T2/T3:** retain schemas beside source inventory and migration/test evidence;
+  verify the manifest's hashes against actual bytes. Run payload, role/ownership,
+  city-scope, idempotency and fresh-database tests separately. OpenAPI excludes
+  WebSocket payloads; require the socket pack independently.
+* **T4/T5:** bind the packet to tested mobile/web versions. On approved synthetic
+  hosted staging, retrieve the served launch schema through its real ingress,
+  canonicalize with the exporter rule and compare its full digest to that
+  candidate. Prove legacy routes are unavailable and run negative authorization,
+  compatibility/preflight, cookie/CSRF and payload tests; matching schema bytes
+  alone cannot prove any of them. Unexplained profile/payload mismatch stops promotion.
+* **T6–T10:** operators must identify the exact candidate/profile during recovery
+  and promotion. Preserve the approved packet beyond the 30-day CI retention
+  window. Code/schema/configuration changes invalidate affected contract evidence;
+  signed-artifact, hosted, staff, legal, field and P0 approvals remain necessary.
+
+Local regeneration (choose a new ignored directory for every packet):
+
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/generate_openapi_evidence.py `
+  --output-dir backend/build/openapi-candidate-evidence
+```
+
+Attach all three output files with separate `--artifact` arguments to
+`generate_release_evidence.py`. A dirty tree requires the explicit non-release
+workspace-snapshot option; none of these records grants phase acceptance.
 
 ### 3.1 Executable phase evidence
 

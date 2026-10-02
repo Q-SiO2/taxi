@@ -2620,6 +2620,27 @@ The generated API documentation should describe:
 
 The documentation should remain synchronized with the implementation.
 
+For immutable release evidence, `infra/scripts/generate_openapi_evidence.py`
+retains the complete generated schemas, not only method/path inventories.
+It uses the actual application factory in a bounded child process with only
+reviewed OS necessities and test/API configuration. Deployment database,
+authentication, provider, log and Python-path settings are not inherited;
+no application lifespan, database request or provider request is executed.
+The canonical serialization is sorted-key UTF-8, two-space indentation and
+one LF terminator; array ordering is preserved. Payload, component, security
+or response changes therefore change the digest even when operation names do not.
+
+Two separate profiles are mandatory: `launch-api` excludes every transitional
+`/api/v1/admin` route; `local-compatibility-api` includes that development/test
+surface. Both retain scoped operations contracts. These are route-mount profiles,
+not accepted runtime configurations. FastAPI may qualify component names
+differently when legacy models are included; each whole schema has its own digest.
+Do not infer semantic payload compatibility from reference names or the method/
+path inventory. WebSocket contracts remain separately tested outside OpenAPI.
+CI binds both schema files and `openapi-manifest.json` to the exact clean source
+candidate and retains them with the backend evidence. Authorization and
+deployment acceptance always remain false in this source manifest.
+
 ---
 
 # 56. Development Environment
