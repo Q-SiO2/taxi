@@ -7,13 +7,155 @@ remains subordinate to the owning domain rules.
 
 This document fixes the implementation choices required to turn the TaxiMobile product documents into working software. It is subordinate to the domain rules in `product.md`, `operations.md`, `auth.md`, `rides.md`, `matching.md`, `pricing.md`, and `payments.md`. If a technical choice conflicts with one of those rules, the domain rule wins and the conflict must be resolved in documentation first.
 
-## Current implementation standing — 2026-09-08
+## Current implementation standing — 2026-10-02
+
+**Android signature-evidence follow-up (2026-10-02):** the packaged-artifact
+checker can inspect both roles against explicit public certificate SHA-256
+fingerprints via modular `verify_android_apk_signatures.py`. SDK apksigner is
+invoked directly as a Java jar, never through a shell, with warnings fatal and
+the manifest's default supported platform range. The current API 24 product
+requires verified v2 and one reported signer; update/rotation compatibility is
+still external evidence. Debuggable packages are rejected. Both identities are
+required together, hashes are checked across inspection and tool errors remain
+redacted. Reports still decline signer approval, distribution and deployment;
+the tool does not create keys or sign APKs. Local 76 mobile-script/242
+infrastructure tests and real-SDK debug-positive/unsigned-release-negative checks
+pass, not signed-minified-release or store acceptance. See `release_baseline.md`.
+
+**Android minifier follow-up (2026-10-02):** AGP 9.0.1's embedded R8 9.0.32
+cannot support the repository's Kotlin 2.4 metadata. The vendor-supported
+settings plugin override pins published stable R8 9.1.56 from the existing
+Google repository, rather than upgrading AGP/KMP or disabling optimization.
+`verifyAndroidShrinker` checks AGP's actual loaded compiler before builds and
+records its artifact hash. The APK verifier requires matching embedded release/
+full-mode compiler markers and each role's mapping ID, with bounded inspection
+and no exported bytecode or mapping contents. CI requires a fresh two-role
+minification log and fails on metadata warnings or cached/skipped tasks.
+Local 64 mobile-script and 242 infrastructure tests, shared JVM/Android host
+tests and both optimized assemblies pass. The preceding `7c7982a` candidate now
+passes push/PR CI; this compatibility repair still needs its own immutable CI,
+signed minified-device journeys and release approval. Source-only compiler
+provenance does not accept deployment. See `release_baseline.md`.
+
+**Android packaged-artifact follow-up (2026-10-02):** the release verifier no
+longer accepts AGP metadata as proof of the actual APK identity. A modular
+standard-library Python checker uses installed SDK `aapt2` to inspect the binary
+manifest in both role APKs and match package/version to the candidate and metadata.
+It requires one non-split output, rejects traversal/absolute/stream references,
+linked/junction output paths, malformed or duplicate metadata and duplicate role
+bytes, and checks hashes before/after tool inspection. Tool failures are explicit
+and redacted; report creation is exclusive. The existing PowerShell entry point
+delegates and propagates failure, and CI mutations preserve its blocking step.
+The manifest remains non-distributable with signing/provider/device acceptance
+false. This tooling does not create keys, prove APK signatures or alter the apps.
+See `release_baseline.md` for the verification boundary.
+
+**Protected image-publication follow-up (2026-10-02):** owner-authorized `main`
+protection is configured and read back; seven up-to-date GitHub Actions checks
+and independent latest-push approval apply to administrators too. GHCR is the
+delegated no-cost backend image store, not a hosting choice. Main-only publication
+waits for all push verification jobs and transfers the exact scanned image/SBOM
+without rebuilding. `infra/scripts/registry_image_evidence.py` checks same-run
+source and file hashes before loading, checks image IDs after loading/pulling,
+and retains immutable registry-reference provenance with acceptance false.
+PR/feature runs cannot publish. Local Docker was unavailable; local protocol and
+CI mutation tests do not prove a real registry push. Review, signing and release
+approval remain absent; PR 43 is draft/unmerged and all 19 P0 gates remain open.
+See [release_baseline.md](release_baseline.md) for policy and retention details.
+
+**Exact OpenAPI evidence follow-up (2026-10-02):** the actual application factory
+now exports separate full launch and local-compatibility schemas through a
+bounded configuration-isolated subprocess. The local source export has 223
+launch HTTP operations versus 244 compatibility operations; neither count is
+an authorization guarantee. Whole-schema hashes cover payloads/components as
+well as endpoints. CI retains both canonical schemas, their no-acceptance
+manifest and backend clean-source binding; mutation gates preserve generation,
+both schema bindings and retention. Existing runtime routes, schema and policies
+are unchanged. Local verification passes 15 exporter fixture/worker cases and
+three CI OpenAPI mutation cases within 222 infrastructure tests, plus 47 focused
+backend factory/system API cases. The three new backend tests also have a
+fresh zero-failure/error/skip JUnit run. Actual full-schema files and their
+manifest match the hashes in an explicit dirty `WORKSPACE_SNAPSHOT` record;
+that record is not an immutable release. No new full migrated-database result
+is claimed for this tooling-only patch. The exporter requires its own immutable CI and served-staging
+contract/authorization evidence before release promotion. Source candidate
+`17a94df` now passes both immutable runs in `release_baseline.md`; its retained
+schemas/manifest reconcile with the backend binding. This does not certify the
+subsequent registry patch or served-staging authorization.
+
+**Android protected-session follow-up (2026-10-02):** the adapter now writes one
+encrypted, versioned token-pair envelope with checked synchronous persistence.
+Complete legacy pairs migrate only after validation and a successful commit;
+partial/corrupt records remain preserved and produce bounded typed errors.
+Reading never creates a replacement Keystore key. IO-dispatched operations share
+a preference-facility lock and uncertainty fence across store/Activity recreation,
+because a failed Android commit can still change process-cached memory. Only an
+explicit successful save or clear recovers that uncertainty; unrelated settings
+and cancellation semantics are preserved.
+
+Local verification passed **22 adapter cases within 208 Android host tests**,
+**235 freshly rerun JVM tests**, both Android debug-role compiles, **204
+infrastructure tests** and **41 mobile script tests**, with no test failures,
+errors or skips in the native/shared suites. Host cipher/preferences doubles
+exercise adapter behavior, not AES-GCM, real Keystore, disk rollback or power-loss
+acceptance. The revised T4 catalog retains 56 cases, strengthens three existing
+Android cases for both products/roles, and invalidates old catalog bindings.
+The template remains `NOT_STARTED`; real native storage, hosted authority,
+staff recovery, field and pilot acceptance remain ordered prerequisites.
+Android commit `cc19776` now passes both
+[push CI](https://github.com/Q-SiO2/taxi/actions/runs/37023593864) and
+[PR CI](https://github.com/Q-SiO2/taxi/actions/runs/37023603230), including both
+iOS simulator application links, not native iOS test execution. The subsequent
+OpenAPI tooling has separate passing immutable CI at `17a94df`, not registry
+publication or deployment acceptance. No new
+dependency, schema, wire, UI, pricing or provider policy is introduced.
+
+**Server live-session authority follow-up (2026-10-02):** the final socket hop
+now owns verified mobile user/session IDs and the JWT deadline, rechecks fresh
+SQL session/account authority at admission, before each hint and while idle,
+and retains admission/send/monitor/close ownership through cleanup. It shares
+the REST authority predicate and changes neither schema nor wire payloads.
+Known authority loss closes `4401`; unavailable authority closes `1013`.
+Caller cancellation cannot abandon the retained closer, and no inbound frame
+executes a business command. HINT-08 documents the read/send race, noncooperative
+transport limit and unaccepted fleet-wide budgets rather than claiming immediate
+revocation of already buffered frames.
+
+Local verification passed 106 focused backend cases, 199 infrastructure tests
+and the network-guarded 20-scenario/66-test T2 pack. The complete guarded
+fresh-PostGIS run passed **1,090 tests with zero failures, errors or skips** and
+three existing dependency deprecation warnings. Its
+`backend/build/live-session-authority-t3-20261002/` bundle requires both migrated
+`LIVE_SESSION_AUTHORITY` cases, confirms migration 0052, zero residual clones,
+revoked temporary `CREATEDB`, and an 81-table/8,511-row logical restore with target
+and dump removal. All six bounded T3 evidence kinds are present; formal phase
+and deployment acceptance remain false. Server commit `2d6a68b` passed both
+[push CI](https://github.com/Q-SiO2/taxi/actions/runs/37000510927) and
+[PR CI](https://github.com/Q-SiO2/taxi/actions/runs/37000515435), including both
+iOS Release simulator application links, not native iOS test execution.
+It still requires hosted pool/load/multi-replica evidence,
+physical device recovery and FCM/APNs delivery acceptance. Source engineering
+scope remains approximately 84%; accepted P0 deployment gates remain 0/19.
+
+**Test-toolchain follow-up (2026-10-01):** pytest 9.0.3 and pytest-asyncio 1.4.0
+replace the vulnerable pytest 8 pair while preserving explicit function-scoped
+fixture/test loops. The hash-enforced install, `pip check`, separate local
+runtime/development audits, 20-persona/60-test simulation pack, 196 infrastructure
+tests and complete migrated-PostGIS regression passed. The fresh regression has
+1,011 passing tests with zero failures/errors/skips and three existing
+deprecation warnings. Its `backend/build/pytest9-t3-20261001/` bundle confirms
+migration 0052, zero residual clones, revoked temporary database authority and a
+current-head logical restore matching all 81 tables. CI now separately audits
+the development lock plus the reviewed Linux wheel supplement, with removal/
+bypass mutation protection. Linux audit execution, immutable remote acceptance,
+formal T3 approval and all real-environment/device/provider gates remain distinct
+from this local evidence. No business contract or migration changed.
 
 The repository contains the provider-independent implementation described here,
 including migrations through `20260908_0052`. Local backend unit/API/integration
 tests, Android/shared compilation, JavaScript and Kotlin/Wasm compilation, and
 portable source-contract checks have passed in the current workspace. The
-latest completed full fresh-PostGIS run (2026-09-08) passed 990 backend tests with no
+dated baseline full fresh-PostGIS run (2026-09-09) passed 992 backend tests with no
 failures, errors or skips, including the paired cash workload and deterministic
 dispatch-contention cases. That report also includes fixed-owner outbox
 aggregation, privacy-bounded Prometheus alert validation, aggregate security-
@@ -24,18 +166,41 @@ and 112 web HTTP operations. The city-authorization slice passed 33
 focused backend cases, also included in that full backend regression, and both
 web browser suites. These are local dirty-workspace results, not release
 certification. Both `jsBrowserDistribution` and `wasmJsBrowserDistribution`
-also completed locally from the current source; bundle-size warnings remain
-performance evidence to review, not failed correctness gates. The
+also completed locally from the current source. Six dependency-free runtime
+scenarios now execute the static web compatibility loader's supported, update,
+forced-upgrade, retry, local-origin and exact-origin/path header-scoping behavior
+in CI. The 2026-09-09 compatibility
+candidate's 6,104,171-byte JavaScript fallback is within its narrowly reviewed
+6,250,000-byte ceiling; startup measurements on target networks remain required
+performance evidence. The
 current CI definition covers backend, Android/shared, iOS simulator compilation,
 documentation/provenance validation, and JavaScript/Wasm browser tests plus a
 production compatibility distribution. It also defines immutable-action
 dependency review, resolved Gradle graph submission, backend image SPDX SBOM and
 source-hash binding, a generated 244-operation/52-migration/22-permission/nine-role
-source-contract inventory, and a blocking high/critical image scan. The inventory
+source-contract inventory, and a blocking high/critical image scan. Web and
+Android/iOS verification outputs now produce limitation-marked manifests that
+are hash-bound to the clean source candidate in CI and retained in its run
+summary. The backend job also runs a frozen T2 catalog of 20 simulated persona
+and adversarial scenarios over 66 exact unit tests, retains JSON/JUnit evidence,
+and explicitly refuses phase or deployment acceptance. The inventory
 is deterministic, validates the migration graph and role mapping, is printed in
 the CI run summary, and is hash-bound into backend candidate evidence. The new and changed
 jobs still require a passing remote run on an immutable commit; their presence in
 YAML is not a clean vulnerability report or signed release provenance.
+
+The guarded backend runner and CI definition now also generate bounded T3 JUnit,
+database-metadata and system-evidence artifacts. The local run verified migration
+0052 on PostgreSQL 16.14/PostGIS 3.5.3, 992 skip-free tests, named lock/race/
+worker-reclaim/reconciliation cases, zero residual clone databases and revoked
+temporary local `CREATEDB` authority. One stale disposable clone from an earlier
+interruption was strictly identified and removed before the successful metadata
+check. A guarded custom-format backup subsequently restored 81 public tables and
+8,511 aggregate rows into an ephemeral database, matched migration/PostGIS/
+schema/table totals before and after a no-op upgrade, and removed the database
+and dump. The combined report supports all six T3 evidence kinds and marks
+evidence complete; T3 and deployment acceptance remain false pending engineering
+sign-off and an ordered phase record.
 The production deployment now has an optional hardened Prometheus/Alertmanager/
 Loki/Alloy/Grafana overlay with internal-only API/worker scraping, bounded
 application-owned JSON log volumes, Docker-secret bearer
@@ -232,10 +397,16 @@ enough to review and test without loading the entire mobile product.
 Android currently supplies an AES-GCM Android Keystore implementation of the secure token store and constructs its Ktor client with the OkHttp engine. Each product flavor supplies a development API base URL through build configuration; staging and production builds must inject a TLS URL through their protected build/deployment configuration rather than altering shared client code.
 
 iOS uses the same shared gateway/coordinator composition with Ktor's Darwin
-engine and an iOS Keychain token store. Its Swift shell reads the app role and
-API base URL from target build settings, keeping production URLs and role choice
-out of shared Kotlin code. The checked-in default URL is deliberately invalid;
-an iOS release must inject a TLS URL through protected configuration.
+engine and an iOS Keychain token store. The Keychain implementation replaces one
+versioned, length-delimited access/refresh envelope atomically, constructs real
+Core Foundation dictionaries/data rather than casting Kotlin objects, checks
+Security-framework status codes, and releases every object it owns. Storage
+failures are translated by the shared authentication coordinator and a failed
+login save triggers best-effort revocation of the newly issued backend session.
+Its Swift shell reads the app role and API base URL from target build settings,
+keeping production URLs and role choice out of shared Kotlin code. The checked-
+in default URL is deliberately invalid; an iOS release must inject a TLS URL
+through protected configuration.
 
 iOS Release builds enforce the same fail-closed boundary as Android. Both
 targets require explicit HTTPS API and MapLibre style URLs, positive numeric
@@ -265,6 +436,16 @@ entry point (invoke it with `powershell -NoProfile -ExecutionPolicy Bypass
 health, requires exactly one authorized device, establishes and verifies the
 reverse tunnel, injects the loopback debug URL, builds and installs only the
 selected role flavor, and launches its activity.
+With `-RegistrationSmoke -ConfirmClearAppData -EvidencePath <new-json>`, the same
+launcher now records a bounded T4 Android registration/login report containing
+SDK/ABI/model/locale/screen/package metadata and backend-confirmed journey
+results. It does not record raw serials, screenshots, credentials or submitted
+values and cannot claim broader device-matrix or T4 acceptance.
+The broader T4 laboratory is frozen in a 56-case machine-readable catalog with
+eight cases per phase evidence kind. A dependency-free validator checks platform
+targets, browser/locale/RTL coverage, device/browser fidelity flags, safety,
+retained artifact metadata and no-acceptance boundaries. The committed run
+template is intentionally 0/56 `NOT_STARTED`.
 After compilation it waits a bounded 120 seconds for the same authorized device
 serial to recover from a transient USB/ADB reset, re-establishes the reverse
 tunnel, and refuses to install on a replacement device.
@@ -521,6 +702,16 @@ ordinary pending command suppresses each attempt. The automatic requester never
 opens permission UI. Unavailable observations trigger localized guidance and a
 60-second backoff. The backend continues to decide freshness, movement,
 service-area validity, eligibility and matching.
+Automatic completion is separately guarded by
+`ForegroundDriverLocationResultGuard`: both successful coordinates and null
+results must still belong to the original operational context. Native roots
+invalidate immediately on background, connectivity change, admitted command and
+composition disposal; completion rechecks foreground, usable network, absence of
+an ordinary command, and unchanged availability/vehicle/city/service/ride. A
+background/network return or logout/login cannot revive the earlier lookup.
+Discarding a result does not revoke permission, cancel OS work, retain a trail or
+change backend authority. The next eligible sampling attempt remains governed by
+the existing cadence and one-shot gate.
 Both platform requesters use the tested common `OneShotLocationGate`: a second
 tap is rejected instead of calling the first pending callback with failure or
 launching another permission/location request. Shared passenger and driver
@@ -830,7 +1021,7 @@ Reinstatement rechecks global/professional status, owned vehicle, credentials,
 application evidence, reviewed services, validity and competing authorization.
 Approval now locks the driver before checking for active city authority, closing
 its race with reinstatement. The focused 33-case backend run and JS/Wasm browser
-tasks pass; the full 990-test backend regression includes this slice. Operational
+tasks pass; the full 992-test backend regression includes this slice. Operational
 acceptance remains open in `testing.md`. No schema change or automated live-ride
 cancellation is added.
 
@@ -1012,6 +1203,83 @@ production publish a versioned, four-field hint through private PostgreSQL
 user's local sockets. FCM delivery requires environment-provided application default
 credentials, bounded retry, invalid-registration revocation, and device validation.
 
+`PostgresLiveEventListener` now observes established connection termination and
+probes liveness every 15 seconds with a five-second operation bound. Connection
+establishment is bounded to ten seconds; retry waits one second after cleanup.
+Registration, removal and graceful close are individually bounded, with hard
+termination if close cannot finish. Per-attempt identity guards ignore late old
+callbacks. Process shutdown/disconnect cancels cooperative socket dispatch tasks
+rather than awaiting stalled sends indefinitely. One listener has one process
+owner; readiness clears throughout loss, cleanup and retry and returns only
+after successful re-registration. These defaults are not an accepted field SLO.
+Hosted API `/ready` checks listener health before and after its SQL probe and
+returns the existing sanitized `503 DEPENDENCY_UNAVAILABLE` on either failure.
+Local/test processes without the PostgreSQL listener retain SQL-only readiness.
+The dedicated migrated integration case terminates only its owned listener PID,
+checks replacement `LISTEN` registration and addressed-recipient delivery, then
+verifies cleanup. Hosted failover remains separate work under GAP-009/GAP-028.
+
+The final local hop now separates `EventHub` registry/fanout from
+`core/live_sessions.py` per-socket ownership and
+`domains/auth/session_authority.py` fresh SQL read authority. Token parsing
+provides verified mobile IDs and a UTC access deadline without retaining the raw
+JWT. REST and socket admission/idle/send paths reject ownership mismatch,
+revocation, database-session expiry and suspended users. Every hint rechecks
+authority; there is no positive-result cache. Session refresh requires socket
+replacement rather than extending the old verified deadline.
+
+Each connection owns one idle monitor, serialized sends, admission and a retained
+closer. Closing withdraws broadcast authority before cooperative cancellation;
+cancelled callers cannot abandon cleanup. Hub shutdown also joins admitting and
+already-closing sessions. Raw ASGI receive handles text/binary/disconnect without
+racing the server's close state; no incoming frame has command authority. Known
+authority loss closes `4401`, unavailable authority closes `1013`, and fixed logs
+omit identity/credentials. Idle/operation defaults are 15/five seconds, with
+earlier JWT-deadline wake-up. No database lock spans a network send; a read/send
+race cannot recall in-flight bytes. Noncooperative cancellation is reported, not
+claimed force-killed. HINT-08 covers the tests and remaining hosted/device/SLO
+acceptance, including the increased database/pool demand from active sockets.
+
+The mobile recovery layer now separates one-attempt `LiveEventGateway` transport
+from `LiveUpdateSubscription` ownership/retry policy. Both native roots derive
+admission from foreground, advisory connectivity and pending security commands.
+The authentication coordinator serializes credential operations and exposes only
+`LocalSessionLifetime` generation/activity/ending as one atomic value. Persisted
+credential replacement cancels the old owner; ordinary REST reads preserve it. Logout closes admission
+before push cleanup and prevents a late restore from reopening it. Native callbacks
+reject cancelled, obsolete or ineligible REST results before applying state.
+The supervisor bounds handshake to ten seconds and each catch-up to fifteen,
+requests catch-up on admission/hints/failure/normal closure, and retries expected
+failures with 0.5–1-second initial jitter capped at 15–30 seconds. Healthy idle
+sockets have no artificial lifetime limit; only useful hints reset flapping
+backoff. Cancellation is never a network-retry signal. Shared behavioral tests
+and a mutation-tested native source-wiring gate are defined in the HINT-06 pack;
+neither proves physical Android/iOS, push-provider or hosted acceptance. The
+existing API and business-command non-replay contracts are unchanged.
+
+The 2026-10-02 local mobile slice passed 31 focused new cases within complete
+235-test JVM and 186-test Android host suites, both Android debug-root compiles,
+57 tests per browser target, 41 mobile script tests with 21 native-wiring
+mutations and 197 infrastructure tests. Docs, source credentials, mobile/web
+contracts, phase evidence, CI security, production Compose and existing mobile
+recovery checks pass. It changes no backend business/schema contract and does
+not claim a fresh PostGIS run. Its immutable remote and macOS compile/link checks
+remain separate for that mobile slice. Immutable `8f92e51` now passes its push
+and PR workflows, including macOS native compile and both Release simulator app
+links; it does not execute the blocked native iOS test link or physical devices.
+The subsequent server-authority slice has its own fresh 1,090-test full PostGIS
+bundle described above and still requires its own immutable CI evidence.
+Device, provider and deployment acceptance remain open.
+
+The 2026-10-01 local recovery slice passed 78 focused unit/API cases and the full
+1,042-test guarded migrated backend regression with zero failures/errors/skips.
+Its named live recovery case is mandatory in the T3 report. The same run verified
+zero residual clones, revoked temporary database authority and an 81-table
+logical restore with cleanup; all six bounded evidence kinds are present without
+phase or deployment acceptance. Infrastructure tests passed 197 and T2 passed
+20 personas/60 selected tests. New immutable CI, hosted failover and physical
+subscription/session acceptance remain separate from these local results.
+
 The same supervisor owns scheduling handoff and operational-analytics refresh
 loops. Analytics takes a transaction-scoped PostgreSQL advisory lock, records
 only coarse `CITY_WIDE` eligible/available supply, purges expired supply
@@ -1113,7 +1381,7 @@ input validator rejects mutable image tags, loopback production databases,
 wildcard hosts/proxies, short or reused secrets, and malformed Firebase IDs.
 
 The API image runs as an unprivileged `taximobile` user and includes a local
-health check only; readiness remains the deployment's database-aware gate. The
+health check only; readiness remains the deployment's database-and-listener gate. The
 application image does not run migrations automatically in production. A
 release pipeline must run `alembic upgrade head` as a controlled pre-rollout
 step, then roll out a compatible API image.
@@ -1219,7 +1487,7 @@ fixture now disables new clone connections, terminates only owner client session
 and retries SQLSTATE `55006` while auxiliary work drains; it does not grant
 superuser authority. Three repetitions of the exact former failure, the initial
 941-test, 952-test, 956-test, 957-test and 970-test reruns, and the current
-990-test rerun passed.
+992-test rerun passed.
 
 `operations/cash_workload.py` extends that evidence with paired driver/passenger
 cash journeys. `workload/client.py` is the shared bounded HTTP boundary;
@@ -1543,7 +1811,12 @@ retryable; results distinguish address/street/locality/landmark, expose provider
 attribution, and disable an outside-area result when pickup is selected. A
 settled map point has an explicit reverse-address action; the returned label never
 replaces its authoritative coordinate. Disabled/provider-failure/no-match states
-retain map/manual selection. Saved-place labels remain deferred. The remaining UI test/screenshot matrix
+retain map/manual selection. Search results remain selectable only while their
+city and normalized query match the visible input; query edits hide old or late
+responses immediately. A reverse request captures its city/target/coordinate,
+and completion labels only that still-selected point without moving coordinates
+or displaying stale guidance after a city/point change or a live ride starts.
+Saved-place labels remain deferred. The remaining UI test/screenshot matrix
 is a later validation slice scheduled in `ui.md`.
 
 The account surface also presents a visually separate safety section for

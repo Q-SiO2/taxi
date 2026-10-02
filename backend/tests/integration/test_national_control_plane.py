@@ -453,6 +453,43 @@ def test_scoped_operations_and_repeatable_second_city_rollout() -> None:
         city_a = create_city(f"rabat-{suffix}", "Rabat test", -6.8498, 34.0209)
         city_b = create_city(f"tangier-{suffix}", "Tangier test", -5.8339, 35.7595)
 
+        expect(
+            client.post(
+                "/api/v1/auth/register",
+                json={
+                    "email": staff_email,
+                    "password": STAFF_PASSWORD,
+                    "display_name": "Integration City Manager",
+                },
+            ),
+            201,
+        )
+        staff_mobile = login(client, "/api/v1/auth/login", staff_email, STAFF_PASSWORD)
+        staff_id = expect(
+            client.get("/api/v1/me", headers=bearer(staff_mobile["access_token"])),
+            200,
+        )["id"]
+        grant = expect(
+            client.post(
+                "/api/v1/operations/administrative-grants",
+                headers=operations_headers,
+                json={
+                    "user_id": staff_id,
+                    "role_template": "CITY_MANAGER",
+                    "city_id": city_a["id"],
+                    "reason": "Independent city-configuration maker integration proof.",
+                },
+            ),
+            201,
+        )
+        staff_operations = login(
+            client,
+            "/api/v1/operations/auth/login",
+            staff_email,
+            STAFF_PASSWORD,
+        )
+        staff_headers = bearer(staff_operations["access_token"])
+
         operator_one = expect(
             client.post(
                 "/api/v1/operations/operators",
@@ -787,7 +824,7 @@ def test_scoped_operations_and_repeatable_second_city_rollout() -> None:
             inactive_configuration = expect(
                 client.post(
                     f"/api/v1/operations/city-configuration-versions/{inactive_configuration['id']}/{command}",
-                    headers=operations_headers,
+                    headers=staff_headers if command == "submit" else operations_headers,
                     json={
                         "expected_version": expected_version,
                         "reason": f"Integration inactive tariff {command} review.",
@@ -837,7 +874,7 @@ def test_scoped_operations_and_repeatable_second_city_rollout() -> None:
             configuration = expect(
                 client.post(
                     f"/api/v1/operations/city-configuration-versions/{configuration['id']}/{command}",
-                    headers=operations_headers,
+                    headers=staff_headers if command == "submit" else operations_headers,
                     json={
                         "expected_version": expected_version,
                         "reason": f"Integration {command} review.",
@@ -846,6 +883,17 @@ def test_scoped_operations_and_repeatable_second_city_rollout() -> None:
                 200,
             )
             assert configuration["status"] == expected_status
+            if command == "submit":
+                self_approval = client.post(
+                    f"/api/v1/operations/city-configuration-versions/{configuration['id']}/approve",
+                    headers=staff_headers,
+                    json={
+                        "expected_version": configuration["optimistic_version"],
+                        "reason": "The configuration maker must not approve their own bundle.",
+                    },
+                )
+                assert self_approval.status_code == 409
+                assert "independent authorized reviewer" in self_approval.text
 
         premature_pilot_evidence = client.post(
             f"/api/v1/operations/city-configuration-versions/{configuration['id']}/readiness-decisions",
@@ -1000,7 +1048,7 @@ def test_scoped_operations_and_repeatable_second_city_rollout() -> None:
             replacement_configuration = expect(
                 client.post(
                     f"/api/v1/operations/city-configuration-versions/{replacement_configuration['id']}/{command}",
-                    headers=operations_headers,
+                    headers=staff_headers if command == "submit" else operations_headers,
                     json={
                         "expected_version": replacement_configuration["optimistic_version"],
                         "reason": f"Review active-city replacement {command} behavior.",
@@ -1103,32 +1151,6 @@ def test_scoped_operations_and_repeatable_second_city_rollout() -> None:
             200,
         )
 
-        staff_tokens = expect(
-            client.post(
-                "/api/v1/auth/register",
-                json={
-                    "email": staff_email,
-                    "password": STAFF_PASSWORD,
-                    "display_name": "Integration City Manager",
-                },
-            ),
-            201,
-        )
-        staff_mobile = login(client, "/api/v1/auth/login", staff_email, STAFF_PASSWORD)
-        staff_id = expect(client.get("/api/v1/me", headers=bearer(staff_mobile["access_token"])), 200)["id"]
-        grant = expect(
-            client.post(
-                "/api/v1/operations/administrative-grants",
-                headers=operations_headers,
-                json={
-                    "user_id": staff_id,
-                    "role_template": "CITY_MANAGER",
-                    "city_id": city_a["id"],
-                    "reason": "Two-city authorization integration proof.",
-                },
-            ),
-            201,
-        )
         support_grant = expect(
             client.post(
                 "/api/v1/operations/administrative-grants",
@@ -1142,14 +1164,6 @@ def test_scoped_operations_and_repeatable_second_city_rollout() -> None:
             ),
             201,
         )
-        staff_operations = login(
-            client,
-            "/api/v1/operations/auth/login",
-            staff_email,
-            STAFF_PASSWORD,
-        )
-        staff_headers = bearer(staff_operations["access_token"])
-
         scoped_cities = expect(
             client.get("/api/v1/operations/cities?limit=1", headers=staff_headers),
             200,

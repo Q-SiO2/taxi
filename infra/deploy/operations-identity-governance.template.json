@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "evidence_revision": "2026-09-29",
+  "gap": "GAP-005",
+  "phase": "T5",
+  "status": "NOT_STARTED",
+  "data_classification": "ACCOUNT_REFERENCES_AND_CONTROL_EVIDENCE_ONLY",
+  "candidate_label": null,
+  "source_commit": null,
+  "environment_inventory_reference": null,
+  "database_evidence_reference": null,
+  "submission": {
+    "submitted_by_account_reference": null,
+    "submitted_at": null,
+    "change_reference": null
+  },
+  "governance": {
+    "authoritative_staff_roster_reference": null,
+    "joiner_mover_leaver_policy_reference": null,
+    "access_review_policy_reference": null,
+    "recovery_policy_reference": null,
+    "break_glass_policy_reference": null,
+    "operations_origin_reference": null,
+    "security_event_routing_reference": null,
+    "access_review_interval_days": null,
+    "leaver_revocation_sla_minutes": null,
+    "minimum_active_platform_administrators": null,
+    "shared_accounts_prohibited": null,
+    "production_password_login_disabled": null,
+    "last_access_review_at": null,
+    "next_access_review_due_at": null
+  },
+  "duty_assignments": [
+    {"function": "PLATFORM_ADMIN_MAKER", "account_reference": null, "role_template": "PLATFORM_ADMIN", "scope_reference": null, "roster_assignment_reference": null, "effective_from": null, "review_due_at": null},
+    {"function": "PLATFORM_ADMIN_CHECKER", "account_reference": null, "role_template": "PLATFORM_ADMIN", "scope_reference": null, "roster_assignment_reference": null, "effective_from": null, "review_due_at": null},
+    {"function": "PLATFORM_ADMIN_RECOVERY", "account_reference": null, "role_template": "PLATFORM_ADMIN", "scope_reference": null, "roster_assignment_reference": null, "effective_from": null, "review_due_at": null},
+    {"function": "CITY_ROLLOUT_MAKER", "account_reference": null, "role_template": "CITY_MANAGER", "scope_reference": null, "roster_assignment_reference": null, "effective_from": null, "review_due_at": null},
+    {"function": "CITY_ROLLOUT_CHECKER", "account_reference": null, "role_template": "PLATFORM_ADMIN", "scope_reference": null, "roster_assignment_reference": null, "effective_from": null, "review_due_at": null},
+    {"function": "PRICING_POLICY_MAKER", "account_reference": null, "role_template": "PRICING_MANAGER", "scope_reference": null, "roster_assignment_reference": null, "effective_from": null, "review_due_at": null},
+    {"function": "PRICING_POLICY_CHECKER", "account_reference": null, "role_template": "PLATFORM_ADMIN", "scope_reference": null, "roster_assignment_reference": null, "effective_from": null, "review_due_at": null},
+    {"function": "PAYMENT_RECONCILIATION", "account_reference": null, "role_template": "PAYMENT_RECONCILER", "scope_reference": null, "roster_assignment_reference": null, "effective_from": null, "review_due_at": null},
+    {"function": "DRIVER_DOCUMENT_REVIEW", "account_reference": null, "role_template": "DRIVER_REVIEWER", "scope_reference": null, "roster_assignment_reference": null, "effective_from": null, "review_due_at": null},
+    {"function": "SENSITIVE_ACCESS_AUDIT", "account_reference": null, "role_template": "PLATFORM_ADMIN", "scope_reference": null, "roster_assignment_reference": null, "effective_from": null, "review_due_at": null},
+    {"function": "SUPPORT_DUTY", "account_reference": null, "role_template": "SUPPORT_AGENT", "scope_reference": null, "roster_assignment_reference": null, "effective_from": null, "review_due_at": null},
+    {"function": "SAFETY_DUTY", "account_reference": null, "role_template": "SAFETY_RESPONDER", "scope_reference": null, "roster_assignment_reference": null, "effective_from": null, "review_due_at": null},
+    {"function": "ACCESS_REVIEW", "account_reference": null, "role_template": "PLATFORM_ADMIN", "scope_reference": null, "roster_assignment_reference": null, "effective_from": null, "review_due_at": null},
+    {"function": "LEAVER_REVOCATION", "account_reference": null, "role_template": "PLATFORM_ADMIN", "scope_reference": null, "roster_assignment_reference": null, "effective_from": null, "review_due_at": null},
+    {"function": "BREAK_GLASS_PRIMARY", "account_reference": null, "role_template": "PLATFORM_ADMIN", "scope_reference": null, "roster_assignment_reference": null, "effective_from": null, "review_due_at": null},
+    {"function": "BREAK_GLASS_SECONDARY", "account_reference": null, "role_template": "PLATFORM_ADMIN", "scope_reference": null, "roster_assignment_reference": null, "effective_from": null, "review_due_at": null}
+  ],
+  "mfa_enrollments": [],
+  "control_drills": [
+    {"drill": "MFA_ENROLLMENT", "status": "PENDING", "actor_account_reference": null, "reviewer_account_reference": null, "evidence_reference": null, "executed_at": null, "review_due_at": null},
+    {"drill": "RECOVERY_CODE_USE", "status": "PENDING", "actor_account_reference": null, "reviewer_account_reference": null, "evidence_reference": null, "executed_at": null, "review_due_at": null},
+    {"drill": "FACTOR_REPLACEMENT", "status": "PENDING", "actor_account_reference": null, "reviewer_account_reference": null, "evidence_reference": null, "executed_at": null, "review_due_at": null},
+    {"drill": "JOINER", "status": "PENDING", "actor_account_reference": null, "reviewer_account_reference": null, "evidence_reference": null, "executed_at": null, "review_due_at": null},
+    {"drill": "MOVER", "status": "PENDING", "actor_account_reference": null, "reviewer_account_reference": null, "evidence_reference": null, "executed_at": null, "review_due_at": null},
+    {"drill": "LEAVER_REVOCATION", "status": "PENDING", "actor_account_reference": null, "reviewer_account_reference": null, "evidence_reference": null, "executed_at": null, "review_due_at": null},
+    {"drill": "ACCESS_RECERTIFICATION", "status": "PENDING", "actor_account_reference": null, "reviewer_account_reference": null, "evidence_reference": null, "executed_at": null, "review_due_at": null},
+    {"drill": "BREAK_GLASS", "status": "PENDING", "actor_account_reference": null, "reviewer_account_reference": null, "evidence_reference": null, "executed_at": null, "review_due_at": null}
+  ],
+  "audit_evidence": {
+    "bootstrap_reference": null,
+    "grant_request_reference": null,
+    "grant_approval_reference": null,
+    "mfa_enrollment_reference": null,
+    "mfa_step_up_reference": null,
+    "sensitive_action_reference": null,
+    "access_review_reference": null,
+    "leaver_revocation_reference": null
+  },
+  "approvals": [
+    {"function": "SECURITY", "approver_role": "SECURITY_OWNER", "decision": "PENDING", "reviewer_account_reference": null, "evidence_reference": null, "decided_at": null, "review_due_at": null},
+    {"function": "OPERATIONS", "approver_role": "OPERATIONS_OWNER", "decision": "PENDING", "reviewer_account_reference": null, "evidence_reference": null, "decided_at": null, "review_due_at": null},
+    {"function": "PRIVACY_LEGAL", "approver_role": "PRIVACY_LEGAL_OWNER", "decision": "PENDING", "reviewer_account_reference": null, "evidence_reference": null, "decided_at": null, "review_due_at": null},
+    {"function": "PRODUCT_OWNER_AUTHORIZATION", "approver_role": "PRODUCT_OWNER", "decision": "PENDING", "reviewer_account_reference": null, "evidence_reference": null, "decided_at": null, "review_due_at": null}
+  ],
+  "gap_005_accepted": false,
+  "phase_accepted": false,
+  "deployment_accepted": false,
+  "limitations": [
+    "NO_PRODUCTION_OPERATIONS_IDENTITY_ACCEPTED",
+    "NO_PHASE_OR_DEPLOYMENT_ACCEPTANCE"
+  ]
+}

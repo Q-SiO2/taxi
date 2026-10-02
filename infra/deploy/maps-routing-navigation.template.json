@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "evidence_revision": "2026-09-29",
+  "gap": "GAP-006",
+  "phase": "T5",
+  "status": "NOT_STARTED",
+  "data_classification": "PUBLIC_ARTIFACT_AND_CONTROL_REFERENCES_ONLY",
+  "candidate_label": null,
+  "source_commit": null,
+  "environment_inventory_reference": null,
+  "database_evidence_reference": null,
+  "pilot_city_approval_reference": null,
+  "submission": {
+    "submitted_by_account_reference": null,
+    "submitted_at": null,
+    "change_reference": null
+  },
+  "launch_scope": {
+    "market_code": null,
+    "country_code": null,
+    "city_id": null,
+    "city_configuration_id": null,
+    "service_area_reference": null,
+    "quality_threshold_reference": null,
+    "accepted_languages": [],
+    "acceptance_valid_until": null
+  },
+  "map_delivery": {
+    "renderer": "MAPLIBRE",
+    "style_artifact_reference": null,
+    "style_version": null,
+    "style_sha256": null,
+    "tile_source_reference": null,
+    "tile_source_version": null,
+    "tile_catalog_sha256": null,
+    "morocco_coverage_reference": null,
+    "license_review_reference": null,
+    "attribution_review_reference": null,
+    "cache_policy_reference": null,
+    "offline_policy_reference": null,
+    "privacy_review_reference": null,
+    "capacity_and_cost_reference": null,
+    "visual_accessibility_review_reference": null
+  },
+  "routing_artifact": {
+    "selected_provider": null,
+    "engine_version": null,
+    "engine_image_digest": null,
+    "morocco_extract_source_reference": null,
+    "morocco_extract_version": null,
+    "morocco_extract_sha256": null,
+    "graph_build_reference": null,
+    "graph_artifact_digest": null,
+    "routing_origin_reference": null,
+    "routing_acceptance_report_reference": null,
+    "routing_acceptance_report_sha256": null
+  },
+  "refresh_and_rollback": {
+    "graph_refresh_cadence_days": null,
+    "map_refresh_cadence_days": null,
+    "maximum_source_age_days": null,
+    "refresh_runbook_reference": null,
+    "license_change_review_reference": null,
+    "traffic_policy_reference": null,
+    "routing_outage_policy_reference": null,
+    "traffic_data_enabled": null,
+    "traffic_data_source_reference": null,
+    "previous_graph_digest": null,
+    "previous_style_sha256": null,
+    "rollback_runbook_reference": null,
+    "rollback_target_reference": null
+  },
+  "benchmark_cases": [
+    {"category": "URBAN", "case_reference": null, "expected_route_reference": null, "result_reference": null, "status": "PENDING", "maximum_distance_error_percent": null, "measured_distance_error_percent": null, "maximum_duration_error_percent": null, "measured_duration_error_percent": null, "restricted_road_violations": null, "executed_at": null},
+    {"category": "PERI_URBAN", "case_reference": null, "expected_route_reference": null, "result_reference": null, "status": "PENDING", "maximum_distance_error_percent": null, "measured_distance_error_percent": null, "maximum_duration_error_percent": null, "measured_duration_error_percent": null, "restricted_road_violations": null, "executed_at": null},
+    {"category": "RESTRICTED_ROAD", "case_reference": null, "expected_route_reference": null, "result_reference": null, "status": "PENDING", "maximum_distance_error_percent": null, "measured_distance_error_percent": null, "maximum_duration_error_percent": null, "measured_duration_error_percent": null, "restricted_road_violations": null, "executed_at": null},
+    {"category": "ONE_WAY", "case_reference": null, "expected_route_reference": null, "result_reference": null, "status": "PENDING", "maximum_distance_error_percent": null, "measured_distance_error_percent": null, "maximum_duration_error_percent": null, "measured_duration_error_percent": null, "restricted_road_violations": null, "executed_at": null},
+    {"category": "ROUNDABOUT", "case_reference": null, "expected_route_reference": null, "result_reference": null, "status": "PENDING", "maximum_distance_error_percent": null, "measured_distance_error_percent": null, "maximum_duration_error_percent": null, "measured_duration_error_percent": null, "restricted_road_violations": null, "executed_at": null},
+    {"category": "FIXED_ROUTE", "case_reference": null, "expected_route_reference": null, "result_reference": null, "status": "PENDING", "maximum_distance_error_percent": null, "measured_distance_error_percent": null, "maximum_duration_error_percent": null, "measured_duration_error_percent": null, "restricted_road_violations": null, "executed_at": null}
+  ],
+  "device_navigation": [
+    {"surface": "PASSENGER_ANDROID_ROUTE_PREVIEW", "status": "PENDING", "build_digest": null, "device_matrix_reference": null, "route_trace_reference": null, "narration_reference": null, "reroute_reference": null, "degraded_network_reference": null, "accessibility_reference": null, "languages": [], "tested_at": null},
+    {"surface": "PASSENGER_IOS_ROUTE_PREVIEW", "status": "PENDING", "build_digest": null, "device_matrix_reference": null, "route_trace_reference": null, "narration_reference": null, "reroute_reference": null, "degraded_network_reference": null, "accessibility_reference": null, "languages": [], "tested_at": null},
+    {"surface": "DRIVER_ANDROID_TURN_BY_TURN", "status": "PENDING", "build_digest": null, "device_matrix_reference": null, "route_trace_reference": null, "narration_reference": null, "reroute_reference": null, "degraded_network_reference": null, "accessibility_reference": null, "languages": [], "tested_at": null},
+    {"surface": "DRIVER_IOS_TURN_BY_TURN", "status": "PENDING", "build_digest": null, "device_matrix_reference": null, "route_trace_reference": null, "narration_reference": null, "reroute_reference": null, "degraded_network_reference": null, "accessibility_reference": null, "languages": [], "tested_at": null}
+  ],
+  "operational_drills": [
+    {"drill": "ROUTING_PROVIDER_OUTAGE", "status": "PENDING", "operator_account_reference": null, "evidence_reference": null, "executed_at": null, "recovery_minutes": null, "review_due_at": null},
+    {"drill": "TILE_STYLE_OUTAGE", "status": "PENDING", "operator_account_reference": null, "evidence_reference": null, "executed_at": null, "recovery_minutes": null, "review_due_at": null},
+    {"drill": "GRAPH_ROLLBACK", "status": "PENDING", "operator_account_reference": null, "evidence_reference": null, "executed_at": null, "recovery_minutes": null, "review_due_at": null},
+    {"drill": "STYLE_ROLLBACK", "status": "PENDING", "operator_account_reference": null, "evidence_reference": null, "executed_at": null, "recovery_minutes": null, "review_due_at": null},
+    {"drill": "OFF_ROUTE_REROUTE", "status": "PENDING", "operator_account_reference": null, "evidence_reference": null, "executed_at": null, "recovery_minutes": null, "review_due_at": null},
+    {"drill": "NETWORK_LOSS_RECOVERY", "status": "PENDING", "operator_account_reference": null, "evidence_reference": null, "executed_at": null, "recovery_minutes": null, "review_due_at": null},
+    {"drill": "ATTRIBUTION_VISIBILITY", "status": "PENDING", "operator_account_reference": null, "evidence_reference": null, "executed_at": null, "recovery_minutes": null, "review_due_at": null}
+  ],
+  "approvals": [
+    {"function": "MAP_LICENSE_PRIVACY", "approver_role": "PRIVACY_LEGAL_OWNER", "decision": "PENDING", "reviewer_account_reference": null, "evidence_reference": null, "decided_at": null, "review_due_at": null},
+    {"function": "MAP_VISUAL_ACCESSIBILITY", "approver_role": "DESIGN_ACCESSIBILITY_OWNER", "decision": "PENDING", "reviewer_account_reference": null, "evidence_reference": null, "decided_at": null, "review_due_at": null},
+    {"function": "ROUTING_QUALITY", "approver_role": "ROUTING_ENGINEERING_OWNER", "decision": "PENDING", "reviewer_account_reference": null, "evidence_reference": null, "decided_at": null, "review_due_at": null},
+    {"function": "MOBILE_NAVIGATION", "approver_role": "MOBILE_RELEASE_OWNER", "decision": "PENDING", "reviewer_account_reference": null, "evidence_reference": null, "decided_at": null, "review_due_at": null},
+    {"function": "OPERATIONS_ROLLBACK", "approver_role": "OPERATIONS_OWNER", "decision": "PENDING", "reviewer_account_reference": null, "evidence_reference": null, "decided_at": null, "review_due_at": null},
+    {"function": "PRODUCT_OWNER_AUTHORIZATION", "approver_role": "PRODUCT_OWNER", "decision": "PENDING", "reviewer_account_reference": null, "evidence_reference": null, "decided_at": null, "review_due_at": null}
+  ],
+  "gap_006_accepted": false,
+  "phase_accepted": false,
+  "deployment_accepted": false,
+  "limitations": [
+    "NO_PRODUCTION_MAP_ROUTING_NAVIGATION_ACCEPTED",
+    "NO_PHASE_OR_DEPLOYMENT_ACCEPTANCE"
+  ]
+}

@@ -1,0 +1,269 @@
+{
+  "schema_version": 1,
+  "catalog_revision": "2026-10-02",
+  "phase": "T2",
+  "suite_id": "simulated_persona_adversarial_v1",
+  "data_classification": "SYNTHETIC",
+  "safety": {
+    "external_network_allowed": false,
+    "public_users_allowed": false,
+    "live_money_allowed": false,
+    "provider_credentials_allowed": false,
+    "persistent_personal_data_allowed": false
+  },
+  "coverage_boundaries": [
+    "NO_REAL_HTTP_OR_DATABASE_RECONCILIATION",
+    "NO_PROVIDER_OR_DEVICE_DELIVERY",
+    "NO_MOBILE_OR_BROWSER_JOURNEY",
+    "NO_REAL_USERS_OR_LIVE_MONEY",
+    "NO_PHASE_ACCEPTANCE_CLAIM"
+  ],
+  "scenarios": [
+    {
+      "id": "SIM-AUTH-001",
+      "category": "AUTHENTICATION",
+      "personas": ["NEW_PASSENGER", "RETURNING_PASSENGER", "SUSPENDED_ACCOUNT"],
+      "journey": "Registration authority, generic failed login, and refresh-family replay containment",
+      "selectors": [
+        "tests/unit/test_auth_schemas.py::test_registration_requires_an_identifier_and_does_not_accept_roles",
+        "tests/unit/test_login_hardening.py::test_suspended_account_verifies_its_hash_before_generic_rejection",
+        "tests/unit/test_refresh_token_rotation.py::test_rotated_refresh_token_reuse_revokes_only_its_active_family"
+      ],
+      "invariants": ["CLIENT_CANNOT_ASSIGN_ROLES", "LOGIN_FAILURE_IS_GENERIC", "REFRESH_REPLAY_IS_CONTAINED"]
+    },
+    {
+      "id": "SIM-ACCOUNT-001",
+      "category": "ACCOUNT_STATUS",
+      "personas": ["SUSPENDED_DRIVER", "DEACTIVATED_DRIVER"],
+      "journey": "Global account status remains part of assignment authority",
+      "selectors": [
+        "tests/unit/test_account_authority.py::test_assignment_authority_uses_postgresql_share_lock",
+        "tests/unit/test_account_authority.py::test_correlated_active_predicate_has_no_open_status_fallback"
+      ],
+      "invariants": ["INACTIVE_ACCOUNT_CANNOT_BE_ASSIGNED", "STATUS_PREDICATE_FAILS_CLOSED"]
+    },
+    {
+      "id": "SIM-DRIVER-001",
+      "category": "DRIVER_ELIGIBILITY",
+      "personas": ["PENDING_DRIVER", "BUSY_DRIVER", "UNVERIFIED_VEHICLE_DRIVER"],
+      "journey": "Ineligible drivers cannot become or remain dispatchable",
+      "selectors": [
+        "tests/unit/test_driver_eligibility.py::test_pending_driver_cannot_go_online",
+        "tests/unit/test_driver_eligibility.py::test_driver_handling_a_ride_cannot_overwrite_availability",
+        "tests/unit/test_driver_eligibility.py::test_approved_driver_requires_a_verified_active_vehicle"
+      ],
+      "invariants": ["PENDING_DRIVER_STAYS_OFFLINE", "ACTIVE_RIDE_OWNS_AVAILABILITY", "VERIFIED_VEHICLE_REQUIRED"]
+    },
+    {
+      "id": "SIM-APPLICANT-001",
+      "category": "DRIVER_RECRUITMENT",
+      "personas": ["DRIVER_APPLICANT", "DOCUMENT_REVIEWER"],
+      "journey": "Application input cannot manufacture review state or use an unconfigured document store",
+      "selectors": [
+        "tests/unit/test_driver_recruitment.py::test_application_answer_requires_one_matching_typed_value",
+        "tests/unit/test_driver_recruitment.py::test_application_creation_cannot_smuggle_status_or_authority",
+        "tests/unit/test_driver_recruitment.py::test_driver_document_storage_is_explicitly_fail_closed"
+      ],
+      "invariants": ["APPLICATION_VALUES_ARE_TYPED", "APPLICANT_CANNOT_SET_STATUS", "DOCUMENT_STORAGE_FAILS_CLOSED"]
+    },
+    {
+      "id": "SIM-MATCH-001",
+      "category": "MATCHING",
+      "personas": ["ELIGIBLE_DRIVER", "DECLINING_DRIVER", "EXPIRING_DRIVER", "NO_SUPPLY_PASSENGER"],
+      "journey": "Deterministic fair offer ordering, decline, expiry, and exhausted supply",
+      "selectors": [
+        "tests/unit/test_matching_scoring.py::test_recent_assignment_fairness_can_favor_driver_with_fewer_rides",
+        "tests/unit/test_matching_scoring.py::test_exact_ties_have_stable_driver_id_order",
+        "tests/unit/test_matching_lifecycle.py::test_decline_releases_driver_without_erasing_wait_and_records_event",
+        "tests/unit/test_matching_lifecycle.py::test_expiration_processor_releases_driver_and_advances_same_ride",
+        "tests/unit/test_matching_lifecycle.py::test_candidate_exhaustion_is_terminal_audited_and_minimally_notified"
+      ],
+      "invariants": ["ORDERING_IS_DETERMINISTIC", "DECLINE_PRESERVES_FAIRNESS", "EXPIRY_ADVANCES_RIDE", "NO_SUPPLY_IS_TERMINAL"]
+    },
+    {
+      "id": "SIM-RIDE-001",
+      "category": "RIDE_LIFECYCLE",
+      "personas": ["PASSENGER", "ASSIGNED_DRIVER"],
+      "journey": "Passenger and driver commands follow the authoritative ride state machine",
+      "selectors": [
+        "tests/unit/test_ride_state_machine.py::test_only_documented_state_transitions_are_allowed",
+        "tests/unit/test_ride_state_machine.py::test_passenger_cannot_cancel_in_progress_or_completed_rides",
+        "tests/unit/test_ride_state_machine.py::test_driver_must_move_through_every_operational_state",
+        "tests/unit/test_ride_state_machine.py::test_cancellation_hint_is_enqueued_in_the_business_transaction"
+      ],
+      "invariants": ["TRANSITIONS_ARE_CLOSED", "PASSENGER_CANNOT_REWRITE_ACTIVE_RIDE", "DRIVER_CANNOT_SKIP_STATES", "CANCELLATION_HINT_IS_TRANSACTIONAL"]
+    },
+    {
+      "id": "SIM-COMMS-001",
+      "category": "COORDINATION",
+      "personas": ["ASSIGNED_PASSENGER", "ASSIGNED_DRIVER", "NON_PARTICIPANT"],
+      "journey": "Pickup coordination is closed-code and rejects free text",
+      "selectors": [
+        "tests/unit/test_ride_communications.py::test_launch_coordination_vocabulary_is_closed_and_role_partitioned",
+        "tests/unit/test_ride_communications.py::test_coordination_request_rejects_free_text_and_unknown_codes"
+      ],
+      "invariants": ["VOCABULARY_IS_CLOSED", "ROLE_ACTIONS_ARE_PARTITIONED", "FREE_TEXT_IS_REJECTED"]
+    },
+    {
+      "id": "SIM-ROUTE-001",
+      "category": "FIXED_ROUTE",
+      "personas": ["FIXED_ROUTE_PASSENGER", "ROUTE_EDITOR"],
+      "journey": "Fixed-route direction and fare references remain explicit and mutually exclusive",
+      "selectors": [
+        "tests/unit/test_fixed_routes.py::test_route_version_requires_distinct_explicit_direction_codes",
+        "tests/unit/test_fixed_routes.py::test_fixed_route_ride_request_is_mutually_exclusive_with_coordinates",
+        "tests/unit/test_fixed_routes.py::test_only_fixed_route_tariffs_can_reference_immutable_directions"
+      ],
+      "invariants": ["DIRECTIONS_ARE_DISTINCT", "REQUEST_SHAPE_IS_EXCLUSIVE", "FARE_REFERENCES_IMMUTABLE_DIRECTION"]
+    },
+    {
+      "id": "SIM-SCHEDULE-001",
+      "category": "SCHEDULING",
+      "personas": ["SCHEDULED_PASSENGER", "COMMITTED_DRIVER"],
+      "journey": "Scheduling shape, time policy, and reviewed policy version fail closed",
+      "selectors": [
+        "tests/unit/test_scheduled_bookings.py::test_scheduled_request_requires_exactly_one_service_shape",
+        "tests/unit/test_scheduled_bookings.py::test_scheduling_time_bounds_are_backend_policy",
+        "tests/unit/test_scheduled_bookings.py::test_confirmation_rejects_policy_versions_that_changed_after_review"
+      ],
+      "invariants": ["SERVICE_SHAPE_IS_EXCLUSIVE", "TIME_BOUNDS_ARE_SERVER_OWNED", "STALE_POLICY_IS_REJECTED"]
+    },
+    {
+      "id": "SIM-CASH-001",
+      "category": "PAYMENT_CASH",
+      "personas": ["CASH_PASSENGER", "CASH_COLLECTING_DRIVER"],
+      "journey": "Cash remains pending until one backend-authorized settlement creates immutable earning facts",
+      "selectors": [
+        "tests/unit/test_payments.py::test_cash_payment_requires_backend_settlement",
+        "tests/unit/test_payments.py::test_cash_payment_cannot_be_settled_twice",
+        "tests/unit/test_payments.py::test_driver_earning_reuses_exact_immutable_ride_economics"
+      ],
+      "invariants": ["CASH_REQUIRES_SETTLEMENT", "SETTLEMENT_IS_SINGLE", "EARNING_REUSES_RIDE_ECONOMICS"]
+    },
+    {
+      "id": "SIM-TRANSFER-001",
+      "category": "PAYMENT_TRANSFER",
+      "personas": ["TRANSFER_PASSENGER", "FINANCE_REVIEWER"],
+      "journey": "Manual transfer claim never marks itself paid and only scoped review can complete it",
+      "selectors": [
+        "tests/unit/test_payments.py::test_manual_transfer_submission_never_completes_payment",
+        "tests/unit/test_payments.py::test_only_operator_verification_completes_manual_transfer",
+        "tests/unit/test_payments.py::test_rejected_manual_transfer_can_be_submitted_again_without_marking_paid",
+        "tests/unit/test_payments.py::test_cash_settlement_cannot_complete_a_manual_transfer"
+      ],
+      "invariants": ["CLAIM_IS_NOT_PAYMENT", "FINANCE_REVIEW_REQUIRED", "REJECTION_IS_NOT_SETTLEMENT", "PAYMENT_FLOWS_CANNOT_CROSS"]
+    },
+    {
+      "id": "SIM-REFUND-001",
+      "category": "REFUND",
+      "personas": ["REFUND_PASSENGER", "FINANCE_REVIEWER"],
+      "journey": "Refunds append facts, conserve cumulative amount, and refuse invalid source state",
+      "selectors": [
+        "tests/unit/test_payments.py::test_partial_refund_is_append_only_and_operator_funded",
+        "tests/unit/test_payments.py::test_cumulative_full_refund_marks_payment_refunded_without_rewriting_amount",
+        "tests/unit/test_payments.py::test_refund_rejects_unsettled_and_excess_amounts"
+      ],
+      "invariants": ["REFUND_IS_APPEND_ONLY", "CUMULATIVE_AMOUNT_IS_CONSERVED", "INVALID_REFUND_IS_REJECTED"]
+    },
+    {
+      "id": "SIM-STAFF-001",
+      "category": "STAFF_AUTHORITY",
+      "personas": ["GRANT_MAKER", "GRANT_TARGET", "PLATFORM_ADMIN"],
+      "journey": "Staff cannot self-grant or bypass reviewed production mutations",
+      "selectors": [
+        "tests/unit/test_administrative_grants.py::test_grant_creation_rejects_self_grant_before_database_access",
+        "tests/unit/test_administrative_grants.py::test_direct_grant_mutation_is_disabled_outside_local_test_scaffolding[staging]",
+        "tests/unit/test_administrative_grants.py::test_direct_grant_mutation_is_disabled_outside_local_test_scaffolding[production]"
+      ],
+      "invariants": ["SELF_GRANT_IS_REJECTED", "STAGING_REQUIRES_REVIEW", "PRODUCTION_REQUIRES_REVIEW"]
+    },
+    {
+      "id": "SIM-SCOPE-001",
+      "category": "SCOPE_ISOLATION",
+      "personas": ["WRONG_MARKET_ADMIN", "MARKET_ADMIN", "CITY_ADMIN"],
+      "journey": "Permissions and service-area commands remain bound to exact grant scope",
+      "selectors": [
+        "tests/unit/test_operations_permissions.py::test_permissions_remain_bound_to_each_grant_scope",
+        "tests/unit/test_operations_permissions.py::test_only_market_scoped_grant_authorizes_market_level_command",
+        "tests/unit/test_operations_permissions.py::test_service_area_geometry_is_closed_bounded_and_serializable"
+      ],
+      "invariants": ["PERMISSIONS_FOLLOW_SCOPE", "MARKET_COMMAND_REQUIRES_MARKET_SCOPE", "SERVICE_AREA_INPUT_IS_BOUNDED"]
+    },
+    {
+      "id": "SIM-CITY-001",
+      "category": "CITY_ROLLOUT",
+      "personas": ["CITY_ADMIN", "INCOMPLETE_CITY", "PILOT_REVIEWER"],
+      "journey": "Public activation requires pilot evidence and unknown gates fail closed",
+      "selectors": [
+        "tests/unit/test_city_rollout_readiness.py::test_public_activation_adds_pilot_outcome_evidence_to_pre_pilot_gates",
+        "tests/unit/test_city_rollout_readiness.py::test_unknown_rollout_gate_fails_closed"
+      ],
+      "invariants": ["PUBLIC_ACTIVATION_REQUIRES_PILOT_EVIDENCE", "UNKNOWN_GATE_FAILS_CLOSED"]
+    },
+    {
+      "id": "SIM-NOTIFY-001",
+      "category": "NOTIFICATION",
+      "personas": ["PASSENGER_DEVICE", "DRIVER_DEVICE", "OUTBOX_WORKER"],
+      "journey": "Notification topics use one closed policy; idle and sending sessions lose authority safely while another session remains isolated",
+      "selectors": [
+        "tests/unit/test_notification_policy.py::test_every_outbox_delivery_topic_has_one_complete_closed_policy",
+        "tests/unit/test_notification_policy.py::test_live_and_push_allowlists_are_derived_from_the_same_policy",
+        "tests/unit/test_notification_policy.py::test_unclassified_topic_fails_closed_for_bounded_dead_letter_processing",
+        "tests/unit/test_realtime.py::test_revoking_one_session_does_not_revoke_another_for_same_account",
+        "tests/unit/test_realtime.py::test_idle_monitor_closes_a_revoked_or_suspended_session",
+        "tests/unit/test_realtime.py::test_idle_socket_closes_at_verified_token_deadline_without_any_hint",
+        "tests/unit/test_realtime.py::test_authority_blackhole_is_bounded_and_sanitized",
+        "tests/unit/test_realtime.py::test_concurrent_hints_are_serialized_per_socket_and_each_reauthorized",
+        "tests/unit/test_realtime.py::test_closed_and_replaced_sessions_cannot_deliver_old_callbacks"
+      ],
+      "invariants": ["TOPIC_POLICY_IS_COMPLETE", "CHANNEL_ALLOWLISTS_AGREE", "UNKNOWN_TOPIC_FAILS_CLOSED", "SESSION_REVOCATION_IS_ISOLATED", "IDLE_AUTHORITY_IS_RECHECKED", "JWT_DEADLINE_IS_ENFORCED", "AUTHORITY_OUTAGE_FAILS_CLOSED", "EACH_HINT_IS_REAUTHORIZED", "OBSOLETE_OWNER_CANNOT_SEND"]
+    },
+    {
+      "id": "SIM-SUPPORT-001",
+      "category": "SUPPORT",
+      "personas": ["PASSENGER_WITH_CASE", "SUPPORT_AGENT"],
+      "journey": "Support triage cannot extend deadlines or skip resolution states",
+      "selectors": [
+        "tests/unit/test_support_triage.py::test_triage_assigns_and_never_extends_an_existing_deadline",
+        "tests/unit/test_support_triage.py::test_support_state_machine_rejects_skips_and_missing_resolution"
+      ],
+      "invariants": ["DEADLINE_NEVER_EXTENDS", "SUPPORT_STATES_CANNOT_BE_SKIPPED"]
+    },
+    {
+      "id": "SIM-SAFETY-001",
+      "category": "SAFETY",
+      "personas": ["PASSENGER_IN_DANGER", "SAFETY_RESPONDER"],
+      "journey": "Urgent safety cases require acknowledgment before escalation and resolution",
+      "selectors": [
+        "tests/unit/test_safety.py::test_immediate_danger_has_urgent_five_minute_acknowledgement_target",
+        "tests/unit/test_safety.py::test_safety_lifecycle_requires_acknowledgement_before_escalation_and_resolution",
+        "tests/unit/test_safety.py::test_safety_state_machine_rejects_resolution_without_acknowledgement"
+      ],
+      "invariants": ["URGENT_ACK_TARGET_IS_BOUNDED", "ACK_PRECEDES_ESCALATION", "UNACKNOWLEDGED_CASE_CANNOT_RESOLVE"]
+    },
+    {
+      "id": "SIM-INCIDENT-001",
+      "category": "SECURITY_INCIDENT",
+      "personas": ["INCIDENT_REPORTER", "RESPONSE_LEAD", "POSTMORTEM_OWNER"],
+      "journey": "Security incident lifecycle, evidence, and responsibility assignment remain forward-only and versioned",
+      "selectors": [
+        "tests/unit/test_security_incidents.py::test_security_incident_lifecycle_is_forward_only_and_sets_milestones",
+        "tests/unit/test_security_incidents.py::test_manual_timeline_contract_requires_traceable_reference",
+        "tests/unit/test_security_incidents.py::test_responsibility_assignment_requires_version_exact_user_and_reference"
+      ],
+      "invariants": ["INCIDENT_LIFECYCLE_IS_FORWARD_ONLY", "TIMELINE_FACT_IS_TRACEABLE", "RESPONSIBILITY_IS_VERSIONED"]
+    },
+    {
+      "id": "SIM-CLIENT-001",
+      "category": "CLIENT_LIFECYCLE",
+      "personas": ["CURRENT_CLIENT", "OUTDATED_CLIENT", "OBSOLETE_CLIENT", "MALFORMED_CLIENT"],
+      "journey": "Six-surface compatibility policy distinguishes update states and rejects malformed identity",
+      "selectors": [
+        "tests/unit/test_client_compatibility.py::test_numeric_client_versions_compare_without_lexical_errors",
+        "tests/unit/test_client_compatibility.py::test_policy_distinguishes_required_available_and_current_updates",
+        "tests/unit/test_client_compatibility.py::test_header_identity_is_closed_and_build_is_positive_and_bounded"
+      ],
+      "invariants": ["VERSION_COMPARISON_IS_NUMERIC", "UPDATE_STATES_ARE_DISTINCT", "CLIENT_IDENTITY_IS_CLOSED"]
+    }
+  ]
+}

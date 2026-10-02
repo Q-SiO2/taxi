@@ -19,7 +19,10 @@ param(
     [switch]$RegistrationSmoke,
 
     [Parameter()]
-    [switch]$ConfirmClearAppData
+    [switch]$ConfirmClearAppData,
+
+    [Parameter()]
+    [string]$EvidencePath
 )
 
 $ErrorActionPreference = "Stop"
@@ -71,6 +74,16 @@ if ($ready.status -ne "ready") {
 }
 if ($RegistrationSmoke -and -not $ConfirmClearAppData) {
     throw "RegistrationSmoke clears the selected debug app's local data. Re-run with ConfirmClearAppData after review."
+}
+if ($EvidencePath -and -not $RegistrationSmoke) {
+    throw "EvidencePath requires RegistrationSmoke because launch alone is not acceptance evidence."
+}
+if ($EvidencePath) {
+    $resolvedEvidencePath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($EvidencePath)
+    if (Test-Path -LiteralPath $resolvedEvidencePath) {
+        throw "Android acceptance refuses to overwrite existing evidence: $resolvedEvidencePath"
+    }
+    New-Item -ItemType Directory -Force -Path (Split-Path -Parent $resolvedEvidencePath) | Out-Null
 }
 
 $deviceLines = & $adb devices
@@ -167,8 +180,9 @@ if ($RegistrationSmoke) {
         throw "The workspace Python runtime is required for Android acceptance: $workspacePython"
     }
     $smokeScript = Join-Path $PSScriptRoot "android_registration_smoke.py"
-    Invoke-CheckedCommand $workspacePython `
-        $smokeScript `
-        "--adb" $adb `
-        "--role" $Role
+    $smokeArguments = @($smokeScript, "--adb", $adb, "--role", $Role)
+    if ($EvidencePath) {
+        $smokeArguments += @("--output", $resolvedEvidencePath)
+    }
+    Invoke-CheckedCommand $workspacePython @smokeArguments
 }

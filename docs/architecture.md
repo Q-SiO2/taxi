@@ -420,6 +420,52 @@ fact. Each API replica can notify locally connected clients after PostgreSQL
 fanout, while a mobile client that misses every hint catches up at foreground,
 reconnect, or explicit refresh.
 
+Every staging/production API process owns one dedicated PostgreSQL listener.
+Established termination clears listener readiness; periodic bounded liveness
+probes detect half-open transports. The process cleans up the old connection and
+pending best-effort dispatches before retrying and registering `LISTEN` again.
+Callbacks from an old connection cannot invalidate or dispatch through its
+replacement. API `/ready` requires both SQL availability and listener readiness;
+`/health` remains process liveness. This is source health/recovery behavior, not a
+guarantee that disconnected clients received hints or that hosted failover meets
+an accepted recovery budget. Authoritative REST catch-up remains mandatory.
+
+Each mobile composition root admits hint listening only while the authenticated
+product is foreground, the advisory network is not unavailable, and no logout,
+session-revocation or password-change action is pending. A common single-owner
+supervisor observes a non-secret local session-generation flow: credential
+replacement cancels the old attempt before starting the new one, while an
+ordinary same-session restore leaves the generation unchanged. Authentication
+restores are serialized so parallel foreground/push/reconnect reads do not rotate
+one refresh credential twice. Logout closes admission before push cleanup and
+suppresses late restore reactivation. This local lifetime is not proof of server
+authentication or authorization and never contains tokens or account identifiers.
+Generation, activity and the ending phase are one atomic value, preventing a
+late restore from committing activity after logout closes admission.
+
+After socket admission, every hint and transport loss/normal close, the client
+requests authoritative REST state. Expected transport/rejection failures retry
+with cancellable exponential jitter, initially 0.5–1 second and capped at
+15–30 seconds. Handshake and individual catch-up are bounded to ten and fifteen
+seconds; a healthy idle socket is not periodically disconnected. A meaningful
+hint resets backoff; an instant handshake/close does not. Background/offline
+ownership changes cancel the subscription, not replay commands. Catch-up results
+apply only while their owner remains current and eligible. A catch-up timeout
+retains prior render state and permits later hints; it does not prove delivery.
+The server now has a separate session-owned final socket hop. Verified mobile
+IDs/deadline establish the owner; fresh SQL checks at admission, before sends and
+while idle enforce database session expiry/revocation and active account status.
+REST shares the read predicate; assignment commit-time authority remains separate.
+One monitor and serialized send path belong to each connection. Closing removes
+hint authority, cancels cooperative work and uses a retained closer independent
+of caller cancellation. Hub shutdown joins admitting and already-closing owners,
+not only currently broadcastable sockets. No database lock spans network IO and
+no already-sent frame can be recalled. Five-second operation and 15-second idle
+defaults are not field SLOs; permanently cancellation-suppressing dependencies
+cannot be forcibly reaped. HINT-08 requires migrated authority, native recovery
+and hosted revocation/pool/load evidence before acceptance. Local cancellation
+alone still cannot establish provider or physical recovery.
+
 Participant coordination uses the same boundary. The passenger and assigned
 driver may send only six documented closed codes during allowed active states.
 The command persists the code and a recipient notification; live and FCM paths

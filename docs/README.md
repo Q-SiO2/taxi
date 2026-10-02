@@ -6,7 +6,7 @@ the repository. Those are not the same kind of statement.
 
 ## Current project standing
 
-**Audit date:** 2026-09-08
+**Source assessment date:** 2026-09-09. **Standing refreshed:** 2026-10-02.
 
 **Migration head:** `20260908_0052`
 
@@ -20,12 +20,42 @@ remain unaccepted in the gap register.
 **Overall standing:** broad provider-independent implementation exists and passes
 local automated verification, but TaxiMobile is **not ready for public or live
 pilot deployment**. The unresolved work is tracked in [`gaps.md`](gaps.md).
-The latest full isolated-PostGIS regression through migration 0052 passed 990 backend
-tests with zero failures, errors or skips; this remains dirty-workspace local
-evidence rather than an immutable release result. It includes the focused
+The latest local full isolated-PostGIS regression through migration 0052 passed
+1,090 backend tests with zero failures, errors or skips. Server commit
+`2d6a68b04eccd793d5d071b8f26bba67568bf63b` passes
+[push CI](https://github.com/Q-SiO2/taxi/actions/runs/37000510927) and
+[PR CI](https://github.com/Q-SiO2/taxi/actions/runs/37000515435), but GAP-001 remains open because
+independent review, signing, registry digest, and release approval are
+absent. Owner-authorized main protection is now configured and verified. Main-only
+GHCR publication is implemented but has not run; image storage does not provide
+live hosting. The subsequent Android protected-session source patch has local host
+evidence and complete passing push/PR CI for `cc19776`; physical-device acceptance
+remains open. OpenAPI tooling now has passing push/PR CI on `17a94df`, with both
+retained packets' hashes and source identities reconciled; subsequent registry
+protocol and packaged-identity patches now pass immutable push/PR CI through
+`7c7982a`, but a successful reviewed main publication remains absent;
+see `implementation.md` and the ordered native-storage testing pack.
+Android artifact tooling also checks actual packaged APK identity rather than
+metadata alone, with fail-closed file confinement and non-distributable reports;
+signing/device evidence remains absent. A further compiler compatibility repair
+pins actually loaded R8 9.1.56 for Kotlin 2.4 and cross-checks APK markers,
+mapping IDs and fresh minification logs. It has local build/script evidence but
+requires its own immutable CI and minified-device journeys before acceptance.
+Optional signed-package inspection now compares both role APKs against explicit
+public signer fingerprints with the SDK verifier and rejects debuggable packages.
+Signature matching is not owner approval; no production identity, signing key,
+signed minified release or distribution acceptance was supplied by this tooling.
+Historical `168c350` results in the summary table below describe that earlier candidate only.
+The local regression includes the focused
 security-incident unit/PostGIS slice, aggregate deadline-alert coverage and
 migration upgrade/downgrade coverage, including explicit incident responsibility
-assignment and append-visible reassignment history.
+assignment and append-visible reassignment history. Machine-readable T3 evidence
+also verifies the current migration/PostGIS metadata, named concurrency and
+worker-recovery cases, zero residual test clones and revoked temporary local
+database authority. A guarded current-head logical restore also reconciled all
+81 public table counts and schema-object totals, then removed its temporary
+database and dump. All six T3 evidence kinds are now locally present, but T3 is
+not accepted without engineering sign-off and an ordered phase record.
 
 The terms below have one meaning throughout these documents:
 
@@ -48,19 +78,20 @@ quality.
 
 | Area | Repository standing | Deployment standing |
 | --- | --- | --- |
-| Passenger and driver mobile | Shared Android/iOS source, role-specific release identity and compatibility preflight, maps, rides, payments, support/safety, fixed routes, scheduling, recruitment, offline-code recovery, active-session controls, and password change are implemented. Android and shared targets compile locally; iOS has a committed macOS CI compiler path. | Approved support/deprecation policy, intentionally obsolete signed-build testing, recovery-code save/acknowledgement research, verified contact ownership, physical Android/iOS matrix, signed store artifacts, production Firebase/APNs, accessibility, network-loss, navigation, and crash-symbolication acceptance are open. |
-| Public applicant and operations web | JavaScript and Kotlin/Wasm sources, release identity/preflight gate, protected operations authentication, staff maker-checker queue, city control plane, recruitment, pricing, payment, fixed-route, scheduling, case, security-incident, audit, and analytics modules are implemented. A CI job compiles/tests both browser targets, builds the compatibility distribution, enforces strict release metadata and initial bundle ceilings, excludes public source maps, and emits file hashes. | The changed CI job has not yet passed remotely for an immutable commit. Old/current hosted-release switching, full browser E2E, production CSP/hosting, accessibility/RTL, authoritative staff/incident rosters, protected-document browser acceptance, and production operations-account enrollment remain open. |
+| Passenger and driver mobile | Shared Android/iOS source, role-specific release identity and compatibility preflight, maps, rides, payments, support/safety, fixed routes, scheduling, recruitment, offline-code recovery, active-session controls, and password change are implemented. The immutable `168c350` push and pull-request runs produced limitation-marked Android/iOS manifests and linked both iOS Release simulator apps. | MapLibre issue 824 still prevents native iOS test linking. Approved support/deprecation policy, intentionally obsolete signed-build testing, verified contact ownership, physical Android/iOS matrix, signed store artifacts, production Firebase/APNs, accessibility, network-loss, navigation, and crash-symbolication acceptance are open. |
+| Public applicant and operations web | JavaScript and Kotlin/Wasm sources, release identity/preflight gate, protected operations authentication, staff maker-checker queue, city control plane, recruitment, pricing, payment, fixed-route, scheduling, case, security-incident, audit, and analytics modules are implemented. Immutable `168c350` CI passed static preflight, both browser targets, compatibility packaging without maps, and clean-source manifest binding. | Old/current hosted-release switching, full browser E2E, production CSP/hosting, accessibility/RTL, authoritative staff/incident rosters, protected-document browser acceptance, and production operations-account enrollment remain open. |
 | Backend and database | FastAPI modular monolith, six-surface release compatibility enforcement, eight worker loops, PostGIS schema through migration `20260908_0052`, scoped operations APIs including transactional staff dual control and security-incident responsibility/postmortem coordination, mobile recovery/session-control APIs, and local unit/API/integration coverage are implemented. | Approved release policy/drill, managed PostGIS, production migration rehearsal, encrypted backup/PITR, staging restore, capacity/soak, high availability, authoritative duty rosters, staffed incident drills, and production incident evidence are open. |
-| Maps, places, routing, push, and crash reporting | MapLibre composition, normalized place search/reverse lookup with a fail-closed Nominatim-compatible adapter, Valhalla/GraphHopper adapters, FCM/APNs wiring, and Crashlytics release boundaries exist. | No production style/tile or geocoding source, accepted data/license and multilingual place benchmark, accepted routing graph, required-language narration matrix, Firebase credentials, or controlled device delivery/crash proof is recorded. |
+| Maps, places, routing, push, and crash reporting | MapLibre composition, normalized place search/reverse lookup with a fail-closed Nominatim-compatible adapter, Valhalla/GraphHopper adapters, FCM/APNs wiring, Crashlytics release boundaries, and a fail-closed GAP-006 evidence contract exist. | The committed GAP-006 record is `NOT_STARTED`; no production style/tile or geocoding source, accepted data/license and multilingual place benchmark, promoted routing graph, required-language physical-device matrix, Firebase credentials, or controlled delivery/crash proof is recorded. |
 | Payments | Cash, manually reconciled bank/M-Wallet transfer claims, versioned recipients/capabilities, refunds, and immutable financial snapshots exist. | Real recipient verification, controlled transfers/refunds, reconciliation staffing, statement fidelity, cash controls, and payout/settlement operations remain open. CMI/card is deferred. |
-| National rollout | City/operator/configuration models, scoped grants, MFA, readiness gates, analytics, emergency pause, and repeatable rollout workflows exist. | No city has supplied legal/operator approval, real readiness evidence, recruited pilot cohort, measured pilot outcomes, or post-launch review. |
-| Production infrastructure | Local Compose, a provider-neutral production blueprint, health checks, rate limits, explicit database-pool bounds and telemetry, authenticated metrics, bounded rotating JSON logs, hardened Prometheus/Alertmanager/Loki/Alloy/Grafana, immutable metric/log dashboards, validators, and backup scripts exist. | There is no accepted production host, registry image, TLS ingress, DNS, secret manager, hosted monitoring/log evidence, real pager/on-call roster, HA log store, or deployed rollback rehearsal. |
+| National rollout | City/operator/configuration models, scoped grants, MFA, readiness gates, analytics, emergency pause, repeatable rollout workflows, backend-enforced maker/reviewer separation and fail-closed GAP-004 pilot/GAP-005 staff-governance evidence contracts exist. | Both committed records are deliberately `NOT_STARTED`; no city has supplied legal/operator approval, real readiness evidence, recruited pilot cohort, production staff roster/drills, measured pilot outcomes, or post-launch review. |
+| Production infrastructure | Local Compose, a provider-neutral production blueprint, fail-closed GAP-002 environment, GAP-003 managed-PostGIS, GAP-004 pilot-city, GAP-005 operations-governance and GAP-006 map/routing/navigation validators, health checks, rate limits, explicit database-pool bounds and telemetry, authenticated metrics, bounded rotating JSON logs, hardened Prometheus/Alertmanager/Loki/Alloy/Grafana, immutable metric/log dashboards, validators, and backup scripts exist. | All committed external-acceptance records are deliberately `NOT_STARTED`; there is no accepted production host, registry image, TLS ingress, DNS, secret manager, managed database/PITR, city/operator launch approval, production staff governance, promoted map/routing artifacts, hosted monitoring/log evidence, real pager/on-call roster, HA log store, or deployed rollback rehearsal. |
 
 ## Document map
 
 | Area | Authority | Standing note |
 | --- | --- | --- |
 | Dated readiness assessment | [`readiness.md`](readiness.md) | Weighted source completion, requirement comparison and fresh versus historical verification. |
+| Release baseline record | [`release_baseline.md`](release_baseline.md) | Reviewed candidate scope, local verification, immutable promotion requirements and rollback boundary. |
 | Delivery workflow | [`workflow.md`](workflow.md) | Task contracts, executable checks, handoffs and evidence-based promotion. |
 | Product mission and scope | [`product.md`](product.md) | Normative product contract; implementation does not prove market validation. |
 | National operations and city rollout | [`operations.md`](operations.md) | Source workflows are broad; every real city gate remains evidence-based. |
@@ -68,8 +99,8 @@ quality.
 | Concrete repository structure | [`implementation.md`](implementation.md) | Current technical baseline and verification claims. |
 | Delivery sequence | [`roadmap.md`](roadmap.md) | Source phases versus deployment acceptance. |
 | Deployment gap register | [`gaps.md`](gaps.md) | Prioritized remediation and acceptance criteria. |
-| Testing and acceptance map | [`testing.md`](testing.md) | Promotion gates from static checks and simulated users through real-city rollout. |
-| Test execution control board | [`testing_execution_map.md`](testing_execution_map.md) | Entry/exit gates, executable evidence-index rules, owners, stop rules and cohort progression from simulation to national replication. |
+| Testing and acceptance map | [`testing.md`](testing.md) | Promotion gates from static checks and an executable 20-scenario simulated-persona baseline through real-city rollout. |
+| Test execution control board | [`testing_execution_map.md`](testing_execution_map.md) | Entry/exit gates, executable evidence-index and T2 catalog rules, owners, stop rules and cohort progression from simulation to national replication. |
 | Executable synthetic workloads | [`testing_workloads.md`](testing_workloads.md) | Bounded closed/open-loop passenger and driver HTTP write, four-phase capacity profiles, dispatch and cash-journey testing, safety guards, measurement limits and LOAD-01–12 progression. |
 | Threat model and security tests | [`threat_model.md`](threat_model.md) | Trust boundaries, abuse cases, test packs and independent acceptance criteria. |
 | Interaction and accessibility | [`design.md`](design.md) | Normative interaction rules; manual UX acceptance remains open. |

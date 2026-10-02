@@ -85,9 +85,9 @@ import org.jetbrains.compose.resources.stringResource
 import taximobile.shared.generated.resources.*
 
 private enum class PassengerSheetPanel { Ride, FixedRoutes, Scheduled, Safety, Account, Inbox }
-private enum class MapSelectionTarget { Pickup, Destination }
+internal enum class MapSelectionTarget { Pickup, Destination }
 
-private class PassengerTripFormState {
+internal class PassengerTripFormState {
     var pickupLatitude by mutableStateOf("")
     var pickupLongitude by mutableStateOf("")
     var destinationLatitude by mutableStateOf("")
@@ -131,19 +131,29 @@ private class PassengerTripFormState {
     fun updateDestinationLatitude(value: String) { destinationLatitude = value; destinationAddress = null }
     fun updateDestinationLongitude(value: String) { destinationLongitude = value; destinationAddress = null }
 
-    fun applyReverseAddress(target: MapSelectionTarget, place: PlaceResult) {
+    fun matchesSelectedPoint(target: MapSelectionTarget, coordinate: Coordinates): Boolean {
+        val current = if (target == MapSelectionTarget.Pickup) pickup else destination
+        return current != null && current.latitude == coordinate.latitude && current.longitude == coordinate.longitude
+    }
+
+    /** Reverse lookup labels an existing selection; it must never move the point. */
+    fun applyReverseAddress(target: MapSelectionTarget, place: PlaceResult): Boolean {
+        if (!matchesSelectedPoint(target, place.coordinate)) return false
         val selected = place.selectedCoordinates()
         if (target == MapSelectionTarget.Pickup) {
-            pickupLatitude = selected.latitude.toString()
-            pickupLongitude = selected.longitude.toString()
             pickupAddress = selected.address
         } else {
-            destinationLatitude = selected.latitude.toString()
-            destinationLongitude = selected.longitude.toString()
             destinationAddress = selected.address
         }
+        return true
     }
 }
+
+private data class PendingReverseSelection(
+    val target: MapSelectionTarget,
+    val cityId: String,
+    val coordinate: Coordinates,
+)
 
 @Composable
 internal fun PassengerHome(
@@ -190,7 +200,7 @@ internal fun PassengerHome(
     var locationRequestInFlight by remember { mutableStateOf(false) }
     var mapUnavailable by remember(mapStyleUrl) { mutableStateOf(false) }
     var selectedPlaceCityId by remember { mutableStateOf<String?>(null) }
-    var reverseTarget by remember { mutableStateOf<MapSelectionTarget?>(null) }
+    var reverseSelection by remember { mutableStateOf<PendingReverseSelection?>(null) }
     var selectedFixedDirectionId by remember(state.fixedRouteCatalog?.city?.id) {
         mutableStateOf(state.selectedFixedRouteDirectionId)
     }
@@ -233,14 +243,20 @@ internal fun PassengerHome(
     }
 
     LaunchedEffect(state.placeDiscovery.revision) {
-        val target = reverseTarget ?: return@LaunchedEffect
+        val request = reverseSelection ?: return@LaunchedEffect
         val reverse = state.placeDiscovery.reverse ?: return@LaunchedEffect
-        if (reverse.cityId != activePlaceCityId) return@LaunchedEffect
+        reverseSelection = null
+        if (
+            hasActiveRide || request.cityId != activePlaceCityId ||
+            reverse.cityId != request.cityId ||
+            !form.matchesSelectedPoint(request.target, request.coordinate)
+        ) return@LaunchedEffect
+        val target = request.target
         val place = reverse.item
         if (place == null) {
             form.locationMessage = UiMessage(Res.string.address_lookup_no_result)
         } else {
-            form.applyReverseAddress(target, place)
+            if (!form.applyReverseAddress(target, place)) return@LaunchedEffect
             form.locationMessage = UiMessage(
                 if (target == MapSelectionTarget.Pickup && !place.pickupServiceable) {
                     Res.string.pickup_outside_service_area
@@ -249,7 +265,6 @@ internal fun PassengerHome(
                 }
             )
         }
-        reverseTarget = null
     }
 
     LaunchedEffect(currentEstimate?.paymentMethods) {
@@ -376,7 +391,7 @@ internal fun PassengerHome(
                     onReverseSelected = { target, coordinate ->
                         val cityId = activePlaceCityId
                         if (cityId != null) {
-                            reverseTarget = target
+                            reverseSelection = PendingReverseSelection(target, cityId, coordinate)
                             onReversePlace(cityId, coordinate)
                         }
                     },

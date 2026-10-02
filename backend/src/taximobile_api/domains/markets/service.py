@@ -720,6 +720,30 @@ def require_expected_version(actual: int, expected: int) -> None:
         )
 
 
+def require_independent_configuration_reviewer(
+    configuration: CityConfigurationVersion,
+    reviewer_user_id: UUID,
+) -> None:
+    """Require an auditable maker/reviewer boundary for rollout decisions.
+
+    The configuration submitter is the maker for the immutable component bundle.
+    Approval and readiness decisions are reviews of that submitted bundle, so the
+    same operations account must not perform both roles.  The later city
+    lifecycle transition remains a separate, recent-MFA command whose actor is
+    recorded in audit.
+    """
+
+    if configuration.submitted_by_user_id is None:
+        raise ControlPlaneConflict(
+            "Configuration review requires an identified configuration submitter."
+        )
+    if configuration.submitted_by_user_id == reviewer_user_id:
+        raise ControlPlaneConflict(
+            "The configuration submitter cannot approve or decide readiness for "
+            "the same configuration; use an independent authorized reviewer."
+        )
+
+
 async def same_market_operator_and_city(
     database_session: AsyncSession,
     operator_id: UUID,

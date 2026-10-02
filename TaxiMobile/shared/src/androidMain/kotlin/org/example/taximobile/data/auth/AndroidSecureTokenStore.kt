@@ -1,78 +1,118 @@
 package org.example.taximobile.data.auth
 
 import android.content.Context
-import android.util.Base64
-import java.nio.charset.StandardCharsets
-import java.security.KeyStore
-import javax.crypto.Cipher
-import javax.crypto.KeyGenerator
-import javax.crypto.SecretKey
-import javax.crypto.spec.GCMParameterSpec
-import android.security.keystore.KeyGenParameterSpec
-import android.security.keystore.KeyProperties
+import android.content.SharedPreferences
+import java.util.WeakHashMap
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 
-/** Stores only AES-GCM ciphertext in app preferences; the key stays in Android Keystore. */
-class AndroidSecureTokenStore(context: Context) : SecureTokenStore {
-    private val preferences = context.getSharedPreferences("taximobile.secure_session", Context.MODE_PRIVATE)
+/**
+ * One encrypted token-pair envelope; AES-GCM keys remain in Android Keystore.
+ * Only an entirely absent record is signed out. Facility/corruption failures
+ * never erase an existing session. Legacy pairs migrate after both decrypt and
+ * a checked write commits. Disk operations run off the UI thread, serialized.
+ */
+class AndroidSecureTokenStore internal constructor(
+    private val preferencesProvider: () -> SharedPreferences,
+    private val cipher: AndroidSessionCipher,
+) : SecureTokenStore {
+    constructor(context: Context) : this(
+        { context.getSharedPreferences("taximobile.secure_session", Context.MODE_PRIVATE) },
+        AndroidKeystoreSessionCipher(),
+    )
 
-    override suspend fun tokens(): StoredTokens? {
-        val access = decrypt(preferences.getString(ACCESS_TOKEN, null))
-        val refresh = decrypt(preferences.getString(REFRESH_TOKEN, null))
-        if (access == null || refresh == null) {
-            clear()
-            return null
+    internal constructor(preferences: SharedPreferences, cipher: AndroidSessionCipher) :
+        this({ preferences }, cipher)
+
+    // Even preference-facility initialization belongs inside error translation.
+    private val preferences by lazy { preferencesProvider() }
+
+    override suspend fun tokens(): StoredTokens? = protectedOperation("read") { preferences, lifetime ->
+        check(!lifetime.persistenceUncertain)
+        val snapshot = preferences.all
+        val envelope = snapshot.stringRecord(SESSION)
+        if (envelope != null) {
+            return@protectedOperation decodeStoredTokens(cipher.decrypt(envelope))
+                ?: error("Invalid protected session envelope")
         }
-        return StoredTokens(accessToken = access, refreshToken = refresh)
-    }
-
-    override suspend fun save(accessToken: String, refreshToken: String) {
-        preferences.edit()
-            .putString(ACCESS_TOKEN, encrypt(accessToken))
-            .putString(REFRESH_TOKEN, encrypt(refreshToken))
-            .apply()
-    }
-
-    override suspend fun clear() {
-        preferences.edit().remove(ACCESS_TOKEN).remove(REFRESH_TOKEN).apply()
-    }
-
-    private fun encrypt(value: String): String {
-        val cipher = Cipher.getInstance(TRANSFORMATION)
-        cipher.init(Cipher.ENCRYPT_MODE, key())
-        val encoded = Base64.encodeToString(cipher.doFinal(value.toByteArray(StandardCharsets.UTF_8)), Base64.NO_WRAP)
-        val iv = Base64.encodeToString(cipher.iv, Base64.NO_WRAP)
-        return "$iv:$encoded"
-    }
-
-    private fun decrypt(stored: String?): String? = try {
-        val parts = stored?.split(":", limit = 2) ?: return null
-        if (parts.size != 2) return null
-        val cipher = Cipher.getInstance(TRANSFORMATION)
-        cipher.init(Cipher.DECRYPT_MODE, key(), GCMParameterSpec(128, Base64.decode(parts[0], Base64.NO_WRAP)))
-        String(cipher.doFinal(Base64.decode(parts[1], Base64.NO_WRAP)), StandardCharsets.UTF_8)
-    } catch (_: Exception) {
-        null
-    }
-
-    private fun key(): SecretKey {
-        val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
-        (keyStore.getKey(KEY_ALIAS, null) as? SecretKey)?.let { return it }
-        val generator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEYSTORE)
-        generator.init(
-            KeyGenParameterSpec.Builder(KEY_ALIAS, KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
-                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
-                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                .setKeySize(256)
-                .build()
+        val access = snapshot.stringRecord(LEGACY_ACCESS)
+        val refresh = snapshot.stringRecord(LEGACY_REFRESH)
+        if (access == null && refresh == null) return@protectedOperation null
+        check(access != null && refresh != null)
+        val tokens = StoredTokens(
+            cipher.decrypt(access).decodeToString(throwOnInvalidSequence = true),
+            cipher.decrypt(refresh).decodeToString(throwOnInvalidSequence = true),
         )
-        return generator.generateKey()
+        write(tokens, preferences, lifetime)
+        tokens
     }
 
-    private companion object {
-        const val ACCESS_TOKEN = "access_token"
-        const val REFRESH_TOKEN = "refresh_token"
-        const val KEY_ALIAS = "taximobile.session.aes.v1"
-        const val ANDROID_KEYSTORE = "AndroidKeyStore"
-        const val TRANSFORMATION = "AES/GCM/NoPadding"
+    override suspend fun save(accessToken: String, refreshToken: String): Unit =
+        protectedOperation("save") { preferences, lifetime ->
+            write(StoredTokens(accessToken, refreshToken), preferences, lifetime)
+        }
+
+    override suspend fun clear(): Unit = protectedOperation("clear") { preferences, lifetime ->
+        commit(preferences.edit().remove(SESSION).remove(LEGACY_ACCESS).remove(LEGACY_REFRESH), lifetime)
+    }
+
+    private fun write(tokens: StoredTokens, preferences: SharedPreferences, lifetime: PersistenceLifetime) {
+        val encrypted = cipher.encrypt(encodeStoredTokens(tokens))
+        commit(preferences.edit().putString(SESSION, encrypted)
+            .remove(LEGACY_ACCESS).remove(LEGACY_REFRESH), lifetime)
+    }
+
+    private fun commit(editor: SharedPreferences.Editor, lifetime: PersistenceLifetime) {
+        lifetime.persistenceUncertain = true
+        check(editor.commit())
+        lifetime.persistenceUncertain = false
+    }
+
+    private suspend fun <T> protectedOperation(
+        operation: String,
+        block: (SharedPreferences, PersistenceLifetime) -> T,
+    ): T = withContext(Dispatchers.IO) {
+        try {
+            val facility = preferences
+            val lifetime = persistenceLifetime(facility)
+            lifetime.operations.withLock { block(facility, lifetime) }
+        } catch (error: CancellationException) {
+            throw error
+        } catch (_: Exception) {
+            // Platform causes may contain alias/ciphertext/credential data.
+            throw SecureTokenStorageException("Protected session $operation failed")
+        }
+    }
+
+    private class PersistenceLifetime {
+        val operations = Mutex()
+        // commit() can mutate Android's process-cached map even on failure.
+        // Activity/store recreation must not trust that unpersisted memory.
+        var persistenceUncertain = false
+    }
+
+    private fun persistenceLifetime(facility: SharedPreferences): PersistenceLifetime =
+        synchronized(lifetimes) {
+            lifetimes.getOrPut(facility) { PersistenceLifetime() }
+        }
+
+    private fun Map<String, *>.stringRecord(key: String): String? {
+        if (!containsKey(key)) return null
+        val record = get(key)
+        check(record is String && record.isNotEmpty())
+        return record
+    }
+
+    internal companion object {
+        const val SESSION = "session_envelope_v1"
+        const val LEGACY_ACCESS = "access_token"
+        const val LEGACY_REFRESH = "refresh_token"
+
+        // Android caches this facility per package/file. Weak keys release an
+        // unused facility without retaining credentials or a Context here.
+        private val lifetimes = WeakHashMap<SharedPreferences, PersistenceLifetime>()
     }
 }

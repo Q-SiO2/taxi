@@ -1,4 +1,7 @@
 from datetime import UTC, datetime, timedelta
+from base64 import urlsafe_b64encode
+from hashlib import sha256
+import hmac
 from uuid import uuid4
 
 import jwt
@@ -42,6 +45,32 @@ def test_access_token_is_bound_to_user_and_session() -> None:
     )
 
     assert service.parse_access_token(token) == (user_id, session_id)
+
+
+def test_live_token_details_retain_only_verified_identity_and_utc_deadline():
+    service = TokenService("a" * 32)
+    now = datetime.now(UTC).replace(microsecond=0)
+    user_id, session_id = uuid4(), uuid4()
+    token = service.create_access_token(user_id=user_id, session_id=session_id, now=now)
+    principal = service.parse_access_token_details(token)
+    assert (principal.user_id, principal.session_id) == (user_id, session_id)
+    assert principal.expires_at == now + timedelta(minutes=15)
+    assert token not in repr(principal) and not hasattr(principal, "token")
+
+
+@pytest.mark.parametrize(("claim", "value"), [
+    ("sid", 42), ("sid", []), ("sid", {}), ("sid", None),
+    ("exp", 2 ** 64), ("exp", "invalid"), ("exp", None),
+])
+def test_live_token_details_reject_malformed_identity_or_unrepresentable_deadline(claim, value):
+    now = datetime.now(UTC)
+    claims = {"sub": str(uuid4()), "sid": str(uuid4()), "type": "access",
+              "iat": now, "exp": now + timedelta(minutes=15),
+              "iss": JWT_ISSUER, "aud": JWT_AUDIENCE}
+    claims[claim] = value
+    token = jwt.encode(claims, "a" * 32, algorithm=JWT_ALGORITHM)
+    with pytest.raises(InvalidAccessToken, match="Invalid or expired"):
+        TokenService("a" * 32).parse_access_token_details(token)
 
 
 def test_operations_token_uses_a_distinct_audience_and_type() -> None:
@@ -111,6 +140,35 @@ def test_access_token_requires_every_identity_and_lifecycle_claim() -> None:
 
     with pytest.raises(InvalidAccessToken):
         TokenService("a" * 32).parse_access_token(incomplete)
+
+
+@pytest.mark.parametrize("parser", ["parse_access_token", "parse_operations_access_token"])
+def test_deeply_nested_signed_payload_is_an_invalid_token_not_a_raw_recursion_error(parser) -> None:
+    secret = "a" * 32
+    header = urlsafe_b64encode(b'{"alg":"HS256","typ":"JWT"}').rstrip(b"=")
+    # Construct bytes without recursively encoding Python containers. Signature
+    # validation must succeed so this exercises the hostile JSON payload boundary.
+    payload = b'{"nested":' + b"[" * 2000 + b"0" + b"]" * 2000 + b"}"
+    encoded = header + b"." + urlsafe_b64encode(payload).rstrip(b"=")
+    signature = urlsafe_b64encode(hmac.new(secret.encode(), encoded, sha256).digest()).rstrip(b"=")
+    token = (encoded + b"." + signature).decode("ascii")
+    with pytest.raises(InvalidAccessToken):
+        getattr(TokenService(secret), parser)(token)
+
+
+@pytest.mark.parametrize("claim", ["exp", "iat"])
+@pytest.mark.parametrize("value", [None, [], {}])
+@pytest.mark.parametrize("operations", [False, True])
+def test_malformed_numeric_claims_fail_as_invalid_tokens(claim, value, operations) -> None:
+    service = TokenService("a" * 32)
+    create = service.create_operations_access_token if operations else service.create_access_token
+    parse = service.parse_operations_access_token if operations else service.parse_access_token
+    valid = create(user_id=uuid4(), session_id=uuid4())
+    payload = jwt.decode(valid, options={"verify_signature": False})
+    payload[claim] = value
+    malformed = jwt.encode(payload, "a" * 32, algorithm=JWT_ALGORITHM)
+    with pytest.raises(InvalidAccessToken):
+        parse(malformed)
 
 
 def test_refresh_tokens_are_random_and_only_the_hash_is_persistable() -> None:

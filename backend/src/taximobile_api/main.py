@@ -10,7 +10,7 @@ from fastapi import Request
 from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
-from sqlalchemy import select, text
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from taximobile_api.api.v1.router import create_v1_router
@@ -49,8 +49,8 @@ from taximobile_api.domains.security_incidents.metrics import (
 )
 from taximobile_api.core.realtime import EventHub
 from taximobile_api.db.session import create_session_factory
-from taximobile_api.domains.auth.models import Session, User, UserStatus
-from taximobile_api.domains.auth.security import InvalidAccessToken, TokenService
+from taximobile_api.domains.auth.security import InvalidAccessToken, TokenService, VerifiedAccessToken
+from taximobile_api.domains.auth.session_authority import mobile_session_is_active
 from taximobile_api.workers.application import BackgroundWorkerRuntime
 from taximobile_api.integrations.routing import RoutingProvider, create_routing_provider
 from taximobile_api.integrations.geocoding import GeocodingProvider, create_geocoding_provider
@@ -105,7 +105,11 @@ def create_app(
             if active_settings.environment in {"staging", "production"}
             else InMemoryRateLimiter()
         )
-    event_hub = EventHub()
+    async def authorize_live_session(principal: VerifiedAccessToken) -> bool:
+        async with sessions() as database_session:
+            return await mobile_session_is_active(database_session, principal.user_id, principal.session_id)
+
+    event_hub = EventHub(authorize_live_session)
     live_event_listener = None
     if active_settings.environment in {"staging", "production"}:
         live_event_publisher = PostgresLiveEventPublisher(sessions)
@@ -152,6 +156,7 @@ def create_app(
         try:
             yield
         finally:
+            await event_hub.aclose()
             if listener_task is not None:
                 listener_task.cancel()
             if worker_runtime is not None:
@@ -253,8 +258,12 @@ def create_app(
     @app.get("/ready", tags=["system"], response_model=None)
     async def ready() -> JSONResponse | dict[str, str]:
         try:
+            if live_event_listener is not None and not live_event_listener.is_ready:
+                raise RuntimeError("The shared live-event listener is not ready.")
             async with sessions() as session:
                 await session.execute(text("SELECT 1"))
+            if live_event_listener is not None and not live_event_listener.is_ready:
+                raise RuntimeError("The shared live-event listener lost readiness.")
         except Exception:
             # Connection/authentication failures are not consistently wrapped
             # by every async database driver. Readiness is a dependency
@@ -343,34 +352,41 @@ def create_app(
             await websocket.close(code=4401)
             return
         try:
-            user_id, session_id = TokenService(active_settings.jwt_secret).parse_access_token(authorization[7:])
+            principal = TokenService(active_settings.jwt_secret).parse_access_token_details(authorization[7:])
         except InvalidAccessToken:
             await websocket.close(code=4401)
             return
-        async with sessions() as session:
-            valid_session = await session.scalar(
-                select(Session.id)
-                .join(User, User.id == Session.user_id)
-                .where(
-                    Session.id == session_id,
-                    Session.user_id == user_id,
-                    Session.revoked_at.is_(None),
-                    User.status == UserStatus.ACTIVE,
-                )
-            )
-        if valid_session is None:
-            await websocket.close(code=4401)
-            return
         hub: EventHub = app.state.event_hub
-        await hub.connect(user_id, websocket)
-        try:
+        connection = await hub.connect(principal, websocket)
+        if connection is None:
+            return
+
+        async def discard_commands() -> None:
             while True:
-                # Commands remain HTTP API operations; inbound socket data is discarded.
-                await websocket.receive_text()
+                # Raw ASGI receive does not require application_state CONNECTED:
+                # the session monitor may already have sent a server close.
+                # Text/binary frames alike have no business-command authority.
+                message = await websocket.receive()
+                if message["type"] == "websocket.disconnect":
+                    raise WebSocketDisconnect(message.get("code", 1000))
+
+        receiver = asyncio.create_task(discard_commands())
+        closed = asyncio.create_task(connection.closed.wait())
+        try:
+            done, _ = await asyncio.wait((receiver, closed), return_when=asyncio.FIRST_COMPLETED)
+            if receiver in done:
+                receiver.result()
         except WebSocketDisconnect:
             pass
         finally:
-            await hub.disconnect(user_id, websocket)
+            receiver.cancel()
+            closed.cancel()
+            try:
+                # Start retained session cleanup before any cancellation point
+                # in child joining; lifespan shutdown joins the same owner.
+                await connection.aclose()
+            finally:
+                await asyncio.gather(receiver, closed, return_exceptions=True)
 
     return app
 

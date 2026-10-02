@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
+from dataclasses import dataclass
 from hashlib import sha256
 from secrets import choice, token_urlsafe
 from uuid import UUID
@@ -36,6 +37,15 @@ _dummy_password_hash = _password_hasher.hash(token_urlsafe(32))
 
 class InvalidAccessToken(ValueError):
     """An access token cannot establish an authenticated session."""
+
+
+@dataclass(frozen=True, slots=True)
+class VerifiedAccessToken:
+    """Verified mobile identity and deadline, never the raw bearer credential."""
+
+    user_id: UUID
+    session_id: UUID
+    expires_at: datetime
 
 
 def hash_password(password: str) -> str:
@@ -128,6 +138,10 @@ class TokenService:
         )
 
     def parse_access_token(self, token: str) -> tuple[UUID, UUID]:
+        verified = self.parse_access_token_details(token)
+        return verified.user_id, verified.session_id
+
+    def parse_access_token_details(self, token: str) -> VerifiedAccessToken:
         try:
             claims = jwt.decode(
                 token,
@@ -139,8 +153,13 @@ class TokenService:
             )
             if claims.get("type") != "access":
                 raise InvalidAccessToken("Unexpected token type.")
-            return UUID(claims["sub"]), UUID(claims["sid"])
-        except (jwt.PyJWTError, KeyError, ValueError) as error:
+            if not isinstance(claims.get("sub"), str) or not isinstance(claims.get("sid"), str):
+                raise InvalidAccessToken("Invalid session identity.")
+            return VerifiedAccessToken(
+                UUID(claims["sub"]), UUID(claims["sid"]),
+                datetime.fromtimestamp(int(claims["exp"]), UTC),
+            )
+        except (jwt.PyJWTError, KeyError, ValueError, TypeError, OverflowError, OSError) as error:
             raise InvalidAccessToken("Invalid or expired access token.") from error
 
     def create_operations_access_token(

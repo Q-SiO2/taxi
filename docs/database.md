@@ -11,11 +11,13 @@ The primary database will be:
 
 The database is the authoritative persistent store for important application data.
 
-**Current standing (2026-09-07):** the Alembic chain contains 51 ordered
+**Current standing (refreshed 2026-09-28):** the Alembic chain contains 52 ordered
 migrations through `20260908_0052`; the current workspace has exercised upgrade,
 targeted downgrade/re-upgrade, and isolated PostGIS integration lifecycles. This
 does not establish managed-provider backup, point-in-time recovery, production
-capacity, or backup-expiry compliance. See [`gaps.md`](gaps.md).
+capacity, or backup-expiry compliance. A fail-closed GAP-003 evidence schema now
+defines those acceptance requirements without claiming a provider exists. See
+[`gaps.md`](gaps.md).
 
 The schema should prioritize:
 
@@ -351,6 +353,10 @@ the additive allowlist and response semantics.
 
 A draft configuration uses optimistic concurrency. Submission freezes its
 component references; approval and activation are explicit audited transitions.
+The existing submitter and decision-actor fields enforce maker/reviewer
+separation without another table: the configuration submitter cannot approve the
+same bundle or decide any readiness gate for it. The later city lifecycle command
+records the separately authenticated owner-authorizing actor in scoped audit.
 Activation validates every referenced version, changes the city's active pointer,
 and records the replaced bundle in one transaction. It must not point to draft,
 expired, cross-city, overlapping, or otherwise incompatible components.
@@ -2336,11 +2342,28 @@ Backups should support recovery from:
 * Database corruption.
 * Security incidents.
 
-Backups must be protected with appropriate access controls.
+Backups must be encrypted and protected with authority separate from the ordinary
+application role. The production service must use private access, TLS in transit,
+encryption at rest, an explicitly approved RPO/RTO, continuous point-in-time
+recovery, a reviewed retention window and a copy outside the primary failure
+domain. Application, migration, monitoring and backup authorities must be
+reviewed separately; the application role must not be superuser or retain
+`CREATEDB`/`CREATEROLE`.
 
 A backup that cannot be restored should not be considered a reliable backup.
 
-Recovery procedures should eventually be tested.
+Recovery must be tested into isolated staging with the same PostgreSQL/PostGIS
+compatibility line. The exercise must reach the current Alembic head, reconcile
+schema objects and aggregate table counts, pass application readiness, measure
+data loss and recovery against RPO/RTO, and record target disposition. A separate
+provider failover must prove API/worker recovery and alert acknowledgement.
+
+Retention acceptance must test both sides of legal policy: held synthetic records
+survive restore, while expired personal fields cannot be recovered after the
+provider's approved backup-expiry window. The provider-neutral template and
+validator are documented under
+[`../infra/deploy/README.md`](../infra/deploy/README.md#gap-003-managed-postgis-evidence).
+They validate a bounded control record, not the external evidence's truth.
 
 ---
 

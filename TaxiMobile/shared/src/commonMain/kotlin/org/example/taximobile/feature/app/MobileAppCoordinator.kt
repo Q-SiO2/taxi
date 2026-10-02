@@ -44,6 +44,7 @@ import org.example.taximobile.domain.system.ClientCompatibilityGateway
 import org.example.taximobile.domain.system.ClientCompatibilityStatus
 import org.example.taximobile.feature.auth.AuthenticationSessionCoordinator
 import org.example.taximobile.feature.auth.AuthenticationState
+import org.example.taximobile.feature.realtime.LiveUpdateSubscription
 import org.example.taximobile.feature.ui.text.UiMessage
 import org.jetbrains.compose.resources.StringResource
 import taximobile.shared.generated.resources.*
@@ -81,6 +82,8 @@ class MobileAppCoordinator(
     private var placeDiscoveryRevision: Long = 0
     private val pushRegistrationMutex = Mutex()
     private var registeredPushRegistration: Pair<String, DevicePlatform>? = null
+    val liveSessionLifetime get() = authentication.liveSessionLifetime
+    private val liveSubscription = liveEvents?.let { LiveUpdateSubscription(it, liveSessionLifetime) }
 
     suspend fun restore(): AppUiState {
         val compatibility = clientCompatibility ?: return authenticatedProductState(
@@ -105,6 +108,7 @@ class MobileAppCoordinator(
 
     /** Local credential removal succeeds even when the backend cannot be reached. */
     suspend fun logout(): AppUiState {
+        authentication.beginSessionEnd()
         latestAcceptedDriverLocation = null
         revokeRegisteredPushRegistration()
         return stateFor(authentication.logout())
@@ -1074,15 +1078,9 @@ class MobileAppCoordinator(
         }
     }
 
-    /** Starts a best-effort listener; state is refreshed only after a server hint. */
+    /** Foreground owner supplies read-only REST catch-up; no commands are replayed. */
     suspend fun listenForLiveUpdates(onRefresh: suspend () -> Unit) {
-        try {
-            liveEvents?.listen { onRefresh() }
-        } catch (_: AuthenticationRejectedException) {
-            // A normal foreground restore will replace/revoke credentials as needed.
-        } catch (_: AuthenticationNetworkException) {
-            // WebSocket delivery is not authoritative and must not overwrite UI state.
-        }
+        liveSubscription?.run(onRefresh)
     }
 
     private suspend fun authenticatedProductState(state: AuthenticationState): AppUiState {

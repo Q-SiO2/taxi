@@ -3,6 +3,7 @@ package org.example.taximobile.core.network
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 import org.example.taximobile.data.network.newIdempotencyKey
 
 class ApiConfigurationTest {
@@ -27,6 +28,6 @@ class IdempotencyKeyTest {
         val key = newIdempotencyKey()
 
         assertEquals(32, key.length)
-        assert(key.all { it in '0'..'9' || it in 'a'..'f' })
+        assertTrue(key.all { it in '0'..'9' || it in 'a'..'f' })
     }
 }

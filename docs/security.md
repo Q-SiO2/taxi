@@ -450,8 +450,14 @@ never triggered in production.
 
 Dependencies should be kept reasonably current.
 
-CI audits the fully pinned Python runtime lock with PyPA `pip-audit` and fails on
-known published vulnerabilities. Dependabot monitors Python, Gradle, GitHub
+CI separately audits the fully pinned Python runtime and development locks with
+PyPA `pip-audit`, including the reviewed Linux supplement on the Linux runner,
+and fails on known published vulnerabilities. Neither audit may be conditional
+or non-blocking; the CI validator tests removal and bypass mutations. Test-runner
+and async-plugin upgrades must retain function-scoped isolation and repeat the
+complete migrated-database/concurrency/worker/restore evidence. A clean runtime
+audit alone does not establish a clean development or browser toolchain.
+Dependabot monitors Python, Gradle, GitHub
 Actions, and both Docker manifests weekly. Findings require review rather than
 automatic production rollout; a scanner supplements but does not replace source,
 authorization, provider, and deployment review.

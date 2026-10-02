@@ -18,6 +18,12 @@ This is the Python FastAPI modular monolith specified in [`../docs/implementatio
 The API exposes `/health`, `/ready`, `/api/v1/meta`, the command-free
 `/api/v1/client-compatibility` preflight, an authenticated best-effort live-event
 socket at `/api/v1/events`, and generated OpenAPI at `/api/v1/openapi.json`.
+`/health` is process liveness. `/ready` requires SQL availability and, in
+staging/production, a live registered PostgreSQL hint listener. Established
+disconnects and bounded probe failures clear readiness until cleanup and
+re-registration succeed; the response never exposes private connection details.
+Hints remain best effort and cannot replace authoritative REST refresh. Local
+owned-PID recovery tests do not accept hosted failover or device/push delivery.
 The documented v1 contract includes accounts, provider-independent offline
 recovery codes, password/session controls, provider-neutral place search/reverse
 lookup, passenger and driver profiles, driver availability/locations, rides and
@@ -161,9 +167,15 @@ Runtime and development installations use `--require-hashes`. The canonical
 Windows-generated locks are `requirements.lock` and `requirements-dev.lock`;
 Linux additionally consumes `requirements-linux.lock` for Uvicorn's
 platform-specific event loop. The Linux supplement contains only reviewed
-CPython 3.12 x86_64/aarch64 wheel hashes. CI also runs
-`python -m pip_audit --no-deps --requirement requirements.lock`. Known published
-vulnerabilities fail the build and must be reviewed rather than silently ignored.
+CPython 3.12 x86_64/aarch64 wheel hashes. CI runs separate blocking audits of
+`requirements.lock` and `requirements-dev.lock` plus `requirements-linux.lock`.
+On Windows audit the canonical runtime/development locks without the Linux-only
+supplement; its reviewed wheel hashes are not Windows/source-distribution hashes.
+Known published vulnerabilities fail the build and must be reviewed rather than
+silently ignored. The test toolchain pins pytest 9.0.3 with pytest-asyncio 1.4.0;
+both fixture and test event loops are explicitly function-scoped. A runner/plugin
+upgrade must pass the complete guarded migrated-PostGIS suite and restore
+rehearsal, not just a selected unit slice, before promotion.
 CI and the portable backend test command also run
 `../infra/scripts/validate_source_credentials.py`, which rejects committed
 provider/signing files, private keys, service-account documents, and recognized

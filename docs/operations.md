@@ -200,6 +200,13 @@ vehicle, status, and timeline flow without importing operations authority.
 The city screen separates pilot-entry, public-activation, and post-launch
 evidence, records only `PASSED` or `FAILED` with a bounded non-secret reference,
 uses optimistic configuration versions, and reloads after every command.
+Configuration approval and every readiness decision fail closed when attempted
+by the configuration submitter. The independent reviewer links a controlled
+evidence record carrying accountable owners and review or expiry dates; the
+database retains the reviewer actor/time and reference, not copied legal
+documents or personal details. The city lifecycle transition remains a distinct
+recent-MFA command whose audit actor is the explicit owner authorization for the
+lifecycle change.
 Service boundaries are entered as bounded WGS84 longitude/latitude rows and
 converted to the typed multipolygon request in memory; the browser never offers
 an arbitrary JSON configuration field. Configuration assembly resolves exact
@@ -398,7 +405,7 @@ share the driver lock with assignment and preserve committed rides and future
 commitment history. Handoff revalidates eligibility; operations must use existing
 support/safety procedures for an already assigned journey.
 
-The 33-case focused backend pack, current full 990-test backend regression and
+The 33-case focused backend pack, current full 992-test backend regression and
 both 57-case web browser target suites pass locally.
 This includes a same-driver/two-city isolation test and actual MFA/scope/replay
 checks. Independent-process contention, complete driver-facing notification

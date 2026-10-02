@@ -182,3 +182,50 @@ The project owner retains final control over:
 * Pricing policy
 * Deployment decisions
 * Major architectural changes
+
+_____________
+## Engram persistent memory
+
+Engram is available through MCP and is the persistent memory system for this project.
+
+### At the start of every task
+
+Before making substantial changes:
+
+1. Search Engram for memories relevant to the user's request.
+2. Read the relevant source files in the repository.
+3. Treat the repository and Git history as authoritative if they conflict with Engram.
+4. Use remembered architectural decisions unless there is a good reason to change them.
+
+### What to remember
+
+Store durable information in Engram when established, including:
+
+- architectural decisions and their reasoning
+- API contracts
+- database schema decisions
+- UI and UX conventions
+- deployment and infrastructure decisions
+- important project constraints
+- difficult bugs and their solutions
+- major implementation choices
+- rejected approaches when the reason matters for future work
+
+### What not to remember
+
+Do not store:
+
+- entire source files
+- routine code changes
+- temporary debugging output
+- build logs
+- information easily available from Git
+- speculative ideas that were never adopted
+
+### At the end of substantial work
+
+Store any important new decisions, resolved problems, architectural changes,
+or constraints that future sessions should know.
+
+Engram stores why the project is structured the way it is.
+Git and the repository store what the project currently is.

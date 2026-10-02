@@ -4,5 +4,9 @@ package org.example.taximobile.domain.realtime
 data class LiveRideEvent(val type: String, val rideId: String)
 
 interface LiveEventGateway {
-    suspend fun listen(onRideEvent: suspend (LiveRideEvent) -> Unit)
+    /** One attempt; connection admission precedes catch-up, and cancellation must propagate. */
+    suspend fun listen(
+        onConnected: suspend () -> Unit,
+        onRideEvent: suspend (LiveRideEvent) -> Unit,
+    )
 }

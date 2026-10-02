@@ -79,6 +79,7 @@ backend/.venv/Scripts/python.exe infra/scripts/validate_mobile_api_contract.py
 backend/.venv/Scripts/python.exe infra/scripts/validate_web_api_contract.py
 backend/.venv/Scripts/python.exe -m unittest discover -s infra/scripts/tests -p 'test_*.py'
 backend/.venv/Scripts/python.exe -m unittest discover -s TaxiMobile/scripts/tests -p 'test_*.py'
+backend/.venv/Scripts/python.exe infra/scripts/run_simulated_persona_suite.py --output backend/build/t2-simulated-personas.json --junit-output backend/build/t2-simulated-personas.junit.xml
 Push-Location backend
 try { ./.venv/Scripts/python.exe -m pytest tests/unit tests/api } finally { Pop-Location }
 ```
@@ -88,12 +89,22 @@ hide an earlier failure. These commands do not establish PostGIS correctness.
 Run only relevant subsets during a focused edit; execute the complete candidate
 gates before promotion.
 
+The T2 runner executes only the frozen synthetic unit-harness catalog. A passing
+66-test report supports the persona matrix and critical-journey evidence kinds,
+but deliberately reports `phase_evidence_complete=false`; do not promote T2
+without the separate reconciliation, adversarial-security, minimization, and
+engineering/security sign-off records required by the phase catalog.
+
 ### Database and system gate (T3)
 
 Use the existing guarded runner after local PostGIS setup:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File infra/scripts/test-portable-backend.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File infra/scripts/test-portable-backend.ps1 `
+  -JUnitPath backend/build/t3-full-backend.junit.xml `
+  -DatabaseMetadataPath backend/build/t3-database-metadata.json `
+  -BackupRestorePath backend/build/t3-backup-restore.json `
+  -EvidencePath backend/build/t3-system-evidence.json
 ```
 
 This runner **recreates the explicitly named isolated `taximobile_ci` database**,
@@ -102,6 +113,13 @@ must never target operational data. Coordinate with any other task using that
 test database before execution. A source-only documentation audit may leave this
 gate historical and explicitly report that limitation; a migration, transaction,
 assignment or financial change requires fresh relevant database verification.
+The four evidence paths are all-or-none and must not exist. The runner performs
+the destructive restore only against a random guarded local test database and
+removes its target and dump. A passing generated report supports all six T3
+evidence records: full backend, fresh migration, concurrency/lock,
+worker kill/reclaim, database reconciliation and local backup/restore. Evidence
+completeness does not accept T3; an accountable engineering sign-off and ordered
+phase record are still required.
 
 For HTTP load experiments use [testing_workloads.md](testing_workloads.md), whose
 confirmation, synthetic-data and rate controls remain mandatory. Closed-loop
@@ -127,6 +145,27 @@ For any release-policy change, run the complete current/optional-update/obsolete
 malformed/unreachable client matrix in `testing.md` for the affected surfaces.
 Record the policy revision and immutable artifact hashes; do not treat a forged
 current-version header as authentication evidence.
+
+Validate the reviewed T4 laboratory map before recording any device/browser run:
+
+```powershell
+python infra/scripts/validate_t4_lab_evidence.py
+python infra/scripts/validate_t4_lab_evidence.py --evidence <t4-lab-run.json>
+```
+
+The closed catalog has 56 cases, eight per required T4 evidence kind. Its source
+matrix is checked against Android SDK 24/36 and iOS 18.2 and requires real
+Chrome/Firefox/Safari, EN/FR/AR, Arabic RTL, physical-device-only observations
+where applicable and retained artifact hashes per executed case. The repository
+template has zero executions and must not be promoted as evidence.
+
+For a packaged web candidate, the bounded Chrome/Firefox boot collector may be
+run before the full browser matrix. It requires exact client preflight headers,
+the expected blocked-or-single-runtime branch and a valid screenshot in every
+scenario. Retain its JSON and screenshot directory together. The report must
+continue to disclose that browser egress is not independently firewalled, Safari
+is missing and zero T4 catalog cases are complete; do not merge its result into
+the 56-case acceptance record.
 
 ### Staging and operational gates (T5–T10)
 

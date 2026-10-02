@@ -6,6 +6,7 @@ import asyncio
 from dataclasses import dataclass
 import json
 import logging
+from math import isfinite
 from typing import Protocol
 from uuid import UUID
 
@@ -67,26 +68,69 @@ class PostgresLiveEventListener:
         hub: EventHub,
         *,
         reconnect_seconds: float = 1.0,
+        heartbeat_seconds: float = 15.0,
+        operation_timeout_seconds: float = 5.0,
+        connect_timeout_seconds: float = 10.0,
     ) -> None:
-        if reconnect_seconds <= 0:
-            raise ValueError("reconnect_seconds must be positive")
+        for value in (
+            reconnect_seconds, heartbeat_seconds, operation_timeout_seconds,
+            connect_timeout_seconds,
+        ):
+            if not isfinite(value) or value <= 0:
+                raise ValueError("Live-event timing bounds must be positive and finite")
         url = make_url(database_url)
         if not url.drivername.startswith("postgresql"):
             raise ValueError("PostgreSQL live events require a PostgreSQL database URL")
         self._dsn = url.set(drivername="postgresql").render_as_string(hide_password=False)
         self._hub = hub
         self._reconnect_seconds = reconnect_seconds
+        self._heartbeat_seconds = heartbeat_seconds
+        self._operation_timeout_seconds = operation_timeout_seconds
+        self._connect_timeout_seconds = connect_timeout_seconds
         self._ready = asyncio.Event()
+        self._connection: asyncpg.Connection | None = None
+        self._running = False
         self._dispatch_tasks: set[asyncio.Task] = set()
 
+    @property
+    def is_ready(self) -> bool:
+        return self._ready.is_set() and self._connection is not None and not self._connection.is_closed()
+
     async def run(self) -> None:
+        if self._running:
+            raise RuntimeError("The live-event listener already has a process owner")
+        self._running = True
+        try:
+            await self._run_connections()
+        finally:
+            self._running = False
+
+    async def _run_connections(self) -> None:
         while True:
             connection: asyncpg.Connection | None = None
+            disconnected = asyncio.Event()
+
+            def on_termination(terminated_connection, lost=disconnected) -> None:
+                # A callback queued by an old connection must not invalidate a
+                # replacement connection. Bind the signal to this attempt.
+                if self._connection is terminated_connection:
+                    self._ready.clear()
+                    lost.set()
+
             try:
-                connection = await asyncpg.connect(self._dsn)
-                await connection.add_listener(LIVE_EVENT_CHANNEL, self._on_notification)
+                connection = await asyncpg.connect(
+                    self._dsn,
+                    timeout=self._connect_timeout_seconds,
+                    command_timeout=self._operation_timeout_seconds,
+                )
+                self._connection = connection
+                connection.add_termination_listener(on_termination)
+                async with asyncio.timeout(self._operation_timeout_seconds):
+                    await connection.add_listener(LIVE_EVENT_CHANNEL, self._on_notification)
+                if disconnected.is_set() or connection.is_closed():
+                    raise ConnectionError("Live-event connection closed during registration")
                 self._ready.set()
-                await asyncio.Future()
+                await self._watch_connection(connection, disconnected)
             except asyncio.CancelledError:
                 raise
             except Exception as error:
@@ -95,20 +139,63 @@ class PostgresLiveEventListener:
                     "live_event_listener_unavailable",
                     extra={"error_type": type(error).__name__},
                 )
-                await asyncio.sleep(self._reconnect_seconds)
             finally:
-                if connection is not None:
-                    try:
-                        await connection.remove_listener(LIVE_EVENT_CHANNEL, self._on_notification)
-                        await connection.close(timeout=5)
-                    except Exception:
-                        pass
                 self._ready.clear()
-                if self._dispatch_tasks:
-                    await asyncio.gather(*tuple(self._dispatch_tasks), return_exceptions=True)
+                self._connection = None
+                # Hints are best effort, not a queue of business commands. A
+                # stalled socket must not prevent listener restart or shutdown.
+                pending = tuple(self._dispatch_tasks)
+                for task in pending:
+                    task.cancel()
+                if pending:
+                    await asyncio.gather(*pending, return_exceptions=True)
+                if connection is not None:
+                    await self._close_connection(connection, on_termination)
+            await asyncio.sleep(self._reconnect_seconds)
+
+    async def _watch_connection(self, connection, disconnected: asyncio.Event) -> None:
+        while True:
+            try:
+                await asyncio.wait_for(disconnected.wait(), timeout=self._heartbeat_seconds)
+            except TimeoutError:
+                # Termination callbacks cover observed closes. A bounded probe
+                # also detects a half-open/blackholed transport that never
+                # supplies a close callback. This adds no business authority.
+                async with asyncio.timeout(self._operation_timeout_seconds):
+                    await connection.execute("SELECT 1", timeout=self._operation_timeout_seconds)
+                if connection.is_closed() or disconnected.is_set():
+                    raise ConnectionError("Live-event connection closed during probe")
+            else:
+                raise ConnectionError("Live-event connection terminated")
+
+    async def _close_connection(self, connection, on_termination) -> None:
+        connection.remove_termination_listener(on_termination)
+        try:
+            async with asyncio.timeout(self._operation_timeout_seconds):
+                await connection.remove_listener(LIVE_EVENT_CHANNEL, self._on_notification)
+        except Exception as error:
+            logger.warning(
+                "live_event_listener_cleanup_failed", extra={"error_type": type(error).__name__},
+            )
+        finally:
+            try:
+                async with asyncio.timeout(self._operation_timeout_seconds):
+                    await connection.close(timeout=self._operation_timeout_seconds)
+            except Exception as error:
+                logger.warning(
+                    "live_event_listener_cleanup_failed", extra={"error_type": type(error).__name__},
+                )
+            finally:
+                if not connection.is_closed():
+                    connection.terminate()
 
     async def wait_until_ready(self, timeout_seconds: float) -> None:
-        await asyncio.wait_for(self._ready.wait(), timeout=timeout_seconds)
+        async with asyncio.timeout(timeout_seconds):
+            while True:
+                await self._ready.wait()
+                if self.is_ready:
+                    return
+                self._ready.clear()
 
     async def dispatch_payload(self, payload: str) -> None:
         """Validate an untrusted notification payload before touching local sockets."""
@@ -116,6 +203,8 @@ class PostgresLiveEventListener:
         await self._hub.publish_ride_refresh(hint.user_id, hint.ride_id, hint.event_type)
 
     def _on_notification(self, _connection, _pid: int, _channel: str, payload: str) -> None:
+        if _connection is not self._connection or not self.is_ready:
+            return
         task = asyncio.create_task(self.dispatch_payload(payload))
         self._dispatch_tasks.add(task)
         task.add_done_callback(self._finish_dispatch)

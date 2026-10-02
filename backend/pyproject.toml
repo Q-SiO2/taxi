@@ -19,7 +19,7 @@ dependencies = [
     "httpx==0.28.1",
     "pydantic==2.13.4",
     "python-multipart==0.0.32",
-    "PyJWT==2.13.0",
+    "PyJWT==2.15.1",
     "requests==2.34.2",
     "sqlalchemy==2.0.51",
     "uvicorn[standard]==0.52.1",
@@ -43,8 +43,8 @@ taximobile-ux-demo-seed = "taximobile_api.operations.ux_demo_seed:main"
 [project.optional-dependencies]
 dev = [
     "pip-audit==2.10.1",
-    "pytest==8.4.2",
-    "pytest-asyncio==0.26.0",
+    "pytest==9.0.3",
+    "pytest-asyncio==1.4.0",
 ]
 
 [tool.pytest.ini_options]
@@ -52,6 +52,7 @@ testpaths = ["tests"]
 addopts = "-q"
 cache_dir = "test-results/pytest-cache"
 asyncio_default_fixture_loop_scope = "function"
+asyncio_default_test_loop_scope = "function"
 markers = [
     "integration: requires the explicitly configured migrated PostGIS test database",
 ]

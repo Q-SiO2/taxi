@@ -12,6 +12,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
+import org.example.taximobile.feature.realtime.canListenForLiveUpdates
 import kotlin.io.encoding.Base64
 import org.example.taximobile.app.AppRole
 import org.example.taximobile.domain.drivers.DriverDocumentUpload
@@ -28,6 +31,7 @@ import org.example.taximobile.feature.connectivity.ConnectivityStatus
 import org.example.taximobile.feature.connectivity.ForegroundRecoveryPolicy
 import org.example.taximobile.feature.notifications.PushRefreshSignals
 import org.example.taximobile.feature.location.ForegroundDriverLocationPolicy
+import org.example.taximobile.feature.location.ForegroundDriverLocationResultGuard
 import org.example.taximobile.feature.location.foregroundDriverLocationUnavailableMessage
 
 fun MainViewController(
@@ -55,14 +59,19 @@ fun MainViewController(
     val recoveryPolicy = remember { ConnectivityRecoveryPolicy() }
     val foregroundRecoveryPolicy = remember { ForegroundRecoveryPolicy() }
     val foregroundDriverLocationPolicy = remember { ForegroundDriverLocationPolicy() }
+    val foregroundDriverLocationResultGuard = remember { ForegroundDriverLocationResultGuard() }
     val actionGate = remember { AppActionGate() }
     val scope = rememberCoroutineScope()
+    DisposableEffect(foregroundDriverLocationResultGuard) {
+        onDispose { foregroundDriverLocationResultGuard.invalidate() }
+    }
     fun submitAction(
         key: AppAction,
         recoverFailure: Boolean = true,
         action: suspend () -> AppUiState,
     ) {
         if (!actionGate.tryStart(key)) return
+        foregroundDriverLocationResultGuard.invalidate()
         completedAction = null
         pendingAction = key
         scope.launch {
@@ -86,6 +95,7 @@ fun MainViewController(
         }
     }
     LifecycleEventEffect(Lifecycle.Event.ON_STOP) {
+        foregroundDriverLocationResultGuard.invalidate()
         appInForeground = false
         foregroundRecoveryPolicy.onBackground()
     }
@@ -112,11 +122,15 @@ fun MainViewController(
                 appActionInFlight = pendingAction != null,
             )
             if (shouldRequest) {
+                val request = foregroundDriverLocationResultGuard.capture(checkNotNull(driverState))
                 automaticLocationRequestInFlight = true
                 val started = currentLocationRequester.requestAuthorized { location ->
                     automaticLocationRequestInFlight = false
-                    val activeAvailability =
-                        (presentation.state as? AppUiState.DriverReady)?.availability
+                    if (!foregroundDriverLocationResultGuard.canApply(
+                            request, presentation.state, appInForeground,
+                            connectivityStatus != ConnectivityStatus.UNAVAILABLE,
+                            pendingAction != null,
+                        )) return@requestAuthorized
                     if (location == null) {
                         foregroundDriverLocationPolicy.recordUnavailable(
                             kotlin.time.Clock.System.now().toEpochMilliseconds()
@@ -124,11 +138,7 @@ fun MainViewController(
                         presentation = presentation.copy(
                             connectionIssue = foregroundDriverLocationUnavailableMessage()
                         )
-                    } else if (
-                        appInForeground &&
-                        activeAvailability != null &&
-                        activeAvailability in ForegroundDriverLocationPolicy.OPERATIONAL_LOCATION_STATES
-                    ) {
+                    } else {
                         submitAction(AppAction(AppActionKind.UPDATE_DRIVER_LOCATION)) {
                             dependencies.appCoordinator.updateDriverLocation(location)
                         }
@@ -152,6 +162,7 @@ fun MainViewController(
     }
     LaunchedEffect(connectivityObserver) {
         connectivityObserver.status.collect { observedStatus ->
+            if (observedStatus != connectivityStatus) foregroundDriverLocationResultGuard.invalidate()
             connectivityStatus = observedStatus
             if (recoveryPolicy.shouldRefresh(observedStatus)) {
                 presentation = presentation.accept(dependencies.appCoordinator.restore())
@@ -168,10 +179,24 @@ fun MainViewController(
     LaunchedEffect(presentation.state.hasAuthenticatedSession()) {
         if (presentation.state.hasAuthenticatedSession()) IosPushRegistration.retry()
     }
-    LaunchedEffect(presentation.state is AppUiState.PassengerReady || presentation.state is AppUiState.DriverReady) {
-        if (presentation.state is AppUiState.PassengerReady || presentation.state is AppUiState.DriverReady) {
+    val liveUpdatesEnabled = canListenForLiveUpdates(
+        presentation.state, appInForeground, connectivityStatus, pendingAction,
+    )
+    LaunchedEffect(dependencies, liveUpdatesEnabled) {
+        if (liveUpdatesEnabled) {
             dependencies.appCoordinator.listenForLiveUpdates {
-                presentation = presentation.accept(dependencies.appCoordinator.restore())
+                if (!canListenForLiveUpdates(
+                        presentation.state, appInForeground, connectivityStatus, pendingAction,
+                    )) return@listenForLiveUpdates
+                val owner = dependencies.appCoordinator.liveSessionLifetime.value
+                val restored = dependencies.appCoordinator.restore()
+                currentCoroutineContext().ensureActive()
+                if (owner == dependencies.appCoordinator.liveSessionLifetime.value &&
+                    canListenForLiveUpdates(
+                        presentation.state, appInForeground, connectivityStatus, pendingAction,
+                    )) {
+                    presentation = presentation.accept(restored)
+                }
             }
         }
     }
@@ -312,6 +337,7 @@ fun MainViewController(
             requestDriverDocument?.invoke selected@ { fileName, mediaType, base64Content ->
                 if (
                     fileName == null ||
+                    mediaType == null ||
                     mediaType !in IOS_DRIVER_DOCUMENT_MEDIA_TYPES ||
                     base64Content == null
                 ) return@selected

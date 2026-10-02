@@ -2,11 +2,53 @@
 param(
     [Parameter()]
     [ValidateRange(1024, 65535)]
-    [int]$DatabasePort = 5432
+    [int]$DatabasePort = 5432,
+
+    [Parameter()]
+    [string]$JUnitPath,
+
+    [Parameter()]
+    [string]$DatabaseMetadataPath,
+
+    [Parameter()]
+    [string]$BackupRestorePath,
+
+    [Parameter()]
+    [string]$EvidencePath
 )
 
 $ErrorActionPreference = "Stop"
 . (Join-Path $PSScriptRoot "_portable-common.ps1")
+
+$evidencePathCount = @($JUnitPath, $DatabaseMetadataPath, $BackupRestorePath, $EvidencePath).Where({ -not [string]::IsNullOrWhiteSpace($_) }).Count
+if ($evidencePathCount -ne 0 -and $evidencePathCount -ne 4) {
+    throw "JUnitPath, DatabaseMetadataPath, BackupRestorePath, and EvidencePath must be supplied together."
+}
+$writeEvidence = $evidencePathCount -eq 4
+
+function Resolve-NewT3EvidencePath {
+    param([Parameter(Mandatory)] [string]$Path)
+    $resolved = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
+    if (Test-Path -LiteralPath $resolved) {
+        throw "T3 evidence refuses to overwrite an existing path: $resolved"
+    }
+    $parent = Split-Path -Parent $resolved
+    if (-not $parent) {
+        throw "T3 evidence output requires a parent directory."
+    }
+    New-Item -ItemType Directory -Force -Path $parent | Out-Null
+    return $resolved
+}
+
+if ($writeEvidence) {
+    $resolvedJUnitPath = Resolve-NewT3EvidencePath -Path $JUnitPath
+    $resolvedDatabaseMetadataPath = Resolve-NewT3EvidencePath -Path $DatabaseMetadataPath
+    $resolvedBackupRestorePath = Resolve-NewT3EvidencePath -Path $BackupRestorePath
+    $resolvedEvidencePath = Resolve-NewT3EvidencePath -Path $EvidencePath
+    if (@($resolvedJUnitPath, $resolvedDatabaseMetadataPath, $resolvedBackupRestorePath, $resolvedEvidencePath) | Group-Object | Where-Object Count -gt 1) {
+        throw "Each T3 evidence output path must be distinct."
+    }
+}
 
 $layout = Get-TaxiMobileWorkspaceLayout
 $environment = Import-TaxiMobileEnvironment -Path $layout.EnvironmentFile -SetProcessEnvironment
@@ -36,6 +78,8 @@ $startedForTests = Start-PortablePostgres -Layout $layout -Port $DatabasePort -W
 $psql = Join-Path $layout.PostgreSqlRoot "bin\psql.exe"
 $dropdb = Join-Path $layout.PostgreSqlRoot "bin\dropdb.exe"
 $createdb = Join-Path $layout.PostgreSqlRoot "bin\createdb.exe"
+$pgDump = Join-Path $layout.PostgreSqlRoot "bin\pg_dump.exe"
+$pgRestore = Join-Path $layout.PostgreSqlRoot "bin\pg_restore.exe"
 $previousPgPassword = $env:PGPASSWORD
 $temporaryCreateDatabaseGranted = $false
 try {
@@ -43,6 +87,28 @@ try {
     # Recreate only the explicitly named CI database so migration-seeded baseline
     # rows are pristine and no test can inherit a prior run's accounts/sessions.
     $env:PGPASSWORD = $databasePassword
+    $staleCloneOutput = & $psql --host=127.0.0.1 --port=$DatabasePort --username=postgres `
+        --dbname=postgres --no-password --tuples-only --no-align --set=ON_ERROR_STOP=1 `
+        --command="SELECT datname FROM pg_database WHERE datname LIKE 'taximobile_ci_test_%' ORDER BY datname;"
+    if ($LASTEXITCODE -ne 0) {
+        throw "Could not inventory stale disposable integration clone databases."
+    }
+    $staleCloneDatabases = @($staleCloneOutput | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+    foreach ($staleCloneDatabase in $staleCloneDatabases) {
+        if ($staleCloneDatabase -notmatch '^taximobile_ci_test_[a-f0-9]{32}$') {
+            throw "Refusing unexpected database name in the disposable integration namespace."
+        }
+        Invoke-CheckedNativeCommand -FilePath $psql -Arguments @(
+            "--host=127.0.0.1", "--port=$DatabasePort", "--username=postgres",
+            "--dbname=postgres", "--no-password", "--set=ON_ERROR_STOP=1", "--quiet",
+            "--command=ALTER DATABASE `"$staleCloneDatabase`" WITH ALLOW_CONNECTIONS false;"
+        ) -FailureMessage "Could not close a stale disposable integration clone."
+        Invoke-CheckedNativeCommand -FilePath $dropdb -Arguments @(
+            "--host=127.0.0.1", "--port=$DatabasePort", "--username=postgres",
+            "--no-password", "--force", $staleCloneDatabase
+        ) -FailureMessage "Could not remove a stale disposable integration clone."
+    }
+    $staleCloneCount = $staleCloneDatabases.Count
     Invoke-CheckedNativeCommand -FilePath $psql -Arguments @(
         "--host=127.0.0.1", "--port=$DatabasePort", "--username=postgres",
         "--dbname=postgres", "--no-password", "--set=ON_ERROR_STOP=1", "--quiet",
@@ -80,11 +146,58 @@ try {
         Invoke-CheckedNativeCommand -FilePath $python -Arguments @(
             "-m", "alembic", "upgrade", "head"
         ) -FailureMessage "Integration database migrations failed."
-        Invoke-CheckedNativeCommand -FilePath $python -Arguments @(
-            "-m", "pytest"
-        ) -FailureMessage "The backend test suite failed."
+        $pytestArguments = @("-m", "pytest")
+        if ($writeEvidence) {
+            $pytestArguments += "--junitxml=$resolvedJUnitPath"
+        }
+        Invoke-CheckedNativeCommand -FilePath $python -Arguments $pytestArguments `
+            -FailureMessage "The backend test suite failed."
     } finally {
         Pop-Location
+    }
+
+    # Integration tests need CREATEDB to clone the migrated template. Revoke it
+    # before collecting post-run metadata so the evidence proves authority did
+    # not leak beyond the suite.
+    if ($temporaryCreateDatabaseGranted) {
+        Invoke-CheckedNativeCommand -FilePath $psql -Arguments @(
+            "--host=127.0.0.1", "--port=$DatabasePort", "--username=postgres",
+            "--dbname=postgres", "--no-password", "--set=ON_ERROR_STOP=1", "--quiet",
+            "--command=ALTER ROLE `"$databaseUser`" NOCREATEDB;"
+        ) -FailureMessage "Could not revoke temporary integration clone authority."
+        $temporaryCreateDatabaseGranted = $false
+    }
+
+    if ($writeEvidence) {
+        $databaseMetadataCollector = Join-Path $PSScriptRoot "collect_t3_database_metadata.py"
+        Invoke-CheckedNativeCommand -FilePath $python -Arguments @(
+            $databaseMetadataCollector,
+            "--authority-mode", "TEMPORARY_CREATEDB_REVOKED",
+            "--database-lifecycle", "RECREATED_BEFORE_MIGRATION",
+            "--preexisting-clone-count", $staleCloneCount,
+            "--output", $resolvedDatabaseMetadataPath
+        ) -FailureMessage "T3 post-run database metadata collection failed."
+
+        $backupRestoreRunner = Join-Path $PSScriptRoot "run_t3_backup_restore_rehearsal.py"
+        Invoke-CheckedNativeCommand -FilePath $python -Arguments @(
+            $backupRestoreRunner,
+            "--maintenance-user", "postgres",
+            "--pg-dump", $pgDump,
+            "--pg-restore", $pgRestore,
+            "--createdb", $createdb,
+            "--dropdb", $dropdb,
+            "--psql", $psql,
+            "--output", $resolvedBackupRestorePath
+        ) -FailureMessage "T3 local backup/restore rehearsal failed."
+
+        $systemEvidenceGenerator = Join-Path $PSScriptRoot "generate_t3_system_report.py"
+        Invoke-CheckedNativeCommand -FilePath $python -Arguments @(
+            $systemEvidenceGenerator,
+            "--junit", $resolvedJUnitPath,
+            "--database-metadata", $resolvedDatabaseMetadataPath,
+            "--backup-restore", $resolvedBackupRestorePath,
+            "--output", $resolvedEvidencePath
+        ) -FailureMessage "T3 system evidence generation failed."
     }
 } finally {
     if ($temporaryCreateDatabaseGranted) {
@@ -101,3 +214,6 @@ try {
 }
 
 Write-Output "Backend unit, API, and migrated PostGIS integration tests passed."
+if ($writeEvidence) {
+    Write-Output "Complete bounded T3 evidence written to $resolvedEvidencePath. Formal phase acceptance remains open."
+}

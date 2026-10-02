@@ -17,8 +17,8 @@ graph, map style, mobile artifact, infrastructure topology, or security-policy
 change invalidates the affected evidence and sends that scope back to the earliest
 impacted phase.
 
-**Current position (2026-09-08):** most subsystems have broad T1–T3 evidence,
-including a fresh migration-through-`20260908_0052` PostGIS run with 990 passing
+**Current position (standing refreshed 2026-10-02):** most subsystems have broad T1–T3 evidence,
+including a fresh migration-through-`20260908_0052` PostGIS run with 1,090 passing
 backend tests and no failures, errors or skips. The staff-grant dual-control slice
 also has focused PostGIS, API, JS and Wasm evidence. Migration 0050 and its
 security-incident workflow, one-time postmortem completion and deadline telemetry
@@ -26,15 +26,138 @@ now include four closed responsibilities, exact-market responder eligibility,
 one active assignee per responsibility and append-visible reassignment history.
 The incident slice has dedicated 16-unit/static and two-PostGIS evidence included
 in that complete regression, plus 57 passing tests per JS/Wasm browser target and
-111 validated web HTTP operations after the protected incident workspace was
+112 validated web HTTP operations after the protected incident workspace was
 extended. The candidate capacity surface
 has 22 fixed Prometheus queries, 21 profile thresholds, explicit per-process
 database-pool bounds, 26 validated alert rules and a 26-panel operations
-dashboard. This remains dirty-workspace local evidence. Some browser/emulator
-evidence has started at T4, and no subsystem has complete T4–T8 acceptance. No
-real-user phase is authorized.
+dashboard. Immutable server commit `2d6a68b` passes the complete push and pull-request CI
+workflows, including both iOS Release simulator application links. Historical
+system/load results remain local unless the remote run explicitly produced them.
+Some browser/emulator evidence has started at T4; the GAP-002 through GAP-006
+external acceptance records remain `NOT_STARTED`, and no subsystem has complete T4–T8 acceptance.
+No real-user phase is authorized.
+
+The latest test-toolchain follow-up passed the complete guarded T3 run with
+pytest 9.0.3/pytest-asyncio 1.4.0, explicit function-scoped loops, zero residual
+clones, revoked temporary database authority and an 81-table logical restore.
+Its local `backend/build/pytest9-t3-20261001/` records cover all six T3 evidence
+kinds; they do not accept T3 or establish clean immutable CI execution. The
+20-persona/60-selected-test T2 pack also passed with its network guard. Separate
+runtime/development audits are locally clean; Linux supplement execution remains
+the Linux CI boundary. Formal sign-offs, ordered evidence and external acceptance
+remain open.
+
+The live-listener follow-up passed 78 focused unit/API cases, 197 infrastructure
+tests and the 20-persona/60-test T2 pack. Its complete guarded T3 regression
+passed 1,042 backend tests with zero failures/errors/skips and three existing
+deprecation warnings, including actual owned-listener PID termination,
+replacement channel registration and addressed-only delivery. Records in
+`backend/build/live-event-recovery-t3-20261001/` prove migration 0052, zero residual
+clones, revoked temporary database authority and an 81-table/8,511-row logical
+restore with cleanup. The system report requires `LIVE_HINT_RECOVERY` and covers
+all six T3 evidence kinds without phase/deployment acceptance. This is local
+workspace evidence, not hosted failover, real delivery, physical UX or immutable
+CI evidence by itself. Immutable `f0824c9` now passes both push and PR workflows,
+including backend, mobile, web, documentation/security, Linux dependency audits
+and both iOS Release simulator links. The subsequent mobile recovery source
+slice requires its own immutable CI runs and physical/hosted acceptance.
+
+The mobile HINT-06 source follow-up locally passes 31 new focused cases inside
+235 JVM and 186 Android host tests, both Android debug-root compiles, 57 tests
+per JS/Wasm browser target, 41 mobile script tests (21 wiring mutations) and
+197 infrastructure tests. The native owner now recovers without changing the
+ready category, cancels obsolete/session-ending work and serializes refresh
+credentials. These are T0/T1 scope records, not iOS test execution, complete T4,
+FCM/APNs delivery or hosted failover. Immutable `8f92e51` now passes both push
+and PR workflows, including macOS shared-source/test compilation and both iOS
+Release simulator application links. Native iOS test linking/execution and real
+devices remain separate limitations. The subsequent server-authority HINT-08
+slice has its own local regression below and passing immutable CI recorded in
+GAP-001; no real-user phase is authorized and deployment acceptance
+remains 0/19 P0 gates.
+
+The server HINT-08 follow-up passes 106 focused backend cases, 199 infrastructure
+tests and 20 simulated scenarios/66 exact tests under outbound-network denial.
+Its complete fresh-PostGIS regression passes 1,090 backend tests with no
+failures/errors/skips and three existing dependency deprecation warnings.
+`backend/build/live-session-authority-t3-20261002/` retains JUnit, database,
+restore and combined system records. The combined report requires both
+`LIVE_SESSION_AUTHORITY` cases independently of listener recovery and verifies
+migration 0052, zero residual clones, revoked temporary clone authority and an
+81-table/8,511-row restore with cleanup. All six bounded T3 evidence kinds are
+present; formal phase acceptance remains false. The ordered HINT-08 pack below
+then requires physical multi-device/session testing, independent authority and
+listener failure injection, multi-replica fanout, SQL-pool headroom and approved
+revocation/delivery budgets before staffed/field/real-user promotion.
 
 ## 2. Promotion path
+
+Android artifact T0/T1 verification must inspect both actual packaged manifests,
+not just their AGP metadata. Exercise wrong-package/version binaries behind
+correct metadata, split APKs behind unfiltered metadata, escaped/linked file
+references, duplicate bytes, corruption, changes during inspection, SDK
+failure/timeout and evidence overwrite attempts. Run the checker with SDK aapt2
+against fresh passenger/driver release builds, then bind the full manifest to
+the exact clean source candidate. Preserve CI step-removal/skip/failure-bypass
+mutations. These checks do not establish signing: T4 still requires signed
+approved-certificate installation/update and real device/provider behavior;
+T5–T8 remain gated by hosted, staff, field and real-user evidence.
+T0/T1 must also verify the resolved R8/Kotlin compatibility and rerun both
+minified role builds without metadata parsing warnings before accepting release
+provenance. T4 must exercise serialization/reflection-dependent authenticated
+journeys in those minified builds, not only debug APKs.
+
+The current reviewed compiler contract is Kotlin 2.4.x with R8 9.1.56 loaded
+through AGP, not merely available as a CLI jar. T0/T1 must compare the generated
+plugin-loader report, role mapping headers and embedded APK DEX markers/IDs;
+exercise old/foreign compilers, malformed or duplicate markers, wrong full/release
+mode, mapping drift and multidex (including `classes10.dex`). Require both fresh
+minification tasks in the actual captured build log; metadata warnings, failed
+builds, cached tasks, missing checks and CI bypass mutations must fail closed.
+Retain hashes/source binding without exposing mappings or raw diagnostics.
+At T4 install both signed minified products, exercise registration/login, session
+restore/refresh/logout, API serialization/error handling and ride journeys in
+Arabic/French/English, and verify a controlled crash can be symbolicated with
+the exact private mapping. A successful debug journey or marker fixture cannot
+substitute for this evidence. Repeat affected phases after compiler changes.
+
+For signed Android candidate evidence, T0/T1 must reject partial fingerprint
+inputs, wrong/ambiguous/multiple signer reports, absent v2, debug packages,
+signature warnings/failure/timeout and changed APK/verifier hashes. Confirm that
+SDK inspection uses the APK's declared platform range without min/max overrides,
+that errors do not reveal subjects/tool diagnostics, and that a failed second
+role creates no partial report. Match public fingerprints to the controlled
+intended identity record independently of the inspected APK. Cryptographic
+matching alone must keep signer approval, distribution and deployment false.
+At T4 use approved signed minified passenger/driver products on minimum/supported
+Android versions: verify clean install, same-certificate update, rejected
+foreign-certificate update, session/data preservation and exact-mapping crash
+symbolication. Any key rotation requires explicit lineage and update tests across
+supported OS versions before promotion; debug signatures are not release evidence.
+
+For T0/GAP-001 image promotion, main protection is configured but does not count
+as independent approval. Test source/run/attempt drift, archive/hash corruption,
+wrong image IDs, foreign or ambiguous registry digests and skipped publication
+gates before review. After a reviewed main push, require all push jobs to pass,
+then verify the retained immutable GHCR reference, source/SBOM binding and pulled
+image ID. Rehearse failed/expired handoff without borrowing another run/attempt's
+image; rerun the whole workflow when needed. Source tests alone cannot accept
+publication. Preserve the compact packet before 30-day retention expires and
+test authenticated package pulls on staging before T5. Registry storage is not
+hosting; publication accepts neither T0/GAP-001 nor real users on its own.
+
+The Android protected-storage follow-up passes 22 adapter cases within 208
+Android host tests, 235 freshly rerun JVM tests, both Android debug-role compiles,
+204 infrastructure tests and 41 mobile-script tests. Synthetic cipher/preferences
+tests prove control flow, not real Keystore or disk persistence. Its own immutable
+CI now passes for `cc19776` in both runs recorded in GAP-001; the subsequent
+OpenAPI tooling has separate passing CI on `17a94df`; registry-protocol and APK
+identity follow-ups now pass both runs through `7c7982a`. The subsequent minifier
+repair requires its own immutable CI. Revised T4 catalog `2026-10-02` keeps 56 cases but binds
+stronger native-storage requirements to a new LF-portable exact-byte hash;
+old evidence cannot accept them. All template cases remain `NOT_STARTED`.
+The native-storage T1/T4 packs below retain T5 hosted authority, T6 staff recovery,
+T7 field and T8 full P0 approval before any real-user promotion.
 
 | Phase | Test population | Environment | Primary question | Exit authority |
 | --- | --- | --- | --- | --- |
@@ -74,6 +197,40 @@ contain:
 Never place tokens, recovery codes, identity documents, precise participant
 location histories, unrestricted case text, payment instructions, or provider
 credentials in the packet. Preserve controlled references instead.
+
+### Exact OpenAPI evidence track (GAP-001)
+
+* **T0/T1:** execute exporter fixtures and CI mutation tests; require both exact
+  profiles, unique operation IDs, deterministic key ordering, digest changes on
+  payload/component/security changes, safe overwrite refusal and sanitized failure.
+  Test actual factory export under denied network connects and hostile parent
+  database/provider/log/auth/Python-path configuration. A schema is not an
+  authorization test, and array ordering must not be normalized away.
+* **T2/T3:** retain schemas beside source inventory and migration/test evidence;
+  verify the manifest's hashes against actual bytes. Run payload, role/ownership,
+  city-scope, idempotency and fresh-database tests separately. OpenAPI excludes
+  WebSocket payloads; require the socket pack independently.
+* **T4/T5:** bind the packet to tested mobile/web versions. On approved synthetic
+  hosted staging, retrieve the served launch schema through its real ingress,
+  canonicalize with the exporter rule and compare its full digest to that
+  candidate. Prove legacy routes are unavailable and run negative authorization,
+  compatibility/preflight, cookie/CSRF and payload tests; matching schema bytes
+  alone cannot prove any of them. Unexplained profile/payload mismatch stops promotion.
+* **T6–T10:** operators must identify the exact candidate/profile during recovery
+  and promotion. Preserve the approved packet beyond the 30-day CI retention
+  window. Code/schema/configuration changes invalidate affected contract evidence;
+  signed-artifact, hosted, staff, legal, field and P0 approvals remain necessary.
+
+Local regeneration (choose a new ignored directory for every packet):
+
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/generate_openapi_evidence.py `
+  --output-dir backend/build/openapi-candidate-evidence
+```
+
+Attach all three output files with separate `--artifact` arguments to
+`generate_release_evidence.py`. A dirty tree requires the explicit non-release
+workspace-snapshot option; none of these records grants phase acceptance.
 
 ### 3.1 Executable phase evidence
 
@@ -143,6 +300,13 @@ production-manifest validators. Validate strict client version/build metadata in
 both mobile and web artifacts and a complete six-surface minimum/recommended
 policy in every production-like manifest.
 
+Run independent blocking audits for the runtime and development Python locks;
+the Linux CI runner includes its reviewed platform supplement. Preserve the
+platform-specific hash boundary: Windows checks do not resolve Linux-only wheels
+or add source-distribution hashes merely to make that audit pass. Retain both
+reports with the candidate; neither one clears browser, container, native SDK or
+default-branch findings by implication.
+
 **Exit:** all required jobs pass from the same clean immutable commit; generated
 contracts have no unexplained drift; no committed secret; no unreviewed migration;
 the generated source-contract inventory is hash-bound to candidate evidence;
@@ -159,6 +323,31 @@ idempotency/replay; rate and size limits; retention/erasure/hold rules; provider
 adapter timeout/malformed/oversized/redirect behavior; localization parity;
 accessibility semantics; log/metric/push redaction; workload and monitoring parser
 mutation tests.
+For mobile hint recovery, run the HINT-06 shared subscription, authentication-
+lifetime and Ktor cancellation suites on JVM and Android host targets. Include
+unchanged-ready network/foreground return, one socket at a time, credential
+replacement/late callbacks, serialized refresh, logout during cleanup, normal
+close/flapping jitter and bounded handshake/REST stalls. Mutation-check both
+native wiring paths in T0; compile both Android roots and verify iOS compile/link
+jobs on macOS. These do not accept native OS/device behavior or server-side
+ongoing socket authorization.
+For protected native credentials, run the Android adapter source pack and common
+authentication storage/lifetime suites from `testing.md`. Distinguish missing
+records from initialization/read/decrypt/corruption failures; require checked
+save/clear commits, complete legacy migration, cancellation propagation and
+sanitized exception chains. Recreate stores sharing the preference facility
+during writes and after a failed commit; the shared lock/uncertainty fence must
+remain authoritative until a confirmed explicit save/clear. Separate facilities
+must not share that failure. Synthetic cipher/prefs tests do not prove Keystore,
+AES-GCM, filesystem durability, process-loss or physical-device behavior.
+For HINT-08, add server verified-token, final-hop ownership and real ASGI protocol
+tests: idle/pre-send authority, JWT/database expiry, one-session/account-wide
+revocation, failed/blackholed authority, serialized sends/recipient isolation,
+cancelled admission/publisher/closer, already-closing shutdown, late accept and
+inbound text/binary rejection. Distinguish cooperative cleanup from a deliberately
+cancellation-suppressing adapter; require bounded removal plus a fixed warning,
+not a claim that Python forcibly reaped it. See the ordered HINT-08 pack in
+`testing.md` for exact executable files and field progression.
 For staff authority, generate every request/decision status, identity role,
 scope shape, expiry boundary, expected-version mismatch and continuity count;
 assert that no intermediate database state satisfies only half a decision.
@@ -193,6 +382,23 @@ reference, current lead, responsibility history and generated timeline facts.
 facts, audit, notification/outbox and money facts reconcile; the simulator emits
 no personal data and cannot bypass backend authority.
 
+**Executable baseline:**
+`infra/testing/simulated-persona-catalog.json` freezes 20 source-level scenario
+IDs and 66 exact pytest nodes across authentication, inactive accounts, driver
+eligibility/recruitment, matching, rides, coordination, fixed routes, scheduling,
+cash, transfers, refunds, staff/scope/city authority, notifications, support,
+safety, security incidents, and client lifecycle. Run it only through
+`infra/scripts/run_simulated_persona_suite.py`. The runner rejects unknown fields,
+missing categories, duplicate or non-unit selectors, external-network/real-user/
+live-money flags, skips, count drift, and overwritten evidence paths. Its report
+always leaves `phase_accepted`, `phase_evidence_complete`, and
+`deployment_accepted` false. It supports only the simulated-persona matrix and
+critical-journey report; complete T2 still requires separate adversarial review,
+state/money reconciliation, test-data-minimization evidence, and both required
+sign-offs. A pytest guard denies DNS and non-loopback sockets while allowing only
+literal loopback/Unix-local runtime channels; it does not convert these unit tests
+into real HTTP evidence.
+
 ### T3 — fresh-PostGIS multi-role system tests
 
 **Entry:** T2 scripts and synthetic fixtures are frozen; the isolated database can
@@ -203,6 +409,34 @@ upgrade/downgrade/preflight and concurrent migrator ownership; lock-order races;
 worker lease/kill/reclaim; dispatch contention; account/city-authorization changes
 during assignment; location/schedule handoff races; cash/transfer/refund database
 conservation; backup and current-head restore rehearsal.
+
+The live-channel slice must terminate only the listener's observed owned backend
+PID in its disposable migrated database, observe readiness loss, verify a
+different replacement PID and actual `LISTEN` channel registration, deliver the
+next minimized hint only to its addressed socket, and leave no connection or
+dispatch task behind. `generate_t3_system_report.py` requires this named case in
+the `LIVE_HINT_RECOVERY` coverage bucket. A TCP reconnection alone is insufficient
+evidence of subscription recovery; this does not prove hosted failover.
+
+The final socket hop must also use actual migrated SQL: commit a single-session
+revocation, then account suspension, and separately expire a database session.
+Fresh reads must deny wrong-user/absent/expired/revoked authority, preserve another
+valid session where appropriate and close idle owners without waiting for a hint.
+The `LIVE_SESSION_AUTHORITY` bucket requires both exact cases from
+`test_live_session_authority.py`; omission of either fails the report. Fake
+listener grants and ASGI seams are not substitutes. Include full-suite, clone,
+temporary-role and restore evidence in the same T3 bundle.
+
+After any pytest/async-plugin upgrade, repeat this entire T3 pack with explicit
+function-scoped fixture and test loops. Retain the exact lock identities, full
+skip-free JUnit report, migration/PostGIS metadata, named concurrency and
+worker-recovery cases, zero residual clone count, revoked temporary database
+authority and the current-head restore report. Mixed synchronous `asyncio.run`
+fixtures and marked async tests must still create and dispose engines within
+their owning loop. Passing a narrow unit slice or installing a compatible pair
+is not sufficient evidence of isolation or transaction correctness. The
+existing formal engineering sign-off and ordered promotion record remain
+required; upgrading the runner cannot accept T3 by itself.
 
 The staff slice must additionally prove migration 0049 upgrade/downgrade,
 partial-unique pending requests, market-lock serialization, stale-authority
@@ -219,6 +453,18 @@ reviewed platform exclusions; every synthetic account/ride/offer/booking/payment
 outbox/audit row reconciles; no orphan process/database remains; evidence is
 repeatable from a clean checkout.
 
+The 2026-09-09 bounded local run now has executable JUnit, database metadata and
+system-report records. It passed 992 tests, confirmed PostgreSQL 16.14/PostGIS
+3.5.3 at migration 0052, removed one stale clone left by an earlier interrupted
+run, found zero clones afterward and confirmed local `CREATEDB` authority was
+revoked. A subsequent guarded logical backup restored 81 public tables and 8,511
+aggregate rows into an ephemeral database, matched PostGIS/schema/table counts,
+accepted a no-op upgrade to head, and removed the target and dump. The combined
+report supports all six required T3 evidence kinds and marks evidence complete.
+It does not accept T3 because engineering sign-off and an ordered promotion
+record remain absent; its source binding is a dirty-workspace snapshot, not
+immutable CI evidence.
+
 ### T4 — device, browser, accessibility and degraded-network lab
 
 **Entry:** signed or release-equivalent candidate artifacts point only to the test
@@ -226,6 +472,17 @@ environment; supported OS/browser/device/language matrix and test accounts are
 approved.
 
 **Execute:** Android and iOS install/upgrade/restart/background/permission flows;
+on a physical iPhone prove before-first-unlock Keychain unavailability is
+explicit and does not claim success, then verify save/restore/logout unlocked,
+relocked, after process kill, and through an interrupted/retried save with proof
+that no split pair, stale pre-release entry, or silent native error remains;
+on physical Android devices run the ordered protected-session pack in
+`testing.md` for both products. `T4-AND-001` requires real Keystore, persistence
+failure, Activity recreation and secret-leak checks; `T4-AND-002` requires
+supported legacy migration, corrupt-record preservation and no key creation on
+read; `T4-AND-003` requires failed-logout persistence and confirmed explicit
+recovery. Only an approved synthetic lab harness may inject native failures;
+an unavailable safe injection path is blocked evidence, not a host-test pass;
 narrow/wide operations and applicant browsers; EN/FR/AR and RTL; screen reader,
 font scaling, contrast, focus and touch targets; account recovery secret storage;
 map fallback; GPS freshness/battery; push foreground/background/killed app;
@@ -243,15 +500,116 @@ the four role labels, exact-UUID error prevention, confirmation clearing,
 stale-version recovery and screen-reader announcement of the authoritative
 current assignment without a broad user-search or roster-disclosure surface.
 
+For GAP-009 live subscriptions, disconnect the socket without changing the
+ready-state category, then restore network/foreground and explicitly refresh.
+Require authoritative REST catch-up **and** an observable replacement subscription
+that receives the next hint. Repeat through access-token rotation, account
+switch/logout, server restart and denied/re-enabled push permission. Confirm no
+hint after session revocation/expiry and no automatic replay of a ride/payment
+command. The shared unchanged-ready reconnect/session-ownership path now has
+source regressions and mutation-checked native wiring; require actual device
+traces rather than promoting those checks into physical acceptance. HINT-08's
+server authority now has source and migrated test paths; repeat it with two
+independent installations, one-session revocation and account-wide suspension,
+idle expiry and refresh, server-close/network races and the next authorized hint.
+Field acceptance must acknowledge that already-started/sent frames cannot be
+recalled and cannot infer a revocation SLO from source defaults.
+
+For GAP-007 automatic lookup races, first run
+`ForegroundDriverLocationResultGuardTest` in T1 with synthetic contexts. At T4,
+delay an authorized lookup on each physical Android/iOS driver app, then complete
+it after (a) background/foreground return, (b) network loss/recovery, (c) an
+availability command, (d) logout/login, (e) a backend-refreshed city, service,
+vehicle or ride change, and (f) root disposal/recreation. Repeat with a coordinate
+and with null/timeout. The obsolete result must produce neither a location write
+nor unavailable guidance in the later context; a newly started eligible lookup
+must still work. Check pending-command priority and absence of overlapping native
+lookups or recurring permission prompts. Retain sanitized request counts and
+screen-state observations, never precise coordinate trails or account tokens.
+At T7 repeat the lifecycle/network cases during the approved closed-cohort shift
+and measure freshness and battery against frozen thresholds. T1 success does not
+accept native timing, T4, T7 or GAP-007; background tracking remains unapproved.
+
+For GAP-008, run the shared reverse-selection and JVM picker regressions before
+T4. On each Android/iOS passenger surface in Arabic/French/English, search a
+landmark, edit/clear/shorten the query, switch city and deliver an older response.
+Only results matching the current city and normalized query may remain
+selectable. Delay reverse lookup for both pickup and destination, move the point
+or switch city before coordinate/no-result completion, and prove that neither
+the new point nor its label is overwritten and no stale completion warning
+appears. An unchanged point must receive its label without moving. Repeat under
+GPS loss, provider outage and slow network with usable map/manual fallback.
+Retain synthetic request/selection assertions, not query or precise participant
+trails. T7 then tests real landmark ambiguity and wrong-city pickups against the
+approved multilingual benchmark; source checks do not accept provider quality.
+
 **Exit:** all critical journeys are usable on the minimum supported matrix; no
 secret or private data leaks through screen, clipboard, cache, logs or analytics;
 crashes and accessibility blockers are below approved thresholds; unresolved S2
 findings have an owner disposition before T7.
 
+The Android launcher can now retain a bounded registration/login device report
+for either role with `-RegistrationSmoke -ConfirmClearAppData -EvidencePath
+<new-json>`. It records no raw serial, screenshot, credential or entered value
+and recognizes only the two backend-confirmed journeys. This starts
+`ANDROID_DEVICE_REPORT`; it does not satisfy the supported matrix, iOS/browser,
+accessibility/RTL, degraded-network/lifecycle or crash-symbolication records and
+cannot mark T4 accepted.
+
+The machine-readable T4 catalog freezes 56 laboratory cases, exactly eight for
+each of the seven required evidence kinds. It cross-checks source platform
+targets, physical-device and real-browser requirements, locales, RTL, safety
+flags, observations and blocking severity. The evidence validator credits a
+kind only when all eight cases pass with retained SHA-256 evidence; failed or
+blocked cases require defect references. The committed template remains
+`NOT_STARTED` with 0/56 cases and no acceptance claim.
+Revision `2026-10-02` strengthens the existing three Android credential cases
+without adding new IDs or claiming execution. Validator mutations reject removal
+of observations, either product/role, the physical-device boundary, S0 severity
+or case identity. The exact catalog-byte hash uses a narrow LF checkout rule;
+old revision/hash records must be recollected for affected observations, never
+relabeled as new evidence. T5–T7 then require hosted session outcomes, a trained
+storage-failure/recovery rehearsal and approved field observations before T8.
+
+`infra/scripts/run_t4_browser_smoke.py` is a narrower executable precursor to
+the browser evidence class. It validates a packaged release, serves a loopback
+origin with synthetic compatibility responses and runs four fail-closed boot
+scenarios per selected Chrome/Firefox family. Every scenario requires the exact
+surface/version/build preflight, the expected blocked-or-single-runtime-branch
+result and a retained valid screenshot. The report explicitly states that
+browser egress is not independently firewalled, lists Safari as missing and
+leaves catalog-case, phase and deployment acceptance false. The 2026-09-09 local
+run passed 4/4 scenarios in Chrome 152 and 4/4 in Firefox 155; it starts evidence
+collection but does not complete any of the eight `BROWSER_COMPATIBILITY_REPORT`
+catalog cases.
+
 ### T5 — hosted staging, capacity, security and failure recovery
 
 **Entry:** production-like hosted topology, protected monitoring, synthetic data,
 named responders, approved SLO/RPO/RTO and an owner-approved workload profile exist.
+The target's protected GAP-002 record must pass
+`validate_production_environment_inventory.py --inventory <record> --require-accepted`;
+the repository's `NOT_STARTED` template is not entry evidence.
+
+T5 entry additionally requires an accepted protected GAP-005 operations identity
+and governance record. It must bind the authoritative staff roster/JML source,
+three-person platform-admin quorum, independent sensitive duties, reviewed MFA
+and recovery custody, current access review, leaver and break-glass drills, audit
+references and four approvals. That gap record never accepts T5 or deployment.
+Its protected GAP-003 record must also pass
+`validate_managed_postgis_evidence.py --evidence <record> --require-accepted`
+before database restore/failover/RPO/RTO claims can satisfy T5 entry.
+
+Any T5 map, routing, tile, narration or provider-failure claim additionally
+requires the protected GAP-006 record to pass
+`validate_maps_routing_navigation.py --evidence <record> --routing-report
+<exact-report> --require-accepted`. Its report digest must match the redacted
+backend acceptance output from the selected target, with every fixed scenario
+passing English, French and Arabic. The same record must bind approved immutable
+style/tile/graph artifacts, policy controls, six pilot-city route categories,
+four role/platform device surfaces, seven drills and six approvals. This gap
+record does not accept T5 and does not replace T4 physical-device or T7 road
+evidence.
 
 **Execute:** WARMUP/STEADY/BURST/RECOVERY and soak with independent API/worker
 replicas; all critical read/write and worker loops; database plans, locks, pools,
@@ -264,6 +622,26 @@ observe HTTP `426` and WebSocket `4406`, verify mobile/web guidance and support
 communication, then exercise the approved policy rollback or forward-fix without
 weakening authentication or deleting user data.
 
+For live-hint recovery, independently break/blackhole the dedicated listener
+while pooled SQL still works. Observe `/ready` fail closed, load-balancer removal,
+bounded probe/cleanup/re-registration, healthy re-admission and measured recovery
+against the frozen RTO. Exercise database restart/failover under concurrent
+commands, duplicate/out-of-order/missed hints and REST reconciliation; verify no
+command replay, extra assignment, changed economics or unauthorized recipient.
+Retain redacted timing/health/recipient evidence. Repeat mobile unchanged-ready
+reconnection, token refresh, logout/revocation and permission/network/lifecycle
+recovery in T4 before using real participants; current source does not yet prove
+all those subscription/session behaviors.
+
+HINT-08 additionally freezes a revocation/expiry/authority-outage budget. Use two
+API replicas, idle and busy sockets for one synthetic user, a stalled receiver,
+SQL delay/blackhole distinct from listener loss, and shutdown during admission/
+close. Measure detection and cleanup, REST rejection/recovery, active-socket and
+hint-rate pool pressure, checkout wait and database connection reserve. Confirm
+no authority cache, raw credential/identity logs or business-command replay.
+Review the read/send race and cancellation-cooperation limitations against the
+intended exposure before staff or real-user promotion.
+
 **Exit:** workload, monitoring and reconciliation all pass the frozen profile;
 resource headroom and cost envelope are accepted; primary and backup responders
 receive and resolve alerts; restore/failover/rollback meet RPO/RTO; no open critical
@@ -272,7 +650,10 @@ or high security issue lacks independently approved bounded treatment.
 ### T6 — trained-staff synthetic operating rehearsal
 
 **Entry:** T5 passes; named least-privilege staff have MFA, runbooks and on-call
-coverage; all data and payment records remain fictional.
+coverage; all data and payment records remain fictional. The protected GAP-004
+record passes `validate_pilot_city_launch_approval.py --approval <record> --require-accepted`,
+binding the rehearsal to one reviewed city/operator scope
+without claiming that T6 or deployment has passed.
 
 **Execute:** city setup and two-person release; driver application/document review;
 tariff/payment/fixed-route/schedule publication; immediate and scheduled journeys;

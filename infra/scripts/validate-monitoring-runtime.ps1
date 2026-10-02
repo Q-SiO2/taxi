@@ -156,9 +156,9 @@ try {
     }
     if (
         $grafanaDashboard.dashboard.uid -ne "taximobile-operations" -or
-        @($grafanaDashboard.dashboard.panels).Count -ne 13
+        @($grafanaDashboard.dashboard.panels).Count -ne 26
     ) {
-        throw "Grafana did not provision the reviewed 13-panel operations dashboard."
+        throw "Grafana did not provision the reviewed 26-panel operations dashboard."
     }
 
     $grafanaLogDashboardJson = (

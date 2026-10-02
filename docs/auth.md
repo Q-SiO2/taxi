@@ -22,7 +22,11 @@ staff grants. It derives scope from the active selector, requires typed
 confirmation and reasons, surfaces expiry/manual-recertification state, and does
 not replay a command after MFA step-up. The backend rejects self-grant and
 self-revocation and remains authoritative for target status, scope and
-permissions. Independent approval and last-admin continuity remain open.
+permissions. Durable maker-checker decisions require an approver distinct from
+both requester and target, revalidate live authority under locks and preserve at
+least two active platform administrators after revocation. Production roster,
+independent human approval, custody, recertification and drill acceptance remain
+open; implemented source controls do not prove those operational conditions.
 
 ## 1. Purpose
 
@@ -340,6 +344,77 @@ SecureTokenStorage interface
     │
     └── iOS implementation
 ```
+
+The iOS implementation stores the access/refresh pair as one versioned,
+length-delimited Keychain value so an interrupted save cannot expose only half
+of a session. It builds and validates native Core Foundation values explicitly,
+uses an after-first-unlock/device-only accessibility class, checks every
+Security-framework status, and converts storage failures into a bounded
+authentication error instead of treating them as a missing session. The
+pre-release two-item account names are deleted during save and logout; they are
+not a supported migration source. Physical-device save, restore, locked-device,
+upgrade, and logout behavior remains an acceptance requirement.
+
+The Android implementation also stores one versioned, length-delimited encrypted
+session envelope. It retains the existing Keystore alias and AES-GCM format;
+reading a record never generates a replacement key. A complete legacy
+access/refresh pair migrates only after both values decrypt, validate and commit
+as one envelope. Partial, corrupt, mistyped or unreadable records produce a
+bounded `SecureTokenStorageException` and are not automatically erased or
+reported as sign-out. Only entirely absent session records return `null`.
+
+Preference initialization, encryption, reads and checked synchronous commits run
+on an IO dispatcher. Store instances sharing Android's cached preference
+facility also share a mutex and persistence-uncertainty fence, so Activity/store
+recreation cannot bypass an in-flight write or trust memory changed by a failed
+commit. An explicit successful save or clear releases that fence; a read-only
+retry can recover a transient facility failure, not an unconfirmed write.
+Cancellation propagates rather than becoming a credential error. Platform error
+causes are removed before crossing into shared code; coroutine recovery may wrap
+only the already-sanitized exception. Clear removes session keys, not unrelated
+settings. This is source/adapter behavior, not a disk rollback, cross-process
+transaction or physical Keystore/power-loss guarantee. The ordered native-storage
+pack in `testing.md` requires those real-device observations before acceptance.
+
+### Local session lifetime for live hints
+
+The shared authentication coordinator serializes restore/login/logout/local-clear
+credential operations. This avoids concurrently rotating a single refresh token
+when foreground, push and socket recovery all request a read. It exposes only an
+ephemeral generation number and active/ending flags to the live-subscription
+supervisor, not access/refresh credentials or account identity. Successful login and refresh
+persistence replace the generation; ordinary same-session restore does not.
+Missing/rejected credentials or a typed protected-storage failure stop hints.
+Network failure does not invent logout or discard recoverable credentials.
+
+Generation and lifecycle flags form one atomic value so concurrent restore and
+logout cannot acknowledge opposite ownership states. Logout marks the session
+as ending before push cleanup or the credential mutex can block. Late and queued
+restores cannot reactivate live hints until that end
+operation finishes; a later explicit login establishes a new owner. Subscription
+callbacks also check ownership after REST returns and before updating UI. This
+local lifecycle is resource ownership only: the backend remains authoritative.
+Android adapter regressions now cover explicit failure and checked persistence;
+serialization and host tests still do not verify native OS secure-storage behavior.
+
+### Ongoing mobile socket authority
+
+The server verifies the mobile JWT's audience/type, identity and expiration, then
+retains only its IDs and UTC deadline. The socket owner uses a fresh database
+session to recheck exact account/session ownership, active user status, unrevoked
+session and session expiry before admission, before every hint, and while idle.
+REST authentication shares that predicate; business commit-time locks remain
+separate and are not held across socket IO. A refreshed token/session needs a
+replacement connection and cannot extend an older owner's deadline.
+
+Known loss of authority closes with `4401`; dependency failure closes with `1013`
+and lets the client perform read-only recovery. One retained closer withdraws
+broadcast authority before cleanup, cancels cooperative admission/monitor/send
+work, and remains owned if an ASGI caller is cancelled. IDs/credentials are never
+included in close reasons, logs or hint payloads. Database-check, idle and cleanup
+defaults are operational bounds, not an accepted immediate-revocation guarantee;
+already-started or sent frames cannot be recalled. See `api.md` and HINT-08 in
+`testing.md` for protocol, failure and field-evidence boundaries.
 
 ---
 

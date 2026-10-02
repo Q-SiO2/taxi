@@ -5,44 +5,56 @@ param(
     [int]$ExpectedVersionCode = 1,
 
     [Parameter()]
-    [ValidatePattern('^[0-9]+(\.[0-9]+){1,3}([+-][A-Za-z0-9.-]+)?$')]
-    [string]$ExpectedVersionName = "1.0.0"
+    [ValidatePattern('^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(\.(0|[1-9][0-9]*))?$')]
+    [string]$ExpectedVersionName = "1.0.0",
+
+    [Parameter()]
+    [string]$ManifestPath,
+    [string]$Aapt2Path,
+    [string]$ReleaseBuildLogPath,
+    [string]$ExpectedPassengerCertificateSha256,
+    [string]$ExpectedDriverCertificateSha256,
+    [string]$ApkSignerJarPath
 )
 
 $ErrorActionPreference = "Stop"
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 
-$variants = @(
-    @{ Role = "passenger"; Variant = "passengerRelease"; ApplicationId = "ma.taximobile.passenger" },
-    @{ Role = "driver"; Variant = "driverRelease"; ApplicationId = "ma.taximobile.driver" }
-)
-$seenFiles = @()
-foreach ($variant in $variants) {
-    $outputDirectory = Join-Path $projectRoot "androidApp\build\outputs\apk\$($variant.Role)\release"
-    $metadataPath = Join-Path $outputDirectory "output-metadata.json"
-    if (-not (Test-Path -LiteralPath $metadataPath -PathType Leaf)) {
-        throw "Missing release metadata for $($variant.Role)."
-    }
-    $metadata = Get-Content -LiteralPath $metadataPath -Raw | ConvertFrom-Json
-    if ($metadata.applicationId -ne $variant.ApplicationId -or $metadata.variantName -ne $variant.Variant) {
-        throw "Unexpected package or variant identity for $($variant.Role)."
-    }
-    if ($metadata.elements.Count -ne 1) {
-        throw "Expected exactly one universal $($variant.Role) release APK."
-    }
-    $element = $metadata.elements[0]
-    if ($element.versionCode -ne $ExpectedVersionCode -or $element.versionName -ne $ExpectedVersionName) {
-        throw "Unexpected version metadata for $($variant.Role)."
-    }
-    $apkPath = Join-Path $outputDirectory $element.outputFile
-    $apk = Get-Item -LiteralPath $apkPath -ErrorAction Stop
-    if ($apk.Length -lt 1MB) {
-        throw "The $($variant.Role) release APK is unexpectedly small."
-    }
-    $seenFiles += $apk.FullName
-}
-if ($seenFiles[0] -eq $seenFiles[1]) {
-    throw "Passenger and driver release outputs must be distinct artifacts."
+$signatureInputsRequested = @("ExpectedPassengerCertificateSha256", "ExpectedDriverCertificateSha256", "ApkSignerJarPath") |
+    Where-Object { $PSBoundParameters.ContainsKey($_) }
+if ($signatureInputsRequested -and (
+    [string]::IsNullOrWhiteSpace($ExpectedPassengerCertificateSha256) -or
+    [string]::IsNullOrWhiteSpace($ExpectedDriverCertificateSha256)
+)) {
+    throw "Signature inspection requires nonempty expected certificate fingerprints for both roles."
 }
 
-Write-Output "Verified distinct passenger and driver release APK identities, versions, and files."
+$pythonCommand = Get-Command python -ErrorAction Stop
+$arguments = @(
+    (Join-Path $PSScriptRoot "generate_android_verification_manifest.py"),
+    "--project-dir", $projectRoot,
+    "--expected-version-code", $ExpectedVersionCode.ToString(),
+    "--expected-version-name", $ExpectedVersionName
+)
+if (-not [string]::IsNullOrWhiteSpace($ManifestPath)) {
+    $arguments += @("--output", $ManifestPath)
+}
+if (-not [string]::IsNullOrWhiteSpace($Aapt2Path)) {
+    $arguments += @("--aapt2", $Aapt2Path)
+}
+if (-not [string]::IsNullOrWhiteSpace($ReleaseBuildLogPath)) {
+    $arguments += @("--build-log", $ReleaseBuildLogPath)
+}
+foreach ($pair in @(
+    @("--expected-passenger-certificate-sha256", $ExpectedPassengerCertificateSha256),
+    @("--expected-driver-certificate-sha256", $ExpectedDriverCertificateSha256),
+    @("--apksigner-jar", $ApkSignerJarPath)
+)) {
+    if (-not [string]::IsNullOrWhiteSpace($pair[1])) {
+        $arguments += @($pair[0], $pair[1])
+    }
+}
+& $pythonCommand.Source @arguments
+if ($LASTEXITCODE -ne 0) {
+    throw "Android artifact verification failed; no accepted distribution manifest was produced."
+}

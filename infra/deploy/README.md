@@ -14,12 +14,189 @@ workers on one sleeping free web instance and uses public fair-use Valhalla, so
 it is restricted to small synthetic tests and expires with the free database.
 
 This directory is a provider-neutral single-host Linux deployment template. It
-does not choose a registry, cloud, DNS provider, TLS proxy, managed PostgreSQL
+uses the delegated GHCR backend-image storage described in
+[`release_baseline.md`](../../docs/release_baseline.md#protected-promotion-and-backend-image-storage--2026-10-02).
+It does not choose a cloud host, DNS provider, TLS proxy, managed PostgreSQL
 service, secret store, or alert-delivery provider. Those remain deployment-owner
 decisions. The base manifest enforces the application boundaries; the optional
 `compose.monitoring.yaml` overlay supplies a no-license-cost self-hosted
 Prometheus, Alertmanager, Loki, Alloy, and Grafana path without making any of
 those services public.
+
+## GAP-002 environment inventory
+
+Before treating any provider account as a production candidate, copy
+`production-environment-inventory.template.json` to the access-controlled release
+evidence store and fill it with bounded references only. Do not put secret values,
+connection strings, private endpoints, personal approver names, email addresses,
+or raw provider credentials in the record. Validate the repository's deliberately
+empty template with:
+
+```powershell
+python .\infra\scripts\validate_production_environment_inventory.py
+```
+
+After architecture, privacy/legal, security, operations and cost owners have
+reviewed the real target, validate the protected candidate record with:
+
+```powershell
+python .\infra\scripts\validate_production_environment_inventory.py `
+  --inventory <protected-evidence-directory>\production-environment-inventory.json `
+  --require-accepted
+```
+
+The accepted form requires three distinct environment boundaries; exact public
+DNS/TLS origins and API host/CORS policy; all 12 reviewed service boundaries;
+digest-pinned API/worker/migrator/scanner images; private database, worker,
+monitoring, scanner and routing services; network/IAM review; secret-manager
+rotation; cost ownership; deployment/migration/forward-fix records; and a rollback
+rehearsal within the approved RTO. It can accept only GAP-002. It always leaves
+T5 and deployment acceptance false, which remain controlled by the ordered phase
+evidence and the rest of the gap register.
+
+## GAP-003 managed PostGIS evidence
+
+After a GAP-002 environment has been accepted, copy
+`managed-postgis-evidence.template.json` into the same protected evidence store.
+Keep connection strings, credentials, provider-private identifiers, row contents,
+personal approver details and query text out of the record. Validate the empty
+repository template with:
+
+```powershell
+python .\infra\scripts\validate_managed_postgis_evidence.py
+```
+
+Validate a real provider exercise only after migration, restore, failover and
+backup-expiry tests have completed:
+
+```powershell
+python .\infra\scripts\validate_managed_postgis_evidence.py `
+  --evidence <protected-evidence-directory>\managed-postgis-evidence.json `
+  --require-accepted
+```
+
+The accepted form is fixed to the tested PostgreSQL 16 line and current Alembic
+head. It requires private TLS/encrypted service controls, least-privilege role
+separation, capacity reserve, approved RPO/RTO, encrypted PITR, migration and
+old/new compatibility evidence, isolated restore integrity, provider failover,
+alert acknowledgement, and proof that legal holds survive while expired personal
+fields leave provider backups after the approved window. The validator checks
+record structure and internally consistent claims; reviewers remain responsible
+for the truth and custody of referenced provider evidence. GAP-003 acceptance
+never grants T5 or deployment acceptance.
+
+## GAP-004 pilot-city launch approval
+
+After GAP-002 and GAP-003 have accepted protected records, copy
+`pilot-city-launch-approval.template.json` into the same access-controlled
+evidence store. This record does not replace the operations control plane: it
+binds the real external approvals to the exact active configuration whose ten
+pilot-entry decisions are recorded by the backend. Keep personal names,
+credentials, participant identifiers, legal-document contents and private
+contact details out of the JSON. Validate the empty repository template with:
+
+```powershell
+python .\infra\scripts\validate_pilot_city_launch_approval.py
+```
+
+Validate the protected record only after the owner has selected one real city
+and legal operator and every reviewer has decided:
+
+```powershell
+python .\infra\scripts\validate_pilot_city_launch_approval.py `
+  --approval <protected-evidence-directory>\pilot-city-launch-approval.json `
+  --require-accepted
+```
+
+The accepted form requires the Moroccan market/country, public city and legal-
+entity facts, an active coherent configuration while the city remains
+`CONFIGURING`, explicit enabled services and payment methods with cash retained,
+approved service area/hours/tariffs, public Arabic/French/English terms, nine
+accountable operational functions, bounded cohort/exposure limits, all ten
+configuration-bound readiness decisions, independent reviewers, six dated
+approval functions and explicit product-owner authorization. Authority,
+assignments, readiness and approvals must remain current through the pilot end.
+It accepts only GAP-004 and always leaves T6 and deployment acceptance false.
+
+## GAP-005 operations identity and governance
+
+After the production environment and database evidence stores exist, copy
+`operations-identity-governance.template.json` into that protected store. Keep
+personal names, email/phone details, passwords, TOTP seeds, recovery codes,
+credentials and copied policy/legal documents out of the JSON; use bounded
+account and control references instead. Validate the repository template with:
+
+```powershell
+python .\infra\scripts\validate_operations_identity_governance.py
+```
+
+Validate the protected record only after real production staff controls and
+drills exist:
+
+```powershell
+python .\infra\scripts\validate_operations_identity_governance.py `
+  --governance <protected-evidence-directory>\operations-identity-governance.json `
+  --require-accepted
+```
+
+Acceptance requires an authoritative roster and joiner/mover/leaver source,
+review/recovery/break-glass policies, three distinct platform-administrator
+quorum duties, explicit rollout/pricing/payment/document/support/safety duties,
+reviewed TOTP and recovery custody for every assigned account, no shared or
+password-only production accounts, an access-review cadence of at most 90 days,
+a bounded leaver deadline, eight independently reviewed drills, fixed bootstrap/
+grant/MFA/sensitive-action audit references and security, operations, privacy-
+legal and product-owner approvals. Assignment, enrollment, drill and approval
+reviews must remain current through the next access review. The record accepts
+only GAP-005 and always leaves T5 and deployment acceptance false.
+
+## GAP-006 production maps, routing and navigation
+
+After GAP-002 through GAP-004 have protected evidence locations, copy
+`maps-routing-navigation.template.json` into the protected store. Do not put
+credentials, personal/device identifiers, provider queries, raw route geometry,
+raw device traces or copied contracts in this JSON. Use bounded references and
+immutable artifact digests. Validate the repository template with:
+
+```powershell
+python .\infra\scripts\validate_maps_routing_navigation.py
+```
+
+Run the existing guarded backend benchmark against the authorized staging or
+production-candidate routing target and retain stdout exactly as a JSON file:
+
+```powershell
+backend\.venv\Scripts\python.exe -m taximobile_api.operations.routing_acceptance `
+  --provider <valhalla-or-graphhopper> `
+  --base-url <authorized-routing-origin> `
+  --confirm-host <exact-hostname> > <protected-routing-report.json>
+```
+
+The command accepts only its fixed public Morocco scenarios, redacts geometry,
+instructions, target details and provider exceptions, and fails unless each
+supported English/French/Arabic route is plausible and localized. The current
+Valhalla catalog explicitly reports Arabic as unsupported, so it cannot be
+papered over by the evidence record; use a target that actually passes the
+required report or leave GAP-006 open.
+
+Validate a completed protected record together with those exact report bytes:
+
+```powershell
+python .\infra\scripts\validate_maps_routing_navigation.py `
+  --evidence <protected-evidence-directory>\maps-routing-navigation.json `
+  --routing-report <protected-evidence-directory>\routing-acceptance.json `
+  --require-accepted
+```
+
+Acceptance requires MapLibre, versioned style/tile artifacts and coverage,
+license/attribution/cache/offline/privacy/capacity reviews, a digest-pinned
+Morocco extract/engine/graph, a bounded refresh and rollback policy, explicit
+traffic-data status, urban/peri-urban/restricted-road/one-way/roundabout/fixed-
+route results within owner-approved tolerances, zero restricted-road violations,
+passenger and driver Android/iOS evidence in Arabic/French/English, seven outage/
+rollback/reroute/network/attribution drills, and six independent owner approvals.
+All evidence must remain current through the acceptance window. The record
+accepts only GAP-006 and always leaves T5 and deployment acceptance false.
 
 ## Required inputs
 
@@ -124,6 +301,15 @@ restart-worthy failure. CI validates these probe targets together with loopback
 ports, process-role separation, least-privilege environment boundaries, and
 container hardening before it renders the manifest with Docker Compose.
 
+Staging/production API readiness additionally requires the process-owned
+PostgreSQL live-hint listener to have a live registered connection. Termination
+or a bounded liveness-probe failure clears that condition until cleanup/retry
+and re-registration succeed, even if another pooled SQL connection still works.
+`/ready` returns the same generic dependency-unavailable response without
+exposing connection details. A healthy replacement does not replay missed hints:
+clients still reload authoritative REST state. Hosted blackhole/failover,
+load-balancer removal/re-admission and recovery-budget evidence remain T5 work.
+
 The Compose environment anchors enforce least privilege: the worker is not given
 the API JWT secret, public host/CORS policy, or routing endpoint, while the API is
 not given the Firebase project configuration used by push delivery. Both receive
@@ -167,7 +353,7 @@ Prometheus removes user/driver/passenger/device/ride/resource/authorization/
 payload/topic labels before an alert can leave the collector. This is defense in
 depth; emitting those labels remains forbidden at source.
 Grafana has immutable internal Prometheus and Loki datasources plus two file-
-provisioned dashboards. The 23-panel `TaxiMobile Operations` dashboard covers target
+provisioned dashboards. The 26-panel `TaxiMobile Operations` dashboard covers target
 health, HTTP rate/error/latency, fixed-worker progress/errors, outbox visibility,
 owner backlog/age/dead letters, database snapshot/connection/lock/deadlock state,
 per-process pool availability/checked-out/overflow state, checkout-wait p95 and
@@ -249,6 +435,16 @@ dashboard correctness, secure staff access, receiver delivery, primary/backup
 acknowledgement and failure-injection drills pass in staging.
 
 ## Controlled release
+
+`main` is protected with passing checks and independent latest-push approval.
+Its successful CI run publishes the exact scanned image to
+`ghcr.io/q-sio2/taxi-api`, not a separately rebuilt image. Use only the
+`registry_reference` containing `@sha256:` from the retained
+`taximobile-registry-provenance-<run>-<attempt>` packet as `TAXIMOBILE_API_IMAGE`;
+API, worker and migration runner share that image. A commit tag is only a lookup
+aid, not an immutable deployment reference. Private package access must be
+configured on the eventual host without placing credentials in source or images.
+Publication does not deploy the manifest or accept GAP-001/GAP-002.
 
 Start from a reviewed clean commit. Validate documentation and generate the
 source-candidate evidence record before building or promoting artifacts:

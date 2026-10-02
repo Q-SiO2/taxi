@@ -10,6 +10,8 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import dataclass
+from datetime import datetime, timezone
+import json
 from pathlib import Path
 import re
 import subprocess
@@ -27,6 +29,7 @@ ROLE_PACKAGES = {
     "passenger": "ma.taximobile.passenger",
     "driver": "ma.taximobile.driver",
 }
+SAFE_PROFILE_TEXT = re.compile(r"[^\x00-\x1f\x7f]{1,120}", re.UNICODE)
 
 
 class SmokeFailure(RuntimeError):
@@ -133,6 +136,18 @@ class AdbClient:
     def hierarchy(self) -> ElementTree.Element:
         return extract_hierarchy(self.run("exec-out", "uiautomator", "dump", "/dev/tty"))
 
+    def bounded_output(self, *arguments: str, max_length: int = 16000) -> str:
+        value = self.run(*arguments).decode("utf-8", errors="replace").strip()
+        if not value or len(value) > max_length or "\x00" in value:
+            raise SmokeFailure("Android returned invalid bounded device metadata.")
+        return value
+
+    def text(self, *arguments: str) -> str:
+        value = self.bounded_output(*arguments, max_length=120)
+        if SAFE_PROFILE_TEXT.fullmatch(value) is None:
+            raise SmokeFailure("Android returned invalid bounded device metadata.")
+        return value
+
     def tap(self, bounds: Bounds) -> None:
         x, y = bounds.center
         self.run("shell", "input", "tap", str(x), str(y))
@@ -222,7 +237,7 @@ class RegistrationSmoke:
         self.adb.input_text(value)
         time.sleep(0.25)
 
-    def run(self) -> None:
+    def run(self) -> list[dict[str, str]]:
         suffix = uuid4().hex
         email = f"android-smoke-{suffix}@example.test"
         password = "DeviceSmoke2026"
@@ -241,6 +256,81 @@ class RegistrationSmoke:
         # Product-role gates require a backend-authenticated session and roles.
         success_key = "where_to" if self.role == "passenger" else "apply_to_drive"
         self.find(success_key, scroll=True)
+        return [
+            {"id": "ANDROID_REGISTRATION", "result": "PASS", "authority": "BACKEND_CONFIRMED"},
+            {"id": "ANDROID_LOGIN_ROLE_GATE", "result": "PASS", "authority": "BACKEND_CONFIRMED"},
+        ]
+
+
+def collect_device_profile(adb: AdbClient, role: str) -> dict[str, object]:
+    if role not in ROLE_PACKAGES:
+        raise ValueError("Role must be passenger or driver.")
+    sdk_text = adb.text("shell", "getprop", "ro.build.version.sdk")
+    if not sdk_text.isdigit() or not 24 <= int(sdk_text) <= 99:
+        raise SmokeFailure("Android SDK is outside the configured supported range.")
+    size_text = adb.text("shell", "wm", "size")
+    size_match = re.search(r"(?:Physical|Override) size:\s*(\d+)x(\d+)", size_text)
+    if size_match is None:
+        raise SmokeFailure("Android did not report a bounded screen size.")
+    width, height = (int(value) for value in size_match.groups())
+    if not 240 <= width <= 10000 or not 240 <= height <= 10000:
+        raise SmokeFailure("Android screen size is outside the evidence bounds.")
+
+    package = ROLE_PACKAGES[role]
+    package_text = adb.bounded_output(
+        "shell", "dumpsys", "package", package, max_length=200000
+    )
+    version_name = re.search(r"(?m)^\s*versionName=([^\s]+)\s*$", package_text)
+    version_code = re.search(r"(?m)^\s*versionCode=(\d+)(?:\s|$)", package_text)
+    if version_name is None or version_code is None:
+        raise SmokeFailure("Installed TaxiMobile package version could not be verified.")
+    try:
+        locale = adb.text("shell", "getprop", "persist.sys.locale")
+    except SmokeFailure:
+        locale = adb.text("shell", "getprop", "ro.product.locale")
+    return {
+        "android_sdk": int(sdk_text),
+        "abi": adb.text("shell", "getprop", "ro.product.cpu.abi"),
+        "manufacturer": adb.text("shell", "getprop", "ro.product.manufacturer"),
+        "model": adb.text("shell", "getprop", "ro.product.model"),
+        "locale": locale,
+        "screen_width_px": width,
+        "screen_height_px": height,
+        "package_name": package,
+        "package_version_name": version_name.group(1),
+        "package_version_code": int(version_code.group(1)),
+        "single_authorized_device_verified": True,
+    }
+
+
+def build_evidence(role: str, profile: dict[str, object], journeys: list[dict[str, str]]) -> dict[str, object]:
+    if role not in ROLE_PACKAGES or not journeys or any(item.get("result") != "PASS" for item in journeys):
+        raise SmokeFailure("Android evidence requires a passing bounded role journey.")
+    return {
+        "schema_version": 1,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "evidence_level": "T4_ANDROID_REGISTRATION_DEVICE_EXECUTION",
+        "phase": "T4",
+        "result": "PASS",
+        "data_classification": "TEST_DEVICE_METADATA_ONLY",
+        "role": role.upper(),
+        "supported_evidence_kinds": ["ANDROID_DEVICE_REPORT"],
+        "phase_evidence_complete": False,
+        "phase_accepted": False,
+        "deployment_accepted": False,
+        "device": profile,
+        "journeys": journeys,
+        "limitations": [
+            "DEBUG_BUILD_ONLY",
+            "REGISTRATION_AND_LOGIN_ONLY",
+            "NO_IOS_OR_BROWSER_CLAIM",
+            "NO_ACCESSIBILITY_OR_RTL_CLAIM",
+            "NO_DEGRADED_NETWORK_OR_LIFECYCLE_CLAIM",
+            "NO_CRASH_SYMBOLICATION_CLAIM",
+            "NO_SCREENSHOT_OR_RAW_DEVICE_IDENTIFIER_CAPTURED",
+            "NO_PHASE_OR_DEPLOYMENT_ACCEPTANCE_CLAIM",
+        ],
+    }
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -248,20 +338,38 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument("--adb", type=Path, required=True)
     parser.add_argument("--role", choices=sorted(ROLE_PACKAGES), required=True)
     parser.add_argument("--timeout-seconds", type=float, default=30)
+    parser.add_argument("--output", type=Path)
     return parser.parse_args()
 
 
 def main() -> int:
     arguments = parse_arguments()
+    output = arguments.output.resolve() if arguments.output else None
+    if output is not None and output.exists():
+        print("Android registration smoke failed: refusing to overwrite existing evidence.")
+        return 1
     try:
-        RegistrationSmoke(
-            AdbClient(arguments.adb),
+        adb = AdbClient(arguments.adb)
+        journeys = RegistrationSmoke(
+            adb,
             arguments.role,
             arguments.timeout_seconds,
         ).run()
+        evidence = build_evidence(
+            arguments.role,
+            collect_device_profile(adb, arguments.role),
+            journeys,
+        )
     except (SmokeFailure, ValueError) as error:
         print(f"Android registration smoke failed: {error}")
         return 1
+    if output is not None:
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(
+            json.dumps(evidence, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+            newline="\n",
+        )
     print(f"TaxiMobile {arguments.role} registration and login passed on Android.")
     return 0
 

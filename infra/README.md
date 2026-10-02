@@ -50,6 +50,30 @@ Exercise all unit/API tests and the full migrated PostGIS lifecycle with:
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test-portable-backend.ps1
 ```
 
+For a candidate run, provide all three fresh output paths so the runner also
+retains the full JUnit report, collects secret-free post-run database metadata,
+and generates bounded T3 system evidence:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test-portable-backend.ps1 `
+  -JUnitPath ..\backend\build\t3-full-backend.junit.xml `
+  -DatabaseMetadataPath ..\backend\build\t3-database-metadata.json `
+  -BackupRestorePath ..\backend\build\t3-backup-restore.json `
+  -EvidencePath ..\backend\build\t3-system-evidence.json
+```
+
+The runner refuses partial or existing output paths. Before rebuilding
+`taximobile_ci`, it inventories stale clone databases and deletes only names
+matching `taximobile_ci_test_` plus a 32-character lowercase hex identifier. It
+records that count, requires zero clones after the suite, revokes the local
+role's temporary `CREATEDB` authority, and verifies one current migration head
+plus PostgreSQL/PostGIS versions. It then creates a custom-format logical backup,
+restores it into one random guarded database, compares every public table count
+and schema-object totals, applies a no-op migration to head, and removes both
+the target and dump. A green combined report supports all six bounded T3
+evidence classes and sets `phase_evidence_complete=true`; formal phase and
+deployment acceptance remain separate and false.
+
 This entry point first runs `validate_source_credentials.py`. In CI the validator
 uses Git-tracked files; in this no-Git workspace it deliberately does not read the
 ignored `infra/.env`, `TaxiMobile/local.properties`, builds, caches, backups, or
@@ -70,6 +94,148 @@ classes, sign-off functions, defects, exposure limits and P0 gap closures. It
 does not validate signatures or external artifact truth and cannot promote the
 all-`NOT_STARTED` repository template. Do not place credentials, identity files,
 precise participant locations or payment instructions in the evidence index.
+
+The bounded T2 simulated-persona baseline is a separate executable input to that
+promotion process:
+
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/run_simulated_persona_suite.py `
+  --output backend/build/t2-simulated-personas.json `
+  --junit-output backend/build/t2-simulated-personas.junit.xml
+```
+
+Its committed catalog freezes 20 authentication, passenger, driver, applicant,
+matching, ride, route, scheduling, money, staff, support, safety, incident,
+notification, and client-lifecycle scenarios over 66 exact test nodes. The
+2026-10-02 catalog adds ongoing-session authority to notification personas. It cannot
+contact a target or provider, use real users or money, or mark T2 accepted. Its
+report identifies the remaining T2 database/money reconciliation, adversarial-
+security, and data-minimization evidence instead of silently claiming coverage.
+
+The T4 device/browser laboratory is also a closed executable map:
+
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/validate_t4_lab_evidence.py
+backend/.venv/Scripts/python.exe infra/scripts/validate_t4_lab_evidence.py `
+  --evidence <t4-lab-run.json>
+```
+
+`infra/testing/t4-lab-catalog.json` contains 56 cases: eight for each required
+supported-matrix, Android, iOS, browser, accessibility/RTL, degraded-network/
+lifecycle and crash-symbolication evidence class. The validator cross-checks
+Android SDK 24/36 and iOS 18.2 against build source, requires Chrome/Firefox/
+Safari plus EN/FR/AR and Arabic RTL, rejects public users/live money/production
+credentials/real personal data, and forbids raw serial or sensitive evidence
+keys. The committed template remains `NOT_STARTED`; a complete evidence class is
+credited only after all eight cases have retained passing facts, and even 56
+passes cannot mark T4 or deployment accepted.
+
+The provider-neutral production environment inventory is the executable GAP-002
+control record:
+
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/validate_production_environment_inventory.py
+backend/.venv/Scripts/python.exe infra/scripts/validate_production_environment_inventory.py `
+  --inventory <protected-production-inventory.json> --require-accepted
+```
+
+The committed template remains `NOT_STARTED` and contains no provider choice or
+secret. A protected accepted copy must reference distinct development, staging
+and production boundaries, exact DNS/TLS and application-origin policy, immutable
+core images, private service/network policy, secret rotation, cost ownership,
+rollback timing and five required approval functions. Passing it closes no
+T5 or deployment gate by itself. See
+[`deploy/README.md`](deploy/README.md#gap-002-environment-inventory).
+
+Managed PostGIS, PITR, restore, failover and backup-expiry acceptance use a
+separate GAP-003 record:
+
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/validate_managed_postgis_evidence.py
+backend/.venv/Scripts/python.exe infra/scripts/validate_managed_postgis_evidence.py `
+  --evidence <protected-managed-postgis-evidence.json> --require-accepted
+```
+
+The committed form is `NOT_STARTED`. A real accepted copy links back to the
+GAP-002 environment, records only bounded references and aggregate timings, and
+must prove the current migration head, PostgreSQL/PostGIS compatibility, private
+encryption, role separation, capacity reserve, PITR, isolated restore, failover,
+RPO/RTO, legal holds and expired-data backup removal. Local T3 logical restore
+reports cannot be relabeled as this evidence. See
+[`deploy/README.md`](deploy/README.md#gap-003-managed-postgis-evidence).
+
+The real city/operator decision uses a separate GAP-004 launch-approval record:
+
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/validate_pilot_city_launch_approval.py
+backend/.venv/Scripts/python.exe infra/scripts/validate_pilot_city_launch_approval.py `
+  --approval <protected-pilot-city-approval.json> --require-accepted
+```
+
+The committed record remains `NOT_STARTED`. An accepted protected copy binds one
+real Moroccan city and legal operator to the exact active configuration, public
+terms, accountable functions, bounded cohort, cash-inclusive payment scope, all
+ten independent readiness reviews and six approvals including explicit product-
+owner pilot authorization. It stores references rather than legal documents or
+personal data and accepts neither T6 nor deployment. See
+[`deploy/README.md`](deploy/README.md#gap-004-pilot-city-launch-approval).
+
+Production operations identity and governance use a separate GAP-005 record:
+
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/validate_operations_identity_governance.py
+backend/.venv/Scripts/python.exe infra/scripts/validate_operations_identity_governance.py `
+  --governance <protected-operations-governance.json> --require-accepted
+```
+
+The committed form remains `NOT_STARTED`. An accepted protected copy requires
+an authoritative staff roster/JML process, three-person platform-admin quorum,
+explicit maker/checker and sensitive-duty assignments, independently reviewed
+TOTP custody for every assigned account, bounded access-review/leaver policy,
+eight exercised control drills, fixed audit references and four owner approvals.
+It contains no names, contacts, credentials, recovery codes or copied documents
+and accepts neither T5 nor deployment. See
+[`deploy/README.md`](deploy/README.md#gap-005-operations-identity-and-governance).
+
+Production maps, routing and device navigation use the separate GAP-006 record:
+
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/validate_maps_routing_navigation.py
+backend/.venv/Scripts/python.exe infra/scripts/validate_maps_routing_navigation.py `
+  --evidence <protected-maps-routing-navigation.json> `
+  --routing-report <exact-redacted-routing-report.json> `
+  --require-accepted
+```
+
+The committed form remains `NOT_STARTED` and chooses no provider or city. An
+accepted protected copy binds one approved Moroccan city configuration to
+immutable MapLibre style/tile and routing graph artifacts, licensing,
+attribution, cache/offline/privacy/cost, refresh, traffic and rollback controls,
+six route benchmark categories, four Android/iOS passenger/driver surfaces in
+Arabic/French/English, seven drills and six approvals. The separately supplied
+backend routing report must match the recorded SHA-256 and pass every language
+for the selected Valhalla or GraphHopper target. The record stores references,
+not raw routes, provider queries, credentials or personal data, and accepts
+neither T5 nor deployment. See
+[`deploy/README.md`](deploy/README.md#gap-006-production-maps-routing-and-navigation).
+
+After packaging a reviewed web distribution, collect bounded real-browser boot
+evidence without editing the 56-case laboratory record:
+
+```powershell
+backend/.venv/Scripts/python.exe infra/scripts/run_t4_browser_smoke.py `
+  --release-dir backend/build/t4-web-release `
+  --browser chrome --browser firefox `
+  --candidate-label local-reviewed-web `
+  --output backend/build/t4-browser-smoke.json `
+  --artifact-dir backend/build/t4-browser-smoke-artifacts
+```
+
+The output and artifact directory must not already exist. The collector requires
+valid screenshots and the exact compatibility/boot network boundary for every
+scenario. Its test origin is loopback, but browser egress is not independently
+firewalled. Safari and full authenticated/accessibility/hosted journeys remain in
+the T4 catalog, so this command never completes a catalog case or accepts T4.
 
 Production-like manifests also fail closed on client lifecycle configuration.
 They require `TAXIMOBILE_CLIENT_COMPATIBILITY_ENFORCED=true`, one controlled

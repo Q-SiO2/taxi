@@ -13,19 +13,24 @@ are validated by `infra/scripts/validate_test_phase_evidence.py`. That gate chec
 promotion metadata and exposure boundaries; it does not authenticate external
 evidence or approve a phase.
 
-**Current standing (2026-09-08):** automated backend, PostGIS, shared/mobile,
+**Current standing (refreshed 2026-09-29):** automated backend, PostGIS, shared/mobile,
 source-contract, and local web compilation coverage is broad. CI definitions now
 include pinned dependency review, resolved Gradle graph submission, backend image
-SBOM/provenance and a blocking high/critical image scan, but those changed jobs
-still need a clean remote candidate run. CI now also structurally validates the
+SBOM/provenance and a blocking high/critical image scan. The complete push and
+pull-request workflows passed at immutable `168c350`; this is not independent
+review, signed release, provider, hosted, or phase acceptance. CI also structurally validates the
 self-hosted monitoring overlay, renders it with the production manifest, parses
 Prometheus/Alertmanager/Loki/Alloy configuration with digest-pinned official
 tools, provisions both Grafana dashboards, and runs a hardened two-role
-structured-log ingestion smoke. Initial in-app
-Wasm browser smoke testing now covers operations/applicant entry rendering and
-narrow/wide applicant layout; it found and closed one nested-scroll runtime
-defect. The project is in **Phase T2/T3**, depending on the subsystem, with a
-small part of T4 started. It has not passed the full browser matrix, hosted
+structured-log ingestion smoke. Initial in-app Wasm browser smoke testing covers
+operations/applicant entry rendering and narrow/wide applicant layout; it found
+and closed one nested-scroll runtime defect. A separate packaged-release
+collector passed four bounded boot and preflight scenarios in each of local
+Chrome 152 and Firefox 155 with retained screenshots. It deliberately does not
+claim browser-egress isolation, a complete T4 catalog case, or Safari/critical-
+journey/accessibility acceptance. The project is in **Phase T2/T3**, depending
+on the subsystem, with a small part of T4 started. It has not passed the full
+browser matrix, hosted
 staging, provider, physical-device, staff-rehearsal, closed-cohort, or real-user
 promotion gates.
 
@@ -38,8 +43,8 @@ while real secure-save behavior, verified contact delivery, statistical timing,
 physical devices, compromised-account
 support, and real-user comprehension remain unaccepted.
 
-Latest completed full-suite evidence (2026-09-08): a clean isolated PostGIS rebuild through migration
-`20260908_0052` passed 990 backend tests with no failures, errors or skips; place authority,
+Latest completed full-suite evidence (2026-09-09): an isolated PostGIS rebuild through migration
+`20260908_0052` passed 992 backend tests with no failures, errors or skips; place authority,
 assigned-ride coordination, notification policy, fixed-owner outbox telemetry
 and real live-event fanout are
 included in that run alongside deadline/device-failure contracts and scheduling
@@ -78,7 +83,7 @@ compilation are locally verified in the latest supported Windows run. Both web
 production target distributions also build locally; this does not replace the
 packaged compatibility release or hosted browser checks. Record
 these again from an immutable candidate before they may satisfy a promotion gate.
-The latest 990-test evidence is the guarded console run; the preceding 956-test
+The latest 992-test evidence is the guarded JUnit run; the preceding 956-test
 full backend JUnit report remains
 `backend/build/security-incident-full-tests.xml`. Separate focused runs of all 74
 workload/contention cases also passed in
@@ -86,14 +91,22 @@ workload/contention cases also passed in
 live-protection cases passed in `backend/build/scheduled-live-protection-focused-tests.xml`.
 All 13 account-assignment authority cases passed in
 `backend/build/account-assignment-authority-focused-tests.xml`. These are generated
-evidence, not committed release artifacts. Localization parity covers 610 EN/FR/AR strings, and
-36 infrastructure-script unit tests, 29 monitoring-deployment contract/mutation
-cases, and 21 Prometheus alert-rule regression cases pass. Dependency deprecation
-warnings remain.
+evidence, not committed release artifacts. Localization parity covers 610
+EN/FR/AR strings, and 50 infrastructure-script unit tests, 29 monitoring-
+deployment contract/mutation cases, six dependency-free static web compatibility-
+loader runtime scenarios, and 21 Prometheus alert-rule regression cases pass.
+Dependency deprecation warnings remain.
+
+The bounded T2 simulated-persona catalog currently executes 20 stable scenarios
+through 66 exact unit-test nodes with no external target, real users, providers,
+or live money. Its latest local run passed with zero failures/errors/skips. The
+result deliberately keeps T2 evidence incomplete until adversarial review,
+durable state/money reconciliation, data-minimization evidence, and required
+engineering/security sign-offs exist.
 
 Migration `20260908_0052` is now the repository head. Sixteen dedicated security-
 incident unit/static cases and two migrated PostGIS API/database cases pass as part
-of the 990-test complete regression. They cover one-time postmortem completion,
+of the 992-test complete regression. They cover one-time postmortem completion,
 evidence requirements, idempotent replay, fixed severity buckets, aggregate
 deadline transitions, unavailable snapshots, privacy-safe rendering, exact
 alert-expression mutation refusal, initial response-lead assignment, exact-market
@@ -103,7 +116,7 @@ and append-visible assignment-history protection.
 The city-authorization slice passed 33 focused backend cases in
 `backend/build/city-authorization-complete-focused-tests.xml`, including actual
 MFA and six observed lock waits, plus JS/Wasm compilation and both browser test
-tasks. All 33 cases are also included in the passing 990-test full backend run.
+tasks. All 33 cases are also included in the passing 992-test full backend run.
 The earlier 750-test location-authority report predates this endpoint and is
 retained only as historical evidence.
 
@@ -125,7 +138,7 @@ and both JS and Wasm browser tasks with 57 tests each. It covers request/replay,
 maker/checker/target separation, approval, revocation, rejection, cancellation,
 stale decisions/targets, bounded quorum bootstrap, last-admin refusal and expiry
 continuity. The web/backend source-contract gate covers 112 HTTP operations. This
-slice is included in the passing 990-test full current-head backend regression.
+slice is included in the passing 992-test full current-head backend regression.
 This is component evidence only; authoritative roster, hosted MFA/CSP, accessibility,
 concurrent staff drills and recertification remain promotion gates.
 
@@ -317,6 +330,38 @@ guards and component states using fake gateways. Every screen must represent:
 loading, empty, backend error, conflict/stale state, offline, permission denied,
 success, and backend-confirmed refresh.
 
+### Native protected-session source pack
+
+Run `AndroidSecureTokenStoreTest` on the Android host target together with the
+common `AuthenticationSessionStorageTest` and `AuthenticationSessionLifetimeTest`
+on JVM and Android host. The adapter tests use synthetic preferences/cipher
+implementations: they exercise production control flow, not real Keystore,
+AES-GCM authentication, filesystem persistence or hardware failure. The cipher
+seam must never be described as cryptographic acceptance.
+
+Required adapter cases include absent versus partial/mistyped/corrupt records;
+preference initialization/read/encryption failure; atomic envelope replacement;
+complete legacy migration and malformed/empty/oversized legacy rejection;
+new-envelope precedence; false/throwing save, migration and clear commits;
+uncertain memory across Activity/store recreation; serialization across store
+instances; independent-facility isolation; explicit confirmed recovery;
+cancellation and sanitized cause/suppressed-exception chains. Common coordinator
+tests additionally require failed save to deny authenticated success and attempt
+revocation of the newly issued server session, failed clear to deny successful
+logout, and storage failure to stop live-session ownership. Transport failure
+does not establish that best-effort server revocation succeeded.
+
+From `TaxiMobile/`, run:
+
+```powershell
+.\gradlew.bat :shared:jvmTest :shared:testAndroidHostTest `
+  :androidApp:compilePassengerDebugKotlin :androidApp:compileDriverDebugKotlin `
+  --no-parallel --console=plain
+```
+
+Retain JUnit results and immutable source/artifact provenance. Do not promote
+this T1 result into T4 device evidence; the following physical pack is mandatory.
+
 ### Promotion gate
 
 Each business rule has deterministic positive and negative coverage. Money,
@@ -396,6 +441,18 @@ a release build.
 Use a fresh isolated PostGIS database at migration head, real API/worker process
 roles, and local provider adapters or controlled stubs. Run all eight worker loops
 and at least two API replicas for cross-instance paths where practical.
+
+The guarded local runner accepts all-or-none JUnit, database-metadata, backup/
+restore and system-evidence paths. Its generated T3 report requires at least 900 skip-free
+tests; named migration-lock, authority-race, worker-termination/reclaim and
+state/money reconciliation cases; one exact migration head; PostGIS; zero
+residual clone databases; and revoked temporary local clone authority. The
+2026-09-09 run passed 992 tests and these checks. The guarded logical rehearsal
+then restored 81 public tables and 8,511 aggregate rows, matched schema/table/
+PostGIS facts through a no-op migration to head, and deleted the restore target
+and dump. The combined report supports all six required T3 evidence kinds and
+marks evidence complete, while T3 and deployment acceptance remain false pending
+engineering sign-off and ordered promotion evidence.
 
 ### Database lifecycle
 
@@ -628,11 +685,36 @@ low/mid/high devices, screen sizes/densities, and Chrome/Firefox/Safari versions
 Include at least one lower-memory Android device and one real iPhone. Emulators do
 not replace camera/file picker, location, push, background, battery or map proof.
 
+The executable source of this matrix is
+`infra/testing/t4-lab-catalog.json`, validated by
+`infra/scripts/validate_t4_lab_evidence.py`. It contains 56 closed cases, eight
+for each phase-required evidence class. A populated evidence record must preserve
+catalog order, attach a controlled reference, SHA-256, UTC timestamp and tester
+reference to every case, and link every failed/blocked case to a defect. Evidence
+classes can complete independently, but T4 is complete only at 56/56; this
+validator never grants phase or deployment acceptance.
+
+The current MapLibre Compose 0.14.0 iOS KLIB contains a publisher-runner
+framework path (upstream issue `maplibre-compose#824`). Until a reviewed upstream
+fix or dependency upgrade removes it, CI compiles Kotlin production/test sources
+and links both role apps through Xcode but does not execute the Gradle native
+test binary. That limitation is recorded in the run summary and cannot be
+treated as T4 evidence.
+
 ### Mobile matrix
 
 For passenger and driver artifacts separately test:
 
 * clean install, first launch, registration/login, relaunch and token refresh;
+  on iOS verify that before-first-unlock Keychain unavailability is explicit and
+  does not claim success, then verify save/restore/logout while unlocked, after
+  relock, after process kill and across an interrupted/retried save; prove no
+  split token pair, stale pre-release item or silent Security-framework failure
+  remains;
+* Android Keystore-backed save/restore/refresh/logout and supported legacy-pair
+  upgrade, including corrupt/partial records, missing/invalidated keys, interrupted
+  writes, Activity/process recreation and controlled persistence failure using
+  only approved synthetic lab fixtures; apply the native-storage pack below;
 * create/save/rotate recovery codes, reset while signed out, revoke another and
   the current session, change password, process death while a secret is shown,
   screenshots/clipboard/accessibility exposure, and recovery with no network;
@@ -653,6 +735,48 @@ For passenger and driver artifacts separately test:
   no local sensitive-file leakage;
 * cash/manual transfer/refund/support/safety/fixed-route/scheduled surfaces; and
 * intentional crash, symbol upload, symbolicated report and privacy review.
+
+For the first bounded Android evidence slice, run each role separately through
+`run-android-device.ps1` with `-RegistrationSmoke -ConfirmClearAppData` and a
+new `-EvidencePath`. The report records Android SDK, ABI, manufacturer/model,
+locale, screen dimensions, package identity/version and backend-confirmed
+registration/login gates. It deliberately captures no raw serial, screenshots,
+credentials or submitted values and sets T4/deployment acceptance false. This
+smoke is not evidence for ride, map, push, lifecycle, network-failure,
+accessibility, crash, iOS or browser behavior.
+
+### Android protected-session physical pack
+
+Bind evidence to each Passenger and Driver artifact, supported OS/device entry,
+locale, candidate commit and synthetic backend identity. Use only an approved
+lab harness and disposable synthetic fixtures for corruption, key invalidation
+or storage-failure injection. Never alter a tester's real app storage, capture
+tokens/ciphertext/aliases in reports, or infer physical failure behavior from the
+host fake. If a native fault cannot safely be exercised, mark the case blocked
+with a defect/evidence reference rather than substituting source assertions.
+
+| Catalog case | Required native procedure and outcome |
+| --- | --- |
+| `T4-AND-001` | Clean install; save/relaunch/refresh using real Keystore; interrupt a save, recreate Activity/store and kill/restart the process. Observe one complete durable pair or an explicit failure/absence, never a split pair or authentication based solely on an unconfirmed write. Inject a false/throwing persistence result through the approved lab path; recreated stores must remain blocked until a confirmed explicit save/clear. Check EN/FR/AR error presentation and absence of secrets in logs, screenshots, crash payloads and backups. |
+| `T4-AND-002` | Upgrade the previous supported encrypted access/refresh pair with its original key. Verify migration preserves the complete pair and removes legacy keys only with the confirmed envelope write. Separately test partial/malformed/mistyped/invalid-UTF8/oversized records, malformed/tag-invalid ciphertext and missing/invalidated keys: read must expose an actionable failure without silently erasing records or creating a replacement key. Retest compatibility gates without command replay. |
+| `T4-AND-003` | Exercise refresh, password change, current/remote session revocation and logout against the synthetic backend. Storage failure must stop live hints and deny false sign-in/logout success; newly issued session revocation is best-effort and must be checked on the backend. Failed deletion must remain visible across store recreation; a confirmed explicit save/clear must recover. Check role separation, cancellation, unrelated settings and recovery-code lifetime separately. |
+
+Retain sanitized state, commit outcomes, process/Activity lifecycle markers and
+backend session outcomes, not secret values. Host injection, real Keystore and
+real disk/process-loss observations must be identified separately in the packet.
+The T4 catalog revision is `2026-10-02`: it keeps 56 case IDs but strengthens
+these three existing S0 device cases, requires both Android products and rejects
+removal of their native observations. Its exact byte hash is portable through a
+catalog-only LF rule; previous revision/hash evidence cannot certify the new
+requirements. The template remains `NOT_STARTED`, with no device/phase acceptance.
+
+At T5 repeat server-revocation/offline recovery on release-equivalent artifacts
+against hosted staging without changing money or ride authority. T6 staff must
+recognize storage failure, preserve evidence and guide explicit recovery without
+requesting secrets or editing live data. T7 repeats relaunch/refresh and safe
+recovery during the approved field cohort. T8 still requires all applicable P0
+gates, owner sign-off and an accepted device matrix; passing this pack alone is
+not permission to carry passengers or money.
 
 ### Browser matrix
 
@@ -678,6 +802,41 @@ security, crash, data-loss or state-authority defect remains. Screenshots and
 recordings are reviewed in all launch languages.
 
 ## 10. Phase T5 — production-like hosted staging
+
+T5 cannot start from an informal cloud-console checklist. The protected target
+record must pass `infra/scripts/validate_production_environment_inventory.py`
+with `--inventory <record> --require-accepted`, binding the immutable source
+commit to distinct environment boundaries, exact DNS/TLS origins, reviewed
+network/IAM policy, digest-pinned core images, secret rotation, cost ownership and
+rollback evidence. This accepts only GAP-002; the phase index must still establish
+every T5 evidence class and sign-off.
+
+Database claims use the separate protected GAP-003 record. It must pass
+`infra/scripts/validate_managed_postgis_evidence.py` with
+`--evidence <record> --require-accepted` after the real provider's current-head
+migration, encrypted PITR restore, failover, least-privilege, capacity and
+retention-expiry exercises. Passing the record accepts only GAP-003; it does not
+replace the T5 `RESTORE_FAILOVER_ROLLBACK_REPORT`, `RPO_RTO_AND_COST_ACCEPTANCE`,
+security retest, or phase sign-off.
+
+T5 entry also requires the protected GAP-005 operations-identity record to pass
+`validate_operations_identity_governance.py --require-accepted`. This proves the
+referenced roster/JML controls, duty separation, MFA/recovery custody, access
+review, leaver/break-glass drills and owner approvals are structurally complete.
+The repository template is intentionally `NOT_STARTED`; accepting GAP-005 does
+not accept T5, deployment, hosted-browser behavior or staff competence.
+
+Production map/routing/navigation claims use the separate protected GAP-006
+record. Generate a redacted route report against the authorized target with
+`python -m taximobile_api.operations.routing_acceptance --provider <provider>
+--base-url <origin> --confirm-host <host>`, retain its exact bytes, and run
+`validate_maps_routing_navigation.py --evidence <record> --routing-report
+<report> --require-accepted`. The validator binds that passing hash-matched
+Arabic/French/English report to immutable map/graph artifacts, provider and data
+policies, six pilot-city route categories, four physical-device role surfaces,
+outage/rollback/reroute drills and owner approvals. The committed template is
+`NOT_STARTED`; GAP-006 acceptance is necessary evidence but does not accept T5,
+deployment, the complete T4 device catalog or the later T7 road trial.
 
 The executable [synthetic HTTP workload runbook](testing_workloads.md) maps
 LOAD-01 through LOAD-12 onto T1–T10. Its passenger request/cancel and paired cash
@@ -751,7 +910,7 @@ acceptance.
 | MON-T5-10 | Attempt public access to ports 9090/9093/3000/3100/12345 and all internal metric/log aliases; only loopback/approved authenticated operator tunnel works and the public TLS proxy rejects internal Host values | Network scan, proxy logs and access-control review |
 | MON-T5-11 | Inject metric/alert names and application errors resembling identifiers or secrets; source normalization plus alert relabeling prevents user/driver/passenger/device/ride/resource/authorization/payload/topic data reaching receivers | Captured scrape and receiver payload review with synthetic canaries |
 | MON-T5-12 | Disable the primary receiver during a critical alert; the approved external receiver/on-call policy reaches backup duty within the target, and T6 staff acknowledge/escalate from the runbook | Primary failure, backup receipt, acknowledgement and escalation timeline |
-| MON-T5-13 | Start Grafana from a fresh named volume with the candidate digest; login succeeds only with the secret-file administrator credential, the internal datasource is healthy, and the immutable `TaxiMobile Operations` dashboard contains exactly the 23 reviewed panels after restart | Image/config/dashboard hashes, health/login trace, datasource result, panel inventory before/after restart |
+| MON-T5-13 | Start Grafana from a fresh named volume with the candidate digest; login succeeds only with the secret-file administrator credential, the internal datasource is healthy, and the immutable `TaxiMobile Operations` dashboard contains exactly the 26 reviewed panels after restart | Image/config/dashboard hashes, health/login trace, datasource result, panel inventory before/after restart |
 | MON-T5-14 | Inspect every provisioned query and inject privacy canaries into source errors and request paths; only normalized route/status/error, fixed worker and fixed owner dimensions appear, with no private label, external link, variable or browser-side datasource request | Exported dashboard JSON hash, Prometheus query audit and canary capture reviewed by privacy owner |
 | MON-T5-15 | Repeat API loss, worker stall/error, latency/5xx, unavailable database/outbox/pool snapshots, pool checkout/overflow, owner backlog/age/dead-letter and recovery injections while staff use the dashboard; each panel changes consistently with its alert and no missing series is interpreted as healthy zero | Synchronized dashboard/alert/source timeline, diagnosis worksheet and false-positive/false-negative findings |
 | MON-T5-16 | Verify anonymous, wrong-password, public-network and unauthorized staff access fail; approved named staff use the protected tunnel/TLS path, then rotate the existing-volume administrator credential and revoke old sessions without deleting dashboard evidence | Access matrix, network trace, named-role review, rotation/session-revocation record with secrets redacted |
@@ -791,6 +950,14 @@ No unresolved critical/high finding lacks approved bounded mitigation.
 
 ## 11. Phase T6 — trained staff rehearsal with synthetic journeys
 
+T6 entry also requires the protected GAP-004 record to pass
+`infra/scripts/validate_pilot_city_launch_approval.py --approval <record> --require-accepted`.
+The repository template is intentionally `NOT_STARTED`.
+Passing the protected record proves that a real city/operator scope, current
+configuration, public terms, accountable owners, pilot limits, independent
+readiness decisions and owner authorization were reviewed; it accepts only
+GAP-004 and does not accept T6, deployment or any rehearsal outcome.
+
 ### Participants
 
 Named market/city administrators, recruitment reviewers, finance reviewers,
@@ -807,6 +974,9 @@ Run a scripted “city in a day” without real customers or documents:
 2. Configure city/service area/operator/tariff/payment/fixed-route/schedule.
 3. Process fictional driver applications and safe synthetic documents.
 4. Activate a pilot bundle through maker/reviewer controls.
+   The configuration submitter must be rejected from both configuration approval
+   and readiness decisions; use an independently authorized reviewer and retain
+   the controlled evidence record with accountable owners and review/expiry dates.
 5. Run immediate, fixed-route and scheduled synthetic rides.
 6. Reconcile cash/transfer/refund and explain every ledger fact.
 7. Handle routine support and urgent safety cases with pager and shift handoff.
@@ -1502,6 +1672,105 @@ T9/T10 replay affected tests for each release and city boundary version; retain
 build identity, configuration version, command IDs, timestamps and reviewer
 decision with minimized location evidence.
 
+#### Live-hint listener recovery and subscription pack
+
+Hints never assign a ride or prove a payment. This pack separates server
+subscription health, client subscription ownership and authoritative catch-up.
+
+| Case | Phase and required result | Evidence boundary |
+| --- | --- | --- |
+| HINT-01 | T1: registration error/timeout or close during registration never marks ready; cleanup finishes and a replacement registers | Controlled connection tests; no real failover claim |
+| HINT-02 | T1: healthy probes retain one connection; probe error/blackhole timeout clears readiness and reconnects; timing values reject non-positive/non-finite input | Unit liveness/timeout cases, fixed error codes without private messages |
+| HINT-03 | T1: a late old termination/notification callback cannot affect the replacement; only the addressed user receives a fresh hint | Recipient and generation-isolation tests |
+| HINT-04 | T1/API: hosted readiness fails when only the listener is unavailable, rechecks after SQL, and recovers; liveness stays healthy; shutdown cancels cooperative stalled sends and releases the connection | Staging/production API tests and bounded cleanup tests |
+| HINT-05 | T3: terminate only the exact test-owned listener PID; observe loss, replacement PID and registered channel, fresh private delivery and complete cleanup | Migrated `test_live_event_recovery.py`; required `LIVE_HINT_RECOVERY` system-report bucket |
+| HINT-06 | T1 then T4: unchanged-ready socket failure, foreground/network return, explicit refresh and access-token rotation restore REST state and receive the next hint through a replacement subscription; logout/account switch/expiry/revocation cease old-session hints | Shared recovery and native wiring source pack implemented; physical Android/iOS traces remain open; HINT-08 separately verifies server authority |
+| HINT-07 | T5: blackhole the dedicated listener while pooled SQL works; remove/re-admit the API through readiness; repeat database restart/failover under concurrent commands and verify missed/duplicate/out-of-order hints reconcile without command replay | Hosted multi-replica, redacted health/recovery timeline, recipient checks and approved RTO; local owned-PID test is insufficient |
+| HINT-08 | T1/T3 then T4/T5: verify the socket's exact session, JWT deadline, database expiry/revocation and account status at admission, before sends and while idle; retain/cancel ownership through shutdown and caller cancellation | Unit/ASGI and fresh migrated authority cases; required `LIVE_SESSION_AUTHORITY` system-report bucket; physical/hosted budgets and pool/load remain unaccepted |
+
+Execute HINT-01–04 through `tests/unit/test_live_events.py`,
+`tests/unit/test_realtime.py` and `tests/api/test_system.py`. Execute HINT-05
+inside the full guarded migrated T3 runner so database isolation, clone cleanup,
+authority revocation and restore evidence remain part of the result.
+
+For HINT-06's source boundary, execute `LiveUpdateSubscriptionTest`,
+`AuthenticationSessionLifetimeTest` and `KtorLiveEventGatewayTest` through both
+shared JVM and Android host suites. Cover unchanged-owner retry, normal closure,
+instant-close backoff without premature reset, foreground/offline return with
+unchanged ready state, maximum one live socket, inactive start, logout during
+retry/push cleanup, account/credential replacement, obsolete callbacks,
+credential rotation inside catch-up, concurrent restores rotating only once,
+typed credential read/save/clear failures, bounded stalled handshake and REST
+reads, unexpected programmer errors and cancellation in token acquisition and
+engine execution. Confirm security commands suppress admission for both roles
+while ordinary commands do not churn the socket. Compile both Android roots;
+compile native sources and tests and link both iOS products in macOS CI. Do not
+describe native test compilation or app linking as executed device behavior.
+
+Run `TaxiMobile/scripts/validate_mobile_live_updates.py` and its mutation tests
+in T0. They check both native wiring paths and reject removal of ownership,
+timeouts, cancellation, retry, logout order or stale-result guards. They are
+source-structure checks, not proof of coroutine behavior or OS lifecycle events.
+HINT-06–08 remain unaccepted: these checks neither configure FCM/APNs nor prove
+physical delivery, accepted server revocation budgets or hosted failover. At
+T4 retain role/platform/network/lifecycle traces, replacement-subscription and
+next-hint evidence, plus absence of business-command replay. Never use a later
+field phase to bypass earlier source or server-authorization gates.
+
+For HINT-08, advance through these boundaries in order:
+
+1. **T0:** validate the unchanged v1 method/path contract, no credential/identity
+   in hint payloads or fixed logs, module-owned authority and no schema/provider
+   substitution. The JSON envelope remains only `type` and `ride_id`; transport
+   fixture grants must be labelled synthetic rather than called real auth.
+2. **T1:** run `tests/unit/test_auth_security.py`,
+   `tests/unit/test_realtime.py` and `tests/api/test_live_sessions.py`. Reject
+   malformed/expired/wrong-signature/operations tokens, ownership failure and
+   unavailable authority before accept. Exercise expiry during the SQL read,
+   JWT deadline earlier than idle interval, idle revocation/suspension, one
+   revoked session versus a second active session, pre-send revalidation,
+   serialized parallel hints, healthy-recipient isolation, lookup/accept/send/
+   close stalls, cancelled publisher/admission/close waiters, shutdown during
+   admission and already-closing work, late accept completion, obsolete owners,
+   text/binary command discard and the server-close/ASGI-receiver race. A broken
+   cancellation-suppressing adapter must produce bounded removal and a fixed
+   cleanup-incomplete warning, not false proof of task force-kill.
+3. **T2:** simulate passenger and driver credential replacement, separate-device
+   session revocation, account suspension, unavailable SQL, lost close frames and
+   refresh during catch-up. Reuse the admitted HINT-06 owner/recovery behaviors;
+   never turn a fake provider/session into migrated or physical evidence. State
+   remains REST-confirmed and no ride/availability/payment command is replayed.
+4. **T3:** run the complete guarded migrated backend suite, not a fixture-only
+   selection. `test_live_session_authority.py` must commit session revocation,
+   account suspension and database expiry through independent SQL sessions,
+   deny wrong user/absent session, preserve the same user's other active session
+   where appropriate, close idle owners and remove all connections/tasks. The
+   report requires both exact `LIVE_SESSION_AUTHORITY` test names in addition
+   to `LIVE_HINT_RECOVERY`; retain skip-free JUnit, migration/PostGIS metadata,
+   clone/temporary-authority cleanup and current-head logical restore.
+5. **T4:** use synthetic accounts on physical Android/iOS passenger and driver
+   apps, including two independently logged-in installations. Revoke only one
+   session, then suspend the whole account; repeat idle, sending, token refresh,
+   foreground/background and network-return cases. Record server close outcome,
+   absence of newly authorized hints after observed withdrawal, REST rejection/
+   recovery, replacement subscription and next allowed hint. Do not promise
+   recall of a frame sent before the revocation check. Retain minimized timelines
+   and candidate/platform identity without tokens, raw session IDs or location.
+6. **T5:** repeat across at least two API replicas with one user connected to
+   both. Blackhole/delay pooled SQL separately from the LISTEN transport; stall
+   one receiver; revoke/expire during admission, a fresh read and in-flight send;
+   restart a replica while it is closing. Freeze and measure idle detection,
+   lookup/send/close/cleanup bounds and REST recovery against approved budgets.
+   Measure idle-socket plus hint-rate database/pool demand, checkout waits,
+   connection reserve and headroom at the intended pilot/expanded fleet size.
+   Review read/send race limits, cancellation cooperation, load, cleanup and
+   outage logs before accepting the security/delivery SLO.
+7. **T6–T10:** staff rehearse lost-session and authority-outage diagnosis before
+   invited field users. Replay the accepted T4/T5 matrix for each candidate,
+   policy, capacity or city-expansion change; use the existing phase stop rules.
+   A successful socket close is not Firebase/APNs delivery or permission to
+   introduce real users before the independent P0 gates pass.
+
 #### City-authorization restriction and reinstatement pack
 
 The command is `POST /operations/driver-applications/{application_id}/authorization/decisions`.
@@ -1539,7 +1808,7 @@ authority case first reproduced an assertion in dispatch: a rejected provisional
 candidate remained non-null while its score was unselected. Dispatch now only
 finalizes a candidate after all guards pass, and repeats the eligibility query
 in a fresh statement snapshot after the driver/global-account locks. The current
-990-test run includes this matching-service change; the earlier
+992-test run includes this matching-service change; the earlier
 783-test report does not.
 
 Run with the complete guarded local test configuration and migrated disposable

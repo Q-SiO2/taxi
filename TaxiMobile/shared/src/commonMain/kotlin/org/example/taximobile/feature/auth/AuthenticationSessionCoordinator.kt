@@ -1,9 +1,16 @@
 package org.example.taximobile.feature.auth
 
 import org.example.taximobile.data.auth.AuthenticationGateway
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.example.taximobile.data.auth.AuthenticationNetworkException
 import org.example.taximobile.data.auth.AuthenticationRejectedException
 import org.example.taximobile.data.auth.SecureTokenStore
+import org.example.taximobile.data.auth.SecureTokenStorageException
 import org.example.taximobile.data.network.ApiRequestException
 import org.example.taximobile.domain.auth.CurrentAccount
 import org.example.taximobile.feature.ui.text.UiMessage
@@ -26,29 +33,88 @@ class AuthenticationSessionCoordinator(
     private val gateway: AuthenticationGateway,
     private val tokenStore: SecureTokenStore,
 ) {
-    suspend fun restore(): AuthenticationState {
-        val tokens = tokenStore.tokens() ?: return AuthenticationState.Unauthenticated
+    // Concurrent reconnect/foreground/push restores must not rotate the same
+    // refresh credential twice. This mutex owns credentials, not business commands.
+    private val sessionMutex = Mutex()
+    private val mutableLifetime = MutableStateFlow(LocalSessionLifetime())
+    val liveSessionLifetime: StateFlow<LocalSessionLifetime> = mutableLifetime.asStateFlow()
+
+    /** Stop hints immediately, before logout waits for any network cleanup. */
+    fun stopLiveUpdates() {
+        mutableLifetime.update { current ->
+            if (current.active) current.copy(generation = current.generation + 1, active = false) else current
+        }
+    }
+
+    /** Late/queued REST restores may not reopen hints while logout cleanup waits. */
+    fun beginSessionEnd() {
+        mutableLifetime.update { current ->
+            current.copy(
+                generation = current.generation + if (current.active) 1 else 0,
+                active = false,
+                ending = true,
+            )
+        }
+    }
+
+    private fun sessionAvailable(replaced: Boolean = false) {
+        mutableLifetime.update { current ->
+            if (!current.ending && (replaced || !current.active)) {
+                LocalSessionLifetime(current.generation + 1, true)
+            } else current
+        }
+    }
+
+    suspend fun restore(): AuthenticationState = sessionMutex.withLock { restoreSession() }
+
+    private suspend fun restoreSession(): AuthenticationState {
         return try {
-            authenticated(gateway.currentAccount(tokens.accessToken))
-        } catch (_: AuthenticationRejectedException) {
-            refreshOrSignOut(tokens.refreshToken)
-        } catch (_: AuthenticationNetworkException) {
-            AuthenticationState.Failure(message(Res.string.message_network_unavailable))
-        } catch (_: ApiRequestException) {
+            val tokens = tokenStore.tokens() ?: run {
+                stopLiveUpdates()
+                return AuthenticationState.Unauthenticated
+            }
+            try {
+                authenticated(gateway.currentAccount(tokens.accessToken))
+            } catch (_: AuthenticationRejectedException) {
+                refreshOrSignOut(tokens.refreshToken)
+            } catch (_: AuthenticationNetworkException) {
+                AuthenticationState.Failure(message(Res.string.message_network_unavailable))
+            } catch (_: ApiRequestException) {
+                AuthenticationState.Failure(message(Res.string.message_session_restore_failed))
+            }
+        } catch (_: SecureTokenStorageException) {
+            stopLiveUpdates()
             AuthenticationState.Failure(message(Res.string.message_session_restore_failed))
         }
     }
 
-    suspend fun login(identifier: String, password: String, deviceLabel: String?): AuthenticationState = try {
-        val tokens = gateway.login(identifier, password, deviceLabel)
-        tokenStore.save(tokens.accessToken, tokens.refreshToken)
-        authenticated(gateway.currentAccount(tokens.accessToken))
-    } catch (_: AuthenticationRejectedException) {
-        AuthenticationState.Failure(message(Res.string.message_invalid_credentials))
-    } catch (_: AuthenticationNetworkException) {
-        AuthenticationState.Failure(message(Res.string.message_network_unavailable))
-    } catch (_: ApiRequestException) {
-        AuthenticationState.Failure(message(Res.string.message_sign_in_failed))
+    suspend fun login(identifier: String, password: String, deviceLabel: String?): AuthenticationState {
+        stopLiveUpdates()
+        return sessionMutex.withLock {
+            mutableLifetime.update { it.copy(ending = false) }
+            loginSession(identifier, password, deviceLabel)
+        }
+    }
+
+    private suspend fun loginSession(identifier: String, password: String, deviceLabel: String?): AuthenticationState {
+        var issuedAccessToken: String? = null
+        return try {
+            val tokens = gateway.login(identifier, password, deviceLabel)
+            issuedAccessToken = tokens.accessToken
+            tokenStore.save(tokens.accessToken, tokens.refreshToken)
+            sessionAvailable(replaced = true)
+            authenticated(gateway.currentAccount(tokens.accessToken))
+        } catch (_: SecureTokenStorageException) {
+            stopLiveUpdates()
+            issuedAccessToken?.let { bestEffortLogout(it) }
+            AuthenticationState.Failure(message(Res.string.message_sign_in_failed))
+        } catch (_: AuthenticationRejectedException) {
+            AuthenticationState.Failure(message(Res.string.message_invalid_credentials))
+        } catch (_: AuthenticationNetworkException) {
+            AuthenticationState.Failure(message(Res.string.message_network_unavailable))
+        } catch (_: ApiRequestException) {
+            AuthenticationState.Failure(message(Res.string.message_sign_in_failed))
+        }
     }
 
     suspend fun register(
@@ -66,42 +132,83 @@ class AuthenticationSessionCoordinator(
     }
 
     suspend fun logout(): AuthenticationState {
-        val tokens = tokenStore.tokens()
-        tokenStore.clear()
+        beginSessionEnd()
+        return sessionMutex.withLock {
+            try { logoutSession() } finally { mutableLifetime.update { it.copy(ending = false) } }
+        }
+    }
+
+    private suspend fun logoutSession(): AuthenticationState {
+        stopLiveUpdates()
+        val tokens = try {
+            tokenStore.tokens()
+        } catch (_: SecureTokenStorageException) {
+            null
+        }
+        try {
+            tokenStore.clear()
+        } catch (_: SecureTokenStorageException) {
+            return AuthenticationState.Failure(message(Res.string.message_session_restore_failed))
+        }
         if (tokens != null) {
-            try {
-                gateway.logout(tokens.accessToken)
-            } catch (_: AuthenticationNetworkException) {
-                // Local credential deletion is still required while offline.
-            } catch (_: AuthenticationRejectedException) {
-                // The server session is already invalid.
-            } catch (_: ApiRequestException) {
-                // Local credential deletion still wins over a server-side failure.
-            }
+            bestEffortLogout(tokens.accessToken)
         }
         return AuthenticationState.Unauthenticated
     }
 
     /** Clear already-revoked local credentials without issuing another command. */
     suspend fun clearLocalSession(): AuthenticationState {
-        tokenStore.clear()
-        return AuthenticationState.Unauthenticated
+        beginSessionEnd()
+        return sessionMutex.withLock {
+            try { clearLocalSessionLocked() } finally { mutableLifetime.update { it.copy(ending = false) } }
+        }
     }
 
-    private suspend fun refreshOrSignOut(refreshToken: String): AuthenticationState = try {
-        val refreshed = gateway.refresh(refreshToken)
-        tokenStore.save(refreshed.accessToken, refreshed.refreshToken)
-        authenticated(gateway.currentAccount(refreshed.accessToken))
-    } catch (_: AuthenticationRejectedException) {
+    private suspend fun clearLocalSessionLocked(): AuthenticationState = try {
+        stopLiveUpdates()
         tokenStore.clear()
         AuthenticationState.Unauthenticated
-    } catch (_: AuthenticationNetworkException) {
-        AuthenticationState.Failure(message(Res.string.message_network_unavailable))
-    } catch (_: ApiRequestException) {
+    } catch (_: SecureTokenStorageException) {
         AuthenticationState.Failure(message(Res.string.message_session_restore_failed))
     }
 
-    private fun authenticated(account: CurrentAccount): AuthenticationState = AuthenticationState.Authenticated(account)
+    private suspend fun refreshOrSignOut(refreshToken: String): AuthenticationState {
+        var issuedAccessToken: String? = null
+        return try {
+            val refreshed = gateway.refresh(refreshToken)
+            issuedAccessToken = refreshed.accessToken
+            tokenStore.save(refreshed.accessToken, refreshed.refreshToken)
+            sessionAvailable(replaced = true)
+            authenticated(gateway.currentAccount(refreshed.accessToken))
+        } catch (_: AuthenticationRejectedException) {
+            clearLocalSessionLocked()
+        } catch (_: AuthenticationNetworkException) {
+            AuthenticationState.Failure(message(Res.string.message_network_unavailable))
+        } catch (_: ApiRequestException) {
+            AuthenticationState.Failure(message(Res.string.message_session_restore_failed))
+        } catch (_: SecureTokenStorageException) {
+            stopLiveUpdates()
+            issuedAccessToken?.let { bestEffortLogout(it) }
+            AuthenticationState.Failure(message(Res.string.message_session_restore_failed))
+        }
+    }
+
+    private suspend fun bestEffortLogout(accessToken: String) {
+        try {
+            gateway.logout(accessToken)
+        } catch (_: AuthenticationNetworkException) {
+            // Local credential deletion is still required while offline.
+        } catch (_: AuthenticationRejectedException) {
+            // The server session is already invalid.
+        } catch (_: ApiRequestException) {
+            // Local credential deletion still wins over a server-side failure.
+        }
+    }
+
+    private fun authenticated(account: CurrentAccount): AuthenticationState {
+        sessionAvailable()
+        return AuthenticationState.Authenticated(account)
+    }
 }
 
 internal fun registrationFailureMessage(statusCode: Int): UiMessage = when (statusCode) {

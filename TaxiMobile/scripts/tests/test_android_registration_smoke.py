@@ -1,7 +1,10 @@
 import importlib.util
+import json
 from pathlib import Path
 import sys
+import tempfile
 import unittest
+from unittest.mock import patch
 
 
 SCRIPT_PATH = Path(__file__).resolve().parents[1] / "android_registration_smoke.py"
@@ -24,6 +27,8 @@ class AndroidRegistrationSmokeTest(unittest.TestCase):
         self.assertLess(guard, clear)
         self.assertIn('"-PtaximobileDebugApiBaseUrl=$apiBaseUrl"', runner)
         self.assertIn('"android_registration_smoke.py"', runner)
+        self.assertIn('"--output", $resolvedEvidencePath', runner)
+        self.assertIn("EvidencePath requires RegistrationSmoke", runner)
 
     def test_localization_catalog_contains_every_acceptance_state(self) -> None:
         values = SMOKE.load_localized_values()
@@ -66,6 +71,62 @@ class AndroidRegistrationSmokeTest(unittest.TestCase):
 
         source = SCRIPT_PATH.read_text(encoding="utf-8")
         self.assertNotIn("/sdcard", source)
+
+    def test_device_profile_is_bounded_and_contains_no_raw_serial(self) -> None:
+        class FakeAdb:
+            values = {
+                ("shell", "getprop", "ro.build.version.sdk"): "35",
+                ("shell", "wm", "size"): "Physical size: 1080x2400",
+                ("shell", "getprop", "ro.product.cpu.abi"): "arm64-v8a",
+                ("shell", "getprop", "ro.product.manufacturer"): "Example",
+                ("shell", "getprop", "ro.product.model"): "Test Phone",
+                ("shell", "getprop", "persist.sys.locale"): "fr-MA",
+                ("shell", "dumpsys", "package", "ma.taximobile.passenger"): (
+                    "  versionCode=7 minSdk=24 targetSdk=36\n  versionName=1.2.3"
+                ),
+            }
+
+            def text(self, *arguments):
+                return self.values[arguments]
+
+            def bounded_output(self, *arguments, **_options):
+                return self.values[arguments]
+
+        profile = SMOKE.collect_device_profile(FakeAdb(), "passenger")
+        self.assertEqual(35, profile["android_sdk"])
+        self.assertEqual("1.2.3", profile["package_version_name"])
+        self.assertNotIn("serial", " ".join(profile).lower())
+
+    def test_device_evidence_is_partial_and_never_accepts_t4(self) -> None:
+        evidence = SMOKE.build_evidence(
+            "driver",
+            {"android_sdk": 35, "single_authorized_device_verified": True},
+            [{"id": "ANDROID_REGISTRATION", "result": "PASS", "authority": "BACKEND_CONFIRMED"}],
+        )
+        self.assertEqual(["ANDROID_DEVICE_REPORT"], evidence["supported_evidence_kinds"])
+        self.assertFalse(evidence["phase_evidence_complete"])
+        self.assertFalse(evidence["phase_accepted"])
+        self.assertFalse(evidence["deployment_accepted"])
+        self.assertNotIn("serial", json.dumps(evidence).lower())
+
+    def test_existing_evidence_is_rejected_before_adb_access(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "existing.json"
+            output.write_text("{}", encoding="utf-8")
+            with patch.object(
+                sys,
+                "argv",
+                [
+                    "android_registration_smoke.py",
+                    "--adb",
+                    str(Path(directory) / "missing-adb"),
+                    "--role",
+                    "passenger",
+                    "--output",
+                    str(output),
+                ],
+            ):
+                self.assertEqual(1, SMOKE.main())
 
 
 if __name__ == "__main__":

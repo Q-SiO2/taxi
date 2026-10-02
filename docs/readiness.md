@@ -1,8 +1,9 @@
 # TaxiMobile — Repository Readiness Assessment
 
-**Assessment date:** 2026-09-08. **Scope:** the current working tree, including
-untracked implementation; not just Git HEAD. **Base commit:**
-`f85417bcc8b432477fd88e87f5bd557a43898447`. **Migration head:** `20260908_0052`.
+**Source assessment date:** 2026-09-09. **Standing refreshed:** 2026-09-29.
+**Assessment base commit:** `f85417bcc8b432477fd88e87f5bd557a43898447`.
+**Current verified candidate:** `168c350948f025c7cf6182c7ada22ce8fcf2dab9`.
+**Migration head:** `20260908_0052`.
 
 ## Decision and percentage
 
@@ -42,7 +43,8 @@ Review combined documentation standing/requirements and gap sections, router and
 worker wiring, critical ride/matching/pricing/payment/scheduling implementation,
 migration constraints, client composition/gateways, tests and release scripts.
 This is a repository-wide structural and targeted implementation review, not a
-line-by-line security audit of all 922 files. No hosted service, remote CI run,
+line-by-line security audit of all 922 files. The current immutable push and
+pull-request CI runs were inspected on 2026-09-28; no hosted production service,
 real provider account, device, legal record, bank statement or staffing roster
 was inspected. Existing documentation's older test results remain historical
 claims unless explicitly rerun below.
@@ -116,40 +118,55 @@ engineering scope rather than counting each feature once per file.
    Treat the generated report and briefing as dated derived artifacts until their
    sources are deliberately revised and rebuilt; this live readiness record and
    the domain documents are authoritative for the current source tree.
-4. `TaxiMobile/README.md` still says operations production access awaits MFA and
-   cookie/CSRF implementation, while current auth source and `docs/auth.md` include
-   them. This non-`docs/` discrepancy is recorded, not silently used to downgrade
-   implemented auth. Its setup text should be reconciled in the next client-doc task.
+4. `TaxiMobile/README.md` previously said operations production access awaited
+   MFA and cookie/CSRF implementation. Its setup text now matches current auth
+   source and `docs/auth.md`: those controls exist, while hosted CSP, enrollment,
+   deployment review and acceptance remain open.
 5. The extended UI introduction's broad “real-time driver discovery” wording can
    be mistaken for pre-assignment supply browsing. Clarified it using the existing
    `product.md` supply-privacy rule, without adding a new product decision.
-6. “CI-wired” previously required a committed definition although this checkout
-   contains modified workflow YAML. The docs now call it a working-tree workflow
-   definition until an immutable remote run is identified.
+6. “CI-wired” previously described only a working-tree workflow definition. The
+   complete push and pull-request workflows now pass at immutable commit
+   `168c350948f025c7cf6182c7ada22ce8fcf2dab9`; this still is not release approval.
 
 ## Verification performed for this assessment
 
-| Check | Fresh result through 2026-09-08 | Boundary |
+| Check | Recorded result through 2026-09-29 | Boundary |
 | --- | --- | --- |
 | Backend `python -m pytest tests/unit tests/api` | **699 passed**, 173 dependency deprecation warnings, 45.52 seconds | Earlier focused check; superseded for backend breadth by the fresh full-suite row below. |
-| Full backend on fresh isolated PostGIS through `20260908_0052` | **990 passed**, zero failures/errors/skips, 175 dependency warnings, 464.24 seconds | Fresh current-worktree console evidence includes client compatibility, explicit pool bounds/exhaustion, staff dual control, legacy-admin retirement telemetry and security-incident responsibility/postmortem/deadline operations. The duration is not capacity evidence. The preceding generated JUnit remains the 956-test `backend/build/security-incident-full-tests.xml`; neither is immutable CI, hosted, provider, device, or user acceptance. |
+| Full backend on fresh isolated PostGIS through `20260908_0052` | **992 passed**, zero failures/errors/skips, 175 dependency warnings, 1,344.70 seconds | Fresh current-worktree JUnit plus bounded T3 metadata/report evidence includes client compatibility, explicit pool bounds/exhaustion, staff dual control, legacy-admin retirement telemetry, security-incident operations, named lock/race/worker recovery and database reconciliation. One stale clone from an older interruption was removed; zero remained and temporary local `CREATEDB` was revoked. This is not capacity, immutable CI, hosted, provider, device, backup/restore or user acceptance. |
 | Mobile/backend contract validator | **83 HTTP + 1 WebSocket operations passed** | Includes the command-free client compatibility preflight; source operation/path agreement, not device/provider delivery. |
 | Focused staff/control-plane PostGIS integration | **28 passed** through `20260907_0049`; the four new staff scenarios and migration downgrade/re-upgrade also passed separately | Covers national scope, city pricing, fixed routes, staff request/replay/decision, revocation, continuity and bounded quorum bootstrap. |
+| Focused city-rollout dual control | **17 unit contract cases passed locally**; the updated migrated two-city journey is delegated to fresh-PostGIS CI | Configuration approval and readiness decisions reject the configuration submitter, while a city-manager maker/platform-admin reviewer path remains covered. This is source enforcement only; no real city, operator, legal approval or pilot authorization is claimed. |
 | Focused security-incident source/PostGIS | **18 dedicated cases** through `20260908_0052` (16 unit/static and two migrated API/database cases) | Adds initial lead assignment, eligible exact-market reassignment, ineligible refusal, concurrent one-winner serialization, idempotent replay, version authority, generated timeline facts and assignment-history mutation refusal to the existing lifecycle/postmortem/deadline coverage; not an authoritative roster, hosted receiver or staffed drill. |
 | Operations web JS and Wasm browser suites | **57 passed per target** | Adds responsibility-input/history decoding to the seven earlier security-incident permission/lifecycle/input/version/postmortem tests; it does not prove staffed browser journeys or accessibility. |
+| Static web compatibility loader | **6 runtime scenarios passed** | Executes supported/update/forced-upgrade/error/retry/local-origin behavior and proves client headers remain scoped to the exact API origin and `/api/v1/` path; this is not a hosted-browser or ingress test. |
 | Operations web production distributions | **JS and Wasm production distributions built** | Local optimized artifacts exist for source verification; this is not the packaged compatibility release, hosted CSP/TLS proof, browser E2E, or an immutable signed artifact. |
 | Web/backend contract validator | **112 HTTP operations passed** | Includes the fail-closed static compatibility preflight, six staff-request and nine security-incident client operations, with the responsibility path selector restricted to four values; does not prove full browser journeys. |
-| Infrastructure script unit tests | **36 passed** | Includes validator/provenance/package behavior, strict web release identity, generated API/migration/permission inventory, executable T0–T10 evidence controls, legacy-client caller enforcement, and CI-wiring mutation coverage. |
-| Mobile script unit tests | **30 passed** | Source/release/device-harness contracts, not physical-device execution. |
+| Infrastructure script unit tests | **193 passed** | Includes validator/provenance/package behavior, strict web release identity, generated API/migration/permission inventory, executable T0–T10/T2 persona, fail-closed T3 backup/restore, balanced T4 laboratory-map, GAP-002 environment, GAP-003 managed-PostGIS, GAP-004 pilot approval, GAP-005 operations-governance, GAP-006 maps/routing/navigation and CI/diagnostic-path mutation coverage. |
+| Bounded T2 simulated-persona baseline | **20 scenarios / 60 exact tests passed** | Source-level synthetic authority and state-machine coverage only. The report refuses T2/deployment acceptance and identifies missing adversarial, durable reconciliation, minimization and sign-off evidence. |
+| Bounded T3 system baseline | **992 tests and all six required evidence kinds passed locally** | JUnit, secret-free database metadata and a guarded logical restore reconcile 81 public tables/8,511 aggregate rows at migration 0052. The target and dump were removed. Evidence completeness is true, but the dirty-workspace snapshot has no engineering sign-off or ordered phase acceptance; T3 and deployment acceptance remain false. |
+| T4 laboratory map | **56 reviewed cases; 0 executed** | Exactly eight cases cover each required evidence kind and source targets/locales/browsers are cross-checked. The template is deliberately `NOT_STARTED`; no device, browser, accessibility, failure or crash acceptance is inferred. |
+| Bounded T4 browser boot smoke | **8/8 local scenarios passed** across Chrome 152 and Firefox 155 | Packaged-release preflight, blocked/boot branch selection and screenshot retention passed. Safari, authenticated critical journeys, accessibility/RTL, console/source-map review, hosted headers and independently firewalled browser egress remain absent; zero complete T4 catalog cases and no phase/deployment acceptance are claimed. |
+| GAP-002 production environment inventory | **Schema/template and ten focused validator cases passed; status `NOT_STARTED`** | The validator requires three isolated environments, 12 reviewed service boundaries, exact TLS origins, digest-pinned core images, private infrastructure, rotation/recovery/cost records and five approvals. No provider or hosted target has supplied that evidence, so GAP-002, T5 and deployment remain unaccepted. |
+| GAP-003 managed PostGIS evidence | **Schema/template and 14 focused validator cases passed; status `NOT_STARTED`** | The validator requires private encrypted PostgreSQL 16/PostGIS compatibility, separated authority, current-head migration, capacity reserve, automated backups/PITR, restore/failover within RPO/RTO, retention-expiry proof and four approvals. No managed service has supplied those facts, so GAP-003, T5 and deployment remain unaccepted. |
+| GAP-004 pilot-city approval evidence | **Schema/template and 19 focused validator cases passed; status `NOT_STARTED`** | The validator binds one real city/operator to an active configuration, cash-inclusive scope, public terms, accountable functions, bounded exposure, ten independent readiness decisions and six approvals. It supports an explicitly approved on-demand/fixed-route/scheduled scope without silently enabling one. No owner has supplied the city, legal operator or approvals, so GAP-004, T6 and deployment remain unaccepted. |
+| GAP-005 operations identity/governance evidence | **Schema/template and 16 focused validator cases passed; status `NOT_STARTED`** | The validator requires roster/JML authority, three distinct platform-admin quorum duties, explicit sensitive-duty separation, reviewed TOTP/recovery custody for every assigned account, access-review/leaver bounds, eight drills, audit references and four approvals. No production accounts, roster owner or human drill evidence exists, so GAP-005, T5 and deployment remain unaccepted. |
+| GAP-006 maps/routing/navigation evidence | **Schema/template and 24 focused validator cases passed; status `NOT_STARTED`** | The validator binds immutable style/tile/graph artifacts and policy controls to six distinct pilot-city benchmark results, four distinct Android/iOS role traces in Arabic/French/English, seven distinct operational drill records, six approvals and the exact hash-matched backend routing-acceptance report. No production tile/style source, promoted graph, approved city case set, physical-device trace, drill or approval exists, so GAP-006, T5 and deployment remain unaccepted. |
+| Remote immutable candidate CI | **Complete push and pull-request workflows passed at `168c350`** | Push run 36579184499 passed dependency submission; PR run 36579194061 passed dependency review. Backend/fresh PostGIS, mobile, web, documentation/provenance, wrapper integrity and both iOS jobs were green. This does not supply independent review, branch protection, signed distribution artifacts, a registry digest or release approval. |
+| Mobile script unit tests | **38 passed** | Includes privacy-bounded Android registration/login evidence contracts and iOS Keychain source guards that reject impossible native casts, split token writes and unchecked status handling. No phone was attached and no physical-device result is claimed. |
+| Android role release verification artifacts | **Passenger and driver 1.0.0 APKs built and manifest-verified** | Distinct package IDs, versions, sizes and SHA-256 hashes are recorded. The manifest is intentionally `distribution_eligible=false` because signing, Firebase/Crashlytics and physical-device acceptance are absent. |
+| iOS role release verification artifacts | **Kotlin production/test sources compiled; Passenger and Driver Release simulator applications linked and evidence-bound at `de69829a`** | The exact 14-package graph was restored from the committed lock, automatic resolution stayed disabled, and both immutable runs passed. MapLibre Compose upstream issue #824 still prevents Gradle native-test linking, so no iOS native-test execution, signed archive, provider configuration, physical-device result, or deployment acceptance is claimed. |
 | Documentation validator | **Passed before and after edits** | Links, standing blocks, gap/test sequences and migration head. |
-| Shared JVM suite | **183 passed**, zero failures/errors/skips | Fresh JVM execution includes client identity and compatibility restore states; both Android role compiles and JS/Wasm compilation pass, while iOS is not executable on Windows. |
+| Shared JVM suite | **190 passed**, zero failures/errors/skips | Fresh JVM execution adds atomic token-envelope corruption cases and protected-storage failure behavior, including revocation of newly issued login/refresh sessions after a failed save. iOS remains non-executable on Windows. |
 | TeX/PDF build and visual checks | **Passed: 18-page report and 36-slide briefing**, compiled with pdfLaTeX, rendered and visually inspected | No overfull boxes, undefined references or TeX errors in final logs. MiKTeX reports its local update-check notice. |
 
-The latest complete backend evidence is **990 full fresh-PostGIS tests at 0052**,
+The latest complete backend test execution is **992 full fresh-PostGIS tests at 0052**,
 with separate focused migration/control-plane evidence for the staff slice. The
-records also report **183 shared JVM tests**, plus
+records also report **190 shared JVM tests**, plus
 Android and JS/Wasm verification. No iOS device, signed release, hosted load,
-provider acceptance, live passenger, or real-money test is claimed here.
+provider acceptance, managed encrypted backup/PITR, live passenger, or real-money
+test is claimed here.
 Deprecation warnings are maintenance work, not failures caused by this change.
 
 ## Updated deliverables

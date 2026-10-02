@@ -262,7 +262,13 @@ async def prove_shared_rate_limit(settings: Settings, key: str) -> None:
 async def prove_shared_live_event_fanout(settings: Settings) -> None:
     engine = create_async_engine(settings.database_url, pool_pre_ping=True)
     sessions = async_sessionmaker(engine, expire_on_commit=False)
-    hub = EventHub()
+    from taximobile_api.domains.auth.security import VerifiedAccessToken
+
+    async def permit_transport_fixture(_):
+        # This test proves PostgreSQL fanout, not mobile authentication.
+        return True
+
+    hub = EventHub(permit_transport_fixture)
     user_id = uuid4()
     ride_id = uuid4()
 
@@ -278,11 +284,14 @@ async def prove_shared_live_event_fanout(settings: Settings) -> None:
             self.message = payload
             self.received.set()
 
+        async def close(self, *, code) -> None:
+            pass
+
     socket = RecordingSocket()
     listener = PostgresLiveEventListener(settings.database_url, hub, reconnect_seconds=0.1)
     listener_task = asyncio.create_task(listener.run())
     try:
-        await hub.connect(user_id, socket)
+        await hub.connect(VerifiedAccessToken(user_id, uuid4(), datetime.now(UTC) + timedelta(minutes=10)), socket)
         await listener.wait_until_ready(5)
         for event_type in sorted(LIVE_EVENT_TYPES):
             socket.received.clear()
@@ -295,6 +304,7 @@ async def prove_shared_live_event_fanout(settings: Settings) -> None:
         listener_task.cancel()
         with suppress(asyncio.CancelledError):
             await listener_task
+        await hub.aclose()
         await engine.dispose()
 
 

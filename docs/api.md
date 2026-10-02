@@ -2076,6 +2076,20 @@ Clients may supply a canonical UUID in `X-Request-ID`; malformed, non-canonical,
 or free-text values are replaced with a server-generated UUID before entering a
 response or log.
 
+## Operational health and readiness
+
+`GET /health` is process liveness, not dependency or delivery acceptance.
+`GET /ready` probes PostgreSQL; in staging/production it additionally requires a
+live registered process-owned PostgreSQL hint listener before and after that
+probe. Loss, cleanup and retry remain unready until re-registration succeeds.
+Either dependency failure returns `503` using the existing
+`DEPENDENCY_UNAVAILABLE` envelope and message `The service is not ready.`; no
+database, listener, provider or private error detail is disclosed. Success is
+`200 {"status":"ready"}`. Local/test processes without that listener use SQL-only
+readiness. Worker readiness separately requires SQL, a running supervisor and
+successful iterations of all eight fixed worker loops. None of these responses
+proves that a device received a hint or that missed hints were replayed.
+
 ## Operational metrics
 
 `GET /internal/metrics` is outside the public versioned API and excluded from
@@ -2483,6 +2497,40 @@ named user's local sockets receive it. Socket input never executes commands. On
 every message, reconnect, foregrounding, or error, the client must retrieve the
 resource from the REST API and reauthorize it. FCM delivery also
 requires environment-provided server credentials and valid Android/APNs projects.
+The native client owns one foreground/session-bound subscription and preserves
+cancellation rather than translating it into transport failure. Admission causes
+REST catch-up before frame consumption; normal closure or network/rejection
+failure causes another read and bounded jittered reconnect even when the ready
+screen category is unchanged. Access-credential replacement switches a non-secret
+local generation and cancels old callbacks; ordinary same-session reads do not.
+The connection-attempt and catch-up budgets are ten and fifteen seconds. These
+are client recovery defaults, not a delivery SLO, new wire contract, replay
+cursor, or background-tracking permission.
+
+The server retains only the verified mobile user/session IDs and access-token
+deadline, never the raw bearer credential, in its socket owner. Admission, every
+hint send and the idle monitor re-read session ownership, revocation, database
+session expiry and active account status through the same SQL predicate as REST.
+No positive authorization result is cached. Operations-audience tokens cannot
+open this mobile socket. Refresh does not extend an existing socket's verified
+deadline: the client must reconnect using its newly persisted credentials.
+
+The idle recheck interval is 15 seconds and authorization/accept/send/close
+operations have five-second defaults; deadline wake-up is earlier when required.
+A known expired/revoked/suspended identity closes with `4401`; unavailable or
+timed-out authority closes with `1013`. Closing immediately withdraws hint
+authority and cancels cooperative owned work. Per-socket sends are serialized;
+other recipients continue independently. Admission and closing owners remain
+tracked until cleanup releases them, and caller cancellation cannot abandon the
+retained closer. Inbound text and binary frames never execute commands.
+
+These are source defaults, not an accepted fleet-wide revocation/delivery SLO.
+Revalidation is a fresh read, not a database lock held across network IO: a
+revocation committing after that read can race an already-started frame, and
+bytes already buffered/sent cannot be retracted. Cancellation-suppressing adapters
+cannot be force-killed by Python; cleanup reports a fixed, identity-free failure
+instead of claiming they were reaped. Hosted pool/load, multi-replica revocation,
+physical device catch-up and provider delivery remain HINT-08/T4/T5 acceptance.
 For an authenticated command error, the client executes no automatic retry of the
 command. It performs one read-only authoritative restore, renders that result,
 and retains the original operation error for the user unless reauthorization
@@ -2571,6 +2619,27 @@ The generated API documentation should describe:
 * Status codes.
 
 The documentation should remain synchronized with the implementation.
+
+For immutable release evidence, `infra/scripts/generate_openapi_evidence.py`
+retains the complete generated schemas, not only method/path inventories.
+It uses the actual application factory in a bounded child process with only
+reviewed OS necessities and test/API configuration. Deployment database,
+authentication, provider, log and Python-path settings are not inherited;
+no application lifespan, database request or provider request is executed.
+The canonical serialization is sorted-key UTF-8, two-space indentation and
+one LF terminator; array ordering is preserved. Payload, component, security
+or response changes therefore change the digest even when operation names do not.
+
+Two separate profiles are mandatory: `launch-api` excludes every transitional
+`/api/v1/admin` route; `local-compatibility-api` includes that development/test
+surface. Both retain scoped operations contracts. These are route-mount profiles,
+not accepted runtime configurations. FastAPI may qualify component names
+differently when legacy models are included; each whole schema has its own digest.
+Do not infer semantic payload compatibility from reference names or the method/
+path inventory. WebSocket contracts remain separately tested outside OpenAPI.
+CI binds both schema files and `openapi-manifest.json` to the exact clean source
+candidate and retains them with the backend evidence. Authorization and
+deployment acceptance always remain false in this source manifest.
 
 ---
 
@@ -3145,6 +3214,12 @@ rollout API. No generic rollout mutation or city-specific endpoint is added.
 `POST /operations/city-configuration-versions/{version_id}/readiness-decisions`
 accepts only an allowlisted `gate_code`, `PASSED` or `FAILED`, a bounded non-secret
 evidence reference, and the expected optimistic configuration version. For an
+approved bundle, the backend requires the deciding account to differ from the
+recorded configuration submitter. Configuration approval enforces the same
+maker/reviewer boundary; retries of an already-completed transition remain
+idempotent. The evidence reference points to a controlled record containing the
+accountable owners and review or expiry dates rather than copying names, legal
+documents, credentials, or participant data into TaxiMobile. For an
 initial launch, `PILOT_SERVICE_AND_FAIRNESS` is accepted only on the active
 configuration of a city currently in `PILOT`. An approved replacement may
 receive a new change-impact decision while its city is already `ACTIVE` or

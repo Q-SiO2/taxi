@@ -173,6 +173,56 @@ def test_readiness_database_failure_is_a_safe_service_unavailable_response() -> 
     assert "private database connection detail" not in response.text
 
 
+@pytest.mark.parametrize("environment", ["staging", "production"])
+def test_hosted_readiness_tracks_live_listener_loss_and_recovery(monkeypatch, environment) -> None:
+    class Listener:
+        is_ready = False
+
+    listener = Listener()
+    monkeypatch.setattr("taximobile_api.main.PostgresLiveEventListener", lambda *_: listener)
+    app = create_app(
+        settings=replace(Settings.from_environment(), environment=environment, process_role="api"),
+        session_factory=ReadySessionFactory(),
+    )
+    client = TestClient(app)
+    assert client.get("/health").status_code == 200
+    assert client.get("/ready").status_code == 503
+    listener.is_ready = True
+    assert client.get("/ready").json() == {"status": "ready"}
+    listener.is_ready = False
+    failed = client.get("/ready")
+    assert failed.status_code == 503
+    assert failed.json() == {
+        "error": {"code": "DEPENDENCY_UNAVAILABLE", "message": "The service is not ready.", "details": {}},
+    }
+    assert "listener" not in failed.text
+    listener.is_ready = True
+    assert client.get("/ready").status_code == 200
+
+
+@pytest.mark.parametrize("environment", ["staging", "production"])
+def test_hosted_readiness_rechecks_listener_after_database_probe(monkeypatch, environment) -> None:
+    class Listener:
+        is_ready = True
+
+    listener = Listener()
+    monkeypatch.setattr("taximobile_api.main.PostgresLiveEventListener", lambda *_: listener)
+
+    class LosingSession(ReadySession):
+        async def execute(self, _statement):
+            listener.is_ready = False
+
+    class LosingContext(ReadySessionContext):
+        async def __aenter__(self):
+            return LosingSession()
+
+    app = create_app(
+        settings=replace(Settings.from_environment(), environment=environment, process_role="api"),
+        session_factory=lambda: LosingContext(),
+    )
+    assert TestClient(app).get("/ready").status_code == 503
+
+
 def test_readiness_accepts_reviewed_host_and_rejects_loopback_host_header() -> None:
     settings = replace(
         Settings.from_environment(),

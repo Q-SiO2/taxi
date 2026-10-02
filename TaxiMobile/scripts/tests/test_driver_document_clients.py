@@ -20,6 +20,8 @@ class DriverDocumentClientContractTest(unittest.TestCase):
             "IOS_DRIVER_DOCUMENT_MAX_BYTES = 10 * 1024 * 1024",
             'setOf("application/pdf", "image/jpeg", "image/png")',
             "uploadDriverCityApplicationDocument",
+            "mediaType == null ||",
+            "mediaType !in IOS_DRIVER_DOCUMENT_MEDIA_TYPES ||",
         ):
             self.assertIn(required, kotlin)
         for required in (
@@ -32,6 +34,12 @@ class DriverDocumentClientContractTest(unittest.TestCase):
             "data.base64EncodedString()",
         ):
             self.assertIn(required, swift)
+        self.assertIn(
+            "_ = completion(fileName, mediaType, base64Content)",
+            swift,
+            "The Swift Void callback must consume KotlinUnit instead of returning it",
+        )
+        self.assertNotIn("present(completion: completion)", swift)
         self.assertNotIn("UIImagePickerController", swift)
 
     def test_android_and_browser_pickers_keep_the_same_closed_media_set(self) -> None:

@@ -9,8 +9,9 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from taximobile_api.domains.auth.models import Role, Session, User, UserRole, UserStatus
+from taximobile_api.domains.auth.models import Role, UserRole
 from taximobile_api.domains.auth.security import InvalidAccessToken, TokenService
+from taximobile_api.domains.auth.session_authority import mobile_session_is_active
 
 
 bearer_scheme = HTTPBearer(auto_error=False)
@@ -42,17 +43,7 @@ async def authenticated_principal(
 
     factory = request.app.state.session_factory
     async with factory() as database_session:
-        statement = (
-            select(Session.id)
-            .join(User, User.id == Session.user_id)
-            .where(
-                Session.id == session_id,
-                Session.user_id == user_id,
-                Session.revoked_at.is_(None),
-                User.status == UserStatus.ACTIVE,
-            )
-        )
-        if await database_session.scalar(statement) is None:
+        if not await mobile_session_is_active(database_session, user_id, session_id):
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication is required.")
     return CurrentPrincipal(user_id=user_id, session_id=session_id)
 

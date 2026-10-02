@@ -300,6 +300,7 @@ val verifyRoleLauncherAssets = tasks.register<ValidateRoleLauncherAssets>("verif
 
 tasks.named("preBuild") {
     dependsOn(verifyRoleLauncherAssets)
+    dependsOn(rootProject.tasks.named("verifyAndroidShrinker"))
 }
 
 val signingPropertyNames = listOf(
