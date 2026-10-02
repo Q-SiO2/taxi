@@ -65,13 +65,25 @@ clone databases and revoked temporary `CREATEDB` authority. It deliberately keep
 ## Current immutable remote evidence
 
 The latest complete source candidate with passing immutable automation is
+`17a94df95f310f2e5b0d98eabba60bf83bb3344e`, verified on 2026-10-02 by
+[push CI](https://github.com/Q-SiO2/taxi/actions/runs/37026466549) and
+[PR CI](https://github.com/Q-SiO2/taxi/actions/runs/37026471915). Both retained
+OpenAPI packets were downloaded and reconciled: schema sizes/hashes match the
+manifest and backend source binding, which records migration 0052, clean source
+and no deployment acceptance. The push binds that branch-head commit; the PR
+binds GitHub's test merge `57ec3e5a93e1dffe07302e1182ca8fd96098ede4`.
+Both tested trees are `a0db5ac405f37b94036359373a9a5cf63a8cde87`; equal trees do
+not make the two commits interchangeable. The subsequent registry-publication
+patch requires its own immutable CI and actual main publication evidence.
+
+The preceding Android source candidate is
 `cc19776fdc804093bffdfe92023679258a66a023`, verified on 2026-10-02 by
 [push CI](https://github.com/Q-SiO2/taxi/actions/runs/37023593864) and
 [PR CI](https://github.com/Q-SiO2/taxi/actions/runs/37023603230). Both include the
 Android storage patch and both iOS Release simulator links. They do not accept
 real Keystore/disk behavior, native iOS test execution, signed distributions or
-deployment. The subsequent OpenAPI export/binding patch is a new candidate and
-requires separate immutable automation.
+deployment. Its source evidence does not certify the later OpenAPI or registry
+patches; the OpenAPI candidate has its own passing automation above.
 
 The latest verified server source is
 `2d6a68b04eccd793d5d071b8f26bba67568bf63b`, successful on 2026-10-02 in
@@ -96,9 +108,52 @@ and bound it to clean-source evidence. MapLibre Compose issue 824 still prevents
 native iOS test linking, and no native iOS test execution is claimed.
 
 This satisfies the remote-CI item below for that source commit only. It does not
-supply independent pull-request approval, branch protection, signed mobile
+supply independent pull-request approval, signed mobile
 distribution artifacts, an immutable registry image digest, or release approval.
 Those controls remain necessary before GAP-001 can close.
+
+## Protected promotion and backend image storage — 2026-10-02
+
+The owner explicitly authorized protecting `main`. GitHub readback confirms seven
+required GitHub Actions checks (`backend`, `mobile`, `web`, `ios-shared`,
+`documentation-and-provenance`, `gradle-wrapper-integrity`, `dependency-review`),
+strict up-to-date checks, one independent approval including the latest push,
+stale-review dismissal, administrator enforcement and resolved conversations.
+Force pushes and deletion are disabled. The push-only dependency-submission job
+is not a required PR check. PR 43 is still draft and has no independent approval;
+protection does not manufacture review or authorize merging.
+
+Under the owner's delegated no-cost technical setup, backend image storage uses
+`ghcr.io/q-sio2/taxi-api`. GitHub currently provides container-image storage and
+bandwidth without charge; this is not a perpetual price guarantee or an API,
+worker or database host. See [GitHub billing](https://docs.github.com/en/billing/concepts/product-billing/github-packages).
+The provider-neutral running topology and taxi-owned/driver-choice product remain
+unchanged; no commission, tariff or payment policy changes follow from this choice.
+
+Only a successful `main` push may publish. The backend exports its already-built,
+scanned Linux/amd64 image and SPDX SBOM; a separate least-privilege package-write
+job waits for all seven push verification jobs. It downloads only this run and
+attempt's archive, verifies source/run/hash identity before loading Docker,
+verifies the loaded image ID, uses the temporary workflow token, and pushes a
+commit/run/attempt-specific tag (never `latest`). It pulls the resulting immutable
+registry digest and verifies that it is still the scanned image before retaining
+provenance. Rebuilding after the scan is forbidden because even the same source
+can resolve different upgraded operating-system packages. The PR and feature
+branch runs neither export nor publish images.
+
+The transfer archive expires after one day; compact registry provenance and SBOM
+are retained for 30 days. Preserve approved release evidence before expiry.
+Rerun the whole workflow if the same-run archive expires; a partial publication
+rerun uses a different attempt and deliberately cannot borrow another attempt's
+archive. The package defaults to private; anonymous pulls require a separately
+reviewed visibility/access decision. CI artifacts and unsigned JSON are trusted
+through the workflow/run service, not standalone cryptographic attestations.
+
+No registry image or digest is claimed until the reviewed workflow reaches main
+and publication succeeds. Mobile signing, actual review, controlled evidence
+custody and release approval remain missing. Docker execution/push/pull requires
+Linux CI: local Docker was unavailable during this slice. Unit/mutation checks
+exercise the protocol but cannot establish successful registry publication.
 
 ## Required immutable promotion evidence
 
@@ -110,7 +165,8 @@ binding for 30 days; an approved release custodian must preserve it in the
 controlled release evidence store before CI retention expires. The launch
 profile has no legacy global-admin routes. Source export isolation and a matching
 digest do not establish runtime permissions, served topology or acceptance.
-The new export/binding jobs require their own immutable successful execution.
+The OpenAPI jobs passed on `17a94df` above; changed candidates still require
+their own immutable successful execution.
 
 GAP-001 remains open until all of the following refer to one clean commit:
 

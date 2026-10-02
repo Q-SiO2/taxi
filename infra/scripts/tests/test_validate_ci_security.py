@@ -27,6 +27,46 @@ class CiSecurityValidationTests(unittest.TestCase):
     def test_committed_workflow_passes(self) -> None:
         validate_ci_security(self.workflow)
 
+    def test_registry_publication_cannot_weaken_main_only_or_job_dependencies(self) -> None:
+        gate = "github.event_name == 'push' && github.ref == 'refs/heads/main'"
+        mutations = (
+            self.workflow.replace(gate, "always()"),
+            self.workflow.replace("gradle-wrapper-integrity, gradle-dependency-submission]", "gradle-wrapper-integrity]"),
+            self.workflow.replace("      packages: write", "      packages: read"),
+            self.workflow.replace("  publish-backend-image:\n", "  publish-backend-image:\n    continue-on-error: true\n"),
+        )
+        for mutation in mutations:
+            with self.subTest(mutation=mutation[-80:]):
+                with self.assertRaisesRegex(CiSecurityError, "Registry"):
+                    validate_ci_security(mutation)
+
+    def test_registry_publication_cannot_load_unbound_or_rebuilt_images(self) -> None:
+        command = "run: python infra/scripts/registry_image_evidence.py verify --bundle /tmp/taximobile-registry-image"
+        mutations = (
+            self.workflow.replace(command, command + " || true"),
+            self.workflow.replace(" --loaded\n", "\n"),
+            self.workflow.replace("docker image load --input", "docker image build --input"),
+            self.workflow.replace("          name: taximobile-scanned-image-${{ github.run_id }}-${{ github.run_attempt }}",
+                                  "          name: taximobile-scanned-image-latest"),
+            self.workflow.replace("--repository \"$repository\"", "--repository \"untrusted/repo\""),
+            self.workflow.replace("            /tmp/taximobile-registry-image/image.spdx.json\n", ""),
+        )
+        for mutation in mutations:
+            with self.subTest(mutation=mutation[-80:]):
+                with self.assertRaisesRegex(CiSecurityError, "Registry"):
+                    validate_ci_security(mutation)
+
+    def test_registry_publication_cannot_precede_verification_or_expand_token_scope(self) -> None:
+        start = self.workflow.index("      - name: Verify source and archive before loading Docker")
+        end = self.workflow.index("      - name: Load and verify the scanned image", start)
+        verify_step = self.workflow[start:end]
+        changed = self.workflow[:start] + self.workflow[end:]
+        insertion = changed.index("      - name: Retain immutable registry provenance")
+        changed = changed[:insertion] + verify_step + changed[insertion:]
+        for mutation in (changed, self.workflow.replace("  mobile:\n", "  mobile:\n    permissions:\n      packages:  write\n")):
+            with self.assertRaisesRegex(CiSecurityError, "Registry"):
+                validate_ci_security(mutation)
+
     def test_backend_lock_audits_cannot_be_removed_or_bypassed(self) -> None:
         commands = (
             "python -m pip_audit --no-deps --requirement requirements.lock",

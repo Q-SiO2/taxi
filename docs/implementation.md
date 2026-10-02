@@ -9,6 +9,19 @@ This document fixes the implementation choices required to turn the TaxiMobile p
 
 ## Current implementation standing — 2026-10-02
 
+**Protected image-publication follow-up (2026-10-02):** owner-authorized `main`
+protection is configured and read back; seven up-to-date GitHub Actions checks
+and independent latest-push approval apply to administrators too. GHCR is the
+delegated no-cost backend image store, not a hosting choice. Main-only publication
+waits for all push verification jobs and transfers the exact scanned image/SBOM
+without rebuilding. `infra/scripts/registry_image_evidence.py` checks same-run
+source and file hashes before loading, checks image IDs after loading/pulling,
+and retains immutable registry-reference provenance with acceptance false.
+PR/feature runs cannot publish. Local Docker was unavailable; local protocol and
+CI mutation tests do not prove a real registry push. Review, signing and release
+approval remain absent; PR 43 is draft/unmerged and all 19 P0 gates remain open.
+See [release_baseline.md](release_baseline.md) for policy and retention details.
+
 **Exact OpenAPI evidence follow-up (2026-10-02):** the actual application factory
 now exports separate full launch and local-compatibility schemas through a
 bounded configuration-isolated subprocess. The local source export has 223
@@ -24,7 +37,10 @@ fresh zero-failure/error/skip JUnit run. Actual full-schema files and their
 manifest match the hashes in an explicit dirty `WORKSPACE_SNAPSHOT` record;
 that record is not an immutable release. No new full migrated-database result
 is claimed for this tooling-only patch. The exporter requires its own immutable CI and served-staging
-contract/authorization evidence before release promotion.
+contract/authorization evidence before release promotion. Source candidate
+`17a94df` now passes both immutable runs in `release_baseline.md`; its retained
+schemas/manifest reconcile with the backend binding. This does not certify the
+subsequent registry patch or served-staging authorization.
 
 **Android protected-session follow-up (2026-10-02):** the adapter now writes one
 encrypted, versioned token-pair envelope with checked synchronous persistence.
@@ -49,7 +65,8 @@ Android commit `cc19776` now passes both
 [push CI](https://github.com/Q-SiO2/taxi/actions/runs/37023593864) and
 [PR CI](https://github.com/Q-SiO2/taxi/actions/runs/37023603230), including both
 iOS simulator application links, not native iOS test execution. The subsequent
-OpenAPI tooling still requires separate immutable CI. No new
+OpenAPI tooling has separate passing immutable CI at `17a94df`, not registry
+publication or deployment acceptance. No new
 dependency, schema, wire, UI, pricing or provider policy is introduced.
 
 **Server live-session authority follow-up (2026-10-02):** the final socket hop

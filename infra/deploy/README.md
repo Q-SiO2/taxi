@@ -14,7 +14,9 @@ workers on one sleeping free web instance and uses public fair-use Valhalla, so
 it is restricted to small synthetic tests and expires with the free database.
 
 This directory is a provider-neutral single-host Linux deployment template. It
-does not choose a registry, cloud, DNS provider, TLS proxy, managed PostgreSQL
+uses the delegated GHCR backend-image storage described in
+[`release_baseline.md`](../../docs/release_baseline.md#protected-promotion-and-backend-image-storage--2026-10-02).
+It does not choose a cloud host, DNS provider, TLS proxy, managed PostgreSQL
 service, secret store, or alert-delivery provider. Those remain deployment-owner
 decisions. The base manifest enforces the application boundaries; the optional
 `compose.monitoring.yaml` overlay supplies a no-license-cost self-hosted
@@ -433,6 +435,16 @@ dashboard correctness, secure staff access, receiver delivery, primary/backup
 acknowledgement and failure-injection drills pass in staging.
 
 ## Controlled release
+
+`main` is protected with passing checks and independent latest-push approval.
+Its successful CI run publishes the exact scanned image to
+`ghcr.io/q-sio2/taxi-api`, not a separately rebuilt image. Use only the
+`registry_reference` containing `@sha256:` from the retained
+`taximobile-registry-provenance-<run>-<attempt>` packet as `TAXIMOBILE_API_IMAGE`;
+API, worker and migration runner share that image. A commit tag is only a lookup
+aid, not an immutable deployment reference. Private package access must be
+configured on the eventual host without placing credentials in source or images.
+Publication does not deploy the manifest or accept GAP-001/GAP-002.
 
 Start from a reviewed clean commit. Validate documentation and generate the
 source-candidate evidence record before building or promoting artifacts:

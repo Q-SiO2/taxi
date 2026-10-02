@@ -92,12 +92,24 @@ revocation/delivery budgets before staffed/field/real-user promotion.
 
 ## 2. Promotion path
 
+For T0/GAP-001 image promotion, main protection is configured but does not count
+as independent approval. Test source/run/attempt drift, archive/hash corruption,
+wrong image IDs, foreign or ambiguous registry digests and skipped publication
+gates before review. After a reviewed main push, require all push jobs to pass,
+then verify the retained immutable GHCR reference, source/SBOM binding and pulled
+image ID. Rehearse failed/expired handoff without borrowing another run/attempt's
+image; rerun the whole workflow when needed. Source tests alone cannot accept
+publication. Preserve the compact packet before 30-day retention expires and
+test authenticated package pulls on staging before T5. Registry storage is not
+hosting; publication accepts neither T0/GAP-001 nor real users on its own.
+
 The Android protected-storage follow-up passes 22 adapter cases within 208
 Android host tests, 235 freshly rerun JVM tests, both Android debug-role compiles,
 204 infrastructure tests and 41 mobile-script tests. Synthetic cipher/preferences
 tests prove control flow, not real Keystore or disk persistence. Its own immutable
 CI now passes for `cc19776` in both runs recorded in GAP-001; the subsequent
-OpenAPI tooling needs independent CI. Revised T4 catalog `2026-10-02` keeps 56 cases but binds
+OpenAPI tooling now has separate passing CI on `17a94df`; the registry follow-up
+requires its own CI. Revised T4 catalog `2026-10-02` keeps 56 cases but binds
 stronger native-storage requirements to a new LF-portable exact-byte hash;
 old evidence cannot accept them. All template cases remain `NOT_STARTED`.
 The native-storage T1/T4 packs below retain T5 hosted authority, T6 staff recovery,

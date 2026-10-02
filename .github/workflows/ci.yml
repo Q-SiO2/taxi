@@ -487,6 +487,81 @@ jobs:
             docker logs "$loki_container"
             exit 1
           fi
+      - name: Export the already-scanned main image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: >-
+          python ../infra/scripts/registry_image_evidence.py prepare
+          --bundle /tmp/taximobile-registry-image
+          --sbom /tmp/taximobile-api.spdx.json
+      - name: Retain the scanned image for same-run publication
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: taximobile-scanned-image-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/taximobile-registry-image
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 1
+
+  publish-backend-image:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [backend, mobile, web, ios-shared, documentation-and-provenance, gradle-wrapper-integrity, gradle-dependency-submission]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Download this run's scanned image
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: taximobile-scanned-image-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/taximobile-registry-image
+      - name: Verify source and archive before loading Docker
+        run: python infra/scripts/registry_image_evidence.py verify --bundle /tmp/taximobile-registry-image
+      - name: Load and verify the scanned image without rebuilding
+        run: |
+          docker image load --input /tmp/taximobile-registry-image/image.tar
+          python infra/scripts/registry_image_evidence.py verify --bundle /tmp/taximobile-registry-image --loaded
+      - name: Publish the verified image to GHCR
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          trap 'docker logout ghcr.io >/dev/null 2>&1' EXIT
+          repository="${GITHUB_REPOSITORY,,}"
+          image="ghcr.io/${repository}-api:sha-${GITHUB_SHA}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+          docker image tag taximobile-api:ci "$image"
+          docker image push "$image"
+          python infra/scripts/registry_image_evidence.py record \
+            --bundle /tmp/taximobile-registry-image --repository "$repository" \
+            --output /tmp/taximobile-registry-image-evidence.json
+      - name: Retain immutable registry provenance
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: taximobile-registry-provenance-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/taximobile-registry-image-evidence.json
+            /tmp/taximobile-registry-image/source-evidence.json
+            /tmp/taximobile-registry-image/image.json
+            /tmp/taximobile-registry-image/image.spdx.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Summarize the immutable image reference
+        shell: bash
+        run: |
+          echo '## Published backend image (not deployment acceptance)' >> "${GITHUB_STEP_SUMMARY}"
+          echo '```json' >> "${GITHUB_STEP_SUMMARY}"
+          cat /tmp/taximobile-registry-image-evidence.json >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"
 
   mobile:
     runs-on: ubuntu-24.04

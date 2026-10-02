@@ -25,10 +25,14 @@ The latest local full isolated-PostGIS regression through migration 0052 passed
 `2d6a68b04eccd793d5d071b8f26bba67568bf63b` passes
 [push CI](https://github.com/Q-SiO2/taxi/actions/runs/37000510927) and
 [PR CI](https://github.com/Q-SiO2/taxi/actions/runs/37000515435), but GAP-001 remains open because
-independent review, protection, signing, registry digest, and release approval are
-absent. The subsequent Android protected-session source patch has local host
+independent review, signing, registry digest, and release approval are
+absent. Owner-authorized main protection is now configured and verified. Main-only
+GHCR publication is implemented but has not run; image storage does not provide
+live hosting. The subsequent Android protected-session source patch has local host
 evidence and complete passing push/PR CI for `cc19776`; physical-device acceptance
-remains open, and the subsequent OpenAPI evidence tooling requires its own CI;
+remains open. OpenAPI tooling now has passing push/PR CI on `17a94df`, with both
+retained packets' hashes and source identities reconciled; the registry follow-up
+requires its own CI and a successful main publication;
 see `implementation.md` and the ordered native-storage testing pack. Historical
 `168c350` results in the summary table below describe that earlier candidate only.
 The local regression includes the focused

@@ -124,10 +124,12 @@ one-active-role uniqueness and append-visible reassignment history.
 The historical audit began from extensive modified and untracked source, but the
 current GAP-001 candidate is committed, clean, and has passing immutable remote
 CI at `de69829a649715ad7768756e285fedfde2fa846a`. It still has no independent
-review approval, signed mobile artifact, protected promotion branch, or registry
+review approval, signed mobile artifact, or registry
 container digest. This audit also did not inspect a live cloud account, production
 database, app-store account, Firebase project, routing host, real payment
 statement, legal authorization, or operator staffing record.
+`main` promotion protection was subsequently configured and read back on
+2026-10-02 under explicit owner approval; actual review remains absent.
 
 “No implementation found” means no matching user-facing contract and end-to-end
 source path was found during this repository audit; it does not claim that an
@@ -160,12 +162,14 @@ unavailable external system cannot provide the capability.
 
 **Current gap (updated 2026-10-02):** implementation is committed on the
 release-baseline branch, with complete passing push/PR evidence for server
-commit `cc19776` recorded below. Newer source slices must acquire their own
+commit `17a94df` recorded in `release_baseline.md`. Newer source slices must acquire their own
 complete immutable CI; a passing predecessor does not certify a changed checkout.
-Draft pull request 43 exists, but independent review, protected promotion rules,
+Draft pull request 43 exists, but independent review,
 signed distributable artifact manifests, a registry image digest, and release
 approval are still missing. Historical dirty-workspace results below are not
 evidence that the current checkout remains dirty.
+Protected `main` promotion rules are now configured and verified; this removes
+the protection-configuration prerequisite, not the independent review gate.
 
 **Risk:** tests, migration history, binaries, and deployed source can silently
 refer to different code. Rollback and incident investigation become unreliable.
@@ -378,6 +382,24 @@ workspace evidence record. No new full migrated-PostGIS or physical/hosted
 acceptance is claimed. Source scope remains approximately 84%; P0 acceptance
 remains 0/19. This fills the OpenAPI-digest prerequisite, not GAP-001 closure or
 a new API policy.
+
+**Protected promotion and registry implementation (2026-10-02):** verified main
+protection requires passing up-to-date provider-bound checks and one independent
+latest-push approval, including administrators, with stale approvals dismissed,
+force pushes/deletion disabled and conversations resolved. The owner delegated
+the no-cost technical setup; GHCR is selected only for backend image storage.
+The publication job is main-push-only, has scoped package-write permission and
+waits for all push verification jobs. It carries the exact scanned image and
+SBOM through same-run/attempt hash-bound evidence, checks before Docker load,
+checks the loaded ID, and verifies a digest-pinned registry pull before emitting
+no-acceptance provenance. No post-scan rebuild or mutable `latest` deployment is
+allowed. Tests cover corruption, identity drift, acceptance forgery, wrong loaded
+and pulled images, foreign/ambiguous digest and failure redaction; CI mutations
+preserve gating and handoff. Local Docker is unavailable; no actual push/pull or
+registry digest is claimed. PR 43 stays draft/unapproved/unmerged; source scope
+remains approximately 84%, P0 acceptance 0/19. Independent review, signing and
+release approval remain open. See `release_baseline.md` for retention and trust
+boundaries.
 
 ### GAP-002 — Provision and accept a real hosted environment
 

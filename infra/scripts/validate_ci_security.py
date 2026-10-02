@@ -279,6 +279,99 @@ def _validate_openapi_evidence(workflow: str) -> None:
         raise CiSecurityError("OpenAPI evidence digest summary is required.")
 
 
+def _validate_registry_publication(workflow: str) -> None:
+    """Restrict package write authority and preserve same-run scanned-image handoff."""
+    def job(name: str) -> str:
+        matches = re.findall(rf"^  {re.escape(name)}:\n(.*?)(?=^  [\w-]+:\n|\Z)",
+                             workflow, re.MULTILINE | re.DOTALL)
+        if len(matches) != 1:
+            raise CiSecurityError("Registry publication requires unique backend/publish jobs.")
+        return matches[0]
+
+    backend, publish = job("backend"), job("publish-backend-image")
+    gate = "github.event_name == 'push' && github.ref == 'refs/heads/main'"
+    if (publish.splitlines().count(f"    if: {gate}") != 1
+            or len(re.findall(r"^\s+packages:\s*write\s*$", workflow, re.MULTILINE)) != 1
+            or publish.splitlines().count("      packages: write") != 1
+            or publish.splitlines().count("      contents: read") != 1
+            or re.search(r"continue-on-error:|always\(\)|\|\|\s*true|^        if:", publish, re.MULTILINE)):
+        raise CiSecurityError("Registry publication must be main-only, blocking and least privilege.")
+    required = "    needs: [backend, mobile, web, ios-shared, documentation-and-provenance, gradle-wrapper-integrity, gradle-dependency-submission]"
+    if publish.splitlines().count(required) != 1:
+        raise CiSecurityError("Registry publication must wait for every push verification gate.")
+
+    def step(text: str, name: str) -> str:
+        matches = re.findall(rf"^      - name: {re.escape(name)}\n(.*?)(?=^      - |\Z)",
+                             text, re.MULTILINE | re.DOTALL)
+        if len(matches) != 1 or "continue-on-error:" in matches[0]:
+            raise CiSecurityError("Registry handoff requires unique blocking steps.")
+        return matches[0]
+
+    export = step(backend, "Export the already-scanned main image")
+    retention = step(backend, "Retain the scanned image for same-run publication")
+    for block in (export, retention):
+        if block.splitlines().count(f"        if: {gate}") != 1:
+            raise CiSecurityError("Registry archive export must be main-only.")
+    if backend.index("Export the already-scanned main image") < backend.index("Reject high or critical backend image vulnerabilities"):
+        raise CiSecurityError("Registry archive export must follow the blocking scan.")
+    for snippet in ("python ../infra/scripts/registry_image_evidence.py prepare",
+                    "--bundle /tmp/taximobile-registry-image", "--sbom /tmp/taximobile-api.spdx.json"):
+        if snippet not in export:
+            raise CiSecurityError("Registry export must bind the scanned image and SBOM.")
+    for line in ("          name: taximobile-scanned-image-${{ github.run_id }}-${{ github.run_attempt }}",
+                 "          path: /tmp/taximobile-registry-image", "          if-no-files-found: error",
+                 "          retention-days: 1", "          compression-level: 0"):
+        if retention.splitlines().count(line) != 1:
+            raise CiSecurityError("Registry archive handoff must be same-run and bounded.")
+    download = step(publish, "Download this run's scanned image")
+    if ("          name: taximobile-scanned-image-${{ github.run_id }}-${{ github.run_attempt }}" not in download
+            or "          path: /tmp/taximobile-registry-image" not in download
+            or re.search(r"^\s+(?:run-id|github-token|repository|merge-multiple):", download, re.MULTILINE)):
+        raise CiSecurityError("Registry publication must not load another run's image.")
+    if "uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093" not in download:
+        raise CiSecurityError("Registry handoff requires the reviewed artifact download action.")
+    verify = step(publish, "Verify source and archive before loading Docker")
+    load = step(publish, "Load and verify the scanned image without rebuilding")
+    if verify.strip() != "run: python infra/scripts/registry_image_evidence.py verify --bundle /tmp/taximobile-registry-image":
+        raise CiSecurityError("Registry archive hashes must be checked before Docker loads it.")
+    if load.strip() != ("run: |\n"
+                       "          docker image load --input /tmp/taximobile-registry-image/image.tar\n"
+                       "          python infra/scripts/registry_image_evidence.py verify --bundle /tmp/taximobile-registry-image --loaded"):
+        raise CiSecurityError("Registry publication must verify the loaded scanned image.")
+    if publish.index("Verify source and archive") > publish.index("Load and verify"):
+        raise CiSecurityError("Registry archive verification must precede loading.")
+    names = ("Download this run's scanned image", "Verify source and archive before loading Docker",
+             "Load and verify the scanned image without rebuilding", "Publish the verified image to GHCR",
+             "Retain immutable registry provenance", "Summarize the immutable image reference")
+    for name in names:
+        step(publish, name)
+    positions = [publish.index(name) for name in names]
+    if positions != sorted(positions):
+        raise CiSecurityError("Registry publication steps must preserve verification/push/evidence order.")
+    publication = step(publish, "Publish the verified image to GHCR")
+    for snippet in ("set -euo pipefail", "GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}",
+                    'image="ghcr.io/${repository}-api:sha-${GITHUB_SHA}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"',
+                    '--password-stdin', 'docker image tag taximobile-api:ci "$image"',
+                    'docker image push "$image"', "python infra/scripts/registry_image_evidence.py record",
+                    '--bundle /tmp/taximobile-registry-image --repository "$repository"',
+                    "--output /tmp/taximobile-registry-image-evidence.json"):
+        if snippet not in publication:
+            raise CiSecurityError("Registry publication must preserve token, tag and digest binding.")
+    if re.search(r"docker (?:image )?build|:latest|pull_request_target|workflow_run", publish):
+        raise CiSecurityError("Registry publication must not rebuild or publish mutable/untrusted images.")
+    provenance = step(publish, "Retain immutable registry provenance")
+    for block in (retention, provenance):
+        if "uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02" not in block:
+            raise CiSecurityError("Registry retention requires the reviewed artifact upload action.")
+    for snippet in ("/tmp/taximobile-registry-image-evidence.json",
+                    "/tmp/taximobile-registry-image/source-evidence.json",
+                    "/tmp/taximobile-registry-image/image.json",
+                    "/tmp/taximobile-registry-image/image.spdx.json",
+                    "          if-no-files-found: error", "          retention-days: 30"):
+        if snippet not in provenance:
+            raise CiSecurityError("Registry digest and source/SBOM binding must be retained.")
+
+
 def validate_ci_security(workflow: str) -> None:
     try:
         package_lock = IOS_PACKAGE_RESOLVED_PATH.read_text(encoding="utf-8")
@@ -367,6 +460,7 @@ def validate_ci_security(workflow: str) -> None:
 
     _validate_backend_dependency_audits(workflow)
     _validate_openapi_evidence(workflow)
+    _validate_registry_publication(workflow)
 
     required_provenance = (
         "--artifact /tmp/taximobile-api.spdx.json",
@@ -657,7 +751,7 @@ def main() -> int:
         "inventory, GAP-003 managed PostGIS evidence, GAP-004 pilot-city approval, "
         "GAP-005 operations identity governance, GAP-006 maps/routing/navigation "
         "evidence, web compatibility runtime "
-        "coverage, and blocking scan are present."
+        "coverage, blocking scan and main-only scanned-image registry publication are present."
     )
     return 0
 
