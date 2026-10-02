@@ -271,6 +271,19 @@ class CiSecurityValidationTests(unittest.TestCase):
             with self.assertRaisesRegex(CiSecurityError, "Android packaged APK verification"):
                 validate_ci_security(mutation)
 
+    def test_android_minified_build_cannot_hide_failure_or_lose_warning_log(self) -> None:
+        heading = "      - name: Build minified Android verification products\n"
+        mutations = (
+            self.workflow.replace(heading, heading + "        continue-on-error: true\n"),
+            self.workflow.replace(heading, heading + "        if: false\n"),
+            self.workflow.replace("./gradlew --no-daemon --no-build-cache", "./gradlew --no-daemon"),
+            self.workflow.replace('tee "${RUNNER_TEMP}/taximobile-android-release.log"', 'tee "${RUNNER_TEMP}/unrelated.log"'),
+            self.workflow.replace('          -ReleaseBuildLogPath "$env:RUNNER_TEMP/taximobile-android-release.log"\n', ""),
+        )
+        for mutation in mutations:
+            with self.assertRaisesRegex(CiSecurityError, "Android (?:minified build|packaged APK verification)"):
+                validate_ci_security(mutation)
+
     def test_ios_manifest_source_binding_cannot_be_removed(self) -> None:
         changed = self.workflow.replace(
             '--artifact "${RUNNER_TEMP}/taximobile-ios-verification-manifest.json"',

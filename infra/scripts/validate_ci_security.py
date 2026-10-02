@@ -585,10 +585,22 @@ def validate_ci_security(workflow: str) -> None:
         "        run: >-\n"
         "          ./scripts/verify-android-release-artifacts.ps1\n"
         "          -ExpectedVersionCode 1 -ExpectedVersionName 1.0.0\n"
-        '          -ManifestPath "$env:RUNNER_TEMP/taximobile-android-verification-manifest.json"'
+        '          -ManifestPath "$env:RUNNER_TEMP/taximobile-android-verification-manifest.json"\n'
+        '          -ReleaseBuildLogPath "$env:RUNNER_TEMP/taximobile-android-release.log"'
     )
     if len(apk_steps) != 1 or apk_steps[0].rstrip() != expected_apk_step:
         raise CiSecurityError("Android packaged APK verification must run once without skip or failure bypass.")
+    build_steps = re.findall(r"^      - name: Build minified Android verification products\n(.*?)(?=^      - |\Z)",
+                            mobile_jobs[0], re.MULTILINE | re.DOTALL)
+    if len(build_steps) != 1:
+        raise CiSecurityError("Android minified build must capture exactly one blocking release log.")
+    build = build_steps[0]
+    if (re.search(r"^\s+(?:if|continue-on-error):|\|\|\s*true", build, re.MULTILINE)
+            or "          set -euo pipefail" not in build
+            or "./gradlew --no-daemon --no-build-cache" not in build
+            or ":androidApp:assemblePassengerRelease :androidApp:assembleDriverRelease" not in build
+            or '| tee "${RUNNER_TEMP}/taximobile-android-release.log"' not in build):
+        raise CiSecurityError("Android minified build must preserve execution, failure status and log capture.")
 
     mobile_diagnostic_requirements = (
         "Run Android shared tests with bounded failure capture",

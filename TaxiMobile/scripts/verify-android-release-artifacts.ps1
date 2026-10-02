@@ -10,7 +10,8 @@ param(
 
     [Parameter()]
     [string]$ManifestPath,
-    [string]$Aapt2Path
+    [string]$Aapt2Path,
+    [string]$ReleaseBuildLogPath
 )
 
 $ErrorActionPreference = "Stop"
@@ -28,6 +29,9 @@ if (-not [string]::IsNullOrWhiteSpace($ManifestPath)) {
 }
 if (-not [string]::IsNullOrWhiteSpace($Aapt2Path)) {
     $arguments += @("--aapt2", $Aapt2Path)
+}
+if (-not [string]::IsNullOrWhiteSpace($ReleaseBuildLogPath)) {
+    $arguments += @("--build-log", $ReleaseBuildLogPath)
 }
 & $pythonCommand.Source @arguments
 if ($LASTEXITCODE -ne 0) {

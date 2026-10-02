@@ -107,6 +107,20 @@ minified role builds without metadata parsing warnings before accepting release
 provenance. T4 must exercise serialization/reflection-dependent authenticated
 journeys in those minified builds, not only debug APKs.
 
+The current reviewed compiler contract is Kotlin 2.4.x with R8 9.1.56 loaded
+through AGP, not merely available as a CLI jar. T0/T1 must compare the generated
+plugin-loader report, role mapping headers and embedded APK DEX markers/IDs;
+exercise old/foreign compilers, malformed or duplicate markers, wrong full/release
+mode, mapping drift and multidex (including `classes10.dex`). Require both fresh
+minification tasks in the actual captured build log; metadata warnings, failed
+builds, cached tasks, missing checks and CI bypass mutations must fail closed.
+Retain hashes/source binding without exposing mappings or raw diagnostics.
+At T4 install both signed minified products, exercise registration/login, session
+restore/refresh/logout, API serialization/error handling and ride journeys in
+Arabic/French/English, and verify a controlled crash can be symbolicated with
+the exact private mapping. A successful debug journey or marker fixture cannot
+substitute for this evidence. Repeat affected phases after compiler changes.
+
 For T0/GAP-001 image promotion, main protection is configured but does not count
 as independent approval. Test source/run/attempt drift, archive/hash corruption,
 wrong image IDs, foreign or ambiguous registry digests and skipped publication
@@ -123,8 +137,9 @@ Android host tests, 235 freshly rerun JVM tests, both Android debug-role compile
 204 infrastructure tests and 41 mobile-script tests. Synthetic cipher/preferences
 tests prove control flow, not real Keystore or disk persistence. Its own immutable
 CI now passes for `cc19776` in both runs recorded in GAP-001; the subsequent
-OpenAPI tooling now has separate passing CI on `17a94df`; the registry follow-up
-requires its own CI. Revised T4 catalog `2026-10-02` keeps 56 cases but binds
+OpenAPI tooling has separate passing CI on `17a94df`; registry-protocol and APK
+identity follow-ups now pass both runs through `7c7982a`. The subsequent minifier
+repair requires its own immutable CI. Revised T4 catalog `2026-10-02` keeps 56 cases but binds
 stronger native-storage requirements to a new LF-portable exact-byte hash;
 old evidence cannot accept them. All template cases remain `NOT_STARTED`.
 The native-storage T1/T4 packs below retain T5 hosted authority, T6 staff recovery,

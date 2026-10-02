@@ -9,6 +9,21 @@ This document fixes the implementation choices required to turn the TaxiMobile p
 
 ## Current implementation standing — 2026-10-02
 
+**Android minifier follow-up (2026-10-02):** AGP 9.0.1's embedded R8 9.0.32
+cannot support the repository's Kotlin 2.4 metadata. The vendor-supported
+settings plugin override pins published stable R8 9.1.56 from the existing
+Google repository, rather than upgrading AGP/KMP or disabling optimization.
+`verifyAndroidShrinker` checks AGP's actual loaded compiler before builds and
+records its artifact hash. The APK verifier requires matching embedded release/
+full-mode compiler markers and each role's mapping ID, with bounded inspection
+and no exported bytecode or mapping contents. CI requires a fresh two-role
+minification log and fails on metadata warnings or cached/skipped tasks.
+Local 64 mobile-script and 242 infrastructure tests, shared JVM/Android host
+tests and both optimized assemblies pass. The preceding `7c7982a` candidate now
+passes push/PR CI; this compatibility repair still needs its own immutable CI,
+signed minified-device journeys and release approval. Source-only compiler
+provenance does not accept deployment. See `release_baseline.md`.
+
 **Android packaged-artifact follow-up (2026-10-02):** the release verifier no
 longer accepts AGP metadata as proof of the actual APK identity. A modular
 standard-library Python checker uses installed SDK `aapt2` to inspect the binary

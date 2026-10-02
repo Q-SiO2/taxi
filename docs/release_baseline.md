@@ -65,7 +65,21 @@ clone databases and revoked temporary `CREATEDB` authority. It deliberately keep
 ## Current immutable remote evidence
 
 The latest complete source candidate with passing immutable automation is
-`17a94df95f310f2e5b0d98eabba60bf83bb3344e`, verified on 2026-10-02 by
+`7c7982a699df642b703a772384d7efcd740af172`, verified on 2026-10-02 by
+[push CI](https://github.com/Q-SiO2/taxi/actions/runs/37033043960) and
+[PR CI](https://github.com/Q-SiO2/taxi/actions/runs/37033051326). Both passed all
+applicable verification jobs, including the actual APK identity checker. These
+runs precede the R8 compatibility repair below and cannot certify it. Registry
+publication remains skipped on the feature branch; no main publication, signing
+or deployment acceptance follows from green CI.
+
+The preceding registry-protocol candidate `aca8b4f1c03c141963845c330ce52530fbe33f74`
+also passed [push CI](https://github.com/Q-SiO2/taxi/actions/runs/37030101698) and
+[PR CI](https://github.com/Q-SiO2/taxi/actions/runs/37030107302). This verifies
+source automation, not a real registry publication.
+
+The preceding exact OpenAPI candidate
+`17a94df95f310f2e5b0d98eabba60bf83bb3344e` was verified on 2026-10-02 by
 [push CI](https://github.com/Q-SiO2/taxi/actions/runs/37026466549) and
 [PR CI](https://github.com/Q-SiO2/taxi/actions/runs/37026471915). Both retained
 OpenAPI packets were downloaded and reconciled: schema sizes/hashes match the
@@ -73,8 +87,8 @@ manifest and backend source binding, which records migration 0052, clean source
 and no deployment acceptance. The push binds that branch-head commit; the PR
 binds GitHub's test merge `57ec3e5a93e1dffe07302e1182ca8fd96098ede4`.
 Both tested trees are `a0db5ac405f37b94036359373a9a5cf63a8cde87`; equal trees do
-not make the two commits interchangeable. The subsequent registry-publication
-patch requires its own immutable CI and actual main publication evidence.
+not make the two commits interchangeable. Later registry-protocol CI is recorded
+above; actual main publication evidence remains absent.
 
 The preceding Android source candidate is
 `cc19776fdc804093bffdfe92023679258a66a023`, verified on 2026-10-02 by
@@ -193,6 +207,58 @@ resolve that toolchain debt. Verify the actually resolved R8 version against
 [Android's Kotlin compatibility table](https://developer.android.com/build/kotlin-support)
 and fix/retest minification before accepting a distributable candidate; do not
 suppress the warning or disable shrinking to pass the gate.
+
+### Android Kotlin/R8 compatibility repair (2026-10-02)
+
+The warning above was real toolchain debt: AGP 9.0.1 embeds R8 9.0.32, while
+Kotlin 2.4 requires R8 at least 9.1.29 according to
+[Android's compatibility table](https://developer.android.com/build/kotlin-support).
+The documented [R8 plugin override](https://r8.googlesource.com/r8/+/refs/heads/main/README.md)
+in `settings.gradle.kts` now selects stable `com.android.tools:r8:9.1.56` from the
+existing Google Maven repository. Minimum 9.1.29 is not published there; 9.1.56
+is a published stable patch in that compatible series. This avoids an unrelated
+AGP/KMP upgrade, a development compiler, a custom downloaded jar, warning
+suppression or disabled shrinking. Both code and resource shrinking stay enabled.
+
+`verifyAndroidShrinker` runs before Android builds even with configuration-cache
+reuse. It resolves the compiler through AGP's plugin classloader, checks the
+reviewed exact R8 version and Kotlin 2.4 range, and records compiler artifact
+size/hash without accepting distribution. A downloaded CLI version alone is
+not proof of the compiler used by Android tasks. Future compiler upgrades must
+deliberately update this contract and its tests.
+
+The APK checker also requires each role's mapping header to name that compiler
+and cross-checks release/full-mode R8 markers inside the APK DEX against the
+mapping ID. It hashes the mapping without exporting class/member mappings.
+This prevents a fresh compiler sidecar from certifying an older APK. It is
+trusted-build provenance, not a general DEX validator, signature verifier or
+independent tool attestation. Preserve matching actual mappings privately for
+crash symbolication; their hashes alone cannot perform symbolication.
+
+CI captures the actual two-role release build log with strict failure propagation
+and no build-cache reuse. Its checker rejects metadata warnings, failed builds,
+missing compiler verification, or cached/skipped role minification. Only the
+log's hash/size and fixed assertions enter the retained manifest, not raw logs.
+The PowerShell wrapper accepts `-ReleaseBuildLogPath`; CI requires it. Local
+inspection without that option does not establish a warning-free fresh build.
+
+Local script verification passes 64 mobile and 242 infrastructure tests, including
+old compiler, mapping/APK disagreement, malformed markers, multidex, metadata
+warning, cached build and CI bypass mutations. All 235 shared JVM and 208 Android
+host tests pass with zero failures/errors/skips; both optimized role assemblies
+passed with the resolved R8 9.1.56. A second forced, no-build-cache release
+invocation passed in 9m 2s with all 136 tasks executed. The real SDK/PowerShell
+checker verified both actual APKs, their embedded compiler markers and mapping
+IDs against the resolved-plugin report. The complete 9,671-byte log passes with
+both minifiers executed and zero Kotlin metadata warnings. Other native-symbol
+packaging and Windows-disabled iOS warnings are not silently reclassified as
+absent. The ignored local full manifest is
+`backend/build/android-r8-compatibility-20261002.json`; its source binding must
+remain a dirty `WORKSPACE_SNAPSHOT`, not a clean-current-commit release claim.
+The following invocation reused the configuration cache and still executed the
+AGP-loaded compiler check; cache reuse did not bypass the version guard.
+Synthetic DEX/log fixture tests alone do not prove actual minification. This repair needs
+its own immutable CI and T4 minified-device journeys before release acceptance.
 
 ### Contracts and combined candidate
 

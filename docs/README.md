@@ -31,12 +31,16 @@ GHCR publication is implemented but has not run; image storage does not provide
 live hosting. The subsequent Android protected-session source patch has local host
 evidence and complete passing push/PR CI for `cc19776`; physical-device acceptance
 remains open. OpenAPI tooling now has passing push/PR CI on `17a94df`, with both
-retained packets' hashes and source identities reconciled; the registry follow-up
-requires its own CI and a successful main publication;
+retained packets' hashes and source identities reconciled; subsequent registry
+protocol and packaged-identity patches now pass immutable push/PR CI through
+`7c7982a`, but a successful reviewed main publication remains absent;
 see `implementation.md` and the ordered native-storage testing pack.
 Android artifact tooling also checks actual packaged APK identity rather than
 metadata alone, with fail-closed file confinement and non-distributable reports;
-this follow-up requires its own immutable CI and signing/device evidence.
+signing/device evidence remains absent. A further compiler compatibility repair
+pins actually loaded R8 9.1.56 for Kotlin 2.4 and cross-checks APK markers,
+mapping IDs and fresh minification logs. It has local build/script evidence but
+requires its own immutable CI and minified-device journeys before acceptance.
 Historical `168c350` results in the summary table below describe that earlier candidate only.
 The local regression includes the focused
 security-incident unit/PostGIS slice, aggregate deadline-alert coverage and

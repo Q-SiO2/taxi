@@ -594,21 +594,26 @@ jobs:
           --title "TaxiMobile Android shared-test failure"
       - run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
       - run: ./gradlew --no-daemon :androidApp:assemblePassengerDebug :androidApp:assembleDriverDebug
-      - run: >-
-          ./gradlew --no-daemon
-          :androidApp:assemblePassengerRelease :androidApp:assembleDriverRelease
-          '-PtaximobileReleaseApiBaseUrl=https://api.example.test'
-          '-PtaximobileReleaseMapStyleUrl=https://maps.example.test/style.json'
-          '-PtaximobileVersionCode=1'
-          '-PtaximobileVersionName=1.0.0'
-          '-PtaximobileAllowUnsignedReleaseForVerification=true'
-          '-PtaximobileAllowMissingFirebaseForVerification=true'
+      - name: Build minified Android verification products
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./gradlew --no-daemon --no-build-cache \
+            :androidApp:assemblePassengerRelease :androidApp:assembleDriverRelease \
+            '-PtaximobileReleaseApiBaseUrl=https://api.example.test' \
+            '-PtaximobileReleaseMapStyleUrl=https://maps.example.test/style.json' \
+            '-PtaximobileVersionCode=1' \
+            '-PtaximobileVersionName=1.0.0' \
+            '-PtaximobileAllowUnsignedReleaseForVerification=true' \
+            '-PtaximobileAllowMissingFirebaseForVerification=true' 2>&1 \
+            | tee "${RUNNER_TEMP}/taximobile-android-release.log"
       - name: Verify packaged Android release identities
         shell: pwsh
         run: >-
           ./scripts/verify-android-release-artifacts.ps1
           -ExpectedVersionCode 1 -ExpectedVersionName 1.0.0
           -ManifestPath "$env:RUNNER_TEMP/taximobile-android-verification-manifest.json"
+          -ReleaseBuildLogPath "$env:RUNNER_TEMP/taximobile-android-release.log"
       - name: Bind Android verification artifacts to immutable source evidence
         run: >-
           python ../infra/scripts/generate_release_evidence.py

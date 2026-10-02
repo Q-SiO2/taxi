@@ -161,8 +161,8 @@ unavailable external system cannot provide the capability.
 ### GAP-001 — Establish an immutable release baseline
 
 **Current gap (updated 2026-10-02):** implementation is committed on the
-release-baseline branch, with complete passing push/PR evidence for server
-commit `17a94df` recorded in `release_baseline.md`. Newer source slices must acquire their own
+release-baseline branch, with complete passing push/PR evidence for source
+commit `7c7982a` recorded in `release_baseline.md`. Newer source slices must acquire their own
 complete immutable CI; a passing predecessor does not certify a changed checkout.
 Draft pull request 43 exists, but independent review,
 signed distributable artifact manifests, a registry image digest, and release
@@ -421,6 +421,23 @@ dirty workspace record, not clean immutable CI or release acceptance.
 The fresh assembly also exposes R8 Kotlin-metadata parsing warnings with Kotlin
 2.4.10/AGP 9.0.1. Resolved shrinker compatibility and minified-product regressions
 remain a GAP-001 prerequisite; successful compilation must not hide this warning.
+
+**Android minifier compatibility follow-up (2026-10-02):** actual AGP inspection
+confirmed embedded R8 9.0.32 below Kotlin 2.4's required minimum. The vendor's
+plugin override now pins published stable R8 9.1.56 through the existing Google
+repository, preserving shrinking and avoiding an unrelated framework upgrade.
+A pre-build task verifies the actual AGP-loaded compiler and hashes its artifact.
+Both APKs must carry matching release/full-mode compiler markers and role mapping
+IDs; sidecar metadata alone cannot bless old bytecode. CI also fails on Kotlin
+metadata warnings, skipped/cached minification or missing fresh build logs.
+Local 64 mobile-script and 242 infrastructure tests pass; shared JVM/Android host
+tests and optimized role assemblies pass with the new compiler. Synthetic marker
+tests are not device or signing proof. See `release_baseline.md` for fresh SDK/log
+evidence and required private mapping custody. The preceding packaged-identity
+candidate `7c7982a` now has passing push/PR CI; this new compiler patch requires
+its own immutable run. Minified T4 auth/serialization/reflection journeys remain
+open, along with review, signatures, registry publication and release approval.
+Progress remains approximately 84% source scope and 0/19 accepted P0 gates.
 
 ### GAP-002 — Provision and accept a real hosted environment
 

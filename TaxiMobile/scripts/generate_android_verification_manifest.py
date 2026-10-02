@@ -14,11 +14,14 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import zipfile
+from validate_android_release_log import AndroidReleaseLogError, validate_release_log
 
 VERSION = re.compile(r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)(?:\.(?:0|[1-9][0-9]*))?")
 PRODUCTS = (("passenger", "passengerRelease", "ma.taximobile.passenger"),
             ("driver", "driverRelease", "ma.taximobile.driver"))
 BUILD_TOOLS_VERSION = "36.1.0"
+R8_VERSION = "9.1.56"
 
 
 class AndroidVerificationError(RuntimeError):
@@ -104,12 +107,109 @@ def find_aapt2(project: Path) -> Path:
     return tool
 
 
+def confined_file(root: Path, path: Path) -> None:
+    """Generated compiler evidence must not escape through links or junctions."""
+    if not path.is_file() or not path.resolve().is_relative_to(root):
+        raise AndroidVerificationError("Missing or escaped Android compiler evidence.")
+    for item in (path, *path.parents):
+        if item == root:
+            break
+        if item.is_symlink() or (hasattr(item, "is_junction") and item.is_junction()):
+            raise AndroidVerificationError("Android compiler evidence must not be linked.")
+
+
+def shrinker_record(root: Path) -> dict:
+    path = root / "build/reports/android-shrinker/resolved-shrinker.json"
+    confined_file(root, path)
+    before = sha256(path)
+    document = metadata(path)
+    if (document.get("schema_version") != 1
+            or document.get("evidence_level") != "ANDROID_RESOLVED_SHRINKER"
+            or document.get("deployment_accepted") is not False
+            or document.get("distribution_eligible") is not False
+            or document.get("r8_version") != R8_VERSION
+            or document.get("resolution_scope") != "AGP_PLUGIN_CLASSLOADER"
+            or not isinstance(document.get("kotlin_version"), str)
+            or not re.fullmatch(r"2\.4\.[0-9]+", document["kotlin_version"])
+            or type(document.get("compiler_artifact_bytes")) is not int
+            or document["compiler_artifact_bytes"] <= 0
+            or not isinstance(document.get("compiler_artifact_sha256"), str)
+            or not re.fullmatch(r"[0-9a-f]{64}", document["compiler_artifact_sha256"])):
+        raise AndroidVerificationError("Android plugin shrinker report does not match the reviewed Kotlin/R8 contract.")
+    if sha256(path) != before:
+        raise AndroidVerificationError("Android plugin shrinker report changed during inspection.")
+    return {**document, "report_sha256": before}
+
+
+def mapping_record(root: Path, variant: str) -> dict:
+    path = root / "androidApp/build/outputs/mapping" / variant / "mapping.txt"
+    confined_file(root, path)
+    before = sha256(path)
+    header = []
+    # Read only a bounded compiler header; never export class/member mappings.
+    with path.open(encoding="utf-8") as source:
+        for _ in range(16):
+            line = source.readline(4097)
+            if len(line) > 4096:
+                raise AndroidVerificationError("R8 mapping compiler header is oversized.")
+            if not line.startswith("#"):
+                break
+            header.append(line.rstrip("\r\n"))
+    compilers = [line[len("# compiler: "):] for line in header if line.startswith("# compiler: ")]
+    versions = [line[len("# compiler_version: "):] for line in header if line.startswith("# compiler_version: ")]
+    map_ids = [line[len("# pg_map_id: "):] for line in header if line.startswith("# pg_map_id: ")]
+    if (compilers != ["R8"] or versions != [R8_VERSION] or len(map_ids) != 1
+            or not re.fullmatch(r"[0-9a-f]{1,64}", map_ids[0])):
+        raise AndroidVerificationError("Role mapping was not produced by the reviewed R8 compiler.")
+    if sha256(path) != before:
+        raise AndroidVerificationError("R8 mapping changed during inspection.")
+    return {"r8_version": R8_VERSION, "mapping_bytes": path.stat().st_size,
+            "mapping_sha256": before, "pg_map_id": map_ids[0]}
+
+
+def verify_dex_compiler(apk: Path, mapping: dict) -> None:
+    """Cross-check embedded R8 markers: a fresh sidecar cannot bless an old APK.
+
+This is build provenance under the trusted CI producer, not signature checking
+or a general DEX verifier. Never export bytecode/marker text to the report.
+"""
+    if apk.stat().st_size > 512 * 1024 * 1024:
+        raise AndroidVerificationError("APK exceeds the bounded compiler-inspection size.")
+    try:
+        with zipfile.ZipFile(apk) as archive:
+            all_entries = archive.infolist()
+            entries = [item for item in all_entries
+                       if re.fullmatch(r"classes(?:[2-9]|[1-9][0-9]+)?\.dex", item.filename)]
+            names = [item.filename for item in entries]
+            if (len(all_entries) > 10_000 or not 1 <= len(entries) <= 32 or "classes.dex" not in names
+                    or len(names) != len(set(names)) or sum(item.file_size for item in entries) > 256 * 1024 * 1024
+                    or any(item.flag_bits & 1 or not 8 <= item.file_size <= 64 * 1024 * 1024 for item in entries)):
+                raise AndroidVerificationError("Invalid, duplicate or oversized APK DEX entries.")
+            markers = []
+            for item in entries:
+                payload = archive.read(item)
+                if not re.match(rb"dex\n0[0-9]{2}\x00", payload):
+                    raise AndroidVerificationError("APK has an unreadable DEX header.")
+                for match in re.finditer(rb"~~R8(\{[^\x00]{1,4096}\})\x00", payload):
+                    markers.append(json.loads(match[1], object_pairs_hook=_pairs))
+    except AndroidVerificationError:
+        raise
+    except (zipfile.BadZipFile, RuntimeError, UnicodeError, ValueError):
+        raise AndroidVerificationError("APK compiler marker inspection failed.") from None
+    if not markers or any(not isinstance(marker, dict)
+            or marker.get("version") != R8_VERSION or marker.get("backend") != "dex"
+            or marker.get("compilation-mode") != "release" or marker.get("r8-mode") != "full"
+            or marker.get("pg-map-id") != mapping["pg_map_id"] for marker in markers):
+        raise AndroidVerificationError("APK embedded compiler identity does not match the reviewed R8 mapping.")
+
+
 def generate_manifest(project: Path, *, version_code: int, version_name: str, aapt2: Path) -> dict:
     if type(version_code) is not int or not 1 <= version_code <= 2_147_483_647:
         raise AndroidVerificationError("Expected version code must be a positive bounded integer.")
     if not isinstance(version_name, str) or not VERSION.fullmatch(version_name):
         raise AndroidVerificationError("Expected version name must be a three/four-component numeric release.")
     root = project.resolve(strict=True)
+    shrinker = shrinker_record(root)
     artifacts, seen_files, seen_hashes = [], set(), set()
     for role, variant, application_id in PRODUCTS:
         directory = root / "androidApp" / "build" / "outputs" / "apk" / role / "release"
@@ -140,6 +240,8 @@ def generate_manifest(project: Path, *, version_code: int, version_name: str, aa
         if apk.stat().st_size < 1024 * 1024:
             raise AndroidVerificationError(f"The {role} APK is unexpectedly small.")
         before = sha256(apk)
+        mapping = mapping_record(root, variant)
+        verify_dex_compiler(apk, mapping)
         identity = packaged_identity(apk, aapt2)
         expected = {"application_id": application_id, "version_code": version_code, "version_name": version_name}
         if identity != expected:
@@ -153,11 +255,12 @@ def generate_manifest(project: Path, *, version_code: int, version_name: str, aa
         seen_hashes.add(after)
         artifacts.append({"role": role, "variant": variant, **identity,
             "path": apk.relative_to(root).as_posix(), "bytes": apk.stat().st_size, "sha256": after,
-            "identity_verification": "AAPT2_PACKAGED_MANIFEST"})
+            "identity_verification": "AAPT2_PACKAGED_MANIFEST", **mapping,
+            "compiler_verification": "R8_EMBEDDED_DEX_MARKER_AND_MAPPING"})
     return {"schema_version": 1, "generated_at": datetime.now(timezone.utc).isoformat(),
         "evidence_level": "ANDROID_VERIFICATION_ARTIFACTS", "deployment_accepted": False,
         "distribution_eligible": False, "expected_version_code": version_code,
-        "expected_version_name": version_name, "artifacts": artifacts,
+        "expected_version_name": version_name, "artifacts": artifacts, "resolved_shrinker": shrinker,
         "limitations": ["SIGNING_NOT_ACCEPTED", "PUSH_CRASH_PROVIDER_NOT_ACCEPTED", "PHYSICAL_DEVICE_NOT_ACCEPTED"]}
 
 
@@ -167,6 +270,7 @@ def main() -> int:
     parser.add_argument("--expected-version-code", type=int, default=1)
     parser.add_argument("--expected-version-name", default="1.0.0")
     parser.add_argument("--aapt2", type=Path)
+    parser.add_argument("--build-log", type=Path)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     try:
@@ -175,11 +279,13 @@ def main() -> int:
         tool = args.aapt2 if args.aapt2 is not None else find_aapt2(args.project_dir)
         manifest = generate_manifest(args.project_dir, version_code=args.expected_version_code,
                                      version_name=args.expected_version_name, aapt2=tool)
+        if args.build_log is not None:
+            manifest["release_build_log"] = validate_release_log(args.build_log, R8_VERSION)
         if args.output is not None:
             args.output.parent.mkdir(parents=True, exist_ok=True)
             with args.output.open("x", encoding="utf-8", newline="\n") as output:
                 output.write(json.dumps(manifest, sort_keys=True, indent=2, allow_nan=False) + "\n")
-    except AndroidVerificationError as error:
+    except (AndroidVerificationError, AndroidReleaseLogError) as error:
         print(f"Android artifact verification failed: {error}", file=sys.stderr)
         return 1
     except OSError:
