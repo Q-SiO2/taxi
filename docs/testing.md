@@ -330,6 +330,38 @@ guards and component states using fake gateways. Every screen must represent:
 loading, empty, backend error, conflict/stale state, offline, permission denied,
 success, and backend-confirmed refresh.
 
+### Native protected-session source pack
+
+Run `AndroidSecureTokenStoreTest` on the Android host target together with the
+common `AuthenticationSessionStorageTest` and `AuthenticationSessionLifetimeTest`
+on JVM and Android host. The adapter tests use synthetic preferences/cipher
+implementations: they exercise production control flow, not real Keystore,
+AES-GCM authentication, filesystem persistence or hardware failure. The cipher
+seam must never be described as cryptographic acceptance.
+
+Required adapter cases include absent versus partial/mistyped/corrupt records;
+preference initialization/read/encryption failure; atomic envelope replacement;
+complete legacy migration and malformed/empty/oversized legacy rejection;
+new-envelope precedence; false/throwing save, migration and clear commits;
+uncertain memory across Activity/store recreation; serialization across store
+instances; independent-facility isolation; explicit confirmed recovery;
+cancellation and sanitized cause/suppressed-exception chains. Common coordinator
+tests additionally require failed save to deny authenticated success and attempt
+revocation of the newly issued server session, failed clear to deny successful
+logout, and storage failure to stop live-session ownership. Transport failure
+does not establish that best-effort server revocation succeeded.
+
+From `TaxiMobile/`, run:
+
+```powershell
+.\gradlew.bat :shared:jvmTest :shared:testAndroidHostTest `
+  :androidApp:compilePassengerDebugKotlin :androidApp:compileDriverDebugKotlin `
+  --no-parallel --console=plain
+```
+
+Retain JUnit results and immutable source/artifact provenance. Do not promote
+this T1 result into T4 device evidence; the following physical pack is mandatory.
+
 ### Promotion gate
 
 Each business rule has deterministic positive and negative coverage. Money,
@@ -679,6 +711,10 @@ For passenger and driver artifacts separately test:
   relock, after process kill and across an interrupted/retried save; prove no
   split token pair, stale pre-release item or silent Security-framework failure
   remains;
+* Android Keystore-backed save/restore/refresh/logout and supported legacy-pair
+  upgrade, including corrupt/partial records, missing/invalidated keys, interrupted
+  writes, Activity/process recreation and controlled persistence failure using
+  only approved synthetic lab fixtures; apply the native-storage pack below;
 * create/save/rotate recovery codes, reset while signed out, revoke another and
   the current session, change password, process death while a secret is shown,
   screenshots/clipboard/accessibility exposure, and recovery with no network;
@@ -708,6 +744,39 @@ registration/login gates. It deliberately captures no raw serial, screenshots,
 credentials or submitted values and sets T4/deployment acceptance false. This
 smoke is not evidence for ride, map, push, lifecycle, network-failure,
 accessibility, crash, iOS or browser behavior.
+
+### Android protected-session physical pack
+
+Bind evidence to each Passenger and Driver artifact, supported OS/device entry,
+locale, candidate commit and synthetic backend identity. Use only an approved
+lab harness and disposable synthetic fixtures for corruption, key invalidation
+or storage-failure injection. Never alter a tester's real app storage, capture
+tokens/ciphertext/aliases in reports, or infer physical failure behavior from the
+host fake. If a native fault cannot safely be exercised, mark the case blocked
+with a defect/evidence reference rather than substituting source assertions.
+
+| Catalog case | Required native procedure and outcome |
+| --- | --- |
+| `T4-AND-001` | Clean install; save/relaunch/refresh using real Keystore; interrupt a save, recreate Activity/store and kill/restart the process. Observe one complete durable pair or an explicit failure/absence, never a split pair or authentication based solely on an unconfirmed write. Inject a false/throwing persistence result through the approved lab path; recreated stores must remain blocked until a confirmed explicit save/clear. Check EN/FR/AR error presentation and absence of secrets in logs, screenshots, crash payloads and backups. |
+| `T4-AND-002` | Upgrade the previous supported encrypted access/refresh pair with its original key. Verify migration preserves the complete pair and removes legacy keys only with the confirmed envelope write. Separately test partial/malformed/mistyped/invalid-UTF8/oversized records, malformed/tag-invalid ciphertext and missing/invalidated keys: read must expose an actionable failure without silently erasing records or creating a replacement key. Retest compatibility gates without command replay. |
+| `T4-AND-003` | Exercise refresh, password change, current/remote session revocation and logout against the synthetic backend. Storage failure must stop live hints and deny false sign-in/logout success; newly issued session revocation is best-effort and must be checked on the backend. Failed deletion must remain visible across store recreation; a confirmed explicit save/clear must recover. Check role separation, cancellation, unrelated settings and recovery-code lifetime separately. |
+
+Retain sanitized state, commit outcomes, process/Activity lifecycle markers and
+backend session outcomes, not secret values. Host injection, real Keystore and
+real disk/process-loss observations must be identified separately in the packet.
+The T4 catalog revision is `2026-10-02`: it keeps 56 case IDs but strengthens
+these three existing S0 device cases, requires both Android products and rejects
+removal of their native observations. Its exact byte hash is portable through a
+catalog-only LF rule; previous revision/hash evidence cannot certify the new
+requirements. The template remains `NOT_STARTED`, with no device/phase acceptance.
+
+At T5 repeat server-revocation/offline recovery on release-equivalent artifacts
+against hosted staging without changing money or ride authority. T6 staff must
+recognize storage failure, preserve evidence and guide explicit recovery without
+requesting secrets or editing live data. T7 repeats relaunch/refresh and safe
+recovery during the approved field cohort. T8 still requires all applicable P0
+gates, owner sign-off and an accepted device matrix; passing this pack alone is
+not permission to carry passengers or money.
 
 ### Browser matrix
 

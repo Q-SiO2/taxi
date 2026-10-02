@@ -34,6 +34,13 @@ REQUIRED_EVIDENCE_KINDS = (
     "DEGRADED_NETWORK_AND_LIFECYCLE_REPORT",
     "CRASH_SYMBOLICATION_REPORT",
 )
+# Source tests do not establish native persistence. These existing device cases
+# must retain the security-critical observations even when the catalog evolves.
+NATIVE_STORAGE_OBSERVATIONS = {
+    "T4-AND-001": {"KEYSTORE_SESSION", "PERSISTENCE_FAILURE", "ACTIVITY_RECREATE", "NO_SECRET_LEAK"},
+    "T4-AND-002": {"LEGACY_PAIR_MIGRATION", "CORRUPT_RECORD_PRESERVED", "MISSING_KEY_NO_REPLACEMENT"},
+    "T4-AND-003": {"LOGOUT_PERSISTENCE_FAILURE", "EXPLICIT_STORAGE_RECOVERY"},
+}
 SURFACES = {
     "ANDROID_PASSENGER",
     "ANDROID_DRIVER",
@@ -243,10 +250,21 @@ def load_and_validate_catalog(path: Path = DEFAULT_CATALOG) -> dict[str, Any]:
             raise T4LabEvidenceError(f"T4 case {identifier} cannot simulate a physical-device claim.")
         if case["test_type"] == "REAL_BROWSER" and not case["requires_real_browser"]:
             raise T4LabEvidenceError(f"T4 case {identifier} cannot simulate a real-browser claim.")
+        if identifier in NATIVE_STORAGE_OBSERVATIONS and (
+            not NATIVE_STORAGE_OBSERVATIONS[identifier].issubset(observations)
+            or kind != "ANDROID_DEVICE_REPORT"
+            or case["blocking_severity"] != "S0"
+            or not case["requires_physical_device"]
+            or case["surfaces"] != ["ANDROID_PASSENGER", "ANDROID_DRIVER"]
+            or case["roles"] != ["PASSENGER", "DRIVER"]
+        ):
+            raise T4LabEvidenceError(f"T4 case {identifier} weakens native-storage device requirements.")
         identifiers.append(identifier)
         kind_counts[kind] += 1
     if len(identifiers) != len(set(identifiers)):
         raise T4LabEvidenceError("T4 case IDs must be unique.")
+    if not NATIVE_STORAGE_OBSERVATIONS.keys() <= set(identifiers):
+        raise T4LabEvidenceError("T4 catalog must retain the native-storage device cases.")
     if set(kind_counts.values()) != {8}:
         raise T4LabEvidenceError("Every T4 evidence kind must contain exactly eight cases.")
     return catalog

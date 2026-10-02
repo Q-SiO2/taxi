@@ -338,7 +338,17 @@ known MapLibre Compose 0.14.0 defect still prevents native iOS test linking, and
 the run does not supply review, branch protection, signing, physical-device,
 registry-digest, provider, or deployment acceptance. GAP-001 remains open.
 
+**Immutable server follow-up (2026-10-02):** commit
+`2d6a68b04eccd793d5d071b8f26bba67568bf63b` passed both
+[push CI](https://github.com/Q-SiO2/taxi/actions/runs/37000510927) and
+[PR CI](https://github.com/Q-SiO2/taxi/actions/runs/37000515435). These complete
+backend, mobile, web, documentation/security and iOS simulator-build runs certify
+only that source candidate's automated gates, not signing, native iOS execution,
+review approval, physical devices, registry promotion or deployment. The
+subsequent Android protected-storage patch needs independent immutable CI.
+
 ### GAP-002 — Provision and accept a real hosted environment
+
 
 **Current gap:** deployment files are provider-neutral blueprints and a strict
 inventory schema now exists, but no completed inventory or accepted host, domain,
@@ -777,7 +787,8 @@ removal. All six bounded T3 evidence kinds pass while phase/deployment acceptanc
 remain false. Documentation, mobile/web API, credential hygiene, mobile live
 wiring, phase evidence, CI security and production Compose checks pass. No new
 dependency, migration, UI or payment/provider contract is introduced. Current
-server-head immutable CI is still a separate verification boundary.
+server commit `2d6a68b` now has passing push and PR CI, as recorded in GAP-001;
+physical/hosted acceptance remains a separate verification boundary.
 
 **Remaining acceptance boundary:** 15-second idle/five-second operation defaults
 are not an approved immediate-revocation or delivery SLO. No database lock spans
@@ -893,10 +904,29 @@ to the release commit; verification of API/map/Firebase endpoints; representativ
 OS/device matrix; install/upgrade/uninstall tests; crash symbolication; store
 pre-review or internal-track acceptance; owner sign-off for both roles.
 
+**Protected-storage source follow-up (2026-10-02):** Android now uses one
+encrypted envelope, validated legacy migration, checked commits and explicit
+sanitized errors instead of destructive corruption recovery. A preference-
+facility-shared lock/uncertainty fence prevents a replacement Activity/store
+from trusting process memory mutated by an unsuccessful write. Local T1 evidence
+is 22 adapter cases within 208 Android host tests, 235 freshly rerun JVM tests,
+both debug-role compiles, 204 infrastructure and 41 mobile-script tests. This
+is also GAP-001/GAP-016 prerequisite work, not signed/native acceptance.
+The ordered storage pack in `testing.md` and `testing_execution_map.md` strengthens
+T4-AND-001/002/003 for both Android products and roles. Catalog revision
+`2026-10-02` has a new exact-byte hash with LF checkout normalization; old
+bindings cannot accept the expanded observations. Mutation tests reject removal
+of required observations, device/product/role authority, severity and case IDs.
+All 56 template cases remain `NOT_STARTED`, with no phase/deployment acceptance.
+Keystore, process death, disk failure, upgrade, logout/recovery, EN/FR/AR usability
+and real backend revocation must be evidenced before staff/field/pilot promotion.
+No new dependency, platform capability, business policy or schema was added.
+
 ### GAP-014 — Add web CI, secure hosting, and browser E2E acceptance
 
-**Current gap:** a web CI job and release packager now exist, but no passing
-remote run is attached to an immutable commit and no full browser E2E suite has
+
+**Current gap:** web CI and release packaging pass for the immutable candidates
+recorded in GAP-001, but no full browser E2E suite has
 run against the approved support matrix. Production hosting, exact CSP/TLS/cache
 headers, cookie/CORS/CSRF verification, accessibility, RTL, and protected-
 document browser flow remain unaccepted.

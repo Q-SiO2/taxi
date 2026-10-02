@@ -1,0 +1,2 @@
+# T4 evidence binds exact catalog bytes; Windows and CI must hash the same file.
+infra/testing/t4-lab-catalog.json text eol=lf

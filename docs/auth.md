@@ -355,6 +355,27 @@ pre-release two-item account names are deleted during save and logout; they are
 not a supported migration source. Physical-device save, restore, locked-device,
 upgrade, and logout behavior remains an acceptance requirement.
 
+The Android implementation also stores one versioned, length-delimited encrypted
+session envelope. It retains the existing Keystore alias and AES-GCM format;
+reading a record never generates a replacement key. A complete legacy
+access/refresh pair migrates only after both values decrypt, validate and commit
+as one envelope. Partial, corrupt, mistyped or unreadable records produce a
+bounded `SecureTokenStorageException` and are not automatically erased or
+reported as sign-out. Only entirely absent session records return `null`.
+
+Preference initialization, encryption, reads and checked synchronous commits run
+on an IO dispatcher. Store instances sharing Android's cached preference
+facility also share a mutex and persistence-uncertainty fence, so Activity/store
+recreation cannot bypass an in-flight write or trust memory changed by a failed
+commit. An explicit successful save or clear releases that fence; a read-only
+retry can recover a transient facility failure, not an unconfirmed write.
+Cancellation propagates rather than becoming a credential error. Platform error
+causes are removed before crossing into shared code; coroutine recovery may wrap
+only the already-sanitized exception. Clear removes session keys, not unrelated
+settings. This is source/adapter behavior, not a disk rollback, cross-process
+transaction or physical Keystore/power-loss guarantee. The ordered native-storage
+pack in `testing.md` requires those real-device observations before acceptance.
+
 ### Local session lifetime for live hints
 
 The shared authentication coordinator serializes restore/login/logout/local-clear
@@ -373,8 +394,8 @@ restores cannot reactivate live hints until that end
 operation finishes; a later explicit login establishes a new owner. Subscription
 callbacks also check ownership after REST returns and before updating UI. This
 local lifecycle is resource ownership only: the backend remains authoritative.
-The Android adapter's error/persistence semantics remain a separate audit issue;
-serialization does not repair or verify OS secure-storage behavior.
+Android adapter regressions now cover explicit failure and checked persistence;
+serialization and host tests still do not verify native OS secure-storage behavior.
 
 ### Ongoing mobile socket authority
 

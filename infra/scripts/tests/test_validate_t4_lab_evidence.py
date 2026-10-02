@@ -15,6 +15,7 @@ if str(SCRIPTS) not in sys.path:
 from validate_t4_lab_evidence import (
     DEFAULT_CATALOG,
     DEFAULT_TEMPLATE,
+    NATIVE_STORAGE_OBSERVATIONS,
     REQUIRED_EVIDENCE_KINDS,
     T4LabEvidenceError,
     load_and_validate_catalog,
@@ -79,6 +80,10 @@ class T4LabEvidenceTests(unittest.TestCase):
         self.assertFalse(self.template["phase_accepted"])
         self.assertFalse(self.template["deployment_accepted"])
 
+    def test_exact_catalog_byte_binding_is_portable_across_checkouts(self) -> None:
+        attributes = (DEFAULT_CATALOG.parents[2] / ".gitattributes").read_text(encoding="utf-8")
+        self.assertRegex(attributes, r"(?m)^infra/testing/t4-lab-catalog\.json text eol=lf$")
+
     def test_catalog_cannot_enable_live_or_public_activity(self) -> None:
         path = self._changed_catalog(
             lambda value: value["safety"].update({"live_money_allowed": True})
@@ -90,6 +95,45 @@ class T4LabEvidenceTests(unittest.TestCase):
         path = self._changed_catalog(lambda value: value["cases"].pop())
         with self.assertRaisesRegex(T4LabEvidenceError, "exactly 56"):
             load_and_validate_catalog(path)
+
+    def test_native_storage_observations_cannot_be_removed(self) -> None:
+        for identifier, required in NATIVE_STORAGE_OBSERVATIONS.items():
+            for observation in required:
+                with self.subTest(case=identifier, observation=observation):
+                    path = self._changed_catalog(lambda value: next(
+                        item for item in value["cases"] if item["id"] == identifier
+                    )["required_observations"].remove(observation))
+                    with self.assertRaisesRegex(T4LabEvidenceError, "native-storage"):
+                        load_and_validate_catalog(path)
+
+    def test_native_storage_device_authority_cannot_be_weakened(self) -> None:
+        for identifier in NATIVE_STORAGE_OBSERVATIONS:
+            for fields in (
+                {"requires_physical_device": False, "test_type": "REVIEW"},
+                {"blocking_severity": "S1"},
+                {"surfaces": ["ANDROID_PASSENGER"]},
+                {"roles": ["PASSENGER"]},
+                {"evidence_kind": "SUPPORTED_MATRIX"},
+            ):
+                with self.subTest(case=identifier, fields=fields):
+                    path = self._changed_catalog(lambda value: next(
+                        item for item in value["cases"] if item["id"] == identifier
+                    ).update(fields))
+                    with self.assertRaisesRegex(T4LabEvidenceError, "native-storage"):
+                        load_and_validate_catalog(path)
+
+    def test_native_storage_case_cannot_be_renamed_to_bypass_its_controls(self) -> None:
+        path = self._changed_catalog(lambda value: next(
+            item for item in value["cases"] if item["id"] == "T4-AND-001"
+        ).update({"id": "T4-AND-099"}))
+        with self.assertRaisesRegex(T4LabEvidenceError, "native-storage"):
+            load_and_validate_catalog(path)
+
+    def test_old_catalog_binding_cannot_accept_the_extended_device_requirements(self) -> None:
+        evidence = self._complete_evidence()
+        evidence["catalog_revision"] = "2026-09-09"
+        with self.assertRaisesRegex(T4LabEvidenceError, "metadata"):
+            validate_evidence(evidence, self.catalog, DEFAULT_CATALOG)
 
     def test_complete_case_evidence_does_not_accept_phase(self) -> None:
         evidence = self._complete_evidence()

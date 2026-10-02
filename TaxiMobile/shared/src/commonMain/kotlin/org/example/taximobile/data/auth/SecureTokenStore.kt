@@ -4,6 +4,10 @@ package org.example.taximobile.data.auth
  * Platform implementations must use the operating system's protected
  * credential facility. Refresh tokens must never be placed in normal app
  * preferences, UI state, analytics, or logs.
+ * Absence returns null; facility, corruption and persistence failures throw a
+ * bounded [SecureTokenStorageException] without raw platform/credential causes.
+ * Successful save/clear must acknowledge persistence, not merely enqueue it.
+ * Cancellation remains cancellation and must not be translated into sign-out.
  */
 interface SecureTokenStore {
     suspend fun tokens(): StoredTokens?

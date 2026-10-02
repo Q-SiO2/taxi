@@ -30,7 +30,7 @@ in that complete regression, plus 57 passing tests per JS/Wasm browser target an
 extended. The candidate capacity surface
 has 22 fixed Prometheus queries, 21 profile thresholds, explicit per-process
 database-pool bounds, 26 validated alert rules and a 26-panel operations
-dashboard. Immutable `168c350` now passes the complete push and pull-request CI
+dashboard. Immutable server commit `2d6a68b` passes the complete push and pull-request CI
 workflows, including both iOS Release simulator application links. Historical
 system/load results remain local unless the remote run explicitly produced them.
 Some browser/emulator evidence has started at T4; the GAP-002 through GAP-006
@@ -72,8 +72,8 @@ FCM/APNs delivery or hosted failover. Immutable `8f92e51` now passes both push
 and PR workflows, including macOS shared-source/test compilation and both iOS
 Release simulator application links. Native iOS test linking/execution and real
 devices remain separate limitations. The subsequent server-authority HINT-08
-slice has its own current-head local regression below and still requires its own
-immutable CI evidence; no real-user phase is authorized and deployment acceptance
+slice has its own local regression below and passing immutable CI recorded in
+GAP-001; no real-user phase is authorized and deployment acceptance
 remains 0/19 P0 gates.
 
 The server HINT-08 follow-up passes 106 focused backend cases, 199 infrastructure
@@ -91,6 +91,16 @@ listener failure injection, multi-replica fanout, SQL-pool headroom and approved
 revocation/delivery budgets before staffed/field/real-user promotion.
 
 ## 2. Promotion path
+
+The Android protected-storage follow-up passes 22 adapter cases within 208
+Android host tests, 235 freshly rerun JVM tests, both Android debug-role compiles,
+204 infrastructure tests and 41 mobile-script tests. Synthetic cipher/preferences
+tests prove control flow, not real Keystore or disk persistence. Its own immutable
+CI remains required. Revised T4 catalog `2026-10-02` keeps 56 cases but binds
+stronger native-storage requirements to a new LF-portable exact-byte hash;
+old evidence cannot accept them. All template cases remain `NOT_STARTED`.
+The native-storage T1/T4 packs below retain T5 hosted authority, T6 staff recovery,
+T7 field and T8 full P0 approval before any real-user promotion.
 
 | Phase | Test population | Environment | Primary question | Exit authority |
 | --- | --- | --- | --- | --- |
@@ -230,6 +240,15 @@ close/flapping jitter and bounded handshake/REST stalls. Mutation-check both
 native wiring paths in T0; compile both Android roots and verify iOS compile/link
 jobs on macOS. These do not accept native OS/device behavior or server-side
 ongoing socket authorization.
+For protected native credentials, run the Android adapter source pack and common
+authentication storage/lifetime suites from `testing.md`. Distinguish missing
+records from initialization/read/decrypt/corruption failures; require checked
+save/clear commits, complete legacy migration, cancellation propagation and
+sanitized exception chains. Recreate stores sharing the preference facility
+during writes and after a failed commit; the shared lock/uncertainty fence must
+remain authoritative until a confirmed explicit save/clear. Separate facilities
+must not share that failure. Synthetic cipher/prefs tests do not prove Keystore,
+AES-GCM, filesystem durability, process-loss or physical-device behavior.
 For HINT-08, add server verified-token, final-hop ownership and real ASGI protocol
 tests: idle/pre-send authority, JWT/database expiry, one-session/account-wide
 revocation, failed/blackholed authority, serialized sends/recipient isolation,
@@ -366,6 +385,13 @@ on a physical iPhone prove before-first-unlock Keychain unavailability is
 explicit and does not claim success, then verify save/restore/logout unlocked,
 relocked, after process kill, and through an interrupted/retried save with proof
 that no split pair, stale pre-release entry, or silent native error remains;
+on physical Android devices run the ordered protected-session pack in
+`testing.md` for both products. `T4-AND-001` requires real Keystore, persistence
+failure, Activity recreation and secret-leak checks; `T4-AND-002` requires
+supported legacy migration, corrupt-record preservation and no key creation on
+read; `T4-AND-003` requires failed-logout persistence and confirmed explicit
+recovery. Only an approved synthetic lab harness may inject native failures;
+an unavailable safe injection path is blocked evidence, not a host-test pass;
 narrow/wide operations and applicant browsers; EN/FR/AR and RTL; screen reader,
 font scaling, contrast, focus and touch targets; account recovery secret storage;
 map fallback; GPS freshness/battery; push foreground/background/killed app;
@@ -446,6 +472,13 @@ flags, observations and blocking severity. The evidence validator credits a
 kind only when all eight cases pass with retained SHA-256 evidence; failed or
 blocked cases require defect references. The committed template remains
 `NOT_STARTED` with 0/56 cases and no acceptance claim.
+Revision `2026-10-02` strengthens the existing three Android credential cases
+without adding new IDs or claiming execution. Validator mutations reject removal
+of observations, either product/role, the physical-device boundary, S0 severity
+or case identity. The exact catalog-byte hash uses a narrow LF checkout rule;
+old revision/hash records must be recollected for affected observations, never
+relabeled as new evidence. T5–T7 then require hosted session outcomes, a trained
+storage-failure/recovery rehearsal and approved field observations before T8.
 
 `infra/scripts/run_t4_browser_smoke.py` is a narrower executable precursor to
 the browser evidence class. It validates a packaged release, serves a loopback

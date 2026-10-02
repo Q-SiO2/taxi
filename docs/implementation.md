@@ -9,6 +9,28 @@ This document fixes the implementation choices required to turn the TaxiMobile p
 
 ## Current implementation standing — 2026-10-02
 
+**Android protected-session follow-up (2026-10-02):** the adapter now writes one
+encrypted, versioned token-pair envelope with checked synchronous persistence.
+Complete legacy pairs migrate only after validation and a successful commit;
+partial/corrupt records remain preserved and produce bounded typed errors.
+Reading never creates a replacement Keystore key. IO-dispatched operations share
+a preference-facility lock and uncertainty fence across store/Activity recreation,
+because a failed Android commit can still change process-cached memory. Only an
+explicit successful save or clear recovers that uncertainty; unrelated settings
+and cancellation semantics are preserved.
+
+Local verification passed **22 adapter cases within 208 Android host tests**,
+**235 freshly rerun JVM tests**, both Android debug-role compiles, **204
+infrastructure tests** and **41 mobile script tests**, with no test failures,
+errors or skips in the native/shared suites. Host cipher/preferences doubles
+exercise adapter behavior, not AES-GCM, real Keystore, disk rollback or power-loss
+acceptance. The revised T4 catalog retains 56 cases, strengthens three existing
+Android cases for both products/roles, and invalidates old catalog bindings.
+The template remains `NOT_STARTED`; real native storage, hosted authority,
+staff recovery, field and pilot acceptance remain ordered prerequisites.
+This Android source candidate requires its own immutable CI results. No new
+dependency, schema, wire, UI, pricing or provider policy is introduced.
+
 **Server live-session authority follow-up (2026-10-02):** the final socket hop
 now owns verified mobile user/session IDs and the JWT deadline, rechecks fresh
 SQL session/account authority at admission, before each hint and while idle,
@@ -28,8 +50,11 @@ three existing dependency deprecation warnings. Its
 `LIVE_SESSION_AUTHORITY` cases, confirms migration 0052, zero residual clones,
 revoked temporary `CREATEDB`, and an 81-table/8,511-row logical restore with target
 and dump removal. All six bounded T3 evidence kinds are present; formal phase
-and deployment acceptance remain false. The current server candidate still
-requires its own immutable CI result, hosted pool/load/multi-replica evidence,
+and deployment acceptance remain false. Server commit `2d6a68b` passed both
+[push CI](https://github.com/Q-SiO2/taxi/actions/runs/37000510927) and
+[PR CI](https://github.com/Q-SiO2/taxi/actions/runs/37000515435), including both
+iOS Release simulator application links, not native iOS test execution.
+It still requires hosted pool/load/multi-replica evidence,
 physical device recovery and FCM/APNs delivery acceptance. Source engineering
 scope remains approximately 84%; accepted P0 deployment gates remain 0/19.
 

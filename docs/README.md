@@ -6,7 +6,7 @@ the repository. Those are not the same kind of statement.
 
 ## Current project standing
 
-**Source assessment date:** 2026-09-09. **Standing refreshed:** 2026-09-29.
+**Source assessment date:** 2026-09-09. **Standing refreshed:** 2026-10-02.
 
 **Migration head:** `20260908_0052`
 
@@ -20,13 +20,17 @@ remain unaccepted in the gap register.
 **Overall standing:** broad provider-independent implementation exists and passes
 local automated verification, but TaxiMobile is **not ready for public or live
 pilot deployment**. The unresolved work is tracked in [`gaps.md`](gaps.md).
-The latest full isolated-PostGIS regression through migration 0052 passed 992 backend
-tests with zero failures, errors or skips; that result is also exercised by the
-current immutable backend job. Immutable commit
-`168c350948f025c7cf6182c7ada22ce8fcf2dab9` passes
-the complete push and pull-request workflows, but GAP-001 remains open because
+The latest local full isolated-PostGIS regression through migration 0052 passed
+1,090 backend tests with zero failures, errors or skips. Server commit
+`2d6a68b04eccd793d5d071b8f26bba67568bf63b` passes
+[push CI](https://github.com/Q-SiO2/taxi/actions/runs/37000510927) and
+[PR CI](https://github.com/Q-SiO2/taxi/actions/runs/37000515435), but GAP-001 remains open because
 independent review, protection, signing, registry digest, and release approval are
-absent. The local regression includes the focused
+absent. The subsequent Android protected-session source patch has local host
+evidence and requires its own immutable CI and physical-device acceptance;
+see `implementation.md` and the ordered native-storage testing pack. Historical
+`168c350` results in the summary table below describe that earlier candidate only.
+The local regression includes the focused
 security-incident unit/PostGIS slice, aggregate deadline-alert coverage and
 migration upgrade/downgrade coverage, including explicit incident responsibility
 assignment and append-visible reassignment history. Machine-readable T3 evidence

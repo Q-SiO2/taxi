@@ -64,6 +64,17 @@ clone databases and revoked temporary `CREATEDB` authority. It deliberately keep
 
 ## Current immutable remote evidence
 
+The latest verified server source is
+`2d6a68b04eccd793d5d071b8f26bba67568bf63b`, successful on 2026-10-02 in
+[push CI](https://github.com/Q-SiO2/taxi/actions/runs/37000510927) and
+[PR CI](https://github.com/Q-SiO2/taxi/actions/runs/37000515435). Both include
+backend, mobile, web, documentation/security and two iOS Release simulator
+application links. Simulator linking is not native iOS test execution or signing.
+These runs do not certify the subsequent Android protected-storage patch;
+that candidate must acquire its own clean-source evidence. No physical/hosted
+acceptance, registry promotion or real-user authorization is inferred.
+The earlier run below is retained as dated provenance, not current acceptance.
+
 On 2026-09-28, commit `de69829a649715ad7768756e285fedfde2fa846a`
 passed the complete
 [push workflow](https://github.com/Q-SiO2/taxi/actions/runs/36430942057) and

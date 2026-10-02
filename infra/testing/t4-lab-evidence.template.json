@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "catalog_revision": "2026-09-09",
-  "catalog_sha256": "a0b23113e80f6fe2107346d6e18b77b87fe335ae00af599069139ef4cfffae64",
+  "catalog_revision": "2026-10-02",
+  "catalog_sha256": "7ca3fa672410c314a965da27eb37934861b76fecc90e99713c327a3149d1f57a",
   "phase": "T4",
   "evidence_level": "T4_LAB_EXECUTION",
   "status": "NOT_STARTED",
