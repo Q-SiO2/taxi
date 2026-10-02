@@ -33,8 +33,11 @@ evidence and complete passing push/PR CI for `cc19776`; physical-device acceptan
 remains open. OpenAPI tooling now has passing push/PR CI on `17a94df`, with both
 retained packets' hashes and source identities reconciled; the registry follow-up
 requires its own CI and a successful main publication;
-see `implementation.md` and the ordered native-storage testing pack. Historical
-`168c350` results in the summary table below describe that earlier candidate only.
+see `implementation.md` and the ordered native-storage testing pack.
+Android artifact tooling also checks actual packaged APK identity rather than
+metadata alone, with fail-closed file confinement and non-distributable reports;
+this follow-up requires its own immutable CI and signing/device evidence.
+Historical `168c350` results in the summary table below describe that earlier candidate only.
 The local regression includes the focused
 security-incident unit/PostGIS slice, aggregate deadline-alert coverage and
 migration upgrade/downgrade coverage, including explicit incident responsibility

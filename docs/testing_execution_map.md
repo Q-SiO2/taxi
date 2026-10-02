@@ -92,6 +92,21 @@ revocation/delivery budgets before staffed/field/real-user promotion.
 
 ## 2. Promotion path
 
+Android artifact T0/T1 verification must inspect both actual packaged manifests,
+not just their AGP metadata. Exercise wrong-package/version binaries behind
+correct metadata, split APKs behind unfiltered metadata, escaped/linked file
+references, duplicate bytes, corruption, changes during inspection, SDK
+failure/timeout and evidence overwrite attempts. Run the checker with SDK aapt2
+against fresh passenger/driver release builds, then bind the full manifest to
+the exact clean source candidate. Preserve CI step-removal/skip/failure-bypass
+mutations. These checks do not establish signing: T4 still requires signed
+approved-certificate installation/update and real device/provider behavior;
+T5–T8 remain gated by hosted, staff, field and real-user evidence.
+T0/T1 must also verify the resolved R8/Kotlin compatibility and rerun both
+minified role builds without metadata parsing warnings before accepting release
+provenance. T4 must exercise serialization/reflection-dependent authenticated
+journeys in those minified builds, not only debug APKs.
+
 For T0/GAP-001 image promotion, main protection is configured but does not count
 as independent approval. Test source/run/attempt drift, archive/hash corruption,
 wrong image IDs, foreign or ambiguous registry digests and skipped publication

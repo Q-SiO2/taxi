@@ -9,6 +9,19 @@ This document fixes the implementation choices required to turn the TaxiMobile p
 
 ## Current implementation standing — 2026-10-02
 
+**Android packaged-artifact follow-up (2026-10-02):** the release verifier no
+longer accepts AGP metadata as proof of the actual APK identity. A modular
+standard-library Python checker uses installed SDK `aapt2` to inspect the binary
+manifest in both role APKs and match package/version to the candidate and metadata.
+It requires one non-split output, rejects traversal/absolute/stream references,
+linked/junction output paths, malformed or duplicate metadata and duplicate role
+bytes, and checks hashes before/after tool inspection. Tool failures are explicit
+and redacted; report creation is exclusive. The existing PowerShell entry point
+delegates and propagates failure, and CI mutations preserve its blocking step.
+The manifest remains non-distributable with signing/provider/device acceptance
+false. This tooling does not create keys, prove APK signatures or alter the apps.
+See `release_baseline.md` for the verification boundary.
+
 **Protected image-publication follow-up (2026-10-02):** owner-authorized `main`
 protection is configured and read back; seven up-to-date GitHub Actions checks
 and independent latest-push approval apply to administrators too. GHCR is the

@@ -577,6 +577,18 @@ def validate_ci_security(workflow: str) -> None:
             f"source, and retained in the CI run summary: missing "
             f"{missing_android_candidate[0]}."
         )
+    mobile_jobs = re.findall(r"^  mobile:\n(.*?)(?=^  [\w-]+:\n|\Z)", workflow, re.MULTILINE | re.DOTALL)
+    apk_steps = re.findall(r"^      - name: Verify packaged Android release identities\n(.*?)(?=^      - |\Z)",
+                          mobile_jobs[0] if len(mobile_jobs) == 1 else "", re.MULTILINE | re.DOTALL)
+    expected_apk_step = (
+        "        shell: pwsh\n"
+        "        run: >-\n"
+        "          ./scripts/verify-android-release-artifacts.ps1\n"
+        "          -ExpectedVersionCode 1 -ExpectedVersionName 1.0.0\n"
+        '          -ManifestPath "$env:RUNNER_TEMP/taximobile-android-verification-manifest.json"'
+    )
+    if len(apk_steps) != 1 or apk_steps[0].rstrip() != expected_apk_step:
+        raise CiSecurityError("Android packaged APK verification must run once without skip or failure bypass.")
 
     mobile_diagnostic_requirements = (
         "Run Android shared tests with bounded failure capture",

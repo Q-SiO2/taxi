@@ -32,6 +32,7 @@ SOURCE_INPUTS = (
     "TaxiMobile/gradle/wrapper/gradle-wrapper.properties",
     "TaxiMobile/settings.gradle.kts",
     "TaxiMobile/scripts/generate_ios_verification_manifest.py",
+    "TaxiMobile/scripts/generate_android_verification_manifest.py",
     "TaxiMobile/scripts/android_registration_smoke.py",
     "TaxiMobile/scripts/run-android-device.ps1",
     "TaxiMobile/scripts/test-web-compatibility-loader.mjs",

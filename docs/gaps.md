@@ -401,6 +401,27 @@ remains approximately 84%, P0 acceptance 0/19. Independent review, signing and
 release approval remain open. See `release_baseline.md` for retention and trust
 boundaries.
 
+**Android actual-package evidence hardening (2026-10-02):** the old checker
+trusted only AGP JSON and could follow an out-of-directory `outputFile`. The new
+modular checker restricts references/output directories and checks both APKs'
+actual package/version through SDK `aapt2`. It rejects sidecar/binary disagreement,
+split APKs, duplicate role bytes, linked/junction paths, malformed/duplicate JSON,
+changed files and tool failures. It preserves exclusive, redacted, unsigned
+no-acceptance reports and the existing PowerShell entry point. CI keeps a unique
+blocking packaged-identity step and binds the new tool as a source input.
+This repairs artifact provenance, not signing or device acceptance. Progress
+remains approximately 84% source scope and 0/19 accepted P0 deployment gates.
+Verification is recorded in `release_baseline.md`; fresh immutable CI, actual
+independent review, mobile signatures, registry publication and release approval
+remain required.
+Local checks pass 15 new checker cases within 56 mobile-script tests and 241
+infrastructure tests. Both role release assemblies passed in a fresh Gradle
+invocation; real SDK verification of those outputs is bound to a deliberately
+dirty workspace record, not clean immutable CI or release acceptance.
+The fresh assembly also exposes R8 Kotlin-metadata parsing warnings with Kotlin
+2.4.10/AGP 9.0.1. Resolved shrinker compatibility and minified-product regressions
+remain a GAP-001 prerequisite; successful compilation must not hide this warning.
+
 ### GAP-002 — Provision and accept a real hosted environment
 
 

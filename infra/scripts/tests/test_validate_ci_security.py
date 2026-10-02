@@ -257,6 +257,20 @@ class CiSecurityValidationTests(unittest.TestCase):
         ):
             validate_ci_security(changed)
 
+    def test_android_packaged_identity_check_cannot_be_removed_skipped_or_ignored(self) -> None:
+        heading = "      - name: Verify packaged Android release identities\n"
+        command = "          ./scripts/verify-android-release-artifacts.ps1\n"
+        mutations = (
+            self.workflow.replace(heading, heading + "        if: false\n"),
+            self.workflow.replace(heading, heading + "        continue-on-error: true\n"),
+            self.workflow.replace(command, command.rstrip() + " ; exit 0\n"),
+            self.workflow.replace(heading, "      - name: Metadata only\n"),
+            self.workflow.replace("-ExpectedVersionCode 1 -ExpectedVersionName 1.0.0", "-ExpectedVersionCode 2 -ExpectedVersionName 1.0.0"),
+        )
+        for mutation in mutations:
+            with self.assertRaisesRegex(CiSecurityError, "Android packaged APK verification"):
+                validate_ci_security(mutation)
+
     def test_ios_manifest_source_binding_cannot_be_removed(self) -> None:
         changed = self.workflow.replace(
             '--artifact "${RUNNER_TEMP}/taximobile-ios-verification-manifest.json"',

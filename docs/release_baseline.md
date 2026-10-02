@@ -157,6 +157,45 @@ exercise the protocol but cannot establish successful registry publication.
 
 ## Required immutable promotion evidence
 
+### Android packaged identity (2026-10-02)
+
+`TaxiMobile/scripts/generate_android_verification_manifest.py` validates actual
+binary-manifest package/version identities with the SDK's `aapt2 dump badging`.
+AGP metadata alone is not proof: it could describe a different APK or point
+outside the expected role output folder. Require one `SINGLE`/unfiltered APK per
+role, safe filename-only references and non-linked in-project output paths;
+reject an actual split APK even if sidecar metadata claims otherwise. Both
+products must have distinct bytes, and their hashes must remain unchanged during
+inspection. The wrapper remains `verify-android-release-artifacts.ps1`, with the
+same version/report arguments and optional explicit `-Aapt2Path`. Install Python
+and SDK build-tools 36.1.0; SDK discovery uses `ANDROID_HOME`, `ANDROID_SDK_ROOT`
+or the known local SDK property only. A custom tool path is trusted operator
+input, not a claim that the SDK executable was independently attested.
+
+Each artifact records `identity_verification=AAPT2_PACKAGED_MANIFEST`; its hash
+is covered by the candidate's complete manifest/source binding. Reports refuse
+overwrite and remain `distribution_eligible=false` and
+`deployment_accepted=false`. Packaged identity inspection is neither signature
+verification nor proof of Firebase/APNs, runtime behavior or an approved signing
+identity. Existing local-output inspection is not clean-current-source build
+evidence; the changed checker needs fresh builds and its own immutable CI.
+
+Local verification passes 15 new checker tests within 56 mobile-script tests,
+plus 241 infrastructure tests including CI mutation controls. Both the Python
+CLI and PowerShell wrapper inspect the existing two APKs with real SDK aapt2.
+Both role release assemblies then passed in a fresh Gradle invocation (135 tasks,
+31 executed, 104 up-to-date). The wrapper inspected those outputs and the full
+new manifest was bound to an explicitly dirty `WORKSPACE_SNAPSHOT`; this is local
+incremental-build/SDK evidence, not clean-source CI or a signed release claim.
+The new release assembly also exposes Kotlin-metadata parsing warnings from R8
+under Kotlin 2.4.10 / AGP 9.0.1. Compilation or APK identity success does not
+resolve that toolchain debt. Verify the actually resolved R8 version against
+[Android's Kotlin compatibility table](https://developer.android.com/build/kotlin-support)
+and fix/retest minification before accepting a distributable candidate; do not
+suppress the warning or disable shrinking to pass the gate.
+
+### Contracts and combined candidate
+
 The exact OpenAPI packet contains `launch-api.openapi.json`,
 `local-compatibility-api.openapi.json` and `openapi-manifest.json`. Its canonical
 whole-schema digests must be listed in the backend clean-source artifact record,

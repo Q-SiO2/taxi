@@ -603,7 +603,8 @@ jobs:
           '-PtaximobileVersionName=1.0.0'
           '-PtaximobileAllowUnsignedReleaseForVerification=true'
           '-PtaximobileAllowMissingFirebaseForVerification=true'
-      - shell: pwsh
+      - name: Verify packaged Android release identities
+        shell: pwsh
         run: >-
           ./scripts/verify-android-release-artifacts.ps1
           -ExpectedVersionCode 1 -ExpectedVersionName 1.0.0
