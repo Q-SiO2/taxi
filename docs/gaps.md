@@ -713,12 +713,42 @@ production Compose checks pass. Engineering scope remains approximately 84%
 and P0 deployment acceptance remains 0/19; this reliability repair is not a new
 accepted provider or launch gate.
 
-**Remaining source recovery boundaries:** mobile listeners currently exit on
-socket failure and are keyed only by the ready-state category; a REST refresh
-that leaves that category unchanged does not restart the subscription. Ongoing
-socket expiry/revocation is also admission-only. Address both with explicit
-session/lifecycle ownership and regressions before claiming a complete fallback.
-Neither changes REST authorization or permits automatic command replay.
+**Mobile recovery progress (2026-10-02):** Android and iOS now use a shared,
+single-owner subscription supervisor rather than a ready-category-only effect.
+Foreground, advisory network availability and security-command state control
+admission. A non-secret local session generation cancels the old socket and
+catch-up when credentials change or the session ends. Credential restoration is
+serialized to avoid concurrently rotating the same refresh token; logout closes
+hint admission before awaiting push cleanup, and late/queued restores cannot
+reopen it during that cleanup. Ordinary same-session REST refresh keeps the
+generation stable.
+
+Network/rejection failures and normal socket closure trigger read-only REST
+catch-up and cancellable exponential jitter (initial 0.5–1 second, capped at
+15–30 seconds). Admission triggers catch-up before frame consumption. Handshake
+and catch-up have ten- and fifteen-second bounds respectively; a healthy idle
+socket has no artificial timeout. Cancellation propagates and obsolete callbacks
+cannot apply render state. No ride, money or availability command is replayed.
+Shared regressions and mutation-checked native wiring cover these boundaries;
+the HINT-06 source pack in `testing.md` names the executable cases. Native device
+traces, FCM/APNs delivery and hosted failover remain separate acceptance evidence.
+
+Local verification passed 31 new focused shared regressions within the complete
+235-test JVM and 186-test Android host suites, both Android debug-root compiles,
+57 tests on each JS/Wasm browser target, 41 mobile script tests (including
+21 source-wiring mutations), and 197 infrastructure tests. Documentation,
+mobile/web API, credential hygiene, existing mobile recovery, phase evidence,
+CI security and production Compose gates pass. Backend business code and schema
+are unchanged; the previous 1,042-test PostGIS result belongs to the server patch,
+not a new database run. This mobile candidate still needs its own immutable CI
+and macOS native compile/link evidence; no iOS/device test execution is claimed.
+
+**Remaining source recovery boundary:** connected backend sockets still check
+expiry/revocation only at admission. Local lifecycle/session cancellation does
+not revoke sockets on other devices or enforce server-side expiry. Add ongoing
+recipient/session authority and regressions before claiming complete notification
+fallback/security. REST reauthorization remains authoritative throughout. The
+source estimate remains approximately 84%; P0 deployment acceptance remains 0/19.
 
 **Risk:** passengers and drivers miss offers, assignments, cancellations,
 scheduled reminders, document decisions, or urgent support updates.

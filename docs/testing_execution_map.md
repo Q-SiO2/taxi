@@ -17,7 +17,7 @@ graph, map style, mobile artifact, infrastructure topology, or security-policy
 change invalidates the affected evidence and sends that scope back to the earliest
 impacted phase.
 
-**Current position (standing refreshed 2026-10-01):** most subsystems have broad T1–T3 evidence,
+**Current position (standing refreshed 2026-10-02):** most subsystems have broad T1–T3 evidence,
 including a fresh migration-through-`20260908_0052` PostGIS run with 1,042 passing
 backend tests and no failures, errors or skips. The staff-grant dual-control slice
 also has focused PostGIS, API, JS and Wasm evidence. Migration 0050 and its
@@ -57,9 +57,20 @@ clones, revoked temporary database authority and an 81-table/8,511-row logical
 restore with cleanup. The system report requires `LIVE_HINT_RECOVERY` and covers
 all six T3 evidence kinds without phase/deployment acceptance. This is local
 workspace evidence, not hosted failover, real delivery, physical UX or immutable
-CI evidence for this patch. The preceding immutable `1f8a9c8` push and PR workflows
-both passed, including the Linux runtime/development audits; this new candidate
-requires its own immutable runs.
+CI evidence by itself. Immutable `f0824c9` now passes both push and PR workflows,
+including backend, mobile, web, documentation/security, Linux dependency audits
+and both iOS Release simulator links. The subsequent mobile recovery source
+slice requires its own immutable CI runs and physical/hosted acceptance.
+
+The mobile HINT-06 source follow-up locally passes 31 new focused cases inside
+235 JVM and 186 Android host tests, both Android debug-root compiles, 57 tests
+per JS/Wasm browser target, 41 mobile script tests (21 wiring mutations) and
+197 infrastructure tests. The native owner now recovers without changing the
+ready category, cancels obsolete/session-ending work and serializes refresh
+credentials. These are T0/T1 scope records, not iOS test execution, complete T4,
+FCM/APNs delivery, hosted failover or ongoing server socket expiry/revocation.
+The mobile candidate requires its own immutable CI/macOS evidence; no real-user
+phase is authorized and deployment acceptance remains 0/19 P0 gates.
 
 ## 2. Promotion path
 
@@ -193,6 +204,14 @@ idempotency/replay; rate and size limits; retention/erasure/hold rules; provider
 adapter timeout/malformed/oversized/redirect behavior; localization parity;
 accessibility semantics; log/metric/push redaction; workload and monitoring parser
 mutation tests.
+For mobile hint recovery, run the HINT-06 shared subscription, authentication-
+lifetime and Ktor cancellation suites on JVM and Android host targets. Include
+unchanged-ready network/foreground return, one socket at a time, credential
+replacement/late callbacks, serialized refresh, logout during cleanup, normal
+close/flapping jitter and bounded handshake/REST stalls. Mutation-check both
+native wiring paths in T0; compile both Android roots and verify iOS compile/link
+jobs on macOS. These do not accept native OS/device behavior or server-side
+ongoing socket authorization.
 For staff authority, generate every request/decision status, identity role,
 scope shape, expiry boundary, expected-version mismatch and continuity count;
 assert that no intermediate database state satisfies only half a decision.
@@ -335,8 +354,11 @@ Require authoritative REST catch-up **and** an observable replacement subscripti
 that receives the next hint. Repeat through access-token rotation, account
 switch/logout, server restart and denied/re-enabled push permission. Confirm no
 hint after session revocation/expiry and no automatic replay of a ride/payment
-command. The unchanged-ready reconnect and ongoing socket authorization paths
-are known source gaps, not accepted behavior merely because REST still works.
+command. The shared unchanged-ready reconnect/session-ownership path now has
+source regressions and mutation-checked native wiring; require actual device
+traces rather than promoting those checks into physical acceptance. Ongoing
+server socket expiry/revocation remains a source gap and must be repaired and
+verified before this full acceptance case can pass.
 
 For GAP-007 automatic lookup races, first run
 `ForegroundDriverLocationResultGuardTest` in T1 with synthetic contexts. At T4,

@@ -430,6 +430,31 @@ replacement. API `/ready` requires both SQL availability and listener readiness;
 guarantee that disconnected clients received hints or that hosted failover meets
 an accepted recovery budget. Authoritative REST catch-up remains mandatory.
 
+Each mobile composition root admits hint listening only while the authenticated
+product is foreground, the advisory network is not unavailable, and no logout,
+session-revocation or password-change action is pending. A common single-owner
+supervisor observes a non-secret local session-generation flow: credential
+replacement cancels the old attempt before starting the new one, while an
+ordinary same-session restore leaves the generation unchanged. Authentication
+restores are serialized so parallel foreground/push/reconnect reads do not rotate
+one refresh credential twice. Logout closes admission before push cleanup and
+suppresses late restore reactivation. This local lifetime is not proof of server
+authentication or authorization and never contains tokens or account identifiers.
+Generation, activity and the ending phase are one atomic value, preventing a
+late restore from committing activity after logout closes admission.
+
+After socket admission, every hint and transport loss/normal close, the client
+requests authoritative REST state. Expected transport/rejection failures retry
+with cancellable exponential jitter, initially 0.5–1 second and capped at
+15–30 seconds. Handshake and individual catch-up are bounded to ten and fifteen
+seconds; a healthy idle socket is not periodically disconnected. A meaningful
+hint resets backoff; an instant handshake/close does not. Background/offline
+ownership changes cancel the subscription, not replay commands. Catch-up results
+apply only while their owner remains current and eligible. A catch-up timeout
+retains prior render state and permits later hints; it does not prove delivery.
+Connected-server socket expiry/revocation checks and physical/provider recovery
+acceptance remain open; local cancellation does not substitute for them.
+
 Participant coordination uses the same boundary. The passenger and assigned
 driver may send only six documented closed codes during allowed active states.
 The command persists the code and a recipient notification; live and FCM paths

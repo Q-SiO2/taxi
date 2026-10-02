@@ -1615,16 +1615,37 @@ subscription health, client subscription ownership and authoritative catch-up.
 | HINT-03 | T1: a late old termination/notification callback cannot affect the replacement; only the addressed user receives a fresh hint | Recipient and generation-isolation tests |
 | HINT-04 | T1/API: hosted readiness fails when only the listener is unavailable, rechecks after SQL, and recovers; liveness stays healthy; shutdown cancels cooperative stalled sends and releases the connection | Staging/production API tests and bounded cleanup tests |
 | HINT-05 | T3: terminate only the exact test-owned listener PID; observe loss, replacement PID and registered channel, fresh private delivery and complete cleanup | Migrated `test_live_event_recovery.py`; required `LIVE_HINT_RECOVERY` system-report bucket |
-| HINT-06 | T4: unchanged-ready socket failure, foreground/network return, explicit refresh and access-token rotation restore REST state and receive the next hint through a replacement subscription; logout/account switch/expiry/revocation cease old-session hints | Known remaining source gaps; require shared regressions plus physical Android/iOS traces before accepting |
+| HINT-06 | T1 then T4: unchanged-ready socket failure, foreground/network return, explicit refresh and access-token rotation restore REST state and receive the next hint through a replacement subscription; logout/account switch/expiry/revocation cease old-session hints | Shared recovery and native wiring source pack implemented; physical Android/iOS traces and ongoing server socket expiry/revocation remain open |
 | HINT-07 | T5: blackhole the dedicated listener while pooled SQL works; remove/re-admit the API through readiness; repeat database restart/failover under concurrent commands and verify missed/duplicate/out-of-order hints reconcile without command replay | Hosted multi-replica, redacted health/recovery timeline, recipient checks and approved RTO; local owned-PID test is insufficient |
 
 Execute HINT-01–04 through `tests/unit/test_live_events.py`,
 `tests/unit/test_realtime.py` and `tests/api/test_system.py`. Execute HINT-05
 inside the full guarded migrated T3 runner so database isolation, clone cleanup,
-authority revocation and restore evidence remain part of the result. HINT-06–07
-stay open; this server patch neither configures FCM/APNs nor proves physical
-delivery, current-session resubscription, ongoing socket authorization or hosted
-failover. Never use a later field phase to bypass those earlier source gates.
+authority revocation and restore evidence remain part of the result.
+
+For HINT-06's source boundary, execute `LiveUpdateSubscriptionTest`,
+`AuthenticationSessionLifetimeTest` and `KtorLiveEventGatewayTest` through both
+shared JVM and Android host suites. Cover unchanged-owner retry, normal closure,
+instant-close backoff without premature reset, foreground/offline return with
+unchanged ready state, maximum one live socket, inactive start, logout during
+retry/push cleanup, account/credential replacement, obsolete callbacks,
+credential rotation inside catch-up, concurrent restores rotating only once,
+typed credential read/save/clear failures, bounded stalled handshake and REST
+reads, unexpected programmer errors and cancellation in token acquisition and
+engine execution. Confirm security commands suppress admission for both roles
+while ordinary commands do not churn the socket. Compile both Android roots;
+compile native sources and tests and link both iOS products in macOS CI. Do not
+describe native test compilation or app linking as executed device behavior.
+
+Run `TaxiMobile/scripts/validate_mobile_live_updates.py` and its mutation tests
+in T0. They check both native wiring paths and reject removal of ownership,
+timeouts, cancellation, retry, logout order or stale-result guards. They are
+source-structure checks, not proof of coroutine behavior or OS lifecycle events.
+HINT-06–07 remain unaccepted: these checks neither configure FCM/APNs nor prove
+physical delivery, ongoing server socket authorization or hosted failover. At
+T4 retain role/platform/network/lifecycle traces, replacement-subscription and
+next-hint evidence, plus absence of business-command replay. Never use a later
+field phase to bypass earlier source or server-authorization gates.
 
 #### City-authorization restriction and reinstatement pack
 

@@ -13,30 +13,37 @@ import org.example.taximobile.data.auth.AuthenticationNetworkException
 import org.example.taximobile.data.auth.AuthenticationRejectedException
 import org.example.taximobile.domain.realtime.LiveEventGateway
 import org.example.taximobile.domain.realtime.LiveRideEvent
+import kotlinx.coroutines.CancellationException
 
 class KtorLiveEventGateway(
     private val client: HttpClient,
     private val api: ApiConfiguration,
     private val accessToken: suspend () -> String,
 ) : LiveEventGateway {
-    override suspend fun listen(onRideEvent: suspend (LiveRideEvent) -> Unit) {
+    override suspend fun listen(
+        onConnected: suspend () -> Unit,
+        onRideEvent: suspend (LiveRideEvent) -> Unit,
+    ) {
         try {
             val token = accessToken()
             client.webSocket(
                 urlString = api.websocketEndpoint("events"),
                 request = { header(HttpHeaders.Authorization, "Bearer $token") },
             ) {
+                onConnected()
                 for (frame in incoming) {
                     if (frame !is Frame.Text) continue
                     val event = json.decodeFromString<LiveEventResponse>(frame.readText())
                     onRideEvent(LiveRideEvent(event.type, event.rideId))
                 }
             }
+        } catch (error: CancellationException) {
+            throw error
         } catch (error: AuthenticationRejectedException) {
             throw error
         } catch (error: Exception) {
-            // The connection is best-effort. Callers retain the last
-            // REST-confirmed state and reconnect on foreground/next refresh.
+            // Shared subscription ownership handles bounded reconnect. A failed
+            // attempt must never replace REST-confirmed business state.
             throw AuthenticationNetworkException()
         }
     }

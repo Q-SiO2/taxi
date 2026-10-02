@@ -23,6 +23,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
+import org.example.taximobile.feature.realtime.canListenForLiveUpdates
 import java.io.ByteArrayOutputStream
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
@@ -219,10 +222,24 @@ class MainActivity : ComponentActivity() {
                     FirebaseMessaging.getInstance().register()
                 }
             }
-            LaunchedEffect(presentation.state is AppUiState.PassengerReady || presentation.state is AppUiState.DriverReady) {
-                if (presentation.state is AppUiState.PassengerReady || presentation.state is AppUiState.DriverReady) {
+            val liveUpdatesEnabled = canListenForLiveUpdates(
+                presentation.state, appInForeground, connectivityStatus, pendingAction,
+            )
+            LaunchedEffect(dependencies, liveUpdatesEnabled) {
+                if (liveUpdatesEnabled) {
                     dependencies.appCoordinator.listenForLiveUpdates {
-                        presentation = presentation.accept(dependencies.appCoordinator.restore())
+                        if (!canListenForLiveUpdates(
+                                presentation.state, appInForeground, connectivityStatus, pendingAction,
+                            )) return@listenForLiveUpdates
+                        val owner = dependencies.appCoordinator.liveSessionLifetime.value
+                        val restored = dependencies.appCoordinator.restore()
+                        currentCoroutineContext().ensureActive()
+                        if (owner == dependencies.appCoordinator.liveSessionLifetime.value &&
+                            canListenForLiveUpdates(
+                                presentation.state, appInForeground, connectivityStatus, pendingAction,
+                            )) {
+                            presentation = presentation.accept(restored)
+                        }
                     }
                 }
             }

@@ -2497,6 +2497,16 @@ named user's local sockets receive it. Socket input never executes commands. On
 every message, reconnect, foregrounding, or error, the client must retrieve the
 resource from the REST API and reauthorize it. FCM delivery also
 requires environment-provided server credentials and valid Android/APNs projects.
+The native client owns one foreground/session-bound subscription and preserves
+cancellation rather than translating it into transport failure. Admission causes
+REST catch-up before frame consumption; normal closure or network/rejection
+failure causes another read and bounded jittered reconnect even when the ready
+screen category is unchanged. Access-credential replacement switches a non-secret
+local generation and cancels old callbacks; ordinary same-session reads do not.
+The connection-attempt and catch-up budgets are ten and fifteen seconds. These
+are client recovery defaults, not a delivery SLO, new wire contract, replay
+cursor, or background-tracking permission. Session validity is currently checked
+at WebSocket admission; ongoing server expiry/revocation remains an explicit gap.
 For an authenticated command error, the client executes no automatic retry of the
 command. It performs one read-only authoritative restore, renders that result,
 and retains the original operation error for the user unless reauthorization

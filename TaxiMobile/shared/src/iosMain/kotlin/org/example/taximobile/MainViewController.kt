@@ -12,6 +12,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
+import org.example.taximobile.feature.realtime.canListenForLiveUpdates
 import kotlin.io.encoding.Base64
 import org.example.taximobile.app.AppRole
 import org.example.taximobile.domain.drivers.DriverDocumentUpload
@@ -176,10 +179,24 @@ fun MainViewController(
     LaunchedEffect(presentation.state.hasAuthenticatedSession()) {
         if (presentation.state.hasAuthenticatedSession()) IosPushRegistration.retry()
     }
-    LaunchedEffect(presentation.state is AppUiState.PassengerReady || presentation.state is AppUiState.DriverReady) {
-        if (presentation.state is AppUiState.PassengerReady || presentation.state is AppUiState.DriverReady) {
+    val liveUpdatesEnabled = canListenForLiveUpdates(
+        presentation.state, appInForeground, connectivityStatus, pendingAction,
+    )
+    LaunchedEffect(dependencies, liveUpdatesEnabled) {
+        if (liveUpdatesEnabled) {
             dependencies.appCoordinator.listenForLiveUpdates {
-                presentation = presentation.accept(dependencies.appCoordinator.restore())
+                if (!canListenForLiveUpdates(
+                        presentation.state, appInForeground, connectivityStatus, pendingAction,
+                    )) return@listenForLiveUpdates
+                val owner = dependencies.appCoordinator.liveSessionLifetime.value
+                val restored = dependencies.appCoordinator.restore()
+                currentCoroutineContext().ensureActive()
+                if (owner == dependencies.appCoordinator.liveSessionLifetime.value &&
+                    canListenForLiveUpdates(
+                        presentation.state, appInForeground, connectivityStatus, pendingAction,
+                    )) {
+                    presentation = presentation.accept(restored)
+                }
             }
         }
     }

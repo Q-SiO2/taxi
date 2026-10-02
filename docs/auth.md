@@ -22,7 +22,11 @@ staff grants. It derives scope from the active selector, requires typed
 confirmation and reasons, surfaces expiry/manual-recertification state, and does
 not replay a command after MFA step-up. The backend rejects self-grant and
 self-revocation and remains authoritative for target status, scope and
-permissions. Independent approval and last-admin continuity remain open.
+permissions. Durable maker-checker decisions require an approver distinct from
+both requester and target, revalidate live authority under locks and preserve at
+least two active platform administrators after revocation. Production roster,
+independent human approval, custody, recertification and drill acceptance remain
+open; implemented source controls do not prove those operational conditions.
 
 ## 1. Purpose
 
@@ -350,6 +354,28 @@ authentication error instead of treating them as a missing session. The
 pre-release two-item account names are deleted during save and logout; they are
 not a supported migration source. Physical-device save, restore, locked-device,
 upgrade, and logout behavior remains an acceptance requirement.
+
+### Local session lifetime for live hints
+
+The shared authentication coordinator serializes restore/login/logout/local-clear
+credential operations. This avoids concurrently rotating a single refresh token
+when foreground, push and socket recovery all request a read. It exposes only an
+ephemeral generation number and active/ending flags to the live-subscription
+supervisor, not access/refresh credentials or account identity. Successful login and refresh
+persistence replace the generation; ordinary same-session restore does not.
+Missing/rejected credentials or a typed protected-storage failure stop hints.
+Network failure does not invent logout or discard recoverable credentials.
+
+Generation and lifecycle flags form one atomic value so concurrent restore and
+logout cannot acknowledge opposite ownership states. Logout marks the session
+as ending before push cleanup or the credential mutex can block. Late and queued
+restores cannot reactivate live hints until that end
+operation finishes; a later explicit login establishes a new owner. Subscription
+callbacks also check ownership after REST returns and before updating UI. This
+local lifecycle is resource ownership only: the backend remains authoritative,
+and connected server sockets still need ongoing expiry/revocation enforcement.
+The Android adapter's error/persistence semantics remain a separate audit issue;
+serialization does not repair or verify OS secure-storage behavior.
 
 ---
 

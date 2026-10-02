@@ -1,6 +1,12 @@
 package org.example.taximobile.feature.auth
 
 import org.example.taximobile.data.auth.AuthenticationGateway
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.example.taximobile.data.auth.AuthenticationNetworkException
 import org.example.taximobile.data.auth.AuthenticationRejectedException
 import org.example.taximobile.data.auth.SecureTokenStore
@@ -27,9 +33,46 @@ class AuthenticationSessionCoordinator(
     private val gateway: AuthenticationGateway,
     private val tokenStore: SecureTokenStore,
 ) {
-    suspend fun restore(): AuthenticationState {
+    // Concurrent reconnect/foreground/push restores must not rotate the same
+    // refresh credential twice. This mutex owns credentials, not business commands.
+    private val sessionMutex = Mutex()
+    private val mutableLifetime = MutableStateFlow(LocalSessionLifetime())
+    val liveSessionLifetime: StateFlow<LocalSessionLifetime> = mutableLifetime.asStateFlow()
+
+    /** Stop hints immediately, before logout waits for any network cleanup. */
+    fun stopLiveUpdates() {
+        mutableLifetime.update { current ->
+            if (current.active) current.copy(generation = current.generation + 1, active = false) else current
+        }
+    }
+
+    /** Late/queued REST restores may not reopen hints while logout cleanup waits. */
+    fun beginSessionEnd() {
+        mutableLifetime.update { current ->
+            current.copy(
+                generation = current.generation + if (current.active) 1 else 0,
+                active = false,
+                ending = true,
+            )
+        }
+    }
+
+    private fun sessionAvailable(replaced: Boolean = false) {
+        mutableLifetime.update { current ->
+            if (!current.ending && (replaced || !current.active)) {
+                LocalSessionLifetime(current.generation + 1, true)
+            } else current
+        }
+    }
+
+    suspend fun restore(): AuthenticationState = sessionMutex.withLock { restoreSession() }
+
+    private suspend fun restoreSession(): AuthenticationState {
         return try {
-            val tokens = tokenStore.tokens() ?: return AuthenticationState.Unauthenticated
+            val tokens = tokenStore.tokens() ?: run {
+                stopLiveUpdates()
+                return AuthenticationState.Unauthenticated
+            }
             try {
                 authenticated(gateway.currentAccount(tokens.accessToken))
             } catch (_: AuthenticationRejectedException) {
@@ -40,18 +83,29 @@ class AuthenticationSessionCoordinator(
                 AuthenticationState.Failure(message(Res.string.message_session_restore_failed))
             }
         } catch (_: SecureTokenStorageException) {
+            stopLiveUpdates()
             AuthenticationState.Failure(message(Res.string.message_session_restore_failed))
         }
     }
 
     suspend fun login(identifier: String, password: String, deviceLabel: String?): AuthenticationState {
+        stopLiveUpdates()
+        return sessionMutex.withLock {
+            mutableLifetime.update { it.copy(ending = false) }
+            loginSession(identifier, password, deviceLabel)
+        }
+    }
+
+    private suspend fun loginSession(identifier: String, password: String, deviceLabel: String?): AuthenticationState {
         var issuedAccessToken: String? = null
         return try {
             val tokens = gateway.login(identifier, password, deviceLabel)
             issuedAccessToken = tokens.accessToken
             tokenStore.save(tokens.accessToken, tokens.refreshToken)
+            sessionAvailable(replaced = true)
             authenticated(gateway.currentAccount(tokens.accessToken))
         } catch (_: SecureTokenStorageException) {
+            stopLiveUpdates()
             issuedAccessToken?.let { bestEffortLogout(it) }
             AuthenticationState.Failure(message(Res.string.message_sign_in_failed))
         } catch (_: AuthenticationRejectedException) {
@@ -78,6 +132,14 @@ class AuthenticationSessionCoordinator(
     }
 
     suspend fun logout(): AuthenticationState {
+        beginSessionEnd()
+        return sessionMutex.withLock {
+            try { logoutSession() } finally { mutableLifetime.update { it.copy(ending = false) } }
+        }
+    }
+
+    private suspend fun logoutSession(): AuthenticationState {
+        stopLiveUpdates()
         val tokens = try {
             tokenStore.tokens()
         } catch (_: SecureTokenStorageException) {
@@ -95,7 +157,15 @@ class AuthenticationSessionCoordinator(
     }
 
     /** Clear already-revoked local credentials without issuing another command. */
-    suspend fun clearLocalSession(): AuthenticationState = try {
+    suspend fun clearLocalSession(): AuthenticationState {
+        beginSessionEnd()
+        return sessionMutex.withLock {
+            try { clearLocalSessionLocked() } finally { mutableLifetime.update { it.copy(ending = false) } }
+        }
+    }
+
+    private suspend fun clearLocalSessionLocked(): AuthenticationState = try {
+        stopLiveUpdates()
         tokenStore.clear()
         AuthenticationState.Unauthenticated
     } catch (_: SecureTokenStorageException) {
@@ -108,14 +178,16 @@ class AuthenticationSessionCoordinator(
             val refreshed = gateway.refresh(refreshToken)
             issuedAccessToken = refreshed.accessToken
             tokenStore.save(refreshed.accessToken, refreshed.refreshToken)
+            sessionAvailable(replaced = true)
             authenticated(gateway.currentAccount(refreshed.accessToken))
         } catch (_: AuthenticationRejectedException) {
-            clearLocalSession()
+            clearLocalSessionLocked()
         } catch (_: AuthenticationNetworkException) {
             AuthenticationState.Failure(message(Res.string.message_network_unavailable))
         } catch (_: ApiRequestException) {
             AuthenticationState.Failure(message(Res.string.message_session_restore_failed))
         } catch (_: SecureTokenStorageException) {
+            stopLiveUpdates()
             issuedAccessToken?.let { bestEffortLogout(it) }
             AuthenticationState.Failure(message(Res.string.message_session_restore_failed))
         }
@@ -133,7 +205,10 @@ class AuthenticationSessionCoordinator(
         }
     }
 
-    private fun authenticated(account: CurrentAccount): AuthenticationState = AuthenticationState.Authenticated(account)
+    private fun authenticated(account: CurrentAccount): AuthenticationState {
+        sessionAvailable()
+        return AuthenticationState.Authenticated(account)
+    }
 }
 
 internal fun registrationFailureMessage(statusCode: Int): UiMessage = when (statusCode) {

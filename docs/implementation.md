@@ -1089,8 +1089,35 @@ returns the existing sanitized `503 DEPENDENCY_UNAVAILABLE` on either failure.
 Local/test processes without the PostgreSQL listener retain SQL-only readiness.
 The dedicated migrated integration case terminates only its owned listener PID,
 checks replacement `LISTEN` registration and addressed-recipient delivery, then
-verifies cleanup. Hosted failover, ongoing socket session revocation and mobile
-subscription recovery remain separate acceptance work under GAP-009/GAP-028.
+verifies cleanup. Hosted failover and ongoing socket session revocation remain
+separate work under GAP-009/GAP-028.
+
+The mobile recovery layer now separates one-attempt `LiveEventGateway` transport
+from `LiveUpdateSubscription` ownership/retry policy. Both native roots derive
+admission from foreground, advisory connectivity and pending security commands.
+The authentication coordinator serializes credential operations and exposes only
+`LocalSessionLifetime` generation/activity/ending as one atomic value. Persisted
+credential replacement cancels the old owner; ordinary REST reads preserve it. Logout closes admission
+before push cleanup and prevents a late restore from reopening it. Native callbacks
+reject cancelled, obsolete or ineligible REST results before applying state.
+The supervisor bounds handshake to ten seconds and each catch-up to fifteen,
+requests catch-up on admission/hints/failure/normal closure, and retries expected
+failures with 0.5–1-second initial jitter capped at 15–30 seconds. Healthy idle
+sockets have no artificial lifetime limit; only useful hints reset flapping
+backoff. Cancellation is never a network-retry signal. Shared behavioral tests
+and a mutation-tested native source-wiring gate are defined in the HINT-06 pack;
+neither proves physical Android/iOS, push-provider or hosted acceptance. The
+existing API and business-command non-replay contracts are unchanged.
+
+The 2026-10-02 local mobile slice passed 31 focused new cases within complete
+235-test JVM and 186-test Android host suites, both Android debug-root compiles,
+57 tests per browser target, 41 mobile script tests with 21 native-wiring
+mutations and 197 infrastructure tests. Docs, source credentials, mobile/web
+contracts, phase evidence, CI security, production Compose and existing mobile
+recovery checks pass. It changes no backend business/schema contract and does
+not claim a fresh PostGIS run. Its immutable remote and macOS compile/link checks
+remain separate, as do device, provider, ongoing server socket authorization
+and deployment acceptance.
 
 The 2026-10-01 local recovery slice passed 78 focused unit/API cases and the full
 1,042-test guarded migrated backend regression with zero failures/errors/skips.
