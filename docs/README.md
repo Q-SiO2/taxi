@@ -41,6 +41,10 @@ signing/device evidence remains absent. A further compiler compatibility repair
 pins actually loaded R8 9.1.56 for Kotlin 2.4 and cross-checks APK markers,
 mapping IDs and fresh minification logs. It has local build/script evidence but
 requires its own immutable CI and minified-device journeys before acceptance.
+Optional signed-package inspection now compares both role APKs against explicit
+public signer fingerprints with the SDK verifier and rejects debuggable packages.
+Signature matching is not owner approval; no production identity, signing key,
+signed minified release or distribution acceptance was supplied by this tooling.
 Historical `168c350` results in the summary table below describe that earlier candidate only.
 The local regression includes the focused
 security-incident unit/PostGIS slice, aggregate deadline-alert coverage and

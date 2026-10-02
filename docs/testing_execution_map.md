@@ -121,6 +121,20 @@ Arabic/French/English, and verify a controlled crash can be symbolicated with
 the exact private mapping. A successful debug journey or marker fixture cannot
 substitute for this evidence. Repeat affected phases after compiler changes.
 
+For signed Android candidate evidence, T0/T1 must reject partial fingerprint
+inputs, wrong/ambiguous/multiple signer reports, absent v2, debug packages,
+signature warnings/failure/timeout and changed APK/verifier hashes. Confirm that
+SDK inspection uses the APK's declared platform range without min/max overrides,
+that errors do not reveal subjects/tool diagnostics, and that a failed second
+role creates no partial report. Match public fingerprints to the controlled
+intended identity record independently of the inspected APK. Cryptographic
+matching alone must keep signer approval, distribution and deployment false.
+At T4 use approved signed minified passenger/driver products on minimum/supported
+Android versions: verify clean install, same-certificate update, rejected
+foreign-certificate update, session/data preservation and exact-mapping crash
+symbolication. Any key rotation requires explicit lineage and update tests across
+supported OS versions before promotion; debug signatures are not release evidence.
+
 For T0/GAP-001 image promotion, main protection is configured but does not count
 as independent approval. Test source/run/attempt drift, archive/hash corruption,
 wrong image IDs, foreign or ambiguous registry digests and skipped publication

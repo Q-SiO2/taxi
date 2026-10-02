@@ -11,11 +11,23 @@ param(
     [Parameter()]
     [string]$ManifestPath,
     [string]$Aapt2Path,
-    [string]$ReleaseBuildLogPath
+    [string]$ReleaseBuildLogPath,
+    [string]$ExpectedPassengerCertificateSha256,
+    [string]$ExpectedDriverCertificateSha256,
+    [string]$ApkSignerJarPath
 )
 
 $ErrorActionPreference = "Stop"
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+
+$signatureInputsRequested = @("ExpectedPassengerCertificateSha256", "ExpectedDriverCertificateSha256", "ApkSignerJarPath") |
+    Where-Object { $PSBoundParameters.ContainsKey($_) }
+if ($signatureInputsRequested -and (
+    [string]::IsNullOrWhiteSpace($ExpectedPassengerCertificateSha256) -or
+    [string]::IsNullOrWhiteSpace($ExpectedDriverCertificateSha256)
+)) {
+    throw "Signature inspection requires nonempty expected certificate fingerprints for both roles."
+}
 
 $pythonCommand = Get-Command python -ErrorAction Stop
 $arguments = @(
@@ -32,6 +44,15 @@ if (-not [string]::IsNullOrWhiteSpace($Aapt2Path)) {
 }
 if (-not [string]::IsNullOrWhiteSpace($ReleaseBuildLogPath)) {
     $arguments += @("--build-log", $ReleaseBuildLogPath)
+}
+foreach ($pair in @(
+    @("--expected-passenger-certificate-sha256", $ExpectedPassengerCertificateSha256),
+    @("--expected-driver-certificate-sha256", $ExpectedDriverCertificateSha256),
+    @("--apksigner-jar", $ApkSignerJarPath)
+)) {
+    if (-not [string]::IsNullOrWhiteSpace($pair[1])) {
+        $arguments += @($pair[0], $pair[1])
+    }
 }
 & $pythonCommand.Source @arguments
 if ($LASTEXITCODE -ne 0) {

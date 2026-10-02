@@ -128,7 +128,7 @@ class AndroidVerificationManifestTests(unittest.TestCase):
     def test_badging_parser_handles_real_tool_shape_and_rejects_ambiguity(self):
         text = "package: name='ma.taximobile.passenger' versionCode='7' versionName='2.3.4' platformBuildVersionCode='36'\nminSdkVersion:'24'\n"
         self.assertEqual(self.identity(self.paths["passenger"], None), android.parse_badging(text))
-        for malformed in ("", text + text, text.replace("versionCode='7'", "versionCode='0'"),
+        for malformed in ("", text + text, text + "application-debuggable\n", text.replace("versionCode='7'", "versionCode='0'"),
                           text.replace("platformBuildVersionCode=", "split='config.en' platformBuildVersionCode="),
                           text.replace("versionName='2.3.4'", "versionName='2.3.4-beta'"),
                           text.replace("versionCode='7'", "versionCode='7' versionCode='8'")):

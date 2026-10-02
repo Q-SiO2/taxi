@@ -9,6 +9,19 @@ This document fixes the implementation choices required to turn the TaxiMobile p
 
 ## Current implementation standing — 2026-10-02
 
+**Android signature-evidence follow-up (2026-10-02):** the packaged-artifact
+checker can inspect both roles against explicit public certificate SHA-256
+fingerprints via modular `verify_android_apk_signatures.py`. SDK apksigner is
+invoked directly as a Java jar, never through a shell, with warnings fatal and
+the manifest's default supported platform range. The current API 24 product
+requires verified v2 and one reported signer; update/rotation compatibility is
+still external evidence. Debuggable packages are rejected. Both identities are
+required together, hashes are checked across inspection and tool errors remain
+redacted. Reports still decline signer approval, distribution and deployment;
+the tool does not create keys or sign APKs. Local 76 mobile-script/242
+infrastructure tests and real-SDK debug-positive/unsigned-release-negative checks
+pass, not signed-minified-release or store acceptance. See `release_baseline.md`.
+
 **Android minifier follow-up (2026-10-02):** AGP 9.0.1's embedded R8 9.0.32
 cannot support the repository's Kotlin 2.4 metadata. The vendor-supported
 settings plugin override pins published stable R8 9.1.56 from the existing

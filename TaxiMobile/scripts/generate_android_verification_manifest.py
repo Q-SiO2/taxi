@@ -16,6 +16,7 @@ import subprocess
 import sys
 import zipfile
 from validate_android_release_log import AndroidReleaseLogError, validate_release_log
+from verify_android_apk_signatures import AndroidSignatureError, certificate_sha256, verify_apk_signature
 
 VERSION = re.compile(r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)(?:\.(?:0|[1-9][0-9]*))?")
 PRODUCTS = (("passenger", "passengerRelease", "ma.taximobile.passenger"),
@@ -58,6 +59,8 @@ def sha256(path: Path) -> str:
 
 
 def parse_badging(text: str) -> dict:
+    if any(line.strip().startswith("application-debuggable") for line in text.splitlines()):
+        raise AndroidVerificationError("Expected a non-debuggable release APK.")
     packages = [line for line in text.splitlines() if line.startswith("package:")]
     if len(packages) != 1:
         raise AndroidVerificationError("APK must have exactly one readable packaged identity.")
@@ -271,21 +274,40 @@ def main() -> int:
     parser.add_argument("--expected-version-name", default="1.0.0")
     parser.add_argument("--aapt2", type=Path)
     parser.add_argument("--build-log", type=Path)
+    parser.add_argument("--expected-passenger-certificate-sha256")
+    parser.add_argument("--expected-driver-certificate-sha256")
+    parser.add_argument("--apksigner-jar", type=Path)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     try:
         if args.output is not None and args.output.exists():
             raise AndroidVerificationError("Refusing to overwrite existing Android evidence.")
+        fingerprints = {"passenger": args.expected_passenger_certificate_sha256,
+                        "driver": args.expected_driver_certificate_sha256}
+        check_signatures = any(value is not None for value in fingerprints.values()) or args.apksigner_jar is not None
+        if check_signatures and any(value is None for value in fingerprints.values()):
+            raise AndroidSignatureError("Signature inspection requires expected certificate fingerprints for both roles.")
+        if check_signatures:
+            fingerprints = {role: certificate_sha256(value) for role, value in fingerprints.items()}
         tool = args.aapt2 if args.aapt2 is not None else find_aapt2(args.project_dir)
         manifest = generate_manifest(args.project_dir, version_code=args.expected_version_code,
                                      version_name=args.expected_version_name, aapt2=tool)
+        if check_signatures:
+            verifier = args.apksigner_jar if args.apksigner_jar is not None else tool.parent / "lib/apksigner.jar"
+            for artifact in manifest["artifacts"]:
+                artifact.update(verify_apk_signature(args.project_dir / artifact["path"], verifier,
+                                                    fingerprints[artifact["role"]], artifact["sha256"]))
+            manifest["signature_inspection"] = "BOTH_ROLES_CRYPTOGRAPHICALLY_VERIFIED_EXPECTED_SIGNERS"
+            manifest["signer_approval_accepted"] = False
+            # Neither an operator-supplied digest nor SDK success proves approval.
+            manifest["limitations"][0] = "SIGNER_APPROVAL_NOT_ACCEPTED"
         if args.build_log is not None:
             manifest["release_build_log"] = validate_release_log(args.build_log, R8_VERSION)
         if args.output is not None:
             args.output.parent.mkdir(parents=True, exist_ok=True)
             with args.output.open("x", encoding="utf-8", newline="\n") as output:
                 output.write(json.dumps(manifest, sort_keys=True, indent=2, allow_nan=False) + "\n")
-    except (AndroidVerificationError, AndroidReleaseLogError) as error:
+    except (AndroidVerificationError, AndroidReleaseLogError, AndroidSignatureError) as error:
         print(f"Android artifact verification failed: {error}", file=sys.stderr)
         return 1
     except OSError:

@@ -439,6 +439,24 @@ its own immutable run. Minified T4 auth/serialization/reflection journeys remain
 open, along with review, signatures, registry publication and release approval.
 Progress remains approximately 84% source scope and 0/19 accepted P0 gates.
 
+**Android signature inspection follow-up (2026-10-02):** build-time signing
+property presence is not proof of a finished APK's cryptographic signature.
+The modular SDK/Java verifier now optionally checks both roles against externally
+supplied public certificate fingerprints, retaining actual signer and verifier
+hashes only. It preserves the APK's default supported platform range, fails on
+warnings/ambiguous signers/missing v2/changed files, rejects debuggable packaged
+manifests and refuses partial identity configuration. CLI matching does not prove
+signer approval: reports remain non-distributable with all acceptance false.
+No production signing key or approval was created. Local 12 signature cases
+within 76 mobile-script tests and 242 infrastructure cases pass. Real SDK checks
+verify existing debug fixtures (not minified releases); Python/PowerShell reject
+the real unsigned optimized APK without creating success evidence.
+See `release_baseline.md` for the command, trust boundary and remaining approved-
+signer/rotation/update/device/store requirements. The preceding compiler
+candidate's PR mobile job passes, but its whole workflow is still running;
+neither that result nor this new source accepts GAP-001. Progress remains ~84%
+source scope; accepted P0 deployment gates remain 0/19.
+
 ### GAP-002 — Provision and accept a real hosted environment
 
 

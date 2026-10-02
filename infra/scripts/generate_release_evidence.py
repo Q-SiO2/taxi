@@ -36,6 +36,7 @@ SOURCE_INPUTS = (
     "TaxiMobile/scripts/generate_ios_verification_manifest.py",
     "TaxiMobile/scripts/generate_android_verification_manifest.py",
     "TaxiMobile/scripts/validate_android_release_log.py",
+    "TaxiMobile/scripts/verify_android_apk_signatures.py",
     "TaxiMobile/scripts/android_registration_smoke.py",
     "TaxiMobile/scripts/run-android-device.ps1",
     "TaxiMobile/scripts/test-web-compatibility-loader.mjs",

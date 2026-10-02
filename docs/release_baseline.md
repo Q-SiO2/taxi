@@ -273,6 +273,60 @@ digest do not establish runtime permissions, served topology or acceptance.
 The OpenAPI jobs passed on `17a94df` above; changed candidates still require
 their own immutable successful execution.
 
+### Android signed-package inspection (2026-10-02)
+
+The existing build-time presence check for signing properties cannot prove the
+finished APK's signature or signer identity. Optional post-build inspection now
+uses SDK build-tools 36.1.0's `lib/apksigner.jar`, invoked directly through Java
+without a shell. See [Android's apksigner reference](https://developer.android.com/tools/apksigner).
+It verifies the APK's manifest-declared Android range, never a narrowed custom
+range, treats signing warnings as errors, and requires one reported signer and
+verified v2 signing for the current minimum Android API 24. This checks current
+reported identity; rotation-lineage and signed-update compatibility still need
+their own reviewed device evidence. Debuggable packaged manifests are rejected
+even if their signature is valid.
+
+Provide both public certificate SHA-256 fingerprints, not private keys or
+passwords. Fingerprints can be 64 hexadecimal digits or 32 colon-separated
+bytes; they are normalized. Inputs must come from the controlled intended signer
+record, not simply be copied from the untrusted APK being inspected. A matching
+CLI input is not proof that the owner approved that identity. Partial inputs or
+an explicit verifier jar without both identities fail before APK inspection.
+
+```powershell
+.\TaxiMobile\scripts\verify-android-release-artifacts.ps1 `
+  -ExpectedVersionCode 1 -ExpectedVersionName 1.0.0 `
+  -ExpectedPassengerCertificateSha256 '<passenger public SHA-256 fingerprint>' `
+  -ExpectedDriverCertificateSha256 '<driver public SHA-256 fingerprint>' `
+  -ReleaseBuildLogPath '<fresh two-role minification log>' `
+  -ManifestPath '<new private evidence file>'
+```
+
+The wrapper forwards the equivalent Python flags. The default verifier jar is
+next to the selected SDK aapt2 tool, under `lib/`; optional `-ApkSignerJarPath`
+is trusted operator input, not independently attested tooling. Java requires a
+usable `JAVA_HOME` or PATH installation. APK hashes must match the prior packaged
+identity/compiler inspection before and after signature verification; the
+verifier artifact is hashed too. Timeouts, tool failure, wrong or ambiguous
+signers, missing v2, changed files and malformed reports fail with fixed redacted
+errors. No certificate subject, PEM, key material or raw tool output is retained.
+
+Both role artifacts gain `SDK_APKSIGNER` evidence and public certificate hashes.
+The full manifest remains `distribution_eligible=false`, `deployment_accepted=false`
+and `signer_approval_accepted=false`. Successful inspection replaces the missing-
+signature limitation with missing-signer-approval; provider and physical-device
+limitations remain. This tool neither signs files nor generates keys. Existing
+unsigned CI verification does not enable signature inspection or claim signing.
+
+Local verification passes 12 signature tests within 76 mobile-script tests and
+242 infrastructure tests. Real SDK inspection succeeds for two already-existing
+debug test APKs; the release identity checker rejects their debug flag. Python
+and PowerShell both reject the actual unsigned minified product without creating
+a report. These results exercise the SDK integration but do not provide a signed
+minified release, approved production fingerprints, signing-key custody, iOS
+distribution or store acceptance. No new native/shared build result is claimed
+for this tooling-only slice. Its own immutable CI remains required.
+
 GAP-001 remains open until all of the following refer to one clean commit:
 
 1. The complete intended source set is reviewed and committed on a protected
