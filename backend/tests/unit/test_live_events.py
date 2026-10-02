@@ -1,5 +1,6 @@
 import asyncio
 from contextlib import suppress
+from datetime import UTC, datetime, timedelta
 import json
 import logging
 from uuid import uuid4
@@ -14,6 +15,16 @@ from taximobile_api.core.live_events import (
     encode_hint,
 )
 from taximobile_api.core.realtime import EventHub
+from taximobile_api.domains.auth.security import VerifiedAccessToken
+
+
+async def permit_transport_fixture(_):
+    """Transport tests isolate fanout, not real database session authority."""
+    return True
+
+
+def transport_identity(user_id):
+    return VerifiedAccessToken(user_id, uuid4(), datetime.now(UTC) + timedelta(minutes=10))
 
 
 class RecordingSocket:
@@ -25,6 +36,9 @@ class RecordingSocket:
 
     async def send_json(self, payload: dict[str, str]) -> None:
         self.messages.append(payload)
+
+    async def close(self, *, code) -> None:
+        pass
 
 
 def test_live_event_payload_is_versioned_minimized_and_round_trips() -> None:
@@ -82,15 +96,18 @@ def test_listener_dispatches_only_to_the_addressed_local_user() -> None:
     ride_id = uuid4()
     first_socket = RecordingSocket()
     second_socket = RecordingSocket()
-    hub = EventHub()
+    hub = EventHub(permit_transport_fixture)
     listener = PostgresLiveEventListener("postgresql+asyncpg://user:password@database/taxi", hub)
 
     async def scenario() -> None:
-        await hub.connect(first_user, first_socket)
-        await hub.connect(second_user, second_socket)
-        await listener.dispatch_payload(
-            encode_hint(LiveEventHint(first_user, ride_id, "RIDE_CANCELLED"))
-        )
+        try:
+            await hub.connect(transport_identity(first_user), first_socket)
+            await hub.connect(transport_identity(second_user), second_socket)
+            await listener.dispatch_payload(
+                encode_hint(LiveEventHint(first_user, ride_id, "RIDE_CANCELLED"))
+            )
+        finally:
+            await hub.aclose()
 
     asyncio.run(scenario())
 
@@ -188,7 +205,7 @@ def controlled_listener(monkeypatch, connections, *, hub=None):
 
     monkeypatch.setattr("taximobile_api.core.live_events.asyncpg.connect", connect)
     return PostgresLiveEventListener(
-        "postgresql+asyncpg://user:password@database/taxi", hub or EventHub(),
+        "postgresql+asyncpg://user:password@database/taxi", hub or EventHub(permit_transport_fixture),
         reconnect_seconds=0.01, heartbeat_seconds=0.02,
         operation_timeout_seconds=0.03, connect_timeout_seconds=0.1,
     ), calls
@@ -203,11 +220,11 @@ async def stop_listener(task):
 @pytest.mark.asyncio
 async def test_established_disconnect_clears_readiness_and_restores_recipient_delivery(monkeypatch):
     first, second = ControlledConnection(), ControlledConnection()
-    hub = EventHub()
+    hub = EventHub(permit_transport_fixture)
     user_id, other_user_id, ride_id = uuid4(), uuid4(), uuid4()
     recipient, stranger = RecordingSocket(), RecordingSocket()
-    await hub.connect(user_id, recipient)
-    await hub.connect(other_user_id, stranger)
+    await hub.connect(transport_identity(user_id), recipient)
+    await hub.connect(transport_identity(other_user_id), stranger)
     listener, calls = controlled_listener(monkeypatch, [first, second], hub=hub)
     task = asyncio.create_task(listener.run())
     try:
@@ -229,6 +246,7 @@ async def test_established_disconnect_clears_readiness_and_restores_recipient_de
         assert len(calls) == 2
     finally:
         await stop_listener(task)
+        await hub.aclose()
     assert not listener.is_ready and second.closed
     assert not first.termination_callbacks and not second.termination_callbacks
 
@@ -289,9 +307,9 @@ async def test_listener_shutdown_cancels_stalled_hint_dispatch(monkeypatch):
             sending.set()
             await asyncio.Event().wait()
 
-    hub = EventHub()
+    hub = EventHub(permit_transport_fixture)
     user_id = uuid4()
-    await hub.connect(user_id, StalledSocket())
+    await hub.connect(transport_identity(user_id), StalledSocket())
     connection = ControlledConnection()
     listener, _ = controlled_listener(monkeypatch, [connection], hub=hub)
     task = asyncio.create_task(listener.run())
@@ -305,6 +323,7 @@ async def test_listener_shutdown_cancels_stalled_hint_dispatch(monkeypatch):
     finally:
         if not task.done():
             await stop_listener(task)
+        await hub.aclose()
 
 
 @pytest.mark.asyncio
@@ -316,7 +335,7 @@ async def test_listener_has_single_process_owner_and_failed_start_remains_unread
         raise ConnectionError("private unavailable detail")
 
     monkeypatch.setattr("taximobile_api.core.live_events.asyncpg.connect", unavailable)
-    listener = PostgresLiveEventListener("postgresql://user:password@database/taxi", EventHub())
+    listener = PostgresLiveEventListener("postgresql://user:password@database/taxi", EventHub(permit_transport_fixture))
     task = asyncio.create_task(listener.run())
     try:
         await asyncio.wait_for(attempts.wait(), timeout=1)
@@ -334,4 +353,4 @@ async def test_listener_has_single_process_owner_and_failed_start_remains_unread
 @pytest.mark.parametrize("value", [0, -1, float("inf"), float("nan")])
 def test_listener_rejects_non_finite_or_non_positive_timing(name, value):
     with pytest.raises(ValueError, match="positive and finite"):
-        PostgresLiveEventListener("postgresql://user:password@database/taxi", EventHub(), **{name: value})
+        PostgresLiveEventListener("postgresql://user:password@database/taxi", EventHub(permit_transport_fixture), **{name: value})

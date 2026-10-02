@@ -106,7 +106,8 @@ backend/.venv/Scripts/python.exe infra/scripts/run_simulated_persona_suite.py `
 
 Its committed catalog freezes 20 authentication, passenger, driver, applicant,
 matching, ride, route, scheduling, money, staff, support, safety, incident,
-notification, and client-lifecycle scenarios over 60 exact test nodes. It cannot
+notification, and client-lifecycle scenarios over 66 exact test nodes. The
+2026-10-02 catalog adds ongoing-session authority to notification personas. It cannot
 contact a target or provider, use real users or money, or mark T2 accepted. Its
 report identifies the remaining T2 database/money reconciliation, adversarial-
 security, and data-minimization evidence instead of silently claiming coverage.

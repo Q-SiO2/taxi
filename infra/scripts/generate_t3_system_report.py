@@ -40,6 +40,10 @@ REQUIRED_CASES = {
     "LIVE_HINT_RECOVERY": (
         "tests.integration.test_live_event_recovery::test_live_event_listener_recovers_after_owned_backend_termination",
     ),
+    "LIVE_SESSION_AUTHORITY": (
+        "tests.integration.test_live_session_authority::test_live_session_revocation_and_suspension_recheck_migrated_authority",
+        "tests.integration.test_live_session_authority::test_idle_socket_closes_when_database_session_expires",
+    ),
     "STATE_AND_MONEY_RECONCILIATION": (
         "tests.integration.test_cash_workload_http::test_cash_cli_durable_money_and_post_commit_failure",
         "tests.integration.test_capacity_workload_http::test_open_loop_capacity_cli_reconciles_every_released_arrival",

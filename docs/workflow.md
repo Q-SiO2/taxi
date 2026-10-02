@@ -90,7 +90,7 @@ Run only relevant subsets during a focused edit; execute the complete candidate
 gates before promotion.
 
 The T2 runner executes only the frozen synthetic unit-harness catalog. A passing
-60-test report supports the persona matrix and critical-journey evidence kinds,
+66-test report supports the persona matrix and critical-journey evidence kinds,
 but deliberately reports `phase_evidence_complete=false`; do not promote T2
 without the separate reconciliation, adversarial-security, minimization, and
 engineering/security sign-off records required by the phase catalog.

@@ -98,7 +98,7 @@ loader runtime scenarios, and 21 Prometheus alert-rule regression cases pass.
 Dependency deprecation warnings remain.
 
 The bounded T2 simulated-persona catalog currently executes 20 stable scenarios
-through 60 exact unit-test nodes with no external target, real users, providers,
+through 66 exact unit-test nodes with no external target, real users, providers,
 or live money. Its latest local run passed with zero failures/errors/skips. The
 result deliberately keeps T2 evidence incomplete until adversarial review,
 durable state/money reconciliation, data-minimization evidence, and required
@@ -1615,8 +1615,9 @@ subscription health, client subscription ownership and authoritative catch-up.
 | HINT-03 | T1: a late old termination/notification callback cannot affect the replacement; only the addressed user receives a fresh hint | Recipient and generation-isolation tests |
 | HINT-04 | T1/API: hosted readiness fails when only the listener is unavailable, rechecks after SQL, and recovers; liveness stays healthy; shutdown cancels cooperative stalled sends and releases the connection | Staging/production API tests and bounded cleanup tests |
 | HINT-05 | T3: terminate only the exact test-owned listener PID; observe loss, replacement PID and registered channel, fresh private delivery and complete cleanup | Migrated `test_live_event_recovery.py`; required `LIVE_HINT_RECOVERY` system-report bucket |
-| HINT-06 | T1 then T4: unchanged-ready socket failure, foreground/network return, explicit refresh and access-token rotation restore REST state and receive the next hint through a replacement subscription; logout/account switch/expiry/revocation cease old-session hints | Shared recovery and native wiring source pack implemented; physical Android/iOS traces and ongoing server socket expiry/revocation remain open |
+| HINT-06 | T1 then T4: unchanged-ready socket failure, foreground/network return, explicit refresh and access-token rotation restore REST state and receive the next hint through a replacement subscription; logout/account switch/expiry/revocation cease old-session hints | Shared recovery and native wiring source pack implemented; physical Android/iOS traces remain open; HINT-08 separately verifies server authority |
 | HINT-07 | T5: blackhole the dedicated listener while pooled SQL works; remove/re-admit the API through readiness; repeat database restart/failover under concurrent commands and verify missed/duplicate/out-of-order hints reconcile without command replay | Hosted multi-replica, redacted health/recovery timeline, recipient checks and approved RTO; local owned-PID test is insufficient |
+| HINT-08 | T1/T3 then T4/T5: verify the socket's exact session, JWT deadline, database expiry/revocation and account status at admission, before sends and while idle; retain/cancel ownership through shutdown and caller cancellation | Unit/ASGI and fresh migrated authority cases; required `LIVE_SESSION_AUTHORITY` system-report bucket; physical/hosted budgets and pool/load remain unaccepted |
 
 Execute HINT-01–04 through `tests/unit/test_live_events.py`,
 `tests/unit/test_realtime.py` and `tests/api/test_system.py`. Execute HINT-05
@@ -1641,11 +1642,65 @@ Run `TaxiMobile/scripts/validate_mobile_live_updates.py` and its mutation tests
 in T0. They check both native wiring paths and reject removal of ownership,
 timeouts, cancellation, retry, logout order or stale-result guards. They are
 source-structure checks, not proof of coroutine behavior or OS lifecycle events.
-HINT-06–07 remain unaccepted: these checks neither configure FCM/APNs nor prove
-physical delivery, ongoing server socket authorization or hosted failover. At
+HINT-06–08 remain unaccepted: these checks neither configure FCM/APNs nor prove
+physical delivery, accepted server revocation budgets or hosted failover. At
 T4 retain role/platform/network/lifecycle traces, replacement-subscription and
 next-hint evidence, plus absence of business-command replay. Never use a later
 field phase to bypass earlier source or server-authorization gates.
+
+For HINT-08, advance through these boundaries in order:
+
+1. **T0:** validate the unchanged v1 method/path contract, no credential/identity
+   in hint payloads or fixed logs, module-owned authority and no schema/provider
+   substitution. The JSON envelope remains only `type` and `ride_id`; transport
+   fixture grants must be labelled synthetic rather than called real auth.
+2. **T1:** run `tests/unit/test_auth_security.py`,
+   `tests/unit/test_realtime.py` and `tests/api/test_live_sessions.py`. Reject
+   malformed/expired/wrong-signature/operations tokens, ownership failure and
+   unavailable authority before accept. Exercise expiry during the SQL read,
+   JWT deadline earlier than idle interval, idle revocation/suspension, one
+   revoked session versus a second active session, pre-send revalidation,
+   serialized parallel hints, healthy-recipient isolation, lookup/accept/send/
+   close stalls, cancelled publisher/admission/close waiters, shutdown during
+   admission and already-closing work, late accept completion, obsolete owners,
+   text/binary command discard and the server-close/ASGI-receiver race. A broken
+   cancellation-suppressing adapter must produce bounded removal and a fixed
+   cleanup-incomplete warning, not false proof of task force-kill.
+3. **T2:** simulate passenger and driver credential replacement, separate-device
+   session revocation, account suspension, unavailable SQL, lost close frames and
+   refresh during catch-up. Reuse the admitted HINT-06 owner/recovery behaviors;
+   never turn a fake provider/session into migrated or physical evidence. State
+   remains REST-confirmed and no ride/availability/payment command is replayed.
+4. **T3:** run the complete guarded migrated backend suite, not a fixture-only
+   selection. `test_live_session_authority.py` must commit session revocation,
+   account suspension and database expiry through independent SQL sessions,
+   deny wrong user/absent session, preserve the same user's other active session
+   where appropriate, close idle owners and remove all connections/tasks. The
+   report requires both exact `LIVE_SESSION_AUTHORITY` test names in addition
+   to `LIVE_HINT_RECOVERY`; retain skip-free JUnit, migration/PostGIS metadata,
+   clone/temporary-authority cleanup and current-head logical restore.
+5. **T4:** use synthetic accounts on physical Android/iOS passenger and driver
+   apps, including two independently logged-in installations. Revoke only one
+   session, then suspend the whole account; repeat idle, sending, token refresh,
+   foreground/background and network-return cases. Record server close outcome,
+   absence of newly authorized hints after observed withdrawal, REST rejection/
+   recovery, replacement subscription and next allowed hint. Do not promise
+   recall of a frame sent before the revocation check. Retain minimized timelines
+   and candidate/platform identity without tokens, raw session IDs or location.
+6. **T5:** repeat across at least two API replicas with one user connected to
+   both. Blackhole/delay pooled SQL separately from the LISTEN transport; stall
+   one receiver; revoke/expire during admission, a fresh read and in-flight send;
+   restart a replica while it is closing. Freeze and measure idle detection,
+   lookup/send/close/cleanup bounds and REST recovery against approved budgets.
+   Measure idle-socket plus hint-rate database/pool demand, checkout waits,
+   connection reserve and headroom at the intended pilot/expanded fleet size.
+   Review read/send race limits, cancellation cooperation, load, cleanup and
+   outage logs before accepting the security/delivery SLO.
+7. **T6–T10:** staff rehearse lost-session and authority-outage diagnosis before
+   invited field users. Replay the accepted T4/T5 matrix for each candidate,
+   policy, capacity or city-expansion change; use the existing phase stop rules.
+   A successful socket close is not Firebase/APNs delivery or permission to
+   introduce real users before the independent P0 gates pass.
 
 #### City-authorization restriction and reinstatement pack
 

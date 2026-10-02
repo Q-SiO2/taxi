@@ -2505,8 +2505,32 @@ screen category is unchanged. Access-credential replacement switches a non-secre
 local generation and cancels old callbacks; ordinary same-session reads do not.
 The connection-attempt and catch-up budgets are ten and fifteen seconds. These
 are client recovery defaults, not a delivery SLO, new wire contract, replay
-cursor, or background-tracking permission. Session validity is currently checked
-at WebSocket admission; ongoing server expiry/revocation remains an explicit gap.
+cursor, or background-tracking permission.
+
+The server retains only the verified mobile user/session IDs and access-token
+deadline, never the raw bearer credential, in its socket owner. Admission, every
+hint send and the idle monitor re-read session ownership, revocation, database
+session expiry and active account status through the same SQL predicate as REST.
+No positive authorization result is cached. Operations-audience tokens cannot
+open this mobile socket. Refresh does not extend an existing socket's verified
+deadline: the client must reconnect using its newly persisted credentials.
+
+The idle recheck interval is 15 seconds and authorization/accept/send/close
+operations have five-second defaults; deadline wake-up is earlier when required.
+A known expired/revoked/suspended identity closes with `4401`; unavailable or
+timed-out authority closes with `1013`. Closing immediately withdraws hint
+authority and cancels cooperative owned work. Per-socket sends are serialized;
+other recipients continue independently. Admission and closing owners remain
+tracked until cleanup releases them, and caller cancellation cannot abandon the
+retained closer. Inbound text and binary frames never execute commands.
+
+These are source defaults, not an accepted fleet-wide revocation/delivery SLO.
+Revalidation is a fresh read, not a database lock held across network IO: a
+revocation committing after that read can race an already-started frame, and
+bytes already buffered/sent cannot be retracted. Cancellation-suppressing adapters
+cannot be force-killed by Python; cleanup reports a fixed, identity-free failure
+instead of claiming they were reaped. Hosted pool/load, multi-replica revocation,
+physical device catch-up and provider delivery remain HINT-08/T4/T5 acceptance.
 For an authenticated command error, the client executes no automatic retry of the
 command. It performs one read-only authoritative restore, renders that result,
 and retains the original operation error for the user unless reauthorization

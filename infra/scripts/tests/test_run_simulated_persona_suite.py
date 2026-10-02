@@ -38,8 +38,18 @@ class SimulatedPersonaSuiteTests(unittest.TestCase):
         catalog = load_and_validate_catalog(DEFAULT_CATALOG)
         selectors = [item for scenario in catalog["scenarios"] for item in scenario["selectors"]]
         self.assertEqual(20, len(catalog["scenarios"]))
-        self.assertEqual(60, len(selectors))
-        self.assertEqual(60, len(set(selectors)))
+        self.assertEqual(66, len(selectors))
+        self.assertEqual(66, len(set(selectors)))
+
+    def test_notification_personas_include_ongoing_session_authority(self) -> None:
+        catalog = load_and_validate_catalog(DEFAULT_CATALOG)
+        scenario = next(item for item in catalog["scenarios"] if item["id"] == "SIM-NOTIFY-001")
+        self.assertTrue({
+            "SESSION_REVOCATION_IS_ISOLATED", "IDLE_AUTHORITY_IS_RECHECKED",
+            "JWT_DEADLINE_IS_ENFORCED", "AUTHORITY_OUTAGE_FAILS_CLOSED",
+            "EACH_HINT_IS_REAUTHORIZED", "OBSOLETE_OWNER_CANNOT_SEND",
+        }.issubset(scenario["invariants"]))
+        self.assertEqual(6, sum("test_realtime.py::" in node for node in scenario["selectors"]))
 
     def test_validate_only_never_requires_or_writes_run_evidence(self) -> None:
         self.assertEqual(0, run_simulated_persona_suite.main(["--validate-only"]))
@@ -89,7 +99,7 @@ class SimulatedPersonaSuiteTests(unittest.TestCase):
                 junit_argument = next(item for item in command if item.startswith("--junitxml="))
                 junit_path = Path(junit_argument.split("=", 1)[1])
                 junit_path.write_text(
-                    '<testsuite tests="60" failures="0" errors="0" skipped="0"/>',
+                    '<testsuite tests="66" failures="0" errors="0" skipped="0"/>',
                     encoding="utf-8",
                 )
                 return subprocess.CompletedProcess(command, 0, stdout="", stderr="")
@@ -107,7 +117,7 @@ class SimulatedPersonaSuiteTests(unittest.TestCase):
             self.assertFalse(report["phase_accepted"])
             self.assertFalse(report["phase_evidence_complete"])
             self.assertFalse(report["deployment_accepted"])
-            self.assertEqual(60, junit_summary(junit)["tests"])
+            self.assertEqual(66, junit_summary(junit)["tests"])
 
 
 if __name__ == "__main__":

@@ -452,8 +452,19 @@ hint resets backoff; an instant handshake/close does not. Background/offline
 ownership changes cancel the subscription, not replay commands. Catch-up results
 apply only while their owner remains current and eligible. A catch-up timeout
 retains prior render state and permits later hints; it does not prove delivery.
-Connected-server socket expiry/revocation checks and physical/provider recovery
-acceptance remain open; local cancellation does not substitute for them.
+The server now has a separate session-owned final socket hop. Verified mobile
+IDs/deadline establish the owner; fresh SQL checks at admission, before sends and
+while idle enforce database session expiry/revocation and active account status.
+REST shares the read predicate; assignment commit-time authority remains separate.
+One monitor and serialized send path belong to each connection. Closing removes
+hint authority, cancels cooperative work and uses a retained closer independent
+of caller cancellation. Hub shutdown joins admitting and already-closing owners,
+not only currently broadcastable sockets. No database lock spans network IO and
+no already-sent frame can be recalled. Five-second operation and 15-second idle
+defaults are not field SLOs; permanently cancellation-suppressing dependencies
+cannot be forcibly reaped. HINT-08 requires migrated authority, native recovery
+and hosted revocation/pool/load evidence before acceptance. Local cancellation
+alone still cannot establish provider or physical recovery.
 
 Participant coordination uses the same boundary. The passenger and assigned
 driver may send only six documented closed codes during allowed active states.

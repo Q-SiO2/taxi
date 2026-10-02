@@ -18,7 +18,7 @@ change invalidates the affected evidence and sends that scope back to the earlie
 impacted phase.
 
 **Current position (standing refreshed 2026-10-02):** most subsystems have broad T1–T3 evidence,
-including a fresh migration-through-`20260908_0052` PostGIS run with 1,042 passing
+including a fresh migration-through-`20260908_0052` PostGIS run with 1,090 passing
 backend tests and no failures, errors or skips. The staff-grant dual-control slice
 also has focused PostGIS, API, JS and Wasm evidence. Migration 0050 and its
 security-incident workflow, one-time postmortem completion and deadline telemetry
@@ -68,9 +68,27 @@ per JS/Wasm browser target, 41 mobile script tests (21 wiring mutations) and
 197 infrastructure tests. The native owner now recovers without changing the
 ready category, cancels obsolete/session-ending work and serializes refresh
 credentials. These are T0/T1 scope records, not iOS test execution, complete T4,
-FCM/APNs delivery, hosted failover or ongoing server socket expiry/revocation.
-The mobile candidate requires its own immutable CI/macOS evidence; no real-user
-phase is authorized and deployment acceptance remains 0/19 P0 gates.
+FCM/APNs delivery or hosted failover. Immutable `8f92e51` now passes both push
+and PR workflows, including macOS shared-source/test compilation and both iOS
+Release simulator application links. Native iOS test linking/execution and real
+devices remain separate limitations. The subsequent server-authority HINT-08
+slice has its own current-head local regression below and still requires its own
+immutable CI evidence; no real-user phase is authorized and deployment acceptance
+remains 0/19 P0 gates.
+
+The server HINT-08 follow-up passes 106 focused backend cases, 199 infrastructure
+tests and 20 simulated scenarios/66 exact tests under outbound-network denial.
+Its complete fresh-PostGIS regression passes 1,090 backend tests with no
+failures/errors/skips and three existing dependency deprecation warnings.
+`backend/build/live-session-authority-t3-20261002/` retains JUnit, database,
+restore and combined system records. The combined report requires both
+`LIVE_SESSION_AUTHORITY` cases independently of listener recovery and verifies
+migration 0052, zero residual clones, revoked temporary clone authority and an
+81-table/8,511-row restore with cleanup. All six bounded T3 evidence kinds are
+present; formal phase acceptance remains false. The ordered HINT-08 pack below
+then requires physical multi-device/session testing, independent authority and
+listener failure injection, multi-replica fanout, SQL-pool headroom and approved
+revocation/delivery budgets before staffed/field/real-user promotion.
 
 ## 2. Promotion path
 
@@ -212,6 +230,14 @@ close/flapping jitter and bounded handshake/REST stalls. Mutation-check both
 native wiring paths in T0; compile both Android roots and verify iOS compile/link
 jobs on macOS. These do not accept native OS/device behavior or server-side
 ongoing socket authorization.
+For HINT-08, add server verified-token, final-hop ownership and real ASGI protocol
+tests: idle/pre-send authority, JWT/database expiry, one-session/account-wide
+revocation, failed/blackholed authority, serialized sends/recipient isolation,
+cancelled admission/publisher/closer, already-closing shutdown, late accept and
+inbound text/binary rejection. Distinguish cooperative cleanup from a deliberately
+cancellation-suppressing adapter; require bounded removal plus a fixed warning,
+not a claim that Python forcibly reaped it. See the ordered HINT-08 pack in
+`testing.md` for exact executable files and field progression.
 For staff authority, generate every request/decision status, identity role,
 scope shape, expiry boundary, expected-version mismatch and continuity count;
 assert that no intermediate database state satisfies only half a decision.
@@ -248,7 +274,7 @@ no personal data and cannot bypass backend authority.
 
 **Executable baseline:**
 `infra/testing/simulated-persona-catalog.json` freezes 20 source-level scenario
-IDs and 60 exact pytest nodes across authentication, inactive accounts, driver
+IDs and 66 exact pytest nodes across authentication, inactive accounts, driver
 eligibility/recruitment, matching, rides, coordination, fixed routes, scheduling,
 cash, transfers, refunds, staff/scope/city authority, notifications, support,
 safety, security incidents, and client lifecycle. Run it only through
@@ -281,6 +307,15 @@ next minimized hint only to its addressed socket, and leave no connection or
 dispatch task behind. `generate_t3_system_report.py` requires this named case in
 the `LIVE_HINT_RECOVERY` coverage bucket. A TCP reconnection alone is insufficient
 evidence of subscription recovery; this does not prove hosted failover.
+
+The final socket hop must also use actual migrated SQL: commit a single-session
+revocation, then account suspension, and separately expire a database session.
+Fresh reads must deny wrong-user/absent/expired/revoked authority, preserve another
+valid session where appropriate and close idle owners without waiting for a hint.
+The `LIVE_SESSION_AUTHORITY` bucket requires both exact cases from
+`test_live_session_authority.py`; omission of either fails the report. Fake
+listener grants and ASGI seams are not substitutes. Include full-suite, clone,
+temporary-role and restore evidence in the same T3 bundle.
 
 After any pytest/async-plugin upgrade, repeat this entire T3 pack with explicit
 function-scoped fixture and test loops. Retain the exact lock identities, full
@@ -356,9 +391,12 @@ switch/logout, server restart and denied/re-enabled push permission. Confirm no
 hint after session revocation/expiry and no automatic replay of a ride/payment
 command. The shared unchanged-ready reconnect/session-ownership path now has
 source regressions and mutation-checked native wiring; require actual device
-traces rather than promoting those checks into physical acceptance. Ongoing
-server socket expiry/revocation remains a source gap and must be repaired and
-verified before this full acceptance case can pass.
+traces rather than promoting those checks into physical acceptance. HINT-08's
+server authority now has source and migrated test paths; repeat it with two
+independent installations, one-session revocation and account-wide suspension,
+idle expiry and refresh, server-close/network races and the next authorized hint.
+Field acceptance must acknowledge that already-started/sent frames cannot be
+recalled and cannot infer a revocation SLO from source defaults.
 
 For GAP-007 automatic lookup races, first run
 `ForegroundDriverLocationResultGuardTest` in T1 with synthetic contexts. At T4,
@@ -470,6 +508,15 @@ Retain redacted timing/health/recipient evidence. Repeat mobile unchanged-ready
 reconnection, token refresh, logout/revocation and permission/network/lifecycle
 recovery in T4 before using real participants; current source does not yet prove
 all those subscription/session behaviors.
+
+HINT-08 additionally freezes a revocation/expiry/authority-outage budget. Use two
+API replicas, idle and busy sockets for one synthetic user, a stalled receiver,
+SQL delay/blackhole distinct from listener loss, and shutdown during admission/
+close. Measure detection and cleanup, REST rejection/recovery, active-socket and
+hint-rate pool pressure, checkout wait and database connection reserve. Confirm
+no authority cache, raw credential/identity logs or business-command replay.
+Review the read/send race and cancellation-cooperation limitations against the
+intended exposure before staff or real-user promotion.
 
 **Exit:** workload, monitoring and reconciliation all pass the frozen profile;
 resource headroom and cost envelope are accepted; primary and backup responders

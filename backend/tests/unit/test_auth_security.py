@@ -47,6 +47,32 @@ def test_access_token_is_bound_to_user_and_session() -> None:
     assert service.parse_access_token(token) == (user_id, session_id)
 
 
+def test_live_token_details_retain_only_verified_identity_and_utc_deadline():
+    service = TokenService("a" * 32)
+    now = datetime.now(UTC).replace(microsecond=0)
+    user_id, session_id = uuid4(), uuid4()
+    token = service.create_access_token(user_id=user_id, session_id=session_id, now=now)
+    principal = service.parse_access_token_details(token)
+    assert (principal.user_id, principal.session_id) == (user_id, session_id)
+    assert principal.expires_at == now + timedelta(minutes=15)
+    assert token not in repr(principal) and not hasattr(principal, "token")
+
+
+@pytest.mark.parametrize(("claim", "value"), [
+    ("sid", 42), ("sid", []), ("sid", {}), ("sid", None),
+    ("exp", 2 ** 64), ("exp", "invalid"), ("exp", None),
+])
+def test_live_token_details_reject_malformed_identity_or_unrepresentable_deadline(claim, value):
+    now = datetime.now(UTC)
+    claims = {"sub": str(uuid4()), "sid": str(uuid4()), "type": "access",
+              "iat": now, "exp": now + timedelta(minutes=15),
+              "iss": JWT_ISSUER, "aud": JWT_AUDIENCE}
+    claims[claim] = value
+    token = jwt.encode(claims, "a" * 32, algorithm=JWT_ALGORITHM)
+    with pytest.raises(InvalidAccessToken, match="Invalid or expired"):
+        TokenService("a" * 32).parse_access_token_details(token)
+
+
 def test_operations_token_uses_a_distinct_audience_and_type() -> None:
     user_id = uuid4()
     session_id = uuid4()

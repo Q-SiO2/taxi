@@ -7,6 +7,7 @@ application, database or server process. This is not hosted failover evidence.
 
 import asyncio
 from contextlib import suppress
+from datetime import UTC, datetime, timedelta
 from uuid import uuid4
 
 import asyncpg
@@ -18,6 +19,7 @@ from taximobile_api.core.live_events import (
     LIVE_EVENT_CHANNEL, PostgresLiveEventListener, PostgresLiveEventPublisher,
 )
 from taximobile_api.core.realtime import EventHub
+from taximobile_api.domains.auth.security import VerifiedAccessToken
 
 
 pytestmark = pytest.mark.integration
@@ -29,7 +31,11 @@ def test_live_event_listener_recovers_after_owned_backend_termination(monkeypatc
     async def scenario():
         engine = create_async_engine(settings.database_url)
         sessions = async_sessionmaker(engine, expire_on_commit=False)
-        hub = EventHub()
+        async def permit_transport_fixture(_):
+            # Actual SQL session authority is covered separately, not here.
+            return True
+
+        hub = EventHub(permit_transport_fixture)
         user_id, stranger_id, ride_id = uuid4(), uuid4(), uuid4()
         created = []
         replacement = asyncio.Event()
@@ -59,9 +65,13 @@ def test_live_event_listener_recovers_after_owned_backend_termination(monkeypatc
                 self.messages.append(message)
                 self.received.set()
 
+            async def close(self, *, code):
+                pass
+
         recipient, stranger = Socket(), Socket()
-        await hub.connect(user_id, recipient)
-        await hub.connect(stranger_id, stranger)
+        deadline = datetime.now(UTC) + timedelta(minutes=10)
+        await hub.connect(VerifiedAccessToken(user_id, uuid4(), deadline), recipient)
+        await hub.connect(VerifiedAccessToken(stranger_id, uuid4(), deadline), stranger)
         listener = PostgresLiveEventListener(settings.database_url, hub, reconnect_seconds=0.1)
         task = asyncio.create_task(listener.run())
         try:
@@ -101,6 +111,7 @@ def test_live_event_listener_recovers_after_owned_backend_termination(monkeypatc
             task.cancel()
             with suppress(asyncio.CancelledError):
                 await asyncio.wait_for(task, timeout=5)
+            await hub.aclose()
             await engine.dispose()
         assert not listener.is_ready and not listener._dispatch_tasks
         assert all(connection.is_closed() for connection in created)

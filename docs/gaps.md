@@ -740,15 +740,56 @@ Local verification passed 31 new focused shared regressions within the complete
 mobile/web API, credential hygiene, existing mobile recovery, phase evidence,
 CI security and production Compose gates pass. Backend business code and schema
 are unchanged; the previous 1,042-test PostGIS result belongs to the server patch,
-not a new database run. This mobile candidate still needs its own immutable CI
-and macOS native compile/link evidence; no iOS/device test execution is claimed.
+not a new database run. Immutable mobile candidate `8f92e51` now passes its push
+and PR CI workflows, including macOS native-source/test compilation and both
+Release simulator application links; no native iOS/device test execution is claimed.
 
-**Remaining source recovery boundary:** connected backend sockets still check
-expiry/revocation only at admission. Local lifecycle/session cancellation does
-not revoke sockets on other devices or enforce server-side expiry. Add ongoing
-recipient/session authority and regressions before claiming complete notification
-fallback/security. REST reauthorization remains authoritative throughout. The
-source estimate remains approximately 84%; P0 deployment acceptance remains 0/19.
+**Ongoing server authority progress (2026-10-02):** socket ownership is now
+modular: verified mobile IDs/access deadline, fresh SQL authority shared with
+REST, and an independent per-connection lifecycle. Admission, every send and the
+idle monitor check exact session ownership, database expiry/revocation and
+active account status without positive caching or raw bearer retention. Known
+loss closes `4401`; unavailable authority closes `1013`. Refreshed credentials
+must establish a replacement owner. Sends serialize per socket without blocking
+other recipients; shutdown joins admission and closing owners as well as live
+recipients. A retained closer survives caller cancellation. Inbound text/binary
+frames cannot execute commands, and the ASGI receiver no longer races a
+server-initiated close through `receive_text`'s connected-state precondition.
+
+HINT-08 adds unit/ASGI cases for expiry, denial, lookup/accept/send/close stalls,
+revoked/suspended idle connections, cancelled admission/publisher/closer,
+late-accept/shutdown ownership, recipient isolation, minimized payloads and
+sanitized failures. Separate migrated tests use fresh SQL sessions to commit
+session revocation, account suspension and database-session expiry. The full
+T3 report now requires both `LIVE_SESSION_AUTHORITY` cases; a mutation test
+rejects omission of either. Transport-only listener fixtures explicitly inject
+synthetic authority and are not a substitute for those database cases.
+
+Local verification passed **106 focused backend cases**, **199 infrastructure
+tests**, three mobile live-wiring regression tests and the network-guarded
+**20-scenario/66-selected-test T2 pack**. The complete guarded fresh-PostGIS
+regression passed **1,090 tests, zero failures/errors/skips**, with three existing
+dependency deprecation warnings. The
+`backend/build/live-session-authority-t3-20261002/` bundle includes both required
+SQL authority cases, migration 0052, zero residual clones, revoked temporary
+`CREATEDB`, and an 81-table/8,511-row logical restore with temporary target/dump
+removal. All six bounded T3 evidence kinds pass while phase/deployment acceptance
+remain false. Documentation, mobile/web API, credential hygiene, mobile live
+wiring, phase evidence, CI security and production Compose checks pass. No new
+dependency, migration, UI or payment/provider contract is introduced. Current
+server-head immutable CI is still a separate verification boundary.
+
+**Remaining acceptance boundary:** 15-second idle/five-second operation defaults
+are not an approved immediate-revocation or delivery SLO. No database lock spans
+network IO; revocation after a fresh read can race an already-started send, and
+already buffered/sent bytes cannot be recalled. Cooperative work is cancelled;
+Python cannot force-kill an adapter that suppresses cancellation forever, so
+incomplete cleanup is explicitly reported. HINT-08/T4/T5 must prove physical
+multi-device logout/refresh, multi-replica idle/send revocation, authority outage,
+pool/load headroom and approved measured budgets. FCM/APNs, hosted failover,
+staff response and deployment acceptance remain open. REST reauthorization
+remains authoritative throughout. Source scope is approximately 84%; P0
+deployment acceptance remains 0/19.
 
 **Risk:** passengers and drivers miss offers, assignments, cancellations,
 scheduled reminders, document decisions, or urgent support updates.
@@ -2000,7 +2041,7 @@ verification APKs and their hashes are locally recorded; iOS execution remains a
 macOS CI gate. This is stronger candidate provenance, not signing, SBOM coverage,
 remote-CI success, device acceptance or a public release.
 
-The backend CI job now also executes the bounded 20-scenario/60-test T2 persona
+The backend CI job now also executes the bounded 20-scenario/66-test T2 persona
 catalog and retains its JSON plus JUnit evidence under the same clean-candidate
 binding. CI wiring mutation tests reject removing the runner, either artifact,
 or the explicit non-acceptance warning. This makes simulated journey drift

@@ -7,7 +7,31 @@ remains subordinate to the owning domain rules.
 
 This document fixes the implementation choices required to turn the TaxiMobile product documents into working software. It is subordinate to the domain rules in `product.md`, `operations.md`, `auth.md`, `rides.md`, `matching.md`, `pricing.md`, and `payments.md`. If a technical choice conflicts with one of those rules, the domain rule wins and the conflict must be resolved in documentation first.
 
-## Current implementation standing — 2026-09-09
+## Current implementation standing — 2026-10-02
+
+**Server live-session authority follow-up (2026-10-02):** the final socket hop
+now owns verified mobile user/session IDs and the JWT deadline, rechecks fresh
+SQL session/account authority at admission, before each hint and while idle,
+and retains admission/send/monitor/close ownership through cleanup. It shares
+the REST authority predicate and changes neither schema nor wire payloads.
+Known authority loss closes `4401`; unavailable authority closes `1013`.
+Caller cancellation cannot abandon the retained closer, and no inbound frame
+executes a business command. HINT-08 documents the read/send race, noncooperative
+transport limit and unaccepted fleet-wide budgets rather than claiming immediate
+revocation of already buffered frames.
+
+Local verification passed 106 focused backend cases, 199 infrastructure tests
+and the network-guarded 20-scenario/66-test T2 pack. The complete guarded
+fresh-PostGIS run passed **1,090 tests with zero failures, errors or skips** and
+three existing dependency deprecation warnings. Its
+`backend/build/live-session-authority-t3-20261002/` bundle requires both migrated
+`LIVE_SESSION_AUTHORITY` cases, confirms migration 0052, zero residual clones,
+revoked temporary `CREATEDB`, and an 81-table/8,511-row logical restore with target
+and dump removal. All six bounded T3 evidence kinds are present; formal phase
+and deployment acceptance remain false. The current server candidate still
+requires its own immutable CI result, hosted pool/load/multi-replica evidence,
+physical device recovery and FCM/APNs delivery acceptance. Source engineering
+scope remains approximately 84%; accepted P0 deployment gates remain 0/19.
 
 **Test-toolchain follow-up (2026-10-01):** pytest 9.0.3 and pytest-asyncio 1.4.0
 replace the vulnerable pytest 8 pair while preserving explicit function-scoped
@@ -27,7 +51,7 @@ The repository contains the provider-independent implementation described here,
 including migrations through `20260908_0052`. Local backend unit/API/integration
 tests, Android/shared compilation, JavaScript and Kotlin/Wasm compilation, and
 portable source-contract checks have passed in the current workspace. The
-latest completed full fresh-PostGIS run (2026-09-09) passed 992 backend tests with no
+dated baseline full fresh-PostGIS run (2026-09-09) passed 992 backend tests with no
 failures, errors or skips, including the paired cash workload and deterministic
 dispatch-contention cases. That report also includes fixed-owner outbox
 aggregation, privacy-bounded Prometheus alert validation, aggregate security-
@@ -54,7 +78,7 @@ source-contract inventory, and a blocking high/critical image scan. Web and
 Android/iOS verification outputs now produce limitation-marked manifests that
 are hash-bound to the clean source candidate in CI and retained in its run
 summary. The backend job also runs a frozen T2 catalog of 20 simulated persona
-and adversarial scenarios over 60 exact unit tests, retains JSON/JUnit evidence,
+and adversarial scenarios over 66 exact unit tests, retains JSON/JUnit evidence,
 and explicitly refuses phase or deployment acceptance. The inventory
 is deterministic, validates the migration graph and role mapping, is printed in
 the CI run summary, and is hash-bound into backend candidate evidence. The new and changed
@@ -1089,8 +1113,28 @@ returns the existing sanitized `503 DEPENDENCY_UNAVAILABLE` on either failure.
 Local/test processes without the PostgreSQL listener retain SQL-only readiness.
 The dedicated migrated integration case terminates only its owned listener PID,
 checks replacement `LISTEN` registration and addressed-recipient delivery, then
-verifies cleanup. Hosted failover and ongoing socket session revocation remain
-separate work under GAP-009/GAP-028.
+verifies cleanup. Hosted failover remains separate work under GAP-009/GAP-028.
+
+The final local hop now separates `EventHub` registry/fanout from
+`core/live_sessions.py` per-socket ownership and
+`domains/auth/session_authority.py` fresh SQL read authority. Token parsing
+provides verified mobile IDs and a UTC access deadline without retaining the raw
+JWT. REST and socket admission/idle/send paths reject ownership mismatch,
+revocation, database-session expiry and suspended users. Every hint rechecks
+authority; there is no positive-result cache. Session refresh requires socket
+replacement rather than extending the old verified deadline.
+
+Each connection owns one idle monitor, serialized sends, admission and a retained
+closer. Closing withdraws broadcast authority before cooperative cancellation;
+cancelled callers cannot abandon cleanup. Hub shutdown also joins admitting and
+already-closing sessions. Raw ASGI receive handles text/binary/disconnect without
+racing the server's close state; no incoming frame has command authority. Known
+authority loss closes `4401`, unavailable authority closes `1013`, and fixed logs
+omit identity/credentials. Idle/operation defaults are 15/five seconds, with
+earlier JWT-deadline wake-up. No database lock spans a network send; a read/send
+race cannot recall in-flight bytes. Noncooperative cancellation is reported, not
+claimed force-killed. HINT-08 covers the tests and remaining hosted/device/SLO
+acceptance, including the increased database/pool demand from active sockets.
 
 The mobile recovery layer now separates one-attempt `LiveEventGateway` transport
 from `LiveUpdateSubscription` ownership/retry policy. Both native roots derive
@@ -1116,8 +1160,12 @@ mutations and 197 infrastructure tests. Docs, source credentials, mobile/web
 contracts, phase evidence, CI security, production Compose and existing mobile
 recovery checks pass. It changes no backend business/schema contract and does
 not claim a fresh PostGIS run. Its immutable remote and macOS compile/link checks
-remain separate, as do device, provider, ongoing server socket authorization
-and deployment acceptance.
+remain separate for that mobile slice. Immutable `8f92e51` now passes its push
+and PR workflows, including macOS native compile and both Release simulator app
+links; it does not execute the blocked native iOS test link or physical devices.
+The subsequent server-authority slice has its own fresh 1,090-test full PostGIS
+bundle described above and still requires its own immutable CI evidence.
+Device, provider and deployment acceptance remain open.
 
 The 2026-10-01 local recovery slice passed 78 focused unit/API cases and the full
 1,042-test guarded migrated backend regression with zero failures/errors/skips.

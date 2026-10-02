@@ -372,10 +372,28 @@ as ending before push cleanup or the credential mutex can block. Late and queued
 restores cannot reactivate live hints until that end
 operation finishes; a later explicit login establishes a new owner. Subscription
 callbacks also check ownership after REST returns and before updating UI. This
-local lifecycle is resource ownership only: the backend remains authoritative,
-and connected server sockets still need ongoing expiry/revocation enforcement.
+local lifecycle is resource ownership only: the backend remains authoritative.
 The Android adapter's error/persistence semantics remain a separate audit issue;
 serialization does not repair or verify OS secure-storage behavior.
+
+### Ongoing mobile socket authority
+
+The server verifies the mobile JWT's audience/type, identity and expiration, then
+retains only its IDs and UTC deadline. The socket owner uses a fresh database
+session to recheck exact account/session ownership, active user status, unrevoked
+session and session expiry before admission, before every hint, and while idle.
+REST authentication shares that predicate; business commit-time locks remain
+separate and are not held across socket IO. A refreshed token/session needs a
+replacement connection and cannot extend an older owner's deadline.
+
+Known loss of authority closes with `4401`; dependency failure closes with `1013`
+and lets the client perform read-only recovery. One retained closer withdraws
+broadcast authority before cleanup, cancels cooperative admission/monitor/send
+work, and remains owned if an ASGI caller is cancelled. IDs/credentials are never
+included in close reasons, logs or hint payloads. Database-check, idle and cleanup
+defaults are operational bounds, not an accepted immediate-revocation guarantee;
+already-started or sent frames cannot be recalled. See `api.md` and HINT-08 in
+`testing.md` for protocol, failure and field-evidence boundaries.
 
 ---
 

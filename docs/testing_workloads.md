@@ -14,7 +14,11 @@ python ..\infra\scripts\run_simulated_persona_suite.py `
   --junit-output build\t2-simulated-personas.junit.xml
 ```
 
-The catalog contains 20 stable scenario IDs backed by 60 exact unit-test nodes.
+The catalog contains 20 stable scenario IDs backed by 66 exact unit-test nodes.
+Its 2026-10-02 revision extends notification personas with six ongoing-session
+authority cases: single-session isolation, idle loss, verified JWT deadline,
+authority timeout, per-send revalidation and obsolete-owner fencing. These are
+simulated seams, not migrated SQL, provider or device acceptance.
 It covers closed authority and state-machine behavior for representative
 passenger, driver, applicant, reviewer, finance, staff, support, safety,
 incident, and obsolete-client personas. The command has no base URL, database,

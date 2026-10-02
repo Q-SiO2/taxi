@@ -233,6 +233,13 @@ class T3SystemReportTests(unittest.TestCase):
             with self.assertRaisesRegex(T3SystemEvidenceError, "missing required"):
                 generate_report(junit, metadata)
 
+    def test_each_missing_live_session_authority_case_is_rejected(self) -> None:
+        for missing in REQUIRED_CASES["LIVE_SESSION_AUTHORITY"]:
+            with self.subTest(case=missing), tempfile.TemporaryDirectory() as directory:
+                junit, metadata = self._artifacts(Path(directory), remove_case=missing)
+                with self.assertRaisesRegex(T3SystemEvidenceError, "missing required"):
+                    generate_report(junit, metadata)
+
     def test_skipped_test_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             junit, metadata = self._artifacts(Path(directory), skipped=1)

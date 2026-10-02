@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "catalog_revision": "2026-09-09",
+  "catalog_revision": "2026-10-02",
   "phase": "T2",
   "suite_id": "simulated_persona_adversarial_v1",
   "data_classification": "SYNTHETIC",
@@ -204,13 +204,19 @@
       "id": "SIM-NOTIFY-001",
       "category": "NOTIFICATION",
       "personas": ["PASSENGER_DEVICE", "DRIVER_DEVICE", "OUTBOX_WORKER"],
-      "journey": "Notification topics use one closed policy and unknown topics dead-letter safely",
+      "journey": "Notification topics use one closed policy; idle and sending sessions lose authority safely while another session remains isolated",
       "selectors": [
         "tests/unit/test_notification_policy.py::test_every_outbox_delivery_topic_has_one_complete_closed_policy",
         "tests/unit/test_notification_policy.py::test_live_and_push_allowlists_are_derived_from_the_same_policy",
-        "tests/unit/test_notification_policy.py::test_unclassified_topic_fails_closed_for_bounded_dead_letter_processing"
+        "tests/unit/test_notification_policy.py::test_unclassified_topic_fails_closed_for_bounded_dead_letter_processing",
+        "tests/unit/test_realtime.py::test_revoking_one_session_does_not_revoke_another_for_same_account",
+        "tests/unit/test_realtime.py::test_idle_monitor_closes_a_revoked_or_suspended_session",
+        "tests/unit/test_realtime.py::test_idle_socket_closes_at_verified_token_deadline_without_any_hint",
+        "tests/unit/test_realtime.py::test_authority_blackhole_is_bounded_and_sanitized",
+        "tests/unit/test_realtime.py::test_concurrent_hints_are_serialized_per_socket_and_each_reauthorized",
+        "tests/unit/test_realtime.py::test_closed_and_replaced_sessions_cannot_deliver_old_callbacks"
       ],
-      "invariants": ["TOPIC_POLICY_IS_COMPLETE", "CHANNEL_ALLOWLISTS_AGREE", "UNKNOWN_TOPIC_FAILS_CLOSED"]
+      "invariants": ["TOPIC_POLICY_IS_COMPLETE", "CHANNEL_ALLOWLISTS_AGREE", "UNKNOWN_TOPIC_FAILS_CLOSED", "SESSION_REVOCATION_IS_ISOLATED", "IDLE_AUTHORITY_IS_RECHECKED", "JWT_DEADLINE_IS_ENFORCED", "AUTHORITY_OUTAGE_FAILS_CLOSED", "EACH_HINT_IS_REAUTHORIZED", "OBSOLETE_OWNER_CANNOT_SEND"]
     },
     {
       "id": "SIM-SUPPORT-001",
