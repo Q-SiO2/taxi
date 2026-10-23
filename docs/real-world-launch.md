@@ -184,8 +184,11 @@ observed failures and bounded corrections. The owner selected the existing
 cooperative register for union membership. [The membership slice](launch/union-membership.md)
 implements and locally verifies R5/R8 admission guards. The
 [staff-register extension](launch/member-register.md) adds scoped audited web
-administration, policy review and localized driver guidance. Its runtime/candidate
-verification, fresh immutable CI and deployment acceptance remain open.
+administration, policy review and localized driver guidance. Its synthetic
+rehearsal passed; terminal CI rejected web size. The
+[session/release successor](launch/session-recovery.md) verifies expired-access
+revocation and explicitly reviews the expanded web budget. Fresh immutable CI,
+hosted upgrade and deployment acceptance remain open.
 
 The earlier physical-Android deferral leaves hardware work pending. This new goal
 includes preparing and obtaining that acceptance; it does not mean a device is

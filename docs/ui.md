@@ -45,6 +45,12 @@ Use the existing shared resource catalog; unchanged backend enums are translated
 only for display. Follow [the bounded localization packet](redesign/web-localization.md)
 and require actual critical-state evidence before calling the web demo trilingual.
 
+Operator member-register driver IDs use the existing outlined text field in
+read-only mode, with a localized label and explicit LTR text direction. Staff
+can select/copy the complete reference; it is not an editable enrollment claim.
+Reuse existing input/selection machinery rather than adding a standalone
+selection container to each record. The four material styles remain in force.
+
 ## Selected visual direction — recorded 15 October 2026
 
 The owner approved **Folded Streets, Street Press, Glazed Machine and Notepad**

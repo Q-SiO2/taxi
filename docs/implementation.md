@@ -1,5 +1,14 @@
 # Implementation Blueprint
 
+## Operations expiry/logout and web release — 23 October 2026
+
+[The session/release checkpoint](launch/session-recovery.md) follows the actual
+post-idle browser logout rejection and CI bundle-size failure. Reuse the existing
+bounded access refresh for logout, retain explicit localized unconfirmed-revocation
+behavior, and use existing copyable read-only ID fields. Backend cookie/JSON
+expiry-to-revocation checks pass; successor browser, packaging and CI evidence
+must establish acceptance. No refresh/session authority moves to the client.
+
 ## Member-register operations and driver guidance — 23 October 2026
 
 [The staff-register checkpoint](launch/member-register.md) extends admission

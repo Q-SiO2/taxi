@@ -2,6 +2,12 @@
 
 ## Current source packet — 23 October 2026
 
+[The session/release successor](launch/session-recovery.md) addresses the actual
+expired-access logout rejection and raw-JS packaging failure from member-register
+CI run 224. Preserve the size limits, one-refresh protocol, existing member
+register and staged deployment boundaries. Source checks, actual client evidence
+and fresh immutable CI remain distinct acceptance steps.
+
 R5/R8 implements explicit closed-shop driver admission using the existing
 register selected for the Fès union. Source migration `20261023_0053` introduces
 the per-operator policy; default false preserves open-participation operators.
@@ -20,7 +26,7 @@ iOS, web, all documented launch capabilities, a controlled city pilot and guarde
 public release. Existing explicit product deferrals remain; no silent reduction
 to the demonstrated on-demand flow is allowed.
 
-**Current task: R5/R8 member-register operations**, following the retained
+**Current task: R2/R8/R9 session and release correction**, following the retained
 [R0 reconciliation](launch/r0-baseline.md), [R1 decisions](launch/r1-decisions.md)
 and [R2 candidate/CI work](launch/r2-ci.md). Finish the reviewed membership
 candidate, actual client workflow and controlled deployment evidence.

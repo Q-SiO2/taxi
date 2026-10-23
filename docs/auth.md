@@ -867,6 +867,16 @@ credentials and never persists any token. Development/test may explicitly use
 password-only login and a JSON refresh token; production startup rejects both
 password-only mode and disabling the secure cookie.
 
+Operations sign-out uses the same bounded access-expiry recovery as other
+authenticated commands. If the server rejects an expired access token with
+`401`, rotate the existing refresh credential once, publish that replacement
+in memory, then revoke its operations session. Do not retry a transport failure
+or an unknown refresh result. A non-`401` rejection must not rotate credentials.
+The client clears local access even when server revocation cannot be confirmed,
+and reports that distinction in the selected language; local clearing does not
+establish refresh-session revocation. No password or MFA-factor recovery is part
+of ordinary access refresh or logout.
+
 High-impact commands require an MFA verification no older than ten minutes.
 This includes grant changes, operator authority/status changes, city/configuration
 activation, financial-policy activation, route publication, driver decisions,

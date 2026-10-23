@@ -19,6 +19,7 @@ import kotlin.random.Random
 import kotlin.time.Clock
 import org.example.taximobile.operations.data.OperationsApiException
 import org.example.taximobile.operations.data.OperationsGateway
+import org.example.taximobile.operations.data.withOperationsAccessRefresh
 import org.example.taximobile.operations.model.AccountSecurityAction
 import org.example.taximobile.operations.model.AccountSecurityActionRequest
 import org.example.taximobile.operations.model.AdministrativeGrantCreateRequest
@@ -1973,13 +1974,13 @@ class OperationsCoordinator(
             var logoutError: OperationsMessage? = null
             if (accessToken != null) {
                 try {
-                    gateway.logout(accessToken)
+                    withAccessToken { gateway.logout(it) }
                 } catch (cancelled: CancellationException) {
                     throw cancelled
                 } catch (_: Throwable) {
                     logoutError = OperationsMessage(
-                        "Local session cleared",
-                        "The server-side logout could not be confirmed. Do not reuse this browser session; the short operations access token will expire.",
+                        UiMessage(Res.string.web_logout_local_title),
+                        UiMessage(Res.string.web_logout_unconfirmed),
                     )
                 }
             }
@@ -2232,15 +2233,10 @@ class OperationsCoordinator(
     private suspend fun <T> withAccessToken(block: suspend (String) -> T): T {
         val active = tokens
             ?: throw OperationsApiException(401, "The operations session is no longer available.")
-        return try {
-            block(active.accessToken)
-        } catch (error: OperationsApiException) {
-            if (error.statusCode != 401) throw error
-            val refreshed = gateway.refresh(active.refreshToken, active.csrfToken)
+        return withOperationsAccessRefresh(active, gateway::refresh, { refreshed ->
             tokens = refreshed
             mutate { it.copy(authenticationStrength = refreshed.authenticationStrength) }
-            block(refreshed.accessToken)
-        }
+        }, block)
     }
 
     private fun expireSession() {

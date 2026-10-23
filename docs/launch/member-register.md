@@ -130,8 +130,32 @@ active fixed-route assignment. Write/publication authority stays unchanged.
 Retain the initial HTTP 500 and the focused regression alongside the eventual
 browser outcome; adding a synthetic assignment would conceal this defect.
 
-Next: finish affected client/runtime checks; capture only intended files in the
-isolated candidate; publish to the existing draft PR; inspect fresh exact-head CI.
-Then prepare the controlled API/worker/schema upgrade with backup and compatibility
+The controlled API/worker/schema upgrade still needs backup and compatibility
 evidence. Staging remains on its prior schema until deliberately upgraded. Keep
 the protected volumes, Trial limits and existing staff permissions intact.
+
+## Published source checkpoint
+
+The [candidate record](member-register-candidate-20261023.json) binds commit
+`e73e6b4304325dde90cf9599418891e38b83890b`, tree
+`bf20e42d9f26f218a2bc5647b0c679e63cd61e08`, to its 48 intended changed files,
+preserved original HEAD/index and clean isolated clone. It is published to
+[draft PR #74](https://github.com/Q-SiO2/taxi/pull/74), unmerged.
+[PR CI run 224](https://github.com/Q-SiO2/taxi/actions/runs/40009677003) is in
+progress at this checkpoint. Documentation/provenance and wrapper checks passed;
+backend, web, Android, iOS and the newly enabled PR dependency submission were
+running. Dependency review must run after graph submission; no overall CI pass
+is claimed. These post-publication metadata files do not change that source SHA.
+
+Next bounded work: observe this exact run and repair actual failures; investigate
+access-expiry/logout revocation and post-dialog accessibility/focus behavior;
+then prepare the reviewed API/worker/schema staging upgrade. Do not replay the
+synthetic browser commands, old factor recovery or fixture seed to improve an
+observation. Owned localhost API/web/PostGIS are stopped; data files are retained.
+
+The [terminal CI record](member-register-ci-terminal-20261023.json) supersedes the
+in-progress observation above: seven engineering/supply-chain jobs passed, while
+web packaging rejected the raw JS size. The [session/release successor](session-recovery.md)
+records the bounded correction and remaining acceptance. Prior localhost resource
+shutdown applies to this packet; the successor owns its own explicitly scoped
+test resources.

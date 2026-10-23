@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -78,9 +77,12 @@ internal fun OperatorMembershipPanel(operator: OperatorRecord, state: Operations
                     if (page.items.isEmpty()) Text(stringResource(Res.string.web_members_empty), color = colors.Ink500)
                     page.items.forEach { member ->
                         Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
-                            SelectionContainer {
-                                Text("${stringResource(Res.string.web_members_driver)} · ${ltrIsolate(member.driverId ?: "—")}")
-                            }
+                            OutlinedTextField(
+                                value = member.driverId ?: "—", onValueChange = {}, readOnly = true,
+                                label = { Text(stringResource(Res.string.web_members_driver)) }, singleLine = true,
+                                textStyle = MaterialTheme.typography.bodyLarge.copy(textDirection = TextDirection.Ltr),
+                                modifier = Modifier.fillMaxWidth(),
+                            )
                             Text("${membershipStatusLabel(member.status)} · ${member.membershipNumber ?: "—"}")
                             member.joinedAt?.let { Text("${stringResource(Res.string.web_members_joined)} · ${ltrIsolate(it)}", style = MaterialTheme.typography.bodySmall) }
                             member.endedAt?.let { Text("${stringResource(Res.string.web_members_until)} · ${ltrIsolate(it)}", style = MaterialTheme.typography.bodySmall) }

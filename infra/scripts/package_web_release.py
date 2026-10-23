@@ -29,10 +29,11 @@ DEFAULT_INPUT = (
     / "productionExecutable"
 )
 WEB_BUDGETS = {
-    # Reviewed 2026-10-19 for required EN/FR/AR board operations and Save repair.
-    # 6,827,377 bytes versus v7's 6,635,078 (+2.90%); no runtime dependency added.
-    # 72,623 bytes of headroom; Wasm/total caps stay unchanged. See deployment.md.
-    "originJsWebApp.js": 6_900_000,
+    # Reviewed 2026-10-23 for scoped membership operations and session recovery.
+    # 6,935,862 bytes after removing 48,698 bytes of avoidable selection support.
+    # 64,138 bytes of headroom; Wasm/total caps stay unchanged. See deployment.md
+    # and launch/session-recovery.md. Size review does not accept startup latency.
+    "originJsWebApp.js": 7_000_000,
     "originWasmWebApp.js": 700_000,
 }
 MAX_WASM_BYTES = 9_000_000

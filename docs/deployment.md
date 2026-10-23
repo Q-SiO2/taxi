@@ -86,6 +86,18 @@ measures fallback JS at 6,827,377 bytes (+2.90% over v7), gzip9 at 1,624,307
 are unchanged. Original 411 compilation inputs remain archived independently
 from the changed packager. Size measurements do not prove startup performance.
 
+The 23 October source candidate adds scoped union-register operations and bounded
+session recovery. Its first CI package failed the 6,900,000-byte limit at
+6,984,560 bytes. Replacing the first standalone text-selection container with
+the existing read-only field removed 48,698 bytes, leaving **6,935,862 bytes**
+(+1.59% against the v8 measurement). The reviewed fallback-JS ceiling for this
+expanded scope is **7,000,000 bytes**, with 64,138 bytes of headroom. The loader
+700,000-byte, per-Wasm 9,000,000-byte and total 35,000,000-byte limits remain
+unchanged. No dependency or shipping minifier change accompanies this review.
+The [session packet](launch/session-recovery.md) records gzip/package measurements,
+failed observations and remaining startup/browser acceptance; this budget revision
+does not turn the failed predecessor CI run into a pass.
+
 Web v7 completed deployment on 18 October. Its
 [102 hosted checks](redesign/board-alpha-evidence/hosted-web-v7-20261018-client-headers.json)
 verify all 93 asset hashes, applicant routing, security headers and version/auth

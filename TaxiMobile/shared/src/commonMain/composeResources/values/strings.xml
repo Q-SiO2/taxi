@@ -1265,4 +1265,6 @@
     <string name="web_members_policy_saving">Updating admission policy…</string>
     <string name="message_membership_required">Your union membership does not currently allow new trips. Contact the union to review it. You can still finish an accepted trip.</string>
     <string name="web_members_date_error">Include a timezone. The end cannot precede the join date.</string>
+    <string name="web_logout_local_title">Signed out on this device</string>
+    <string name="web_logout_unconfirmed">Server sign-out could not be confirmed. Close this window and ask your operations administrator to revoke the session.</string>
 </resources>

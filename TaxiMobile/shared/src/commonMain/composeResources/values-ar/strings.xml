@@ -1265,4 +1265,6 @@
     <string name="web_members_policy_saving">جارٍ تحديث شروط القبول…</string>
     <string name="message_membership_required">عضويتك النقابية لا تتيح رحلات جديدة حالياً. تواصل مع النقابة لمراجعتها. يمكنك إكمال رحلة سبق قبولها.</string>
     <string name="web_members_date_error">أدخل المنطقة الزمنية. يجب ألا تسبق النهاية تاريخ بدء العضوية.</string>
+    <string name="web_logout_local_title">تم تسجيل الخروج على هذا الجهاز</string>
+    <string name="web_logout_unconfirmed">تعذر تأكيد إلغاء الجلسة على الخادم. أغلق هذه النافذة واطلب من مسؤول العمليات إلغاء الجلسة.</string>
 </resources>

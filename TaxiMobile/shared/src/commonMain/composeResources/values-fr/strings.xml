@@ -1265,4 +1265,6 @@
     <string name="web_members_policy_saving">Mise à jour de la règle d’accès…</string>
     <string name="message_membership_required">Votre adhésion syndicale ne permet pas de nouvelles courses pour le moment. Contactez le syndicat. Vous pouvez terminer une course déjà acceptée.</string>
     <string name="web_members_date_error">Indiquez le fuseau. La fin ne peut pas précéder le début.</string>
+    <string name="web_logout_local_title">Déconnecté sur cet appareil</string>
+    <string name="web_logout_unconfirmed">La déconnexion côté serveur reste non confirmée. Fermez cette fenêtre et demandez à votre administrateur de révoquer la session.</string>
 </resources>
