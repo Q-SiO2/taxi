@@ -1,0 +1,87 @@
+{
+  "recorded_utc": "2026-10-23T17:34:49.692750+00:00",
+  "commit": "e2cd441102e32bfbbd370898fea980fc47044c09",
+  "tree": "d0e19af3ca90c1e4ca508def64d7fc39e71f46a7",
+  "parent": "7d757a69a17fa126caad33c3eb7f4d510c8cf981",
+  "files": [
+    "backend/migrations/versions/20261023_0053_operator_membership_policy.py",
+    "backend/src/taximobile_api/domains/cooperatives/authority.py",
+    "backend/src/taximobile_api/domains/drivers/router.py",
+    "backend/src/taximobile_api/domains/markets/models.py",
+    "backend/src/taximobile_api/domains/markets/operations_router.py",
+    "backend/src/taximobile_api/domains/markets/schemas.py",
+    "backend/src/taximobile_api/domains/matching/service.py",
+    "backend/src/taximobile_api/domains/rides/service.py",
+    "backend/src/taximobile_api/domains/scheduled_bookings/service.py",
+    "backend/tests/integration/test_operator_membership_authority.py",
+    "backend/tests/unit/test_operator_membership_policy.py",
+    "docs/README.md",
+    "docs/api.md",
+    "docs/database.md",
+    "docs/drivers.md",
+    "docs/gaps.md",
+    "docs/implementation.md",
+    "docs/launch/r1-decisions.md",
+    "docs/launch/r2-ci-last-observation-20261023.json",
+    "docs/launch/r2-ci-terminal-20261023.json",
+    "docs/launch/r2-ci.md",
+    "docs/launch/r2-corrective-ci-20261023.json",
+    "docs/launch/union-membership-verification-20261023.json",
+    "docs/launch/union-membership.md",
+    "docs/operations.md",
+    "docs/real-world-launch.md",
+    "docs/roadmap.md",
+    "infra/scripts/generate_openapi_evidence.py"
+  ],
+  "checks": [
+    {
+      "label": "docs",
+      "exit_code": 0,
+      "log": ".tools/real-world-launch/union-candidate-docs-20261023.log"
+    },
+    {
+      "label": "credentials",
+      "exit_code": 0,
+      "log": ".tools/real-world-launch/union-candidate-credentials-20261023.log"
+    },
+    {
+      "label": "whitespace",
+      "exit_code": 0,
+      "log": ".tools/real-world-launch/union-candidate-whitespace-20261023.log"
+    }
+  ],
+  "original_head": "2835c8aa7f5e97a17afcdbe647fe589cbd0421e1",
+  "original_index_preserved": true,
+  "candidate_clean": true,
+  "published": true,
+  "deployment_accepted": false,
+  "observed_utc": "2026-10-23T17:37:02.806840+00:00",
+  "pull_request": "https://github.com/Q-SiO2/taxi/pull/74",
+  "release_evidence": {
+    "path": ".tools/real-world-launch/union-release-evidence-20261023.json",
+    "sha256": "3b900e6f1fdfea02c7659601f39487ac6245ff90cbbef6558e8a217302233b90"
+  },
+  "source_digests_match_candidate": true,
+  "owned_test_cluster_stopped": true,
+  "ci": {
+    "run_id": 39996331260,
+    "run_number": 220,
+    "event": "pull_request",
+    "observed_status": "in_progress",
+    "conclusion": null,
+    "url": "https://github.com/Q-SiO2/taxi/actions/runs/39996331260"
+  },
+  "staging_modified": false,
+  "next_actions": [
+    "Observe the same e2 CI run and repair actual failures; do not transfer older 7d results.",
+    "Investigate missing dependency-review head snapshots without weakening the gate.",
+    "Implement scoped audited member-register administration and policy/localized driver UX, without expanding real grants.",
+    "Prepare deliberate hosted migration/rollback and trust-bundle rollout evidence; keep current alpha fallback."
+  ],
+  "external_constraints": [
+    "Exact legal union identity/authorization/boundary and verified roster authority remain pending.",
+    "Trial-only spending; no paid resources or volume deletion.",
+    "Android phone/Play availability is not physical acceptance/signing; iOS resources remain unconfirmed.",
+    "Git push reported 49 alerts on the older default branch (3 critical/24 high/19 moderate/3 low); untriaged, separate from candidate audits."
+  ]
+}

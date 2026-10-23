@@ -80,6 +80,15 @@ unsigned iOS verification, with dependency review cancelled. That earlier commit
 does not include this feature. A successor must receive its own immutable CI;
 dependency comparison, independent review and release acceptance remain open.
 
+Membership candidate `e2cd441102e32bfbbd370898fea980fc47044c09` is published to
+[draft PR #74](https://github.com/Q-SiO2/taxi/pull/74). Its PR run 220 found an
+infrastructure assertion still requiring the previous 45-second worker budget.
+The [CI correction record](union-membership-ci-correction-20261023.json) retains
+that failure and the corrected **270-test infrastructure pass**. The assertion
+now requires the documented finite 180-second budget; environment isolation and
+redaction assertions are unchanged. This test-only correction needs a successor
+candidate/CI; it does not change the verified admission implementation.
+
 ## Controlled rollout and next work
 
 1. Freeze/review the successor source and verify full CI, contracts and migration
