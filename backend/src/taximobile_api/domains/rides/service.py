@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from geoalchemy2.elements import WKTElement
 
 from taximobile_api.domains.auth.authority import user_account_is_active
+from taximobile_api.domains.cooperatives.authority import driver_membership_is_active
 from taximobile_api.domains.drivers.models import AvailabilityStatus, DriverAccountStatus, DriverProfile, Vehicle, VehicleStatus, VehicleVerificationStatus, VerificationStatus
 from taximobile_api.domains.drivers.service import invalid_driver_credentials
 from taximobile_api.domains.drivers.offer_location import offer_location_failure
@@ -368,6 +369,10 @@ async def accept_offer_atomically(
         serialize_with_status_change=True,
     ):
         raise RideOfferUnavailable("Driver account is no longer active.")
+    if not await driver_membership_is_active(
+        database_session, profile.user_id, ride.operator_id, serialize_with_changes=True
+    ):
+        raise RideOfferUnavailable("Active membership with this operator is required.")
     vehicle = await database_session.get(Vehicle, profile.active_vehicle_id) if profile.active_vehicle_id else None
     credential_ineligible = bool(
         await database_session.scalar(select(invalid_driver_credentials(profile.id, now)))

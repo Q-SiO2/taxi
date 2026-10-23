@@ -1,5 +1,16 @@
 # TaxiMobile — Database Specification
 
+## Operator membership policy — source change, 23 October 2026
+
+Migration `20261023_0053` adds non-null Boolean
+`operators.requires_active_membership`, default false, with a database constraint
+requiring `cooperative_id` when enabled. The owner selected the existing register
+for the Fès union. This internal relationship does not certify legal form.
+There is no new membership table, automatic enrollment or grant expansion.
+Existing memberships retain their independent status and optional effective dates.
+This source migration requires isolated upgrade/downgrade and runtime acceptance;
+staging remains at its separately verified schema until a deliberate rollout.
+
 ## 1. Purpose
 
 This document defines the logical data model for TaxiMobile.

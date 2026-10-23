@@ -16,6 +16,10 @@ must be reconciled with their actual scope rather than requested again.
 - Closed-shop access: **drivers must be union members; passengers register normally**.
   Licensing, vehicle approval and city/service authorization remain additional
   requirements. Client membership claims cannot grant dispatch eligibility.
+- Membership source: **reuse the existing cooperative register for the union**,
+  as explicitly selected by the owner. Link the operator to that register and
+  require active membership for new driver work. This internal software mapping
+  does not establish the union's legal form or verify a real participant roster.
 - Available release resources: **an Android phone and Google Play accounts**.
   This establishes availability, not a connected device, signing-key custody,
   configured Play application, accepted build or release permission.

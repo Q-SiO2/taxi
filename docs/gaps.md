@@ -1,5 +1,14 @@
 # TaxiMobile — Real-World Deployment Gap Audit
 
+## Membership source packet — 23 October 2026
+
+The owner selected the existing member register for the Fès union's closed-shop
+driver cohort. R5/R8 source migration `20261023_0053` adds the explicit per-operator
+admission policy. Actual membership verification, grant-safe staff operation,
+configuration UX and rollout acceptance remain required. Local SQL/concurrency
+results belong to [the membership checkpoint](launch/union-membership.md).
+This packet does not close GAP-004/005/019 or create legal/operator acceptance.
+
 ## Current execution checkpoint — 23 October 2026
 
 The [real-world launch goal](real-world-launch.md) is active. Its

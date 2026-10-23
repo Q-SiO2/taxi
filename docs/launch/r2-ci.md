@@ -8,7 +8,26 @@ runs to that source. The [local checkpoint](r2-candidate.md) remains historical
 evidence for its captured files and tests; its local-only status is superseded
 by this publication checkpoint, not retroactively rewritten.
 
+Successor **`7d757a69a17fa126caad33c3eb7f4d510c8cf981`** contains the 17 reviewed
+corrective inputs and owner-contract updates. It is pushed to the same draft PR.
+The [successor run record](r2-corrective-ci-20261023.json) identifies actual push
+run 217 (`39989226056`) and PR run 218 (`39989234575`), both observed in progress.
+The original checkout HEAD/index remain preserved. These are live job identities,
+not passing CI or promotion evidence. Re-observe those same runs before restarting
+anything or claiming a terminal outcome.
+
 ## Observed initial CI
+
+### Successor terminal observation
+
+[Terminal PR-job evidence](r2-ci-terminal-20261023.json) now confirms that candidate
+`7d757a69a17fa126caad33c3eb7f4d510c8cf981` passed backend, mobile, web,
+documentation/provenance, wrapper integrity and iOS shared compilation plus both
+unsigned iOS simulator application builds. Dependency review was **cancelled**;
+the incomplete dependency comparison still prevents an all-green CI claim.
+These results precede the membership implementation and cannot accept its source.
+No signing, physical iOS acceptance, staging deployment or public promotion follows
+from these job results.
 
 - Android/shared and web jobs passed; Gradle wrapper integrity passed. The push
   job also generated and submitted the Gradle dependency graph.
@@ -57,8 +76,8 @@ Google Play accounts. Product, driver and operations contracts are updated.
 Legal identity/authorization and operating rules remain unconfirmed, not rejected
 or assumed. iPhone, Mac and Apple Developer resources remain to be arranged.
 
-Source inspection found that existing cooperative memberships are independently
-reported and are not a dispatch eligibility gate. Implement and test the selected
+Source inspection of the preceding candidate found that cooperative memberships were independently
+reported without a dispatch eligibility gate. Implement and test the selected
 union rule across availability, allocation and acceptance for every enabled
 service, including withdrawal after going online. Preserve accepted-trip safety,
 completion and financial records. Driver approval and a self-entered membership
@@ -69,8 +88,10 @@ account has been created by these documentation decisions.
 
 Observe the successor CI head/runs and repair actual failures. Investigate the
 missing dependency-review head snapshot without bypassing the security gate.
-Then prepare and verify the union-membership enforcement slice against existing
-operator/member authorities. Staging trust-bundle rollout needs its own exact
+[The membership checkpoint](union-membership.md) now records that enforcement
+slice against the existing operator/member authorities. Its successor source
+needs fresh immutable CI, staff/configuration UX and deliberate staging rollout.
+Staging trust-bundle rollout also needs its own exact
 artifact/deployment evidence; do not replay the previous credential/MFA recovery.
 Production, participant enrollment, money, signing and public activation gates
 remain unchanged.

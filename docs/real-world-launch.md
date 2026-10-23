@@ -177,8 +177,10 @@ available; connection, signing ownership and actual acceptance are still require
 Exact union identity, authorization, service boundary, financial/support rules and
 iOS release resources remain pending in the [R1 packet](launch/r1-decisions.md).
 The [remote CI checkpoint](launch/r2-ci.md) records the draft source review,
-observed failures and bounded corrections. Membership dispatch enforcement is
-actual R5/R8 implementation work, not established by these owner decisions.
+observed failures and bounded corrections. The owner selected the existing
+cooperative register for union membership. [The membership slice](launch/union-membership.md)
+implements and locally verifies R5/R8 admission guards; staff UX, immutable CI
+and deployment acceptance remain open.
 
 The earlier physical-Android deferral leaves hardware work pending. This new goal
 includes preparing and obtaining that acceptance; it does not mean a device is

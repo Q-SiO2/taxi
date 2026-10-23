@@ -15,6 +15,13 @@ Casablanca staging remains synthetic alpha evidence. The owner confirmed an
 Android phone and Google Play accounts; actual device/signing/release acceptance
 and iOS resources remain separate work.
 
+The owner selected the existing cooperative member register for union membership.
+An operator may enable `requires_active_membership` only with a linked register;
+the existing scoped operator-management authority and MFA-protected update/audit
+path own this policy. Fès must enable it before launch. Keep the legal identity
+decision separate from the internal register mapping. Policy configuration does
+not approve members or expand staff permissions.
+
 ## Board alpha execution authorized — 15 October 2026
 
 The owner now directs the earliest functional board alpha, authorizes application

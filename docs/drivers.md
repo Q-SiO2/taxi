@@ -677,9 +677,19 @@ revalidate current membership for the operating organization, including withdraw
 or suspension after going online. Ending membership must not silently discard an
 already accepted trip, its safety/support access or outstanding financial records.
 The membership verification and revocation staff workflow requires a named union
-authority and audit evidence before real enrollment. The source currently exposes
-membership information separately; this launch condition still needs verified
-enforcement throughout all service modes.
+authority and audit evidence before real enrollment. The owner confirmed reuse of
+the existing cooperative register for the union on 23 October; this software
+mapping is not evidence of the union's legal form or transport authorization.
+
+The operator's explicit `requires_active_membership` policy enables closed-shop
+admission. It defaults to false for existing/open-participation operators. The
+Fès union launch must enable it and link the approved register before activation.
+An enabled policy requires a linked register. Admission requires that organization
+and the user's membership to be ACTIVE, with an optional joined date no later than
+admission and no ended date at or before admission. Membership in a different
+register cannot satisfy it. Final assignment/commitment reads serialize with
+membership status and operator policy changes; passenger registration and already
+accepted trip completion are outside this new-work gate.
 
 The general model can distinguish:
 

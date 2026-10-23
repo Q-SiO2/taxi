@@ -1,5 +1,14 @@
 # Implementation Blueprint
 
+## Closed-shop membership slice — 23 October 2026
+
+Source migration `20261023_0053` adds a per-operator policy backed by the existing
+member register, as selected by the owner. Admission gates must cover availability,
+matching/acceptance and scheduled commitment/handoff while preserving accepted
+trips. [The membership checkpoint](launch/union-membership.md) records the local
+SQL, concurrency and integration evidence and remaining staff/configuration work.
+The earlier alpha deployment is not upgraded by these source changes.
+
 ## Active real-world implementation goal - 23 October 2026
 
 Follow [the R0-R12 execution plan](real-world-launch.md), mapped to the existing

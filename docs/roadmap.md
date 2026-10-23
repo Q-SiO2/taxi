@@ -1,5 +1,14 @@
 # TaxiMobile — Alpha, Pilot and Public Release Roadmap
 
+## Current source packet — 23 October 2026
+
+R5/R8 implements explicit closed-shop driver admission using the existing
+register selected for the Fès union. Source migration `20261023_0053` introduces
+the per-operator policy; default false preserves open-participation operators.
+[The membership checkpoint](launch/union-membership.md) records local SQL,
+assignment and concurrency verification. Staff/configuration UX, immutable CI
+and controlled rollout remain before capability acceptance.
+
 ## Active objective - full real-world deployment, 23 October 2026
 
 The owner now requests a new detailed goal for real-world deployment with full
@@ -9,8 +18,10 @@ iOS, web, all documented launch capabilities, a controlled city pilot and guarde
 public release. Existing explicit product deferrals remain; no silent reduction
 to the demonstrated on-demand flow is allowed.
 
-**Next task: R0 source/evidence/capability reconciliation**, followed by a concrete
-first-city decision packet and the highest-priority unblocked implementation fix.
+**Current task: R5/R8 union membership admission**, following the retained
+[R0 reconciliation](launch/r0-baseline.md), [R1 decisions](launch/r1-decisions.md)
+and [R2 candidate/CI work](launch/r2-ci.md). Finish the reviewed membership
+candidate, staff/configuration workflow and controlled deployment evidence.
 The completed synthetic alpha remains the regression/fallback baseline. Its
 earlier urgency and provider-paused packets below do not define the new queue.
 Trial-only spending and preserved-volume constraints remain until explicitly

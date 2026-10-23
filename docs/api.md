@@ -1,5 +1,16 @@
 # TaxiMobile — API Specification
 
+## Closed-shop operator policy — source contract, 23 October 2026
+
+Operator create/update/read payloads expose `requires_active_membership` (default
+false). Enabling it requires the operator's linked cooperative/member register.
+Updates retain existing scoped `MANAGE_OPERATORS`, recent MFA and audit authority;
+they do not enroll members. Closed-shop new-work failures return the existing 409
+domain-conflict response with `Active membership with this operator is required.`
+Availability, immediate/fixed-route matching/acceptance and scheduled commitment /
+handoff recheck server membership. Passenger registration, already accepted trip
+progress, safety/support and financial-history access are not membership-gated.
+
 ## 1. Purpose
 
 This document defines the HTTP API used by TaxiMobile clients and backend services.

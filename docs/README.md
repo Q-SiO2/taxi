@@ -1,5 +1,11 @@
 # TaxiMobile documentation
 
+> **Source migration - 23 October 2026:** `20261023_0053` adds the explicit
+> operator membership policy for the Fès union launch. It is a source change;
+> [isolated migration/authority verification](launch/union-membership.md) is
+> recorded, with immutable CI, staff UX and deliberate deployment still required.
+> The alpha's deployed schema/evidence retain their original identity.
+
 > **Active goal - 23 October 2026:** establish real-world deployment with full
 > documented functionality. Start with [the detailed execution plan](real-world-launch.md)
 > and [roadmap](roadmap.md): R0 reconciliation, production capability closure,
