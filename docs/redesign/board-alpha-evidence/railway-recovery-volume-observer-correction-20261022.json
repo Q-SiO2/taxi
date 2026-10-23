@@ -1,0 +1,7 @@
+{
+  "observed_utc": "2026-10-22T23:45:01.064146+00:00",
+  "bindings_issued_before_correction": 0,
+  "scope": "Local preflight guard only; no provider/config/DB change",
+  "finding": "CLI environment volumeInstances includes the preserved volume even when its serviceId is null. The original guard incorrectly required its ID to be absent.",
+  "correction": "Require both exact volumes present, active attached only to existing PostGIS, preserved unattached, neither deleted/pending deletion, both500MB and active usage below450MB."
+}

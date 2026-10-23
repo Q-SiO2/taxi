@@ -1,0 +1,18 @@
+{
+  "started_utc": "2026-10-20T10:06:46.878879+00:00",
+  "role": "driver",
+  "serial": "emulator-5556",
+  "actions": [
+    {
+      "observed": "System UI isn't responding",
+      "action": "Close app",
+      "screenshot": "v15-driver-system-boot-dialog-1.png"
+    }
+  ],
+  "scope": "Known observed bundled-system boot dialogs and explicit read-only native Retry connection only; no app reset/security/network setting change",
+  "ui_after": [
+    "TaxiMobile",
+    "جارٍ التحقق من جلستك الآمنة…"
+  ],
+  "finished_utc": "2026-10-20T10:07:08.360093+00:00"
+}

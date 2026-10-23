@@ -1,0 +1,29 @@
+{
+  "started_utc": "2026-10-21T17:55:41.632136+00:00",
+  "candidate": "candidate-native-v19.json",
+  "passed": true,
+  "roles": [
+    {
+      "role": "driver",
+      "serial": "emulator-5556",
+      "avd": "taximobile-board-api35-driver",
+      "sdk": "35",
+      "previous_apk_sha256": "3be60dacd05a1bd98e871065977a1911b849914b38874e9b29878a2b14cb729d",
+      "installed_apk_sha256": "72fd8b624520724dc3faff24619bc2ef534fa2e8c08095baa21b5d17822bae52",
+      "data_retained": true,
+      "installed_utc": "2026-10-21T17:56:40.319742+00:00"
+    },
+    {
+      "role": "passenger",
+      "serial": "emulator-5554",
+      "avd": "taximobile-board-aosp31-passenger",
+      "sdk": "31",
+      "previous_apk_sha256": "007ac960ff0c147a77859bddbed3c80f25c6ff3601c51bd282f1c26ffc8d9681",
+      "installed_apk_sha256": "cb3ccc481c6be4c634c3090db835076e17af5888a8f7b9c454932d759dbf4822",
+      "data_retained": true,
+      "installed_utc": "2026-10-21T17:56:45.095025+00:00"
+    }
+  ],
+  "scope": "Owned API35 driver/API31 passenger emulators only; existing app data retained; no trip acceptance",
+  "finished_utc": "2026-10-21T17:56:45.095140+00:00"
+}

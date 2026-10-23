@@ -208,7 +208,11 @@ data class LocalizedName(
     val fr: String,
     val ar: String,
 ) {
-    fun preferred(): String = en.ifBlank { fr.ifBlank { ar } }
+    fun preferred(language: String = "en"): String = when (language.replace('_', '-').substringBefore('-').lowercase()) {
+        "ar" -> ar.ifBlank { fr.ifBlank { en } }
+        "fr" -> fr.ifBlank { en.ifBlank { ar } }
+        else -> en.ifBlank { fr.ifBlank { ar } }
+    }
 }
 
 @Serializable

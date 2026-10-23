@@ -1,5 +1,43 @@
 # TaxiMobile — National Operations and City Rollout Specification
 
+## Board alpha execution authorized — 15 October 2026
+
+The owner now directs the earliest functional board alpha, authorizes application
+implementation and TaxiMobile Railway staging changes/deployment, and requires
+French, Arabic and English with concise copy. This supersedes the earlier
+planning-only stop. The selected four-style contract remains in force; no further
+palette approval is needed. Follow [the active board alpha checkpoint](board-alpha.md)
+for execution and evidence. Native, integrated staging, device and release
+acceptance must still be demonstrated.
+
+## Selected style system — recorded 15 October 2026
+
+The owner selected Folded Streets, Street Press, Glazed Machine and Notepad as
+four complete local presentation choices. The independent color-theme menu and
+main city/taxi illustration are withdrawn. [style-options.md](redesign/style-options.md)
+now owns the shared preference, exact treatments and ST-0–ST-4 engineering packets;
+[delivery.md](redesign/delivery.md) maps them into the UX waves. Earlier statements
+that no style has been selected are historical. No further palette vote is needed.
+
+Use the existing semantic components/theme boundary. Notepad retains main tasks,
+icons and explicit state/recovery in grayscale, with decorative motion disabled.
+Keep all backend authorization, scope, review, MFA, privacy and financial contracts.
+This selection is distinct from native/device, deployment and release acceptance.
+The next scoped engineering step is source/candidate reconciliation and ST-1/ST-2;
+no app implementation or acceptance is claimed by the documentation previews.
+
+
+## Visual replacement proposal — latest 12 October 2026
+
+The owner has rejected current UI/UX and requested a full redesign plan with free
+visual exploration followed by confirmation before implementation. The old
+navy/mustard visual clauses below describe the previous identity. Review
+[redesign/web-pages.md](redesign/web-pages.md) and
+[redesign/delivery.md](redesign/delivery.md); no replacement is approved yet.
+Operational scope, independent review, MFA, evidence, privacy and financial
+authority remain unchanged. UX-0 will reconcile only visual prescriptions after
+approval. The complete page plan does not make all console polish an alpha gate.
+
 ## Current standing — 2026-09-07
 
 Phases 12 through 19 are implemented in source, including versioned payment

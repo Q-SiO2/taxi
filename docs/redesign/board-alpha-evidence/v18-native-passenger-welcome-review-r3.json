@@ -1,0 +1,69 @@
+{
+  "candidate": "candidate-native-v18.json",
+  "role": "passenger",
+  "started_utc": "2026-10-21T12:04:48.576349+00:00",
+  "passed": true,
+  "checks": [
+    {
+      "style": "Folded Streets",
+      "named_option_selected": true,
+      "raw_recording": {
+        "path": "v18-native-passenger-welcome-r3-folded-streets.mp4",
+        "sha256": "6d1f230b331ca361f1dce398fd0b49e273d7c757764e4aca2cb0932cb2b6ec2a",
+        "bytes": 176744
+      },
+      "screenshot": {
+        "path": "v18-native-passenger-welcome-r3-folded-streets.png",
+        "sha256": "5ee161189d76f57210589265c8272d1cbb70409de2d4f2f4ad151a614686d7bb",
+        "bytes": 105736
+      }
+    },
+    {
+      "style": "Street Press",
+      "named_option_selected": true,
+      "raw_recording": {
+        "path": "v18-native-passenger-welcome-r3-street-press.mp4",
+        "sha256": "064bb4ae400efe6654e73cbc539ea3bf28061b06d4723705cc196a88d15c6157",
+        "bytes": 179971
+      },
+      "screenshot": {
+        "path": "v18-native-passenger-welcome-r3-street-press.png",
+        "sha256": "262cabe1ef047a7cb2b77b6fafb4e829fb875f427fc7fd757a542260b2bfd7fa",
+        "bytes": 49365
+      }
+    },
+    {
+      "style": "Glazed Machine",
+      "named_option_selected": true,
+      "raw_recording": {
+        "path": "v18-native-passenger-welcome-r3-glazed-machine.mp4",
+        "sha256": "000c1bea05463aedeadc7f4532ce8db284c117e60eb1c2bc10cb4f8418dd6894",
+        "bytes": 257598
+      },
+      "screenshot": {
+        "path": "v18-native-passenger-welcome-r3-glazed-machine.png",
+        "sha256": "c0b5df571475319b9e37e37b1760f35405984a6964c815539ab6ea5bf0a0dadc",
+        "bytes": 135427
+      }
+    },
+    {
+      "style": "Notepad",
+      "named_option_selected": true,
+      "raw_recording": {
+        "path": "v18-native-passenger-welcome-r3-notepad.mp4",
+        "sha256": "20ba6482caf3cbda96e9543f59c0605f202ddb95066f442066988148bba64f63",
+        "bytes": 157013
+      },
+      "screenshot": {
+        "path": "v18-native-passenger-welcome-r3-notepad.png",
+        "sha256": "cfbb02cc6e1fbd64a7a62a97671036be6391195ca7806f31a3068f3e5e7b025c",
+        "bytes": 44692
+      }
+    }
+  ],
+  "scope": "Actual EN welcome artwork/style options and normal existing-account re-entry; recordings are raw emulator observations, not physical performance acceptance",
+  "entry_method": "Normal signed-out process restart after prior own-session revocation displayed the sign-in/security message; no data wipe or repeated revocation",
+  "normal_existing_account_restored": true,
+  "final_style": "Folded Streets",
+  "finished_utc": "2026-10-21T12:07:58.405644+00:00"
+}

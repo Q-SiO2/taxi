@@ -1,5 +1,6 @@
 package org.example.taximobile.operations.ui
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,8 @@ internal fun AccountSecurityScreen(
     state: OperationsUiState,
     coordinator: OperationsCoordinator,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     var targetUserId by remember { mutableStateOf("") }
     var action by remember { mutableStateOf(AccountSecurityAction.REVOKE_SESSIONS) }
     var reasonCode by remember { mutableStateOf("ACCOUNT_COMPROMISE") }
@@ -60,33 +63,33 @@ internal fun AccountSecurityScreen(
         Text("Account containment", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
         Text(
             "Use only from a verified support, safety, security, or legal case. The backend treats this as an account-wide action and refuses it unless your permission covers every market associated with the target.",
-            color = TaxiColors.Ink500,
+            color = taxiColors.Ink500,
         )
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = TaxiColors.Warning100,
-            shape = RoundedCornerShape(TaxiRadii.Md),
-            border = BorderStroke(1.dp, TaxiColors.Warning600),
+            color = taxiColors.Warning100,
+            shape = RoundedCornerShape(taxiRadii.Md),
+            border = BorderStroke(1.dp, taxiColors.Warning600),
         ) {
             Column(Modifier.padding(TaxiSpacing.Md), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
-                Text("Selected association market", fontWeight = FontWeight.Bold, color = TaxiColors.Navy900)
+                Text("Selected association market", fontWeight = FontWeight.Bold, color = taxiColors.Navy900)
                 Text(
                     selectedMarket?.let { "${it.name} (${it.code})" }
                         ?: "Select an authorized market before entering a command.",
-                    color = TaxiColors.Ink500,
+                    color = taxiColors.Ink500,
                 )
                 Text(
                     "This selection does not reduce the command to one city. Partial cross-market authority fails closed.",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TaxiColors.Ink500,
+                    color = taxiColors.Ink500,
                 )
             }
         }
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = TaxiColors.Surface0,
-            shape = RoundedCornerShape(TaxiRadii.Lg),
-            border = BorderStroke(1.dp, TaxiColors.StrokeSubtle),
+            color = taxiColors.Surface0,
+            shape = RoundedCornerShape(taxiRadii.Lg),
+            border = BorderStroke(1.dp, taxiColors.StrokeSubtle),
         ) {
             Column(Modifier.padding(TaxiSpacing.Lg), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md)) {
                 OutlinedTextField(
@@ -138,9 +141,10 @@ internal fun AccountSecurityScreen(
                     enabled = !state.interactionLocked,
                 )
                 inputError?.let {
-                    Text(it, color = TaxiColors.Warning600, style = MaterialTheme.typography.bodySmall)
+                    Text(it, color = taxiColors.Warning600, style = MaterialTheme.typography.bodySmall)
                 }
                 Button(
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                     onClick = {
                         val submittedConfirmation = confirmation
                         confirmation = ""

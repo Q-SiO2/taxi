@@ -1,0 +1,1634 @@
+{
+  "created_utc": "2026-10-15T16:49:48.372415+00:00",
+  "kind": "debug board candidate; acceptance incomplete",
+  "git_head": "2835c8aa7f5e97a17afcdbe647fe589cbd0421e1",
+  "working_tree": "pre-existing uncommitted work retained; source hashes identify the actual build inputs",
+  "api": "https://alpha-api-staging.up.railway.app",
+  "web": "https://alpha-web-staging.up.railway.app",
+  "configuration": {
+    "place_search": false,
+    "manual_coordinate_entry": false,
+    "map_selection": true,
+    "map_style": "https://tiles.openfreemap.org/styles/positron"
+  },
+  "tests": {
+    "jvm": {
+      "tests": 336,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "android_host": {
+      "tests": 280,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "backend_snapshot_sha256": "47188a0fcc0271ee05c5f7bb6ed5fb5758ddd6c8596cd0ecaf813f28b95fb0d7",
+  "artifacts": [
+    {
+      "role": "passenger",
+      "path": "TaxiMobile/androidApp/build/outputs/apk/passenger/debug/androidApp-passenger-debug.apk",
+      "bytes": 81140975,
+      "sha256": "73cc41491d4b145091f696131381051edcccf67c57173e20785ab9f953e5aa9b",
+      "archived_path": ".tools/alpha-delivery/native-v5/androidApp-passenger-debug.apk"
+    },
+    {
+      "role": "driver",
+      "path": "TaxiMobile/androidApp/build/outputs/apk/driver/debug/androidApp-driver-debug.apk",
+      "bytes": 81140971,
+      "sha256": "9d686cfc2ffffc0db72a0d9cd16e9ad1b9b267b148218fe7ac7f5cf1d3800152",
+      "archived_path": ".tools/alpha-delivery/native-v5/androidApp-driver-debug.apk"
+    }
+  ],
+  "sources_sha256": "c6b74157ef8b008cd6dae277da617a70648dc6ce7bede2e3cd2512313af7d87c",
+  "sources": [
+    {
+      "path": "infra/deploy/railway-web/Dockerfile",
+      "sha256": "c708e6b7ace89fc3e61a5d957a1ea4ab56afec1c7ad900bd3d7a0c0fce4bc71c"
+    },
+    {
+      "path": "infra/deploy/railway-web/nginx.conf",
+      "sha256": "1b9df308847c387bdbefe888ff1a24b2d5a3950871614c4ba4d08be3b016c1ee"
+    },
+    {
+      "path": "infra/deploy/railway-web/start.sh",
+      "sha256": "15fd9e52533a0a9cbfaf8e83db7a4720eae0c8594057d10d432ae6838b25527b"
+    },
+    {
+      "path": "infra/scripts/prepare_railway_web.py",
+      "sha256": "7c983e01145b4c4aa940bceb09c186c24113ef63e1710cc5ab9b634ca2e628f3"
+    },
+    {
+      "path": "TaxiMobile/androidApp/build.gradle.kts",
+      "sha256": "2f7fdaeb95bbf06a831aadfd4cf0ea1c38bc62dd4646360853dc96f7ccf9758e"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/debug/AndroidManifest.xml",
+      "sha256": "3862b3f805048be18cc83c0468a576a860526a02ba93a8c3a46121d19be3d569"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/debug/res/xml/network_security_config.xml",
+      "sha256": "db55df651c6193a08884b5e3664e1d9a1ea90c4580c41cdad058a13ba283d999"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/driver/res/drawable/ic_launcher_background.xml",
+      "sha256": "0a74443b13a114bad64d021ed6e01dff112fd1112f9be91bee6639f68a958044"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/driver/res/drawable/ic_launcher_foreground.xml",
+      "sha256": "5c4e0c700bc61b49b3e695b68090c61551ea53f4d8e5a8bff1c001ceea421279"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/driver/res/drawable/ic_launcher_legacy.xml",
+      "sha256": "8aea2341d9241d61a36ab8ffc29a9b36ea01cf8b86c4db477e80a40da231360c"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/driver/res/mipmap-anydpi/ic_launcher.xml",
+      "sha256": "d13a79acd84e2a736068fe7200c005c5c319f4f4d20f78fb0bf22b6b6fc79f5c"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/driver/res/mipmap-anydpi/ic_launcher_round.xml",
+      "sha256": "d13a79acd84e2a736068fe7200c005c5c319f4f4d20f78fb0bf22b6b6fc79f5c"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/driver/res/mipmap-anydpi-v26/ic_launcher.xml",
+      "sha256": "6d0988175971f41bdc83eadb144af3d84c40052fa125e90edbe7d89227be4b25"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/driver/res/mipmap-anydpi-v26/ic_launcher_round.xml",
+      "sha256": "6d0988175971f41bdc83eadb144af3d84c40052fa125e90edbe7d89227be4b25"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/AndroidManifest.xml",
+      "sha256": "bf0794269ba1ff03bb190118d9555234a47a7bf9936635080a3f5fbcada6826c"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/kotlin/org/example/taximobile/AndroidAppDependencies.kt",
+      "sha256": "7859bf18c04193163f1bb0c693f2454a5bf07bb3631a6cf72664771cea5d21b8"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/kotlin/org/example/taximobile/AndroidConnectivityObserver.kt",
+      "sha256": "a2d673a57d7b1d20efe0d69cc03ac4b18f83cdef93495f89bd3de298ec18ba03"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/kotlin/org/example/taximobile/AndroidCurrentLocationRequester.kt",
+      "sha256": "766826906cb56a31a1556550ba6fe60e5911c17ad1311cd276a2582abbbf9467"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/kotlin/org/example/taximobile/AndroidPushRegistration.kt",
+      "sha256": "76f1b10f036fbbae5435e4d93894ef9c326cf3bb51b859e49449687e526831a2"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/kotlin/org/example/taximobile/MainActivity.kt",
+      "sha256": "e7d2dff8d112adf0d41a279a826bee5498c257540c5044343a253e9205df61c4"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/kotlin/org/example/taximobile/TaxiMobileFirebaseMessagingService.kt",
+      "sha256": "c036141de4c9f20ecc9c34a46970d48da9227e0df3bc9a944ce49792f871e199"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/res/drawable/ic_launcher_background.xml",
+      "sha256": "7efdb2e2967b19a9237354ba282b9d1b31a35e69754e812d2ef70ae04621668f"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/res/drawable-v24/ic_launcher_foreground.xml",
+      "sha256": "bc901bed0988941c683609aabf49ab30666aa44ad279c86fcc836c426fe76694"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+      "sha256": "46aef39e5993c8278c744bb9e8f58eb06ba663416fbaf0b954ae189c63b065a7"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml",
+      "sha256": "46aef39e5993c8278c744bb9e8f58eb06ba663416fbaf0b954ae189c63b065a7"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/res/mipmap-hdpi/ic_launcher.png",
+      "sha256": "5ee6ca2903e3094d64110dee90aea432f9eb9bc747c7e5c134496b8f7feff3b8"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/res/mipmap-hdpi/ic_launcher_round.png",
+      "sha256": "876e35db6919f81d28dbe042d8535414b2b3bb13d1139c16265f652ca5df65ac"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/res/mipmap-mdpi/ic_launcher.png",
+      "sha256": "62c4db47abd938c35f4926ea0b7b31b9d6c41bef1ddacb2c7685b5c6ea0890e5"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/res/mipmap-mdpi/ic_launcher_round.png",
+      "sha256": "b9bc0ce206c8715db22eacfbceddff820f9b8a0ef3a519bbb88f7b6e65806d71"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/res/mipmap-xhdpi/ic_launcher.png",
+      "sha256": "2a5e85ebec8c77c18f5c34d762949674373c7a95de57a8a82ce165c8db8cedbb"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/res/mipmap-xhdpi/ic_launcher_round.png",
+      "sha256": "81b31d4cabd3e4358db2d99e6c31474b82ae6379dc06ea0c00267f41da1bd599"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+      "sha256": "01cec2d4d6cc59f250e4bbfa445042c3a3b9ebf9788b9f34796e85c0af874da4"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/res/mipmap-xxhdpi/ic_launcher_round.png",
+      "sha256": "bf24682fa050affbc3bdaae15cd5532c13758a5a0e6d5305cfad52ddefc4d571"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+      "sha256": "b2f8a8d39587eb912f8d217f2160c4ba4e21a60fd7a6f84849c102bcac725975"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png",
+      "sha256": "d7ed7010aa67cb843af6df357ff1a74ec1598d2407e4884d12633aa0f11e3a4b"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/res/values/strings.xml",
+      "sha256": "1153b32e18780df936ad648a4c9f50f28f489d93385a9423380c337e5e02fcae"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/res/values/themes.xml",
+      "sha256": "f4faac8d50cb7e071526ba579ae6a227ba699162d09f9ab839f15448de92be22"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/res/values-v31/themes.xml",
+      "sha256": "8fef621da237c4b9574d1b9090aaec3a9c2f35d0564588f25183999165bcdcfe"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/passenger/res/drawable/ic_launcher_background.xml",
+      "sha256": "0a74443b13a114bad64d021ed6e01dff112fd1112f9be91bee6639f68a958044"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/passenger/res/drawable/ic_launcher_foreground.xml",
+      "sha256": "58438717bdaed71e7cbd76aeb45e4d63d3339326c0d1151f612b9b95fd425328"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/passenger/res/drawable/ic_launcher_legacy.xml",
+      "sha256": "8aea2341d9241d61a36ab8ffc29a9b36ea01cf8b86c4db477e80a40da231360c"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/passenger/res/mipmap-anydpi/ic_launcher.xml",
+      "sha256": "d13a79acd84e2a736068fe7200c005c5c319f4f4d20f78fb0bf22b6b6fc79f5c"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/passenger/res/mipmap-anydpi/ic_launcher_round.xml",
+      "sha256": "d13a79acd84e2a736068fe7200c005c5c319f4f4d20f78fb0bf22b6b6fc79f5c"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/passenger/res/mipmap-anydpi-v26/ic_launcher.xml",
+      "sha256": "6d0988175971f41bdc83eadb144af3d84c40052fa125e90edbe7d89227be4b25"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/passenger/res/mipmap-anydpi-v26/ic_launcher_round.xml",
+      "sha256": "6d0988175971f41bdc83eadb144af3d84c40052fa125e90edbe7d89227be4b25"
+    },
+    {
+      "path": "TaxiMobile/build.gradle.kts",
+      "sha256": "8912a31d4a3fddfa0f0aba1b6b8b4f47d882282ec9c3c84911b1e09c2a037aa3"
+    },
+    {
+      "path": "TaxiMobile/desktopApp/build.gradle.kts",
+      "sha256": "a1b3cda4a3b77cd6c4e816e25dd0e838520f869351ce69b68d7efe7d3d4980d1"
+    },
+    {
+      "path": "TaxiMobile/desktopApp/src/main/kotlin/org/example/taximobile/main.kt",
+      "sha256": "41fb4b93329a9d1b2d818a93d4582bf118a00bdab07bcdbd44fe60704b857bc5"
+    },
+    {
+      "path": "TaxiMobile/settings.gradle.kts",
+      "sha256": "55c5f1498027cb2f72990c355cf351dfc1fad3528d3aeb0854c32b620913eb31"
+    },
+    {
+      "path": "TaxiMobile/shared/build.gradle.kts",
+      "sha256": "a3b16064246f8eeca1356d82569578f59a19a3c6e2b0a504318b52dc4fd3bfb0"
+    },
+    {
+      "path": "TaxiMobile/shared/src/androidHostTest/kotlin/org/example/taximobile/data/auth/AndroidSecureTokenStoreTest.kt",
+      "sha256": "a294923b749f8414fffe1ebd1d4ff122d55428996bd5d0ce70714498e590becf"
+    },
+    {
+      "path": "TaxiMobile/shared/src/androidHostTest/kotlin/org/example/taximobile/SharedLogicAndroidHostTest.kt",
+      "sha256": "354aea540026728d015875335963779856a2c2c61927ad83bb5bc2ff93b0905e"
+    },
+    {
+      "path": "TaxiMobile/shared/src/androidMain/kotlin/org/example/taximobile/data/auth/AndroidKeystoreSessionCipher.kt",
+      "sha256": "c185ec1b973e14792018d5723a5c73599f42ca63ec1fbfbe4395b86f3fed33d1"
+    },
+    {
+      "path": "TaxiMobile/shared/src/androidMain/kotlin/org/example/taximobile/data/auth/AndroidSecureTokenStore.kt",
+      "sha256": "b548e08c4607f6fd5d4c1167b0bb2fe9f2b91fb317f05332bb4cb143353c4cc9"
+    },
+    {
+      "path": "TaxiMobile/shared/src/androidMain/kotlin/org/example/taximobile/data/network/KtorClientCompatibilityGateway.kt",
+      "sha256": "b9f39c557b72f317a6b225780c046959cd6dd24d38c30996b082d9747412a732"
+    },
+    {
+      "path": "TaxiMobile/shared/src/androidMain/kotlin/org/example/taximobile/feature/maps/MapLibreTripMap.android.kt",
+      "sha256": "407d14f39881caf8b7f9423ebb2c3c9dfa0b9e5b4d71ddc0900d5e5384e8edf3"
+    },
+    {
+      "path": "TaxiMobile/shared/src/androidMain/kotlin/org/example/taximobile/feature/ui/theme/TaxiStylePreferences.android.kt",
+      "sha256": "8da1610c3fb96f2e94f62b9c0cb64598b30d2779db91bd4ec5400d60f40341c9"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/app_icon_background.svg",
+      "sha256": "cace1be8e2097bf3049f844188ef701111372d7ede894ebe0ccc0f76e5eaad0f"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/app_icon_foreground.svg",
+      "sha256": "7ef3659aead5dc5af9d43d6c9b63f9535325796d348ee70a3fb138cfa8a85f97"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/app_icon_monochrome.svg",
+      "sha256": "9e16394522c1f9357dd1468ce4ed5c16696fdc271c545448f6ceaaac8945086e"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/brand_logo_mark.svg",
+      "sha256": "5b58cc1227a6fd4180a0ab733c6a6e4938964be3cccbab66d20c8460921b37fc"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/brand_logo_mark_light.svg",
+      "sha256": "6704f81165fbc9c31cb14d8fb7e8549cabdf62d2736a2171857289b32415c613"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/brand_logo_mark_runtime.png",
+      "sha256": "17713f126c661ba87886edc4dfc50b5430be525c85dc42c5abc1ff3f6bbd2144"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/brand_splash_logo.svg",
+      "sha256": "b951fa38ea02d6a63c142bc766837e8f08e03e43dd960495eb2b2f31c0843e76"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/brand_wordmark_dark.svg",
+      "sha256": "fd4bfe11820177d1644f53daebce450a40fdf22fa238587ae3d96df96d274151"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/brand_wordmark_light.svg",
+      "sha256": "237a94c871c64c86a318b145b72941a88a5367cb16dd3d3e1dfbae07eb614cb7"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/compose-multiplatform.xml",
+      "sha256": "8db35d9bcb1ad5b0e61fa2fd73bb0dc6180eac708f1dd8a22860acc3cdbcec3b"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/icon_driver_arrived.svg",
+      "sha256": "66fe159ec181fe479ff6ba70010173e35b7ea485cbd01dbc18eb917dd8b86e55"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/icon_driver_arriving.svg",
+      "sha256": "9957f8657a3aa90dfc02ef8f795b3d54af7ae83a068e6381d56eb318d8902800"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/icon_driver_matched.svg",
+      "sha256": "e938fa1666e8a2e14cf902eabe7740f1f519a7271035d144723daba2e2f6dab0"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/icon_emergency_call.svg",
+      "sha256": "74e553badcfb8b63a6e33987e4016b558b9408e6fac182e8ce9d4bdc43738c87"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/icon_lost_item.svg",
+      "sha256": "dfefea9c3dbf31ac53473526ea71e8bb30ba27365a479d5cc459af74e6cfb950"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/icon_nav_account.svg",
+      "sha256": "f2e788dc4ed5f52307616652e870fca2e6147cd525a4a536c1ec4cb1ad1dcbb0"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/icon_nav_earnings.svg",
+      "sha256": "601563e0e19acc7540cad58205bc83e597e245d840c7abef4cd4984374223198"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/icon_nav_home.svg",
+      "sha256": "0be6d6f6d42e4b63aa86b5ec9d7c3f58e37da3480dfd2575c397e0867ae83f2e"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/icon_nav_online.svg",
+      "sha256": "ae16b120dcd311a02cb6ff01983c804d5ebaad984d2c082e7e975c7996988419"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/icon_nav_saved.svg",
+      "sha256": "78cb0f9f0577859eaefe62be649f0f205c4236475d30714ed228bf246d54c39d"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/icon_nav_trips.svg",
+      "sha256": "ffbfe5878ece158e1237c233d8fc2cd94fd851d932841a02eaff20f265b5e62e"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/icon_payment_bank_card.svg",
+      "sha256": "329ce68e6fe44656c43156db7ae03cd4883b6ff03521d8d3b2e86c949a614041"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/icon_payment_cash.svg",
+      "sha256": "bf8d21074480adedf0eacf88ba6c02aac88b03f238b3c1010933faba0df551d0"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/icon_payment_receipt.svg",
+      "sha256": "9b89ef44a8535aba0d94e82959b0d415699ea49e79d872b7ffad3e214f8ef9a7"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/icon_report_issue.svg",
+      "sha256": "e94bedf5f757a7ca6e1421a14f92ef59ccf8d94169546f66ce62f823dcf2574a"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/icon_safety_shield.svg",
+      "sha256": "9c03fc5b1238df4e6f0682c33eef0186e71ccf5f5ffef9cb0349959cb0824610"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/icon_share_trip.svg",
+      "sha256": "d7867060c460f9508a5e66ec0e98cb5cdb4ef525b4a81e97d2b105bcd5dd174a"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/icon_support.svg",
+      "sha256": "078607066170fdc0510107f8eae8e2cc4a9180b6e7789bfa63b35642f561eb74"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/illustration_driver_documents.svg",
+      "sha256": "2a0de8e9e2be4a6bda6ba3581d51dd119b1b2851d8b09d3e635ac41d4b24612f"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/illustration_driver_onboarding.svg",
+      "sha256": "8349e88eb546e7de34add66cc6bb47b0dd6dd774220a482f17b2902b68dfaa06"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/illustration_driver_verification.svg",
+      "sha256": "5d8510a4b610c0b9036fc03842996f5590917f9a1e63097adbbfb03ac5cdd5a9"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/illustration_empty_earnings.svg",
+      "sha256": "4a13bd24d08f6fed0576fe0ccc1ba855c59bce95353214070e65f53d2d4064e3"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/illustration_empty_saved_places.svg",
+      "sha256": "fec967455ebde14a2cbd2253f911be50dbeefe274f36ffc42a61f5c9690ea7e4"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/illustration_empty_trips.svg",
+      "sha256": "a24e07679e5cb87e1890bd9a8357a3aaac4c3b9984bf794974e78ba049402193"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/illustration_landing.svg",
+      "sha256": "2987176399fff736844166af76c58b8c137b6dc878649c9de0ba9cd6cdc62d2e"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/illustration_landing_runtime.png",
+      "sha256": "61294026e9a0bc7682ee06b472361b3f29ad1ddaec3de626f0e18092ff6fdfef"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/illustration_location_permission.svg",
+      "sha256": "40bb00ad5cb0f3e2f814e11939390f085d76224e39c4f72265e0dfab295e0c4d"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/illustration_notification_permission.svg",
+      "sha256": "bacd7d9b88ce92dff4e7cb623cea85b821966fb01a276aebd44481d9636a6106"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/illustration_payment_failure.svg",
+      "sha256": "965ca31cd57cab608f24d717eac26b20fe4241e71f56ac8186464054950213e0"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/illustration_payment_success.svg",
+      "sha256": "4b93e2a251bb4fde84971d359eac2e50b01adea4a7dc50455812f7ca7fe8cfc9"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/illustration_trip_completed.svg",
+      "sha256": "1e4f2603c3a651e4325897771953ced552c8509f4898e05da26614f191e1bb36"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/map_marker_search_result.svg",
+      "sha256": "8e22f155db21994f6ffdb1aefb6ecd86657b04e6f18942d8d6ea8a64498fda29"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/map_marker_selected_halo.svg",
+      "sha256": "93ab2fd73f1481b5c3a0caa90e0ab13ebc19c9b902d415d31fe1e5eba96efa86"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/map_marker_user.svg",
+      "sha256": "bfb2a18e96ef8338594ecbeb2d29e7a093d8d1baf997eaabfe5c72580cd7778b"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/map_pin_destination.svg",
+      "sha256": "17f77ad6deaeb5fe41e5136ac90c582efa3cba16b3f2dedda09b18436f3b7ef1"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/map_pin_home.svg",
+      "sha256": "c83fad86da66f572bd69a82484e10a835fec9e163f538f35d3f011c349179b1b"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/map_pin_pickup.svg",
+      "sha256": "b91d564f20bf347c44401348ea6813b2a11d3206284651b07e88e0c2fb8cea6d"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/map_pin_work.svg",
+      "sha256": "9520303d5c50d8ec57c4bf5497d0c25d55b60be01f4f327841eee5a39833c44b"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/route_decorative_curve.svg",
+      "sha256": "4d1fe9dca89755bd8365bcc8cfd08287d840e2f725f2a801376a1b9b982898e1"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/route_mini.svg",
+      "sha256": "ccc03f758af5cd2524461639abb5788016aa518466e3dc6298eb42feb0a9456f"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/route_progress_motif.svg",
+      "sha256": "0d9e65b32071cbe000516ed02b1d1932369646bc371aee31015674f4e37e7d0d"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/vehicle_marker_large.svg",
+      "sha256": "82da2df40d0b1b1722c9b81c332d1c62e36d30846aa2b72020b1c52f8747785d"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/vehicle_marker_standard.svg",
+      "sha256": "75e83d015fef1527291b41ec5788e8fe46d6c59ca08861b570f41bdf2c4851a7"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/vehicle_render_large_512.png",
+      "sha256": "f929b405e31ca939ae70ca5038629bf925bf5a7e9012569b7f24888d52bea67a"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/vehicle_render_standard_512.png",
+      "sha256": "90dcc5471e7192db1e457616f5f87b0199958ad253f65284148d4db11bd78e80"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/vehicle_silhouette_large.svg",
+      "sha256": "e9442dedfbc1ebd24e7bd677d1d1d7e3b34b4c9358ae29898ffb360899cf71fd"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/vehicle_silhouette_standard.svg",
+      "sha256": "b18a519c583ba55a770be2c24cece149bc134ad88edfa2ccd3e12b6e84bd4f1f"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/drawable/vehicle_silhouette_standard_runtime.png",
+      "sha256": "aea9f2f583d9f383055109b695c66a67574e71a02af7084fde5541de9dd0efd7"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/files/font-licenses/ibm_plex_mono_ofl.txt",
+      "sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/files/font-licenses/ibmplexsans_ofl.txt",
+      "sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/files/font-licenses/ibmplexsansarabic_ofl.txt",
+      "sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/files/font-licenses/manrope_ofl.txt",
+      "sha256": "e01b637272e0cbdfb240184dd98ea5cc671556d9894dae2668d92ab2c906787c"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/files/font-licenses/noto_sans_arabic_ofl.txt",
+      "sha256": "07fc70bfeb985cc1a87a8587d0a0c80bab11c86c9dc3fd95b6f0cb332f983e96"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/files/font-licenses/plusjakartasans_ofl.txt",
+      "sha256": "995c7199cab65954f545996326755daee7b63cc6b42b06c13da1f9502ab08a99"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/files/font-licenses/sora_ofl.txt",
+      "sha256": "ba0b9729c9428ba79a0459ab8ec575791b51509dbec213e383d0316d37fec299"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/font/ibm_plex_mono_medium.ttf",
+      "sha256": "a9b4c49bb299e05b5f6c481e7fb5e78943d2793249a0c8874ab574a2d1ea6755"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/font/ibmplexsans.ttf",
+      "sha256": "3b031aa4216174205bd8471f88a49b91f093169e9e87bd5262242bc5967fe2e3"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/font/ibmplexsansarabic.ttf",
+      "sha256": "6f611412270a132bbac838da9259d4c68569b4175f3b3b8fa3fa36a30b56dab9"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/font/ibmplexsansarabic_500.ttf",
+      "sha256": "b8363ab9f733dfa4f8e96b8b2102c24b5cf4110fb96d1d3d9a9412f6fb49cf74"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/font/ibmplexsansarabic_600.ttf",
+      "sha256": "597bd5502e5997be4414e4c9c88834b30ff3784250c84f20bce2b20e53ebd467"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/font/ibmplexsansarabic_700.ttf",
+      "sha256": "691e0c891a38637ae6bbdb69700f8042cb0724a137bee615068ffdb92244f61f"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/font/manrope_variable.ttf",
+      "sha256": "d0639be45d0af36e798172419d7bd173c4bd4f29e2b76cbb69db1d11bf8b0a40"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/font/noto_sans_arabic_variable.ttf",
+      "sha256": "63111b5b2e074dd48cc67692e0a2726d86ee94c1c37fe8598257b7b4e87e869e"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/font/plusjakartasans.ttf",
+      "sha256": "89b3fb38aa0d275d7a731d0d817a4f1622b316b4d7fbdedcf02ee9099ff68bc8"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/font/sora_variable.ttf",
+      "sha256": "84ff7096ae3ec6c8be47d906d1a0ba4de7f2ce78c615275c77301964a316e16c"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/values/strings.xml",
+      "sha256": "6139713006f71628af2d67bc50444b734f801c942ccacf965720d0d1803afb9b"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/values-ar/strings.xml",
+      "sha256": "2f68fbcf6561cc2f2584fc8de99f227990398fd39e91cefa293575ac24e3deff"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/values-fr/strings.xml",
+      "sha256": "18b07e262e3e75abb819d0f2186be631ec20df3c32c682f0f0be11eeab959a97"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/app/AppRole.kt",
+      "sha256": "9bd04a390037731498c58cfb24a18d8ef1c003149c39391373267ad70cf39aec"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/App.kt",
+      "sha256": "888ac19ea78cc0a486b814c13ff4e1dd7d070f38567d6f44c38498a5161ae6d2"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/core/network/ApiConfiguration.kt",
+      "sha256": "becedeb5ce701234e55b52f2a07741b08817918958aa27522cecb5a8e6543131"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/auth/AccountSecurityGateway.kt",
+      "sha256": "645e68582aab9a866f82d8fab81a73f3eb7795540a41a5c1e2524f192170312a"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/auth/AuthenticationGateway.kt",
+      "sha256": "597d18fdacac7b50b59bae53e4734c2bb206d6745ffaab9da4655cdf2e74de2c"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/auth/KtorAccountSecurityGateway.kt",
+      "sha256": "bc8326840cdea46620750725eda4e0c48395e6821d93cf46ef30391f08d57c32"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/auth/KtorAuthenticationGateway.kt",
+      "sha256": "44ee6164f8eb8e8445310800e8da328dca4010d3aa89d405a2d5818e4736727c"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/auth/SecureTokenStore.kt",
+      "sha256": "23f452b4d0bac543b21da19bd3ef1ab423f2c346fa5aa4e08ef51c244ffc0c2a"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/cooperatives/KtorCooperativeGateway.kt",
+      "sha256": "d33b9136b595fac52a082a5072c57a7ac4d98ad6f5a836d0b52f21e93f135774"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/drivers/KtorDriverGateway.kt",
+      "sha256": "b33409a9a87af34789613be0093354c142e169cf4d788c69e572bcd819029d94"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/drivers/KtorDriverOfferGateway.kt",
+      "sha256": "445fef973c423b16b4bac84bbfd1fea5aace005bb18231298a58be3cd4069c0f"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/drivers/KtorDriverRecruitmentGateway.kt",
+      "sha256": "004c2f8e2c43596313ebabb02f7a8b1d3affe2192223b8b3f6282cae21e785a2"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/drivers/KtorDriverRideGateway.kt",
+      "sha256": "1ef5df4ff148c42583eea92c11b126246d0363e0f1b1ca2d441821447ada59a2"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/network/ApiFailure.kt",
+      "sha256": "c05110e3ab27ed9907c7d2cc98859fe26dd1d4c2489777347fcdf776b1f89a1e"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/network/IdempotencyKey.kt",
+      "sha256": "a102652baa756ad7ef45e8fbca473c6a0d4bf9c7e2fdfcd08175b5a5eaa2b8f0"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/network/TaxiMobileHttpClient.kt",
+      "sha256": "1b6acbe97ecf6d8a3715d1965f9e31d8d6304fe3f1922d2e7daae432dcc492b1"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/notifications/KtorNotificationGateway.kt",
+      "sha256": "b9c1dfc5920ff67fc1b1d40b612f3487b1f84a3cdd13e6519c715fce9222db79"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/passengers/KtorPassengerProfileGateway.kt",
+      "sha256": "446863aedab66c38df81bed4cb305e3c2ef1493a6769324f720be3c2d6e1f580"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/places/KtorPlaceDiscoveryGateway.kt",
+      "sha256": "7778c3d87acc6e23c3d36f7f7b56a6c3ce657217e03627a151df2494212df4c0"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/realtime/KtorLiveEventGateway.kt",
+      "sha256": "493e3284122f27453ccfa8aaf9b8febb2d12c720779cdc159b92573f6017cf3b"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/rides/KtorRideGateway.kt",
+      "sha256": "bc6cedd0f29003538af27bfda31e28881c6f269b864f901bc8ce35539402c2a1"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/routing/KtorRoutingGateway.kt",
+      "sha256": "583abfb86d6eff8d97e93935e5696d8ab742b8187a686c2f99252e52490455b3"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/safety/KtorSafetyGateway.kt",
+      "sha256": "61ab36762a1c7e8238c3aaca68cf0b6810b36463db3b658bcc3e371c5df48bbb"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/scheduling/KtorScheduledBookingGateway.kt",
+      "sha256": "098aa74ade675946e3832d95c482dbef615cccf711a865b623ec1991742655f4"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/support/KtorSupportGateway.kt",
+      "sha256": "6eaadf13c4638e10158152339150227f6ee2650103124140443b5d2c54e0a5db"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/auth/AccountSecurityModels.kt",
+      "sha256": "713742084710443146737c675fc2e7992751ca0245d70a91c8fa70cb2a075c94"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/auth/AuthModels.kt",
+      "sha256": "08d36eed4dbfbe5a56fbe2f167b7a539b1c028703ef90fe0e20f96e613e23bc0"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/cooperatives/CooperativeGateway.kt",
+      "sha256": "009c47edcb5aada8b1eee517c4f365871705ec8db2024913c4366780d7e16e20"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/drivers/DriverGateway.kt",
+      "sha256": "1e5ae42cb819ee98f445e0b5d1de97a5428df4b89670de00b36b00338b5611e9"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/drivers/DriverLocationObservation.kt",
+      "sha256": "be0cf14e4f8cdd73122fd8c0243fd99295d7a00fda3e42082938d314875518ae"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/drivers/DriverOfferGateway.kt",
+      "sha256": "ca3f6267204c25b20f0ffb602e43377ea7aa725d08e4fc1061e830b6933abe74"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/drivers/DriverRecruitment.kt",
+      "sha256": "19db3a40d472c969ac0735b5d2b858179970f45429db6c8d4bd5d6f1cd624dd6"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/drivers/DriverRideGateway.kt",
+      "sha256": "312112ff6e25c8c838f20f5a43fc74a50e29196e2b7202dd2c1fac71adafa344"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/drivers/PendingCashPayments.kt",
+      "sha256": "6c3ffd9ab0433281ef1b1f2e935a7b4e448bfec1b34cbaf48ad24d76f49799e1"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/notifications/NotificationGateway.kt",
+      "sha256": "01024d126da1a5feac02c59429ff4f2ef38ee1a1d26e41ba37693c5a0d50977e"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/passengers/PassengerProfileGateway.kt",
+      "sha256": "4d8ce812df1580c76012012b86f3a96d8b4428fc5dc1497fd4eeb9e58075eb36"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/places/PlaceModels.kt",
+      "sha256": "03670a7a97718fd1662efd63b1f318c7245cb9b8a9199846caeed228e87625ed"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/realtime/LiveEventGateway.kt",
+      "sha256": "603898f53821d0cb56094fe8728c25b07ab808767a07d3183253c854a2a61b9d"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/rides/RideModels.kt",
+      "sha256": "97902e8389479ce83bd0681f7ea1af3da0927859d3508277cce3e673a5c59ddd"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/routing/RoutingModels.kt",
+      "sha256": "6c237c0bb901173711cc632bec905a11c5360c04e635a294f69930aa1243c7eb"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/safety/SafetyModels.kt",
+      "sha256": "bd29f44d06d66e121d763d527b4ae5a60f8c9658a03c2d599014619c588b5ec9"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/scheduling/ScheduledBookingModels.kt",
+      "sha256": "e90789e78c2959526e638c8f2e6e0c89622cc8aa4534bb89776b687a9677cb13"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/support/SupportModels.kt",
+      "sha256": "d7736b8aa4e2bd2e5671fb90babdf38b98d2670379dd49b1172f0ef5a8dfb517"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/system/ClientCompatibility.kt",
+      "sha256": "b4bfc545a2b74fe9525b3ca84099dac807348167df539a01fca7d157327e7dcb"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/account/AccountSecuritySection.kt",
+      "sha256": "b4dba27dd6c66737f0a3901bfec16f70735bcf78a1c4781162e6e2a2cbeeb978"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/AppAction.kt",
+      "sha256": "a3082151ea137d1e8f833fc73938e20b8ef840fc239dbac19263939e8fc531a0"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/AppUiState.kt",
+      "sha256": "e7d7990546fd5977c169cb4e362fc55b32bc87518fad1cebe69cf4743f6d47b2"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/MobileAppCoordinator.kt",
+      "sha256": "bf2401a1906f862a1e05387907228af9a7ff43b4d159abfee161a5dc78f75552"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/SharedSections.kt",
+      "sha256": "57abfcdaef09638f2b1009b492ac593d438689ed5c7bad1562903c47535edb1e"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/TaxiMobileScreen.kt",
+      "sha256": "c16bac0762e4bc75e632f9262dea195c21e9b5371f07252de9d11cb4e4e4ca8a"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/auth/AuthenticationSessionCoordinator.kt",
+      "sha256": "7116201cd716c18e324c4c80f8f36f924fafabdcc25184be0639b3dfa696e778"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/auth/AuthenticationState.kt",
+      "sha256": "ae791726f9d64261e636d1b2615a02c6f10c31a57d3ad259ea7c6b926d258f61"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/auth/LocalSessionLifetime.kt",
+      "sha256": "b5b472eee35c1ba2b2d9a1909a1275fafbc0053a4819513066d17cee1387ca46"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/auth/RegistrationInput.kt",
+      "sha256": "48ae87df58581a7d4c9f022abeba5cc92faba56a9585571bdc47d1b2bc8ed2df"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/connectivity/Connectivity.kt",
+      "sha256": "f239a86508b41cf0e522bdcda60e6928fb8e82cf48bf3c581d62017a9c271740"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt",
+      "sha256": "fb4c63a40f7f41ff064ce6d9c6cdec5cb94395959099a5d4dd965191286410ac"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/OfferCountdown.kt",
+      "sha256": "0b63e960d4a899eacc952bc129c0f9893b53c163320347bb2a447ece0921cacc"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/onboarding/CityAuthorizationPresentation.kt",
+      "sha256": "4a7c91feae11749a13c8b9b618512d0adc88382689e45d51e55ffe558736b243"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/onboarding/DriverOnboardingScreen.kt",
+      "sha256": "36454f23eeb7f4ae0fb9ae39f8680962afa86db4e95c36093e4e64c017cee315"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/PendingCashPaymentsSection.kt",
+      "sha256": "cc8917e5cbf4ca2832d6b2bffa04cd042b5d53f7afa4bf31871b0ccb5f4e9c9a"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/location/ForegroundDriverLocationPolicy.kt",
+      "sha256": "51ddb3e4ca6946ebbbe42bf396bd347f1f7e2b7562c72dc5f880180208fd04ee"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/location/ForegroundDriverLocationResultGuard.kt",
+      "sha256": "99cc7e5f5390e5b94a0450c6c67cdb753d3acc19ae0cdf444b44558106922b31"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/location/OneShotLocationGate.kt",
+      "sha256": "6d8989a9c1fdb174f128cfa57909d73b211128c9280f6bbf1f05cf64c2ac5e63"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/maps/MapCameraFocus.kt",
+      "sha256": "db7a477ee1a85791777d2969dd139f1d3d07b24e671d1b36a2e8b89786c5a4ee"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/maps/MapLibreTripMap.kt",
+      "sha256": "ea4238313e96049cf39f9c92396487b859426f617b4c5b84f9d16c6385e71546"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/notifications/PushRefreshHintRelay.kt",
+      "sha256": "41dc97cc9913d5188067db67bb4d5b4137a68fe8d23467fa51f463464294c4c0"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/notifications/PushRegistrationRelay.kt",
+      "sha256": "991b6c62b8f5b22e55b541642acd4b0a369ecaaee43e1388ad026e5529adb27e"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+      "sha256": "8f7fb5c6f96c5f9f2c6c43cd2c0f5080401e228982b06a6a0770acb22b1b0e51"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PlaceDiscoverySection.kt",
+      "sha256": "029584d97a3d9b8f1aad625fb6bd7bfccab774ae7de117750489508263b90c3e"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/RecentDestinations.kt",
+      "sha256": "6329b83deaf1bfff29da4f4928b99dcd8baaa9f187357267c208dcb8d7c51547"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/realtime/LiveUpdateSubscription.kt",
+      "sha256": "d6f9a39a8674d59a23696aaca58f1c90a73cacb975cd67300705440548b7c600"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/rides/RideCoordinationSection.kt",
+      "sha256": "6ac15ea262d04df71c76d72c65cbf027e1fc09135da91d32d55f77a1d84f48d1"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/ConfirmDialog.kt",
+      "sha256": "21a752afa00324aca108db6c248c683e37ad6acdb4f008ac54286f81d04c068d"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/DriverCard.kt",
+      "sha256": "814cb03f035b8694e6a6ee6b33feed2cbc43278e94012b7e66a11374c9c0032b"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/FareBlock.kt",
+      "sha256": "a4cd7f71f25eb6ffa0e8bd744b8365b9faea471e7656a2efbea300d133f7d50e"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/MapFab.kt",
+      "sha256": "5724a0484c6abbf4b27744b487d541c074e94037dd9ea82de528df8ef1429412"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/MapToolbar.kt",
+      "sha256": "6571150276439bc613b02bd4cd85b27bb3c46917d75e5076fb71b968f0f7cd09"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/OfferCard.kt",
+      "sha256": "8659f077989418eab8a2863f6b47704197a9a3eeb72c73c49a208384a1fd5b0e"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/OptionalArtwork.kt",
+      "sha256": "68e4770aab3694b672ca611c440578fd8e526f646249ffe7d78a40ce749ae258"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/Skeleton.kt",
+      "sha256": "34e8f68e34d16656ca1e0fe82fc9814d0439417109c846d98bdc773d4a104180"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/SpecializedFields.kt",
+      "sha256": "e49f3084817e34a6d63cb155899bcd05833f4cff108a20b59aaab176f487eb4c"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/StatusPill.kt",
+      "sha256": "fdaf42fb4fedb43855297d85bdfbfff4d83e7eebfc3299ba630bed7e80503809"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/SuccessConfirmation.kt",
+      "sha256": "91f088c6694c7102e2ca3f38a612e1c0fafa0cca371a82b6938c4b4d095853e4"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiArtwork.kt",
+      "sha256": "6406943dbac3757163a27bec5ea5fba7443da8529a9c2c09b4ff2abbb9b0b137"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiButton.kt",
+      "sha256": "79850678ef2b2f006e06df68459750d787401873ffbcfe9f8dc544f0ff07e737"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiCards.kt",
+      "sha256": "7d06f49538d699c7b65b97f2a431f2458ac94d5d2dd16113bef07efb2e4b01b4"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiEntryFrame.kt",
+      "sha256": "e35c799a524baaae88f1bb873dde486b0e62d1b7d24ac74cc1bdf87782a91562"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiSegmentedControl.kt",
+      "sha256": "2f2cd10d4b7e25f37fb6e2891ae47922892c022b121b109827c4be2563bb8b16"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiSheet.kt",
+      "sha256": "2c34b0e978eb5836e648549dfaccfeaccee4d68534a06c48b43bcb641f13e699"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiStyleChooser.kt",
+      "sha256": "d95e2022e84b4cd60fa4da4659b628b7b7ab63481eeba8a70ddd3c8745c452b9"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiTextField.kt",
+      "sha256": "2b775e5c14b0fb70ca201db09f2709360189a9dafb23ebd4bca0ec3f92dc864d"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/ToastBanner.kt",
+      "sha256": "2ca4d92fb2944d437e92af9b8d0e8160c67ec932a0b5a556be5857c4105c43e6"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/text/BidiText.kt",
+      "sha256": "8184ffd4a03a2373df30e4ff7c8ff50836cbaed8b2aae70a2fc7478d8401e708"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/text/UiMessage.kt",
+      "sha256": "388d6d127bc73bf33156a81c4316c729f95dcc275d9fa5bbe22bd12d6aea6c0c"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/theme/TaxiColors.kt",
+      "sha256": "169d46d65a929fa564fb935350d6cbc996c19dab0898f9679aff6217b47868e5"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/theme/TaxiDimensions.kt",
+      "sha256": "0ab78f7576dbf82884512d5b634bb32c589354c89e2d9aeed2dbc241d020364a"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/theme/TaxiMotion.kt",
+      "sha256": "b0e4aea855c05bcf7af6022fd85e6df5a6e0788062d4d4963c115ba3523f02b1"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/theme/TaxiStyle.kt",
+      "sha256": "2047721ba13ef87253284ee3568e8278da327eb5534ad722c68eff71b8a2f785"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/theme/TaxiTheme.kt",
+      "sha256": "4c288ba853a76874a6518fdd0ce8565b6e783767a73d389f56883b84f71ae6fb"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/theme/TaxiTypography.kt",
+      "sha256": "fafbace9bc0e1c8d940ab4c8218e9585f3477fd2dc8512153ac60efcdd2beea1"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/core/network/ApiConfigurationTest.kt",
+      "sha256": "3fb2e29a26b913f442ab6044bd17c5291230a500c41cce8ac1f4392abd314f7c"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/auth/KtorAuthenticationCancellationTest.kt",
+      "sha256": "d4bbf75404aec2c3727ed3aa72cece48840147d1dd43a3b742f7b81443095011"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/auth/SecureTokenStoreTest.kt",
+      "sha256": "7de381300c3aac62677c09818abf2f0c722982049fdae4bdbac3c4b0c2e42dd2"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/cooperatives/CooperativeMembershipDecodingTest.kt",
+      "sha256": "caa0761ac895ada04254e01f4757327161bf442cc00d1a0f993651e0dca365fc"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/drivers/DriverCredentialDecodingTest.kt",
+      "sha256": "1954f39771d0a51342ffa366af3ba11cf6e1a6bcd99f1bbfb4bc1be1de353f9d"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/drivers/DriverEarningsDecodingTest.kt",
+      "sha256": "f0a62666f67564b837e8d0827c7ef1527430b4913b235977f66b17141a08acf3"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/drivers/DriverOfferEconomicsDecodingTest.kt",
+      "sha256": "50b415bbad04fc73af8f53302c2432a9b7fdb0af7a77871d8c510f59ea29f5e5"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/drivers/PendingCashPaymentsTest.kt",
+      "sha256": "13d9891383d244cc5f617a065f43bd47097003a33142a09c731a4cc519c971b8"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/network/TaxiMobileHttpClientTest.kt",
+      "sha256": "e5cb5aded8a312497ae0a1d3027580d7850f17a85f20ac597db450c546d6eda5"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/places/PlaceLanguageTest.kt",
+      "sha256": "c33df84872a92d9d6ecdb304713825f07cba64bca9a9aa2502a5d4443b9efa2f"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/realtime/KtorLiveEventGatewayTest.kt",
+      "sha256": "2718572d72b40c0fcc6230d3a8026aed98302d85ee118d6e900d186196a412b8"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/rides/FixedRouteCatalogDecodingTest.kt",
+      "sha256": "d75a98308d239779399fb5b0f062d5809e5c3e4be73b8b0e2d4e7b1def73b052"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/rides/RideCoordinationDecodingTest.kt",
+      "sha256": "eff822539f5ede79733efcf76fff9911ec2d65c2ae01cd883e27d60d4397cde5"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/rides/RideHistoryDecodingTest.kt",
+      "sha256": "5eca0cd57c7bcd9abc2e98b7829164fe8cdb4d5a24c3b9611f2db32a4cc4c4f4"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/rides/RideReceiptDecodingTest.kt",
+      "sha256": "9e3e54ea2210e375484518ddd54ceda1d15dd0a10a66da2b0a962f0a94d4aea6"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/routing/RoutingLanguageTest.kt",
+      "sha256": "9bc1bc44e9c71aece545b67afc3c75bae7fd41a0211b1506e7f555b421fe7615"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/safety/SafetyReportDecodingTest.kt",
+      "sha256": "b88435fda995b450317f8ae4fb0b4dc7345e9257dbef2531d3927e830d6805b3"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/scheduling/ScheduledBookingDecodingTest.kt",
+      "sha256": "a591bdcc5f22031106541f12a2057663c71b411c4a99b9f9f7741dcc285e907d"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/domain/drivers/DriverEarningsTest.kt",
+      "sha256": "5494e75466027541ba59acbc3b67c38399d6db7a8a8f50c87194fea55e68541e"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/domain/drivers/DriverLocationObservationTest.kt",
+      "sha256": "d46cfcd159f7d64677a18788d75763c4ca5dbd1a2dcf6d232d505740c5836223"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/domain/rides/FareEstimateTest.kt",
+      "sha256": "a4847d47b514afcc416a412d2b27596862c0280b47585e401a48d3052047ecae"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/app/AppActionTest.kt",
+      "sha256": "dc49ccaffde2d5809c408e5c0419f97061639ebb91d58092a6c53fb858183648"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/app/AppUiStateTest.kt",
+      "sha256": "93a80961418f867df830c6d6dd0e5934ec8c2f99107434940b82e34298dd9429"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/app/ClientCompatibilityCoordinatorTest.kt",
+      "sha256": "446e566623ef9f031a9dac957060b69a46132b2c05fb000a7f6b702653b2c768"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/app/MobileAppCoordinatorTest.kt",
+      "sha256": "044787a80ddb3b32665e55b72c2801db1b0e4c3de8e66638b69ad7c9fe9228da"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/app/NotificationPresentationTest.kt",
+      "sha256": "ba68201aa2eb1d7530be26df116373fb8186a06c9857d5fdf9f48b11ae5f7187"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/app/QuoteSessionRecoveryTest.kt",
+      "sha256": "2aaa01df3728dea32540a3a2f8c57599c5e8c2b2491a77ad01f339ddfcb19cc8"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/app/RidePresentationMappingTest.kt",
+      "sha256": "41f82e60f49cd4c64f23fb59ad7e538e4c834db1e0072f5e8ac38889ed361f08"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/auth/AuthenticatedReadRecoveryTest.kt",
+      "sha256": "7ee70996354dfb59e03158cd888d6fdeb28f2123a02d90f2f899a3ca8cfb01cb"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/auth/AuthenticationSessionLifetimeTest.kt",
+      "sha256": "a2073578efd29ccf74d95e9f0bc13fee8b176d9cad098a5352371471ff86a882"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/auth/AuthenticationSessionStorageTest.kt",
+      "sha256": "8209b041ebcbce31ff196d3abf05dd674c73e062500524f5eaaa80281a14e7e8"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/auth/AuthenticationStateTest.kt",
+      "sha256": "cf8d4e81dd452408bb52267dee291e2ea3588b71c817a48909660fa3d367d724"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/auth/RegistrationInputTest.kt",
+      "sha256": "d33aed181f68ce9dd7e0ebfb1eb4156ef9b94ea439e95248d110980d429e910c"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/connectivity/ConnectivityTest.kt",
+      "sha256": "b0f9aee755b4f836a769351f0d53bf7e1edfca6df84040558a3f00c1110cafae"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/driver/OfferCountdownTest.kt",
+      "sha256": "d9ba01c3e1c55f47a9a4e7a37eee916ee7079cd36bd8f40afc18055528a79b4b"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/driver/onboarding/CityAuthorizationPresentationTest.kt",
+      "sha256": "ec8f5fcbc73133f1dccbd8587230c16b9af5761e8256f023ec9c4a40147e086a"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/location/ForegroundDriverLocationPolicyTest.kt",
+      "sha256": "e75e390fc647c0ed4639619d8efca552474519ff70261a56d609a73b43e35799"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/location/ForegroundDriverLocationResultGuardTest.kt",
+      "sha256": "ad2c3ab0cf3181822b64b959e81da868efc5b75119851c7ce5c6a8212b823a1b"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/location/OneShotLocationGateTest.kt",
+      "sha256": "f33da0d767527792b06752ae0d24fc66c4275531e4468d3d42f2c0e95647f13b"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/maps/MapCameraFocusTest.kt",
+      "sha256": "d06b7455306ea29050cbcab860e9e8bed22c5d72e1aaf157fda44badeae09a59"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/maps/MapStyleFallbackTest.kt",
+      "sha256": "b79d75ab688ddffaf03a6e299ef38d185b3e53e74a0fc7466eb4fa4dfde3f1ed"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/notifications/PushRefreshHintRelayTest.kt",
+      "sha256": "0652a6ee6e5ad0fa4a370c2e25798b8d3c2a1a1dc5725c2e24af332faa44837f"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/notifications/PushRegistrationRelayTest.kt",
+      "sha256": "74f64d3517a8051677d7f47dfbb59de4cfa38af107ae6c101ec236dd23fc50a6"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/passenger/PassengerReverseSelectionTest.kt",
+      "sha256": "003df254e42e0e7b3d21c8f3a8b9e4db158801fff4a7551573986bbc2eabd0ae"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/passenger/RecentDestinationsTest.kt",
+      "sha256": "1ae186518d29344a9432c6060ff1cbc166ba32dd6dbbb246bfb7211ef3d4c2fb"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/realtime/LiveUpdateSubscriptionTest.kt",
+      "sha256": "679ce0d501a99eb2dd6b82fcb15d0d68f53ca49d8ce322c143ed53d0f04f11bf"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/ui/components/SpecializedFieldsTest.kt",
+      "sha256": "6cb0289c07d1c54356b30398b2ac587b8c79fd78a6112b58f3c57645baf6651d"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/ui/TaxiDesignTokensTest.kt",
+      "sha256": "312f729de03ff201fd601561cbf054f029ad4af176544de103b83b9f5e9cf886"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/ui/text/BidiTextTest.kt",
+      "sha256": "e851b4627115267f57b63f5d46e2758d94048fbdc6814063d34f535c0db1d9c2"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/ui/theme/TaxiColorContrastTest.kt",
+      "sha256": "4a68275cad5cece345fe616f9d9c1c36aaf95a7c89621aa9cb8b7afe743d6b41"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/ui/theme/TaxiStylePreferencesTest.kt",
+      "sha256": "f4acb2c017e5b2cec8e28ddba3131097c62d23268b5ca72381c5063f8ebf6355"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/SharedCommonTest.kt",
+      "sha256": "d8393eb71aac0a1e75a6061079008eb6cede3faa581dd53129e3cf861a87eec3"
+    },
+    {
+      "path": "TaxiMobile/shared/src/iosMain/kotlin/org/example/taximobile/data/auth/IosSecureTokenStore.kt",
+      "sha256": "3b563e40f2dda0af92e835f878243e33d7f0c225371ffaa4b73274a3915000d2"
+    },
+    {
+      "path": "TaxiMobile/shared/src/iosMain/kotlin/org/example/taximobile/data/network/KtorClientCompatibilityGateway.kt",
+      "sha256": "b9f39c557b72f317a6b225780c046959cd6dd24d38c30996b082d9747412a732"
+    },
+    {
+      "path": "TaxiMobile/shared/src/iosMain/kotlin/org/example/taximobile/feature/maps/MapLibreTripMap.ios.kt",
+      "sha256": "407d14f39881caf8b7f9423ebb2c3c9dfa0b9e5b4d71ddc0900d5e5384e8edf3"
+    },
+    {
+      "path": "TaxiMobile/shared/src/iosMain/kotlin/org/example/taximobile/feature/ui/theme/TaxiStylePreferences.ios.kt",
+      "sha256": "70ef323204e955857f0f75287ca8691944fc1d6c55dfde4d84d834ee01f3dfe6"
+    },
+    {
+      "path": "TaxiMobile/shared/src/iosMain/kotlin/org/example/taximobile/IosAppDependencies.kt",
+      "sha256": "4332c74efb01661ceb51ea4704a2f1181385a8c1eda8743246fc210473c8e6b0"
+    },
+    {
+      "path": "TaxiMobile/shared/src/iosMain/kotlin/org/example/taximobile/IosConnectivityObserver.kt",
+      "sha256": "377e0aedbc69c10165ffed760ba97fcd61d5055c0c9770152cefa65b730db6b1"
+    },
+    {
+      "path": "TaxiMobile/shared/src/iosMain/kotlin/org/example/taximobile/IosCurrentLocationRequester.kt",
+      "sha256": "9766f3f007524c347ce5a1eef5759d144c087cf5a716c3634549ee5591e61b70"
+    },
+    {
+      "path": "TaxiMobile/shared/src/iosMain/kotlin/org/example/taximobile/IosPushRegistration.kt",
+      "sha256": "6365aaff46d4e6ef4bead76fb66080483f8f929d0fbf5c84c142b6ab597c446f"
+    },
+    {
+      "path": "TaxiMobile/shared/src/iosMain/kotlin/org/example/taximobile/MainViewController.kt",
+      "sha256": "3b04c1b20839e240c1793536a4bed3e7bbd72b276772f2f60b036cccfbb95ec9"
+    },
+    {
+      "path": "TaxiMobile/shared/src/iosTest/kotlin/org/example/taximobile/SharedLogicIOSTest.kt",
+      "sha256": "dc9fab48a79fb5d92d7344caa57036c959d798d1c9f185ae065026a047e6482c"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jsMain/kotlin/org/example/taximobile/feature/maps/MapLibreTripMap.js.kt",
+      "sha256": "958b8862d95c923f40c9604d45107548b41fe1e4b73dde6ab6eee82c530c9169"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jsMain/kotlin/org/example/taximobile/feature/ui/theme/TaxiStylePreferences.js.kt",
+      "sha256": "bddee2bf07f18ff5e6291caf3804a29e295a786c67b30639360852c44bbb2397"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmMain/kotlin/org/example/taximobile/feature/maps/MapLibreTripMap.jvm.kt",
+      "sha256": "958b8862d95c923f40c9604d45107548b41fe1e4b73dde6ab6eee82c530c9169"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmMain/kotlin/org/example/taximobile/feature/ui/theme/TaxiStylePreferences.jvm.kt",
+      "sha256": "fa42032fede8975ba024e1cd53f7304f7beacae04d17622b9481ac526d0545be"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/CriticalStateUiTest.kt",
+      "sha256": "50ec1f6c6f5cce66a76c081cbc1ba4c3d97927f9ef52fa5a02bda0587f4c018b"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/DriverCompletionLocationUiTest.kt",
+      "sha256": "6e92e6395631ad9fec19e00d1ced860483f52098bc0216a8923a23b35451a214"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/DriverOnboardingInsetsUiTest.kt",
+      "sha256": "ed9c78d89432b8c9ab9b7f2738ac1d8839cb460fe00851f36853b30b299064a9"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/GatePageInsetsUiTest.kt",
+      "sha256": "3e56cbc1881921ca54e1b061d4ac4f51e28d9f6780f017cae62d6c9a650588c8"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/MapSheetInsetsUiTest.kt",
+      "sha256": "ff5ad487a8ce9b15f24bccebbbe45a8398af4dc74d6fbbeb47beacf61908cc67"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/MapToolbarInsetsUiTest.kt",
+      "sha256": "e8d9d62914bf532aa100a678decf85a6b7dc776ee9e38d8cc7889f94f1f6a7bb"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/PassengerIdlePeekUiTest.kt",
+      "sha256": "0d8ea74ca4892534cd957a486a86e99111c93be89fa6d60b330f3e4b637ff029"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/PendingCashRecoveryUiTest.kt",
+      "sha256": "bd779c7bc45822ae15786e2942defc3bd60733671224040f0d02dc04ece86e44"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/StyleLanguageRenderTest.kt",
+      "sha256": "9e0bc9db4d4b7163ced44c0c0a0c5c8132a78126a56e0943de588e5c18a0d180"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/StyleSwitchUiTest.kt",
+      "sha256": "d60b170a35b5f827aa698339792d120377f41ce9d3ecb4dcc781be7af7fb1c8f"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/passenger/PlaceDiscoveryFreshnessUiTest.kt",
+      "sha256": "77922b62c5939ee5e853c8aeb015d160a0eac2d9d32860780ad8d2b406d8f8a0"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/rides/RideCoordinationSectionUiTest.kt",
+      "sha256": "82cde824d80514e4615e1205a9b4e51127f0f9b54756ef0286d102e3d46a287e"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/ui/components/FarePresentationUiTest.kt",
+      "sha256": "199a0fc1f80c7f5fb27f6c333329c6f868180a8d0b2c12e6d0c6eb16bcfb27c1"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/ui/components/OptionalArtworkTest.kt",
+      "sha256": "91d07d1a56b1cf9068751f4b5267a8db4e869f150c4dc0e63ce4d5975d9a72c4"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/ui/components/TaxiArtworkUiTest.kt",
+      "sha256": "4d753ccec7a880a5b868d0e935f3a4b43d4f82624ec10d971ff70b63003c2b06"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/ui/components/TaxiSheetUiTest.kt",
+      "sha256": "f5d3606210ffa1c1083225edd3b507c5c39e1bf600eef833c5d8dd52b50bd314"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/SharedLogicDesktopTest.kt",
+      "sha256": "73ced82ab69c9ff2427c786652747572d6957b60e2d3dadbf8066593c5b22e5f"
+    },
+    {
+      "path": "TaxiMobile/shared/src/wasmJsMain/kotlin/org/example/taximobile/feature/maps/MapLibreTripMap.wasmJs.kt",
+      "sha256": "958b8862d95c923f40c9604d45107548b41fe1e4b73dde6ab6eee82c530c9169"
+    },
+    {
+      "path": "TaxiMobile/shared/src/wasmJsMain/kotlin/org/example/taximobile/feature/ui/theme/TaxiStylePreferences.wasmJs.kt",
+      "sha256": "29dcf29b77b5998e1889f41c3dfc00decb8f37813183e1213ece616af38d61d5"
+    },
+    {
+      "path": "TaxiMobile/shared/src/webTest/kotlin/org/example/taximobile/SharedLogicWebTest.kt",
+      "sha256": "0ee14236475301e78845e3be4edb4db699e8c65efb8a4d33a5dc8920dc35e8b0"
+    },
+    {
+      "path": "TaxiMobile/webApp/build.gradle.kts",
+      "sha256": "bc60c2f4d534b950055b02d81a6b4dcc6effd57fae9ae654647865951d0af8ad"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/jsMain/kotlin/org/example/taximobile/applicant/state/BrowserDriverDocumentPicker.js.kt",
+      "sha256": "ac8009700e98dd57079c6722e91ae8a147cbbd85da5f0eab86af50bc4b23d9ac"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/jsMain/kotlin/org/example/taximobile/operations/state/BrowserProtectedDocumentDownload.js.kt",
+      "sha256": "73aa1a49f23ebbf842306f6cac987b4f46f511e82634981192e96062b6e6e272"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/wasmJsMain/kotlin/org/example/taximobile/applicant/state/BrowserDriverDocumentPicker.wasmJs.kt",
+      "sha256": "26f6538b85ee2feb331924df4bcf7e9064eca4f70bca0da0fd300c57e69cf444"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/wasmJsMain/kotlin/org/example/taximobile/operations/state/BrowserProtectedDocumentDownload.wasmJs.kt",
+      "sha256": "73aa1a49f23ebbf842306f6cac987b4f46f511e82634981192e96062b6e6e272"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/state/ApplicantPortalCoordinator.kt",
+      "sha256": "93043cc9cea2e53597428816e9233ea89eb80070aac63f5dc8482c7aacfdb0ff"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/state/BrowserDriverDocumentPicker.kt",
+      "sha256": "9b0d8c5ba5ca7665355bd242c8645eca501354472135aa3e430bb7ce11815cc3"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantApplicationEditor.kt",
+      "sha256": "274723b1bdbcdc42bd98fe5a7aa1c31395ac53df8392ac51f52abc214c7445ac"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantComponents.kt",
+      "sha256": "d42f5cef977e9035c8365ea568d0b9432f03828309dab7ac067279c3b67e085c"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantPortalApp.kt",
+      "sha256": "ba53b9c7bd69b8338b003a476b52759cc50bcaf3f483d5bb35d41f988498f299"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/application/OperationsEnvironment.kt",
+      "sha256": "cbd39855562bfe0fe2da4b035678718d12fa15d05612eca124ad8d61aa9556e4"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/application/WebSurface.kt",
+      "sha256": "9d3e9ee11638e820e6956484439032c7378d388cc1605bdd665d486633d4b41c"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/main.kt",
+      "sha256": "0f739b62e0032bcf00173a3f1bd18492f770d8c5ed12d9aea8cda3ad60f7adc8"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/data/AccountSecurityGateway.kt",
+      "sha256": "da84124eea6169196be87cb634bd85019e955a6083d218676db28f736a6c1d8f"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/data/CaseOperationsGateway.kt",
+      "sha256": "f13f4dbfbf945d5e36ed6105305328849da3c4f2b6abe4c33e2fbe2cfbd868b7"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/data/ControlPlaneGateway.kt",
+      "sha256": "c51f2eb8f0049b5cac721f4d4fe04c980279de99f31a9e3eef25133d5a31d0b9"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/data/FixedRoutesGateway.kt",
+      "sha256": "105d729de7de5d2351213ba2eb5faf07140125a4c285f7a64a429b4acda0bcc6"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/data/OperationsApiEndpoints.kt",
+      "sha256": "140bf14857f3e8170adfd682f0e188a2e4bdd0c1817f4c966a6b8433a6fb3584"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/data/OperationsGateway.kt",
+      "sha256": "f5adfaceb19fcfad75967559265b85ac5e7679343dd50d65e1adf2bf38ff5c6e"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/data/PaymentOperationsGateway.kt",
+      "sha256": "afa85e464b9749c1d8ff6fdc3bf1037cbca56f924042928fd861c3e8c2f693cd"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/data/PricingEconomicsGateway.kt",
+      "sha256": "393153b683b5346efdcd5aa94b2a7b24f0f8febc6d22b71275a80fdfa0774a70"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/data/SecurityIncidentGateway.kt",
+      "sha256": "92ba90b389bd17dfa46b45d21a5e2b9d7fc143d6c1131449a0a4ebebbdb47db0"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/data/StaffAccessGateway.kt",
+      "sha256": "cb8ca0a59c000e51849206888b02cc29040821d5dbc02ecaae4e183380f0b42a"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/model/AccountSecurityModels.kt",
+      "sha256": "e3c823c24901faba23874263eb64ef4152def62ef5f1308d50f8f28ba2e873b7"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/model/AnalyticsModels.kt",
+      "sha256": "50f20bb6c753a6c1ca8baa37a09dc02ce2b84689b8e5b288446fea9836477c11"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/model/CaseOperationsModels.kt",
+      "sha256": "28f56e9e58b5e4dcf69b26b16d80fc58266b427499ecd4066e55bc64b9fba7bf"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/model/CityAuthorizationModels.kt",
+      "sha256": "b8dcb8c788cf5cb8b595aff34bf2262eba121840b8ed9e0f4e4c0145bb06c6b0"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/model/ControlPlaneModels.kt",
+      "sha256": "db1726f7a46073c60c8aeae8eae5dadb31e0d991d0b7575d9c8296f637ba360b"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/model/FixedRouteModels.kt",
+      "sha256": "d444ec157e95d0ce62924d8dd4cd1779d243095f8489d816c1f183d6c8641b1d"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/model/OperationsModels.kt",
+      "sha256": "92d0ab538fb96787c663be7052825604bbe3863d1e56907d9dc3650e3f92d9f4"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/model/PaymentOperationsModels.kt",
+      "sha256": "dd90e99c76c998ec0aab87a9d7a87e4d1839bc606c61911721e32b6f0986ea76"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/model/PricingEconomicsModels.kt",
+      "sha256": "4b62b270b4f5de55b7151dfb9c5950a160a1d57ad672c7059b2bd30c17778abd"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/model/SecurityIncidentModels.kt",
+      "sha256": "ff2919814659e40054d32b12d5b55bd8217310c6c6e459de33f7e81a9c89ec57"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/model/StaffAccessModels.kt",
+      "sha256": "a715ed6856fdaaf07788c71dc18a08c1421d6a6d11add778da0516877a1cc886"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/state/BrowserProtectedDocumentDownload.kt",
+      "sha256": "a1dbf51ee4eea22c4a62cc00e50d28933d2495da98b52f60ae468900bf7e9379"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/state/OperationsCoordinator.kt",
+      "sha256": "cf1e604d696f0c3786837e2a08a030162d73ca5b4613d247042b87098334b174"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/AccountSecurityScreen.kt",
+      "sha256": "92cbb398953c84431ff6cbcf5000e41ce9c1ffba2d10d3b5a98ab9a85f276648"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/AnalyticsScreen.kt",
+      "sha256": "d647f0e3ad188aacbf2006f7a7f4ee7a783880736868b603ded73ac57be0c4c0"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+      "sha256": "cbf863c33aa612fca956dbdb0efd40972c3107f0909724b70bf3c8296a4ed260"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CityAuthorizationReview.kt",
+      "sha256": "9d13dee5fdcc9bd150f7a0bfa4981ff1b065d155f2eb66eff257ab6d63f97b52"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/ControlPlaneEditors.kt",
+      "sha256": "3a47891691a67f60c7a58fc7a413d84419e21ebc3c7872de94fcac7b7e8db6ee"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/DriverRecruitmentScreen.kt",
+      "sha256": "795c7aa17bdb8a2c350f23cd120b6d5b0a0efae5dd076ccbac8a340d8b550fba"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/FixedRoutesScreen.kt",
+      "sha256": "fcf66a0cf103a54e80762c5843577a2e1fbbe8d9792cdefb0d55e5368122d169"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsApp.kt",
+      "sha256": "f76d0f8cca67ab4bd663414b3677bae6e82f7e2773878050926a9a3f63111c3a"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsComponents.kt",
+      "sha256": "dd10ac54f5dfabfabdadcde6ed79b478ae87e38b2f37dbbfec119bc482782d07"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsScreens.kt",
+      "sha256": "f48a0c11a2346a445ab58e6f7b7c907188b491ca29acb7bd317e2d5ebcfe4ab1"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PaymentOperationsScreen.kt",
+      "sha256": "784f99b25104394ddca5fe3cc098fb44383d9391c04063a6718c17f177f13c24"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PricingEconomicsEditors.kt",
+      "sha256": "5e6f3ffec551f07355056099dc1ab78a5bf70726e338779892982c88fca3e8b4"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PricingEconomicsScreen.kt",
+      "sha256": "883b5d5e1d95b0b6f39073865900a2d5f2745b8f0762d15fc76f22156f2cc995"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/ScheduledExceptionsScreen.kt",
+      "sha256": "2eb2b4d3cf6edc81d0bcaaf8bfc99706a5dfea6aea70b9e79432cdc2631589a8"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/SecurityIncidentScreen.kt",
+      "sha256": "72fbfe4412b897fb129c7143893bc5bf5dd252c609faa0c5ba8dae4d20f613f4"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/StaffAccessScreen.kt",
+      "sha256": "6435ff0b9ee02bbd2354664fb27a72450646c18cf2cc7678c1d42f40efd50874"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/resources/compatibility.js",
+      "sha256": "02950c7dec931fba6e213ef6a0c6cd1de899d8d1a6646a10b4ebb5d23ef9263f"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/resources/favicon.svg",
+      "sha256": "5b58cc1227a6fd4180a0ab733c6a6e4938964be3cccbab66d20c8460921b37fc"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/resources/index.html",
+      "sha256": "4565a815e89c563506cb3b818f22ca7abd2dcef49c5316b94f7e5e36f55e1ec0"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/resources/styles.css",
+      "sha256": "cf6765ed796e87d229ab283c5474621905bcd6baedde31d2cd89ce3308de008d"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webTest/kotlin/org/example/taximobile/applicant/state/ApplicantPortalCoordinatorTest.kt",
+      "sha256": "73a0dce19b69cdc9a1896f903b632b1b29dfbd5f65432ce8a79c31b0c67a6a08"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webTest/kotlin/org/example/taximobile/application/WebSurfaceTest.kt",
+      "sha256": "ab5e4af08432560672ab3dddb700e9b44fb250f87c696ae5a4465439475670e1"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webTest/kotlin/org/example/taximobile/operations/data/OperationsApiEndpointsTest.kt",
+      "sha256": "4568329ba73d05445867d756b92a8cdaa864ae45f9182b1f50ad043e40f3a80f"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webTest/kotlin/org/example/taximobile/operations/model/AccountSecurityModelsTest.kt",
+      "sha256": "1e83a6f2f83c5151dff720af9b20d6d30905d374a411893038a74c39bf7292b0"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webTest/kotlin/org/example/taximobile/operations/model/AnalyticsModelsTest.kt",
+      "sha256": "7823b53aded5cba505fdc22dc039c0024191235b7cff2cc84ca0aaee0b5292a1"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webTest/kotlin/org/example/taximobile/operations/model/CaseOperationsModelsTest.kt",
+      "sha256": "c7d44531989382fbebe99cbbd445e6e32db7a9df1c2c805a22f77d3cd1ff759e"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webTest/kotlin/org/example/taximobile/operations/model/CityAuthorizationModelsTest.kt",
+      "sha256": "a8f26eda842004643e1894bd0ceb88885f7def642c7f2d1fa655e98cf379e439"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webTest/kotlin/org/example/taximobile/operations/model/ControlPlaneModelsTest.kt",
+      "sha256": "398f8313f7a990a8541d42e6be697ab8f7f3f6e8e97455d33c66feed33115514"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webTest/kotlin/org/example/taximobile/operations/model/DriverRecruitmentModelsTest.kt",
+      "sha256": "3112a2cdc64b86bac6db800464474dc6c0813233c6acadb58c3f0d3cb1687d40"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webTest/kotlin/org/example/taximobile/operations/model/FixedRouteModelsTest.kt",
+      "sha256": "fcabddc6dc9d404a43c93062463d252a420a3d5f371e946bdf097c7e65adfd0a"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webTest/kotlin/org/example/taximobile/operations/model/OperationsModelsTest.kt",
+      "sha256": "cf2cb184679d1b1d65defdd5397936427f96ac6449772cb844e5a28f051d9b73"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webTest/kotlin/org/example/taximobile/operations/model/PaymentOperationsModelsTest.kt",
+      "sha256": "6cb9bc9d66d3e60ec08501d9f5f3d8d60578eeff05904045af04303b8a22e50b"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webTest/kotlin/org/example/taximobile/operations/model/PricingEconomicsModelsTest.kt",
+      "sha256": "d8b230232d416bc5f82ea4ffb74f6593c22e894c10b4444bfc21b3abe533e19f"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webTest/kotlin/org/example/taximobile/operations/model/SecurityIncidentModelsTest.kt",
+      "sha256": "28b50fb252891848e62c1b6ab5f645da39916fe7b186b8658f237e6aedacd2db"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webTest/kotlin/org/example/taximobile/operations/model/StaffAccessModelsTest.kt",
+      "sha256": "8de377d553dcd509fd0ecfb62cf34903c4d3b22f84e37ad07ecac7a55e554798"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webTest/kotlin/org/example/taximobile/operations/ui/DriverRecruitmentScreenTest.kt",
+      "sha256": "3070fb55f4338cb10923b0d1c1ade8a9b93788fea271eccfcacfa039cb407495"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webTest/kotlin/org/example/taximobile/operations/ui/OperationsComponentsTest.kt",
+      "sha256": "24bace109d22f08f89b3ba2fcd40fe2f479618d0324e706d5733bb06823a1189"
+    }
+  ],
+  "limitations": [
+    "final candidate repeat rehearsal pending",
+    "physical Android deferred by owner",
+    "web FR/AR incomplete",
+    "iOS source only on Windows",
+    "not all 213 views accepted",
+    "not a pilot or public release"
+  ],
+  "web_candidate_manifest": "candidate.json",
+  "native_change": "Location acknowledgement preserves latest projection without full dashboard reload; session/phase fenced"
+}

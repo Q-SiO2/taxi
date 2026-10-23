@@ -3,8 +3,12 @@ package org.example.taximobile.operations.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -15,11 +19,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextDirection
+import org.example.taximobile.feature.ui.text.ltrIsolate
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import org.example.taximobile.feature.ui.theme.TaxiSpacing
 import org.example.taximobile.operations.model.CityAuthorizationAction
 import org.example.taximobile.operations.model.OperationsCityApplicationRecord
 import org.example.taximobile.operations.model.cityAuthorizationActions
 import org.example.taximobile.operations.state.OperationsCoordinator
+import org.jetbrains.compose.resources.stringResource
+import taximobile.shared.generated.resources.*
 
 @Composable
 internal fun CityAuthorizationReview(
@@ -32,46 +41,47 @@ internal fun CityAuthorizationReview(
         mutableStateOf<CityAuthorizationAction?>(null)
     }
     Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
-        SectionHeading("City authorization", "Decisions apply to ${application.cityCode} only.")
-        StatusBadge(authorization.status)
-        Text("Valid until: ${authorization.validUntil ?: "No recorded expiry"}")
-        Text("Existing rides and commitments keep their history. New work must pass the current eligibility checks.")
+        SectionHeading(stringResource(Res.string.web_auth_title), stringResource(Res.string.web_auth_scope, ltrIsolate(application.cityCode)))
+        StatusBadge(authorization.status, label = recruitmentLabel(authorization.status))
+        Text(stringResource(Res.string.web_auth_until, authorization.validUntil?.let(::ltrIsolate) ?: stringResource(Res.string.web_auth_no_expiry)))
+        Text(stringResource(Res.string.web_auth_history_notice))
         cityAuthorizationActions(authorization.status).forEach { action ->
-            OutlinedButton(onClick = { pending = action }, enabled = !locked) { Text(action.label) }
+            OutlinedButton(shape = RoundedCornerShape(TaxiTheme.radii.Md), onClick = { pending = action }, enabled = !locked) { Text(recruitmentLabel(action.name)) }
         }
-        if (authorization.status == "REVOKED") Text("A new application is required after revocation.")
+        if (authorization.status == "REVOKED") Text(stringResource(Res.string.web_auth_new_application))
     }
     pending?.let { action ->
         var reason by remember(authorization.id, action) { mutableStateOf(action.reasons.first()) }
         var confirmation by remember(authorization.id, action) { mutableStateOf("") }
         AlertDialog(
+            shape = RoundedCornerShape(TaxiTheme.radii.Lg),
             onDismissRequest = { if (!locked) pending = null },
-            title = { Text("${action.label} city authorization?") },
+            title = { Text(stringResource(Res.string.web_auth_question, recruitmentLabel(action.name))) },
             text = {
-                Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
-                    Text("City: ${application.cityCode}")
-                    Text("Authorization: ${authorization.id}")
-                    Text(if (action == CityAuthorizationAction.REINSTATE)
-                        "The backend will recheck eligibility. Reinstatement does not extend the expiry or put the driver online."
-                    else "New assignments in this city will be blocked after this decision. Handle existing rides through the normal support workflow.")
-                    Text("Review reason")
+                Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
+                    Text(stringResource(Res.string.web_auth_scope, ltrIsolate(application.cityCode)))
+                    Text(stringResource(Res.string.web_auth_id, ltrIsolate(authorization.id)))
+                    Text(stringResource(if (action == CityAuthorizationAction.REINSTATE)
+                        Res.string.web_auth_reinstate_notice else Res.string.web_auth_block_notice))
+                    Text(stringResource(Res.string.web_recruit_review_reason))
                     action.reasons.forEach { value ->
                         TextButton(onClick = { reason = value }, enabled = !locked) {
-                            Text((if (reason == value) "Selected: " else "") + value.replace('_', ' '))
+                            Text(if (reason == value) stringResource(Res.string.web_auth_selected_reason, recruitmentLabel(value)) else recruitmentLabel(value))
                         }
                     }
                     OutlinedTextField(confirmation, { confirmation = it }, Modifier.fillMaxWidth(),
-                        label = { Text("Type the full authorization ID") }, singleLine = true, enabled = !locked)
+                        label = { Text(stringResource(Res.string.web_auth_type_id)) }, singleLine = true, enabled = !locked,
+                        textStyle = MaterialTheme.typography.bodyLarge.copy(textDirection = TextDirection.Ltr))
                 }
             },
             confirmButton = {
-                Button(onClick = {
+                Button(shape = RoundedCornerShape(TaxiTheme.radii.Md), onClick = {
                     coordinator.decideCityAuthorization(authorization.id, application.optimisticVersion,
                         action, reason, confirmation)
                     pending = null
-                }, enabled = !locked && confirmation.trim() == authorization.id) { Text("Confirm ${action.label.lowercase()}") }
+                }, enabled = !locked && confirmation.trim() == authorization.id) { Text(stringResource(Res.string.web_auth_confirm, recruitmentLabel(action.name))) }
             },
-            dismissButton = { TextButton(onClick = { pending = null }, enabled = !locked) { Text("Cancel") } },
+            dismissButton = { TextButton(onClick = { pending = null }, enabled = !locked) { Text(stringResource(Res.string.web_cancel)) } },
         )
     }
 }

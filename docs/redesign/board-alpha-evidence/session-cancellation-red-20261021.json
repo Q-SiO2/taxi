@@ -1,0 +1,41 @@
+{
+  "verified_utc": "2026-10-21T18:41:30.747770+00:00",
+  "baseline": "Exact v19 production sources; four new meaningful common authentication cancellation regressions",
+  "native_rejection": "native-v19-session-recovery-rejection-20261021.json",
+  "activity_diagnostic": "v19-native-activity-owner-diagnostic-20261021.json",
+  "result": {
+    "tests": 4,
+    "failures": 3,
+    "errors": 0,
+    "skipped": 0
+  },
+  "failed_cases": [
+    "cancelled_ui_during_protected_save_does_not_drop_the_rotated_pair[jvm]",
+    "staged_logout_after_cancelled_rotation_revokes_the_new_pair_and_never_reopens_hints[jvm]",
+    "cancelled_ui_after_server_rotation_still_commits_the_issued_pair[jvm]"
+  ],
+  "archive": ".tools/alpha-delivery/session-cancellation-red-20261021",
+  "sources": [
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/auth/AuthenticationSessionCoordinator.kt",
+      "sha256": "b35c59a1f98b09e9158c9992f57d21d940c57ec62c3c4f42f3dcc28b8568ba55"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/auth/AuthenticationSessionCancellationTest.kt",
+      "sha256": "c278e614828300b761998e392086526e53c2321fb6622bf137adaaefaca3be8c"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/kotlin/org/example/taximobile/AndroidAppDependencies.kt",
+      "sha256": "7859bf18c04193163f1bb0c693f2454a5bf07bb3631a6cf72664771cea5d21b8"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/kotlin/org/example/taximobile/MainActivity.kt",
+      "sha256": "a4117bd3564b165a348d0cd6574fc40579b9e8e3b61334fb0e7cd069e81faaeb"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/kotlin/org/example/taximobile/TaxiMobileFirebaseMessagingService.kt",
+      "sha256": "c036141de4c9f20ecc9c34a46970d48da9227e0df3bc9a944ce49792f871e199"
+    }
+  ],
+  "scope": "Deterministic cancellation/rotation defects are reproduced. This does not by itself attribute all native proxy requests to a token family or accept an Android dependency owner."
+}

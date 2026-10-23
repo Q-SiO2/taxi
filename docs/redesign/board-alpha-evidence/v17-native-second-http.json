@@ -1,0 +1,82 @@
+{
+  "candidate": "candidate-native-v17.json",
+  "run": "v17-native-second.json",
+  "source": "Railway API proxy logs; native ktor-client POST requests in exact second interval",
+  "deployment_id": "e5e108a0-e5dd-4553-93fd-292026c98b63",
+  "passed": true,
+  "scope": "Eight lifecycle/availability/cash commands exactly once; advisory estimate/route/location posts excluded; credentials and source IPs excluded",
+  "rows": [
+    {
+      "timestamp": "2026-10-20T20:32:21.433876292Z",
+      "method": "POST",
+      "path": "/api/v1/drivers/me/availability/online",
+      "httpStatus": 200,
+      "totalDuration": 31
+    },
+    {
+      "timestamp": "2026-10-20T20:32:26.539018567Z",
+      "method": "POST",
+      "path": "/api/v1/rides",
+      "httpStatus": 201,
+      "totalDuration": 84
+    },
+    {
+      "timestamp": "2026-10-20T20:32:41.197046989Z",
+      "method": "POST",
+      "path": "/api/v1/ride-offers/d9e7d6da-4c15-4609-a1e7-9301d34b90de/accept",
+      "httpStatus": 200,
+      "totalDuration": 48
+    },
+    {
+      "timestamp": "2026-10-20T20:33:02.171748129Z",
+      "method": "POST",
+      "path": "/api/v1/rides/d8daeaaa-fbe9-4614-af7e-45b896d30ecb/en-route",
+      "httpStatus": 200,
+      "totalDuration": 30
+    },
+    {
+      "timestamp": "2026-10-20T20:33:18.293882053Z",
+      "method": "POST",
+      "path": "/api/v1/rides/d8daeaaa-fbe9-4614-af7e-45b896d30ecb/arrived",
+      "httpStatus": 200,
+      "totalDuration": 44
+    },
+    {
+      "timestamp": "2026-10-20T20:33:36.817756827Z",
+      "method": "POST",
+      "path": "/api/v1/rides/d8daeaaa-fbe9-4614-af7e-45b896d30ecb/start",
+      "httpStatus": 200,
+      "totalDuration": 57
+    },
+    {
+      "timestamp": "2026-10-20T20:34:20.199623635Z",
+      "method": "POST",
+      "path": "/api/v1/rides/d8daeaaa-fbe9-4614-af7e-45b896d30ecb/complete",
+      "httpStatus": 200,
+      "totalDuration": 49
+    },
+    {
+      "timestamp": "2026-10-20T20:34:34.739680713Z",
+      "method": "POST",
+      "path": "/api/v1/rides/d8daeaaa-fbe9-4614-af7e-45b896d30ecb/payments/cash/settle",
+      "httpStatus": 200,
+      "totalDuration": 42
+    }
+  ],
+  "auth_refresh_rows": [
+    {
+      "timestamp": "2026-10-20T20:32:57.716986449Z",
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "httpStatus": 200,
+      "totalDuration": 18
+    },
+    {
+      "timestamp": "2026-10-20T20:33:03.701553784Z",
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "httpStatus": 200,
+      "totalDuration": 29
+    }
+  ]
+}

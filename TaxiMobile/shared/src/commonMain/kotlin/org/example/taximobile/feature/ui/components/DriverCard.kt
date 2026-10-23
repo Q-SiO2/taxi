@@ -23,13 +23,14 @@ fun DriverCard(
     statusTone: StatusTone,
     modifier: Modifier = Modifier,
 ) {
-    Surface(modifier = modifier, shape = MaterialTheme.shapes.large, color = TaxiColors.Surface0, tonalElevation = TaxiSpacing.Xxs) {
+    val taxiColors = TaxiTheme.colors
+    Surface(modifier = modifier, shape = MaterialTheme.shapes.large, color = taxiColors.Surface0, tonalElevation = TaxiSpacing.Xxs) {
         Column(Modifier.padding(TaxiSpacing.Md), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
             Text(displayName, style = MaterialTheme.typography.titleMedium)
             StatusPill(statusLabel, statusTone)
-            Text(vehicleDescription, style = MaterialTheme.typography.bodyMedium, color = TaxiColors.Ink700)
+            Text(vehicleDescription, style = MaterialTheme.typography.bodyMedium, color = taxiColors.Ink700)
             taxiIdentifier?.let {
-                Text(ltrIsolate(it), style = TaxiTheme.typography.monoMedium, color = TaxiColors.Ink900)
+                Text(ltrIsolate(it), style = TaxiTheme.typography.monoMedium, color = taxiColors.Ink900)
             }
         }
     }

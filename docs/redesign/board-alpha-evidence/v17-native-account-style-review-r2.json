@@ -1,0 +1,456 @@
+{
+  "candidate": "candidate-native-v17.json",
+  "started_utc": "2026-10-21T09:44:31.846137+00:00",
+  "passed": true,
+  "checks": [
+    {
+      "role": "passenger",
+      "style": "Folded Streets",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v17-en-style-passenger-folded-streets-account.png",
+          "sha256": "2555d05e555efb97aaabc511fdc1dba5e3f98e209b75cd91cc4f3e8179b2e5b0"
+        },
+        {
+          "path": "v17-en-style-passenger-folded-streets-financial.png",
+          "sha256": "2555d05e555efb97aaabc511fdc1dba5e3f98e209b75cd91cc4f3e8179b2e5b0"
+        }
+      ]
+    },
+    {
+      "role": "passenger",
+      "style": "Street Press",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v17-en-style-passenger-street-press-account.png",
+          "sha256": "8decf1c98258cb4385652894f9d8d5b13fcaf635b8e95ea8b1e6a414942713ca"
+        },
+        {
+          "path": "v17-en-style-passenger-street-press-financial.png",
+          "sha256": "8decf1c98258cb4385652894f9d8d5b13fcaf635b8e95ea8b1e6a414942713ca"
+        }
+      ]
+    },
+    {
+      "role": "passenger",
+      "style": "Glazed Machine",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v17-en-style-passenger-glazed-machine-account.png",
+          "sha256": "02573251ba9aaed4a622263251ec280fc923d9df214a0bf1162c7b47f8d94d63"
+        },
+        {
+          "path": "v17-en-style-passenger-glazed-machine-financial.png",
+          "sha256": "02573251ba9aaed4a622263251ec280fc923d9df214a0bf1162c7b47f8d94d63"
+        }
+      ]
+    },
+    {
+      "role": "passenger",
+      "style": "Notepad",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v17-en-style-passenger-notepad-account.png",
+          "sha256": "05573282f958bf737e38b9b4abbeefb2319bd19a2133d8e0fde51b11e53c9538"
+        },
+        {
+          "path": "v17-en-style-passenger-notepad-financial.png",
+          "sha256": "05573282f958bf737e38b9b4abbeefb2319bd19a2133d8e0fde51b11e53c9538"
+        }
+      ]
+    },
+    {
+      "role": "driver",
+      "style": "Folded Streets",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v17-en-style-driver-folded-streets-account.png",
+          "sha256": "21da9a489468a5d3b758c745535dfade3424f5303d703da3f9bbe2cc6bc02636"
+        },
+        {
+          "path": "v17-en-style-driver-folded-streets-financial.png",
+          "sha256": "21da9a489468a5d3b758c745535dfade3424f5303d703da3f9bbe2cc6bc02636"
+        }
+      ]
+    },
+    {
+      "role": "driver",
+      "style": "Street Press",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v17-en-style-driver-street-press-account.png",
+          "sha256": "126afcf9e0741ad9fb401d95f15f8618db8a0b38885e8581bb276c2c06072a13"
+        },
+        {
+          "path": "v17-en-style-driver-street-press-financial.png",
+          "sha256": "126afcf9e0741ad9fb401d95f15f8618db8a0b38885e8581bb276c2c06072a13"
+        }
+      ]
+    },
+    {
+      "role": "driver",
+      "style": "Glazed Machine",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v17-en-style-driver-glazed-machine-account.png",
+          "sha256": "ffc2f29fd0091657adb93afae4c663d904595c4f5320ff88712c738b756c52f1"
+        },
+        {
+          "path": "v17-en-style-driver-glazed-machine-financial.png",
+          "sha256": "ffc2f29fd0091657adb93afae4c663d904595c4f5320ff88712c738b756c52f1"
+        }
+      ]
+    },
+    {
+      "role": "driver",
+      "style": "Notepad",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v17-en-style-driver-notepad-account.png",
+          "sha256": "088bf2d5382cff8c25bf2055077dc358a2a78372a83fa329037429a0636ea388"
+        },
+        {
+          "path": "v17-en-style-driver-notepad-financial.png",
+          "sha256": "32cd159ff64a7997a07f4978ed1e4b0763a394ecec4a0111497e844681f9db18"
+        }
+      ]
+    }
+  ],
+  "scope": "Actual selected EN account/financial views across four styles, normal Notepad restart and1.3x text; no all-page or full accessibility claim",
+  "before": {
+    "rides": [
+      {
+        "id": "d8daeaaa-fbe9-4614-af7e-45b896d30ecb",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "733abbcf-5d1b-4ff2-b7f3-3563052cbd25",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "cb951af4-f5ae-4d05-8a06-a28b49797f33",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "c55e696d-2bae-4640-8801-f50d2c20a42b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "b7aac6ac-cc87-494d-aa95-842c21fc6759",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "98a253df-de13-4029-9daa-e538a520997d",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e531e392-6f5b-4962-9964-3967a4afc418",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "082f8b85-6598-423d-aac5-cf31eec3f30a",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "e734ed2c-a37c-424b-9d84-b31e6811cd09",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "65f3d974-1cb3-4c43-9486-80cd1007c256",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "03756c30-f453-4d09-ae50-c3fa8f3782a4",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "59576371-85a9-4732-a100-12f7295f0c0a",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e1b2bf66-0887-4429-a798-e272cc4ebf1a",
+        "status": "UNMATCHED"
+      }
+    ],
+    "availability": {
+      "status": "OFFLINE",
+      "vehicle_id": "d491cb54-7ec1-4b6e-a6f9-1f1a8fd93792",
+      "city_id": "10000000-0000-4000-8000-000000000003",
+      "service_type": "ON_DEMAND"
+    }
+  },
+  "finished_utc": "2026-10-21T09:53:06.517877+00:00",
+  "continued_from": "v17-native-account-style-review.json",
+  "resumed_utc": "2026-10-21T09:48:58.409862+00:00",
+  "harness_correction": "Expected middle-dot label was double-decoded in the harness copy; actual native Style label is correct. No application change.",
+  "resumed_before": {
+    "rides": [
+      {
+        "id": "d8daeaaa-fbe9-4614-af7e-45b896d30ecb",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "733abbcf-5d1b-4ff2-b7f3-3563052cbd25",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "cb951af4-f5ae-4d05-8a06-a28b49797f33",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "c55e696d-2bae-4640-8801-f50d2c20a42b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "b7aac6ac-cc87-494d-aa95-842c21fc6759",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "98a253df-de13-4029-9daa-e538a520997d",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e531e392-6f5b-4962-9964-3967a4afc418",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "082f8b85-6598-423d-aac5-cf31eec3f30a",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "e734ed2c-a37c-424b-9d84-b31e6811cd09",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "65f3d974-1cb3-4c43-9486-80cd1007c256",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "03756c30-f453-4d09-ae50-c3fa8f3782a4",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "59576371-85a9-4732-a100-12f7295f0c0a",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e1b2bf66-0887-4429-a798-e272cc4ebf1a",
+        "status": "UNMATCHED"
+      }
+    ],
+    "availability": {
+      "status": "OFFLINE",
+      "vehicle_id": "d491cb54-7ec1-4b6e-a6f9-1f1a8fd93792",
+      "city_id": "10000000-0000-4000-8000-000000000003",
+      "service_type": "ON_DEMAND"
+    }
+  },
+  "restart_checks": [
+    {
+      "role": "passenger",
+      "style": "Notepad",
+      "normal_authenticated_restore": true,
+      "screenshot": {
+        "path": "v17-en-style-passenger-notepad-restarted.png",
+        "sha256": "cde910df025e9f437f9b4c77127d10dff992f44364ca274a4dc421cf1438a084"
+      }
+    },
+    {
+      "role": "driver",
+      "style": "Notepad",
+      "normal_authenticated_restore": true,
+      "screenshot": {
+        "path": "v17-en-style-driver-notepad-restarted.png",
+        "sha256": "fce1c82f12a59bd2f555147f68d4b5b4c54153dd5caa0c4b52f9abde9344d0d8"
+      }
+    }
+  ],
+  "large_text_checks": [
+    {
+      "role": "passenger",
+      "font_scale": "1.3",
+      "style": "Notepad",
+      "screenshots": [
+        {
+          "path": "v17-en-style-passenger-notepad-large-text-account.png",
+          "sha256": "bb8d64add2b3ca83e5c79d8e0c531ff92d2fc8fb1f0a0e85602bf929641f15cf"
+        },
+        {
+          "path": "v17-en-style-passenger-notepad-large-text-financial.png",
+          "sha256": "bb8d64add2b3ca83e5c79d8e0c531ff92d2fc8fb1f0a0e85602bf929641f15cf"
+        }
+      ],
+      "limit": "Selected account/financial views only; no claim of all pages or TalkBack acceptance"
+    },
+    {
+      "role": "driver",
+      "font_scale": "1.3",
+      "style": "Notepad",
+      "screenshots": [
+        {
+          "path": "v17-en-style-driver-notepad-large-text-account.png",
+          "sha256": "95e6521b7e635ff9442559a43a9dca4ca464f4828c557e486349b2a6af755229"
+        },
+        {
+          "path": "v17-en-style-driver-notepad-large-text-financial.png",
+          "sha256": "95e6521b7e635ff9442559a43a9dca4ca464f4828c557e486349b2a6af755229"
+        }
+      ],
+      "limit": "Selected account/financial views only; no claim of all pages or TalkBack acceptance"
+    }
+  ],
+  "after": {
+    "rides": [
+      {
+        "id": "d8daeaaa-fbe9-4614-af7e-45b896d30ecb",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "733abbcf-5d1b-4ff2-b7f3-3563052cbd25",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "cb951af4-f5ae-4d05-8a06-a28b49797f33",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "c55e696d-2bae-4640-8801-f50d2c20a42b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "b7aac6ac-cc87-494d-aa95-842c21fc6759",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "98a253df-de13-4029-9daa-e538a520997d",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e531e392-6f5b-4962-9964-3967a4afc418",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "082f8b85-6598-423d-aac5-cf31eec3f30a",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "e734ed2c-a37c-424b-9d84-b31e6811cd09",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "65f3d974-1cb3-4c43-9486-80cd1007c256",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "03756c30-f453-4d09-ae50-c3fa8f3782a4",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "59576371-85a9-4732-a100-12f7295f0c0a",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e1b2bf66-0887-4429-a798-e272cc4ebf1a",
+        "status": "UNMATCHED"
+      }
+    ],
+    "availability": {
+      "status": "OFFLINE",
+      "vehicle_id": "d491cb54-7ec1-4b6e-a6f9-1f1a8fd93792",
+      "city_id": "10000000-0000-4000-8000-000000000003",
+      "service_type": "ON_DEMAND"
+    }
+  }
+}

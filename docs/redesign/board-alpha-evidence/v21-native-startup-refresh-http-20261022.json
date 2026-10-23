@@ -1,0 +1,28 @@
+{
+  "candidate": "candidate-native-v21.json",
+  "observed_utc": "2026-10-22T11:18:04.141160+00:00",
+  "passed": true,
+  "interval": [
+    "2026-10-22T11:15:30Z",
+    "2026-10-22T11:17:00Z"
+  ],
+  "native_record": "v21-native-retained-startup-20261022.json",
+  "refresh_requests": [
+    {
+      "timestamp": "2026-10-22T11:16:17.902369193Z",
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "httpStatus": 200,
+      "deploymentId": "e5e108a0-e5dd-4553-93fd-292026c98b63"
+    },
+    {
+      "timestamp": "2026-10-22T11:16:18.004934446Z",
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "httpStatus": 200,
+      "deploymentId": "e5e108a0-e5dd-4553-93fd-292026c98b63"
+    }
+  ],
+  "rejected_refresh_count": 0,
+  "scope": "Correlated exact APK replacement/normal retained-session startup window. No native sign-in performed; proxy does not identify family or role. No claim of another controlled16-minute process-absence window. No IP/user-agent/token/family identifier retained."
+}

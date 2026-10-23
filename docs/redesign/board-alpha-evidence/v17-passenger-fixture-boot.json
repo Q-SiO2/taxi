@@ -1,0 +1,7 @@
+{
+  "ready_utc": "2026-10-20T20:15:16.878407+00:00",
+  "role": "passenger",
+  "avd": "taximobile-board-aosp31-passenger",
+  "boot_seconds": 81.57,
+  "scope": "Existing owned AVD, data retained, no app/business commands"
+}

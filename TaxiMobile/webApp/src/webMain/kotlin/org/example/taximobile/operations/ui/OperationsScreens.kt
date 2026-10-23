@@ -1,5 +1,6 @@
 package org.example.taximobile.operations.ui
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -35,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.example.taximobile.feature.ui.theme.TaxiColors
@@ -66,6 +68,9 @@ import org.example.taximobile.operations.model.lifecycleTargetsFor
 import org.example.taximobile.operations.model.operatorStatusTargetsFor
 import org.example.taximobile.operations.model.serviceAreaTargetFor
 import org.example.taximobile.operations.state.OperationsUiState
+import org.example.taximobile.feature.ui.text.ltrIsolate
+import org.jetbrains.compose.resources.stringResource
+import taximobile.shared.generated.resources.*
 
 @Composable
 internal fun RolloutScreen(state: OperationsUiState) {
@@ -78,61 +83,66 @@ internal fun RolloutScreen(state: OperationsUiState) {
     }
     ScreenColumn {
         SectionHeading(
-            title = "Rollout overview",
-            supportingText = "Backend-authorized visibility and readiness for gradual city deployment.",
+            title = stringResource(Res.string.web_rollout_title),
+            supportingText = stringResource(Res.string.web_rollout_help),
         )
         Row(
             modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Md),
         ) {
             MetricCard(
-                label = "Visible cities",
-                value = visibleCities.size.toString(),
-                supportingText = "${snapshot.rollout.visibleCityCount} across all active grants",
+                label = stringResource(Res.string.web_rollout_visible),
+                value = ltrIsolate(visibleCities.size.toString()),
+                supportingText = stringResource(Res.string.web_rollout_visible_total, ltrIsolate(snapshot.rollout.visibleCityCount.toString())),
                 modifier = Modifier.width(220.dp),
             )
             MetricCard(
-                label = "Active",
-                value = activeCities.toString(),
-                supportingText = "Publicly operating in this presentation scope",
+                label = stringResource(Res.string.account_status_active),
+                value = ltrIsolate(activeCities.toString()),
+                supportingText = stringResource(Res.string.web_rollout_active_help),
                 modifier = Modifier.width(220.dp),
             )
             MetricCard(
-                label = "Readiness complete",
-                value = readyCities.toString(),
-                supportingText = "Cities ready for audited public activation",
+                label = stringResource(Res.string.web_rollout_ready),
+                value = ltrIsolate(readyCities.toString()),
+                supportingText = stringResource(Res.string.web_rollout_ready_help),
                 modifier = Modifier.width(220.dp),
             )
             MetricCard(
-                label = "Operators",
-                value = snapshot.operators.total.toString(),
-                supportingText = "Scoped operator records in the selected market",
+                label = stringResource(Res.string.web_nav_operators),
+                value = ltrIsolate(snapshot.operators.total.toString()),
+                supportingText = stringResource(Res.string.web_rollout_operators_help),
                 modifier = Modifier.width(220.dp),
             )
         }
         SectionHeading(
-            title = "City readiness",
-            supportingText = "A lifecycle label never substitutes for the configuration and evidence gates below.",
+            title = stringResource(Res.string.web_rollout_city_readiness),
+            supportingText = stringResource(Res.string.web_rollout_evidence_help),
         )
         if (visibleCities.isEmpty()) {
-            EmptyState("No cities in scope", "The backend returned no city visible to the active grants and selected scope.")
+            EmptyState(stringResource(Res.string.web_rollout_empty), stringResource(Res.string.web_rollout_empty_help))
         } else {
             DataCard(tableMinWidth = 820.dp) {
                 Column(Modifier.fillMaxWidth().widthIn(min = 820.dp)) {
-                    TableHeader(listOf("City" to 1.5f, "Lifecycle" to 0.9f, "Pilot" to 0.8f, "Public" to 0.8f, "Post-launch" to 0.9f, "Next blocker" to 2f))
+                    TableHeader(listOf(stringResource(Res.string.web_recruit_city) to 1.5f,
+                        stringResource(Res.string.web_rollout_city_status) to 0.9f,
+                        stringResource(Res.string.web_rollout_pilot) to 0.8f,
+                        stringResource(Res.string.web_rollout_public) to 0.8f,
+                        stringResource(Res.string.web_rollout_post_launch) to 0.9f,
+                        stringResource(Res.string.web_rollout_next_check) to 2f))
                     visibleCities.forEach { city ->
                         TableRow {
-                            TableCell(city.localizedName.preferred(), 1.5f, supporting = city.code)
-                            Box(Modifier.weight(0.9f)) { StatusBadge(city.lifecycleStatus) }
-                            TableCell("${city.pilotEntryPassed} / ${city.pilotEntryRequired}", 0.8f)
-                            TableCell("${city.publicActivationPassed} / ${city.publicActivationRequired}", 0.8f)
-                            Box(Modifier.weight(0.9f)) { StatusBadge(city.postLaunchReviewStatus) }
+                            TableCell(city.localizedName.preferred(Locale.current.language), 1.5f, supporting = ltrIsolate(city.code))
+                            Box(Modifier.weight(0.9f)) { StatusBadge(city.lifecycleStatus, label = rolloutLabel(city.lifecycleStatus)) }
+                            TableCell(ltrIsolate("${city.pilotEntryPassed} / ${city.pilotEntryRequired}"), 0.8f)
+                            TableCell(ltrIsolate("${city.publicActivationPassed} / ${city.publicActivationRequired}"), 0.8f)
+                            Box(Modifier.weight(0.9f)) { StatusBadge(city.postLaunchReviewStatus, label = rolloutLabel(city.postLaunchReviewStatus)) }
                             TableCell(
                                 when {
-                                    city.missingPilotEntryGates.isNotEmpty() -> city.missingPilotEntryGates.first().replace('_', ' ')
-                                    city.missingPublicActivationGates.isNotEmpty() -> city.missingPublicActivationGates.first().replace('_', ' ')
-                                    city.postLaunchReviewStatus != "PASSED" -> "POST LAUNCH REVIEW"
-                                    else -> "Rollout evidence complete"
+                                    city.missingPilotEntryGates.isNotEmpty() -> rolloutLabel(city.missingPilotEntryGates.first())
+                                    city.missingPublicActivationGates.isNotEmpty() -> rolloutLabel(city.missingPublicActivationGates.first())
+                                    city.postLaunchReviewStatus != "PASSED" -> stringResource(Res.string.web_gate_post_launch)
+                                    else -> stringResource(Res.string.web_rollout_complete)
                                 },
                                 2f,
                             )
@@ -156,6 +166,7 @@ internal fun CitiesScreen(
     onTransition: (CityRecord, String, String) -> Unit,
     onReadinessDecision: (CityConfigurationRecord, String, String, String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     val snapshot = state.snapshot ?: return
     val cities = snapshot.cities.items.filter { city ->
         state.scope.marketId == null || city.marketId == state.scope.marketId
@@ -176,7 +187,7 @@ internal fun CitiesScreen(
             action = when {
                 selected != null -> ({ TextButton(onClick = { onSelectCity(null) }) { Text("View all cities") } })
                 state.scope.marketId != null && state.session?.hasPermission(MANAGE_CITY_LIFECYCLE) == true ->
-                    ({ Button(onClick = { showCreateCity = true }, enabled = !state.interactionLocked) { Text("Create city") } })
+                    ({ Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { showCreateCity = true }, enabled = !state.interactionLocked) { Text("Create city") } })
                 else -> null
             },
         )
@@ -193,7 +204,7 @@ internal fun CitiesScreen(
                             Box(Modifier.weight(1f)) { StatusBadge(city.lifecycleStatus) }
                             TableCell(shortId(city.activeConfigurationVersionId), 1.2f)
                             Box(Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
-                                OutlinedButton(onClick = { onSelectCity(city.id) }, enabled = !state.interactionLocked) {
+                                OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onSelectCity(city.id) }, enabled = !state.interactionLocked) {
                                     Text("Inspect", maxLines = 1, softWrap = false)
                                 }
                             }
@@ -223,7 +234,7 @@ internal fun CitiesScreen(
         } else {
             Text(
                 "Select a city to load its configuration and service-area versions through a scoped backend request.",
-                color = TaxiColors.Ink500,
+                color = taxiColors.Ink500,
                 style = MaterialTheme.typography.bodyMedium,
             )
         }
@@ -322,15 +333,17 @@ private fun CityDetail(
     onCreateConfiguration: () -> Unit,
     onTransitionConfiguration: (CityConfigurationRecord, String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     SectionHeading(
         title = city.localizedName.preferred(),
         supportingText = "${city.localizedName.fr} · optimistic version ${city.optimisticVersion}",
     )
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Text("AR · ", color = TaxiColors.Ink500, style = MaterialTheme.typography.bodyMedium)
+        Text("AR · ", color = taxiColors.Ink500, style = MaterialTheme.typography.bodyMedium)
         Text(
             text = city.localizedName.ar,
-            color = TaxiColors.Ink500,
+            color = taxiColors.Ink500,
             style = MaterialTheme.typography.bodyMedium,
             fontFamily = taxiArabicFontFamily(),
         )
@@ -346,7 +359,7 @@ private fun CityDetail(
                     Modifier.weight(1f),
                 )
                 Column(Modifier.weight(1f)) {
-                    Text("LIFECYCLE", style = MaterialTheme.typography.labelSmall, color = TaxiColors.Ink500)
+                    Text("LIFECYCLE", style = MaterialTheme.typography.labelSmall, color = taxiColors.Ink500)
                     Spacer(Modifier.height(TaxiSpacing.Xxs))
                     StatusBadge(city.lifecycleStatus)
                 }
@@ -354,26 +367,27 @@ private fun CityDetail(
             if (city.isLegacyCompatibility) {
                 Text(
                     "Compatibility city: preserves the proven single-city data plane while national ownership is introduced.",
-                    color = TaxiColors.Info600,
+                    color = taxiColors.Info600,
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(TaxiColors.Info100, RoundedCornerShape(TaxiRadii.Sm))
+                        .background(taxiColors.Info100, RoundedCornerShape(taxiRadii.Sm))
                         .padding(TaxiSpacing.Sm),
                 )
             }
             val targets = lifecycleTargetsFor(city.lifecycleStatus)
             if (state.session?.hasPermission(MANAGE_CITY_LIFECYCLE) == true && targets.isNotEmpty()) {
                 Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
-                    Text("REVIEWED LIFECYCLE COMMANDS", style = MaterialTheme.typography.labelSmall, color = TaxiColors.Ink500)
+                    Text("REVIEWED LIFECYCLE COMMANDS", style = MaterialTheme.typography.labelSmall, color = taxiColors.Ink500)
                     Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
                         targets.forEach { target ->
                             OutlinedButton(
+                                shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                                 onClick = { onRequestTransition(target) },
                                 enabled = !state.interactionLocked,
                                 border = BorderStroke(
                                     1.dp,
-                                    if (target == "RETIRED" || target == "PAUSED") TaxiColors.Danger600 else TaxiColors.Navy400,
+                                    if (target == "RETIRED" || target == "PAUSED") taxiColors.Danger600 else taxiColors.Navy400,
                                 ),
                             ) {
                                 Text("Review ${target.replace('_', ' ').lowercase()}")
@@ -387,7 +401,7 @@ private fun CityDetail(
                             "ACTIVE" -> "Emergency PAUSED remains available without changing the approved configuration."
                             else -> "The backend revalidates the active bundle and stage-specific evidence on every launch command."
                         },
-                        color = TaxiColors.Ink500,
+                        color = taxiColors.Ink500,
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
@@ -400,7 +414,7 @@ private fun CityDetail(
         title = "Configuration versions",
         supportingText = "Draft, review, approval, and activation remain separate backend commands.",
         action = if (state.session?.hasPermission(MANAGE_CITY_CONFIGURATION) == true) {
-            { Button(onClick = onCreateConfiguration, enabled = !state.interactionLocked) { Text("Create bundle") } }
+            { Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = onCreateConfiguration, enabled = !state.interactionLocked) { Text("Create bundle") } }
         } else null,
     )
     if (configurations == null || configurations.items.isEmpty()) {
@@ -423,10 +437,11 @@ private fun CityDetail(
                         Box(Modifier.weight(1.2f), contentAlignment = Alignment.CenterStart) {
                             if (target != null && state.session?.hasPermission(MANAGE_CITY_CONFIGURATION) == true) {
                                 OutlinedButton(
+                                    shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                                     onClick = { onTransitionConfiguration(configuration, target) },
                                     enabled = !state.interactionLocked,
                                 ) { Text("Review ${target.replace('_', ' ').lowercase()}") }
-                            } else Text("—", color = TaxiColors.Ink500)
+                            } else Text("—", color = taxiColors.Ink500)
                         }
                     }
                 }
@@ -482,7 +497,7 @@ private fun CityDetail(
         title = "Service-area versions",
         supportingText = "Only reviewed geometry can be activated as part of a coherent city bundle.",
         action = if (state.session?.hasPermission(MANAGE_SERVICE_AREAS) == true) {
-            { Button(onClick = onCreateServiceArea, enabled = !state.interactionLocked) { Text("Create boundary") } }
+            { Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = onCreateServiceArea, enabled = !state.interactionLocked) { Text("Create boundary") } }
         } else null,
     )
     if (serviceAreas == null || serviceAreas.items.isEmpty()) {
@@ -504,10 +519,11 @@ private fun CityDetail(
                         Box(Modifier.weight(1.2f), contentAlignment = Alignment.CenterStart) {
                             if (target != null && state.session?.hasPermission(MANAGE_SERVICE_AREAS) == true) {
                                 OutlinedButton(
+                                    shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                                     onClick = { onTransitionServiceArea(area, target) },
                                     enabled = !state.interactionLocked,
                                 ) { Text("Review ${target.replace('_', ' ').lowercase()}") }
-                            } else Text("—", color = TaxiColors.Ink500)
+                            } else Text("—", color = taxiColors.Ink500)
                         }
                     }
                 }
@@ -531,14 +547,15 @@ private fun ReadinessGateGroup(
     locked: Boolean,
     onReview: (String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     val checks = configuration.readinessChecks.associateBy { it.gateCode }
     DataCard {
         Column(
             Modifier.fillMaxWidth().padding(TaxiSpacing.Lg),
             verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm),
         ) {
-            Text(title, style = MaterialTheme.typography.titleMedium, color = TaxiColors.Navy900, fontWeight = FontWeight.Bold)
-            Text(supportingText, style = MaterialTheme.typography.bodySmall, color = TaxiColors.Ink500)
+            Text(title, style = MaterialTheme.typography.titleMedium, color = taxiColors.Navy900, fontWeight = FontWeight.Bold)
+            Text(supportingText, style = MaterialTheme.typography.bodySmall, color = taxiColors.Ink500)
             gates.forEach { gate ->
                 val check = checks[gate]
                 Row(
@@ -547,18 +564,18 @@ private fun ReadinessGateGroup(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Column(Modifier.weight(1f)) {
-                        Text(gate.replace('_', ' '), style = MaterialTheme.typography.labelMedium, color = TaxiColors.Ink700)
+                        Text(gate.replace('_', ' '), style = MaterialTheme.typography.labelMedium, color = taxiColors.Ink700)
                         Text(
                             check?.nonSecretEvidenceReference ?: "No evidence reference recorded",
                             style = MaterialTheme.typography.bodySmall,
-                            color = TaxiColors.Ink500,
+                            color = taxiColors.Ink500,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )
                     }
                     StatusBadge(check?.status ?: "PENDING")
                     if (canManage && configuration.status in setOf("APPROVED", "ACTIVE")) {
-                        OutlinedButton(onClick = { onReview(gate) }, enabled = !locked) {
+                        OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onReview(gate) }, enabled = !locked) {
                             Text(if (check == null) "Review" else "Revise")
                         }
                     }
@@ -575,6 +592,7 @@ private fun ReadinessReviewDialog(
     onDismiss: () -> Unit,
     onConfirm: (String, String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     var decision by remember(review.configuration.optimisticVersion, review.gateCode) { mutableStateOf("PASSED") }
     var evidence by remember(review.configuration.optimisticVersion, review.gateCode) { mutableStateOf("") }
     AlertDialog(
@@ -582,17 +600,17 @@ private fun ReadinessReviewDialog(
         title = { Text("Review rollout gate") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md)) {
-                Text(review.gateCode.replace('_', ' '), fontWeight = FontWeight.Bold, color = TaxiColors.Navy900)
+                Text(review.gateCode.replace('_', ' '), fontWeight = FontWeight.Bold, color = taxiColors.Navy900)
                 Text(
                     "The backend records this decision against configuration ${review.configuration.version} version ${review.configuration.optimisticVersion}. The configuration submitter cannot perform this review. Use a non-secret ticket, runbook, test-run, or analytics-review reference that carries accountable owners and review or expiry dates.",
-                    color = TaxiColors.Ink700,
+                    color = taxiColors.Ink700,
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
                     listOf("PASSED", "FAILED").forEach { option ->
                         if (decision == option) {
-                            Button(onClick = { decision = option }, enabled = !busy) { Text(option) }
+                            Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { decision = option }, enabled = !busy) { Text(option) }
                         } else {
-                            OutlinedButton(onClick = { decision = option }, enabled = !busy) { Text(option) }
+                            OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { decision = option }, enabled = !busy) { Text(option) }
                         }
                     }
                 }
@@ -609,6 +627,7 @@ private fun ReadinessReviewDialog(
         },
         confirmButton = {
             Button(
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                 onClick = { onConfirm(decision, evidence.trim()) },
                 enabled = !busy && evidence.trim().length >= 3,
             ) { Text("Record decision") }
@@ -626,6 +645,7 @@ internal fun OperatorsScreen(
     onCreateAssignment: (OperatorCityAssignmentCreateRequest) -> Unit,
     onRetireAssignment: (OperatorCityAssignment, String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     val snapshot = state.snapshot ?: return
     val operators = snapshot.operators.items
     val selected = operators.firstOrNull { it.id == state.scope.operatorId }
@@ -643,7 +663,7 @@ internal fun OperatorsScreen(
             action = when {
                 selected != null -> ({ TextButton(onClick = { onSelectOperator(null) }) { Text("View all operators") } })
                 state.scope.marketId != null && state.session?.hasPermission(MANAGE_OPERATORS) == true ->
-                    ({ Button(onClick = { showCreateOperator = true }, enabled = !state.interactionLocked) { Text("Create operator") } })
+                    ({ Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { showCreateOperator = true }, enabled = !state.interactionLocked) { Text("Create operator") } })
                 else -> null
             },
         )
@@ -660,7 +680,7 @@ internal fun OperatorsScreen(
                             Box(Modifier.weight(1f)) { StatusBadge(operator.status) }
                             TableCell(shortId(operator.cooperativeId), 1.2f)
                             Box(Modifier.weight(0.8f), contentAlignment = Alignment.CenterStart) {
-                                OutlinedButton(onClick = { onSelectOperator(operator.id) }, enabled = !state.interactionLocked) {
+                                OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onSelectOperator(operator.id) }, enabled = !state.interactionLocked) {
                                     Text("Inspect")
                                 }
                             }
@@ -673,16 +693,17 @@ internal fun OperatorsScreen(
         if (selected != null) {
             DataCard {
                 Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Lg), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md)) {
-                    Text(selected.name, style = MaterialTheme.typography.titleLarge, color = TaxiColors.Navy900, fontWeight = FontWeight.Bold)
+                    Text(selected.name, style = MaterialTheme.typography.titleLarge, color = taxiColors.Navy900, fontWeight = FontWeight.Bold)
                     Text(
                         "${selected.operatorType.replace('_', ' ')} · ${selected.status} · ${shortId(selected.id)}",
-                        color = TaxiColors.Ink500,
+                        color = taxiColors.Ink500,
                     )
                     val targets = operatorStatusTargetsFor(selected.status)
                     if (state.session?.hasPermission(MANAGE_OPERATORS) == true && targets.isNotEmpty()) {
                         Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
                             targets.forEach { target ->
                                 OutlinedButton(
+                                    shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                                     onClick = { pendingOperatorStatus = selected to target },
                                     enabled = !state.interactionLocked,
                                 ) { Text("Review ${target.lowercase()}") }
@@ -699,7 +720,7 @@ internal fun OperatorsScreen(
                 selected != null && selectedCity != null &&
                 state.session?.hasPermission(MANAGE_OPERATOR_ASSIGNMENTS) == true
             ) {
-                { Button(onClick = { showCreateAssignment = true }, enabled = !state.interactionLocked) { Text("Assign service") } }
+                { Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { showCreateAssignment = true }, enabled = !state.interactionLocked) { Text("Assign service") } }
             } else null,
         )
         if (snapshot.assignments.items.isEmpty()) {
@@ -722,10 +743,11 @@ internal fun OperatorsScreen(
                                     state.session?.hasPermission(MANAGE_OPERATOR_ASSIGNMENTS) == true
                                 ) {
                                     OutlinedButton(
+                                        shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                                         onClick = { pendingAssignmentRetirement = assignment },
                                         enabled = !state.interactionLocked,
                                     ) { Text("Retire") }
-                                } else Text("—", color = TaxiColors.Ink500)
+                                } else Text("—", color = taxiColors.Ink500)
                             }
                         }
                     }
@@ -819,6 +841,7 @@ private fun LifecycleReviewDialog(
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     var reason by remember(city.id, target) { mutableStateOf("") }
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -828,7 +851,7 @@ private fun LifecycleReviewDialog(
                 Text(
                     "${city.localizedName.preferred()} will move from ${city.lifecycleStatus} to $target. " +
                         "The backend will validate version ${city.optimisticVersion}, readiness, configuration, and rollout safety before accepting it.",
-                    color = TaxiColors.Ink700,
+                    color = taxiColors.Ink700,
                 )
                 OutlinedTextField(
                     value = reason,
@@ -843,6 +866,7 @@ private fun LifecycleReviewDialog(
         },
         confirmButton = {
             Button(
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                 onClick = { onConfirm(reason.trim()) },
                 enabled = !busy && reason.trim().length >= 3,
             ) {
@@ -868,8 +892,9 @@ internal fun ScreenColumn(content: @Composable ColumnScope.() -> Unit) {
 
 @Composable
 internal fun TableHeader(columns: List<Pair<String, Float>>) {
+    val taxiColors = TaxiTheme.colors
     Row(
-        modifier = Modifier.fillMaxWidth().background(TaxiColors.Navy50).padding(horizontal = TaxiSpacing.Md, vertical = TaxiSpacing.Sm),
+        modifier = Modifier.fillMaxWidth().background(taxiColors.Navy50).padding(horizontal = TaxiSpacing.Md, vertical = TaxiSpacing.Sm),
         horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Md),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -877,7 +902,7 @@ internal fun TableHeader(columns: List<Pair<String, Float>>) {
             Text(
                 label.uppercase(),
                 modifier = Modifier.weight(weight),
-                color = TaxiColors.Ink500,
+                color = taxiColors.Ink500,
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
             )
@@ -890,10 +915,11 @@ internal fun TableRow(
     selected: Boolean = false,
     content: @Composable RowScope.() -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(if (selected) TaxiColors.Accent100.copy(alpha = 0.55f) else Color.Transparent)
+            .background(if (selected) taxiColors.Accent100.copy(alpha = 0.55f) else Color.Transparent)
             .padding(horizontal = TaxiSpacing.Md, vertical = TaxiSpacing.Md),
         horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Md),
         verticalAlignment = Alignment.CenterVertically,
@@ -908,19 +934,24 @@ internal fun RowScope.TableCell(
     weight: Float,
     supporting: String? = null,
 ) {
+    val taxiColors = TaxiTheme.colors
     Column(Modifier.weight(weight), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xxs)) {
         Text(
             value,
-            color = TaxiColors.Ink900,
-            style = MaterialTheme.typography.bodyMedium,
+            color = taxiColors.Ink900,
+            style = MaterialTheme.typography.bodyMedium.copy(textDirection = androidx.compose.ui.text.style.TextDirection.Content),
+            fontFamily = if (org.example.taximobile.feature.ui.text.hasArabicScript(value))
+                org.example.taximobile.feature.ui.theme.taxiArabicFontFamily() else null,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
         )
         supporting?.let {
             Text(
                 it,
-                color = TaxiColors.Ink500,
-                style = MaterialTheme.typography.labelSmall,
+                color = taxiColors.Ink500,
+                style = MaterialTheme.typography.labelSmall.copy(textDirection = androidx.compose.ui.text.style.TextDirection.Content),
+                fontFamily = if (org.example.taximobile.feature.ui.text.hasArabicScript(it))
+                    org.example.taximobile.feature.ui.theme.taxiArabicFontFamily() else null,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )

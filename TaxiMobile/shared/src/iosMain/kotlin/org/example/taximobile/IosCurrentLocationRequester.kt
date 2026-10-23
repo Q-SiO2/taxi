@@ -3,6 +3,7 @@ package org.example.taximobile
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
 import org.example.taximobile.domain.rides.Coordinates
+import org.example.taximobile.domain.drivers.DriverLocationObservation
 import org.example.taximobile.feature.location.OneShotLocationGate
 import platform.CoreLocation.CLAuthorizationStatus
 import platform.CoreLocation.CLLocation
@@ -25,10 +26,17 @@ internal class IosCurrentLocationRequester : NSObject(), CLLocationManagerDelega
         delegate = this@IosCurrentLocationRequester
     }
     private val requestGate = OneShotLocationGate()
-    private var pendingResult: ((Coordinates?) -> Unit)? = null
+    private var pendingResult: ((DriverLocationObservation?) -> Unit)? = null
 
     fun request(onResult: (Coordinates?) -> Unit) {
-        if (!requestGate.tryStart()) return
+        requestObservation { onResult(it?.coordinates) }
+    }
+
+    fun requestObservation(onResult: (DriverLocationObservation?) -> Unit) {
+        if (!requestGate.tryStart()) {
+            onResult(null)
+            return
+        }
         pendingResult = onResult
         when (CLLocationManager.authorizationStatus()) {
             kCLAuthorizationStatusAuthorizedAlways,
@@ -40,7 +48,7 @@ internal class IosCurrentLocationRequester : NSObject(), CLLocationManagerDelega
         }
     }
 
-    fun requestAuthorized(onResult: (Coordinates?) -> Unit): Boolean {
+    fun requestAuthorized(onResult: (DriverLocationObservation?) -> Unit): Boolean {
         val authorized = CLLocationManager.authorizationStatus() in setOf(
             kCLAuthorizationStatusAuthorizedAlways,
             kCLAuthorizationStatusAuthorizedWhenInUse,
@@ -70,14 +78,20 @@ internal class IosCurrentLocationRequester : NSObject(), CLLocationManagerDelega
 
     override fun locationManager(manager: CLLocationManager, didUpdateLocations: List<*>) {
         val location = didUpdateLocations.lastOrNull() as? CLLocation
-        finish(location?.coordinate?.useContents { Coordinates(latitude, longitude) })
+        finish(location?.let {
+            DriverLocationObservation(
+                coordinates = it.coordinate.useContents { Coordinates(latitude, longitude) },
+                observedAtEpochMillis = (it.timestamp.timeIntervalSince1970 * 1_000.0).toLong(),
+                accuracyMeters = it.horizontalAccuracy,
+            )
+        })
     }
 
     override fun locationManager(manager: CLLocationManager, didFailWithError: NSError) {
         finish(null)
     }
 
-    private fun finish(location: Coordinates?) {
+    private fun finish(location: DriverLocationObservation?) {
         val result = pendingResult
         pendingResult = null
         requestGate.finish()

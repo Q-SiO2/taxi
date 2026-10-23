@@ -1,7 +1,10 @@
 import asyncio
+import json
 from dataclasses import replace
 
 import pytest
+
+from taximobile_api.operations import routing_acceptance
 
 from taximobile_api.integrations.routing.models import Route, RouteCoordinate, RouteManeuver
 from taximobile_api.integrations.routing.provider import RoutingUnavailable
@@ -205,3 +208,67 @@ def test_nonlocal_target_requires_exact_hostname_confirmation() -> None:
         confirm_target("https://routing.internal.example", "another.internal.example")
 
     confirm_target("https://routing.internal.example", "ROUTING.INTERNAL.EXAMPLE")
+
+
+@pytest.mark.parametrize("unavailable", [False, True])
+def test_cli_constructs_routes_and_closes_on_one_live_loop(monkeypatch, capsys, unavailable):
+    class LoopBoundProvider(LocalizedRoutingProvider):
+        def __init__(self):
+            super().__init__(unavailable=unavailable)
+            self.owner_loop = asyncio.get_running_loop()
+            self.close_calls = 0
+
+        async def route(self, *args, **kwargs):
+            assert asyncio.get_running_loop() is self.owner_loop
+            return await super().route(*args, **kwargs)
+
+        async def aclose(self):
+            assert asyncio.get_running_loop() is self.owner_loop
+            assert not self.owner_loop.is_closed()
+            self.close_calls += 1
+
+    providers = []
+
+    def factory(name, url, *, timeout_seconds):
+        assert (name, url, timeout_seconds) == ("graphhopper", "http://127.0.0.1:8002", 15)
+        provider = LoopBoundProvider()
+        providers.append(provider)
+        return provider
+
+    monkeypatch.setattr(routing_acceptance, "create_routing_provider", factory)
+    code = routing_acceptance.main([
+        "--provider", "graphhopper", "--base-url", "http://127.0.0.1:8002/",
+    ])
+    assert code == (1 if unavailable else 0)
+    assert json.loads(capsys.readouterr().out)["passed"] is not unavailable
+    assert len(providers) == 1
+    assert providers[0].close_calls == 1
+    assert len(providers[0].calls) == 9
+
+
+@pytest.mark.parametrize("error_type", [RuntimeError, asyncio.CancelledError])
+def test_cli_closes_provider_on_unexpected_failure_or_cancellation(monkeypatch, error_type):
+    owner_loop = None
+    close_calls = 0
+
+    class Provider(LocalizedRoutingProvider):
+        async def aclose(self):
+            nonlocal close_calls
+            assert asyncio.get_running_loop() is owner_loop
+            close_calls += 1
+
+    def factory(*args, **kwargs):
+        nonlocal owner_loop
+        owner_loop = asyncio.get_running_loop()
+        return Provider()
+
+    async def failing_gate(**kwargs):
+        raise error_type()
+
+    monkeypatch.setattr(routing_acceptance, "create_routing_provider", factory)
+    monkeypatch.setattr(routing_acceptance, "run_routing_acceptance", failing_gate)
+    with pytest.raises(error_type):
+        routing_acceptance.main([
+            "--provider", "graphhopper", "--base-url", "http://127.0.0.1:8002",
+        ])
+    assert close_calls == 1

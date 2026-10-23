@@ -1,0 +1,28 @@
+{
+  "observed_utc": "2026-10-21T17:30:29.088173+00:00",
+  "candidate": "candidate-native-v18.json",
+  "scope": "Native sheet-handle gesture observation, no ride/payment input",
+  "drag": [
+    360,
+    860,
+    360,
+    400,
+    600
+  ],
+  "before_scroll_viewports": [
+    "[0,832][720,1504]"
+  ],
+  "after_scroll_viewports": [
+    "[0,832][720,1504]"
+  ],
+  "screenshots": [
+    {
+      "path": "v18-sheet-before-expand-diagnostic.png",
+      "sha256": "bc1d9eb9fc0920b618e0cf1c2798b64b007bb925ec0f69775a02dbbb7ed880d0"
+    },
+    {
+      "path": "v18-sheet-after-expand-diagnostic.png",
+      "sha256": "a8d7046d7fa4bbcc2aca31f82874c5c0fda1d29d0fff646747a4a2d38ca9d51f"
+    }
+  ]
+}

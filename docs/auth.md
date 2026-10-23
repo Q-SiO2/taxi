@@ -397,6 +397,26 @@ local lifecycle is resource ownership only: the backend remains authoritative.
 Android adapter regressions now cover explicit failure and checked persistence;
 serialization and host tests still do not verify native OS secure-storage behavior.
 
+### Android entry-point and refresh-commit ownership
+
+Activity creation/recreation and Firebase registration must obtain the same
+application-context-owned dependencies and credential coordinator for the build's
+role. A mutex created independently by every activity does not serialize the
+shared protected credential record. The 21 October driver presentation rejection
+exposes this ownership gap; the corrective packet must retain normal server
+refresh-family revocation rather than manufacture a new sign-in as recovery.
+
+Once an advisory recovery sends a one-use refresh, its request-to-protected-commit
+span must finish despite cancellation of the triggering UI/subscription. Bound
+that protected span to at most 30 seconds. A cancelled caller must still propagate
+cancellation before principal publication or live-hint activation; a staged logout
+retains its owner fence and clears/revokes the newly committed pair. Protected-save
+failure attempts revocation of the issued session inside that same bounded span.
+Network/deadline or process-loss uncertainty is not a successful commit or a replay
+permission: retain explicit recovery/sign-in behavior and existing failure rules.
+This local protection does not make network or power loss transactional, does not
+weaken backend reuse rejection, and never wraps a ride/payment command.
+
 ### Ongoing mobile socket authority
 
 The server verifies the mobile JWT's audience/type, identity and expiration, then
@@ -1018,6 +1038,46 @@ request     user
 ```
 
 The client should avoid infinite refresh loops.
+
+### Advisory-read recovery standing — 2026-10-04
+
+Immediate point-to-point, fixed-route and both scheduled-quote reads now use
+`AuthenticationSessionCoordinator.readWithSessionRecovery`. Under the existing
+credential mutex, the client validates `/me`, makes at most **one refresh attempt
+total** (including preflight), and may repeat the explicitly read-only quote
+projection at most once after a definitive authentication rejection. Product
+reload rejections participate in that same budget; they cannot silently bypass
+recovery by returning a signed-out projection. Backend amounts, roles and
+identity remain authoritative; there is no JWT-claim-based authorization.
+
+The read captures credential ownership before waiting for the mutex. Login and
+session-end stage an ownership fence immediately, so queued/late reads cannot
+adopt another account or restart its predecessor's live hints during refresh.
+Cancellation propagates. Network failures retain recoverable credentials and
+are not retried automatically. A protected-store failure stops hints and is
+reported as a recovery failure, not successful credential deletion.
+
+This retry policy is **not** a transport-wide interceptor and must never wrap
+booking, offer acceptance, availability, ride transitions, cash settlement or
+transfer submission. Their authentication recovery requires explicit,
+non-replaying command handling and backend reconciliation before another user
+attempt; neither a refresh nor a network error proves a mutation did not commit.
+The native authenticated-action boundary now distinguishes a resource rejection
+from a confirmed signed-out session using a typed local recheck flag. It executes
+the action once, performs one normal read-only restore (including the existing
+serialized refresh policy), and publishes no successful-action confirmation for
+that rejected action. Successful restore retains current authorized state and
+asks the user to review it before explicitly retrying. Revoked/expired refresh
+sessions still sign out; deliberate logout and unauthenticated screens never
+take this recovery path. No command is automatically resent.
+
+This correction follows two driver sign-in returns at access-token expiry while
+the retained database refresh session remained unrevoked and unexpired. Wider
+handler/account-switch/cancellation audit and a rebuilt actual-device expiry
+journey remain required; a typed flag or passing simulation alone does not
+establish complete session continuity.
+Token lifetimes and backend revocation/rotation policy are unchanged. See
+`union_demo.md` for distinct automated and actual-device evidence.
 
 ---
 

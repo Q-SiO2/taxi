@@ -1,0 +1,37 @@
+{
+  "candidate": "candidate-native-v15.json",
+  "scope": "Four-style native account/financial, restart, 1.3x font and selected EN/FR/AR core layouts plus five Tab stops per role",
+  "records": [
+    {
+      "path": "v15-native-account-style-review-verified.json",
+      "sha256": "6e21f282c4864f3a27cfc2a4ed6091d3d0b70fbe88e3176da8b0f789808187fd"
+    },
+    {
+      "path": "v15-native-passenger-fr-core-review.json",
+      "sha256": "40b281ef15c9ddf27f5a29614a50af3de13fbcc6d1a959b18d0e46c1df0d3393"
+    },
+    {
+      "path": "v15-native-passenger-en-core-review.json",
+      "sha256": "ec6d0161977102451fb8cc05c05ae680e5c079bdd9e2badbf40de1a27dc7ce31"
+    },
+    {
+      "path": "v15-native-driver-fr-core-review.json",
+      "sha256": "92be7792be1a019d73a754dc709c70f23639380201e4f08d2a89ea3eb51ca392"
+    },
+    {
+      "path": "v15-native-driver-en-core-review.json",
+      "sha256": "ca30824ede466c6070a32fd588a4623d0a5321c9bfbc7364568de910d16447f7"
+    },
+    {
+      "path": "v15-native-keyboard-focus.json",
+      "sha256": "7e196868d212323794867c98b2bd3a2e6acb82ee203b8f629c8715a5f431c6f0"
+    }
+  ],
+  "limitations": [
+    "No physical Android or iOS acceptance",
+    "No full TalkBack or all-page accessibility claim",
+    "Valhalla Arabic instructions fall back to English",
+    "Large text shows readable amounts with vertical scrolling; no full financial-row audit"
+  ],
+  "passed_within_scope": true
+}

@@ -1,0 +1,24 @@
+{
+  "candidate": "candidate-native-v21.json",
+  "observed_utc": "2026-10-22T11:17:22.595784+00:00",
+  "passed": true,
+  "observations": [
+    {
+      "role": "passenger",
+      "account_visible": true,
+      "session_expired_visible": false,
+      "pid": "1850",
+      "screenshot": "v21-native-retained-startup-passenger.png",
+      "sha256": "d3a387967401e59266e3d94f403044885b63b8a64cdaf1919d7d24ac16f70b65"
+    },
+    {
+      "role": "driver",
+      "account_visible": true,
+      "session_expired_visible": false,
+      "pid": "2197",
+      "screenshot": "v21-native-retained-startup-driver.png",
+      "sha256": "2220a0382fa60ceffd1727496dcdcb74a6aa68f518bb568ee0bae489aa03175c"
+    }
+  ],
+  "scope": "Actual retained app data/session after exact APK replacement and normal startup; no native sign-in or data wipe. V20 controlled expiry retains earlier exact APK identity; no new16-minute window claimed."
+}

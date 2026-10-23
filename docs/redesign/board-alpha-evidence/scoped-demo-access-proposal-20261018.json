@@ -1,0 +1,29 @@
+{
+  "status": "owner_approval_pending_not_applied",
+  "environment": "TaxiMobile Alpha / staging only",
+  "project_id": "9f841575-c4f3-4a4d-bb83-2e6ff92e436e",
+  "environment_id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+  "subject": "Existing synthetic Amal UX Recruitment Reviewer account",
+  "current_fixture_roles": ["CITY_MANAGER", "DRIVER_REVIEWER", "ANALYST"],
+  "observed": "Normal password/TOTP sign-in succeeds after bootstrap cleanup. Current access omits case, scheduling and payment-reconciliation views as expected.",
+  "proposed_city_id": "10000000-0000-4000-8000-000000000003",
+  "proposed_city": "Casablanca",
+  "proposed_additional_roles": [
+    {"role": "SUPPORT_AGENT", "purpose": "Scoped support queue/detail/response rehearsal"},
+    {"role": "SAFETY_RESPONDER", "purpose": "Scoped safety queue/detail/consequence rehearsal"},
+    {"role": "PRICING_MANAGER", "purpose": "Scoped scheduled-booking visibility; this existing role also permits pricing/scheduling commands"},
+    {"role": "PAYMENT_RECONCILER", "purpose": "Scoped settlement/refund record review; this existing role also permits reconciliation commands"}
+  ],
+  "grant_expiry": "24 hours from approved grant creation; exact timestamp must be recorded",
+  "setup_prerequisite": "Use or provision the documented initial three-account MFA platform-admin quorum in this isolated staging market, then use the normal protected grant request/review workflow. Bootstrap quorum grants are non-expiring under the existing contract; do not misrepresent them as 24-hour grants.",
+  "authority_sources": ["docs/operations.md section 6", "backend/src/taximobile_api/domains/administration/permissions.py", "backend/src/taximobile_api/cli/bootstrap_operations.py", "backend/src/taximobile_api/cli/bootstrap_operations_quorum.py"],
+  "constraints": [
+    "Approval must cover the synthetic setup quorum as well as the four time-limited city roles",
+    "Never add permissions merely on language/style changes or weaken API authorization",
+    "No production access, real people, real settlement/refund or public recruitment",
+    "No hidden manual database manipulation or direct grant-table edits; use the documented trusted bootstrap and protected grant workflow",
+    "Keep generated test credentials private; no values in docs, logs or client assets",
+    "No paid plan, new volume or public database proxy",
+    "Actual UI acceptance remains separate from source compilation"
+  ]
+}

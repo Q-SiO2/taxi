@@ -1,0 +1,95 @@
+{
+  "date": "2026-10-14",
+  "revision": "Owner likes interface without main illustration; active prototype is art-free",
+  "motion": [
+    {
+      "actionFixed": true,
+      "back": "matrix(1, 0, 0, 1, 8, 0)",
+      "factsUnchanged": true,
+      "hinge": "none",
+      "phase": "scrubbed",
+      "progress": "50.0",
+      "world": "tactile"
+    },
+    {
+      "actionFixed": true,
+      "back": "matrix(1, 0, 0, 1, 8, 0)",
+      "factsUnchanged": true,
+      "hinge": "none",
+      "phase": "scrubbed",
+      "progress": "50.0",
+      "world": "print"
+    },
+    {
+      "actionFixed": true,
+      "back": "matrix(1, 0, 0, 1, 8, 0)",
+      "factsUnchanged": true,
+      "hinge": "matrix(0.97783, 0.209398, -0.209398, 0.97783, 0, 0)",
+      "phase": "scrubbed",
+      "progress": "50.0",
+      "world": "fold"
+    }
+  ],
+  "playObserved": "running",
+  "reducedMotion": "suppressed",
+  "compactArabicLarge": [
+    {
+      "artHidden": true,
+      "direction": "rtl",
+      "font": "Arabic, Plex, sans-serif",
+      "overflow": [],
+      "scroll": 305,
+      "width": 305,
+      "world": "tactile"
+    },
+    {
+      "artHidden": true,
+      "direction": "rtl",
+      "font": "Arabic, Plex, sans-serif",
+      "overflow": [],
+      "scroll": 305,
+      "width": 305,
+      "world": "print"
+    },
+    {
+      "artHidden": true,
+      "direction": "rtl",
+      "font": "Arabic, Plex, sans-serif",
+      "overflow": [],
+      "scroll": 305,
+      "width": 305,
+      "world": "fold"
+    }
+  ],
+  "all213Grammars": [
+    {
+      "art": 0,
+      "family": "",
+      "grammar": "tactile",
+      "overflow": [],
+      "scroll": 345,
+      "views": 213,
+      "width": 345
+    },
+    {
+      "art": 0,
+      "family": "",
+      "grammar": "print",
+      "overflow": [],
+      "scroll": 345,
+      "views": 213,
+      "width": 345
+    },
+    {
+      "art": 0,
+      "family": "",
+      "grammar": "fold",
+      "overflow": [],
+      "scroll": 345,
+      "views": 213,
+      "width": 345
+    }
+  ],
+  "errors": [],
+  "limits": "Browser specimens only. No native or release acceptance; prior vehicle animation proof is historical."
+}

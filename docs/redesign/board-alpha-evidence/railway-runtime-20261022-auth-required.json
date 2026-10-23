@@ -1,0 +1,45 @@
+{
+  "observed_utc": "2026-10-22T10:05:29.620550+00:00",
+  "direct_endpoint_observations": [
+    {
+      "url": "https://alpha-api-staging.up.railway.app/health",
+      "status": 200,
+      "location": null
+    },
+    {
+      "url": "https://alpha-api-staging.up.railway.app/ready",
+      "status": 200,
+      "location": null
+    },
+    {
+      "url": "https://alpha-web-staging.up.railway.app/",
+      "status": 200,
+      "location": null
+    },
+    {
+      "url": "https://alpha-web-staging.up.railway.app/apply/",
+      "status": 200,
+      "location": null
+    },
+    {
+      "url": "https://alpha-web-staging.up.railway.app/apply",
+      "status": 302,
+      "location": "http://alpha-web-staging.up.railway.app:8080/apply/"
+    }
+  ],
+  "connector": {
+    "authenticated": false,
+    "error_code": "UNAUTHORIZED",
+    "message": "This app connection requires reauthentication. Reconnect the app and try again.",
+    "fresh_five_service_topology_verified": false
+  },
+  "provider": {
+    "source": "https://status.railway.com/",
+    "latest_observed_update_utc": "2026-10-22T09:28:00Z",
+    "trial_builds_available": false,
+    "scope": "Builds available for Pro/Enterprise only; Hobby/Free/Trial not yet enabled. Deployment queues/error rates elevated. Official earlier04:17UTC update reports all Railway API tokens invalidated."
+  },
+  "action": "Asked owner to reconnect existing Railway app with same authorized workspace/trial. Continue independent native credential correction. No deployment retry, paid plan, volume or permission mutation.",
+  "prepared_packet": "candidate-web-v8-proxy-r1.json",
+  "goal_turn_classification": "Previous goal turn made substantial native/source/runtime progress. This continuation has fresh focused green and a new meaningful cleanup red case; not at an impasse."
+}

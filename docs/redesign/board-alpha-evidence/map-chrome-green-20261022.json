@@ -1,0 +1,41 @@
+{
+  "recorded_utc": "2026-10-22T11:56:11.993350+00:00",
+  "kind": "green",
+  "totals": {
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "class": "org.example.taximobile.feature.app.MapSheetInsetsUiTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "0871f7983bc07ce44bb91ff40f75e65ad5ea488dd3a4301b650a4cb0c31ed1d6"
+    }
+  ],
+  "sources": [
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/MapSheetInsetsUiTest.kt",
+      "sha256": "877da4e531fe75ca24a5c6be354ed516fe90722bde3874b8809b6a4a3d66a9f9"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+      "sha256": "b481b79db1e7284048dfa7e896fb623dc7618a4a4d701a32c7373955e8a3c18c"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt",
+      "sha256": "6df8815ceee87720a0faac9896bb3b64b4fc825e4b4ec57dc441c55d6b70cfaf"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiSheet.kt",
+      "sha256": "2e0af9491acc82d97c8206a4a2cd210e83e3807e32c9001e913fa17f8c7a7636"
+    }
+  ],
+  "archive": ".tools/alpha-delivery/map-chrome-green-20261022",
+  "log_sha256": "c8c535ccfc3f41bba0a5f7b585fccda3eaa8e0d11e6975e5c75cbf49aaa5c087",
+  "scope": "Passenger and driver expanded/promoted sheets yield map shortcuts to the toolbar; collapse restores them. Existing IME/inset cases retained. No command, authentication, price or sheet geometry change."
+}

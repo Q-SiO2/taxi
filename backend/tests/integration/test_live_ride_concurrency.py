@@ -16,7 +16,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from taximobile_api.domains.auth.models import User
 from taximobile_api.domains.drivers.models import (
-    AvailabilityStatus, DriverAccountStatus, DriverProfile, Vehicle,
+    AvailabilityStatus, DriverAccountStatus, DriverLocation, DriverProfile, Vehicle,
     VehicleVerificationStatus, VerificationStatus,
 )
 from taximobile_api.domains.driver_applications.models import (
@@ -68,6 +68,11 @@ async def seed(sessions, *, arrived=False, expired=False):
         await session.flush()
         session.add(DriverCityAuthorizationService(authorization_id=authorization.id,
             service_type=ServiceType.ON_DEMAND))
+        # An otherwise eligible assignment fixture must also satisfy current
+        # operational location readiness, not rely on the old missing guard.
+        session.add(DriverLocation(driver_id=profile.id,
+            point=WKTElement("POINT(-7.62 33.59)", srid=4326),
+            observed_at=datetime.now(UTC), accuracy_meters=5))
         ride = Ride(city_id=LEGACY_CITY_ID, operator_id=LEGACY_OPERATOR_ID,
             passenger_id=passenger.id,
             status=RideStatus.DRIVER_ARRIVED if arrived else RideStatus.MATCHING,
@@ -185,10 +190,15 @@ async def prove_race(settings, mode):
                 OutboxEvent.payload["ride_id"].astext == str(ride_id))))
             assert sum(e.topic == "ride.accepted" for e in events) == int(first_action == "accept")
             assert sum(e.topic == "ride.cancelled" for e in events) == int(ride.status == RideStatus.CANCELLED)
+            assert sum(e.topic == "ride.updated" for e in events) == int(first_action == "start")
             notifications = list(await session.scalars(select(Notification).where(
                 Notification.data["ride_id"].astext == str(ride_id))))
-            assert len(notifications) == int(first_action == "accept")
+            expected_notification_types = {
+                "accept": ["DRIVER_ASSIGNED"], "start": ["RIDE_UPDATED"],
+            }.get(first_action, [])
+            assert sorted(n.type for n in notifications) == expected_notification_types
             assert all(n.user_id == passenger_id for n in notifications)
+            assert all(n.data == {"ride_id": str(ride_id)} for n in notifications if n.type == "RIDE_UPDATED")
     finally:
         release.set()
         for task in tasks:

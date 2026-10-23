@@ -1,0 +1,15 @@
+{
+  "updated_utc": "2026-10-19T19:38:22.819887+00:00",
+  "candidate": "candidate-native-v12.json",
+  "failed_full_runs": [
+    {
+      "path": "v12-first-attempt-20261019T193301722760Z.json",
+      "started_utc": "2026-10-19T19:19:31.515182+00:00",
+      "ride_id": "98a253df-de13-4029-9daa-e538a520997d",
+      "outcome": "Start not confirmed before timeout; later explicit retry and recovery verified separately",
+      "sha256": "6e3d791872417174dc937abba17bb305e15117d2b3e024502e365b19790855e9"
+    }
+  ],
+  "recovery_verification": "v12-native-first-fr-trip-recovery-verified.json",
+  "reference_resolution": "The recovery verifier recorded v12-native-first.json as the historical failed-run filename. That failed report is now preserved under the unique archive path above; the named first report is reserved for the next attempt. Recovery is never a clean full rehearsal."
+}

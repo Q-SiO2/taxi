@@ -1,5 +1,117 @@
 # Implementation Blueprint
 
+## Active real-world implementation goal - 23 October 2026
+
+Follow [the R0-R12 execution plan](real-world-launch.md), mapped to the existing
+roadmap B/C packages and GAP/T authorities. First reconcile source and actual
+acceptance for the full feature/platform scope, then repair bounded unblocked
+gaps. Reuse current FastAPI/PostGIS/Kotlin/Compose implementations and preserve
+the demonstrated alpha. This goal includes physical devices, production providers,
+operations, money/settlement, field pilot and guarded public release; synthetic
+test counts cannot close it. No new software or production acceptance is claimed
+by this planning checkpoint.
+
+## Board alpha execution authorized — 15 October 2026
+
+The owner now directs the earliest functional board alpha, authorizes application
+implementation and TaxiMobile Railway staging changes/deployment, and requires
+French, Arabic and English with concise copy. This supersedes the earlier
+planning-only stop. The selected four-style contract remains in force; no further
+palette approval is needed. Follow [the active board alpha checkpoint](board-alpha.md)
+for execution and evidence. Native, integrated staging, device and release
+acceptance must still be demonstrated.
+
+## Selected style system — recorded 15 October 2026
+
+The bounded [functional material grammar](redesign/task-material.md) is implemented
+in native v23 / optimized live web v10. Their frozen builds pass 389 JVM /
+311 Android-host and 75 fresh JS / 75 Wasm checks. [Final integration](redesign/board-alpha-evidence/release-v23-r2-integrated-verification.json)
+passes two synthetic presentation paths against the exact recovered staging pair,
+with all eight business commands once per ride, same-process rebooking, quote
+resume, controlled radio recovery and normal staff MFA/applicant reads. Observed
+timings are 16:22 / 11:07 with explicit first-run/observer qualifications.
+
+Web v10 changes only the later web applicant timeline markers to font-independent
+circles. Native v23 APKs are unchanged; all 415 current web inputs match their
+archive, and the single web-only exception to the native snapshot is explicit.
+All 103 hosted HTTP checks and selected actual four-style/EN/FR/AR timeline
+observations pass. Credential/MFA recovery is applied within Trial limits.
+
+[The handoff](board-alpha-handoff.md) owns current artifacts and evidence scope.
+The core v22 map shortcut clearance, v21 input-only quote restoration and v20
+credential ownership remain intact. Historical checks retain their original
+identities. Owner visual review, physical/device/field, full accessibility,
+iOS and later pilot/public acceptance are separate from these scoped passes.
+
+The owner selected Folded Streets, Street Press, Glazed Machine and Notepad as
+four complete local presentation choices. The independent color-theme menu and
+main city/taxi illustration are withdrawn. [style-options.md](redesign/style-options.md)
+now owns the shared preference, exact treatments and ST-0–ST-4 engineering packets;
+[delivery.md](redesign/delivery.md) maps them into the UX waves. Earlier statements
+that no style has been selected are historical. No further palette vote is needed.
+
+Use the existing semantic components/theme boundary. Notepad retains main tasks,
+icons and explicit state/recovery in grayscale, with decorative motion disabled.
+Keep all backend authorization, scope, review, MFA, privacy and financial contracts.
+This selection is distinct from native/device, deployment and release acceptance.
+The shared style preference and component treatments are now implemented. Use
+[the current checkpoint](board-alpha.md) and [handoff](board-alpha-handoff.md)
+for exact source/APK identities and actual runtime coverage; documentation previews
+and the 213-view inventory do not establish application acceptance. The current
+native ownership implementation preserves history and quote navigation under stable login/logout
+ownership, rereads fresh server terms, and keeps token-specific realtime reconnect
+generations unchanged. The focused 74-case suite and two complete v17 native
+journeys pass. V18 adds short history display references and readable coordinate
+fallbacks while retaining full API identifiers/points. Its frozen full build
+passes 372 JVM / 305 Android-host tests. Two actual v18 native trips, same-process
+rebooking, history/support and timed seven-beat repetitions now pass; source,
+selected runtime coverage and broader release acceptance remain distinct. Earlier failed attempts are
+preserved in the checkpoint's historical evidence.
+
+The latest native v20 freezes the credential lifecycle correction: one
+application-context dependency/coordinator per Android role across activity and
+Firebase entry points; a cancellation-safe refresh/protected-commit phase bounded
+to 30 seconds; cancellation propagated before principal/hint publication. Six
+new regressions join 117 focused passing checks. Its 413 frozen inputs differ
+from v19 in exactly five source/test files; the full build passes 383 JVM /
+311 Android-host tests. Exact native recovery, core and presentation acceptance
+remain pending; the v19 session-expiry rejection is preserved. See
+[the active checkpoint](board-alpha.md). No backend/API/schema or business-command
+retry change is introduced, and compiled hosted web v8 remains independent.
+
+The resumed 21 October native review exposes header drags being stolen by content
+scrolling. V19 corrects input arbitration without changing sheet geometry, retains
+body scroll and child taps, and adds localized accessible snap actions. Five new
+JVM UI regressions pass; its exact full build passes 377 JVM / 305 Android-host
+checks. Native gestures, four-style fare and both core repetitions subsequently
+pass; a later driver session-expiry failure withholds full presentation acceptance
+and motivates v20. Earlier runtime evidence retains its exact candidate identity.
+
+
+## Historical owner stop — 12 October 2026; superseded 15 October
+
+At that checkpoint the UI/UX and rehearsal were rejected. The owner requested free visual
+exploration and a complete plan, then confirmation before execution. Review
+[redesign/README.md](redesign/README.md) and
+[redesign/delivery.md](redesign/delivery.md). No new application redesign,
+deployment or device rehearsal was authorized before that confirmation. The
+15 October authorization above supersedes this stop. Preserve
+the dirty checkout and treat older implementation/hosting checkpoints below as
+dated evidence. Once confirmed, UX-0 resolves visual authority and candidate
+identity, then UX-1 validates actual Compose foundation renders.
+
+## Active implementation handoff — 12 October 2026
+
+[roadmap.md](roadmap.md) replaces the historical phase ordering with executable
+alpha tasks and a pilot/public launch mapping. [deployment.md](deployment.md)
+defines Railway preparation, separate process-role verification and cost controls.
+The GPS provenance/accuracy paths and later retained 90-test focused report were
+inspected for planning; they were not rerun in this documentation session.
+Do not reclassify this as fresh candidate acceptance. Current UI, cash, location,
+web and other uncommitted work must be preserved and verified under A-01.
+No remaining application feature, hosted service or physical-device journey was
+implemented or accepted by this planning change. A-01 is the next software task.
+
 For task sequencing and executable verification, use [workflow.md](workflow.md).
 For the dated requirement comparison and weighted source-completion estimate,
 use [readiness.md](readiness.md). The detailed implementation contract below
@@ -7,7 +119,74 @@ remains subordinate to the owning domain rules.
 
 This document fixes the implementation choices required to turn the TaxiMobile product documents into working software. It is subordinate to the domain rules in `product.md`, `operations.md`, `auth.md`, `rides.md`, `matching.md`, `pricing.md`, and `payments.md`. If a technical choice conflicts with one of those rules, the domain rule wins and the conflict must be resolved in documentation first.
 
-## Current implementation standing — 2026-10-02
+## Current implementation standing — 2026-10-08
+
+**Union-demo cash recovery follow-up (2026-10-08):** completed pending cash now
+has its own driver-owned oldest-first paginated read, independent of recent ride
+history. The completion-only UI flag was removed. Shared restoration reloads
+authoritative payment facts, preserves only the selected page during read-only
+refresh, clamps a depleted page and presents explicit read failure/reload. Cards
+and confirmation display ride reference, amount/currency and date. The locked
+idempotent settlement transaction remains authoritative, and coroutine cancellation
+is not replayed. The exact retained synthetic payment was confirmed in the native
+driver app; restart recovered its single earning and the remaining pending queue.
+Full local backend (1,133), JVM (316) and Android-host (267) test gates and both
+role APK assemblies passed. Current physical-device/candidate evidence and the
+remaining full-journey boundary are in `union_demo.md`; real cash operations
+remain open under GAP-010. No database schema or production topology changed.
+
+**Union-demo artwork follow-up (2026-10-02):** a connected Samsung Android 16
+phone exposed a signed-out welcome crash (`Android platform doesn't support SVG
+format`) that JVM tests and Android compilation had not caught. Shared decorative
+images now use bounded PNG runtime exports, loaded outside composition, with the
+existing accessible Canvas/text fallbacks for missing/corrupt assets. Cancellation
+and fatal VM failures remain visible; this fallback policy does not apply to
+auth, maps, navigation, driver documents or payment authority. The graphic gate
+now rejects shared UI references to SVG and missing/corrupt runtime PNGs.
+**Latest illustration direction (2026-10-03):** after rejecting the stock and
+code-authored outline candidates, the owner explicitly requested image generation
+for a navy background with thin light-navy taxi/Al-Qarawiyyin-inspired contours,
+then a phone portrait composition with substantially less detail. The current 941x1672 master,
+prompt/provenance records and unchanged PNG runtime mapping are retained under
+`assets/illustrations/onboarding/` and `assets/manifest.json`. The welcome displays
+the entire approximately 9:16 portrait at up to 216x384 dp, shrinking on narrow
+screens. Only this intentionally opaque artwork permits RGB without alpha and
+a 2 MiB decode-input budget; other optional images keep 1 MiB and cutouts require
+alpha. The simplified Canvas fallback follows the same navy/light-navy direction.
+No runtime image provider, new typography, control colours or business logic is
+introduced. Final visual approval and physical-phone acceptance remain open.
+The signed-out/role-gate page now consumes platform safe-drawing insets before
+its scroll container, after an API-35 emulator exposed a status-bar/header overlap.
+This preserves map edge-to-edge drawing and existing gate padding; a controlled
+inset UI test checks the header offset without claiming physical-device acceptance.
+Physical post-fix execution evidence belongs in `union_demo.md`; compilation or
+JVM decoding alone must not be reported as a successful phone journey.
+
+**Union-demo account/chrome follow-up (2026-10-03):** actual API-35 inspection
+found the status-bar frame covering the passenger account action's centre; a tap
+on its visible lower edge opened the account sheet. Passenger and driver toolbars
+now consume top/horizontal safe-drawing insets, retain 16 dp side spacing and use
+the documented 12 dp clearance below the status bar. Their visible controls have
+48 dp minimum height and localized account-purpose accessibility labels without
+changing displayed names or palette. Driver city onboarding also consumes safe
+insets; sheet scroll viewports consume bottom/horizontal safe insets so actions
+can be scrolled above gesture navigation. Maps remain full-bleed. Controlled
+Compose tests cover both toolbar account actions, onboarding and long-sheet
+action access. Emulator registration/session reports remain separate from full
+UD-01 and physical/release acceptance; see `union_demo.md`.
+
+**Union-demo advisory session recovery (2026-10-04):** the shared authentication
+coordinator now owns read-only quote authorization/recovery under its existing
+credential mutex. Point, fixed-route and scheduled quotes validate the backend
+principal, allow one refresh attempt total and at most one advisory retry.
+Credential ownership is captured before the mutex wait and fenced immediately
+by login/logout. Refresh persistence and subsequent principal validation cannot
+reactivate a superseded owner's live hints. Ktor authentication cancellation
+propagates rather than becoming a transport error. Network/storage failures
+remain distinct from successful sign-out. Business mutations are not inside
+this retry boundary and are never automatically replayed by it; broader command
+continuity and physical expiry/revocation acceptance remain open. This reuses
+the existing coordinator instead of adding a global HTTP retry interceptor.
 
 **Android signature-evidence follow-up (2026-10-02):** the packaged-artifact
 checker can inspect both roles against explicit public certificate SHA-256
@@ -172,7 +351,12 @@ forced-upgrade, retry, local-origin and exact-origin/path header-scoping behavio
 in CI. The 2026-09-09 compatibility
 candidate's 6,104,171-byte JavaScript fallback is within its narrowly reviewed
 6,250,000-byte ceiling; startup measurements on target networks remain required
-performance evidence. The
+performance evidence. On 17 October the required EN/FR/AR entry and recovery
+packet measured 6,467,000 bytes, versus deployed board v4's 6,245,606. Its reviewed
+JS ceiling is 6,550,000 bytes (1.28% headroom); Wasm and total-package ceilings
+remain unchanged. The locale adapter must be packaged and loaded synchronously
+before compatibility boot. This supersedes the September JS ceiling for the new
+board packet; target-network startup evidence remains open. The
 current CI definition covers backend, Android/shared, iOS simulator compilation,
 documentation/provenance validation, and JavaScript/Wasm browser tests plus a
 production compatibility distribution. It also defines immutable-action
@@ -520,6 +704,14 @@ requests exactly one normal restoration after an unavailable-to-available edge.
 The platform signal remains advisory and cannot acknowledge API reachability or a
 business command.
 
+Android additionally separates explicit driver observation ownership from its
+automatic foreground sampler using the existing one-shot gate. A first explicit
+lookup preempts automatic sampling; repeated explicit taps cannot replace it.
+The preempted automatic cancellation neither warns nor backs off, and automatic
+sampling waits until the explicit callback finishes. The existing context,
+foreground and freshness validation remains mandatory. Actual replacement APK
+acceptance is tracked in [the board checkpoint](board-alpha.md).
+
 Both roots use the common Compose lifecycle for foreground recovery. A tested
 `ForegroundRecoveryPolicy` arms only after `ON_STOP`, consumes that arm on the
 next `ON_START`, and ignores initial or repeated start events. An authenticated
@@ -614,6 +806,31 @@ Both profiles intentionally claim host-loopback port `8002`, making accidental
 dual activation fail while each provider retains its native private container
 port. The guarded launcher selects exactly one profile and injects only that
 provider's internal URL into the API process.
+The union rehearsal also has an optional native Windows GraphHopper launcher
+using that same pinned JAR and reviewed profile, with both HTTP/admin sockets on
+loopback only. It verifies source hashes, fences process reuse by ownership and
+content-addresses caches by engine/extract/config identity. This removes Docker
+Desktop startup as a local-demo dependency without introducing a new routing
+provider, paid API or client-side fallback. The cohort launcher records an
+explicit provider selection; changing it requires stopping only that same API,
+not reseeding or replacing its database/accounts/signing secret. See
+`union_demo.md` for the guarded commands, input provenance and distinct provider,
+authenticated-backend and device acceptance gates. Native import readiness is
+not deployment acceptance, and geocoding remains independently disabled.
+The portable PostgreSQL launcher now leaves a live startup process running when
+its readiness-observation deadline expires. Observed WAL recovery exceeded that
+deadline; terminating the recovering server had restarted the recovery cycle.
+Use the exact workspace DataRoot's `pg_ctl status`, `pg_isready` and private logs
+to distinguish recovery from terminal exit before resuming the same demo. A
+timeout is not permission to reset data or start a duplicate. Explicit stop
+commands remain separate from observation.
+The shared map sheet consumes IME bottom space in its outer overlay before snap
+sizing, then applies remaining safe chrome to the inner scroller. Applying a
+keyboard-sized inset inside a small peek sheet had erased its viewport and
+focused input on Android. Maps remain edge-to-edge and the requested/accessible
+snap policy is unchanged. The injected-keyboard regression tests focus, scroll
+visibility and restored gesture-nav bounds; native keyboard journeys still need
+device evidence beyond those shared tests.
 The passenger product reloads the authorized detailed ride after creation and on
 later refreshes, then requests the normalized pickup-to-destination route for its
 active MapLibre view. This visualizes the journey but does not claim live driver
@@ -696,7 +913,11 @@ actions before backend submission.
 
 After backend-confirmed online entry, a tested shared policy schedules the same
 one-shot adapter every 15 seconds for `AVAILABLE`/`OFFERED_RIDE` and every 10
-seconds for active-ride states. Android/iOS lifecycle callbacks disarm it on
+seconds for active-ride states, with that minimum idle interval measured again
+after automatic submission/readback/reconciliation finishes. The native roots
+record completion only when the admitted action releases its gate, including
+failure/cancellation cleanup. Slow work therefore cannot immediately consume
+the gate again; permission/GPS backoff is never shortened. Android/iOS lifecycle callbacks disarm it on
 background; offline/paused/disconnected state, an active platform lookup, or an
 ordinary pending command suppresses each attempt. The automatic requester never
 opens permission UI. Unavailable observations trigger localized guidance and a

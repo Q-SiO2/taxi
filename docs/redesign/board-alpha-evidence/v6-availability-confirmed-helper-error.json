@@ -1,0 +1,14 @@
+{
+  "candidate": "candidate-native-v6.json",
+  "run": "first",
+  "started_utc": "2026-10-15T21:20:32.985923+00:00",
+  "fidelity": "two API35 Android emulators, synthetic GPS/accounts/cash; native writes and server reads",
+  "passed": false,
+  "steps": [
+    {
+      "name": "Native on-demand availability visible",
+      "utc": "2026-10-15T21:21:16.886723+00:00"
+    }
+  ],
+  "finished_utc": "2026-10-15T21:21:18.532966+00:00"
+}

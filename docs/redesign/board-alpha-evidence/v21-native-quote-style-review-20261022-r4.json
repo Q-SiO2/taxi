@@ -1,0 +1,138 @@
+{
+  "candidate": "candidate-native-v21.json",
+  "started_utc": "2026-10-22T11:27:15.656517+00:00",
+  "passed": false,
+  "checks": [],
+  "scope": "Actual API31 passenger map-selected advisory quote and four style choices. UI labels/fare/control readiness and owner-scoped ride-list stability; not a hidden-coordinate or active-trip assertion.",
+  "apk_sha256": "bba9cd2e810659d66002b0b10377e95b275aec16d02424acba7705844a55e297",
+  "before": [
+    {
+      "id": "46f115c7-cc34-4161-a3a3-238910b494c9",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "8145b32e-4549-4183-bce5-60d3936a4de4",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "93df2c70-fd2b-4e97-8df3-eee368699bea",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "d8daeaaa-fbe9-4614-af7e-45b896d30ecb",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "733abbcf-5d1b-4ff2-b7f3-3563052cbd25",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "cb951af4-f5ae-4d05-8a06-a28b49797f33",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "c55e696d-2bae-4640-8801-f50d2c20a42b",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "b7aac6ac-cc87-494d-aa95-842c21fc6759",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "98a253df-de13-4029-9daa-e538a520997d",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "e531e392-6f5b-4962-9964-3967a4afc418",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "082f8b85-6598-423d-aac5-cf31eec3f30a",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "e734ed2c-a37c-424b-9d84-b31e6811cd09",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+      "status": "COMPLETED"
+    }
+  ],
+  "pid_before": "1850",
+  "map_before": {
+    "path": "v21-quote-style-r4-map-before-selection.png",
+    "sha256": "09fe77d484d9be443c10c34007f69b3b88cdc5e049bd93c3d5c2c02d06cfa0d7"
+  },
+  "initial_quote": {
+    "path": "v21-quote-style-r4-initial-quote.png",
+    "sha256": "b0899160396b89bd686c238d77ce07788f29880356897e265067998551183839"
+  },
+  "fresh_activity_recovery": {
+    "before_history_count": 4,
+    "observations": [
+      {
+        "mode": "plain",
+        "history_count": 5,
+        "pid": "1850",
+        "selection": {
+          "path": "v21-quote-style-r4-fresh-plain-selection.png",
+          "sha256": "c41cc61f7b4127b9a6bb51de76b4da00fa401ae1743be4eecac5d62164ad6152"
+        },
+        "fare": {
+          "path": "v21-quote-style-r4-fresh-plain-fare.png",
+          "sha256": "ad9620c0759c387538e13de3de52a459ad8dd822f5b30586c851e740f02542cc"
+        },
+        "request_visible_enabled": true
+      },
+      {
+        "mode": "launcher",
+        "history_count": 5,
+        "pid": "1850",
+        "selection": {
+          "path": "v21-quote-style-r4-fresh-launcher-selection.png",
+          "sha256": "312a9cede17809a2a7667df611612dc8a81b0104bec5710d5deffb137a521bb3"
+        },
+        "fare": {
+          "path": "v21-quote-style-r4-fresh-launcher-fare.png",
+          "sha256": "9535fb4d510622d0c172ac1f486ecfa96dc9069c49095c0ecf946a1fe7b8cb26"
+        },
+        "request_visible_enabled": true
+      }
+    ],
+    "passed": true
+  },
+  "failure_type": "AssertionError",
+  "failure_detail": "",
+  "final_style": "Folded Streets",
+  "verifier_own_session_logout_status": 200,
+  "finished_utc": "2026-10-22T11:29:36.080700+00:00"
+}

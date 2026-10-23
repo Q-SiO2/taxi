@@ -1,0 +1,16 @@
+{
+  "verified_utc": "2026-10-21T11:32:57.785725+00:00",
+  "candidate": "candidate-native-v18.json",
+  "passed": true,
+  "records": [
+    "v18-native-driver-history-review-r2.json",
+    "v18-native-passenger-between-trips-history-review-r2.json"
+  ],
+  "all_412_frozen_sources_unchanged": true,
+  "qualification": "Original passenger/driver attempts stopped on simultaneous ADB hierarchy timeouts at 11:22 UTC; cause not established. Unique r2 attempts pass. No failed record overwritten and no production code changed.",
+  "original_attempts": [
+    "v18-native-driver-history-review.json",
+    "v18-native-passenger-between-trips-history-review.json"
+  ],
+  "scope": "Both exact-APK selected history details use short references, retain authorized full API IDs, and survive same-process foreground/live wait. Passenger paid receipt/public support acknowledgement and disabled empty Send pass. Driver ratings response empty; no populated feedback rendering claimed."
+}

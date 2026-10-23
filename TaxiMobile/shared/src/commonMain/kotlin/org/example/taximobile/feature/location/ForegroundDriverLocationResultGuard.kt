@@ -42,10 +42,14 @@ class ForegroundDriverLocationResultGuard {
         appInForeground: Boolean,
         networkUsable: Boolean,
         appActionInFlight: Boolean,
+        allowOfflineStaging: Boolean = false,
     ): Boolean = request.generation == generation &&
         appInForeground && networkUsable && !appActionInFlight &&
         state is AppUiState.DriverReady &&
-        state.availability in ForegroundDriverLocationPolicy.OPERATIONAL_LOCATION_STATES &&
+        (state.availability in ForegroundDriverLocationPolicy.OPERATIONAL_LOCATION_STATES ||
+            (allowOfflineStaging && state.availability in setOf(
+                DriverAvailabilityStatus.OFFLINE, DriverAvailabilityStatus.PAUSED,
+            ))) &&
         request.context == state.context()
 
     private fun AppUiState.DriverReady.context() = Context(

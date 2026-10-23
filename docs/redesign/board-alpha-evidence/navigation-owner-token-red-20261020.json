@@ -1,0 +1,32 @@
+{
+  "created_utc": "2026-10-20T20:08:37.120305+00:00",
+  "counts": {
+    "tests": 19,
+    "failures": 2,
+    "errors": 0,
+    "skipped": 0
+  },
+  "failed": [
+    "quote_catch_up_rotates_rejected_access_once_without_replaying_a_ride_command[jvm]",
+    "token_rotation_keeps_selected_history_under_the_same_credential_owner[jvm]"
+  ],
+  "finding": "Both quote recovery and selected history must survive valid token rotation under stable credential ownership, while live subscription generations remain token-specific.",
+  "archive": [
+    {
+      "path": ".tools/alpha-delivery/navigation-owner-token-red/TEST-org.example.taximobile.feature.app.QuoteSessionRecoveryTest.xml",
+      "sha256": "59330b3a0cd574aeea36f1f413422f6ee2c777a4adc268ce535dae7b91a586c3"
+    },
+    {
+      "path": ".tools/alpha-delivery/navigation-owner-token-red/navigation-owner-token-red-20261020.log",
+      "sha256": "c59f4c71024237e9d59eaedd97995186e8c1d8ae103f5c5bdfb08ddc19d355c1"
+    },
+    {
+      "path": ".tools/alpha-delivery/navigation-owner-token-red/MobileAppCoordinator.kt",
+      "sha256": "317259daaa2305b3aec67d6f45e7cb422dfe9c1465c60e31e99db88ff3ec6f6e"
+    },
+    {
+      "path": ".tools/alpha-delivery/navigation-owner-token-red/QuoteSessionRecoveryTest.kt",
+      "sha256": "b0a472dcf5567f57735335ee153b85796dafb803e8801cccf41db94d37941d57"
+    }
+  ]
+}

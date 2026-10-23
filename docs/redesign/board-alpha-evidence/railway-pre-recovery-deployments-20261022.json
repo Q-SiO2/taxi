@@ -1,0 +1,60 @@
+{
+  "observed_utc": "2026-10-22T23:31:21.339345+00:00",
+  "project_id": "9f841575-c4f3-4a4d-bb83-2e6ff92e436e",
+  "environment_id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+  "deployments": [
+    {
+      "service": "alpha-web",
+      "service_id": "2d8ab069-2310-46ff-afe0-8fd4f42a5bd1",
+      "deployment_id": "ceee310c-e957-49ad-945d-b9f2d292eb61",
+      "status": "SUCCESS",
+      "image_digest": "sha256:5f4900fa9b289d4e8b830f9458bf1a9de64de45ef965d458e5d090a66794e657",
+      "start_command": null,
+      "pre_deploy_command": null,
+      "active_deployments": 1
+    },
+    {
+      "service": "alpha-api",
+      "service_id": "758fa7d5-f8b8-4730-a00f-438e28184e35",
+      "deployment_id": "e5e108a0-e5dd-4553-93fd-292026c98b63",
+      "status": "SUCCESS",
+      "image_digest": "sha256:6754fb817a8ec3e2f25b3539895837e1b3a333db96ccdc0e20a98b2281bf1701",
+      "start_command": "python -m taximobile_api.operations.railway_entrypoint api",
+      "pre_deploy_command": [
+        "python -m taximobile_api.operations.railway_entrypoint migrate"
+      ],
+      "active_deployments": 1
+    },
+    {
+      "service": "alpha-worker",
+      "service_id": "eb42d0ba-feae-4f7a-9c86-48f4d38006d0",
+      "deployment_id": "8ca5a361-9b66-4d7a-8041-c9a5754bbe47",
+      "status": "SUCCESS",
+      "image_digest": "sha256:0bc1db2bcb47b7e110ff4c459e6f86784513e8eb94a51cbc5e78be5aa28186b7",
+      "start_command": "python -m taximobile_api.operations.railway_entrypoint worker",
+      "pre_deploy_command": null,
+      "active_deployments": 1
+    },
+    {
+      "service": "alpha-routing",
+      "service_id": "568723a2-e456-4130-825a-077c5cae9f81",
+      "deployment_id": "dec657d1-e507-421d-9bc2-15f0250385b7",
+      "status": "SUCCESS",
+      "image_digest": "sha256:3b35de64ffb16a05bf945631cf034dc821fe7e5675124e53b2b0f4ee59c6f6f4",
+      "start_command": null,
+      "pre_deploy_command": null,
+      "active_deployments": 1
+    },
+    {
+      "service": "alpha-postgis",
+      "service_id": "41ccd6b2-41e2-4886-8d96-cc56f62aaab7",
+      "deployment_id": "10348a72-65f4-4b80-8474-e8a950ccd282",
+      "status": "SUCCESS",
+      "image_digest": "sha256:44126d872ac91993766c341e369c539e8196614321765d36a6f1bab0419a5fa5",
+      "start_command": "docker-entrypoint.sh postgres -c shared_buffers=32MB -c work_mem=2MB -c max_wal_size=32MB -c min_wal_size=32MB -c checkpoint_timeout=30s -c wal_compression=on -c log_min_messages=warning",
+      "pre_deploy_command": null,
+      "active_deployments": 1
+    }
+  ],
+  "scope": "Existing approved CLI topology read. Only immutable deployment/image/command metadata; no variables or personal/provider secrets."
+}

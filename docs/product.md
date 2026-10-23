@@ -1,5 +1,33 @@
 # TaxiMobile — Product Specification
 
+## Active delivery goal - 23 October 2026
+
+The owner now requests full real-world deployment following the synthetic board
+alpha. [roadmap.md](roadmap.md) and [real-world-launch.md](real-world-launch.md)
+define the active B/C execution sequence and full capability scope. Android,
+iOS, applicant/operations web, on-demand, fixed routes, scheduled bookings and
+documented financial/support/account/city workflows require actual acceptance.
+Existing explicit deferrals and backend authority remain binding. No live
+transport or public activation is accepted merely by creating this goal.
+
+## Prior alpha delivery contract — 12 October 2026
+
+The immediate product is a union-presentation-ready **technical alpha**, followed
+by an authorized real-world pilot and public release. [roadmap.md](roadmap.md)
+defines the only active sequence and acceptance checklist. A must make passenger,
+driver and representative organizational value visible through a genuine complete
+trip on tested Android apps and Railway staging. Professional visual quality,
+FR/AR/RTL usability and reproducibility are release requirements, not later polish.
+Use synthetic accounts/documents/trips/payment records and explicit provider
+disclosures. No live transport, commercial recruitment or real settlement in A.
+Physical GPS observations require consent and minimized protected handling.
+
+Retain cooperative licensed-taxi participation, private backend matching, cash,
+city governance and privacy rules below. The broader national/fixed-route/scheduled/
+transfer scope is preserved; it does not all precede an honest essential alpha.
+No unverified capability may be shown as available. Legal/operator/privacy/tariff
+feasibility proceeds alongside A; written approval precedes B's real operations.
+
 ## Current standing — 2026-09-02
 
 The repository implements the broad provider-independent passenger, driver,

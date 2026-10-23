@@ -1,0 +1,24 @@
+{
+  "verified_utc": "2026-10-19T11:29:41.949501+00:00",
+  "scope": "Separate actual browser sign-in evidence after four obsolete bootstrap variables were removed; does not broaden original HTTP record",
+  "api_deployment": "e5e108a0-e5dd-4553-93fd-292026c98b63",
+  "v7_actual_signin": {
+    "path": "api-cleanup-ops-mfa-success-v7.jpg",
+    "sha256": "e7183f91cf5c5d508cb0829ef19c348c2f2a73726cc95143233bd3b83f678fc4",
+    "bytes": 67715,
+    "format": "JPEG",
+    "viewport": "1280x720 actual browser"
+  },
+  "v8_actual_signin": {
+    "path": "v8-reviewer-mfa-scoped-workspace.jpg",
+    "sha256": "fd06b8a30be2b1e827e6104c2c33a767f9e2d595e84f89a321c60888ee2bba69",
+    "bytes": 67672,
+    "format": "JPEG",
+    "viewport": "1280x720 actual browser"
+  },
+  "passed": true,
+  "limitations": [
+    "V7 screenshot retains V7 copy; not V8 localization evidence",
+    "No session, password, TOTP or recovery code recorded"
+  ]
+}

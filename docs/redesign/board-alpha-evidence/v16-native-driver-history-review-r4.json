@@ -1,0 +1,187 @@
+{
+  "candidate": "candidate-native-v16.json",
+  "started_utc": "2026-10-20T19:46:52.430465+00:00",
+  "passed": true,
+  "scope": "Actual owned driver history detail, fresh feedback read and foreground catch-up; no consequential input",
+  "screenshots": [
+    {
+      "path": "v16-native-driver-secondary-r4-history-list.png",
+      "sha256": "03bea8bfaf5b0edd90862a52e03e974534281b80da4dacda7c234e4050c28d9d"
+    },
+    {
+      "path": "v16-native-driver-secondary-r4-history-detail.png",
+      "sha256": "6ae6abd58399a573a34cd22dcb0cd9f19cd4027e3b2c9d8139ff7933b72ce100"
+    },
+    {
+      "path": "v16-native-driver-secondary-r4-history-detail-after-foreground-refresh.png",
+      "sha256": "34745106d0940d0fdcea820b1f6682c91f85c9e36ef5b15b86da1ce971e4b745"
+    },
+    {
+      "path": "v16-native-driver-secondary-r4-history-detail-after-live-wait.png",
+      "sha256": "fa5c3b97d5795ce9ca0aea9a4ed7a2fe082938d1a8710968104434af1d8e0288"
+    }
+  ],
+  "checks": [
+    {
+      "selected_ride_id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+      "same_process_foreground_refresh": true,
+      "live_wait_seconds": 15,
+      "pid": "2294"
+    },
+    {
+      "history_ride_id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+      "server_phase": "COMPLETED",
+      "server_feedback": {
+        "items": []
+      },
+      "note": "No populated feedback rendering claimed if the owner-scoped response is empty"
+    }
+  ],
+  "before": {
+    "rides": [
+      {
+        "id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "c55e696d-2bae-4640-8801-f50d2c20a42b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "98a253df-de13-4029-9daa-e538a520997d",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "59576371-85a9-4732-a100-12f7295f0c0a",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d8a67153-d7e5-4d96-8df0-be6ddb329d37",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e8948a59-659f-4d70-b756-eaafd9cc1fa1",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "ee13caaa-3461-418d-b0b4-f32eab7dd516",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "a0ba8798-8536-4420-bde2-12aa9111b817",
+        "status": "COMPLETED"
+      }
+    ],
+    "tickets": [
+      {
+        "id": "1f7c26be-edb3-4b05-bff1-7f4bd2bdaf51",
+        "city_id": "10000000-0000-4000-8000-000000000003",
+        "category": "RIDE_PROBLEM",
+        "subject": "Example driver support request",
+        "description": "Synthetic ticket for local UX review.",
+        "ride_id": "a0ba8798-8536-4420-bde2-12aa9111b817",
+        "status": "OPEN",
+        "latest_public_message": null,
+        "latest_public_message_at": null,
+        "resolved_at": null,
+        "closed_at": null,
+        "created_at": "2026-10-12T11:46:19.121262Z",
+        "updated_at": "2026-10-15T11:46:19.217130Z"
+      }
+    ]
+  },
+  "after": {
+    "rides": [
+      {
+        "id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "c55e696d-2bae-4640-8801-f50d2c20a42b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "98a253df-de13-4029-9daa-e538a520997d",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "59576371-85a9-4732-a100-12f7295f0c0a",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d8a67153-d7e5-4d96-8df0-be6ddb329d37",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e8948a59-659f-4d70-b756-eaafd9cc1fa1",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "ee13caaa-3461-418d-b0b4-f32eab7dd516",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "a0ba8798-8536-4420-bde2-12aa9111b817",
+        "status": "COMPLETED"
+      }
+    ],
+    "tickets": [
+      {
+        "id": "1f7c26be-edb3-4b05-bff1-7f4bd2bdaf51",
+        "city_id": "10000000-0000-4000-8000-000000000003",
+        "category": "RIDE_PROBLEM",
+        "subject": "Example driver support request",
+        "description": "Synthetic ticket for local UX review.",
+        "ride_id": "a0ba8798-8536-4420-bde2-12aa9111b817",
+        "status": "OPEN",
+        "latest_public_message": null,
+        "latest_public_message_at": null,
+        "resolved_at": null,
+        "closed_at": null,
+        "created_at": "2026-10-12T11:46:19.121262Z",
+        "updated_at": "2026-10-15T11:46:19.217130Z"
+      }
+    ]
+  },
+  "finished_utc": "2026-10-20T19:48:22.173126+00:00"
+}

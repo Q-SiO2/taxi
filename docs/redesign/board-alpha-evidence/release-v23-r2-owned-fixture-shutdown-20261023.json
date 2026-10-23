@@ -1,0 +1,24 @@
+{
+  "started_utc": "2026-10-23T11:27:32.871843+00:00",
+  "passed": true,
+  "fixtures": [
+    {
+      "role": "passenger",
+      "serial": "emulator-5554",
+      "avd": "taximobile-board-aosp31-passenger",
+      "font_scale_before_shutdown": "1.0",
+      "normal_shutdown_acknowledged": true
+    },
+    {
+      "role": "driver",
+      "serial": "emulator-5556",
+      "avd": "taximobile-board-api35-driver",
+      "font_scale_before_shutdown": "1.0",
+      "normal_shutdown_acknowledged": true
+    }
+  ],
+  "scope": "Normal shutdown of only the two exact owned headless emulator fixtures after final idle/cash verification. No data wipe, reinstall, snapshot assurance, physical device action or hosting mutation.",
+  "finished_utc": "2026-10-23T11:27:49.381804+00:00",
+  "gps_feeder_stopped": true,
+  "normal_app_data_retained": true
+}

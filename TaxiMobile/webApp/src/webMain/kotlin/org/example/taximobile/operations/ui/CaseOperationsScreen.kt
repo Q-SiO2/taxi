@@ -1,5 +1,6 @@
 package org.example.taximobile.operations.ui
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -57,6 +58,9 @@ import org.example.taximobile.operations.model.safetyTransitionTargets
 import org.example.taximobile.operations.model.supportTransitionTargets
 import org.example.taximobile.operations.state.OperationsCoordinator
 import org.example.taximobile.operations.state.OperationsUiState
+import org.example.taximobile.feature.ui.text.ltrIsolate
+import org.jetbrains.compose.resources.stringResource
+import taximobile.shared.generated.resources.*
 
 private val supportResolutionCodes = listOf(
     "INFORMATION_PROVIDED",
@@ -121,8 +125,8 @@ internal fun CaseOperationsScreen(
     ) {
         item {
             SectionHeading(
-                title = "Restricted case operations",
-                supportingText = "Queues, counts, and mutations are filtered by the active server-side grant. Free text is never part of analytics or pager payloads.",
+                title = stringResource(Res.string.web_case_title),
+                supportingText = stringResource(Res.string.web_case_help),
             )
         }
         item {
@@ -131,22 +135,22 @@ internal fun CaseOperationsScreen(
                 horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Md),
             ) {
                 MetricCard(
-                    "Open pager alerts",
-                    snapshot?.alerts?.items.orEmpty().count { it.status == "OPEN" }.toString(),
-                    "Acknowledgement stops repeat paging, not case ownership.",
+                    stringResource(Res.string.web_case_open_alerts),
+                    ltrIsolate(snapshot?.alerts?.items.orEmpty().count { it.status == "OPEN" }.toString()),
+                    stringResource(Res.string.web_case_alert_metric_help),
                 )
                 if (supportAllowed) {
                     MetricCard(
-                        "Support queue",
-                        (snapshot?.supportCases?.total ?: 0).toString(),
-                        "Ordinary cases in the selected authorized city scope.",
+                        stringResource(Res.string.web_case_support_queue),
+                        ltrIsolate((snapshot?.supportCases?.total ?: 0).toString()),
+                        stringResource(Res.string.web_case_support_metric_help),
                     )
                 }
                 if (safetyAllowed) {
                     MetricCard(
-                        "Safety queue",
-                        (snapshot?.safetyCases?.total ?: 0).toString(),
-                        "More restricted reports; not an emergency dispatch service.",
+                        stringResource(Res.string.web_case_safety_queue),
+                        ltrIsolate((snapshot?.safetyCases?.total ?: 0).toString()),
+                        stringResource(Res.string.web_case_safety_metric_help),
                     )
                 }
             }
@@ -238,18 +242,19 @@ private fun OverdueAlertsSection(
     onOpenCase: (CaseAlertRecord) -> Unit,
     onAcknowledge: (CaseAlertRecord) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
         SectionHeading(
-            title = "Overdue response alerts",
-            supportingText = "Durable alerts continue paging every 15 minutes until acknowledged or resolved by case progress.",
+            title = stringResource(Res.string.web_case_overdue),
+            supportingText = stringResource(Res.string.web_case_overdue_help),
         )
         if (alerts.isEmpty()) {
-            EmptyState("No overdue alerts", "No durable support or safety response alert is visible in this scope.")
+            EmptyState(stringResource(Res.string.web_case_no_alerts), stringResource(Res.string.web_case_no_alerts_help))
         } else {
             DataCard {
                 Column {
                     alerts.forEachIndexed { index, alert ->
-                        if (index > 0) HorizontalDivider(color = TaxiColors.StrokeSubtle)
+                        if (index > 0) HorizontalDivider(color = taxiColors.StrokeSubtle)
                         Row(
                             Modifier.fillMaxWidth().padding(TaxiSpacing.Md),
                             horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Md),
@@ -257,26 +262,26 @@ private fun OverdueAlertsSection(
                         ) {
                             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xxs)) {
                                 Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
-                                    StatusBadge(alert.severity)
-                                    StatusBadge(alert.status)
-                                    StatusBadge(alert.caseType)
+                                    StatusBadge(alert.severity, label = caseLabel(alert.severity))
+                                    StatusBadge(alert.status, label = caseLabel(alert.status))
+                                    StatusBadge(alert.caseType, label = caseLabel(alert.caseType))
                                 }
                                 Text(
-                                    "${alert.caseType.lowercase().replaceFirstChar { it.uppercase() }} ${shortId(alert.caseId)}",
-                                    color = TaxiColors.Navy900,
+                                    stringResource(Res.string.web_case_reference, caseLabel(alert.caseType), ltrIsolate(shortId(alert.caseId))),
+                                    color = taxiColors.Navy900,
                                     fontWeight = FontWeight.Bold,
                                 )
                                 Text(
-                                    "Due ${compactTimestamp(alert.responseDueAt)} · detected ${compactTimestamp(alert.firstDetectedAt)} · ${alert.deliveryAttempts} delivery attempt(s)",
-                                    color = TaxiColors.Ink500,
+                                    stringResource(Res.string.web_case_alert_dates, ltrIsolate(compactTimestamp(alert.responseDueAt)), ltrIsolate(compactTimestamp(alert.firstDetectedAt)), ltrIsolate(alert.deliveryAttempts.toString())),
+                                    color = taxiColors.Ink500,
                                 )
                             }
-                            OutlinedButton(onClick = { onOpenCase(alert) }, enabled = !locked) {
-                                Text("Open case")
+                            OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onOpenCase(alert) }, enabled = !locked) {
+                                Text(stringResource(Res.string.web_case_open))
                             }
                             if (alert.status == "OPEN") {
-                                Button(onClick = { onAcknowledge(alert) }, enabled = !locked) {
-                                    Text("Acknowledge pager")
+                                Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onAcknowledge(alert) }, enabled = !locked) {
+                                    Text(stringResource(Res.string.web_case_ack_alert))
                                 }
                             }
                         }
@@ -295,31 +300,32 @@ private fun SupportQueueSection(
     locked: Boolean,
     onSelect: (String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
         SectionHeading(
-            title = "Ordinary support",
-            supportingText = "Claim, communicate, resolve, or hand ride-linked safety concerns into the restricted queue.",
+            title = stringResource(Res.string.web_case_support),
+            supportingText = stringResource(Res.string.web_case_support_help),
         )
         if (cases.isEmpty()) {
-            EmptyState("No support cases", "No ordinary support case is visible in the selected scope.")
+            EmptyState(stringResource(Res.string.web_case_no_support), stringResource(Res.string.web_case_no_support_help))
         } else {
             DataCard(tableMinWidth = 860.dp) {
                 Column {
-                    QueueHeader(listOf("Case", "Category", "Status", "Priority", "Response due", "Owner", ""))
+                    QueueHeader(listOf(stringResource(Res.string.web_case_case), stringResource(Res.string.web_case_category), stringResource(Res.string.web_table_status), stringResource(Res.string.web_case_priority), stringResource(Res.string.web_case_due), stringResource(Res.string.web_case_owner), ""))
                     cases.forEach { item ->
-                        HorizontalDivider(color = TaxiColors.StrokeSubtle)
+                        HorizontalDivider(color = taxiColors.StrokeSubtle)
                         Row(
                             Modifier.fillMaxWidth().padding(TaxiSpacing.Md),
                             horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Md),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            QueueText("${shortId(item.id)}\n${item.subject}", Modifier.weight(1.5f))
-                            QueueText(item.category.replace('_', ' '), Modifier.weight(1f))
-                            StatusBadge(item.status, Modifier.weight(0.8f))
-                            StatusBadge(item.priority, Modifier.weight(0.8f))
-                            QueueText(compactTimestamp(item.responseDueAt), Modifier.weight(1f))
-                            QueueText(shortId(item.assignedToUserId), Modifier.weight(0.8f))
-                            OutlinedButton(onClick = { onSelect(item.id) }, enabled = !locked) { Text("Review") }
+                            QueueText("${ltrIsolate(shortId(item.id))}\n${item.subject}", Modifier.weight(1.5f))
+                            QueueText(caseLabel(item.category), Modifier.weight(1f))
+                            StatusBadge(item.status, Modifier.weight(0.8f), label = caseLabel(item.status))
+                            StatusBadge(item.priority, Modifier.weight(0.8f), label = caseLabel(item.priority))
+                            QueueText(ltrIsolate(compactTimestamp(item.responseDueAt)), Modifier.weight(1f))
+                            QueueText(ltrIsolate(shortId(item.assignedToUserId)), Modifier.weight(0.8f))
+                            OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onSelect(item.id) }, enabled = !locked) { Text(stringResource(Res.string.web_recruit_review)) }
                         }
                     }
                 }
@@ -336,31 +342,32 @@ private fun SafetyQueueSection(
     locked: Boolean,
     onSelect: (String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
         SectionHeading(
-            title = "Restricted safety",
-            supportingText = "Acknowledge every transition to the participant; immediate danger copy must direct them to local emergency services.",
+            title = stringResource(Res.string.web_case_safety),
+            supportingText = stringResource(Res.string.web_case_safety_help),
         )
         if (cases.isEmpty()) {
-            EmptyState("No safety reports", "No safety report is visible in the selected scope.")
+            EmptyState(stringResource(Res.string.web_case_no_safety), stringResource(Res.string.web_case_no_safety_help))
         } else {
             DataCard(tableMinWidth = 860.dp) {
                 Column {
-                    QueueHeader(listOf("Report", "Category", "Status", "Priority", "Response due", "Owner", ""))
+                    QueueHeader(listOf(stringResource(Res.string.web_case_report), stringResource(Res.string.web_case_category), stringResource(Res.string.web_table_status), stringResource(Res.string.web_case_priority), stringResource(Res.string.web_case_due), stringResource(Res.string.web_case_owner), ""))
                     cases.forEach { item ->
-                        HorizontalDivider(color = TaxiColors.StrokeSubtle)
+                        HorizontalDivider(color = taxiColors.StrokeSubtle)
                         Row(
                             Modifier.fillMaxWidth().padding(TaxiSpacing.Md),
                             horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Md),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            QueueText("${shortId(item.id)}\nride ${shortId(item.rideId)}", Modifier.weight(1.5f))
-                            QueueText(item.category.replace('_', ' '), Modifier.weight(1f))
-                            StatusBadge(item.status, Modifier.weight(0.8f))
-                            StatusBadge(item.priority, Modifier.weight(0.8f))
-                            QueueText(compactTimestamp(item.responseDueAt), Modifier.weight(1f))
-                            QueueText(shortId(item.assignedToUserId), Modifier.weight(0.8f))
-                            OutlinedButton(onClick = { onSelect(item.id) }, enabled = !locked) { Text("Review") }
+                            QueueText("${ltrIsolate(shortId(item.id))}\n${stringResource(Res.string.web_case_ride)} ${ltrIsolate(shortId(item.rideId))}", Modifier.weight(1.5f))
+                            QueueText(caseLabel(item.category), Modifier.weight(1f))
+                            StatusBadge(item.status, Modifier.weight(0.8f), label = caseLabel(item.status))
+                            StatusBadge(item.priority, Modifier.weight(0.8f), label = caseLabel(item.priority))
+                            QueueText(ltrIsolate(compactTimestamp(item.responseDueAt)), Modifier.weight(1f))
+                            QueueText(ltrIsolate(shortId(item.assignedToUserId)), Modifier.weight(0.8f))
+                            OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onSelect(item.id) }, enabled = !locked) { Text(stringResource(Res.string.web_recruit_review)) }
                         }
                     }
                 }
@@ -372,6 +379,7 @@ private fun SafetyQueueSection(
 
 @Composable
 private fun QueueHeader(labels: List<String>) {
+    val taxiColors = TaxiTheme.colors
     Row(
         Modifier.fillMaxWidth().padding(TaxiSpacing.Md),
         horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Md),
@@ -386,7 +394,7 @@ private fun QueueHeader(labels: List<String>) {
             Text(
                 label.uppercase(),
                 modifier = Modifier.weight(weight),
-                color = TaxiColors.Ink500,
+                color = taxiColors.Ink500,
                 fontWeight = FontWeight.Bold,
             )
         }
@@ -395,7 +403,8 @@ private fun QueueHeader(labels: List<String>) {
 
 @Composable
 private fun QueueText(value: String, modifier: Modifier) {
-    Text(value, modifier = modifier, color = TaxiColors.Ink700, maxLines = 2, overflow = TextOverflow.Ellipsis)
+    val taxiColors = TaxiTheme.colors
+    Text(value, style = recruitmentTextStyle(value), modifier = modifier, color = taxiColors.Ink700, maxLines = 2, overflow = TextOverflow.Ellipsis)
 }
 
 @Composable
@@ -405,19 +414,20 @@ private fun RetentionSection(
     locked: Boolean,
     onRelease: (LegalHoldRecord, String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     var releasing by remember { mutableStateOf<LegalHoldRecord?>(null) }
     Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
         SectionHeading(
-            title = "Legal holds and retention evidence",
-            supportingText = "Platform retention authority only. Active holds prevent erasure; release never runs erasure inside the browser request.",
+            title = stringResource(Res.string.web_case_retention),
+            supportingText = stringResource(Res.string.web_case_retention_help),
         )
         if (holds.isEmpty() && actions.isEmpty()) {
-            EmptyState("No retention records", "No legal hold or completed personal-data erasure is visible in this authorized scope.")
+            EmptyState(stringResource(Res.string.web_case_no_retention), stringResource(Res.string.web_case_no_retention_help))
         } else {
             DataCard {
                 Column {
                     holds.forEachIndexed { index, hold ->
-                        if (index > 0) HorizontalDivider(color = TaxiColors.StrokeSubtle)
+                        if (index > 0) HorizontalDivider(color = taxiColors.StrokeSubtle)
                         Row(
                             Modifier.fillMaxWidth().padding(TaxiSpacing.Md),
                             horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Md),
@@ -425,26 +435,26 @@ private fun RetentionSection(
                         ) {
                             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xxs)) {
                                 Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
-                                    StatusBadge(hold.status)
-                                    StatusBadge(hold.caseKind)
+                                    StatusBadge(hold.status, label = caseLabel(hold.status))
+                                    StatusBadge(hold.caseKind, label = caseLabel(hold.caseKind))
                                 }
-                                Text("${hold.caseKind.lowercase()} ${shortId(hold.caseId)} · ${hold.reasonCode.replace('_', ' ')}", color = TaxiColors.Navy900, fontWeight = FontWeight.Bold)
-                                Text("Reference ${hold.authorityReference} · review ${compactTimestamp(hold.reviewDueAt)}", color = TaxiColors.Ink500)
+                                Text("${caseLabel(hold.caseKind)} ${ltrIsolate(shortId(hold.caseId))} · ${caseLabel(hold.reasonCode)}", color = taxiColors.Navy900, fontWeight = FontWeight.Bold)
+                                Text(stringResource(Res.string.web_case_hold_reference, ltrIsolate(hold.authorityReference), ltrIsolate(compactTimestamp(hold.reviewDueAt))), color = taxiColors.Ink500)
                             }
                             if (hold.status == "ACTIVE") {
-                                OutlinedButton(onClick = { releasing = hold }, enabled = !locked) { Text("Release") }
+                                OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { releasing = hold }, enabled = !locked) { Text(stringResource(Res.string.web_case_release)) }
                             }
                         }
                     }
                     actions.forEach { action ->
-                        HorizontalDivider(color = TaxiColors.StrokeSubtle)
+                        HorizontalDivider(color = taxiColors.StrokeSubtle)
                         Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Md)) {
                             Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
-                                StatusBadge("ERASED")
-                                StatusBadge(action.caseKind)
+                                StatusBadge("ERASED", label = caseLabel("ERASED"))
+                                StatusBadge(action.caseKind, label = caseLabel(action.caseKind))
                             }
-                            Text("${action.caseKind.lowercase()} ${shortId(action.caseId)} · ${action.action.replace('_', ' ')}", color = TaxiColors.Navy900, fontWeight = FontWeight.Bold)
-                            Text("Due ${compactTimestamp(action.retentionDueAt)} · executed ${compactTimestamp(action.executedAt)} · ${action.erasedNoteCount} note(s) erased", color = TaxiColors.Ink500)
+                            Text("${caseLabel(action.caseKind)} ${ltrIsolate(shortId(action.caseId))} · ${caseLabel(action.action)}", color = taxiColors.Navy900, fontWeight = FontWeight.Bold)
+                            Text(stringResource(Res.string.web_case_erasure_dates, ltrIsolate(compactTimestamp(action.retentionDueAt)), ltrIsolate(compactTimestamp(action.executedAt)), ltrIsolate(action.erasedNoteCount.toString())), color = taxiColors.Ink500)
                         }
                     }
                 }
@@ -454,12 +464,12 @@ private fun RetentionSection(
     releasing?.let { hold ->
         var reason by remember(hold.id) { mutableStateOf(legalHoldReleaseReasons.first()) }
         CommandDialog(
-            title = "Release legal hold ${shortId(hold.id)}",
-            guidance = "Release is audited and cannot be undone with the same hold. If retention is due, the worker may erase personal fields on its next pass.",
+            title = stringResource(Res.string.web_case_release_title, ltrIsolate(shortId(hold.id))),
+            guidance = stringResource(Res.string.web_case_release_help),
             onDismiss = { releasing = null },
             onConfirm = { releasing = null; onRelease(hold, reason) },
         ) {
-            ControlledChoice("Release reason", reason, legalHoldReleaseReasons) { reason = it }
+            ControlledChoice(stringResource(Res.string.web_case_release_reason), reason, legalHoldReleaseReasons) { reason = it }
         }
     }
 }
@@ -520,7 +530,8 @@ private fun SupportCaseDetailDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Support ${shortId(detail.id)}") },
+        shape = RoundedCornerShape(TaxiTheme.radii.Lg),
+        title = { Text(stringResource(Res.string.web_case_support_reference, ltrIsolate(shortId(detail.id)))) },
         text = {
             CaseDetailBody(
                 status = detail.status,
@@ -541,32 +552,33 @@ private fun SupportCaseDetailDialog(
                 horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs),
             ) {
                 if (detail.status in setOf("OPEN", "IN_PROGRESS")) {
-                    Button(onClick = { onAction(SupportCaseAction.Triage) }, enabled = !locked) {
-                        Text(if (detail.status == "OPEN") "Claim & acknowledge" else "Retriage")
+                    Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onAction(SupportCaseAction.Triage) }, enabled = !locked) {
+                        Text(if (detail.status == "OPEN") stringResource(Res.string.web_case_claim) else stringResource(Res.string.web_case_retriage))
                     }
                 }
                 supportTransitionTargets(detail.status).forEach { target ->
                     OutlinedButton(
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                         onClick = { onAction(SupportCaseAction.Transition(target)) },
                         enabled = !locked,
-                    ) { Text(target.replace('_', ' ')) }
+                    ) { Text(caseLabel(target)) }
                 }
                 if (
                     safetyHandoffAvailable && detail.rideId != null &&
                     detail.status !in setOf("RESOLVED", "CLOSED")
                 ) {
-                    OutlinedButton(onClick = { onAction(SupportCaseAction.Escalate) }, enabled = !locked) {
-                        Text("Hand to safety")
+                    OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onAction(SupportCaseAction.Escalate) }, enabled = !locked) {
+                        Text(stringResource(Res.string.web_case_handoff))
                     }
                 }
                 if (retentionAvailable) {
-                    OutlinedButton(onClick = { onAction(SupportCaseAction.LegalHold) }, enabled = !locked) {
-                        Text("Place legal hold")
+                    OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onAction(SupportCaseAction.LegalHold) }, enabled = !locked) {
+                        Text(stringResource(Res.string.web_case_hold))
                     }
                 }
             }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Close") } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(Res.string.web_recruit_close)) } },
     )
 }
 
@@ -591,7 +603,8 @@ private fun SafetyCaseFlow(
     } else if (target == null) {
         AlertDialog(
             onDismissRequest = onDismiss,
-            title = { Text("Safety ${shortId(detail.id)}") },
+            shape = RoundedCornerShape(TaxiTheme.radii.Lg),
+            title = { Text(stringResource(Res.string.web_case_safety_reference, ltrIsolate(shortId(detail.id)))) },
             text = {
                 CaseDetailBody(
                     status = detail.status,
@@ -612,18 +625,18 @@ private fun SafetyCaseFlow(
                     horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs),
                 ) {
                     safetyTransitionTargets(detail.status).forEach { next ->
-                        Button(onClick = { target = next }, enabled = !locked) {
-                            Text(next.replace('_', ' '))
+                        Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { target = next }, enabled = !locked) {
+                            Text(caseLabel(next))
                         }
                     }
                     if (retentionAvailable) {
-                        OutlinedButton(onClick = { placingHold = true }, enabled = !locked) {
-                            Text("Place legal hold")
+                        OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { placingHold = true }, enabled = !locked) {
+                            Text(stringResource(Res.string.web_case_hold))
                         }
                     }
                 }
             },
-            dismissButton = { TextButton(onClick = onDismiss) { Text("Close") } },
+            dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(Res.string.web_recruit_close)) } },
         )
     } else {
         SafetyTransitionDialog(
@@ -647,48 +660,50 @@ private fun CaseDetailBody(
     notes: List<CaseNoteRecord>,
     retentionUntil: String?,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     Column(
-        Modifier.widthIn(min = 520.dp, max = 760.dp).heightIn(max = 520.dp).verticalScroll(rememberScrollState()),
+        Modifier.widthIn(max = 760.dp).fillMaxWidth().heightIn(max = 520.dp).verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md),
     ) {
         Surface(
-            color = TaxiColors.Warning100,
-            shape = RoundedCornerShape(TaxiRadii.Md),
-            border = BorderStroke(1.dp, TaxiColors.Warning600.copy(alpha = 0.25f)),
+            color = taxiColors.Warning100,
+            shape = RoundedCornerShape(taxiRadii.Md),
+            border = BorderStroke(1.dp, taxiColors.Warning600.copy(alpha = 0.25f)),
         ) {
             Text(
-                "Restricted case content. Do not copy credentials, statements, identity documents, or unrelated personal data into notes.",
+                stringResource(Res.string.web_case_restricted_help),
                 Modifier.fillMaxWidth().padding(TaxiSpacing.Sm),
-                color = TaxiColors.Warning600,
+                color = taxiColors.Warning600,
             )
         }
         Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
-            StatusBadge(status)
-            StatusBadge(priority)
-            StatusBadge(category)
+            StatusBadge(status, label = caseLabel(status))
+            StatusBadge(priority, label = caseLabel(priority))
+            StatusBadge(category, label = caseLabel(category))
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Lg)) {
-            KeyValue("City", shortId(cityId), Modifier.weight(1f))
-            KeyValue("Ride", shortId(rideId), Modifier.weight(1f))
-            KeyValue("Owner", shortId(assignedTo), Modifier.weight(1f))
+            KeyValue(stringResource(Res.string.web_city), ltrIsolate(shortId(cityId)), Modifier.weight(1f))
+            KeyValue(stringResource(Res.string.web_case_ride), ltrIsolate(shortId(rideId)), Modifier.weight(1f))
+            KeyValue(stringResource(Res.string.web_case_owner), ltrIsolate(shortId(assignedTo)), Modifier.weight(1f))
         }
-        KeyValue("Response due", compactTimestamp(responseDueAt))
-        KeyValue("Description", description)
-        retentionUntil?.let { KeyValue("Retention due", compactTimestamp(it)) }
-        HorizontalDivider(color = TaxiColors.StrokeSubtle)
-        Text("Append-only notes", color = TaxiColors.Navy900, fontWeight = FontWeight.Bold)
-        if (notes.isEmpty()) Text("No case notes recorded.", color = TaxiColors.Ink500)
+        KeyValue(stringResource(Res.string.web_case_due), ltrIsolate(compactTimestamp(responseDueAt)))
+        KeyValue(stringResource(Res.string.web_req_description), description)
+        retentionUntil?.let { KeyValue(stringResource(Res.string.web_case_retention_due), ltrIsolate(compactTimestamp(it))) }
+        HorizontalDivider(color = taxiColors.StrokeSubtle)
+        Text(stringResource(Res.string.web_case_notes), color = taxiColors.Navy900, fontWeight = FontWeight.Bold)
+        if (notes.isEmpty()) Text(stringResource(Res.string.web_case_no_notes), color = taxiColors.Ink500)
         notes.forEach { note ->
             Surface(
-                color = if (note.visibility == "INTERNAL") TaxiColors.Surface2 else TaxiColors.Info100,
-                shape = RoundedCornerShape(TaxiRadii.Md),
+                color = if (note.visibility == "INTERNAL") taxiColors.Surface2 else taxiColors.Info100,
+                shape = RoundedCornerShape(taxiRadii.Md),
             ) {
                 Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Sm)) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text(note.visibility, fontWeight = FontWeight.Bold, color = TaxiColors.Navy900)
-                        Text(compactTimestamp(note.createdAt), color = TaxiColors.Ink500)
+                        Text(caseLabel(note.visibility), fontWeight = FontWeight.Bold, color = taxiColors.Navy900)
+                        Text(ltrIsolate(compactTimestamp(note.createdAt)), color = taxiColors.Ink500)
                     }
-                    Text(note.message, color = TaxiColors.Ink700)
+                    Text(note.message, style = recruitmentTextStyle(note.message), color = taxiColors.Ink700)
                 }
             }
         }
@@ -705,14 +720,14 @@ private fun SupportTriageDialog(
     var participant by remember { mutableStateOf("") }
     var internal by remember { mutableStateOf("") }
     CommandDialog(
-        title = "Claim and acknowledge support",
-        guidance = "This assigns the case to you. Keep participant communication separate from the minimal internal note.",
+        title = stringResource(Res.string.web_case_triage_title),
+        guidance = stringResource(Res.string.web_case_triage_help),
         onDismiss = onDismiss,
         onConfirm = { onConfirm(SupportTriageCommand(priority, participantMessage = participant, internalNote = internal)) },
     ) {
-        ControlledChoice("Priority", priority, listOf("LOW", "NORMAL", "HIGH", "URGENT")) { priority = it }
-        CommandText("Participant acknowledgement", participant) { participant = it }
-        CommandText("Internal note", internal) { internal = it }
+        ControlledChoice(stringResource(Res.string.web_case_priority), priority, listOf("LOW", "NORMAL", "HIGH", "URGENT")) { priority = it }
+        CommandText(stringResource(Res.string.web_case_participant_ack), participant) { participant = it }
+        CommandText(stringResource(Res.string.web_case_internal_note), internal) { internal = it }
     }
 }
 
@@ -727,8 +742,8 @@ private fun SupportTransitionDialog(
     var participant by remember { mutableStateOf("") }
     var internal by remember { mutableStateOf("") }
     CommandDialog(
-        title = "Move support case to ${target.replace('_', ' ')}",
-        guidance = if (terminal) "A controlled resolution and participant message are mandatory." else "Reopening clears the prior resolution projection; notes remain append-only.",
+        title = stringResource(Res.string.web_case_support_transition_title, caseLabel(target)),
+        guidance = if (terminal) stringResource(Res.string.web_case_resolution_required) else stringResource(Res.string.web_case_reopen_help),
         onDismiss = onDismiss,
         onConfirm = {
             onConfirm(
@@ -741,9 +756,9 @@ private fun SupportTransitionDialog(
             )
         },
     ) {
-        if (terminal) ControlledChoice("Resolution", resolution, supportResolutionCodes) { resolution = it }
-        CommandText("Participant message${if (terminal) "" else " (optional)"}", participant) { participant = it }
-        CommandText("Internal note", internal) { internal = it }
+        if (terminal) ControlledChoice(stringResource(Res.string.web_case_resolution), resolution, supportResolutionCodes) { resolution = it }
+        CommandText(stringResource(if (terminal) Res.string.web_case_participant_message else Res.string.web_case_optional_message), participant) { participant = it }
+        CommandText(stringResource(Res.string.web_case_internal_note), internal) { internal = it }
     }
 }
 
@@ -755,13 +770,13 @@ private fun SafetyHandoffDialog(
     var category by remember { mutableStateOf(safetyCategories.first()) }
     var internal by remember { mutableStateOf("") }
     CommandDialog(
-        title = "Create restricted safety handoff",
-        guidance = "The original description is copied into a separate safety report. The support response receives only a minimal receipt.",
+        title = stringResource(Res.string.web_case_handoff_title),
+        guidance = stringResource(Res.string.web_case_handoff_help),
         onDismiss = onDismiss,
         onConfirm = { onConfirm(SupportSafetyEscalationCommand(category, internal)) },
     ) {
-        ControlledChoice("Safety category", category, safetyCategories) { category = it }
-        CommandText("Internal handoff note", internal) { internal = it }
+        ControlledChoice(stringResource(Res.string.web_case_safety_category), category, safetyCategories) { category = it }
+        CommandText(stringResource(Res.string.web_case_handoff_note), internal) { internal = it }
     }
 }
 
@@ -776,8 +791,8 @@ private fun SafetyTransitionDialog(
     var participant by remember { mutableStateOf("") }
     var internal by remember { mutableStateOf("") }
     CommandDialog(
-        title = "Move safety report to ${target.replace('_', ' ')}",
-        guidance = "Every safety transition requires a participant-safe message. TaxiMobile does not claim to dispatch emergency help.",
+        title = stringResource(Res.string.web_case_safety_transition_title, caseLabel(target)),
+        guidance = stringResource(Res.string.web_case_safety_transition_help),
         onDismiss = onDismiss,
         onConfirm = {
             onConfirm(
@@ -790,9 +805,9 @@ private fun SafetyTransitionDialog(
             )
         },
     ) {
-        if (terminal) ControlledChoice("Resolution", resolution, safetyResolutionCodes) { resolution = it }
-        CommandText("Participant message", participant) { participant = it }
-        CommandText("Internal note", internal) { internal = it }
+        if (terminal) ControlledChoice(stringResource(Res.string.web_case_resolution), resolution, safetyResolutionCodes) { resolution = it }
+        CommandText(stringResource(Res.string.web_case_participant_message), participant) { participant = it }
+        CommandText(stringResource(Res.string.web_case_internal_note), internal) { internal = it }
     }
 }
 
@@ -804,12 +819,12 @@ private fun AlertAcknowledgementDialog(
 ) {
     var reason by remember { mutableStateOf("") }
     CommandDialog(
-        title = "Acknowledge ${alert.caseType.lowercase()} pager",
-        guidance = "This stops repeat delivery for alert ${shortId(alert.id)}. It does not resolve, assign, or acknowledge the underlying case.",
+        title = stringResource(Res.string.web_case_ack_title, caseLabel(alert.caseType)),
+        guidance = stringResource(Res.string.web_case_ack_help, ltrIsolate(shortId(alert.id))),
         onDismiss = onDismiss,
         onConfirm = { onConfirm(reason) },
     ) {
-        CommandText("Bounded acknowledgement reason", reason, singleLine = true) { reason = it }
+        CommandText(stringResource(Res.string.web_case_ack_reason), reason, singleLine = true) { reason = it }
     }
 }
 
@@ -824,8 +839,8 @@ private fun LegalHoldDialog(
     var authorityReference by remember { mutableStateOf("") }
     var reviewDueAt by remember { mutableStateOf("") }
     CommandDialog(
-        title = "Place legal hold on ${caseKind.lowercase()} ${shortId(caseId)}",
-        guidance = "Use only an approved non-secret authority reference. A hold preserves case personal data until controlled release and review.",
+        title = stringResource(Res.string.web_case_hold_title, caseLabel(caseKind), ltrIsolate(shortId(caseId))),
+        guidance = stringResource(Res.string.web_case_hold_help),
         onDismiss = onDismiss,
         onConfirm = {
             onConfirm(
@@ -839,9 +854,9 @@ private fun LegalHoldDialog(
             )
         },
     ) {
-        ControlledChoice("Legal reason", reason, legalHoldReasons) { reason = it }
-        CommandText("Authority reference", authorityReference, singleLine = true) { authorityReference = it }
-        CommandText("Review due (ISO 8601 with timezone)", reviewDueAt, singleLine = true) { reviewDueAt = it }
+        ControlledChoice(stringResource(Res.string.web_case_legal_reason), reason, legalHoldReasons) { reason = it }
+        CommandText(stringResource(Res.string.web_case_authority_reference), authorityReference, singleLine = true) { authorityReference = it }
+        CommandText(stringResource(Res.string.web_case_review_due), reviewDueAt, singleLine = true) { reviewDueAt = it }
     }
 }
 
@@ -853,20 +868,22 @@ private fun CommandDialog(
     onConfirm: () -> Unit,
     fields: @Composable () -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     AlertDialog(
         onDismissRequest = onDismiss,
+        shape = RoundedCornerShape(TaxiTheme.radii.Lg),
         title = { Text(title) },
         text = {
             Column(
-                Modifier.widthIn(min = 480.dp, max = 640.dp).verticalScroll(rememberScrollState()),
+                Modifier.widthIn(max = 640.dp).fillMaxWidth().verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md),
             ) {
-                Text(guidance, color = TaxiColors.Ink500)
+                Text(guidance, color = taxiColors.Ink500)
                 fields()
             }
         },
-        confirmButton = { Button(onClick = onConfirm) { Text("Confirm") } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+        confirmButton = { Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = onConfirm) { Text(stringResource(Res.string.web_case_confirm)) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(Res.string.web_cancel)) } },
     )
 }
 
@@ -879,8 +896,8 @@ private fun ControlledChoice(
 ) {
     ScopeMenu(
         label = label,
-        selected = selected.replace('_', ' '),
-        options = options.map { ScopeOption(it, it.replace('_', ' ')) },
+        selected = caseLabel(selected),
+        options = options.map { ScopeOption(it, caseLabel(it)) },
         enabled = true,
         onSelected = { value -> value?.let(onSelected) },
     )
@@ -897,6 +914,7 @@ private fun CommandText(
         value = value,
         onValueChange = onValueChange,
         label = { Text(label) },
+        textStyle = recruitmentTextStyle(value),
         modifier = Modifier.fillMaxWidth(),
         singleLine = singleLine,
         minLines = if (singleLine) 1 else 3,

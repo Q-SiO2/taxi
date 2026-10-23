@@ -1,0 +1,11 @@
+{
+  "method": "Same running passenger process after completed first-retry ride; no force-stop, activity or locale restart between runs",
+  "pid": "1883",
+  "prior_run": "v15-native-first-retry.json",
+  "pid_after_selection": "1883",
+  "post_trip_selection_confirmed": true,
+  "evidence": "v15-second-stepped-passenger-new-destination-after-trip-after.png",
+  "pid_after_second_trip": "1883",
+  "second_complete_run": "v15-native-second-bounded2.json",
+  "passed": true
+}

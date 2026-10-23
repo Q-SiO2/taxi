@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-14",
+  "studies": [
+    {
+      "actionFixed": true,
+      "cutTransform": "none",
+      "factsUnchanged": true,
+      "field": "prism",
+      "fieldTransform": "matrix(0.999391, 0.0348995, -0.0348995, 0.999391, 14.2707, -7.50653)",
+      "gradientPosition": "90% 80%",
+      "phase": "scrubbed",
+      "progress": "50.0"
+    },
+    {
+      "actionFixed": true,
+      "cutTransform": "matrix(1, 0, 0, 1, 16, 0)",
+      "factsUnchanged": true,
+      "field": "collage",
+      "fieldTransform": "matrix(0.999391, 0.0348995, -0.0348995, 0.999391, 14.2707, -7.50653)",
+      "gradientPosition": "90% 80%",
+      "phase": "scrubbed",
+      "progress": "50.0"
+    },
+    {
+      "actionFixed": true,
+      "cutTransform": "none",
+      "factsUnchanged": true,
+      "field": "grain",
+      "fieldTransform": "matrix(0.999391, 0.0348995, -0.0348995, 0.999391, 14.2707, -7.50653)",
+      "gradientPosition": "90% 80%",
+      "phase": "scrubbed",
+      "progress": "50.0"
+    }
+  ],
+  "reduced": "suppressed",
+  "playObserved": {
+    "phase": "running",
+    "progress": "0.5"
+  },
+  "compact": [
+    {
+      "direction": "rtl",
+      "field": "prism",
+      "font": "Arabic, Plex, sans-serif",
+      "overflow": [],
+      "scroll": 305,
+      "width": 305
+    },
+    {
+      "direction": "rtl",
+      "field": "collage",
+      "font": "Arabic, Plex, sans-serif",
+      "overflow": [],
+      "scroll": 305,
+      "width": 305
+    },
+    {
+      "direction": "rtl",
+      "field": "grain",
+      "font": "Arabic, Plex, sans-serif",
+      "overflow": [],
+      "scroll": 305,
+      "width": 305
+    }
+  ],
+  "logs": [],
+  "nativeAccepted": false,
+  "identityAccepted": false
+}

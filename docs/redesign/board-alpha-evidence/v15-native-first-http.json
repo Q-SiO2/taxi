@@ -1,0 +1,56 @@
+{
+  "candidate": "candidate-native-v15.json",
+  "run": "first",
+  "source": "Railway HTTP proxy log for the exact rehearsal interval; IP and user-agent omitted",
+  "domain_commands": [
+    {
+      "timestamp": "2026-10-20T10:22:11.123563387Z",
+      "method": "POST",
+      "path": "/api/v1/rides",
+      "httpStatus": 201,
+      "totalDuration": 121
+    },
+    {
+      "timestamp": "2026-10-20T10:22:41.152491830Z",
+      "method": "POST",
+      "path": "/api/v1/ride-offers/0dfdf727-b57b-4ecd-9db1-bf4397927709/accept",
+      "httpStatus": 200,
+      "totalDuration": 72
+    },
+    {
+      "timestamp": "2026-10-20T10:23:40.093401660Z",
+      "method": "POST",
+      "path": "/api/v1/rides/c55e696d-2bae-4640-8801-f50d2c20a42b/en-route",
+      "httpStatus": 200,
+      "totalDuration": 32
+    },
+    {
+      "timestamp": "2026-10-20T10:24:24.955044201Z",
+      "method": "POST",
+      "path": "/api/v1/rides/c55e696d-2bae-4640-8801-f50d2c20a42b/arrived",
+      "httpStatus": 200,
+      "totalDuration": 40
+    },
+    {
+      "timestamp": "2026-10-20T10:25:29.144052131Z",
+      "method": "POST",
+      "path": "/api/v1/rides/c55e696d-2bae-4640-8801-f50d2c20a42b/start",
+      "httpStatus": 200,
+      "totalDuration": 121
+    },
+    {
+      "timestamp": "2026-10-20T10:26:43.407731169Z",
+      "method": "POST",
+      "path": "/api/v1/rides/c55e696d-2bae-4640-8801-f50d2c20a42b/complete",
+      "httpStatus": 200,
+      "totalDuration": 44
+    },
+    {
+      "timestamp": "2026-10-20T10:27:51.303529059Z",
+      "method": "POST",
+      "path": "/api/v1/rides/c55e696d-2bae-4640-8801-f50d2c20a42b/payments/cash/settle",
+      "httpStatus": 200,
+      "totalDuration": 45
+    }
+  ]
+}

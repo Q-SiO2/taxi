@@ -1,13 +1,20 @@
 package org.example.taximobile.feature.driver
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -25,7 +32,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.example.taximobile.domain.drivers.DriverAvailabilityStatus
 import org.example.taximobile.domain.drivers.DriverRideAction
@@ -67,6 +77,7 @@ import org.example.taximobile.feature.ui.components.DriverDocumentCard
 import org.example.taximobile.feature.ui.components.FareBlock
 import org.example.taximobile.feature.ui.components.FareBreakdownRow
 import org.example.taximobile.feature.ui.components.MapFab
+import org.example.taximobile.feature.ui.components.MapToolbar
 import org.example.taximobile.feature.ui.components.OfferCard
 import org.example.taximobile.feature.ui.components.StatusPill
 import org.example.taximobile.feature.ui.components.SuccessConfirmation
@@ -75,6 +86,9 @@ import org.example.taximobile.feature.ui.components.TaxiButton
 import org.example.taximobile.feature.ui.components.TaxiButtonStyle
 import org.example.taximobile.feature.ui.components.TaxiSheet
 import org.example.taximobile.feature.ui.components.TaxiSheetSnap
+import org.example.taximobile.feature.ui.components.accessibleTaxiSheetSnap
+import org.example.taximobile.feature.ui.components.taxiSheetAllowsMapActions
+import androidx.compose.ui.platform.LocalDensity
 import org.example.taximobile.feature.ui.components.TaxiTextField
 import org.example.taximobile.feature.ui.components.TaxiCard
 import org.example.taximobile.feature.ui.components.VehicleAssetFallback
@@ -117,9 +131,9 @@ internal fun DriverHome(
     completedAction: AppActionCompletion?,
     mapStyleUrl: String?,
     onLogout: () -> Unit,
-    onRequestCurrentLocation: ((Coordinates?) -> Unit) -> Unit,
+    onRequestDriverObservation: ((org.example.taximobile.domain.drivers.DriverLocationObservation?) -> Unit) -> Unit,
     onSetDriverOnline: (Boolean, String?, String?) -> Unit,
-    onUpdateDriverLocation: (Coordinates) -> Unit,
+    onUpdateDriverLocation: (org.example.taximobile.domain.drivers.DriverLocationObservation) -> Unit,
     onRegisterDriverVehicle: (VehicleRegistration) -> Unit,
     onSelectDriverVehicle: (String) -> Unit,
     onDeactivateDriverVehicle: (String) -> Unit,
@@ -131,6 +145,7 @@ internal fun DriverHome(
     onSendRideCoordination: (String, RideCoordinationCode) -> Unit,
     onCompleteDriverRide: (String, Coordinates) -> Unit,
     onSettleDriverCash: (String) -> Unit,
+    onLoadPendingCashPayments: (Int) -> Unit,
     onCreateSupportTicket: (SupportCategory, String, String, String?) -> Unit,
     onCreateSafetyReport: (String, SafetyCategory, String) -> Unit,
     onMarkNotificationRead: (String) -> Unit,
@@ -141,23 +156,41 @@ internal fun DriverHome(
     onAcknowledgeRecoveryCodes: () -> Unit,
     onRevokeAccountSession: (String) -> Unit,
     onChangeAccountPassword: (String, String) -> Unit,
+    showManualCoordinateEntry: Boolean = true,
 ) {
-    val locationDraft = remember { DriverCoordinateDraft() }
+    val taxiColors = TaxiTheme.colors
     val completionDraft = remember { DriverCoordinateDraft() }
+    var locationMessage by remember { mutableStateOf<UiMessage?>(null) }
     var panel by remember { mutableStateOf(DriverSheetPanel.Operations) }
     var snap by remember { mutableStateOf(TaxiSheetSnap.Peek) }
     var declineOfferId by remember { mutableStateOf<String?>(null) }
     var cancelRide by remember { mutableStateOf<Pair<String, String>?>(null) }
-    var settleCashRideId by remember { mutableStateOf<String?>(null) }
+    var settleCashPayment by remember { mutableStateOf<org.example.taximobile.domain.drivers.PendingCashPayment?>(null) }
     var cameraFocusRequest by remember { mutableIntStateOf(0) }
     var locationRequestInFlight by remember { mutableStateOf(false) }
     var mapUnavailable by remember(mapStyleUrl) { mutableStateOf(false) }
     val requestCurrentLocation: ((Coordinates?) -> Unit) -> Unit = { onResult ->
         if (!locationRequestInFlight) {
             locationRequestInFlight = true
-            onRequestCurrentLocation { selected ->
+            onRequestDriverObservation { observation ->
                 locationRequestInFlight = false
-                onResult(selected)
+                onResult(observation?.coordinates)
+            }
+        }
+    }
+    val refreshDriverLocation: () -> Unit = {
+        if (!locationRequestInFlight && pendingAction == null) {
+            locationRequestInFlight = true
+            locationMessage = UiMessage(Res.string.requesting_current_location)
+            onRequestDriverObservation { observation ->
+                locationRequestInFlight = false
+                if (observation == null) {
+                    locationMessage = UiMessage(Res.string.driver_location_unavailable)
+                } else {
+                    locationMessage = null
+                    onUpdateDriverLocation(observation)
+                    snap = TaxiSheetSnap.Half
+                }
             }
         }
     }
@@ -171,19 +204,21 @@ internal fun DriverHome(
         panel,
         state.activeRide,
         state.offers.size,
-        state.pendingCashRideId,
+        state.pendingCashPayments?.total,
         completedAction?.sequence,
     ) {
         snap = when {
             panel != DriverSheetPanel.Operations -> TaxiSheetSnap.Expanded
             completedAction?.action?.kind == AppActionKind.SETTLE_DRIVER_CASH -> TaxiSheetSnap.Half
-            state.activeRide != null || state.offers.isNotEmpty() || state.pendingCashRideId != null -> TaxiSheetSnap.Half
+            state.activeRide != null || state.offers.isNotEmpty() || (state.pendingCashPayments?.total ?: 0) > 0 -> TaxiSheetSnap.Half
             state.availability == DriverAvailabilityStatus.OFFLINE || state.availability == DriverAvailabilityStatus.PAUSED -> TaxiSheetSnap.Half
             else -> TaxiSheetSnap.Peek
         }
     }
 
-    BoxWithConstraints(Modifier.fillMaxSize().background(TaxiColors.Surface1)) {
+    BoxWithConstraints(Modifier.fillMaxSize().background(taxiColors.Surface1)) {
+        val fontScale = LocalDensity.current.fontScale
+        val effectiveSnap = accessibleTaxiSheetSnap(snap, fontScale)
         MapLibreTripMap(
             pickup = state.pickup.takeIf {
                 state.activeRide in setOf(
@@ -191,7 +226,7 @@ internal fun DriverHome(
                     RideStatus.DRIVER_EN_ROUTE,
                     RideStatus.DRIVER_ARRIVED,
                 )
-            },
+            } ?: state.offers.firstOrNull()?.pickup,
             destination = state.destination.takeIf {
                 state.activeRide in setOf(RideStatus.DRIVER_ARRIVED, RideStatus.IN_PROGRESS)
             },
@@ -209,12 +244,12 @@ internal fun DriverHome(
             onAccount = { panel = DriverSheetPanel.Account },
             onSafety = { panel = DriverSheetPanel.Safety },
             onInbox = { panel = DriverSheetPanel.Inbox },
-            modifier = Modifier.align(Alignment.TopCenter).padding(TaxiSpacing.Md),
+            modifier = Modifier.align(Alignment.TopCenter),
         )
-        if (panel == DriverSheetPanel.Operations) {
+        if (panel == DriverSheetPanel.Operations && taxiSheetAllowsMapActions(snap, fontScale, maxHeight)) {
             Column(
                 modifier = Modifier.align(Alignment.BottomEnd)
-                    .padding(end = TaxiSpacing.Md, bottom = maxHeight * snap.heightFraction + TaxiSpacing.Md),
+                    .padding(end = TaxiSpacing.Md, bottom = maxHeight * effectiveSnap.heightFraction + TaxiSpacing.Md),
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm),
             ) {
@@ -232,18 +267,7 @@ internal fun DriverHome(
                     glyph = "◎",
                     enabled = !locationRequestInFlight,
                     loading = locationRequestInFlight,
-                    onClick = {
-                        locationDraft.message = UiMessage(Res.string.requesting_current_location)
-                        requestCurrentLocation { selected ->
-                            if (selected == null) {
-                                locationDraft.message = UiMessage(Res.string.driver_location_unavailable)
-                            } else {
-                                locationDraft.load(selected)
-                                locationDraft.message = UiMessage(Res.string.driver_location_loaded)
-                                snap = TaxiSheetSnap.Half
-                            }
-                        }
-                    },
+                    onClick = refreshDriverLocation,
                 )
             }
         }
@@ -264,21 +288,23 @@ internal fun DriverHome(
                     state = state,
                     pendingAction = pendingAction,
                     completedAction = completedAction,
-                    locationDraft = locationDraft,
+                    locationMessage = locationMessage,
                     completionDraft = completionDraft,
                     locationRequestInFlight = locationRequestInFlight,
                     onRequestCurrentLocation = requestCurrentLocation,
+                    onRefreshDriverLocation = refreshDriverLocation,
                     onSetDriverOnline = onSetDriverOnline,
-                    onUpdateDriverLocation = onUpdateDriverLocation,
                     onAcceptOffer = { onRespondToOffer(it, true) },
                     onDeclineOffer = { declineOfferId = it },
                     onAdvanceDriverRide = onAdvanceDriverRide,
                     onCancelRide = { rideId, reason -> cancelRide = rideId to reason },
                     onSendRideCoordination = onSendRideCoordination,
                     onCompleteDriverRide = onCompleteDriverRide,
-                    onSettleCash = { settleCashRideId = it },
+                    onSettleCash = { settleCashPayment = it },
+                    onLoadPendingCashPayments = onLoadPendingCashPayments,
                     onOfferExpired = onOfferExpired,
                     onOpenScheduled = { panel = DriverSheetPanel.Scheduled },
+                    showManualCoordinateEntry = showManualCoordinateEntry,
                 )
                 DriverSheetPanel.Scheduled -> DriverScheduledSheet(
                     state = state,
@@ -346,49 +372,50 @@ internal fun DriverHome(
             onCancel = { cancelRide = null },
         )
     }
-    settleCashRideId?.let { rideId ->
+    LaunchedEffect(state.pendingCashPayments, state.pendingCashLoadFailed) {
+        if (state.pendingCashLoadFailed || state.pendingCashPayments?.items?.none { it.paymentId == settleCashPayment?.paymentId } != false) {
+            settleCashPayment = null
+        }
+    }
+    settleCashPayment?.let { payment ->
         ConfirmDialog(
             title = stringResource(Res.string.confirm_cash_received_question),
-            body = stringResource(Res.string.confirm_cash_received_body),
+            body = stringResource(Res.string.confirm_cash_received_body) + "\n\n" +
+                "${payment.amount} ${payment.currency}" + "\n" +
+                stringResource(Res.string.pending_cash_date, (payment.completedAt ?: payment.createdAt).take(10)),
             confirmLabel = stringResource(Res.string.cash_received),
             onConfirm = {
-                settleCashRideId = null
-                onSettleDriverCash(rideId)
+                settleCashPayment = null
+                onSettleDriverCash(payment.rideId)
             },
-            onCancel = { settleCashRideId = null },
+            onCancel = { settleCashPayment = null },
         )
     }
 }
 
 @Composable
-private fun DriverToolbar(
+internal fun DriverToolbar(
     displayName: String?,
     unreadCount: Int,
     onAccount: () -> Unit,
     onSafety: () -> Unit,
     onInbox: () -> Unit,
     modifier: Modifier = Modifier,
+    safeInsets: WindowInsets = WindowInsets.safeDrawing,
 ) {
-    Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Surface(shape = MaterialTheme.shapes.medium, color = TaxiColors.Surface0, shadowElevation = TaxiSpacing.Xs) {
-            TextButton(onClick = onAccount) {
-                Text(displayName?.ifBlank { null } ?: stringResource(Res.string.driver_account))
-            }
-        }
-        Surface(shape = MaterialTheme.shapes.medium, color = TaxiColors.Surface0, shadowElevation = TaxiSpacing.Xs) {
-            TextButton(onClick = onSafety) {
-                Text(stringResource(Res.string.safety_reports_title))
-            }
-        }
-        Surface(shape = MaterialTheme.shapes.medium, color = TaxiColors.Surface0, shadowElevation = TaxiSpacing.Xs) {
-            TextButton(onClick = onInbox) {
-                Text(
-                    if (unreadCount > 0) stringResource(Res.string.inbox_count, unreadCount)
-                    else stringResource(Res.string.inbox)
-                )
-            }
-        }
-    }
+    MapToolbar(
+        accountLabel = stringResource(Res.string.driver_account),
+        accountDisplayLabel = stringResource(Res.string.account),
+        displayName = displayName,
+        safetyLabel = stringResource(Res.string.safety_reports_title),
+        inboxLabel = if (unreadCount > 0) stringResource(Res.string.inbox_count, unreadCount) else stringResource(Res.string.inbox),
+        unreadCount = unreadCount,
+        onAccount = onAccount,
+        onSafety = onSafety,
+        onInbox = onInbox,
+        modifier = modifier.windowInsetsPadding(safeInsets.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal))
+            .padding(horizontal = TaxiSpacing.Md, vertical = TaxiSpacing.Sm),
+    )
 }
 
 @Composable
@@ -396,27 +423,41 @@ private fun DriverOperationsSheet(
     state: AppUiState.DriverReady,
     pendingAction: AppAction?,
     completedAction: AppActionCompletion?,
-    locationDraft: DriverCoordinateDraft,
+    locationMessage: UiMessage?,
     completionDraft: DriverCoordinateDraft,
     locationRequestInFlight: Boolean,
     onRequestCurrentLocation: ((Coordinates?) -> Unit) -> Unit,
+    onRefreshDriverLocation: () -> Unit,
     onSetDriverOnline: (Boolean, String?, String?) -> Unit,
-    onUpdateDriverLocation: (Coordinates) -> Unit,
     onAcceptOffer: (String) -> Unit,
     onDeclineOffer: (String) -> Unit,
     onAdvanceDriverRide: (String, DriverRideAction) -> Unit,
     onCancelRide: (String, String) -> Unit,
     onSendRideCoordination: (String, RideCoordinationCode) -> Unit,
     onCompleteDriverRide: (String, Coordinates) -> Unit,
-    onSettleCash: (String) -> Unit,
+    onSettleCash: (org.example.taximobile.domain.drivers.PendingCashPayment) -> Unit,
+    onLoadPendingCashPayments: (Int) -> Unit,
     onOfferExpired: () -> Unit,
     onOpenScheduled: () -> Unit,
+    showManualCoordinateEntry: Boolean,
 ) {
+    val taxiColors = TaxiTheme.colors
     Text(stringResource(Res.string.driver_home), style = MaterialTheme.typography.displaySmall)
     StatusPill(
         stringResource(state.availability.driverAvailabilityResource()),
         state.availability.driverAvailabilityTone(),
     )
+    // After completion/restart, cash is the next idle-driver task, not hidden
+    // below setup controls. Never put old cash work ahead of an active ride.
+    if (state.activeRide == null) {
+        PendingCashPaymentsSection(state.pendingCashPayments, state.pendingCashLoadFailed, pendingAction, onSettleCash, onLoadPendingCashPayments)
+    }
+    if (completedAction?.action?.kind == AppActionKind.SETTLE_DRIVER_CASH) {
+        SuccessConfirmation(
+            stringResource(Res.string.cash_received_confirmation),
+            completedAction.sequence,
+        )
+    }
     val activeVehicle = state.vehicles.firstOrNull { it.id == state.activeVehicleId }
     val vehicleReady = activeVehicle?.status == "ACTIVE" && activeVehicle.verificationStatus == "VERIFIED"
     var selectedCityId by remember(state.onlineCityId, state.authorizedMarkets) {
@@ -497,7 +538,8 @@ private fun DriverOperationsSheet(
             stringResource(Res.string.go_online),
             { onSetDriverOnline(true, selectedCityId, selectedServiceType ?: "ON_DEMAND") },
             modifier = Modifier.testTag("driver-go-online"),
-            enabled = vehicleReady && state.currentLocation != null && authorizationReady && pendingAction == null,
+            enabled = vehicleReady && state.currentLocation != null && authorizationReady &&
+                !locationRequestInFlight && pendingAction == null,
             loading = pendingAction.isPending(AppActionKind.SET_DRIVER_AVAILABILITY),
         )
     } else if (state.availability == DriverAvailabilityStatus.AVAILABLE) {
@@ -574,11 +616,8 @@ private fun DriverOperationsSheet(
         }
         TimedOfferCard(
             offer = offer,
-            pickupSummary = stringResource(
-                Res.string.pickup_coordinates,
-                offer.pickup.latitude.toString(),
-                offer.pickup.longitude.toString(),
-            ),
+            pickupSummary = offer.pickup.address?.takeIf { it.isNotBlank() }
+                ?: stringResource(Res.string.offer_pickup_on_map),
             distanceAndEta = distanceAndEta,
             fare = fare,
             economicsDetails = serviceDetails + economicsDetails,
@@ -592,20 +631,22 @@ private fun DriverOperationsSheet(
     if (state.availability in ForegroundDriverLocationPolicy.OPERATIONAL_LOCATION_STATES) {
         Text(
             stringResource(Res.string.foreground_driver_location_active),
-            color = TaxiColors.Ink500,
+            color = taxiColors.Ink500,
             style = MaterialTheme.typography.bodySmall,
         )
     }
-    TaxiButton(
-        stringResource(
-            Res.string.scheduled_work_summary,
-            state.scheduledOffers.size,
-            state.scheduledCommitments.size,
-        ),
-        onOpenScheduled,
-        enabled = pendingAction == null,
-        style = TaxiButtonStyle.Secondary,
-    )
+    if (state.activeRideId == null) {
+        TaxiButton(
+            stringResource(
+                Res.string.scheduled_work_summary,
+                state.scheduledOffers.size,
+                state.scheduledCommitments.size,
+            ),
+            onOpenScheduled,
+            enabled = pendingAction == null,
+            style = TaxiButtonStyle.Secondary,
+        )
+    }
     state.routePlan?.let { route ->
         Text(
             stringResource(
@@ -614,23 +655,9 @@ private fun DriverOperationsSheet(
                 formatMinutes(route.durationSeconds),
             )
         )
-        route.maneuvers.take(4).forEach { Text(it.instruction, style = MaterialTheme.typography.bodyMedium) }
+        route.maneuvers.take(1).forEach { Text(it.instruction, style = MaterialTheme.typography.bodyMedium) }
     }
     if (state.routeUnavailable) ToastBanner(stringResource(Res.string.driver_route_unavailable))
-    state.pendingCashRideId?.let {
-        TaxiButton(
-            stringResource(Res.string.confirm_cash_received),
-            { onSettleCash(it) },
-            enabled = pendingAction == null,
-            loading = pendingAction.isPending(AppActionKind.SETTLE_DRIVER_CASH, it),
-        )
-    }
-    if (completedAction?.action?.kind == AppActionKind.SETTLE_DRIVER_CASH) {
-        SuccessConfirmation(
-            stringResource(Res.string.cash_received_confirmation),
-            completedAction.sequence,
-        )
-    }
     state.activeRideId?.let { rideId ->
         state.activeFixedRoute?.let { route ->
             val language = androidx.compose.ui.text.intl.Locale.current.language
@@ -671,6 +698,7 @@ private fun DriverOperationsSheet(
                 locationRequestInFlight,
                 onRequestCurrentLocation,
                 onCompleteDriverRide,
+                showManualCoordinateEntry,
             )
             else -> Unit
         }
@@ -695,16 +723,17 @@ private fun DriverOperationsSheet(
         }
     }
     Text(stringResource(Res.string.driver_location), style = MaterialTheme.typography.titleMedium)
-    locationDraft.message?.let { ToastBanner(it.resolve()) }
-    TaxiTextField(locationDraft.latitude, { locationDraft.latitude = it }, stringResource(Res.string.current_latitude), keyboardType = KeyboardType.Decimal)
-    TaxiTextField(locationDraft.longitude, { locationDraft.longitude = it }, stringResource(Res.string.current_longitude), keyboardType = KeyboardType.Decimal)
+    locationMessage?.let { ToastBanner(it.resolve()) }
     TaxiButton(
         stringResource(Res.string.submit_location),
-        { onUpdateDriverLocation(requireNotNull(locationDraft.coordinates)) },
-        enabled = locationDraft.coordinates != null && pendingAction == null,
-        loading = pendingAction.isPending(AppActionKind.UPDATE_DRIVER_LOCATION),
+        onRefreshDriverLocation,
+        enabled = !locationRequestInFlight && pendingAction == null,
+        loading = locationRequestInFlight || pendingAction.isPending(AppActionKind.UPDATE_DRIVER_LOCATION),
         style = TaxiButtonStyle.Secondary,
     )
+    if (state.activeRide != null) {
+        PendingCashPaymentsSection(state.pendingCashPayments, state.pendingCashLoadFailed, pendingAction, onSettleCash, onLoadPendingCashPayments)
+    }
 }
 
 @Composable
@@ -715,13 +744,14 @@ private fun DriverScheduledSheet(
     onPreference: (String, Boolean) -> Unit,
     onRespond: (String, Boolean) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Text(stringResource(Res.string.scheduled_work_title), style = MaterialTheme.typography.headlineSmall)
         TextButton(onClick = onBack) { Text(stringResource(Res.string.scheduled_back_to_live)) }
     }
     Text(
         stringResource(Res.string.scheduled_driver_participation),
-        color = TaxiColors.Ink500,
+        color = taxiColors.Ink500,
     )
     if (state.authorizedMarkets.isEmpty()) {
         EmptyState(
@@ -734,11 +764,11 @@ private fun DriverScheduledSheet(
             Surface(
                 Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium,
-                color = TaxiColors.Surface0,
+                color = taxiColors.Surface0,
             ) {
                 Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Md), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
                     Text(market.cityName.forLanguage(Locale.current.language), style = MaterialTheme.typography.titleMedium)
-                    Text(stringResource(Res.string.scheduled_preference_backend), color = TaxiColors.Ink500)
+                    Text(stringResource(Res.string.scheduled_preference_backend), color = taxiColors.Ink500)
                     Text(
                         stringResource(
                             when (preference?.enabled) {
@@ -747,7 +777,7 @@ private fun DriverScheduledSheet(
                                 null -> Res.string.scheduled_preference_not_set
                             }
                         ),
-                        color = if (preference?.enabled == true) TaxiColors.Success600 else TaxiColors.Ink500,
+                        color = if (preference?.enabled == true) taxiColors.Success600 else taxiColors.Ink500,
                     )
                     Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
                         TaxiButton(
@@ -777,14 +807,14 @@ private fun DriverScheduledSheet(
         )
     }
     state.scheduledOffers.forEach { offer ->
-        Surface(Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.medium, color = TaxiColors.Surface0) {
+        Surface(Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.medium, color = taxiColors.Surface0) {
             Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Md), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Text(offer.scheduledFor, style = MaterialTheme.typography.titleMedium)
                     StatusPill(offer.serviceType.replace('_', ' '), StatusTone.Info)
                 }
                 Text(stringResource(Res.string.scheduled_location_summary, offer.pickup.address ?: stringResource(Res.string.pickup), offer.destination.address ?: stringResource(Res.string.destination)))
-                Text(stringResource(Res.string.scheduled_offer_deadline, offer.expiresAt, offer.serverTime), color = TaxiColors.Warning600)
+                Text(stringResource(Res.string.scheduled_offer_deadline, offer.expiresAt, offer.serverTime), color = taxiColors.Warning600)
                 FareBlock(
                     amount = offer.economics.expectedDriverNet,
                     currency = offer.economics.currency,
@@ -805,7 +835,7 @@ private fun DriverScheduledSheet(
                         )
                         else -> stringResource(Res.string.scheduled_refund_never)
                     },
-                    color = TaxiColors.Ink500,
+                    color = taxiColors.Ink500,
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
                     TaxiButton(
@@ -834,7 +864,7 @@ private fun DriverScheduledSheet(
         )
     }
     state.scheduledCommitments.forEach { commitment ->
-        Surface(Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.medium, color = TaxiColors.Surface0) {
+        Surface(Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.medium, color = taxiColors.Surface0) {
             Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Md), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Text(commitment.scheduledFor, style = MaterialTheme.typography.titleMedium)
@@ -843,7 +873,7 @@ private fun DriverScheduledSheet(
                 Text(stringResource(Res.string.scheduled_protected_window, commitment.protectedFrom, commitment.protectedUntil))
                 Text(stringResource(Res.string.scheduled_location_summary, commitment.pickup.address ?: stringResource(Res.string.pickup), commitment.destination.address ?: stringResource(Res.string.destination)))
                 Text(stringResource(Res.string.scheduled_expected_driver_net, commitment.economics.expectedDriverNet, commitment.economics.currency))
-                Text(stringResource(Res.string.scheduled_commitment_warning), color = TaxiColors.Warning600)
+                Text(stringResource(Res.string.scheduled_commitment_warning), color = taxiColors.Warning600)
             }
         }
     }
@@ -914,6 +944,7 @@ private fun DriverCompletionControls(
     locationRequestInFlight: Boolean,
     onRequestCurrentLocation: ((Coordinates?) -> Unit) -> Unit,
     onComplete: (String, Coordinates) -> Unit,
+    showManualCoordinateEntry: Boolean,
 ) {
     TaxiButton(
         stringResource(Res.string.load_completion_location),
@@ -921,7 +952,10 @@ private fun DriverCompletionControls(
             draft.message = UiMessage(Res.string.completion_location_requesting)
             onRequestCurrentLocation { selected ->
                 if (selected == null) {
-                    draft.message = UiMessage(Res.string.completion_location_unavailable)
+                    draft.message = UiMessage(
+                        if (showManualCoordinateEntry) Res.string.completion_location_unavailable
+                        else Res.string.driver_location_unavailable,
+                    )
                 } else {
                     draft.load(selected)
                     draft.message = UiMessage(Res.string.completion_location_loaded)
@@ -933,8 +967,10 @@ private fun DriverCompletionControls(
         style = TaxiButtonStyle.Secondary,
     )
     draft.message?.let { ToastBanner(it.resolve()) }
-    TaxiTextField(draft.latitude, { draft.latitude = it }, stringResource(Res.string.completion_latitude), keyboardType = KeyboardType.Decimal)
-    TaxiTextField(draft.longitude, { draft.longitude = it }, stringResource(Res.string.completion_longitude), keyboardType = KeyboardType.Decimal)
+    if (showManualCoordinateEntry) {
+        TaxiTextField(draft.latitude, { draft.latitude = it }, stringResource(Res.string.completion_latitude), keyboardType = KeyboardType.Decimal)
+        TaxiTextField(draft.longitude, { draft.longitude = it }, stringResource(Res.string.completion_longitude), keyboardType = KeyboardType.Decimal)
+    }
     TaxiButton(
         stringResource(Res.string.complete_ride),
         { onComplete(rideId, requireNotNull(draft.coordinates)) },
@@ -962,6 +998,7 @@ private fun DriverAccountSheet(
     onChangeAccountPassword: (String, String) -> Unit,
 ) {
     TaxiButton(stringResource(Res.string.back_to_operations), onBack, style = TaxiButtonStyle.Tertiary)
+    org.example.taximobile.feature.ui.components.TaxiStyleChooser()
     Text(stringResource(Res.string.driver_account), style = MaterialTheme.typography.displaySmall)
     state.displayName?.takeIf { it.isNotBlank() }?.let {
         Text(it, style = MaterialTheme.typography.titleMedium)
@@ -1110,7 +1147,7 @@ private fun DriverRideHistoryDetail(ride: RideSummary, rating: RideRating?) {
         stringResource(ride.status.passengerStatusResource()),
         ride.status.passengerStatusTone(),
     )
-    Text(stringResource(Res.string.ride_identifier, ltrIsolate(ride.id)))
+    Text(stringResource(Res.string.ride_identifier, ltrIsolate(ride.id.take(8))))
     ride.pickup?.let {
         Text(stringResource(Res.string.ride_location_line, stringResource(Res.string.pickup), driverHistoryLocationLabel(it)))
     }
@@ -1126,12 +1163,17 @@ private fun DriverRideHistoryDetail(ride: RideSummary, rating: RideRating?) {
     }
 }
 
-private fun driverHistoryLocationLabel(location: Coordinates): String =
-    location.address?.trim()?.takeIf(String::isNotEmpty)
-        ?: ltrIsolate("${location.latitude}, ${location.longitude}")
+private fun driverHistoryLocationLabel(location: Coordinates): String {
+    location.address?.trim()?.takeIf(String::isNotEmpty)?.let { return it }
+    // Display precision only; routing and API requests keep the original point.
+    val latitude = kotlin.math.round(location.latitude * 100_000) / 100_000
+    val longitude = kotlin.math.round(location.longitude * 100_000) / 100_000
+    return ltrIsolate("$latitude, $longitude")
+}
 
 @Composable
 private fun DriverEarningCard(earning: org.example.taximobile.domain.drivers.DriverEarningItem) {
+    val taxiColors = TaxiTheme.colors
     TaxiCard {
         Text(
             stringResource(
@@ -1179,7 +1221,7 @@ private fun DriverEarningCard(earning: org.example.taximobile.domain.drivers.Dri
                     }
                 ),
                 style = MaterialTheme.typography.bodySmall,
-                color = TaxiColors.Ink500,
+                color = taxiColors.Ink500,
             )
         }
     }

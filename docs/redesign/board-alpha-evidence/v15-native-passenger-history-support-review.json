@@ -1,0 +1,8 @@
+{
+  "candidate": "candidate-native-v15.json",
+  "passed": false,
+  "stage": "Harness preflight before any UI input",
+  "failure": "Windows default encoding cannot decode Arabic evidence; failure-record write also rejected Arabic text",
+  "native_input_sent": false,
+  "raw_truncated_artifact": "v15-passenger-secondary-encoding-write-failed.partial"
+}

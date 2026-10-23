@@ -1,0 +1,111 @@
+{
+  "verified_utc": "2026-10-19T11:42:17.752016+00:00",
+  "passed": true,
+  "web_deployment": "ceee310c-e957-49ad-945d-b9f2d292eb61",
+  "application_id": "0de83ae6-2f00-4dbd-8f23-34b491e5698e",
+  "synthetic_owner": "Omar Empty State",
+  "reviewer": "Amal UX Recruitment Reviewer",
+  "city": "Casablanca",
+  "predecessor": "v8-applicant-save-submit-20261019.json",
+  "actual_ui_sequence": [
+    "Matched Omar in scoped reviewer queue at submitted revision 3",
+    "Confirmed START_REVIEW/MANUAL_REVIEW_STARTED with Arabic applicant message: revision 4",
+    "Prepared Arabic correction message, retained through English to French to Arabic without submitting during language changes",
+    "Confirmed REQUEST_ADDITIONAL_INFORMATION/MISSING_OR_INVALID_EVIDENCE through Arabic UI: revision 5",
+    "Applicant Refresh received exact message and revision 5",
+    "Applicant Save confirmed revision 6",
+    "Submit encountered expired applicant session; explicit Sign in again, no domain transition",
+    "Independent owned read confirmed ADDITIONAL_INFORMATION_REQUIRED revision 6 unchanged",
+    "Normal applicant password sign-in recovered revision 6 without replay",
+    "Deliberate new UI Submit confirmed SUBMITTED revision 7; independent owned read agrees"
+  ],
+  "owned_readbacks": [
+    "v8-omar-readback-after-expiry.json",
+    "v8-omar-readback-resubmitted.json"
+  ],
+  "screenshots": [
+    {
+      "path": "v8-reviewer-omar-queue.jpg",
+      "sha256": "7522d704543ed278ffe0709a022f37a840c62fa510608b70d3b47b78af9d3b44",
+      "bytes": 76817,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-omar-start-review-confirmed.jpg",
+      "sha256": "fdcf2118ccb07c2ab62d94928ad1046b5b53954bd26a3fe4c07b5080dc3c934f",
+      "bytes": 63413,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-omar-review-started-revision4.jpg",
+      "sha256": "9fd71b2a3b6b3581e62c5df8de918ec8b9882dc8ffa3006ef1e21bb34a9dcb00",
+      "bytes": 72915,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-review-french-arabic-draft.jpg",
+      "sha256": "f968345d8fa9d6de9457dbf23d775f777a2deeb65dbec92f43e632a99d772399",
+      "bytes": 80874,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-review-arabic-retained-draft.jpg",
+      "sha256": "723dca962be78c9ab95d3a0aff04e443cd92c9f8414a1ab8ec89e0673edcbd27",
+      "bytes": 58082,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-omar-correction-requested-revision5.jpg",
+      "sha256": "8ed0eec1aed74b8143137690cb424cc33174d288454fdd5af2cf9f88d960b656",
+      "bytes": 55315,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-applicant-correction-received-revision5.jpg",
+      "sha256": "8f4b042b63d34843897312793c26e58eb0895335d25a81b81a1dc72950b1b0f3",
+      "bytes": 52479,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-applicant-correction-saved-revision6.jpg",
+      "sha256": "c13f50e223dc869a3237a913aea9b9c87d212a676c522d9c26d2751aaf03b9c5",
+      "bytes": 54697,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-applicant-session-expired-before-resubmit.jpg",
+      "sha256": "c9603a6830a252463de33ac20afa164af8a776083475d79ef327a7a1e3f08a08",
+      "bytes": 53075,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-applicant-recovered-revision6.jpg",
+      "sha256": "8df061e597866c599c47c1275c765c5493d47407ed0e4e922f657c119d2ba3bb",
+      "bytes": 58142,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-applicant-resubmitted-revision7.jpg",
+      "sha256": "2df503e80d868c422574150e2f6f8ad8e16a8b6c3298965cfb394f74991c3ace",
+      "bytes": 57092,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    }
+  ],
+  "limitations": [
+    "No approval, rejection, eligibility expansion, document access or real-money command tested",
+    "Profile-only synthetic requirements do not prove credential/vehicle evidence workflows",
+    "Actual visual capture supports these states only, not the complete 4-style x 3-language matrix",
+    "CUA AX repeatedly exposed stale popup/flattened content after city/language changes; screenshots/native UI actions were used. Screen-reader acceptance remains open; do not infer app accessibility success from these checks."
+  ]
+}

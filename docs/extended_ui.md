@@ -1,5 +1,46 @@
 # TaxiMobile — Extended UI/UX Specification
 
+## Board alpha execution authorized — 15 October 2026
+
+The owner now directs the earliest functional board alpha, authorizes application
+implementation and TaxiMobile Railway staging changes/deployment, and requires
+French, Arabic and English with concise copy. This supersedes the earlier
+planning-only stop. The selected four-style contract remains in force; no further
+palette approval is needed. Follow [the active board alpha checkpoint](board-alpha.md)
+for execution and evidence. Native, integrated staging, device and release
+acceptance must still be demonstrated.
+
+## Selected visual direction — recorded 15 October 2026
+
+The owner approved **Folded Streets, Street Press, Glazed Machine and Notepad**
+as four complete user-selectable styles. The independent five-color theme menu
+is withdrawn. Gradients/collage/grain are treatments inside the expressive styles,
+not additional choices. Notepad is grayscale ruled utility, retaining meaningful
+icons and main workflows while disabling decorative motion.
+
+[The selected four-style contract](redesign/style-options.md),
+[current preview](redesign/abstract-lab.html), [visual system](redesign/visual-system.md)
+and [all-page coverage](redesign/style-coverage.md) supersede earlier identity,
+palette, shape and motion prescriptions below. The dated rejection/research and
+pending-style-selection notes are historical. No further palette confirmation is
+needed. Native implementation/device evidence, complete delivery-plan execution,
+hosted rehearsal and release gates remain separate; this records design selection.
+Backend authority, privacy, accessibility and state/command rules remain in force.
+
+
+## Replacement plan awaiting owner confirmation — 12 October 2026
+
+The owner rejected the current UI and stopped rehearsal. Unrestricted exploration
+is authorized; gold/navy and existing fonts receive no preference. The complete
+[mobile page book](redesign/mobile-pages.md), [web page book](redesign/web-pages.md),
+[component options](redesign/components.md) and [visual system](redesign/visual-system.md)
+are proposals awaiting confirmation under [delivery.md](redesign/delivery.md).
+The mapping in the mobile book covers the legacy page IDs below, including
+explicitly deferred capabilities. Prior visual prescriptions are historical;
+they do not constrain research or authorize immediate implementation. Preserve
+domain/capability boundaries. After approval UX-0 reconciles this specification
+with `ui.md` before any application redesign work.
+
 ## 0. Purpose
 
 This document defines the complete visual, interaction, layout, validation, motion, and state-management specification for the TaxiMobile product.

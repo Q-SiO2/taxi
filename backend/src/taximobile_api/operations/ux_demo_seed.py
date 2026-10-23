@@ -1,4 +1,4 @@
-"""Create additive synthetic UX-review data in a confirmed local database only."""
+"""Create synthetic UX data locally, or in the explicitly isolated Railway alpha."""
 
 from __future__ import annotations
 
@@ -6,7 +6,10 @@ import argparse
 import asyncio
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
+from enum import StrEnum
 import json
+import os
+from pathlib import Path
 from secrets import token_hex
 from urllib.parse import urlparse
 
@@ -15,6 +18,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from taximobile_api.core.config import Settings
+from taximobile_api.operations.alpha_seed_target import RailwayAlphaTarget, require_pristine_alpha
 from taximobile_api.domains.administration.models import (
     AdministrativeGrant,
     AdministrativeRoleTemplate,
@@ -58,10 +62,12 @@ from taximobile_api.domains.fixed_routes.models import (
     FixedRouteVersion,
 )
 from taximobile_api.domains.notifications.models import Notification
-from taximobile_api.domains.payments.models import DriverEarning, Payment, PaymentMethod, PaymentStatus
+from taximobile_api.domains.payments.models import PaymentMethod
+from taximobile_api.domains.payments.service import (
+    create_driver_earning, create_pending_payment, settle_cash_payment,
+)
 from taximobile_api.domains.pricing.models import (
     BookingType,
-    FareRecord,
     FinancialPolicyStatus,
     OperatorFeeCalculationMode,
     OperatorFeeFundingMode,
@@ -73,6 +79,9 @@ from taximobile_api.domains.pricing.models import (
     SchedulingPolicy,
     SchedulingRefundMode,
     SchedulingSurchargeBeneficiary,
+)
+from taximobile_api.domains.pricing.service import (
+    calculate_financial_quote, finalize_fixed_fare_for_rule,
 )
 from taximobile_api.domains.rides.models import Ride, RideEvent, RideEventType, RideRating, RideStatus
 from taximobile_api.domains.rides.schemas import Coordinate
@@ -105,6 +114,11 @@ DEMO_CONFIRMATION = "CONFIRM_LOCAL_UX_DEMO_DATA"
 LOOPBACK_HOSTS = {"127.0.0.1", "::1", "localhost"}
 
 
+class DemoProfile(StrEnum):
+    UX_REVIEW = "ux_review"
+    UNION_LIVE = "union_live"
+
+
 class DemoSeedRefused(ValueError):
     """The requested target is not an explicitly confirmed local development database."""
 
@@ -116,6 +130,8 @@ def validate_demo_target(*, environment: str, database_url: str, confirmation: s
         raise DemoSeedRefused(f"Pass --confirm {DEMO_CONFIRMATION} after reviewing the target.")
     if environment != "development":
         raise DemoSeedRefused("UX demo data is allowed only with TAXIMOBILE_ENV=development.")
+    if parsed.scheme != "postgresql":
+        raise DemoSeedRefused("UX demo data requires a PostgreSQL database URL.")
     if parsed.hostname not in LOOPBACK_HOSTS:
         raise DemoSeedRefused("UX demo data requires a loopback PostgreSQL host.")
     if not database_name or database_name in {"postgres", "template0", "template1"}:
@@ -189,6 +205,7 @@ async def add_completed_ride(
     driver: DriverProfile,
     vehicle: Vehicle,
     rule: PricingRule,
+    fee_policy_id,
     pickup: tuple[float, float, str],
     destination: tuple[float, float, str],
     created_at: datetime,
@@ -210,55 +227,31 @@ async def add_completed_ride(
     session.add(ride)
     await session.flush()
 
-    amount = Decimal(str(rule.fixed_amount))
-    session.add(
-        FareRecord(
-            ride_id=ride.id,
-            pricing_rule_id=rule.id,
-            base_amount=amount,
-            total_amount=amount,
-            currency=rule.currency,
-            snapshot={
-                "tariff_version": rule.version,
-                "model": PricingModel.FIXED.value,
-                "base_fare": str(amount),
-                "total": str(amount),
-                "currency": rule.currency,
-            },
-            calculated_at=ride.completed_at,
-            finalized_at=ride.completed_at,
-        )
+    snapshot = await attach_demo_economics(session, ride, rule, fee_policy_id)
+    fare = await finalize_fixed_fare_for_rule(
+        session, ride.id, rule, financial_snapshot=snapshot,
     )
-    payment = Payment(
+    fare.calculated_at = fare.finalized_at = ride.completed_at
+    payment = create_pending_payment(
         ride_id=ride.id,
         payer_id=passenger_id,
-        amount=amount,
+        city_id=ride.city_id,
+        operator_id=ride.operator_id,
+        payment_capability_version_id=ride.payment_capability_version_id,
+        payment_recipient_account_id=ride.payment_recipient_account_id,
+        amount=snapshot.passenger_total_amount,
         currency=rule.currency,
         method=PaymentMethod.CASH,
-        status=PaymentStatus.COMPLETED if settled else PaymentStatus.PENDING,
-        completed_at=ride.completed_at + timedelta(minutes=1) if settled else None,
-        created_at=ride.completed_at,
     )
+    payment.created_at = ride.completed_at
     session.add(payment)
     await session.flush()
     if settled:
-        session.add(
-            DriverEarning(
-                driver_id=driver.id,
-                ride_id=ride.id,
-                payment_id=payment.id,
-                gross_amount=amount,
-                fee_amount=Decimal("0.00"),
-                adjustment_amount=Decimal("0.00"),
-                net_amount=amount,
-                transport_fare_amount=amount,
-                scheduling_surcharge_amount=Decimal("0.00"),
-                operator_fee_amount=Decimal("0.00"),
-                operator_allocation_amount=Decimal("0.00"),
-                currency=rule.currency,
-                settled_at=payment.completed_at,
-            )
-        )
+        settle_cash_payment(payment)
+        payment.completed_at = ride.completed_at + timedelta(minutes=1)
+        session.add(create_driver_earning(
+            driver_id=driver.id, payment=payment, financial_snapshot=snapshot,
+        ))
     if rating is not None:
         session.add(
             RideRating(
@@ -283,11 +276,75 @@ async def add_completed_ride(
     return ride
 
 
-async def seed_demo(settings: Settings) -> dict[str, object]:
-    engine = create_async_engine(settings.database_url, pool_pre_ping=True)
+async def attach_demo_economics(session, ride: Ride, rule: PricingRule, fee_policy_id):
+    """Synthetic history uses the same economics/receipt format as fresh rides."""
+    policy = await session.get(OperatorFeePolicy, fee_policy_id)
+    if policy is None:
+        raise RuntimeError("The demo ride has no operator fee policy.")
+    quote = calculate_financial_quote(rule, policy, booking_type=BookingType.IMMEDIATE)
+    snapshot = quote.ride_snapshot(ride.id)
+    snapshot.created_at = ride.created_at
+    ride.quoted_amount = quote.passenger_total_amount
+    session.add(snapshot)
+    await session.flush()
+    return snapshot
+
+
+async def replace_demo_tariffs(session, booking_type: BookingType) -> None:
+    """Do not overlap the new local fare with an earlier seed's active interval."""
+    rules = list(await session.scalars(
+        select(PricingRule).where(
+            PricingRule.city_id == LEGACY_CITY_ID,
+            PricingRule.operator_id == LEGACY_OPERATOR_ID,
+            PricingRule.service_type == ServiceType.ON_DEMAND,
+            PricingRule.booking_type == booking_type,
+            PricingRule.status == PricingRuleStatus.ACTIVE,
+        ).with_for_update()
+    ))
+    for rule in rules:
+        rule.status = PricingRuleStatus.REPLACED
+    if rules:
+        await session.flush()
+
+
+async def replace_demo_scheduling_policies(session) -> None:
+    policies = list(await session.scalars(
+        select(SchedulingPolicy).where(
+            SchedulingPolicy.city_id == LEGACY_CITY_ID,
+            SchedulingPolicy.operator_id == LEGACY_OPERATOR_ID,
+            SchedulingPolicy.service_type.in_([ServiceType.ON_DEMAND, ServiceType.FIXED_ROUTE]),
+            SchedulingPolicy.status == FinancialPolicyStatus.ACTIVE,
+        ).with_for_update()
+    ))
+    for policy in policies:
+        policy.status = FinancialPolicyStatus.REPLACED
+    if policies:
+        await session.flush()
+
+
+async def seed_demo(
+    settings: Settings,
+    *,
+    confirmation: str,
+    profile: DemoProfile = DemoProfile.UX_REVIEW,
+    railway_target: RailwayAlphaTarget | None = None,
+) -> dict[str, object]:
+    # Default and local CLI retain their strict local-only boundary. Hosted
+    # bootstrap is a separate explicit path; every input precedes a connection.
+    if railway_target is None:
+        validate_demo_target(environment=settings.environment,
+                             database_url=settings.database_url, confirmation=confirmation)
+    else:
+        railway_target.validate(environment=settings.environment,
+                                database_url=settings.database_url, confirmation=confirmation)
+        if profile != DemoProfile.UNION_LIVE:
+            raise DemoSeedRefused("Hosted alpha requires the fresh-dispatch union_live profile.")
+    profile = DemoProfile(profile)
+    live_demo = profile == DemoProfile.UNION_LIVE
+    engine = create_async_engine(settings.database_url, pool_pre_ping=True, hide_parameters=True)
     sessions = async_sessionmaker(engine, expire_on_commit=False)
-    suffix = token_hex(4)
-    password = f"Demo-{token_hex(6)}-Aa9!"
+    suffix = railway_target.suffix if railway_target is not None else token_hex(4)
+    password = railway_target.password if railway_target is not None else f"Demo-{token_hex(6)}-Aa9!"
     now = datetime.now(UTC)
     emails = {
         "passenger_rich": f"ux-passenger-{suffix}@example.test",
@@ -299,6 +356,8 @@ async def seed_demo(settings: Settings) -> dict[str, object]:
     try:
         async with sessions() as session:
             async with session.begin():
+                if railway_target is not None:
+                    await require_pristine_alpha(session)
                 passenger = await add_passenger(
                     session,
                     email=emails["passenger_rich"],
@@ -363,9 +422,11 @@ async def seed_demo(settings: Settings) -> dict[str, object]:
                     display_name="Youssef UX Driver",
                     verification_status=VerificationStatus.APPROVED,
                     account_status=DriverAccountStatus.ACTIVE,
-                    availability_status=AvailabilityStatus.EN_ROUTE,
-                    online_city_id=LEGACY_CITY_ID,
-                    online_service_type=ServiceType.ON_DEMAND,
+                    availability_status=(
+                        AvailabilityStatus.OFFLINE if live_demo else AvailabilityStatus.EN_ROUTE
+                    ),
+                    online_city_id=None if live_demo else LEGACY_CITY_ID,
+                    online_service_type=None if live_demo else ServiceType.ON_DEMAND,
                 )
                 pending_driver = DriverProfile(
                     user_id=pending_user.id,
@@ -626,6 +687,7 @@ async def seed_demo(settings: Settings) -> dict[str, object]:
                     raise RuntimeError(
                         "The configured on-demand service is missing its active operator-fee policy."
                     )
+                await replace_demo_scheduling_policies(session)
                 on_demand_schedule_policy = SchedulingPolicy(
                     city_id=LEGACY_CITY_ID,
                     operator_id=LEGACY_OPERATOR_ID,
@@ -686,6 +748,7 @@ async def seed_demo(settings: Settings) -> dict[str, object]:
                     activated_by_user_id=operations_user.id,
                     activated_at=now,
                 )
+                await replace_demo_tariffs(session, BookingType.SCHEDULED)
                 scheduled_on_demand_rule = PricingRule(
                     city_id=LEGACY_CITY_ID,
                     operator_id=LEGACY_OPERATOR_ID,
@@ -832,6 +895,7 @@ async def seed_demo(settings: Settings) -> dict[str, object]:
                             service_type=service.service_type,
                             operator_city_assignment_id=service.operator_city_assignment_id,
                             tariff_version_id=service.tariff_version_id,
+                            payment_capability_version_id=service.payment_capability_version_id,
                             operator_fee_policy_version_id=service.operator_fee_policy_version_id,
                             scheduling_policy_version_id=(
                                 on_demand_schedule_policy.id
@@ -927,23 +991,7 @@ async def seed_demo(settings: Settings) -> dict[str, object]:
                     now=now,
                 )
 
-                active_on_demand_rules = list(
-                    await session.scalars(
-                        select(PricingRule)
-                        .where(
-                            PricingRule.city_id == LEGACY_CITY_ID,
-                            PricingRule.operator_id == LEGACY_OPERATOR_ID,
-                            PricingRule.service_type == ServiceType.ON_DEMAND,
-                            PricingRule.booking_type == BookingType.IMMEDIATE,
-                            PricingRule.status == PricingRuleStatus.ACTIVE,
-                        )
-                        .with_for_update()
-                    )
-                )
-                for active_rule in active_on_demand_rules:
-                    active_rule.status = PricingRuleStatus.REPLACED
-                if active_on_demand_rules:
-                    await session.flush()
+                await replace_demo_tariffs(session, BookingType.IMMEDIATE)
 
                 rule = PricingRule(
                     city_id=LEGACY_CITY_ID,
@@ -961,12 +1009,26 @@ async def seed_demo(settings: Settings) -> dict[str, object]:
                 session.add(rule)
                 await session.flush()
 
+                # The copied bundle may pin the previous tariff. Replacing that
+                # rule without rebinding leaves an ACTIVE bundle quoting a
+                # REPLACED tariff. Commit one coherent synthetic bundle instead.
+                demo_on_demand_service = await session.scalar(
+                    select(CityConfigurationService).where(
+                        CityConfigurationService.configuration_version_id == demo_configuration.id,
+                        CityConfigurationService.service_type == ServiceType.ON_DEMAND,
+                    )
+                )
+                if demo_on_demand_service is None:
+                    raise RuntimeError("The demo city has no on-demand service configuration.")
+                demo_on_demand_service.tariff_version_id = rule.id
+
                 settled_ride = await add_completed_ride(
                     session,
                     passenger_id=passenger.id,
                     driver=driver,
                     vehicle=vehicle,
                     rule=rule,
+                    fee_policy_id=demo_on_demand_service.operator_fee_policy_version_id,
                     pickup=(33.5898, -7.6039, "Casa-Port railway station"),
                     destination=(33.6084, -7.6327, "Hassan II Mosque"),
                     created_at=now - timedelta(days=8),
@@ -979,61 +1041,34 @@ async def seed_demo(settings: Settings) -> dict[str, object]:
                     driver=driver,
                     vehicle=vehicle,
                     rule=rule,
+                    fee_policy_id=demo_on_demand_service.operator_fee_policy_version_id,
                     pickup=(33.5811, -7.6352, "Maarif neighborhood"),
                     destination=(33.5950, -7.6802, "Ain Diab corniche"),
                     created_at=now - timedelta(days=2),
                     settled=False,
                     rating=None,
                 )
-                active_ride = assigned_ride(
-                    passenger_id=passenger.id,
-                    driver=driver,
-                    vehicle=vehicle,
-                    rule=rule,
-                    status=RideStatus.DRIVER_EN_ROUTE,
-                    pickup=(33.5731, -7.5898, "United Nations Square"),
-                    destination=(33.5899, -7.6039, "Casa-Port railway station"),
-                    created_at=now - timedelta(minutes=12),
-                )
-                session.add(active_ride)
-                await session.flush()
-                session.add_all(
-                    [
-                        RideEvent(
-                            ride_id=active_ride.id,
-                            event_type=RideEventType.STATUS_CHANGED,
-                            previous_status=RideStatus.ACCEPTED,
-                            new_status=RideStatus.DRIVER_EN_ROUTE,
-                            actor_user_id=driver_user.id,
-                            created_at=now - timedelta(minutes=9),
-                        ),
-                        DriverLocation(
-                            driver_id=driver.id,
-                            point=point(33.5750, -7.5920),
-                            observed_at=now - timedelta(minutes=1),
-                            accuracy_meters=7.0,
-                        ),
-                    ]
-                )
+                if not live_demo:
+                    await add_active_review_ride(
+                        session,
+                        passenger_id=passenger.id,
+                        driver=driver,
+                        vehicle=vehicle,
+                        rule=rule,
+                        fee_policy_id=demo_on_demand_service.operator_fee_policy_version_id,
+                        now=now,
+                    )
 
                 session.add_all(
                     [
                         Notification(
                             user_id=passenger.id,
-                            type="DRIVER_ASSIGNED",
-                            title="Driver assigned",
-                            body="Youssef is heading to your pickup.",
-                            data={"ride_id": str(active_ride.id)},
-                            created_at=now - timedelta(minutes=10),
-                        ),
-                        Notification(
-                            user_id=passenger.id,
-                            type="RIDE_CANCELLED",
-                            title="Earlier ride cancelled",
-                            body="A previous request was cancelled safely.",
+                            type="RIDE_COMPLETED",
+                            title="Earlier ride completed",
+                            body="Your earlier ride is complete; its cash payment is still pending.",
                             data={"ride_id": str(pending_cash_ride.id)},
                             read_at=now - timedelta(days=1),
-                            created_at=now - timedelta(days=2),
+                            created_at=pending_cash_ride.completed_at,
                         ),
                         Notification(
                             user_id=driver_user.id,
@@ -1071,16 +1106,25 @@ async def seed_demo(settings: Settings) -> dict[str, object]:
             async with session.begin():
                 await refresh_operational_analytics(session, now=now)
         return {
-            "database": "local development database",
+            "database": "isolated synthetic Railway alpha" if railway_target is not None else "local development database",
+            "profile": profile.value,
             "password": password,
             "accounts": {
                 "passenger_rich": {
                     "email": emails["passenger_rich"],
-                    "purpose": "active ride plus a committed scheduled fixed route, map/status, history, receipts, inbox, support",
+                    "purpose": (
+                        "fresh ride request, committed scheduled fixed route, history, receipts, inbox, support"
+                        if live_demo else
+                        "active ride plus a committed scheduled fixed route, map/status, history, receipts, inbox, support"
+                    ),
                 },
                 "driver_rich": {
                     "email": emails["driver_rich"],
-                    "purpose": "approved on-demand/fixed-route driver, scheduled opt-in/offers/commitment, active ride, vehicle, credential, earnings, inbox",
+                    "purpose": (
+                        "approved offline driver; capture fresh location, go online, accept a real new offer; earnings and schedules"
+                        if live_demo else
+                        "approved on-demand/fixed-route driver, scheduled opt-in/offers/commitment, active ride, vehicle, credential, earnings, inbox"
+                    ),
                 },
                 "driver_pending": {
                     "email": emails["driver_pending"],
@@ -1100,10 +1144,62 @@ async def seed_demo(settings: Settings) -> dict[str, object]:
         await engine.dispose()
 
 
+async def add_active_review_ride(
+    session, *, passenger_id, driver: DriverProfile, vehicle: Vehicle,
+    rule: PricingRule, fee_policy_id, now: datetime,
+) -> Ride:
+    """Preassigned scene for screenshot review, never for a live dispatch demo."""
+    active_ride = assigned_ride(
+        passenger_id=passenger_id,
+        driver=driver,
+        vehicle=vehicle,
+        rule=rule,
+        status=RideStatus.DRIVER_EN_ROUTE,
+        pickup=(33.5731, -7.5898, "United Nations Square"),
+        destination=(33.5899, -7.6039, "Casa-Port railway station"),
+        created_at=now - timedelta(minutes=12),
+    )
+    session.add(active_ride)
+    await session.flush()
+    await attach_demo_economics(session, active_ride, rule, fee_policy_id)
+    session.add_all([
+        RideEvent(
+            ride_id=active_ride.id,
+            event_type=RideEventType.STATUS_CHANGED,
+            previous_status=RideStatus.ACCEPTED,
+            new_status=RideStatus.DRIVER_EN_ROUTE,
+            actor_user_id=driver.user_id,
+            created_at=now - timedelta(minutes=9),
+        ),
+        DriverLocation(
+            driver_id=driver.id,
+            point=point(33.5750, -7.5920),
+            observed_at=now - timedelta(minutes=1),
+            accuracy_meters=7.0,
+        ),
+        Notification(
+            user_id=passenger_id,
+            type="DRIVER_ASSIGNED",
+            title="Driver assigned",
+            body="Youssef is heading to your pickup.",
+            data={"ride_id": str(active_ride.id)},
+            created_at=now - timedelta(minutes=10),
+        ),
+    ])
+    return active_ride
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Seed synthetic local TaxiMobile UX-review accounts.")
     parser.add_argument("--confirm", required=True, help="Exact local-only confirmation phrase.")
+    parser.add_argument("--profile", choices=list(DemoProfile), default=DemoProfile.UX_REVIEW)
+    parser.add_argument(
+        "--output", type=Path,
+        help="Exclusive local credentials file; required for union_live. Protect its parent directory.",
+    )
     arguments = parser.parse_args()
+    if arguments.profile == DemoProfile.UNION_LIVE and arguments.output is None:
+        parser.error("union_live requires --output; do not expose demo credentials in shared stdout.")
     settings = Settings.from_environment()
     try:
         validate_demo_target(
@@ -1113,7 +1209,28 @@ def main() -> int:
         )
     except DemoSeedRefused as error:
         parser.error(str(error))
-    print(json.dumps(asyncio.run(seed_demo(settings)), indent=2))
+    output = None
+    if arguments.output is not None:
+        try:
+            # Reserve before mutating the DB. Never overwrite somebody's login
+            # material. POSIX owner-only; Windows caller must protect the parent ACL.
+            descriptor = os.open(arguments.output, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+            output = os.fdopen(descriptor, "w", encoding="utf-8")
+        except OSError:
+            parser.error("Credentials output must be a new writable file in an existing private directory.")
+    try:
+        result = asyncio.run(seed_demo(
+            settings, confirmation=arguments.confirm, profile=DemoProfile(arguments.profile),
+        ))
+        if output is None:
+            print(json.dumps(result, indent=2))  # legacy UX-review interface
+        else:
+            json.dump(result, output, indent=2)
+            output.write("\n")
+            print(f"Synthetic {arguments.profile} cohort created; credentials saved locally.")
+    finally:
+        if output is not None:
+            output.close()
     return 0
 
 

@@ -1,0 +1,58 @@
+{
+  "verified_utc": "2026-10-19T11:29:41.944225+00:00",
+  "passed": true,
+  "web_deployment": "ceee310c-e957-49ad-945d-b9f2d292eb61",
+  "api_deployment": "e5e108a0-e5dd-4553-93fd-292026c98b63",
+  "package_manifest_sha256": "c102804385af05a5c1414b7dc36792d729cdc36b7dff736aa6812193c94af61a",
+  "application_id": "0de83ae6-2f00-4dbd-8f23-34b491e5698e",
+  "city": "Casablanca",
+  "synthetic_owner": "Omar Empty State",
+  "before": {
+    "status": "NOT_STARTED",
+    "revision": 1
+  },
+  "actual_browser_actions": [
+    {
+      "action": "Save draft",
+      "observed": "Draft saved; application revision 2 confirmed"
+    },
+    {
+      "action": "Submit for city review",
+      "observed": "Application submitted; awaiting city review; revision 3"
+    }
+  ],
+  "owned_server_readback": {
+    "status": "SUBMITTED",
+    "revision": 3,
+    "complete": true
+  },
+  "screenshots": [
+    {
+      "path": "v8-applicant-before-save.jpg",
+      "sha256": "b39b74325c91be310e6b315ad0eed6eb2f8d2fcb4ac958bbef9595e6767ad317",
+      "bytes": 50415,
+      "format": "JPEG",
+      "viewport": "1280x720 actual browser"
+    },
+    {
+      "path": "v8-applicant-save-revision2.jpg",
+      "sha256": "ac2a3827d2c32bc748bd904661685f62313961bf3266b97c82ed407a8baadbe4",
+      "bytes": 52334,
+      "format": "JPEG",
+      "viewport": "1280x720 actual browser"
+    },
+    {
+      "path": "v8-applicant-submitted-revision3.jpg",
+      "sha256": "a211d06db426fffff74cde4663f73a032a7e9fc9e2bd0dc7cadb5c735ef3c846",
+      "bytes": 53246,
+      "format": "JPEG",
+      "viewport": "1280x720 actual browser"
+    }
+  ],
+  "method": "Actual UI commands followed by independent owned HTTP GET; no direct positive PATCH/Submit API workaround",
+  "limitations": [
+    "Matching operations review/correction remains separate",
+    "Full style/language/responsive/accessibility matrix is not inferred",
+    "Synthetic isolated staging only"
+  ]
+}

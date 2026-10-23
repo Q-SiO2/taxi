@@ -1,0 +1,46 @@
+{
+  "verified_utc": "2026-10-17T09:05:11.938551+00:00",
+  "passed": true,
+  "scope": "fresh hosted synthetic password/MFA login and selected-city retention across French, Arabic and English; shell presentation only",
+  "url": "https://alpha-web-staging.up.railway.app/",
+  "deployment": "62985a05-46c3-4b74-8bcd-d101f003e18b",
+  "candidate": "candidate-web-v5.json",
+  "checks": [
+    "French password sign-in issued an MFA challenge",
+    "Fresh authenticator code opened the authorized operations console",
+    "Arabic switched navigation and scope labels to RTL without another sign-in",
+    "Explicit Casablanca city selection remained visible after Arabic to English to French changes",
+    "Notepad preference remained selected throughout"
+  ],
+  "captures": [
+    {
+      "path": "wl2-hosted-v5-fr-authenticated.png",
+      "sha256": "dbbf41fc23eb2e866cc2e9435c149645a084320cfc558b13e5abf300d9fb2cb6"
+    },
+    {
+      "path": "wl2-hosted-v5-ar-authenticated.png",
+      "sha256": "5576714619a7ce3b20249fbc9b3d34993f5371ac9689d6ec85337f5230085da8"
+    },
+    {
+      "path": "wl2-hosted-v5-ar-casablanca.png",
+      "sha256": "ff5f5f7c4004042a0be0ea48173264ce2677e80809ea0b976079986748da016c"
+    },
+    {
+      "path": "wl2-hosted-v5-en-casablanca.png",
+      "sha256": "5eb0c9877e76e5f5898aa7bfdd583ff430eb97d9f06ed9bf1af025161e1911a7"
+    },
+    {
+      "path": "wl2-hosted-v5-fr-casablanca.png",
+      "sha256": "2b44bfbd2619bc87e8eac9717b73f8360cdbfeef99e83c39d71bc612229709f9"
+    }
+  ],
+  "limitations": [
+    "Initial interrupted MFA challenge did not pass; fresh sign-in was required",
+    "No protected mutation or recovery code used",
+    "No network-level assertion of zero domain calls is inferred",
+    "Rollout body remains English; the whole protected web demo is not accepted as trilingual",
+    "665 by 556 viewport; selected scope controls require horizontal overflow, complete responsive and accessibility acceptance remains open",
+    "Notepad language dialog inherits a lavender Material surface in deployed v5; source correction is not deployed",
+    "MFA error content can clip cancel in the short viewport; source scrolling correction awaits new web acceptance"
+  ]
+}

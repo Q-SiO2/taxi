@@ -1,0 +1,9 @@
+{
+  "candidate": "candidate-native-v19.json",
+  "pid": "1879",
+  "first_complete_run": "v19-native-first.json",
+  "passed": true,
+  "pid_after_first_trip": "1879",
+  "second_complete_run": "v19-native-second.json",
+  "pid_after_second_trip": "1879"
+}

@@ -1,0 +1,13 @@
+{
+  "observed_utc": "2026-10-22T23:21:37.695Z",
+  "candidate": "candidate-web-v9.json",
+  "passed": false,
+  "scope": "Exact optimized local web v9 package; normal synthetic applicant login/read, Arabic Notepad. No edit or resubmission.",
+  "finding": "Timeline filled/open Unicode circle text renders as missing-glyph boxes beside readable Arabic status labels.",
+  "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantApplicationEditor.kt:485",
+  "screenshot": {
+    "path": "web-v9-ar-timeline-glyph-rejection-20261022.png",
+    "sha256": "acfe8b84ef200be34cba5e9ac70ed0eeee0dc85db7645dfb26a9f7401a426756"
+  },
+  "next": "Replace decorative font-dependent marker with theme-colored Compose vector circles; preserve status text/order/current-state ownership and verify actual replacement."
+}

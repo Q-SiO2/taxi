@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-14",
+  "status": "EXPLORATION_UNAPPROVED",
+  "assets": [
+    {
+      "file": "identity-assets/fold.png",
+      "sha256": "1b9d0e3349c1cea4a24b97350ed2fcaf8ceef35957f94e9ac9d25cb5fff9c562",
+      "provenance": "AI-generated concept study using built-in image_gen; not commissioned final art",
+      "role": "art direction plate"
+    },
+    {
+      "file": "identity-assets/print.png",
+      "sha256": "6ce694c490d9a4377a0913e3c1be77760272dd83a8da4d8b1e9419ca4db4ef42",
+      "provenance": "AI-generated concept study using built-in image_gen; not commissioned final art",
+      "role": "art direction plate"
+    },
+    {
+      "file": "identity-assets/tactile.png",
+      "sha256": "5dab0e29fb6da986c538c019788b9fdc82476ed7abd305b9cf20b2d813242964",
+      "provenance": "AI-generated concept study using built-in image_gen; not commissioned final art",
+      "role": "art direction plate"
+    },
+    {
+      "file": "identity-assets/taxi-layer.png",
+      "sha256": "15d6ddccb6a818e3798dc6b3bfa03879437d63578fe846ec4ae8ff23c3364e47",
+      "provenance": "AI-generated concept study using built-in image_gen; not commissioned final art",
+      "role": "transparent independent vehicle staging prop"
+    }
+  ],
+  "prompts": "identity-prompts.md",
+  "previousCityScene": "REJECTED",
+  "themesAreIdentity": false
+}

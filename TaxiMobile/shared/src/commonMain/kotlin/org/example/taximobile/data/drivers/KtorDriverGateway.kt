@@ -131,11 +131,11 @@ class KtorDriverGateway(
         response.body<VehicleResponse>().toDomain()
     }
 
-    override suspend fun updateLocation(location: Coordinates, observedAt: String) = request {
+    override suspend fun updateLocation(location: Coordinates, observedAt: String, accuracyMeters: Double) = request {
         val response = client.post(api.endpoint("drivers/me/location")) {
             authorize()
             contentType(ContentType.Application.Json)
-            setBody(LocationUpdateRequest(location.latitude, location.longitude, observedAt))
+            setBody(LocationUpdateRequest(location.latitude, location.longitude, observedAt, accuracyMeters))
         }
         if (response.status == HttpStatusCode.Unauthorized) throw AuthenticationRejectedException()
         if (!response.status.isSuccess()) throw ApiRequestException(response.status.value, "The server could not update driver location.")
@@ -217,6 +217,7 @@ private data class LocationUpdateRequest(
     val latitude: Double,
     val longitude: Double,
     @SerialName("observed_at") val observedAt: String,
+    val accuracy: Double,
 )
 
 @Serializable

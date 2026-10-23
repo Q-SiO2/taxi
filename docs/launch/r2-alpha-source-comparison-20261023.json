@@ -1,0 +1,33 @@
+{
+  "observed_utc": "2026-10-23T16:01:22.882202+00:00",
+  "scope": "Current local file bytes compared with retained alpha source manifests; no remote state checked, no build acceptance transferred. Added unmanifested files are outside this per-manifest comparison.",
+  "comparisons": [
+    {
+      "kind": "native",
+      "manifest": "docs/redesign/board-alpha-evidence/candidate-native-v23.json",
+      "manifest_sha256": "a02d98fbbe9e1d295fda81811d5785025b0ba021d5f15e8bba4bae852c9ad1b2",
+      "indexed_inputs": 415,
+      "current_input_deltas": [
+        {
+          "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantApplicationEditor.kt",
+          "expected": "ee7ae75d18873b3fd3d4e7ec6921bc47f9e5c7cfa6a1834d30377d88e534e6b6",
+          "actual": "ae230de51ce977dd88b6d44ae7283eb96f951dc8df61c3e6efe6e7cf671605ea"
+        }
+      ]
+    },
+    {
+      "kind": "web",
+      "manifest": "docs/redesign/board-alpha-evidence/candidate-web-v10.json",
+      "manifest_sha256": "63104284acd55fd57bea816c23b48ade324210df3e9f033fe0856c71d07c8d9a",
+      "indexed_inputs": 415,
+      "current_input_deltas": []
+    },
+    {
+      "kind": "api-authored-upload",
+      "manifest": ".tools/alpha-delivery/backend-upload-v6-manifest.json",
+      "manifest_sha256": "59eb6337c2660432da379b44842e5b2b00253f5c31aca83c0f31fa6489624afc",
+      "indexed_inputs": 298,
+      "current_input_deltas": []
+    }
+  ]
+}

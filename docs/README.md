@@ -1,12 +1,61 @@
 # TaxiMobile documentation
 
+> **Active goal - 23 October 2026:** establish real-world deployment with full
+> documented functionality. Start with [the detailed execution plan](real-world-launch.md)
+> and [roadmap](roadmap.md): R0 reconciliation, production capability closure,
+> real device/provider/staff acceptance, authorized city pilot and public release.
+> Android, iOS and both web portals are included. Spending, operator/legal and
+> activation decisions retain their explicit gates. The alpha below is the
+> regression baseline, not real-world acceptance.
+
+> **Active delivery - 23 October 2026:** native v23 / live web v10 now pass the
+> scoped synthetic board path twice, at **16:22 / 11:07**, with disclosed
+> observer/setup qualifications. Both cash rides have eight successful business
+> requests exactly once; final driver state is offline and pending cash zero.
+> Folded Streets, Street Press, Glazed Machine and Notepad are implemented choices;
+> there is no separate color menu or taxi/city hero. The deployed web passes
+> 103 HTTP checks and selected actual four-style/EN/FR/AR timeline review.
+>
+> Start with [the current checkpoint](board-alpha.md), [the handoff](board-alpha-handoff.md)
+> and [presenter script](board-demo.md). [roadmap.md](roadmap.md) remains the plan
+> for **board alpha -> authorized pilot -> public release**. Railway recovery is
+> applied within Trial limits, with both volumes preserved. Owner visual review,
+> physical Android, iOS, broader accessibility/state coverage, field transport,
+> real money and later launch gates remain separate. The 213-view inventory is
+> not runtime acceptance of every view. Historical records keep their own identity.
+
+## Six core entry points
+
+| Read to | Start here | Detailed authority when needed |
+| --- | --- | --- |
+| Understand the project and status | This README | Dated [readiness.md](readiness.md); source inventory below. |
+| Implement product journeys | [product.md](product.md) | [design.md](design.md), [ui.md](ui.md), [extended_ui.md](extended_ui.md) and relevant domain. |
+| Understand system boundaries | [architecture.md](architecture.md) | [implementation.md](implementation.md), [api.md](api.md), [database.md](database.md), [security.md](security.md). |
+| Set up, build, test and hand off | [workflow.md](workflow.md) | Linked backend/client/infra setup guides, [testing.md](testing.md) and evidence catalogs. |
+| Deploy and verify staging | [deployment.md](deployment.md) | Railway preflight, resource/cost/secret controls, actual integration and safe shutdown. |
+| Choose and execute the next task | [roadmap.md](roadmap.md) | [union_demo.md](union_demo.md) scenarios; [gaps.md](gaps.md) real-world acceptance. |
+
+These entry points consolidate delivery navigation without deleting specialized
+API, legal/privacy, security, data or business contracts referenced by code and
+project instructions. The old numbered delivery plan is [historical](history/roadmap_before_alpha_20261012.md).
+Read relevant sections rather than every document; no separate audit or historical
+percentage overrides the active A/B/C sequence. Future consolidation must preserve
+contracts and update all links/instructions/validators before removing an authority.
+
 This directory is the product, architecture, security, and delivery authority for
 TaxiMobile. It describes both the intended system and the software currently in
 the repository. Those are not the same kind of statement.
 
 ## Current project standing
 
-**Source assessment date:** 2026-09-09. **Standing refreshed:** 2026-10-02.
+**Current delivery priority:** the essential alpha journeys and ten exit gates in
+[roadmap.md](roadmap.md). [union_demo.md](union_demo.md) retains the wider 20-journey
+board, including optional advanced demonstrations, and the rehearsal procedure.
+Report both separately; neither automated tests nor fixture screens accept a
+physical passenger/driver/browser journey or authorize live transport.
+
+**Historical source assessment:** 2026-09-09, refreshed 2026-10-02.
+Current alpha evidence and candidate identities are in [board-alpha.md](board-alpha.md).
 
 **Migration head:** `20260908_0052`
 
@@ -98,6 +147,7 @@ quality.
 | System boundaries and source of truth | [`architecture.md`](architecture.md) | Implemented architecture plus explicit provider/deployment boundaries. |
 | Concrete repository structure | [`implementation.md`](implementation.md) | Current technical baseline and verification claims. |
 | Delivery sequence | [`roadmap.md`](roadmap.md) | Source phases versus deployment acceptance. |
+| Railway staging and release operations | [`deployment.md`](deployment.md) | Minimal topology, actual provider/account preflight, hosted verification, cost and safe shutdown. |
 | Deployment gap register | [`gaps.md`](gaps.md) | Prioritized remediation and acceptance criteria. |
 | Testing and acceptance map | [`testing.md`](testing.md) | Promotion gates from static checks and an executable 20-scenario simulated-persona baseline through real-city rollout. |
 | Test execution control board | [`testing_execution_map.md`](testing_execution_map.md) | Entry/exit gates, executable evidence-index and T2 catalog rules, owners, stop rules and cohort progression from simulation to national replication. |
@@ -122,8 +172,9 @@ not normative and must be regenerated when the status summary materially changes
 
 ## Reading order for implementation work
 
-1. Read this file, [`gaps.md`](gaps.md), and [`testing.md`](testing.md) to
-   understand current standing and the required evidence path.
+1. Read this file and [`roadmap.md`](roadmap.md) for the current milestone,
+   next task and exit evidence. Use [`union_demo.md`](union_demo.md) for A journeys;
+   [`gaps.md`](gaps.md) and [`testing.md`](testing.md) for real-world release gates.
 2. Read [`roadmap.md`](roadmap.md) and [`implementation.md`](implementation.md)
    to confirm scope and delivery gates.
 3. Read [`architecture.md`](architecture.md) and the relevant domain document.

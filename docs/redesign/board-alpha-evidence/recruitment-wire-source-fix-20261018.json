@@ -1,0 +1,71 @@
+{
+  "verified_utc": "2026-10-18T19:35:43.345352+00:00",
+  "scope": "Shared gateway wire regression and source fix only; not a hosted browser pass",
+  "runtime_failure": "wl3-v7-editable-contract-failure.json",
+  "red": {
+    "tests": 3,
+    "failures": 1,
+    "cause": "Serialized answers key omitted for profile-only save",
+    "archive": ".tools/alpha-delivery/recruitment-wire-red"
+  },
+  "green": {
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "backend_unit_tests": 8,
+  "coverage": [
+    "Actual gateway with production HTTP configuration emits explicit empty answer/evidence arrays",
+    "Compatibility/auth headers and optimistic version remain intact",
+    "Populated typed patches and explicit removal IDs retain snake-case wire fields",
+    "409 remains an error and produces exactly one request",
+    "Existing backend schema accepts explicit empty patches and rejects omitted changes/authority fields"
+  ],
+  "change": "Map empty draft lists to explicit [] rather than omitted nulls. Backend implementation and patch/removal semantics unchanged.",
+  "test_dependency": "JVM-test-only io.ktor:ktor-client-mock uses the existing Ktor 3.5.1 version. No app runtime dependency added.",
+  "archive": ".tools/alpha-delivery/recruitment-wire-green",
+  "sources": [
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/drivers/KtorDriverRecruitmentGateway.kt",
+      "sha256": "86510212c1f79d8626cc7241561091063d84f9f226265c9b0d0c77ac8cd59808"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/network/TaxiMobileHttpClient.kt",
+      "sha256": "1b6acbe97ecf6d8a3715d1965f9e31d8d6304fe3f1922d2e7daae432dcc492b1"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/data/drivers/KtorDriverRecruitmentRequestTest.kt",
+      "sha256": "1942d102737f111dbdec3e02631db227487c89566e75ca8103bdd7a25b9dfe83"
+    },
+    {
+      "path": "TaxiMobile/shared/build.gradle.kts",
+      "sha256": "6b51099d53774980aed7285f8471b2228db0026626ff8d2a46988614d50e289b"
+    },
+    {
+      "path": "TaxiMobile/gradle/libs.versions.toml",
+      "sha256": "9f979dc17fb6ff72b89d93377a0fae4ec40857a74b2022f7f7af0c1e2dc93b43"
+    },
+    {
+      "path": "backend/src/taximobile_api/domains/driver_applications/schemas.py",
+      "sha256": "f5101868501761ab9eeecbef03a87f34e3179eec325e68bfca77e41f265e386f"
+    },
+    {
+      "path": "backend/src/taximobile_api/domains/driver_applications/service.py",
+      "sha256": "b95add0f67c234c584771ee27f0ef2f53d82ff0cdc391f5df8866352c6c2e0dd"
+    },
+    {
+      "path": "backend/tests/unit/test_driver_recruitment.py",
+      "sha256": "8af7279a72fec643fa40893a65a450c292d4c0db9f146b620697ecc9ccacd4cc"
+    },
+    {
+      "path": "docs/api.md",
+      "sha256": "ddcd29a495e02cc6b4d9dadd5540d37319177efd2859bcf3fbcc5f2281879cd5"
+    }
+  ],
+  "limitations": [
+    "Hosted v7 remains immutable and still has the defect",
+    "Omar synthetic draft must be saved successfully through the replacement browser UI before submitting",
+    "No profile approval, money command, physical-device or full board acceptance is inferred"
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "observed_utc": "2026-10-21T18:21:36.292Z",
+  "project_id": "9f841575-c4f3-4a4d-bb83-2e6ff92e436e",
+  "environment": {
+    "id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+    "name": "staging"
+  },
+  "summary": {
+    "totalServices": 5,
+    "servicesWithIssues": 0,
+    "totalFailures": 0
+  },
+  "pending_work_count": 0,
+  "services": [
+    {
+      "name": "alpha-web",
+      "id": "2d8ab069-2310-46ff-afe0-8fd4f42a5bd1",
+      "state": "online",
+      "has_issues": false,
+      "replicas": {
+        "running": 1,
+        "crashed": 0,
+        "total": 1
+      },
+      "active_deployments": [
+        {
+          "id": "ceee310c-e957-49ad-945d-b9f2d292eb61",
+          "status": "SUCCESS"
+        }
+      ]
+    },
+    {
+      "name": "alpha-api",
+      "id": "758fa7d5-f8b8-4730-a00f-438e28184e35",
+      "state": "online",
+      "has_issues": false,
+      "replicas": {
+        "running": 1,
+        "crashed": 0,
+        "total": 1
+      },
+      "active_deployments": [
+        {
+          "id": "e5e108a0-e5dd-4553-93fd-292026c98b63",
+          "status": "SUCCESS"
+        }
+      ]
+    },
+    {
+      "name": "alpha-postgis",
+      "id": "41ccd6b2-41e2-4886-8d96-cc56f62aaab7",
+      "state": "online",
+      "has_issues": false,
+      "replicas": {
+        "running": 1,
+        "crashed": 0,
+        "total": 1
+      },
+      "active_deployments": [
+        {
+          "id": "10348a72-65f4-4b80-8474-e8a950ccd282",
+          "status": "SUCCESS"
+        }
+      ]
+    },
+    {
+      "name": "alpha-routing",
+      "id": "568723a2-e456-4130-825a-077c5cae9f81",
+      "state": "online",
+      "has_issues": false,
+      "replicas": {
+        "running": 1,
+        "crashed": 0,
+        "total": 1
+      },
+      "active_deployments": [
+        {
+          "id": "dec657d1-e507-421d-9bc2-15f0250385b7",
+          "status": "SUCCESS"
+        }
+      ]
+    },
+    {
+      "name": "alpha-worker",
+      "id": "eb42d0ba-feae-4f7a-9c86-48f4d38006d0",
+      "state": "online",
+      "has_issues": false,
+      "replicas": {
+        "running": 1,
+        "crashed": 0,
+        "total": 1
+      },
+      "active_deployments": [
+        {
+          "id": "8ca5a361-9b66-4d7a-8041-c9a5754bbe47",
+          "status": "SUCCESS"
+        }
+      ]
+    }
+  ],
+  "provider_status": {
+    "url": "https://status.railway.com/",
+    "latest_observed_update_utc": "2026-10-21T17:45:00Z",
+    "builds_paused": true,
+    "deployments_paused": true,
+    "scope": "API/dashboard and build/deployment pipeline still affected; support site unavailable"
+  },
+  "prepared_only": "candidate-web-v8-proxy-r1.json",
+  "native_runtime": "v19-native-integrated-verification.json",
+  "mutations": "No provider deploy, paid-plan, volume or staff-permission mutation performed during this resumed turn; normal synthetic app/browser sign-ins and native rehearsal commands are separate.",
+  "goal_audit": "First recurrence after resuming the provider-blocked goal; substantial independent native motion, real sheet correction and exact v19 runtime progress made. Goal remains active; no completion or new blocked claim."
+}

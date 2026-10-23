@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "observed_utc": "2026-10-23T15:56:20.141933+00:00",
+  "git_root": "C:/Users/Q/Projects",
+  "head": "2835c8aa7f5e97a17afcdbe647fe589cbd0421e1",
+  "branch": "codex/gap-001-release-baseline",
+  "dirty": true,
+  "status_records_sha256": "c43d687b3478cba79acf3fabb3d04b80dfa0def5c588b6f21f93c69866281b65",
+  "status_note": "Pre-existing tracked and untracked changes are preserved; this is not an immutable source candidate or a rollback backup.",
+  "source_manifest_file": ".tools/real-world-launch/r0-source-file-manifest-20261023.json",
+  "source_manifest_sha256": "1a1ebf7041daa254c20bcdf76206003615023596b6fa5b730122690e1f5e9567",
+  "indexed_files": 990,
+  "manifest_scope": [
+    "backend/src/",
+    "backend/tests/",
+    "backend/alembic/",
+    "TaxiMobile/shared/src/",
+    "TaxiMobile/androidApp/src/",
+    "TaxiMobile/webApp/src/",
+    "TaxiMobile/iosApp/",
+    "infra/scripts/",
+    "infra/deploy/",
+    "infra/testing/",
+    ".github/workflows/",
+    "assets/",
+    "TaxiMobile/androidApp/build.gradle.kts",
+    "TaxiMobile/build.gradle.kts",
+    "TaxiMobile/gradle/libs.versions.toml",
+    "TaxiMobile/settings.gradle.kts",
+    "TaxiMobile/shared/build.gradle.kts",
+    "TaxiMobile/webApp/build.gradle.kts",
+    "backend/pyproject.toml",
+    "backend/uv.lock"
+  ],
+  "manifest_limitations": "Allowlisted source/test/deployment/assets paths, metadata only; no ignored local secrets or generated builds. Does not archive source bytes or prove CI. Snapshot was recorded after the unit run; no claim of pre/post source equality.",
+  "checks": [
+    {
+      "name": "backend-unit",
+      "exit_code": 0,
+      "tests": 983,
+      "failures": 0,
+      "errors": 0,
+      "started_utc": "2026-10-23T12:33:05.767827+00:00",
+      "finished_utc": "2026-10-23T12:34:37.541863+00:00",
+      "command": "backend/.venv/Scripts/python.exe -m pytest tests/unit -x --junitxml=<local-report> (cwd backend)",
+      "junit_sha256": "38ab51ed62bf59a58feb9d139d6a3659db6babfc0ec8e37480c0b070b56cb730",
+      "scope": "Current worktree backend unit suite, stop at first failure; no integration/hosted/device acceptance."
+    },
+    {
+      "check": "ci-security",
+      "started_utc": "2026-10-23T15:52:32.428401+00:00",
+      "finished_utc": "2026-10-23T15:52:32.562268+00:00",
+      "exit_code": 0,
+      "log": "r0-ci-security-20261023.log",
+      "command": [
+        "backend/.venv/Scripts/python.exe",
+        "infra/scripts/validate_ci_security.py"
+      ]
+    },
+    {
+      "check": "source-contracts",
+      "started_utc": "2026-10-23T15:52:32.562323+00:00",
+      "finished_utc": "2026-10-23T15:52:38.664542+00:00",
+      "exit_code": 0,
+      "log": "r0-source-contracts-20261023.log",
+      "command": [
+        "backend/.venv/Scripts/python.exe",
+        "infra/scripts/generate_source_contract_inventory.py",
+        "--output",
+        "C:\\Users\\Q\\Projects\\.tools\\real-world-launch\\r0-source-contracts-20261023.json"
+      ]
+    },
+    {
+      "check": "source-credentials",
+      "started_utc": "2026-10-23T15:52:38.664585+00:00",
+      "finished_utc": "2026-10-23T15:52:40.210369+00:00",
+      "exit_code": 0,
+      "log": "r0-source-credentials-20261023.log",
+      "command": [
+        "backend/.venv/Scripts/python.exe",
+        "infra/scripts/validate_source_credentials.py"
+      ]
+    },
+    {
+      "name": "mobile-api-contract",
+      "exit_code": 0,
+      "http_calls": 84,
+      "websocket_calls": 1,
+      "scope": "Local standalone validator, actual gateway call extraction vs current FastAPI; not payload compatibility or hosted execution."
+    },
+    {
+      "name": "operations-web-api-contract",
+      "exit_code": 0,
+      "http_calls": 112,
+      "scope": "Local standalone validator, current operations gateway calls; not authenticated browser E2E."
+    }
+  ],
+  "acceptance": "NOT_ESTABLISHED_BY_R0",
+  "production_mutations_performed": false,
+  "next_packet": "R2 source-candidate isolation and provenance; R1 decisions prepared separately."
+}

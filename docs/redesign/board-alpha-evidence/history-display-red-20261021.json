@@ -1,0 +1,42 @@
+{
+  "created_utc": "2026-10-21T10:16:00.221856+00:00",
+  "phase": "Updated existing passenger/driver UI cases reject full technical ID and long raw coordinate display",
+  "counts": {
+    "tests": 2,
+    "failures": 2,
+    "errors": 0,
+    "skipped": 0
+  },
+  "failures": [
+    {
+      "case": "driver_history_row_loads_and_renders_authorized_passenger_feedback[jvm]",
+      "message": "java.lang.AssertionError: Action performScrollTo() failed.\nReason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains '"
+    },
+    {
+      "case": "passenger_history_row_loads_and_renders_authorized_receipt_detail[jvm]",
+      "message": "java.lang.AssertionError: Action performScrollTo() failed.\nReason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains '"
+    }
+  ],
+  "archive": [
+    {
+      "path": ".tools/alpha-delivery/history-display-red/TEST-org.example.taximobile.feature.app.CriticalStateUiTest.xml",
+      "sha256": "8c1ec2db1e1bfcb36b66192c5b92c8ca8f3b0023f9483060439dda50699b9312"
+    },
+    {
+      "path": ".tools/alpha-delivery/history-display-red/history-display-red-20261021.log",
+      "sha256": "27105325741e737847b328eea335d2a12d3c01b8d9f338dca056b4f3eb8bb92c"
+    },
+    {
+      "path": ".tools/alpha-delivery/history-display-red/PassengerHome.kt",
+      "sha256": "4c902094c3c633045c603d7fd20d57deae4126f2e6edd4cf9c48e98788a926e9"
+    },
+    {
+      "path": ".tools/alpha-delivery/history-display-red/DriverHome.kt",
+      "sha256": "55d88dd1ef561a8c1b66263018fb5eb9cf0228328caee5ed4dd140296f7b929e"
+    },
+    {
+      "path": ".tools/alpha-delivery/history-display-red/CriticalStateUiTest.kt",
+      "sha256": "02df64c120ff012851edce61d1c22c12d31424af9080e3bc8689cfa58e7a9453"
+    }
+  ]
+}

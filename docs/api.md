@@ -1212,6 +1212,51 @@ The backend should calculate and finalize the fare.
 
 The client must not be trusted to submit the final fare.
 
+## GET /drivers/me/payments/cash/pending
+
+An authenticated driver's read-only cash work queue, independent of paginated
+ride history. The server resolves the driver from the authenticated user; no
+driver identifier or scope is accepted from the client. Only rides assigned to
+that driver, already `COMPLETED`, with an actual `CASH`/`PENDING` payment appear.
+Other drivers' payments, manual transfers and settled/disputed/cancelled payments
+are excluded. A passenger without a driver profile receives 404; missing or
+invalid authentication receives 401.
+
+Query parameters follow existing conventions: `page` starts at 1; `limit`
+defaults to 20 and is bounded to 1–100. Results are ordered oldest payment first,
+then payment UUID for deterministic ties. An out-of-range page has empty `items`
+and the current scoped `total`. Concurrent settlement can move page boundaries;
+reload page one after a successful settlement.
+
+```json
+{
+  "items": [{
+    "payment_id": "b041282b-b91c-466a-8adf-8355214415d1",
+    "ride_id": "31441ec9-b6ca-4967-8e6d-3078c4ea8c69",
+    "amount": "35.00",
+    "currency": "MAD",
+    "created_at": "2026-10-05T12:00:00Z",
+    "completed_at": "2026-10-05T12:00:00Z",
+    "method": "CASH",
+    "status": "PENDING"
+  }],
+  "page": 1,
+  "limit": 20,
+  "total": 1
+}
+```
+
+`completed_at` may be null for legacy data; `created_at` is always the server
+payment creation time. Amount/currency are the recorded payment facts, not
+client calculations. The response contains no passenger identity, coordinates,
+document, transfer destination or external payment reference. Loading this list
+does not settle money, create earnings, or confer authority on a stale client.
+The existing settlement command rechecks current ownership, ride/payment state
+and idempotency under locks. Mobile confirmation must show the selected ride
+reference, recorded amount/currency and date. Unavailable reads show an explicit
+reload action; never manufacture a pending cash flag from completion/history or
+from absence of earnings.
+
 ## POST /rides/{ride_id}/payments/cash/settle
 
 The assigned driver confirms settlement of a pending cash payment after the ride has completed. The backend verifies driver ownership, completed ride state, payment method, and pending payment status before recording settlement.
@@ -1772,6 +1817,7 @@ as delivered or forwarded as an arbitrary provider payload.
 | --- | --- | --- | --- | --- | --- |
 | `ride.offer.created` | `RIDE_OFFER_AVAILABLE` | live + push | 5 min and exact offer expiry | immediate; no quiet hours | driver offer reload |
 | `ride.accepted` | `DRIVER_ASSIGNED` | live + push | 15 min | immediate; no quiet hours | passenger active-ride reload plus inbox |
+| `ride.updated` | `RIDE_UPDATED` | live + push | 2 hr | immediate; no quiet hours | passenger ride/receipt reload plus generic inbox entry |
 | `ride.cancelled` | `RIDE_CANCELLED` | live + push | 2 hr | immediate; no quiet hours | participant ride reload |
 | `ride.matching.failed` | `RIDE_UNMATCHED` | live + push | 15 min | immediate; no quiet hours | passenger ride reload plus inbox |
 | `ride.coordination.message` | `RIDE_COORDINATION_MESSAGE` | live + push | 5 min | immediate; no quiet hours | active-ride reload plus inbox |
@@ -1782,6 +1828,15 @@ as delivered or forwarded as an arbitrary provider payload.
 | `scheduled.unfulfilled` | `SCHEDULED_UNFULFILLED` | push | 24 hr | immediate; no quiet hours | passenger booking reload plus inbox |
 | `driver.credential.expiring` | `DRIVER_CREDENTIAL_EXPIRING` | push | 7 days | informational; quiet hours allowed | driver credential reload plus inbox |
 | `driver.credential.expired` | `DRIVER_CREDENTIAL_EXPIRED` | push | 7 days | informational; quiet hours allowed | driver credential reload plus inbox |
+
+En-route, arrival, start, completion and the first cash-settlement transition
+persist `ride.updated` and a generic passenger-owned inbox row in the same
+transaction as the source command. Its payload is only `ride_id`; it contains
+no coordinates, fare, payment status or recipient identity. The worker reloads
+the current assigned ride and addresses its current passenger owner, ignoring
+event-supplied recipient fields. Delayed hints reload the latest state rather
+than replaying the earlier transition. Cash settlement replay does not create
+another update/inbox row. These hints do not prove OS push delivery.
 
 The worker checks event age before opening business-data or provider boundaries,
 then reloads current source records and state. Scheduled offers additionally
@@ -2490,7 +2545,12 @@ The transactional-outbox processor emits
 `RIDE_OFFER_AVAILABLE` to the selected driver and `DRIVER_ASSIGNED` to the
 passenger only after the corresponding database transaction commits and the
 worker reloads the relevant records. Driver/passenger cancellation similarly
-enqueues `RIDE_CANCELLED` in the business transaction. In staging and production,
+enqueues `RIDE_CANCELLED` in the business transaction. En-route, arrival, start,
+completion and the first cash settlement enqueue `RIDE_UPDATED`; the worker
+reloads the current assigned ride and addresses only its passenger. Delayed
+hints carry no historical state, coordinates or payment authority: the client
+reloads the authorized current ride/receipt. A cash replay emits no new hint or
+inbox row. In staging and production,
 a private PostgreSQL notification carries only version, authorized user ID, ride
 ID, and allowlisted event type to every API process; it is validated before the
 named user's local sockets receive it. Socket input never executes commands. On
@@ -3001,6 +3061,13 @@ defined by that requirement version while the application is editable; it cannot
 set status, reviewer fields, roles, or authorization. Submit validates a complete
 snapshot and is idempotent. Withdraw is applicant-owned, idempotent, allowed only
 before approval, and never deletes the audit/retention record.
+PATCH distinguishes omitted changes from explicit empty answer/evidence arrays.
+A profile-only draft save supplies `answers: []` and `evidence: []` alongside
+`expected_version`; a version-only request is invalid. These arrays apply item
+patches rather than replacing the saved collections. Only explicit
+`remove_answer_item_ids` / `remove_evidence_item_ids` delete existing items.
+The server checks the expected version and returns the authoritative new version;
+a conflict is not a successful save and must not be retried automatically.
 Document upload is a bounded authenticated `multipart/form-data` request through
 the backend's protected storage adapter; it enforces declared and detected media
 type, byte limit, hash, malware-scan quarantine, ownership, requirement-item

@@ -202,10 +202,12 @@ function Start-PortablePostgres {
         Start-Sleep -Milliseconds 250
     } while ((Get-Date) -lt $deadline)
 
-    if (-not $serverProcess.HasExited) {
-        Stop-Process -Id $serverProcess.Id
-    }
-    throw "Portable PostgreSQL did not become ready within $WaitSeconds seconds. Inspect $standardError."
+    # An observation deadline is not a server failure. In particular, WAL
+    # recovery/fsync after an interrupted host can exceed this bound. Killing
+    # that process repeats recovery on the next launch and risks further loss.
+    # pg_ctl status/DataRoot ownership remains available for the next observer;
+    # never start a replacement solely because pg_isready is not ready yet.
+    throw "Portable PostgreSQL readiness observation timed out after $WaitSeconds seconds; the startup process was left running. Check pg_ctl status for this DataRoot, pg_isready and $standardError before resuming. Do not start a second server or reset the data directory for this timeout."
 }
 
 function Stop-PortablePostgres {

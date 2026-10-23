@@ -1,0 +1,73 @@
+{
+  "candidate": "candidate-native-v16.json",
+  "run": "v16-native-second.json",
+  "accepted_as_complete": false,
+  "scope": "Observed Request screenshot then one tap; no booking POST reached Railway and owner read shows no new ride",
+  "native_post_rows": [
+    {
+      "timestamp": "2026-10-20T19:54:46.922374181Z",
+      "method": "POST",
+      "path": "/api/v1/rides/estimate",
+      "httpStatus": 200,
+      "clientUa": "ktor-client"
+    },
+    {
+      "timestamp": "2026-10-20T19:54:47.279093104Z",
+      "method": "POST",
+      "path": "/api/v1/routing/route",
+      "httpStatus": 200,
+      "clientUa": "ktor-client"
+    },
+    {
+      "timestamp": "2026-10-20T19:55:10.002598133Z",
+      "method": "POST",
+      "path": "/api/v1/drivers/me/location",
+      "httpStatus": 200,
+      "clientUa": "ktor-client"
+    },
+    {
+      "timestamp": "2026-10-20T19:55:17.070233401Z",
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "httpStatus": 200,
+      "clientUa": "ktor-client"
+    },
+    {
+      "timestamp": "2026-10-20T19:55:17.704276992Z",
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "httpStatus": 200,
+      "clientUa": "ktor-client"
+    },
+    {
+      "timestamp": "2026-10-20T19:55:18.671681650Z",
+      "method": "POST",
+      "path": "/api/v1/drivers/me/availability/online",
+      "httpStatus": 200,
+      "clientUa": "ktor-client"
+    },
+    {
+      "timestamp": "2026-10-20T19:55:28.023428224Z",
+      "method": "POST",
+      "path": "/api/v1/drivers/me/location",
+      "httpStatus": 200,
+      "clientUa": "ktor-client"
+    },
+    {
+      "timestamp": "2026-10-20T19:55:48.064649631Z",
+      "method": "POST",
+      "path": "/api/v1/drivers/me/location",
+      "httpStatus": 200,
+      "clientUa": "ktor-client"
+    },
+    {
+      "timestamp": "2026-10-20T19:56:08.042325245Z",
+      "method": "POST",
+      "path": "/api/v1/drivers/me/location",
+      "httpStatus": 200,
+      "clientUa": "ktor-client"
+    }
+  ],
+  "finding": "MobileAppCoordinator rebuild drops fareEstimate and routePlan on dashboard catch-up; PassengerHome collapses quote sheet when estimate becomes null. Native auth refresh is observed just before the missed Request; focused reproduction required before correction.",
+  "next": "Retain only session-owned quote inputs and re-fetch fresh server estimates on read-only catch-up; fence owner/new primary journey; never replay ride commands."
+}

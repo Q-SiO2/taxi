@@ -1,0 +1,33 @@
+{
+  "candidate": "candidate-native-v20.json",
+  "web_candidate": "candidate-web-v8.json",
+  "run": "first",
+  "started_utc": "2026-10-22T10:54:46.391594+00:00",
+  "passed": false,
+  "beats": [
+    {
+      "beat": 1,
+      "description": "Four style options shown; Notepad selected then Folded Streets restored in actual native passenger UI",
+      "finished_utc": "2026-10-22T10:55:20.373162+00:00",
+      "screenshots": [
+        {
+          "path": "v20-board-first-style-options-notepad.png",
+          "sha256": "bc37700282b0038fd3318caea0a58d14569b814827b991fa90a91cab7f4159e5"
+        },
+        {
+          "path": "v20-board-first-selected-notepad.png",
+          "sha256": "710f8c13d5500e1223335ad5cf1fbaa32490791cc49f905a21c7a679cdf48f47"
+        },
+        {
+          "path": "v20-board-first-style-options-folded-streets.png",
+          "sha256": "3d907cba0406b58dceaa73dc72db39f7c412a0c2989f069a2e1f93e06bd37a1b"
+        },
+        {
+          "path": "v20-board-first-selected-folded-streets.png",
+          "sha256": "895e2c6965de232a337bafe565c72de9fefe9c4fe73988acf598987eec9c9feb"
+        }
+      ]
+    }
+  ],
+  "scope": "Synthetic emulator and normal hosted browser rehearsal; actual elapsed time, not a seven-minute claim"
+}

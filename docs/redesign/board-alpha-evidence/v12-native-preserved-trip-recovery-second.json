@@ -1,0 +1,47 @@
+{
+  "started_utc": "2026-10-19T19:08:33.228177+00:00",
+  "candidate": "candidate-native-v12.json",
+  "ride_id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+  "passed": false,
+  "recovered": true,
+  "steps": [
+    {
+      "name": "Preserved server IN_PROGRESS verified; exact APKs and existing clocks match",
+      "utc": "2026-10-19T19:08:35.263060+00:00"
+    },
+    {
+      "name": "Fresh guarded completion coordinate acquired in native UI",
+      "utc": "2026-10-19T19:08:48.494699+00:00"
+    },
+    {
+      "name": "Same ride completed through native UI; server cash remains pending",
+      "utc": "2026-10-19T19:08:53.262874+00:00"
+    },
+    {
+      "name": "Exact recovered ride cash confirmed on server and passenger native UI",
+      "utc": "2026-10-19T19:09:21.079528+00:00"
+    }
+  ],
+  "scope": "Same preserved IN_PROGRESS trip; exact v12 native UI recovery, independent owned server reads; not a complete new-candidate rehearsal",
+  "screenshots": [
+    {
+      "path": "v12-recovery-second-driver-location-loaded.png",
+      "sha256": "3ac936dd10ce7c12b3801681839c6290b6570bdf0eb164fff94928aa8560c2b8"
+    },
+    {
+      "path": "v12-recovery-second-passenger-cash-pending.png",
+      "sha256": "03a4dc01a4882be8389633f4391a650e92df3029daa32010079ad4f9a153fdd1"
+    },
+    {
+      "path": "v12-recovery-second-driver-cash-dialog.png",
+      "sha256": "207549cef8ad628c7da9ba0258add13c6f313b7899939e713f605ee5fe2ae938"
+    },
+    {
+      "path": "v12-recovery-second-passenger-cash-completed.png",
+      "sha256": "1ae845426aa0de3dc6fe79b8485079ee6c6de86cd484cf8e59fa58c32912e0ed"
+    }
+  ],
+  "fare": "35.00",
+  "failure_type": "SmokeFailure",
+  "finished_utc": "2026-10-19T19:10:34.940031+00:00"
+}

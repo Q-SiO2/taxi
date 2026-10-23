@@ -1,0 +1,42 @@
+{
+  "verified_utc": "2026-10-23T11:21:48.914228+00:00",
+  "passed": true,
+  "services": [
+    {
+      "service": "web",
+      "deployment": "da158b10-2d82-468e-b1f1-cffba5c32ee4",
+      "status": "SUCCESS",
+      "active": 1,
+      "image_digest": "sha256:7a83a300bc857e1c471ca122dab93421068f307ad4c3db8a27ef3e83966567f8"
+    },
+    {
+      "service": "api",
+      "deployment": "8b03ad50-ba24-4d38-88b3-dc5321cd77cd",
+      "status": "SUCCESS",
+      "active": 1,
+      "image_digest": "sha256:cb4839a2fbc71633476566d895b4dbbc950d7f9d51f551a8c770426f4027c913"
+    },
+    {
+      "service": "worker",
+      "deployment": "0bc39434-5d26-4e7b-8645-350526e638dd",
+      "status": "SUCCESS",
+      "active": 1,
+      "image_digest": "sha256:a00d67be3f9ee5992732fc290a6d37d90fb34835ed0d0babf5c4a94d111af7c7"
+    },
+    {
+      "service": "database",
+      "deployment": "d8645fc6-04d2-4ffc-b42d-c93709ede85a",
+      "status": "SUCCESS",
+      "active": 1,
+      "image_digest": "sha256:44126d872ac91993766c341e369c539e8196614321765d36a6f1bab0419a5fa5"
+    },
+    {
+      "service": "routing",
+      "deployment": "dec657d1-e507-421d-9bc2-15f0250385b7",
+      "status": "SUCCESS",
+      "active": 1,
+      "image_digest": "sha256:3b35de64ffb16a05bf945631cf034dc821fe7e5675124e53b2b0f4ee59c6f6f4"
+    }
+  ],
+  "scope": "Fresh authorized CLI read after both complete native trips; all five exact paired deployments remain sole active successful heads. No mutation, upgrade or billing assurance inferred."
+}

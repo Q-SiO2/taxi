@@ -1,0 +1,79 @@
+{
+  "candidate": "candidate-native-v11.json",
+  "run": "first",
+  "started_utc": "2026-10-19T11:58:03.722622+00:00",
+  "fidelity": "two Android emulators, synthetic GPS/accounts/cash; native writes and server reads",
+  "emulators": [
+    {
+      "role": "driver",
+      "serial": "emulator-5556",
+      "api_level": 35,
+      "avd": "taximobile-board-api35-driver"
+    },
+    {
+      "role": "passenger",
+      "serial": "emulator-5554",
+      "api_level": 31,
+      "avd": "taximobile-board-aosp31-passenger"
+    }
+  ],
+  "passed": false,
+  "steps": [
+    {
+      "name": "Native on-demand availability visible",
+      "utc": "2026-10-19T11:58:55.894004+00:00"
+    },
+    {
+      "name": "Server on-demand availability confirmed",
+      "utc": "2026-10-19T11:59:00.062921+00:00"
+    },
+    {
+      "name": "Native booking confirmed",
+      "utc": "2026-10-19T11:59:21.153405+00:00"
+    },
+    {
+      "name": "Private acceptance confirmed",
+      "utc": "2026-10-19T12:00:02.941308+00:00"
+    },
+    {
+      "name": "Native DRIVER_EN_ROUTE",
+      "utc": "2026-10-19T12:00:33.220214+00:00"
+    },
+    {
+      "name": "Native DRIVER_ARRIVED",
+      "utc": "2026-10-19T12:01:29.478848+00:00"
+    },
+    {
+      "name": "Native IN_PROGRESS",
+      "utc": "2026-10-19T12:01:53.467392+00:00"
+    }
+  ],
+  "installed_apks": [
+    {
+      "role": "driver",
+      "sha256": "e960318c250dfb905b02718240906748122110a29b7685b3313bc62616f093da"
+    },
+    {
+      "role": "passenger",
+      "sha256": "eda8e08731fcddab9f9defbf49b38be40e3f8613afdcaf21031c8b2c43ad1d09"
+    }
+  ],
+  "harness_sha256": "240f8d3a829903c69b50b9437409099937df12bb0212b072a72a12c8370f1db4",
+  "clock_fixture": [
+    {
+      "role": "driver",
+      "host_minus_device_seconds_before": 0.88,
+      "host_minus_device_seconds_after": 0.12,
+      "method": "owned emulator cmd alarm set-time before trip only"
+    },
+    {
+      "role": "passenger",
+      "host_minus_device_seconds_before": 0.21,
+      "host_minus_device_seconds_after": 0.38,
+      "method": "owned emulator cmd alarm set-time before trip only"
+    }
+  ],
+  "ride_id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+  "failure_type": "SmokeFailure",
+  "finished_utc": "2026-10-19T12:03:21.177604+00:00"
+}

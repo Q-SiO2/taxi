@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-20T09:27:59.278300+00:00",
+  "tests": {
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "scope": "Stable remembered adapter dispatches a provider-retained listener to the latest Compose callback; active-to-idle selection and idle-to-active guard both pass",
+  "sources": [
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/maps/MapLibreTripMap.kt",
+      "sha256": "fe56f631eed4807d7258405b93a03ff614303e89214a1d3c39099b7f88388a71"
+    },
+    {
+      "path": "TaxiMobile/shared/src/androidMain/kotlin/org/example/taximobile/feature/maps/MapLibreTripMap.android.kt",
+      "sha256": "7ff986f2d6dabe3131887c75ec5a402b24454990e901fbc7f76fc92eb9f7c7de"
+    },
+    {
+      "path": "TaxiMobile/shared/src/iosMain/kotlin/org/example/taximobile/feature/maps/MapLibreTripMap.ios.kt",
+      "sha256": "7ff986f2d6dabe3131887c75ec5a402b24454990e901fbc7f76fc92eb9f7c7de"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/maps/MapCoordinateCallbackUiTest.kt",
+      "sha256": "822df886293bc3e9c9a67e4fab223a31c11b1441fa2ad3a9fd51233f96b38a8d"
+    }
+  ],
+  "red": "map-callback-red-20261020.json",
+  "report": ".tools/alpha-delivery/map-callback-green-20261020/TEST-org.example.taximobile.feature.maps.MapCoordinateCallbackUiTest.xml",
+  "log": ".tools/alpha-delivery/map-callback-green-20261020.log",
+  "limitations": [
+    "JVM Compose regression models pinned map callback retention; native same-instance rebooking remains required",
+    "Android/iOS wrappers share this adapter; iOS runtime/build unverified on Windows"
+  ]
+}

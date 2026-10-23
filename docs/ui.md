@@ -1,5 +1,157 @@
 # TaxiMobile — UI Plan
 
+## Board alpha execution authorized — 15 October 2026
+
+The owner now directs the earliest functional board alpha, authorizes application
+implementation and TaxiMobile Railway staging changes/deployment, and requires
+French, Arabic and English with concise copy. This supersedes the earlier
+planning-only stop. The selected four-style contract remains in force; no further
+palette approval is needed. Follow [the active board alpha checkpoint](board-alpha.md)
+for execution and evidence. Native, integrated staging, device and release
+acceptance must still be demonstrated.
+
+### Map shortcuts and expanded sheets
+
+Passenger and driver map shortcuts must leave the persistent toolbar, including
+Inbox, unobstructed. Show the floating shortcut stack only when at least 240 dp
+of map height remains above the sheet. Use the actual sheet state after system
+font scaling promotes it, both for visibility and positioning. This reserve
+allows the toolbar, safe top area, two shortcut targets and their spacing to
+coexist. Collapsing the sheet restores the shortcuts when space permits; body
+location and primary workflow controls remain available in the sheet.
+
+### Functional task material
+
+The selected styles apply beyond their entry artwork. Native sheets, the signed-in
+operations content shell and applicant dashboard share compact material painting:
+spectral/folded edges, print registration, tactile glazing and grayscale Notepad
+rules with a leading margin rail. Keep registration marks inside the existing
+12 dp gutter, mirror the leading edge in RTL and paint paper rules behind text
+and opaque controls. Do not move controls, add hero space, change hit targets,
+introduce decorative controllers or imply domain status through this treatment.
+Notepad stays static; existing entry motion keeps its independent OS/lifecycle
+contract. Actual new artifacts and renders must be verified before acceptance.
+
+### Web language presentation
+
+Operations and applicant web expose English, Français and العربية beside the
+style choice. Language is a persisted local presentation preference. Switching
+it preserves the authenticated session, selected scope and safe unsent drafts;
+it must not recreate coordinators, replay a command or discard consequence
+review. An unavailable store keeps a temporary choice and a visible retry path.
+An unavailable locale adapter keeps the applied language and reports failure.
+Arabic sets RTL layout while identifiers and money retain explicit bidi handling.
+Use the existing shared resource catalog; unchanged backend enums are translated
+only for display. Follow [the bounded localization packet](redesign/web-localization.md)
+and require actual critical-state evidence before calling the web demo trilingual.
+
+## Selected visual direction — recorded 15 October 2026
+
+The owner approved **Folded Streets, Street Press, Glazed Machine and Notepad**
+as four complete user-selectable styles. The independent five-color theme menu
+is withdrawn. Gradients/collage/grain are treatments inside the expressive styles,
+not additional choices. Notepad is grayscale ruled utility, retaining meaningful
+icons and main workflows while disabling decorative motion.
+
+[The selected four-style contract](redesign/style-options.md),
+[current preview](redesign/abstract-lab.html), [visual system](redesign/visual-system.md)
+and [all-page coverage](redesign/style-coverage.md) supersede earlier identity,
+palette, shape and motion prescriptions below. The dated rejection/research and
+pending-style-selection notes are historical. No further palette confirmation is
+needed. Native implementation/device evidence, complete delivery-plan execution,
+hosted rehearsal and release gates remain separate; this records design selection.
+Backend authority, privacy, accessibility and state/command rules remain in force.
+
+
+## Latest owner correction — 14 October 2026
+
+The owner further directs the art-free identity toward elaborate abstract motion,
+moving color gradients and contrasted collage. Review the
+[abstract lab](redesign/abstract-lab.html) and
+[expression plan](redesign/abstract-expression.md).
+
+The owner subsequently said they love the new interface treatments without the
+main illustration. The current lab defaults to art-free UI and motion; large
+illustrations are an optional unselected archive.
+
+The owner rejected the graphical proposal, especially the incoherent city/taxi
+scene, and requested a unique, unusual, illustrative and animated identity.
+The existing five color directions are proposed themes, not distinct identities.
+Review [redesign/identity-reset.md](redesign/identity-reset.md) and the
+[new art-direction lab](redesign/identity-lab.html). Material, drawing, composition,
+typography and 2D/2.5D/3D motion exploration are reopened. Prior recommendations
+are unaccepted; structural every-page coverage remains useful. The identity goal
+is active, and application implementation still awaits the complete selected plan.
+
+
+## Owner-directed replacement proposal — latest 14 October 2026
+
+The 14 October request broadens illustration and motion exploration. Review the
+[expressive atelier](redesign/expressive-board.html) and
+[art/native-motion plan](redesign/expressive-motion.md). The restrained historical
+motion/asset prescriptions below must not prevent researching the requested
+graphical personality; implementation still waits for the selected plan.
+
+The current UI is unaccepted. The owner stopped rehearsal and granted freedom
+to explore any visual identity, without preference for gold/navy, but requires
+confirmation of the complete plan before execution. See the
+[proposal](redesign/README.md), [five-palette/three-type board](redesign/direction-board.html),
+[visual system](redesign/visual-system.md), [components](redesign/components.md)
+and [delivery approval record](redesign/delivery.md).
+The previous palette/font/chrome restrictions and direction-refinement approval
+below are historical inputs, not constraints on this exploration. No new identity
+is approved yet. Do not implement either further refinement or the proposed
+replacement before confirmation. Backend, security and accessibility rules stay
+in force. UX-0 will replace conflicting visual prescriptions coherently once
+the owner selects the identity/type/navigation.
+
+## Full alpha visual acceptance wave — 12 October 2026
+
+This extends the existing recovery slice into the whole passenger and driver
+experience. A-02 defines the reviewed visual reference; A-03/A-04 implement the
+complete journeys; A-07 handles representative operations; A-10 verifies them.
+Retain the effective navy/gold brand, licensed bundled fonts and shared components.
+Address hierarchy, navigation and oversized screen responsibilities as well as
+tokens; avoid a second design system. [roadmap.md](roadmap.md) owns task status.
+
+Capture actual welcome/auth/recovery, map/search/pickup/quote, matching/assigned/
+active/completed/history/support states; driver onboarding/restriction/offline/
+offer/arrival/start/active/completion/cash/earnings states; and the representative
+operations records. Include relevant loading/empty/error/offline/disabled states.
+Verify 320/360/430 dp, French and Arabic RTL plus English sanity, 1.3×/1.6× text,
+keyboard/insets and reachable primary actions. Body text requires 4.5:1 contrast,
+large text 3:1, 48 dp touch targets, status text beyond color, assistive labels and
+reduced-motion behavior. Gold ordinary text on white is prohibited.
+
+Retain before/after screenshots with candidate hash, device/viewport, locale,
+font scale, scenario and defects corrected. Owner review of the visual direction
+and actual-device acceptance remain explicit; source changes, JVM renders and
+APK compilation alone cannot establish physical-phone visual quality.
+
+## Alpha visual recovery — 11 October 2026
+
+The owner has authorized a full passenger/driver UX overhaul while retaining the
+recognizable navy/gold identity. The screen plans below are design targets, not
+claims of visual acceptance. For the first verified slice, map toolbars use one
+shared compact account/safety/inbox component with 48 dp actions and explicit
+accessibility labels. Secondary fixed-route/scheduling actions no longer compete
+with the idle destination heading. The idle peek shows one dominant place-search
+action and a persistent fixed-routes entry; selecting a map point or recent
+destination expands the sheet to the full form. Fare and cash primary views should communicate
+amount, payment state and the next action; backend tariff versions, UUIDs, raw UTC
+timestamps and routing maneuvers do not belong in the primary presentation.
+Backend records retain their full audit data. This is an alpha UI presentation
+rule, not authorization to discard financial or location provenance.
+
+The release gate remains actual rendered screenshots, French/Arabic/RTL and
+representative-device review, followed by task completion without developer
+coaching. Passing Compose tests or building an APK alone does not close it.
+
+Material's default primary token is navy on light surfaces so uncustomized
+TextButtons, focus indicators and links are readable. The product's explicit
+primary `TaxiButton` remains gold-filled with navy text. Gold is not used as
+ordinary text on white.
+
 ## Purpose
 
 Define the visual identity, interaction model, motion language, and screen-by-screen UI plan for the passenger and driver applications.
@@ -178,10 +330,13 @@ Bundle as Compose Multiplatform resources:
 
 Weights to ship: Sora 600/700; Manrope 400/500/600/700; IBM Plex Mono 500.
 
-Arabic, French, and English catalogs are implemented. Keep Manrope for Latin and
-the platform Arabic fallback until a separately licensed and device-validated
-Arabic companion is approved; changing typefaces must not alter the navy token
-set. Do not hard-code English-only layout widths that break RTL.
+Arabic, French, and English catalogs are implemented. Arabic locale uses the
+bundled OFL-licensed **Noto Sans Arabic** family across the Material type scale,
+with zero Latin-style tracking and taller line heights for Arabic shaping.
+Sora/Manrope remain the Latin display/body families. Actual Arabic/RTL renders
+at representative widths and large text remain an alpha acceptance gate; source
+font selection alone is not visual approval. Do not hard-code English-only
+layout widths that break RTL.
 
 ### Type scale
 
@@ -391,6 +546,10 @@ disabled until `finally` releases the one-at-a-time gate.
 Uber-like bottom sheet with:
 
 * Grabber (32×4, `ink.300`)
+* Its visible header has a 48 dp drag area. Header drags change snap; ordinary
+  body drags scroll content and taps continue to reach their original control.
+  Expose localized expand/collapse accessibility actions for reachable snaps;
+  never advertise collapsing below the current text-scale minimum.
 * Snap points: `peek` (~28% screen), `half` (~48%), `expanded` (~78%)
 * System text scale promotes the minimum reachable snap: `1.3×` promotes peek
   to half, and `1.6×` or greater promotes peek/half to expanded; explicit user
@@ -408,7 +567,7 @@ Examples: `Matching`, `Driver on the way`, `Arriving`, `In trip`, `Completed`, `
 ### 5. `FareBlock`
 
 * Large amount (`display.sm`)
-* Tariff version caption (`body.sm`, `ink.500`)
+* No internal tariff-version identifier in the primary fare hierarchy; retain it in the backend record
 * Optional breakdown rows from **backend components only**
 * Estimate vs final: label explicitly (`Estimated fare` vs `Final fare`)
 
@@ -636,11 +795,13 @@ Uber-like composition:
    - Destination field (opens expanded place entry)
    - Persistent **Fixed routes** entry for the selected city; it remains useful
      when no taxi is online
+   - Keep the peek short enough that all visible content fits above system navigation
+4. Expanded place-entry sheet:
    - Up to three unique recent destinations derived from completed backend
      history summaries when available; selecting one still requires pickup and a
      fresh backend fare estimate
-4. FAB: current location (one-shot)
-5. Context clue: “Pickup defaults to your selected point”
+5. FAB: current location (one-shot)
+6. Context clue: “Pickup defaults to your selected point”
 
 ### F. Passenger — Place selection
 
@@ -667,7 +828,7 @@ Uber-like composition:
 * Sheet half
 * Route drawn after `POST /routing/route` success
 * FareBlock labeled **Estimated fare**
-* Tariff version caption
+* No internal tariff-version caption in the primary quote
 * Primary: **Request taxi**
 * Changing either point discards estimate and route immediately
 * A Now / Schedule choice appears only when enabled by the backend city catalog

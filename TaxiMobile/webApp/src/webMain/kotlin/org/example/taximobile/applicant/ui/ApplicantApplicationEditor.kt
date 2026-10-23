@@ -1,12 +1,15 @@
 package org.example.taximobile.applicant.ui
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
@@ -23,8 +26,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.dp
 import org.example.taximobile.domain.drivers.DriverApplicationAnswerDraft
 import org.example.taximobile.domain.drivers.DriverApplicationEvidenceDraft
@@ -39,6 +46,11 @@ import org.example.taximobile.feature.ui.theme.TaxiColors
 import org.example.taximobile.feature.ui.theme.TaxiRadii
 import org.example.taximobile.feature.ui.theme.TaxiSpacing
 import org.example.taximobile.feature.driver.onboarding.CityAuthorizationSummary
+import org.example.taximobile.feature.ui.text.ltrIsolate
+import org.example.taximobile.operations.ui.recruitmentLabel
+import org.example.taximobile.operations.ui.recruitmentTextStyle
+import org.jetbrains.compose.resources.stringResource
+import taximobile.shared.generated.resources.*
 
 @Composable
 internal fun ApplicantApplicationEditor(
@@ -61,6 +73,8 @@ internal fun ApplicantApplicationEditor(
     onDeleteDocument: (String, String, Int) -> Unit,
     onRegisterVehicle: (VehicleRegistration) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     val language = Locale.current.language
     val draftKey = "${application.id}:${application.optimisticVersion}"
     val textValues = remember(draftKey) {
@@ -94,14 +108,14 @@ internal fun ApplicantApplicationEditor(
     }
     var confirmWithdrawal by remember(application.id) { mutableStateOf(false) }
 
-    HorizontalDivider(color = TaxiColors.StrokeSubtle)
+    HorizontalDivider(color = taxiColors.StrokeSubtle)
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically) {
         Column {
             Text(application.cityName.forLanguage(language), style = MaterialTheme.typography.headlineSmall,
-                color = TaxiColors.Navy900, fontWeight = FontWeight.Bold)
-            Text("City-scoped application · requirements ${application.requirementVersion}",
-                color = TaxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
+                color = taxiColors.Navy900, fontWeight = FontWeight.Bold)
+            Text(stringResource(Res.string.requirement_version_value, ltrIsolate(application.requirementVersion)),
+                color = taxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
         }
         ApplicantStatus(application.status)
     }
@@ -110,23 +124,23 @@ internal fun ApplicantApplicationEditor(
 
     application.latestDecision?.let { decision ->
         ApplicantCard {
-            Text("Latest reviewer message", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
-            Text(decision.message)
-            Text("Reason: ${decision.reasonCode.toDisplayLabel()}", color = TaxiColors.Ink500,
+            Text(stringResource(Res.string.latest_reviewer_message), style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+            Text(decision.message, style = recruitmentTextStyle(decision.message))
+            Text(stringResource(Res.string.web_app_reason, recruitmentLabel(decision.reasonCode)), color = taxiColors.Ink500,
                 style = MaterialTheme.typography.bodySmall)
         }
     }
     application.authorization?.let { authorization ->
         ApplicantCard(selected = authorization.status == "ACTIVE") {
             CityAuthorizationSummary(authorization.status, authorization.validUntil)
-            Text("Services: ${authorization.serviceTypes.joinToString { it.toDisplayLabel() }}")
+            Text(stringResource(Res.string.authorization_services, authorization.serviceTypes.map { recruitmentLabel(it) }.joinToString(" · ")))
             if (!authorization.scheduledOffersEnabled) {
-                Text("Scheduled offers are not enabled for this authorization.", color = TaxiColors.Ink500)
+                Text(stringResource(Res.string.authorization_scheduled_disabled), color = taxiColors.Ink500)
             }
         }
     }
 
-    Text("Application requirements", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+    Text(stringResource(Res.string.application_requirements), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
     application.requirements.sortedBy { it.displayOrder }.forEach { requirement ->
         ApplicantRequirementEditor(
             requirement = requirement,
@@ -215,7 +229,7 @@ internal fun ApplicantApplicationEditor(
             }
         }
         ApplicantPrimaryButton(
-            "Save draft",
+            stringResource(Res.string.web_req_save),
             onClick = {
                 onSave(
                     application.id,
@@ -229,41 +243,42 @@ internal fun ApplicantApplicationEditor(
             enabled = !locked,
         )
         Surface(
-            color = if (application.complete) TaxiColors.Success100 else TaxiColors.Warning100,
-            shape = RoundedCornerShape(TaxiRadii.Md),
+            color = if (application.complete) taxiColors.Success100 else taxiColors.Warning100,
+            shape = RoundedCornerShape(taxiRadii.Md),
         ) {
             Text(
-                if (application.complete) "The backend confirms all required items are complete."
-                else "Required items are still missing. Save the draft, then review the updated status.",
+                if (application.complete) stringResource(Res.string.application_complete)
+                else stringResource(Res.string.application_incomplete),
                 Modifier.fillMaxWidth().padding(TaxiSpacing.Md),
-                color = if (application.complete) TaxiColors.Success600 else TaxiColors.Warning600,
+                color = if (application.complete) taxiColors.Success600 else taxiColors.Warning600,
             )
         }
         ApplicantPrimaryButton(
-            "Submit for city review",
+            stringResource(Res.string.submit_city_application),
             onClick = { onSubmit(application.id) },
             enabled = application.complete && !locked,
         )
     }
 
     if (application.status in WITHDRAWABLE_STATUSES) {
-        OutlinedButton(onClick = { confirmWithdrawal = true }, enabled = !locked, modifier = Modifier.fillMaxWidth()) {
-            Text("Withdraw application", color = TaxiColors.Danger600)
+        OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { confirmWithdrawal = true }, enabled = !locked, modifier = Modifier.fillMaxWidth()) {
+            Text(stringResource(Res.string.withdraw_application), color = taxiColors.Danger600)
         }
     }
     if (confirmWithdrawal) {
         ApplicantCard {
-            Text("Withdraw this city application?", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-            Text("The record and status remain visible. This does not delete documents or your account.")
+            Text(stringResource(Res.string.withdraw_application_title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text(stringResource(Res.string.withdraw_application_body))
             Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
-                OutlinedButton(onClick = { confirmWithdrawal = false }) { Text("Keep application") }
+                OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { confirmWithdrawal = false }) { Text(stringResource(Res.string.web_app_keep)) }
                 OutlinedButton(
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                     onClick = {
                         confirmWithdrawal = false
                         onWithdraw(application.id)
                     },
                     enabled = !locked,
-                ) { Text("Confirm withdrawal", color = TaxiColors.Danger600) }
+                ) { Text(stringResource(Res.string.web_app_confirm_withdraw), color = taxiColors.Danger600) }
             }
         }
     }
@@ -290,93 +305,100 @@ private fun ApplicantRequirementEditor(
     onVehicle: (String) -> Unit,
     onCredential: (String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     val language = Locale.current.language
     ApplicantCard(selected = missing) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(requirement.label.forLanguage(language), Modifier.weight(1f), fontWeight = FontWeight.Bold)
-            Text(if (missing) "Missing" else if (requirement.required) "Required" else "Optional",
-                color = if (missing) TaxiColors.Warning600 else TaxiColors.Ink500,
+            val label = requirement.label.forLanguage(language)
+            Text(label, Modifier.weight(1f), fontWeight = FontWeight.Bold, style = recruitmentTextStyle(label))
+            Text(if (missing) stringResource(Res.string.missing_requirement) else if (requirement.required) stringResource(Res.string.required_requirement) else stringResource(Res.string.optional_requirement),
+                color = if (missing) taxiColors.Warning600 else taxiColors.Ink500,
                 style = MaterialTheme.typography.labelMedium)
         }
-        Text(requirement.description.forLanguage(language), color = TaxiColors.Ink500)
+        val description = requirement.description.forLanguage(language)
+        Text(description, color = taxiColors.Ink500, style = recruitmentTextStyle(description))
         when (requirement.evidenceType) {
-            DriverRequirementEvidenceType.PROFILE -> Text("Your signed-in profile is linked automatically.", color = TaxiColors.Success600)
+            DriverRequirementEvidenceType.PROFILE -> Text(stringResource(Res.string.profile_evidence_confirmed), color = taxiColors.Success600)
             DriverRequirementEvidenceType.BOOLEAN -> Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(booleanValue, onCheckedChange = onBoolean, enabled = editable)
-                Text("I confirm this requirement")
+                Text(stringResource(Res.string.boolean_requirement_confirmation))
             }
             DriverRequirementEvidenceType.DATE -> OutlinedTextField(
                 textValue,
                 { onText(it.take(10)) },
                 Modifier.fillMaxWidth(),
-                label = { Text("Date (YYYY-MM-DD)") },
+                label = { Text(stringResource(Res.string.date_requirement_answer)) },
                 singleLine = true,
                 enabled = editable,
+                textStyle = MaterialTheme.typography.bodyLarge.copy(textDirection = TextDirection.Ltr),
             )
             DriverRequirementEvidenceType.TEXT -> OutlinedTextField(
                 textValue,
                 { onText(it.take(1000)) },
                 Modifier.fillMaxWidth(),
-                label = { Text("Your answer") },
+                label = { Text(stringResource(Res.string.text_requirement_answer)) },
                 enabled = editable,
+                textStyle = recruitmentTextStyle(textValue),
             )
             DriverRequirementEvidenceType.VEHICLE -> EvidenceChoices(
-                "Select a vehicle",
-                vehicles.map { it.id to "${it.make} ${it.model} · ${it.verificationStatus.toDisplayLabel()}" },
+                stringResource(Res.string.select_evidence_vehicle),
+                vehicles.map { it.id to "${it.make} ${it.model} · ${recruitmentLabel(it.verificationStatus)}" },
                 selectedVehicleId,
                 editable,
                 onVehicle,
             )
             DriverRequirementEvidenceType.CREDENTIAL -> EvidenceChoices(
-                "Select a professional credential",
-                credentials.map { it.id to "${it.type.toDisplayLabel()} · ${it.status.toDisplayLabel()}" },
+                stringResource(Res.string.select_evidence_credential),
+                credentials.map { it.id to stringResource(Res.string.credential_summary, ltrIsolate(it.type), recruitmentLabel(it.status)) },
                 selectedCredentialId,
                 editable,
                 onCredential,
             )
             DriverRequirementEvidenceType.DOCUMENT -> {
                 Surface(
-                    color = if (document == null) TaxiColors.Warning100 else TaxiColors.Success100,
-                    shape = RoundedCornerShape(TaxiRadii.Md),
+                    color = if (document == null) taxiColors.Warning100 else taxiColors.Success100,
+                    shape = RoundedCornerShape(taxiRadii.Md),
                     border = BorderStroke(
                         1.dp,
-                        if (document == null) TaxiColors.Warning600.copy(alpha = 0.25f)
-                        else TaxiColors.Success600.copy(alpha = 0.25f),
+                        if (document == null) taxiColors.Warning600.copy(alpha = 0.25f)
+                        else taxiColors.Success600.copy(alpha = 0.25f),
                     ),
                 ) {
                     Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Md)) {
                         Text(
                             when {
-                                document != null -> "Protected document · ${document.scanStatus.toDisplayLabel()}"
-                                documentUploadAvailable && documentPickerAvailable -> "Ready for protected upload"
-                                else -> "Protected document upload unavailable"
+                                document != null -> stringResource(Res.string.web_app_document_status, recruitmentLabel(document.scanStatus))
+                                documentUploadAvailable && documentPickerAvailable -> stringResource(Res.string.document_status_ready)
+                                else -> stringResource(Res.string.document_status_unavailable)
                             },
                             fontWeight = FontWeight.Bold,
-                            color = if (document == null) TaxiColors.Warning600 else TaxiColors.Success600,
+                            color = if (document == null) taxiColors.Warning600 else taxiColors.Success600,
                         )
                         Text(
                             when {
-                                document != null -> "${document.mediaType} · ${document.byteSize} bytes"
-                                !documentUploadAvailable -> "Protected storage is not configured; no file was accepted."
-                                !documentPickerAvailable -> "Use the supported JavaScript portal build or the Android driver app."
-                                else -> "Choose one PDF, JPEG, or PNG up to 10 MB. The server verifies and scans it."
+                                document != null -> stringResource(Res.string.web_recruit_document_size, ltrIsolate(document.mediaType), ltrIsolate(document.byteSize.toString()))
+                                !documentUploadAvailable -> stringResource(Res.string.web_app_upload_unavailable)
+                                !documentPickerAvailable -> stringResource(Res.string.web_app_upload_client)
+                                else -> stringResource(Res.string.web_app_upload_help)
                             },
-                            color = TaxiColors.Ink500,
+                            color = taxiColors.Ink500,
                         )
                     }
                 }
                 if (editable && documentUploadAvailable && documentPickerAvailable) {
                     ApplicantPrimaryButton(
-                        if (document == null) "Choose document" else "Replace document",
+                        if (document == null) stringResource(Res.string.choose_document) else stringResource(Res.string.replace_document),
                         onClick = onUploadDocument,
                     )
                 }
                 if (editable && document != null) {
                     OutlinedButton(
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                         onClick = { onDeleteDocument(document.id) },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Text("Delete document", color = TaxiColors.Danger600)
+                        Text(stringResource(Res.string.delete_document), color = taxiColors.Danger600)
                     }
                 }
             }
@@ -392,18 +414,20 @@ private fun EvidenceChoices(
     enabled: Boolean,
     onSelect: (String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     Text(title, style = MaterialTheme.typography.labelLarge)
     if (choices.isEmpty()) {
-        Text("No matching account-owned evidence is available.", color = TaxiColors.Warning600)
+        Text(stringResource(Res.string.no_eligible_evidence), color = taxiColors.Warning600)
     } else {
         choices.forEach { (id, label) ->
             Surface(
                 modifier = Modifier.fillMaxWidth().clickable(enabled = enabled) { onSelect(id) },
-                color = if (id == selectedId) TaxiColors.Accent100 else TaxiColors.Surface1,
-                shape = RoundedCornerShape(TaxiRadii.Md),
-                border = BorderStroke(1.dp, if (id == selectedId) TaxiColors.Accent500 else TaxiColors.StrokeSubtle),
+                color = if (id == selectedId) taxiColors.Accent100 else taxiColors.Surface1,
+                shape = RoundedCornerShape(taxiRadii.Md),
+                border = BorderStroke(1.dp, if (id == selectedId) taxiColors.Accent500 else taxiColors.StrokeSubtle),
             ) {
-                Text(label, Modifier.padding(TaxiSpacing.Sm))
+                Text(label, Modifier.padding(TaxiSpacing.Sm), style = recruitmentTextStyle(label))
             }
         }
     }
@@ -414,6 +438,7 @@ private fun ApplicantVehicleForm(
     locked: Boolean,
     onRegister: (VehicleRegistration) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     var make by remember { mutableStateOf("") }
     var model by remember { mutableStateOf("") }
     var year by remember { mutableStateOf("") }
@@ -424,17 +449,17 @@ private fun ApplicantVehicleForm(
     val parsedYear = year.toIntOrNull()
     val parsedCapacity = capacity.toIntOrNull()
     ApplicantCard {
-        Text("Register a vehicle for review", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-        Text("Taxi category and service eligibility appear as city requirements when policy requires them.", color = TaxiColors.Ink500)
-        OutlinedTextField(make, { make = it.take(80) }, Modifier.fillMaxWidth(), label = { Text("Make") }, enabled = !locked)
-        OutlinedTextField(model, { model = it.take(80) }, Modifier.fillMaxWidth(), label = { Text("Model") }, enabled = !locked)
-        OutlinedTextField(year, { year = it.filter(Char::isDigit).take(4) }, Modifier.fillMaxWidth(), label = { Text("Year") }, enabled = !locked)
-        OutlinedTextField(color, { color = it.take(60) }, Modifier.fillMaxWidth(), label = { Text("Color") }, enabled = !locked)
-        OutlinedTextField(plate, { plate = it.take(64) }, Modifier.fillMaxWidth(), label = { Text("Registration plate") }, enabled = !locked)
-        OutlinedTextField(taxiId, { taxiId = it.take(64) }, Modifier.fillMaxWidth(), label = { Text("Taxi identifier (optional)") }, enabled = !locked)
-        OutlinedTextField(capacity, { capacity = it.filter(Char::isDigit).take(2) }, Modifier.fillMaxWidth(), label = { Text("Passenger capacity (optional, 1–12)") }, enabled = !locked)
+        Text(stringResource(Res.string.register_required_vehicle), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+        Text(stringResource(Res.string.city_controls_vehicle_eligibility), color = taxiColors.Ink500)
+        OutlinedTextField(make, { make = it.take(80) }, Modifier.fillMaxWidth(), label = { Text(stringResource(Res.string.vehicle_make)) }, enabled = !locked, textStyle = recruitmentTextStyle(make))
+        OutlinedTextField(model, { model = it.take(80) }, Modifier.fillMaxWidth(), label = { Text(stringResource(Res.string.vehicle_model)) }, enabled = !locked, textStyle = recruitmentTextStyle(model))
+        OutlinedTextField(year, { year = it.filter(Char::isDigit).take(4) }, Modifier.fillMaxWidth(), label = { Text(stringResource(Res.string.vehicle_year)) }, enabled = !locked, textStyle = MaterialTheme.typography.bodyLarge.copy(textDirection = TextDirection.Ltr))
+        OutlinedTextField(color, { color = it.take(60) }, Modifier.fillMaxWidth(), label = { Text(stringResource(Res.string.vehicle_color)) }, enabled = !locked, textStyle = recruitmentTextStyle(color))
+        OutlinedTextField(plate, { plate = it.take(64) }, Modifier.fillMaxWidth(), label = { Text(stringResource(Res.string.registration_number)) }, enabled = !locked, textStyle = recruitmentTextStyle(plate).copy(textDirection = TextDirection.Ltr))
+        OutlinedTextField(taxiId, { taxiId = it.take(64) }, Modifier.fillMaxWidth(), label = { Text(stringResource(Res.string.taxi_identifier_optional)) }, enabled = !locked, textStyle = recruitmentTextStyle(taxiId).copy(textDirection = TextDirection.Ltr))
+        OutlinedTextField(capacity, { capacity = it.filter(Char::isDigit).take(2) }, Modifier.fillMaxWidth(), label = { Text(stringResource(Res.string.passenger_capacity_optional)) }, enabled = !locked, textStyle = MaterialTheme.typography.bodyLarge.copy(textDirection = TextDirection.Ltr))
         ApplicantPrimaryButton(
-            "Register vehicle",
+            stringResource(Res.string.register_vehicle),
             onClick = {
                 onRegister(
                     VehicleRegistration(
@@ -456,17 +481,30 @@ private fun ApplicantVehicleForm(
 
 @Composable
 private fun ApplicationTimeline(status: String) {
+    val taxiColors = TaxiTheme.colors
     val steps = listOf("SUBMITTED", "UNDER_REVIEW", "ADDITIONAL_INFORMATION_REQUIRED", "APPROVED", "REJECTED")
     ApplicantCard {
-        Text("Application timeline", fontWeight = FontWeight.Bold)
+        Text(stringResource(Res.string.application_timeline), fontWeight = FontWeight.Bold)
         steps.forEach { step ->
-            Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
-                Text(if (step == status) "●" else "○", color = if (step == status) TaxiColors.Accent600 else TaxiColors.Ink300)
-                Text(step.toDisplayLabel(), color = if (step == status) TaxiColors.Navy900 else TaxiColors.Ink500,
+            val current = step == status
+            Row(
+                modifier = Modifier.semantics(mergeDescendants = true) { selected = current },
+                horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Canvas(Modifier.size(12.dp)) {
+                    val markerColor = if (current) taxiColors.Accent600 else taxiColors.Ink300
+                    if (current) {
+                        drawCircle(markerColor, radius = 4.dp.toPx())
+                    } else {
+                        drawCircle(markerColor, radius = 4.dp.toPx(), style = Stroke(1.5.dp.toPx()))
+                    }
+                }
+                Text(recruitmentLabel(step), color = if (step == status) taxiColors.Navy900 else taxiColors.Ink500,
                     fontWeight = if (step == status) FontWeight.Bold else FontWeight.Normal)
             }
         }
-        if (status == "WITHDRAWN") Text("● Withdrawn", color = TaxiColors.Danger600, fontWeight = FontWeight.Bold)
+        if (status == "WITHDRAWN") Text(stringResource(Res.string.application_status_withdrawn), color = taxiColors.Danger600, fontWeight = FontWeight.Bold)
     }
 }
 

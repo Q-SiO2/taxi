@@ -1,0 +1,14 @@
+{
+  "started_utc": "2026-10-19T12:10:41.849356+00:00",
+  "candidate": "candidate-native-v11.json",
+  "ride_id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+  "original_network": {
+    "wifi": "1",
+    "mobile_data": "1"
+  },
+  "scope": "Diagnostic only; no trip/payment command, no freshness relaxation; restore original emulator network settings",
+  "completion_location_loaded_offline": false,
+  "restored_network": true,
+  "failure_type": "SmokeFailure",
+  "finished_utc": "2026-10-19T12:11:48.157734+00:00"
+}

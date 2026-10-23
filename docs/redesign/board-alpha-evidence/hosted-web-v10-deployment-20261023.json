@@ -1,0 +1,20 @@
+{
+  "issued_utc": "2026-10-23T10:04:18.906540+00:00",
+  "candidate": "candidate-web-v10.json",
+  "candidate_sha256": "63104284acd55fd57bea816c23b48ade324210df3e9f033fe0856c71d07c8d9a",
+  "project_id": "9f841575-c4f3-4a4d-bb83-2e6ff92e436e",
+  "environment_id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+  "service_id": "2d8ab069-2310-46ff-afe0-8fd4f42a5bd1",
+  "previous_deployment_id": "ceee310c-e957-49ad-945d-b9f2d292eb61",
+  "package_manifest_sha256": "be37bc97a881e2c5f736cb25f4f1ddbe8023def24bbf0e35c0c56305bf317475",
+  "assets": 93,
+  "state": "Network fetch failed; no replacement job observed",
+  "accepted": false,
+  "cli_returncode": 1,
+  "failure": {
+    "code": "FETCH_ERROR",
+    "cause": "Windows DNS lookup os11001",
+    "latest_observed_deployment_id": "ceee310c-e957-49ad-945d-b9f2d292eb61",
+    "replacement_job_observed": false
+  }
+}

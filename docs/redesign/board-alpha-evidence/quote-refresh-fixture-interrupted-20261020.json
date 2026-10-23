@@ -1,0 +1,9 @@
+{
+  "phase": "test fixture interruption before production quote correction",
+  "accepted_as_regression_result": false,
+  "reason": "The first late-quote fixture synchronously invoked logout while the advisory read held the non-reentrant credential mutex. Only that Gradle test executor was interrupted.",
+  "correction": "Stage logout in an undispatched child coroutine, allow the owned read to release the mutex, then join logout before normal sign-in.",
+  "raw_log_retained": false,
+  "raw_log_limitation": "The attempted log move used a workspace-relative path from the TaxiMobile subdirectory, failed, and the following fresh run overwrote that log. No test count or app failure is inferred from the interrupted fixture.",
+  "fresh_result_required": "quote-refresh-red-20261020.json"
+}

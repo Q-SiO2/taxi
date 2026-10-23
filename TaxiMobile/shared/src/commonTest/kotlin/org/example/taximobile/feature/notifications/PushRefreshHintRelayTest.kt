@@ -9,6 +9,14 @@ import kotlinx.coroutines.runBlocking
 
 class PushRefreshHintRelayTest {
     @Test
+    fun `ride update is only an opaque authorized reload trigger`() = runBlocking {
+        val relay = PushRefreshHintRelay()
+        val rideId = "9f4f11f6-b67f-4a2d-9ae8-0d32d7e506a4"
+        assertTrue(relay.submit("RIDE_UPDATED", rideId))
+        assertEquals(PushRefreshHint("RIDE_UPDATED", rideId), relay.hints.first())
+    }
+
+    @Test
     fun `allowlisted server hint is delivered without becoming business state`() = runBlocking {
         val relay = PushRefreshHintRelay()
         val rideId = "9f4f11f6-b67f-4a2d-9ae8-0d32d7e506a4"

@@ -1,0 +1,64 @@
+{
+  "candidate": "candidate-native-v23.json",
+  "started_utc": "2026-10-23T11:09:23.109634+00:00",
+  "passed": true,
+  "samples": [
+    {
+      "utc": "2026-10-23T11:14:52.929622+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-23T11:14:56.075728+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-23T11:14:58.038376+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-23T11:15:00.696311+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-23T11:15:02.459881+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-23T11:15:03.909638+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-23T11:15:05.757909+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-23T11:15:07.574799+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-23T11:15:09.367803+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-23T11:15:11.099274+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    }
+  ],
+  "scope": "Independent read-only actual Android wifi_on/mobile_data observations. No radio change, native input, HTTP request or assertion about every possible transport.",
+  "restored_sample": {
+    "utc": "2026-10-23T11:15:13.418983+00:00",
+    "wifi_on": "1",
+    "mobile_data": "1"
+  },
+  "finished_utc": "2026-10-23T11:15:13.419288+00:00"
+}

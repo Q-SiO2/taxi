@@ -1,0 +1,34 @@
+{
+  "verified_utc": "2026-10-19T12:14:11.419103+00:00",
+  "accepted": false,
+  "candidate": "candidate-native-v11.json",
+  "failed_run": "v11-native-first.json",
+  "ride_id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+  "server_status": "IN_PROGRESS",
+  "driver_availability": "ON_RIDE",
+  "observed": [
+    "Exact APKs installed, normal retained accounts, server booking/private acceptance/en-route/arrived/start passed",
+    "Completion coordinate acquisition unavailable; Complete ride remained disabled",
+    "Two additional normal UI load retries did not acquire completion coordinates",
+    "Bounded offline diagnostic also failed; original Wi-Fi/mobile-data settings restored"
+  ],
+  "diagnostic": "v11-completion-location-network-diagnostic.json",
+  "screenshots": [
+    {
+      "path": "v11-completion-location-before-diagnostic.png",
+      "sha256": "891aa910ba39a96b7a7a39d452a87a988976ee8ab6e8caa022a73ca347fdab67"
+    },
+    {
+      "path": "v11-completion-location-offline-result.png",
+      "sha256": "4dbf9b528e5481e6d6a71b6f2681d9c1c5c9ecad50c8f6beda55d612d21d1dcf"
+    }
+  ],
+  "source_finding": "Driver completion uses the legacy coordinate callback. Android routes it through cached getCurrentLocation; working foreground driver observations use a separate fresh listener and context guard.",
+  "next": "Route driver completion through the existing driver observation callback, add a regression proving the legacy coordinate callback is not used, then build a new candidate. Recover this same in-progress ride through the app before two new complete rehearsals.",
+  "constraints": [
+    "No backend completion/payment workaround or database reset",
+    "No freshness/accuracy relaxation",
+    "Do not count a recovered partial run as one of two complete rehearsals",
+    "V8 hosted package remains independently frozen; do not relabel it after native source corrections"
+  ]
+}
