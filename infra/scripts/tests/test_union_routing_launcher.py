@@ -7,8 +7,6 @@ import subprocess
 import tempfile
 import unittest
 
-import yaml
-
 ROOT = Path(__file__).resolve().parents[3]
 PWSH = shutil.which("pwsh")
 HELPER = ROOT / "infra/scripts/_union-routing-common.ps1"
@@ -28,6 +26,8 @@ class UnionRoutingTests(unittest.TestCase):
         )
 
     def test_native_configuration_preserves_engine_and_confines_both_sockets(self):
+        import yaml
+
         path = ROOT / "infra/routing/graphhopper/config.yml"
         result = self.run_ps(f"ConvertTo-UnionRoutingConfig -Source (Get-Content -Raw {literal(path)})")
         self.assertEqual(result.returncode, 0, result.stderr)

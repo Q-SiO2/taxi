@@ -1,5 +1,20 @@
 # TaxiMobile — National Operations and City Rollout Specification
 
+## First-city operating target — 23 October 2026
+
+The owner selected **Fès** with **the transport union** as operator. Drivers must
+be verified union members; passengers may register normally. Keep operator/staff
+authority, verified driver eligibility and membership as separate backend facts.
+Resolve the union's legal identity and its mapping to existing operator/cooperative
+records before production configuration. Do not invent a union entity identifier,
+new operator type or membership authority merely from this product decision.
+
+The [R1 packet](launch/r1-decisions.md) retains authorization, roster verification,
+service boundary, tariffs, support, budget and pilot acceptance dependencies.
+Casablanca staging remains synthetic alpha evidence. The owner confirmed an
+Android phone and Google Play accounts; actual device/signing/release acceptance
+and iOS resources remain separate work.
+
 ## Board alpha execution authorized — 15 October 2026
 
 The owner now directs the earliest functional board alpha, authorizes application

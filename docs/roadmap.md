@@ -183,8 +183,10 @@ dependencies; a green source test never accepts a device or hosted requirement.
 | **A-11 QA/operations: repeatable presentation** | **Scoped v22 rehearsal passes.** Two exact-candidate repetitions at 10:47 / 7:29 include native cash, same-process rebooking, normal browser reset and independently observed radio recovery. Warm setup and the initial failed attempt/recovery remain qualified. Broader gate scope remains below. | A-09, A-10 | Two consecutive runs on one candidate, one app/service restart and network-loss exercise; no central step needs manual DB edits. Approved synthetic reset mechanism preserves unrelated data. Fallback is a labeled recording or verified local scenario, never fabricated hosted success. |
 | **A-12 Product/engineering: alpha handoff** | **Candidate handoff delivered.** Exact artifacts, secure setup, rehearsal/visual evidence, disclosures and B/C backlog are linked. Provider-paused redirect repair and applicable presentation acceptance remain. | A-11 | Reproducible demo setup, secure account retrieval, exact artifacts/screenshots, test successes/failures, staging service/cost/shutdown record, simulated-provider list and incomplete capability disclosure reviewed. Applicable evidence and the owner's presentation decision precede a union-ready acceptance claim. |
 
-**Next implementation packet:** R2 source-delta review and candidate isolation in
-[real-world-launch.md](real-world-launch.md). The [R0 baseline](launch/r0-baseline.md)
+**Next implementation packet:** R2 candidate review and immutable remote CI in
+[real-world-launch.md](real-world-launch.md). The [R2 local checkpoint](launch/r2-candidate.md)
+preserves an isolated source commit and two verified release-preparation fixes;
+local source identity does not close R2. The [R0 baseline](launch/r0-baseline.md)
 maps current source/navigation and all 37 GAPs; the
 [R1 decision agenda](launch/r1-decisions.md) is prepared. Preserve the current
 alpha and unrelated dirty work; run candidate-bound checks and repair evidenced

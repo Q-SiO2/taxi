@@ -663,7 +663,25 @@ not merge these into an unexplained “commission.”
 
 Cooperative membership is distinct from being a driver.
 
-A driver may be:
+For the owner-selected **Fès union-operated launch**, only verified members of the
+operating union may participate as drivers. Ordinary passenger registration has
+no membership restriction. Membership is an additional backend-owned condition;
+driver approval, professional credentials, vehicle verification and city/service
+authorization remain independently required. A client claim, uploaded membership
+number alone or approved taxi license cannot establish union membership.
+
+The implementation must use the existing operator/cooperative/member authorities
+where appropriate to the confirmed legal entity, without granting membership as
+a side effect of driver approval. New availability and allocation/acceptance must
+revalidate current membership for the operating organization, including withdrawal
+or suspension after going online. Ending membership must not silently discard an
+already accepted trip, its safety/support access or outstanding financial records.
+The membership verification and revocation staff workflow requires a named union
+authority and audit evidence before real enrollment. The source currently exposes
+membership information separately; this launch condition still needs verified
+enforcement throughout all service modes.
+
+The general model can distinguish:
 
 ```text
 Verified driver

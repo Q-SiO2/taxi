@@ -1,0 +1,88 @@
+{
+  "recorded_utc": "2026-10-23T16:09:30.074465+00:00",
+  "commit": "45c491a4615d466c74c4bb0ca46fd6d55488ad7f",
+  "tree": "6f2c2dbf6e096af613bd3d84f4e7bd01f827b137",
+  "parent": "2835c8aa7f5e97a17afcdbe647fe589cbd0421e1",
+  "branch": "codex/real-world-r2-baseline",
+  "candidate_path": "C:\\Users\\Q\\Projects\\.tools\\real-world-launch\\source-candidate-r2-20261023",
+  "clean": true,
+  "source_head_preserved": true,
+  "source_index_preserved": true,
+  "files_bound": 3340,
+  "signed": false,
+  "remote_configured": false,
+  "remote_ci_run": false,
+  "deployment_accepted": false,
+  "scope": "Local independent commit only; no push/deployment and no acceptance transfer from historical alpha. Candidate contains captured current application source/test/infra/docs/assets, including pre-existing work. It is prepared for review, not an assertion that all captured deltas received independent review.",
+  "checks": [
+    {
+      "name": "focused-tests",
+      "started_utc": "2026-10-23T16:07:13.353933+00:00",
+      "finished_utc": "2026-10-23T16:07:26.678816+00:00",
+      "exit_code": 0,
+      "log": "r2-focused-tests-20261023.log",
+      "log_sha256": "9bc07732774655b1306379117070a4e5d9449f4160ea5819a88f6a1521eea5c9",
+      "cwd": "C:\\Users\\Q\\Projects\\.tools\\real-world-launch\\source-candidate-r2-20261023\\backend",
+      "arguments": [
+        "-m",
+        "pytest",
+        "tests/unit/test_source_credentials.py",
+        "../infra/scripts/tests/test_generate_release_evidence.py",
+        "-q",
+        "--junitxml=C:\\Users\\Q\\Projects\\.tools\\real-world-launch\\r2-focused-tests-20261023.xml"
+      ]
+    },
+    {
+      "name": "docs",
+      "started_utc": "2026-10-23T16:07:26.699144+00:00",
+      "finished_utc": "2026-10-23T16:07:27.217234+00:00",
+      "exit_code": 0,
+      "log": "r2-docs-20261023.log",
+      "log_sha256": "f52cd2b7001b00bb9c2c6a3d018af8fe9fbb87d783ff64c8a882def8691b158e",
+      "cwd": "C:\\Users\\Q\\Projects\\.tools\\real-world-launch\\source-candidate-r2-20261023",
+      "arguments": [
+        "infra/scripts/validate_docs.py"
+      ]
+    },
+    {
+      "name": "credentials-untracked",
+      "started_utc": "2026-10-23T16:07:27.217845+00:00",
+      "finished_utc": "2026-10-23T16:07:38.020812+00:00",
+      "exit_code": 0,
+      "log": "r2-credentials-untracked-20261023.log",
+      "log_sha256": "ec562be1f9b3c881f1e32d3aa314eefa6912c2c503d134556121e20f81327e3f",
+      "cwd": "C:\\Users\\Q\\Projects\\.tools\\real-world-launch\\source-candidate-r2-20261023",
+      "arguments": [
+        "infra/scripts/validate_source_credentials.py",
+        "--include-untracked"
+      ]
+    },
+    {
+      "name": "ci-security",
+      "started_utc": "2026-10-23T16:07:38.021348+00:00",
+      "finished_utc": "2026-10-23T16:07:38.349537+00:00",
+      "exit_code": 0,
+      "log": "r2-ci-security-20261023.log",
+      "log_sha256": "25537fc036d76a1eebcaa1531d91842d592a58cd0dac89b597ebc2f708465cfe",
+      "cwd": "C:\\Users\\Q\\Projects\\.tools\\real-world-launch\\source-candidate-r2-20261023",
+      "arguments": [
+        "infra/scripts/validate_ci_security.py"
+      ]
+    }
+  ],
+  "capture": {
+    "captured_utc": "2026-10-23T16:05:31.898505+00:00",
+    "source_head": "2835c8aa7f5e97a17afcdbe647fe589cbd0421e1",
+    "candidate": "C:\\Users\\Q\\Projects\\.tools\\real-world-launch\\source-candidate-r2-20261023",
+    "candidate_branch": "codex/real-world-r2-baseline",
+    "source_file_count": 3340,
+    "source_bytes": 242399857,
+    "manifest_sha256": "4c33007c63a76e9ea571dafea6e798d2d3fab7d11d63bfdb8ffbc2cc53cf8a8c",
+    "source_index_preserved": true,
+    "source_head_preserved": true,
+    "scope": "Local isolated review candidate, not committed/tested/CI/launch-accepted yet. Only non-ignored application roots and explicit root files copied. Existing source checkout untouched.",
+    "reviewed_followup": "Only docs/board-alpha-handoff.md synchronized after independent checkout exposed ignored-APK link dependency. Artifact hashes and local binary files preserved.",
+    "followup_utc": "2026-10-23T16:06:47.406411+00:00"
+  },
+  "limitations": "Local review candidate only. No immutable remote CI, signed artifacts, device/provider/operational or launch acceptance."
+}

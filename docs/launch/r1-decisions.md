@@ -1,10 +1,31 @@
 # First-city launch decisions
 
 Prepared 23 October 2026 for R1 of the [real-world launch plan](../real-world-launch.md).
-Status: **PREPARED — decisions and named owners not established by this packet**.
+Status: **PARTIALLY DECIDED — owner launch scope recorded; operating acceptance pending**.
 This is a decision agenda. It does not authorize transport, participant enrollment,
 spending, financial policy, new privileges or public activation. Existing approvals
 must be reconciled with their actual scope rather than requested again.
+
+## Owner decisions received — 23 October 2026
+
+- First city: **Fès**. Casablanca board-alpha fixtures remain synthetic presentation
+  evidence and must not be relabelled as a Fès deployment.
+- Operating organization: **the transport union**. Its exact legal name/entity,
+  representatives, transport authority, boundary and permitted services have not
+  yet been supplied or independently accepted.
+- Closed-shop access: **drivers must be union members; passengers register normally**.
+  Licensing, vehicle approval and city/service authorization remain additional
+  requirements. Client membership claims cannot grant dispatch eligibility.
+- Available release resources: **an Android phone and Google Play accounts**.
+  This establishes availability, not a connected device, signing-key custody,
+  configured Play application, accepted build or release permission.
+- No iPhone, Mac/Xcode or Apple Developer account was confirmed. Full iOS release
+  remains in scope with those resource dependencies open; CI simulator builds
+  cannot substitute for signing, physical-device or App Store acceptance.
+
+These decisions establish the product target and membership audience. They do not
+approve a legal identity, production configuration, participant roster, paid plan,
+financial policy or public activation.
 
 ## Proposed sequence
 
@@ -26,7 +47,7 @@ requires an explicit scope decision; it does not complete the full goal.
 
 | ID / accountable function | Decision to record | Prepared choice / evidence needed | Dependent work | Work that continues |
 | --- | --- | --- | --- | --- |
-| D01 Owner + qualified operator/transport authority | First city, legal entity/operator, authorization, geographic boundary and permitted services. | Choose an actually authorized operator and documented service polygon. Alpha Casablanca fixtures are synthetic, not proof of authorization. Define on-demand, fixed-route and single-booking scheduling scope explicitly. | R1, R3 configuration, R6, R11 | Source isolation, contract checks, synthetic workflows. |
+| D01 Owner + qualified operator/transport authority | Fès/union selected; obtain exact legal operator, authorization, geographic boundary and permitted services. | Drivers are union-member-only; passengers register normally. Record legal identity, who verifies/updates membership and the approved service polygon. Alpha Casablanca fixtures are synthetic, not proof of Fès authorization. Define on-demand, fixed-route and single-booking scheduling scope explicitly. | R1, R3 configuration, R5 membership enforcement, R6, R11 | Source isolation, contract checks, synthetic workflows. |
 | D02 Operator + support/safety lead | Named launch manager, licensed cohort limit, operating hours, support languages, contacts and emergency escalation. | Start with a finite staffed cohort and hours; specify who can pause admissions/availability and who covers an active trip during an incident. No assumed 24/7 coverage. | R8, R10–R12 | Prepare runbooks and synthetic incident drills. |
 | D03 Owner/budget holder | Monthly/initial ceiling, payer, reserve, spending alarms, storage growth and provider limits. | Existing authorization remains **Trial-only, no purchases**. Prepare costed Railway production/preproduction, DB/backup/routing/storage/network/provider options from verified quotes before purchasing. Do not assume the alpha's 500 MB volumes support production or delete them. | R3–R4, sustainable R12 | Inspect deployment configuration and prepare cost/restore evidence plans. |
 | D04 Operator/finance + tariff authority | Approved fares/fees, cash custody, manual-transfer recipient ownership, evidence, review, correction/refund/dispute controls. | Record currency/rounding, authority/version/effective date, who reconciles, independent approval where required, and treatment of failed/cancelled trips. Use existing payment contracts where sufficient. | R7, real-money portion of R11 | Synthetic payment tests and contract review. |
@@ -35,7 +56,7 @@ requires an explicit scope decision; it does not complete the full goal.
 | D07 Owner + security/identity lead | Verified-contact channel, provider, proofing, compromised-account recovery and staff identity process. | Decide approved email/phone ownership proof and outage/abuse controls before implementing missing verified-contact flows. Existing offline recovery and MFA are partial building blocks. Staff verification/recovery remains distinct and privileged. | R4/R5/R8/GAP-005, 020–022 | Existing auth negative tests, session security and contract provenance. |
 | D08 Operator + product/safety + mobile lead | Operational location policy and external navigation behavior, including background/lock-screen expectations. | Current source contract is **foreground-only**. Decide whether that is acceptable for a limited pilot, with clear availability controls, or approve a scoped policy change after battery/privacy/platform review. Measure native behavior before approving it. | R4/R5/GAP-007, field gate | Foreground freshness/permission/reconnect tests and lifecycle scenario preparation. |
 | D09 Owner/provider account holder + engineering | Approved maps, geocoder, routing, attribution/quotas, push/APNs and monitoring/crash/contact providers. | Record actual service endpoints, licensing, credentials ownership, budget, data handling and failure behavior in the existing provider records. Alpha map-selection-only is insufficient for the full search requirement. No new Firebase products are implied by FCM. | R4 and dependent R10 | Adapter tests, source contracts and provider acceptance checklists. |
-| D10 Owner/release lead | Android/iOS signing and store ownership, Mac/Xcode access, actual test phones, supported OS/browser versions and distribution channels. | Name available resources and access route without posting secrets. Physical Android was previously deferred; iOS/macOS resources are not assumed available. Define private pilot distribution and eventual public channels separately. | R2 signing, R9–R12 | Candidate/source preparation and existing desktop/emulator checks where relevant. |
+| D10 Owner/release lead | Android phone/Google Play accounts available; arrange connection, signing custody, application ownership and remaining iOS/Mac resources. | Verify Android install/update and field behavior after connection. iPhone/Mac/Xcode/Apple Developer resources remain unconfirmed. Define supported OS/browser versions and private pilot/public channels separately; keep secrets outside repository records. | R2 signing, R9–R12 | Candidate/source preparation and existing desktop/emulator checks where relevant. |
 | D11 Operator + engineering/on-call + owner | Cohort/load, service SLOs, RPO/RTO, latency, location/notification quality, financial reconciliation, safety and cost stop/exit thresholds. | Supply measurable targets, observation window and stop authority before the load/restore/pilot exercise. Do not derive acceptable safety/cost thresholds from whatever result a test happens to produce. | R3/R10–R12/GAP-018, 032 | Capacity profile/runbook preparation; bounded local measurement. |
 | D12 Owner + independent reviewers | Accountable approvers for engineering, security/privacy, accessibility/localization, financial operations, pilot exit and public launch. | Assign real people/functions and evidence locations; capture dissent, conditions and invalidation. No synthetic staff grant or template signature is a substitute. | T0–T9 promotion, R10–R12 | Assemble evidence and close independent software defects. |
 

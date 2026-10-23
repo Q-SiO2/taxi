@@ -118,14 +118,17 @@ R0 is a bounded reconciliation, not an instruction to rebuild everything.
    hundreds of builds or another cosmetic variant to make the inventory complete.
 
 Current checkpoint, 23 October: **R0 source/gap navigation baseline prepared;
-R1 decision agenda prepared; R2-R12 not launch-accepted.** The
+R1 decision agenda prepared; R2 local candidate preserved; R2-R12 not launch-accepted.** The
 [R0 baseline and ranked queue](launch/r0-baseline.md) maps 15 capability areas,
 all 37 GAPs and candidate UI surfaces, with current local check provenance. It is
 not assertion-level coverage or every-state runtime acceptance. The
 [R1 decision packet](launch/r1-decisions.md) identifies the actual operating
-decisions needed. Next is a bounded R2 source-delta/isolation packet; no
-unrelated dirty work may be staged. No new production resource, provider purchase
-or participant activation is implied by this checkpoint.
+decisions needed. The [R2 checkpoint](launch/r2-candidate.md) records an isolated
+local commit, credential archive-scan fix and portable handoff correction, with
+16 focused passing tests. The original checkout index/HEAD are preserved. Next
+is candidate review and immutable remote CI; no unrelated dirty work may be staged.
+No new production resource, provider purchase or participant activation is implied
+by this checkpoint.
 
 ## Evidence and execution discipline
 
@@ -167,6 +170,15 @@ The first required decisions are first city/legal operator and service boundary;
 hosting/provider spending ceiling; tariff/payment/settlement ownership; support
 and incident owners; physical devices and signing/store access; and approved
 pilot/SLO/stop thresholds. Do not invent names, licenses, budgets or launch dates.
+
+Owner input on 23 October selects **Fès, union operation, member-only drivers and
+ordinary passenger registration**. Android hardware and Google Play accounts are
+available; connection, signing ownership and actual acceptance are still required.
+Exact union identity, authorization, service boundary, financial/support rules and
+iOS release resources remain pending in the [R1 packet](launch/r1-decisions.md).
+The [remote CI checkpoint](launch/r2-ci.md) records the draft source review,
+observed failures and bounded corrections. Membership dispatch enforcement is
+actual R5/R8 implementation work, not established by these owner decisions.
 
 The earlier physical-Android deferral leaves hardware work pending. This new goal
 includes preparing and obtaining that acceptance; it does not mean a device is

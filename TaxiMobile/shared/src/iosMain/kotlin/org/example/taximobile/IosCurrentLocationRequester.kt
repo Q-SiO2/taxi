@@ -16,6 +16,7 @@ import platform.CoreLocation.kCLAuthorizationStatusNotDetermined
 import platform.CoreLocation.kCLAuthorizationStatusRestricted
 import platform.CoreLocation.kCLLocationAccuracyBest
 import platform.Foundation.NSError
+import platform.Foundation.timeIntervalSince1970
 import platform.darwin.NSObject
 
 /** One-shot, foreground iOS location access. The app never starts background updates. */
