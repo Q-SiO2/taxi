@@ -2,8 +2,9 @@
 
 > **Current source packet — 23 October 2026:** the
 > [session/release correction](launch/session-recovery.md) addresses idle logout
-> and the actual member-register CI packaging failure. Source and selected local
-> checks are recorded; fresh client/runtime/release acceptance remains separate.
+> and the actual member-register CI packaging failure. Local protocol, production
+> packaging and bounded Chrome boot now pass. The [dependency correction](launch/dependency-refresh.md)
+> addresses the next actual CI audit failure; full CI and hosted acceptance remain open.
 
 > **Source migration - 23 October 2026:** `20261023_0053` adds the explicit
 > operator membership policy for the Fès union launch. It is a source change;

@@ -1,6 +1,6 @@
 # Operations session recovery and web release — 23 October 2026
 
-Status: **local protocol verification passed; release/CI verification in progress**. This R2/R8/R9
+Status: **local protocol, production package and partial Chrome boot passed; CI correction in progress**. This R2/R8/R9
 packet follows the [member-register rehearsal](member-register.md); it does not
 change the full [real-world launch scope](../real-world-launch.md).
 
@@ -106,3 +106,35 @@ protected backup, isolated restore, owner/runtime privilege checks and matching
 API/worker artifacts. Reuse the existing staging authorization and Trial limits.
 Do not replay the previously applied credential/MFA recovery or infer production
 funding from the current staging metadata.
+
+## Published source checkpoint
+
+The [candidate record](session-recovery-candidate-20261023.json) identifies
+`aeff4a25d1d07ab8f6762fad9826af90cfb5708d`, tree
+`c26cd2cd34e83b52b734438e2d9099886e9751ec`, published to
+[draft PR #74](https://github.com/Q-SiO2/taxi/pull/74). All 371 recorded compilation
+inputs match the clean isolated clone; the original workspace HEAD/index remain
+preserved. [CI run 226](https://github.com/Q-SiO2/taxi/actions/runs/40040360195)
+is in progress. Documentation/provenance and wrapper checks passed at this
+checkpoint; the remaining jobs and separate local production distribution are
+running. No overall CI or packaging pass is claimed. Resume those exact runs
+before starting another build. This post-publication record does not change the
+published source SHA.
+
+## Terminal local release and subsequent CI finding
+
+The [terminal local record](session-release-terminal-20261023.json) supersedes the
+running-build observation: the same production invocation finished successfully
+in **21m21s**. All 371 compilation inputs still match. Packaging passes with
+**93 assets / 29,834,826 bytes**, excluding three source maps; each packaged asset
+was rehashed. JS is 6,935,862 bytes, Wasm loader 543,417, application Wasm 7,626,289
+and Skiko Wasm 8,652,729, within the explicitly reviewed limits.
+
+The existing Chrome collector passes its four supported applicant/operations,
+required-upgrade and failed-preflight scenarios. This is bounded boot evidence,
+with no full browser-matrix, catalog-case, performance or T4 acceptance.
+
+CI run 226 subsequently failed the development dependency audit on three new
+`filelock 3.32.2` advisories; the runtime lock audit passed. The
+[dependency correction](dependency-refresh.md) records the precise scoped update
+and fresh verification. No hosted rollout follows from these local results.

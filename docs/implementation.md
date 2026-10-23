@@ -6,8 +6,10 @@
 post-idle browser logout rejection and CI bundle-size failure. Reuse the existing
 bounded access refresh for logout, retain explicit localized unconfirmed-revocation
 behavior, and use existing copyable read-only ID fields. Backend cookie/JSON
-expiry-to-revocation checks pass; successor browser, packaging and CI evidence
-must establish acceptance. No refresh/session authority moves to the client.
+expiry-to-revocation checks, actual synthetic browser revocation, production
+packaging and partial Chrome boot pass. [The scoped dependency correction](launch/dependency-refresh.md)
+follows the development audit failure in fresh CI; overall CI acceptance remains
+open. No refresh/session authority moves to the client.
 
 ## Member-register operations and driver guidance — 23 October 2026
 

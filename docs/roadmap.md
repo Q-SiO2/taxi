@@ -4,9 +4,12 @@
 
 [The session/release successor](launch/session-recovery.md) addresses the actual
 expired-access logout rejection and raw-JS packaging failure from member-register
-CI run 224. Preserve the size limits, one-refresh protocol, existing member
-register and staged deployment boundaries. Source checks, actual client evidence
-and fresh immutable CI remain distinct acceptance steps.
+CI run 224. The explicit scope review sets fallback JS to 7 MB; loader, Wasm and
+total caps remain fixed. Local production packaging and partial Chrome boot now
+pass. [The dependency correction](launch/dependency-refresh.md) addresses the
+next actual CI audit failure. Preserve the one-refresh protocol, existing member
+register and staged deployment boundaries. Source, local runtime and fresh
+immutable CI remain distinct acceptance steps.
 
 R5/R8 implements explicit closed-shop driver admission using the existing
 register selected for the Fès union. Source migration `20261023_0053` introduces
