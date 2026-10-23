@@ -17,6 +17,7 @@ import org.example.taximobile.core.network.ApiConfiguration
 import org.example.taximobile.data.auth.AuthenticationNetworkException
 import org.example.taximobile.data.auth.AuthenticationRejectedException
 import org.example.taximobile.data.network.ApiRequestException
+import org.example.taximobile.data.network.apiFailure
 import org.example.taximobile.data.rides.FareEconomicsResponse
 import org.example.taximobile.data.rides.FixedRouteRideSummaryResponse
 import org.example.taximobile.data.rides.toDomainEconomics
@@ -54,9 +55,9 @@ class KtorDriverOfferGateway(
         header(HttpHeaders.Authorization, "Bearer ${accessToken()}")
     }
 
-    private fun io.ktor.client.statement.HttpResponse.throwForFailure() {
+    private suspend fun io.ktor.client.statement.HttpResponse.throwForFailure() {
         if (status == HttpStatusCode.Unauthorized) throw AuthenticationRejectedException()
-        if (!status.isSuccess()) throw ApiRequestException(status.value, "The server could not complete this offer action.")
+        if (!status.isSuccess()) throw apiFailure("The server could not complete this offer action.")
     }
 
     private suspend fun <T> request(block: suspend () -> T): T = try {

@@ -12,15 +12,18 @@ transport or public activation is accepted merely by creating this goal.
 
 ### First-city contract — owner decision, 23 October 2026
 
-Launch targets **Fès**, operated by **the transport union**, with a closed-shop
+Launch targets **Fès**, using **Fès Taxi Union** as the generic working operator name, with a closed-shop
 driver cohort: only verified union members may participate as drivers. Passengers
 may register normally without union membership. Driver membership is an additional
 backend-authoritative eligibility condition, alongside professional, vehicle and
 city/service authorization; membership never substitutes for those checks.
 
-The union's exact legal identity, representation, transport authorization, service
-boundary, roster-verification process and operating policies remain acceptance
-dependencies in the [R1 decision packet](launch/r1-decisions.md). This decision does
+The owner specifies autonomous taxis within their unions and no separate union
+transport permit to secure for this project. The union administers membership
+and the platform; retain individual driver/vehicle/service checks. The working
+name does not fabricate a registered entity. Service boundary, roster-verification
+responsibility and operating policies remain in the
+[R1 decision packet](launch/r1-decisions.md). This decision does
 not activate a city or convert synthetic Casablanca evidence into a Fès pilot.
 Android hardware and Google Play accounts are available; iOS signing, Mac and
 physical iPhone resources remain to be arranged within the full-release scope.

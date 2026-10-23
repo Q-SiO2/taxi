@@ -540,8 +540,9 @@ class MobileAppCoordinator(
             signedOut(Res.string.message_session_expired)
         } catch (_: AuthenticationNetworkException) {
             offline(Res.string.message_network_unavailable)
-        } catch (_: ApiRequestException) {
-            offline(Res.string.message_availability_failed)
+        } catch (error: ApiRequestException) {
+            offline(if (error.reason == org.example.taximobile.data.network.ApiFailureReason.OPERATOR_MEMBERSHIP_REQUIRED)
+                Res.string.message_membership_required else Res.string.message_availability_failed)
         }
     }
 
@@ -644,8 +645,9 @@ class MobileAppCoordinator(
             signedOut(Res.string.message_session_expired)
         } catch (_: AuthenticationNetworkException) {
             offline(Res.string.message_network_unavailable)
-        } catch (_: ApiRequestException) {
-            offline(Res.string.message_offer_update_failed)
+        } catch (error: ApiRequestException) {
+            offline(if (error.reason == org.example.taximobile.data.network.ApiFailureReason.OPERATOR_MEMBERSHIP_REQUIRED)
+                Res.string.message_membership_required else Res.string.message_offer_update_failed)
         }
     }
 
@@ -958,8 +960,9 @@ class MobileAppCoordinator(
             signedOut(Res.string.message_session_expired)
         } catch (_: AuthenticationNetworkException) {
             offline(Res.string.message_network_unavailable)
-        } catch (_: ApiRequestException) {
-            offline(Res.string.message_ride_request_failed)
+        } catch (error: ApiRequestException) {
+            offline(if (error.reason == org.example.taximobile.data.network.ApiFailureReason.OPERATOR_MEMBERSHIP_REQUIRED)
+                Res.string.message_membership_required else Res.string.message_ride_request_failed)
         }
     }
 

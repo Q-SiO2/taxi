@@ -251,6 +251,7 @@ data class OperatorRecord(
     val id: String,
     @SerialName("market_id") val marketId: String,
     @SerialName("cooperative_id") val cooperativeId: String? = null,
+    @SerialName("requires_active_membership") val requiresActiveMembership: Boolean = false,
     val name: String,
     @SerialName("operator_type") val operatorType: String,
     val status: String,

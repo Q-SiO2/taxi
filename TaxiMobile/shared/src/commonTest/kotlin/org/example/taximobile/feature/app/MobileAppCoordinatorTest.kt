@@ -442,6 +442,23 @@ class MobileAppCoordinatorTest {
     }
 
     @Test
+    fun `membership rejection gives localized union review guidance without declaring sign out`() = runBlocking {
+        val gateway = object : DriverGateway by RecordingDriverGateway() {
+            override suspend fun goOnline(cityId: String?, serviceType: String): DriverAvailability {
+                throw org.example.taximobile.data.network.ApiRequestException(409, "safe fallback",
+                    org.example.taximobile.data.network.ApiFailureReason.OPERATOR_MEMBERSHIP_REQUIRED)
+            }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER, unusedAuthentication(), driver = gateway)
+        val rejected = assertIs<AppUiState.Offline>(coordinator.changeDriverAvailability(true))
+        assertEquals(Res.string.message_membership_required, rejected.message.resource)
+        // Ordinary denial is not authentication expiry, and going offline remains
+        // available through the same gateway after membership withdrawal.
+        val offline = assertIs<AppUiState.DriverReady>(coordinator.changeDriverAvailability(false))
+        assertEquals(DriverAvailabilityStatus.OFFLINE, offline.availability)
+    }
+
+    @Test
     fun `driver applicant restore loads the public recruiting city catalog`() = runBlocking {
         val recruitment = RecordingRecruitmentGateway()
         val coordinator = MobileAppCoordinator(

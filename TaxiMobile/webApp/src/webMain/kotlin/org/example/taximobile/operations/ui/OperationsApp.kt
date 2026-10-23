@@ -601,7 +601,7 @@ private fun OperationsWorkspace(
             state.mutationLabel?.let {
                 Surface(color = taxiColors.Info100, shape = RoundedCornerShape(taxiRadii.Sm)) {
                     Text(
-                        stringResource(Res.string.web_pending_action),
+                        membershipMutationLabel(it),
                         modifier = Modifier.fillMaxWidth().padding(TaxiSpacing.Sm),
                         color = taxiColors.Info600,
                         style = MaterialTheme.typography.bodySmall,
@@ -630,6 +630,7 @@ private fun OperationsWorkspace(
                     )
                     OperationsDestination.OPERATORS -> OperatorsScreen(
                         state = state,
+                        coordinator = coordinator,
                         onSelectOperator = coordinator::selectOperator,
                         onCreateOperator = coordinator::createOperator,
                         onUpdateOperatorStatus = coordinator::updateOperatorStatus,

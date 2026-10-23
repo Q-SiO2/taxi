@@ -10,9 +10,17 @@ must be reconciled with their actual scope rather than requested again.
 
 - First city: **Fès**. Casablanca board-alpha fixtures remain synthetic presentation
   evidence and must not be relabelled as a Fès deployment.
-- Operating organization: **the transport union**. Its exact legal name/entity,
-  representatives, transport authority, boundary and permitted services have not
-  yet been supplied or independently accepted.
+- Operating organization: **Fès Taxi Union**, a generic working name selected
+  following the owner's instruction to use a generic union name. French:
+  **Syndicat des taxis de Fès**; Arabic: **نقابة سيارات الأجرة بفاس**. These are
+  presentation labels, not an invented registered entity or legal identifier.
+- Operating model: the owner states that individual taxis operate autonomously
+  within their unions and that no separate union/operator authorization is to
+  be secured for this project. The union administers membership and the platform.
+  Do not impose an assumed new union transport permit as an engineering blocker.
+  Existing driver/vehicle/service checks remain independent. Applicable launch
+  compliance records must describe this actual model rather than invent a permit
+  or claim every legal/privacy obligation has already been accepted.
 - Closed-shop access: **drivers must be union members; passengers register normally**.
   Licensing, vehicle approval and city/service authorization remain additional
   requirements. Client membership claims cannot grant dispatch eligibility.
@@ -33,7 +41,8 @@ financial policy or public activation.
 
 ## Proposed sequence
 
-1. Agree the first city, legal operator, service boundary and authorized services.
+1. Use Fès Taxi Union as the working operator name; record the autonomous-taxi
+   model, service boundary and enabled services with the operator's accountable team.
 2. Agree operating capacity: drivers, hours, staffed support and stop conditions.
 3. Approve financial/legal contracts and an actual hosting/provider budget.
 4. Select device/release/provider resources and sign-off authorities.
@@ -51,7 +60,7 @@ requires an explicit scope decision; it does not complete the full goal.
 
 | ID / accountable function | Decision to record | Prepared choice / evidence needed | Dependent work | Work that continues |
 | --- | --- | --- | --- | --- |
-| D01 Owner + qualified operator/transport authority | Fès/union selected; obtain exact legal operator, authorization, geographic boundary and permitted services. | Drivers are union-member-only; passengers register normally. Record legal identity, who verifies/updates membership and the approved service polygon. Alpha Casablanca fixtures are synthetic, not proof of Fès authorization. Define on-demand, fixed-route and single-booking scheduling scope explicitly. | R1, R3 configuration, R5 membership enforcement, R6, R11 | Source isolation, contract checks, synthetic workflows. |
+| D01 Owner + union operating lead | Fès Taxi Union is the working name; owner specifies autonomous taxis and no separate union permit to obtain. Record the service boundary, enabled services and roster-verification responsibility. | Drivers are union-member-only; passengers register normally. Use the existing cooperative register. Do not invent a registered identity, union permit or a verified participant roster. Retain individual driver/vehicle checks and apply the actual model to existing launch-compliance records. Casablanca fixtures remain synthetic. Define on-demand, fixed-route and single-booking scope explicitly. | R1, R3 configuration, R5 membership enforcement, R6, R11 | Register/policy implementation, contract checks, synthetic workflows and launch preparation. |
 | D02 Operator + support/safety lead | Named launch manager, licensed cohort limit, operating hours, support languages, contacts and emergency escalation. | Start with a finite staffed cohort and hours; specify who can pause admissions/availability and who covers an active trip during an incident. No assumed 24/7 coverage. | R8, R10–R12 | Prepare runbooks and synthetic incident drills. |
 | D03 Owner/budget holder | Monthly/initial ceiling, payer, reserve, spending alarms, storage growth and provider limits. | Existing authorization remains **Trial-only, no purchases**. Prepare costed Railway production/preproduction, DB/backup/routing/storage/network/provider options from verified quotes before purchasing. Do not assume the alpha's 500 MB volumes support production or delete them. | R3–R4, sustainable R12 | Inspect deployment configuration and prepare cost/restore evidence plans. |
 | D04 Operator/finance + tariff authority | Approved fares/fees, cash custody, manual-transfer recipient ownership, evidence, review, correction/refund/dispute controls. | Record currency/rounding, authority/version/effective date, who reconciles, independent approval where required, and treatment of failed/cancelled trips. Use existing payment contracts where sufficient. | R7, real-money portion of R11 | Synthetic payment tests and contract review. |

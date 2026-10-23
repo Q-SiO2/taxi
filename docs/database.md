@@ -8,6 +8,13 @@ requiring `cooperative_id` when enabled. The owner selected the existing registe
 for the Fès union. This internal relationship does not certify legal form.
 There is no new membership table, automatic enrollment or grant expansion.
 Existing memberships retain their independent status and optional effective dates.
+
+Scoped register maintenance reuses these existing rows and `updated_at` as the
+reviewed edit token. The member row is refreshed under an exclusive lock and
+the server advances the timestamp after the lock wait. Stale edits fail before
+mutation. Existing idempotency and scoped audit records commit with the member;
+audit changes exclude membership-number values. No further table, role or
+schema migration is introduced by the staff maintenance workflow.
 This source migration requires isolated upgrade/downgrade and runtime acceptance;
 staging remains at its separately verified schema until a deliberate rollout.
 

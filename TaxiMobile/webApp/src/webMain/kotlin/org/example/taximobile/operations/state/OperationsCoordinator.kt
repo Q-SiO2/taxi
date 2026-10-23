@@ -1,6 +1,11 @@
 package org.example.taximobile.operations.state
 
 import org.example.taximobile.feature.ui.text.UiMessage
+import org.example.taximobile.operations.model.OperatorMembershipPage
+import org.example.taximobile.operations.model.OperatorMembershipRecord
+import org.example.taximobile.operations.model.OperatorMembershipCreateRequest
+import org.example.taximobile.operations.model.OperatorMembershipUpdateRequest
+import org.example.taximobile.operations.model.OperatorMembershipPolicyRequest
 import org.example.taximobile.feature.ui.text.ltrIsolate
 import taximobile.shared.generated.resources.*
 import kotlinx.coroutines.CancellationException
@@ -152,6 +157,8 @@ data class OperationsUiState(
     val destination: OperationsDestination = OperationsDestination.ROLLOUT,
     val scope: OperationsScope = OperationsScope(),
     val snapshot: OperationsSnapshot? = null,
+    val operatorMemberships: OperatorMembershipPage? = null,
+    val membershipCompletedKey: String? = null,
     val selectedDriverApplication: OperationsDriverApplicationDetail? = null,
     val selectedSupportCase: org.example.taximobile.operations.model.SupportCaseDetail? = null,
     val selectedSafetyCase: org.example.taximobile.operations.model.SafetyCaseDetail? = null,
@@ -874,6 +881,70 @@ class OperationsCoordinator(
                 initial = false,
             )
             notice("Operator created", "${created.name} is ${created.status}; review and activate it before assignment.")
+        }
+    }
+
+    private fun membershipOperator(): OperatorRecord? {
+        val current = mutableState.value
+        val operator = current.snapshot?.operators?.items?.firstOrNull { it.id == current.scope.operatorId }
+        if (current.session?.hasPermission(MANAGE_OPERATORS) != true || operator?.cooperativeId == null) {
+            fail(UiMessage(Res.string.web_members_title), UiMessage(Res.string.web_members_scope))
+            return null
+        }
+        return operator
+    }
+
+    fun loadOperatorMemberships(page: Int = 1) {
+        val operator = membershipOperator() ?: return
+        if (page < 1) return
+        launchMutation("Loading member register") {
+            val result = withAccessToken { gateway.controlPlane.memberships(it, operator.id, page) }
+            mutate { it.copy(operatorMemberships = result) }
+        }
+    }
+
+    fun enrollOperatorMember(request: OperatorMembershipCreateRequest, key: String) {
+        val operator = membershipOperator() ?: return
+        launchMutation("Recording membership") {
+            runMembershipCommand(operator.id, 1, key) {
+                withAccessToken { gateway.controlPlane.enrollMember(it, operator.id, key, request) }
+            }
+        }
+    }
+
+    fun updateOperatorMember(member: OperatorMembershipRecord, request: OperatorMembershipUpdateRequest, key: String) {
+        val operator = membershipOperator() ?: return
+        val page = mutableState.value.operatorMemberships
+        if (page?.operatorId != operator.id || page.items.none { it.id == member.id && it.updatedAt == member.updatedAt }) return
+        launchMutation("Updating membership") {
+            runMembershipCommand(operator.id, page.page, key) {
+                withAccessToken { gateway.controlPlane.updateMember(it, operator.id, member.id, key, request) }
+            }
+        }
+    }
+
+    private suspend fun runMembershipCommand(operatorId: String, page: Int, key: String, command: suspend () -> Unit) {
+        try {
+            command()
+        } catch (error: OperationsApiException) {
+            if (error.statusCode == 409) {
+                val latest = withAccessToken { gateway.controlPlane.memberships(it, operatorId, page) }
+                mutate { it.copy(operatorMemberships = latest) }
+            }
+            throw error
+        }
+        mutate { it.copy(membershipCompletedKey = key) }
+        notice(UiMessage(Res.string.web_members_saved), UiMessage(Res.string.web_members_saved_help))
+        val result = withAccessToken { gateway.controlPlane.memberships(it, operatorId, page) }
+        mutate { it.copy(operatorMemberships = result) }
+    }
+
+    fun updateOperatorMembershipPolicy(required: Boolean) {
+        val operator = membershipOperator() ?: return
+        launchMutation("Updating membership policy") {
+            withAccessToken { gateway.controlPlane.updateMembershipPolicy(it, operator.id, OperatorMembershipPolicyRequest(required)) }
+            reloadNow(mutableState.value.scope, initial = false)
+            notice(UiMessage(Res.string.web_members_saved), UiMessage(Res.string.web_members_policy_help))
         }
     }
 

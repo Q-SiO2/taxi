@@ -11,6 +11,12 @@ Availability, immediate/fixed-route matching/acceptance and scheduled commitment
 handoff recheck server membership. Passenger registration, already accepted trip
 progress, safety/support and financial-history access are not membership-gated.
 
+Native driver availability and offer/scheduled admission failures translate only
+the exact documented 409 membership rejection from the standard error envelope
+into EN/FR/AR union-review guidance. Other error bodies retain safe generic
+messages; arbitrary server text is never displayed. This affects feedback only,
+not client eligibility or authentication state.
+
 ## 1. Purpose
 
 This document defines the HTTP API used by TaxiMobile clients and backend services.
@@ -1687,6 +1693,39 @@ Query parameters may include:
 # 34. Cooperative Membership
 
 ## GET /cooperative/membership
+
+### Scoped operations member register
+
+`GET /operations/operators/{operator_id}/memberships` returns `items`, `page`,
+`limit`, `total`, `operator_id`, `cooperative_id` and `cooperative_status`.
+Page starts at one; limit is 1–100. All rows and counts require the existing
+`manage_operators` permission for that exact operator. Missing/out-of-scope
+operators and entries are hidden as `404`; operators without a linked register
+return `409`. There is no unrestricted member/user search.
+
+`POST /operations/operators/{operator_id}/memberships` enrolls a driver using
+`driver_id`, `status` (PENDING or ACTIVE), optional `membership_number`,
+`joined_at`, `ended_at`, and a review `reason` of 3–240 characters. The driver
+must have a city application associated with an assignment of this operator.
+This is a register decision, independent of license/city application approval.
+An existing entry or duplicate register membership number returns `409`.
+
+`PATCH /operations/operators/{operator_id}/memberships/{membership_id}` supplies
+the complete editable record (`status`, `membership_number`, `joined_at`,
+`ended_at`), `expected_updated_at`, and `reason`. Status is PENDING, ACTIVE,
+SUSPENDED or ENDED. Date values must include an offset; an end before a join
+returns `422`. A stale expected timestamp returns `409` without partial changes.
+Writes require recent MFA and `Idempotency-Key` and return the canonical record
+including `id`, `driver_id`, `status`, dates, number and `updated_at`.
+An identical authorized replay returns the saved response once, without another
+audit. Reusing a key with different input returns `409`; scope and MFA are
+revalidated before replay. Audit and member updates commit together.
+
+This workflow does not delete membership history, modify account/driver roles,
+cancel accepted trips or establish the union's legal authority. No contact data,
+license image or membership number is copied into its audit change payload.
+
+### Authenticated member read
 
 Returns the authenticated user's current non-ended cooperative membership. The
 membership is looked up independently of driver approval and account roles. A
@@ -3582,6 +3621,13 @@ may create a fixed-route fare against an existing unpriced draft direction.
 Fare activation requires the reciprocal one-to-one link; route submission
 requires a linked fare; route publication requires that fare to be active for
 the full route period. These checks are backend-owned and optimistic-versioned.
+
+The scoped fixed-route list and fare-option reads do not require a currently
+active fixed-route assignment. An on-demand-only operator can return empty lists,
+and historical routes remain readable after assignment retirement. The exact
+city/operator permission conjunction and shared market are still checked before
+data is returned. Drafting and publishing retain their active-assignment checks;
+read access cannot grant service authority.
 
 Operations authentication issues a dedicated administrative audience and never
 accepts a normal mobile bearer token as sufficient. `auth.md` and `security.md`

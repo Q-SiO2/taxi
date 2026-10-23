@@ -420,6 +420,28 @@ def validate_ci_security(workflow: str) -> None:
     if re.search(r"^\s+warn-only:\s+true\s*$", dependency_review, re.MULTILINE):
         raise CiSecurityError("Dependency review must not set warn-only true.")
 
+    review_job = workflow.split("  dependency-review:\n", 1)[-1].split("\n  gradle-dependency-submission:", 1)[0]
+    review_commands = (
+        "python infra/scripts/require_complete_dependency_comparison.py --wait-seconds 180",
+        "python infra/scripts/require_complete_dependency_comparison.py --wait-seconds 0",
+    )
+    for required in (
+        "    needs: gradle-dependency-submission",
+        "    if: always() && !cancelled() && github.event_name == 'pull_request'",
+        "      DEPENDENCY_SUBMISSION_RESULT: ${{ needs.gradle-dependency-submission.result }}",
+        *review_commands,
+    ):
+        if required not in review_job:
+            raise CiSecurityError("Dependency review must require successful submission and complete immutable snapshots.")
+    if not (review_job.index(review_commands[0]) < review_job.index("uses: actions/dependency-review-action@") < review_job.index(review_commands[1])):
+        raise CiSecurityError("Dependency completeness checks must surround vulnerability review.")
+    if re.search(r"continue-on-error:\s*true|\|\|\s*true", review_job):
+        raise CiSecurityError("Dependency review completeness must fail closed.")
+    submission_job = workflow.split("  gradle-dependency-submission:\n", 1)[-1].split("\n  gradle-wrapper-integrity:", 1)[0]
+    trigger = "    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)"
+    if trigger not in submission_job:
+        raise CiSecurityError("Dependency submission must include same-repository pull requests without giving forks write access.")
+
     dependency_submission = _action_block(workflow, "gradle/actions/dependency-submission")
     _require(
         dependency_submission,

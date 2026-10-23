@@ -94,10 +94,10 @@ candidate/CI; it does not change the verified admission implementation.
 1. Freeze/review the successor source and verify full CI, contracts and migration
    evidence. Preserve failures and keep the existing draft PR unmerged until its
    actual gates are accepted.
-2. Implement scoped, audited register administration and operations policy UX
-   against existing permissions; do not expand real staff grants. Verify member
-   suspension/end, effective dates, unauthorized access and participant-facing
-   EN/FR/AR behavior across the four supported styles.
+2. Complete verification and candidate capture for the [staff-register slice](member-register.md),
+   which implements scoped, audited administration and policy UX against existing
+   permissions. Do not expand real staff grants. Verify member suspension/end,
+   dates, unauthorized access and participant-facing EN/FR/AR behavior.
 3. Before a deliberate staging rollout, bind API and worker images to the same
    reviewed migration/contract, preserve backup/rollback data and prove the
    staging upgrade/recovery path. Existing deployed schema remains 0052.
@@ -106,10 +106,13 @@ candidate/CI; it does not change the verified admission implementation.
    controls before any incompatible rollback/downgrade, preserve active trips,
    and restore a version that enforces the membership policy. The isolated
    downgrade test does not authorize removal of a live access rule.
-5. Obtain exact operator identity, authorization, verified roster ownership,
-   service boundary and the remaining [R1 operating decisions](r1-decisions.md)
-   before real participant enrollment or transport activation. Keep Trial-only
-   spending and protected staging volumes unchanged.
+5. Use **Fès Taxi Union** as the generic working name. The owner states that
+   individual taxis operate autonomously within their unions and no separate
+   union permit is to be secured; do not retain that assumed permit as a blocker.
+   Record roster-verification responsibility, the service boundary and remaining
+   [R1 operating decisions](r1-decisions.md) before real participant activation.
+   Individual driver/vehicle checks, Trial-only spending and preserved staging
+   volumes remain independent constraints.
 
 No hosted migration, membership enrollment, privilege expansion, native rebuild,
 physical-device acceptance or real-world activation is claimed here.

@@ -16,6 +16,9 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.Checkbox
+import org.jetbrains.compose.resources.stringResource
+import taximobile.shared.generated.resources.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -108,6 +111,7 @@ internal fun CreateOperatorDialog(
     var name by remember { mutableStateOf("") }
     var operatorType by remember { mutableStateOf("LOCAL_ENTITY") }
     var cooperativeId by remember { mutableStateOf("") }
+    var requiresMembership by remember { mutableStateOf(false) }
     val valid = name.trim().isNotEmpty() &&
         (operatorType != "COOPERATIVE" || cooperativeId.trim().isNotEmpty())
     EditorDialog(
@@ -124,6 +128,7 @@ internal fun CreateOperatorDialog(
                     cooperativeId = cooperativeId.trim().ifEmpty { null },
                     name = name.trim(),
                     operatorType = operatorType,
+                    requiresActiveMembership = requiresMembership,
                 )
             )
         },
@@ -131,6 +136,7 @@ internal fun CreateOperatorDialog(
         EditorField(name, { name = it.take(200) }, "Operator name")
         ChoiceChips("Operator type", listOf("LOCAL_ENTITY", "PLATFORM", "COOPERATIVE"), operatorType) {
             operatorType = it
+            if (it != "COOPERATIVE") { cooperativeId = ""; requiresMembership = false }
         }
         if (operatorType == "COOPERATIVE") {
             EditorField(
@@ -139,6 +145,10 @@ internal fun CreateOperatorDialog(
                 "Existing cooperative ID",
                 "Required because cooperative records remain independently governed",
             )
+            Row {
+                Checkbox(checked = requiresMembership, onCheckedChange = { requiresMembership = it })
+                Text(stringResource(Res.string.web_members_required))
+            }
         }
     }
 }

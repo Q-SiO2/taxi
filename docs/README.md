@@ -3,7 +3,9 @@
 > **Source migration - 23 October 2026:** `20261023_0053` adds the explicit
 > operator membership policy for the Fès union launch. It is a source change;
 > [isolated migration/authority verification](launch/union-membership.md) is
-> recorded, with immutable CI, staff UX and deliberate deployment still required.
+> recorded. The [staff-register extension](launch/member-register.md) adds scoped
+> audited operations UX and localized driver guidance; its runtime verification,
+> immutable CI and deliberate deployment remain separate acceptance steps.
 > The alpha's deployed schema/evidence retain their original identity.
 
 > **Active goal - 23 October 2026:** establish real-world deployment with full

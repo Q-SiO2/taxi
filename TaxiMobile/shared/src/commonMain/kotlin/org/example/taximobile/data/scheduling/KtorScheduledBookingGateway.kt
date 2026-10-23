@@ -18,6 +18,7 @@ import org.example.taximobile.core.network.ApiConfiguration
 import org.example.taximobile.data.auth.AuthenticationNetworkException
 import org.example.taximobile.data.auth.AuthenticationRejectedException
 import org.example.taximobile.data.network.ApiRequestException
+import org.example.taximobile.data.network.apiFailure
 import org.example.taximobile.data.network.newIdempotencyKey
 import org.example.taximobile.domain.rides.Coordinates
 import org.example.taximobile.domain.scheduling.ScheduledBooking
@@ -186,9 +187,9 @@ class KtorScheduledBookingGateway(
         header(HttpHeaders.Authorization, "Bearer ${accessToken()}")
     }
 
-    private fun io.ktor.client.statement.HttpResponse.requireSuccess(action: String) {
+    private suspend fun io.ktor.client.statement.HttpResponse.requireSuccess(action: String) {
         if (status == HttpStatusCode.Unauthorized) throw AuthenticationRejectedException()
-        if (!status.isSuccess()) throw ApiRequestException(status.value, "The server could not $action.")
+        if (!status.isSuccess()) throw apiFailure("The server could not $action.")
     }
 
     private suspend fun <T> request(block: suspend () -> T): T = try {

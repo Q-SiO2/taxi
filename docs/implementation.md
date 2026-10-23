@@ -1,12 +1,22 @@
 # Implementation Blueprint
 
+## Member-register operations and driver guidance — 23 October 2026
+
+[The staff-register checkpoint](launch/member-register.md) extends admission
+enforcement with scoped, MFA-protected register list/enrollment/editing, atomic
+audit, idempotency, version conflicts, policy review and localized web controls.
+Shared driver gateways display bounded EN/FR/AR membership guidance that explains
+accepted trips can still finish. No new register, staff role/grant or schema is
+introduced by this extension. Candidate/runtime verification and controlled
+rollout remain separate from source implementation.
+
 ## Closed-shop membership slice — 23 October 2026
 
 Source migration `20261023_0053` adds a per-operator policy backed by the existing
 member register, as selected by the owner. Admission gates must cover availability,
 matching/acceptance and scheduled commitment/handoff while preserving accepted
 trips. [The membership checkpoint](launch/union-membership.md) records the local
-SQL, concurrency and integration evidence and remaining staff/configuration work.
+SQL, concurrency and integration evidence and the successor staff workflow.
 The earlier alpha deployment is not upgraded by these source changes.
 
 ## Active real-world implementation goal - 23 October 2026

@@ -9,21 +9,28 @@ permissions:
 
 jobs:
   dependency-review:
-    if: github.event_name == 'pull_request'
+    needs: gradle-dependency-submission
+    if: always() && !cancelled() && github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      DEPENDENCY_SUBMISSION_RESULT: ${{ needs.gradle-dependency-submission.result }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Require complete immutable dependency snapshots
+        run: python infra/scripts/require_complete_dependency_comparison.py --wait-seconds 180
       - name: Reject newly introduced high or critical dependencies
         uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
         with:
           fail-on-severity: high
           license-check: false
-          retry-on-snapshot-warnings: true
-          retry-on-snapshot-warnings-timeout: 600
+          retry-on-snapshot-warnings: false
+      - name: Reject comparison warnings after vulnerability review
+        run: python infra/scripts/require_complete_dependency_comparison.py --wait-seconds 0
 
   gradle-dependency-submission:
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:

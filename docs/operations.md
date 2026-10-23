@@ -2,14 +2,16 @@
 
 ## First-city operating target — 23 October 2026
 
-The owner selected **Fès** with **the transport union** as operator. Drivers must
+The owner selected **Fès** with **Fès Taxi Union** as the generic working operator name. Drivers must
 be verified union members; passengers may register normally. Keep operator/staff
 authority, verified driver eligibility and membership as separate backend facts.
-Resolve the union's legal identity and its mapping to existing operator/cooperative
-records before production configuration. Do not invent a union entity identifier,
-new operator type or membership authority merely from this product decision.
+The owner specifies autonomous taxis within their unions, with no separate union
+transport permit to secure for this project. Use that operating model and the
+existing cooperative register; do not invent a registered union identifier,
+permit, new operator type or membership authority. Driver, vehicle and city/service
+checks remain separate from the platform's operator/member administration.
 
-The [R1 packet](launch/r1-decisions.md) retains authorization, roster verification,
+The [R1 packet](launch/r1-decisions.md) retains applicable launch-compliance records, roster verification,
 service boundary, tariffs, support, budget and pilot acceptance dependencies.
 Casablanca staging remains synthetic alpha evidence. The owner confirmed an
 Android phone and Google Play accounts; actual device/signing/release acceptance
@@ -21,6 +23,32 @@ the existing scoped operator-management authority and MFA-protected update/audit
 path own this policy. Fès must enable it before launch. Keep the legal identity
 decision separate from the internal register mapping. Policy configuration does
 not approve members or expand staff permissions.
+
+### Operator member-register administration
+
+The linked register's driver-membership maintenance uses the existing
+`manage_operators` permission, currently held by scoped platform administrators.
+Operator administrators, driver reviewers, analysts and ordinary members do not
+inherit it. This initial workflow changes neither role templates nor live grants.
+Every write requires recent operations MFA, a bounded review reason, transactional
+audit and `Idempotency-Key`. Replays recheck current operator scope before returning
+any saved result. Listing is paginated and scoped before rows and counts.
+
+Enrollment selects a registered driver by ID whose city application is associated
+with an assignment of this operator. It does not approve that application or the
+driver's license. No global account/email search is exposed. Existing linked
+register entries remain maintainable independently of current driving eligibility.
+Responses contain register/driver IDs, membership number, status and effective
+dates, without contact details or documents. Membership numbers are excluded from
+audit changes. Reasons must avoid identity documents or other unnecessary personal
+data. Named union roster verification remains an operational prerequisite.
+
+Updates require the last observed `updated_at`; a stale version returns `409`.
+Operator/register and member row locks serialize maintenance with admission.
+Status/date changes never revoke account sessions, cancel an accepted ride or
+change driver/vehicle/city approval. Effective end dates deny new work at the
+boundary even when membership status is ACTIVE. Historic entries are retained;
+there is no destructive delete or automatic privilege/driver-role grant.
 
 ## Board alpha execution authorized — 15 October 2026
 

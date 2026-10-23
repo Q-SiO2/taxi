@@ -24,6 +24,7 @@ data class OperatorCreateRequest(
     @SerialName("cooperative_id") val cooperativeId: String? = null,
     val name: String,
     @SerialName("operator_type") val operatorType: String,
+    @SerialName("requires_active_membership") val requiresActiveMembership: Boolean = false,
 )
 
 @Serializable

@@ -639,6 +639,7 @@ private fun ReadinessReviewDialog(
 @Composable
 internal fun OperatorsScreen(
     state: OperationsUiState,
+    coordinator: org.example.taximobile.operations.state.OperationsCoordinator,
     onSelectOperator: (String?) -> Unit,
     onCreateOperator: (OperatorCreateRequest) -> Unit,
     onUpdateOperatorStatus: (OperatorRecord, String) -> Unit,
@@ -713,6 +714,7 @@ internal fun OperatorsScreen(
                 }
             }
         }
+        if (selected != null) OperatorMembershipPanel(selected, state, coordinator)
         SectionHeading(
             title = "City assignments",
             supportingText = "One active operator authority is allowed per city, service type, and effective time.",

@@ -27,6 +27,18 @@ class CiSecurityValidationTests(unittest.TestCase):
     def test_committed_workflow_passes(self) -> None:
         validate_ci_security(self.workflow)
 
+    def test_dependency_review_cannot_skip_snapshot_completeness(self) -> None:
+        mutations = (
+            self.workflow.replace("    needs: gradle-dependency-submission\n", ""),
+            self.workflow.replace("always() && !cancelled() && ", ""),
+            self.workflow.replace(" --wait-seconds 180", " --wait-seconds 0"),
+            self.workflow.replace(" --wait-seconds 0", " --wait-seconds 0 || true"),
+            self.workflow.replace(" && github.event.pull_request.head.repo.full_name == github.repository", ""),
+        )
+        for changed in mutations:
+            with self.subTest(change=changed[:500]), self.assertRaisesRegex(CiSecurityError, "Dependency"):
+                validate_ci_security(changed)
+
     def test_registry_publication_cannot_weaken_main_only_or_job_dependencies(self) -> None:
         gate = "github.event_name == 'push' && github.ref == 'refs/heads/main'"
         mutations = (

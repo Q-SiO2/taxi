@@ -6,8 +6,10 @@ R5/R8 implements explicit closed-shop driver admission using the existing
 register selected for the Fès union. Source migration `20261023_0053` introduces
 the per-operator policy; default false preserves open-participation operators.
 [The membership checkpoint](launch/union-membership.md) records local SQL,
-assignment and concurrency verification. Staff/configuration UX, immutable CI
-and controlled rollout remain before capability acceptance.
+assignment and concurrency verification. [The staff-register extension](launch/member-register.md)
+adds scoped audited web administration, policy review and localized driver
+guidance. Finish its runtime/candidate verification, fresh immutable CI and
+controlled rollout before capability acceptance.
 
 ## Active objective - full real-world deployment, 23 October 2026
 
@@ -18,10 +20,10 @@ iOS, web, all documented launch capabilities, a controlled city pilot and guarde
 public release. Existing explicit product deferrals remain; no silent reduction
 to the demonstrated on-demand flow is allowed.
 
-**Current task: R5/R8 union membership admission**, following the retained
+**Current task: R5/R8 member-register operations**, following the retained
 [R0 reconciliation](launch/r0-baseline.md), [R1 decisions](launch/r1-decisions.md)
 and [R2 candidate/CI work](launch/r2-ci.md). Finish the reviewed membership
-candidate, staff/configuration workflow and controlled deployment evidence.
+candidate, actual client workflow and controlled deployment evidence.
 The completed synthetic alpha remains the regression/fallback baseline. Its
 earlier urgency and provider-paused packets below do not define the new queue.
 Trial-only spending and preserved-volume constraints remain until explicitly

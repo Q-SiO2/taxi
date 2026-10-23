@@ -18,6 +18,7 @@ import org.example.taximobile.core.network.ApiConfiguration
 import org.example.taximobile.data.auth.AuthenticationNetworkException
 import org.example.taximobile.data.auth.AuthenticationRejectedException
 import org.example.taximobile.data.network.ApiRequestException
+import org.example.taximobile.data.network.apiFailure
 import org.example.taximobile.domain.drivers.DriverAvailabilityStatus
 import org.example.taximobile.domain.drivers.DriverAvailability
 import org.example.taximobile.domain.drivers.DriverApplication
@@ -147,7 +148,7 @@ class KtorDriverGateway(
 
     private suspend fun io.ktor.client.statement.HttpResponse.availabilityOrThrow(): DriverAvailability {
         if (status == HttpStatusCode.Unauthorized) throw AuthenticationRejectedException()
-        if (!status.isSuccess()) throw ApiRequestException(status.value, "The server could not change availability.")
+        if (!status.isSuccess()) throw apiFailure("The server could not change availability.")
         return body<AvailabilityResponse>().let {
             DriverAvailability(
                 status = DriverAvailabilityStatus.valueOf(it.status),
