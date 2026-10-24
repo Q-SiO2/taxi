@@ -1,5 +1,16 @@
 # Implementation Blueprint
 
+## Protected document pipeline — 24 October 2026
+
+The [R3/R8 document packet](launch/document-storage.md) fixes scanner framing,
+fragmentation and whole-exchange timeout handling, plus safe atomic-write failure
+classification. Thirty-two focused cases, all 1,060 unit tests, two actual
+HTTP/PostGIS lifecycle variants and five real local ClamAV/custom-fixture checks
+pass. Signature-download/import failures and the original eleven protocol
+regressions are retained. Fresh candidate CI remains required. Hosted ingestion
+is disabled; shared persistence/key recovery and actual scanner-feed acceptance
+must be resolved within a reviewed topology and authorized budget.
+
 ## Staging backup and restore — 24 October 2026
 
 The [R3 packet](launch/staging-upgrade.md) records eight passing source CI jobs,
@@ -10,7 +21,9 @@ controller/import failures and patch/platform limits are retained. Hosted source
 is unchanged. [One immutable database TLS policy](launch/database-tls.md) now
 covers ORM, worker, LISTEN, Alembic and operational direct connections; production
 requires verified CA/hostname trust. Local unit/infrastructure and real TLS
-positive/negative tests pass. Fresh full CI, hosted TLS, protected document
+positive/negative tests pass. CI 232 passes the full 1,317-test backend suite
+without failures/errors/skips and its backend image/security checks; all eight
+required jobs pass, including iOS. Hosted TLS, protected document
 ingestion and matching API/worker rollout remain required. No live
 role/credential/MFA reset or volume change.
 

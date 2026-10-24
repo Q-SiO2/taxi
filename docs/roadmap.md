@@ -2,11 +2,20 @@
 
 ## Current packet — 24 October 2026
 
+R3/R8 [document pipeline recovery](launch/document-storage.md) now fixes verified
+scanner protocol/write failures, with 1,060 unit, two HTTP/PostGIS and real local
+ClamAV/custom-fixture checks passing. Fresh candidate CI and actual hosted
+storage/scanner/key/retention acceptance remain open. Separate Railway API and
+worker services require a reviewed persistence decision; equal filesystem paths
+do not prove a shared volume. No unapproved architecture or spending change.
+
 R3 [staging preparation](launch/staging-upgrade.md) now has exact-source CI,
 encrypted snapshot backup and qualified local restore/0053 migration evidence.
 The [TLS source packet](launch/database-tls.md) passes unit/infrastructure and
-real local PostgreSQL trust/rejection checks; fresh full CI must run its new
-disposable TLS fixture before any hosted upgrade acceptance.
+real local PostgreSQL trust/rejection checks. Successor CI 232 passes all 1,317
+backend tests including its disposable TLS fixture, plus image/security checks.
+[All eight required jobs pass](launch/database-tls-ci-terminal-20261024.json),
+including iOS. Actual hosted verification remains required before upgrade acceptance.
 The live source still uses schema 0052, a non-TLS private database connection and
 disabled driver-document ingestion. Close transport/storage/rollout work with
 actual evidence while retaining the full R0–R12 scope and R1 decisions. Preserve

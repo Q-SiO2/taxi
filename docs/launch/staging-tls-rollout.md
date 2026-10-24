@@ -5,7 +5,9 @@ Prepared 24 October 2026. Status: **PREPARED, NOT APPLIED**. Implements the
 [CI 230](database-tls-ci-observation-20261024.json) for source
 `3698f60334721d3289d616bb598ffee36cb81b24` passes all eight real TLS probes but
 fails four API test fakes. The local correction passes 44 system API tests;
-fresh complete successor CI is required.
+[Terminal successor CI 232](database-tls-ci-terminal-20261024.json) now passes
+all eight required jobs for `29198354250615940fa46ac7c1d8305da743ba86`.
+Current Trial capacity and actual server/consumer apply remain pending.
 No certificate, server/consumer setting, HBA rule or deployment has been changed
 by this packet. Do not reuse the localhost test certificate for this target.
 
@@ -27,6 +29,20 @@ digest, running command, PG data/config/HBA paths, current SSL settings, HBA rul
 order, ownership, capacity and active connections before mutation. An unexpected
 target, concurrent deployment or changed baseline invalidates this preparation.
 Do not copy connection credentials or HBA address details into public evidence.
+
+The [read-only server preflight](staging-tls-server-preflight-20261024.json)
+confirms PG data at `/var/lib/postgresql/data/pgdata`, with `postgresql.conf`
+and `pg_hba.conf` in that directory. SSL is off; its certificate/key and minimum
+protocol settings are reloadable and have no command-line override. Five TCP
+client sessions were plaintext, zero encrypted, and no `hostnossl reject` rule
+was present at observation. HBA parsing reports no errors. This is an unaccepted
+baseline, not a secure configuration.
+
+One file-setting diagnostic is [classified separately](staging-tls-config-diagnostic-20261024.json):
+`shared_buffers` from the config file is unapplied while its effective source is
+the existing command line. Preserve that startup override. Treat it as an
+explicit baseline precedence diagnostic; distinguish any new TLS setting or HBA
+parse/application error rather than requiring or claiming a blanket zero count.
 
 ## Preparation before applying
 

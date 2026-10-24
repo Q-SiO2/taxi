@@ -345,6 +345,16 @@ host port. The key must not be reused for JWT, MFA, database, pager, monitoring,
 Firebase, or payment configuration and must be backed up/rotated through the
 deployment secret boundary; losing it makes retained ciphertext unrecoverable.
 
+The INSTREAM adapter consumes a bounded complete non-session response through
+connection closure, accepting only the single `stream: OK` NUL-terminated record.
+TCP fragmentation is permitted; unterminated, wrong-prefix, multiple, oversized
+or error records fail closed. A single deadline covers connection, upload
+backpressure and response; connection cleanup is bounded. Scan cancellation
+propagates without persisting a file. Atomic-write errors become the existing
+safe unavailable response and temporary ciphertext is removed. See the
+[scanner/recovery packet](launch/document-storage.md) for source and local
+evidence, separate from production daemon/storage acceptance.
+
 Review reads require the explicit document permission, application city scope,
 recent operations MFA, clean scan state, and a bounded reviewer quota. Every
 successful read is audited and streamed with an opaque filename, `no-store`, and

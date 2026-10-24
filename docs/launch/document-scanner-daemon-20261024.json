@@ -1,0 +1,27 @@
+{
+  "recorded_utc": "2026-10-24T18:07:52.861684+00:00",
+  "scope": "Real portable ClamAV loopback-only custom harmless hash-signature probe; no official feed or hosted/real-document acceptance",
+  "engine_archive_sha256": "0d9e0228b2674137ea1a2853566c98a0278ad52ab2582c3d6dbd75373848c395",
+  "signature_fingerprint": "5BADCA2665EF59DCF8A23D8B707F0DB480836771",
+  "official_vendor_feed_loaded": false,
+  "real_malware_or_participant_documents_used": false,
+  "passed": true,
+  "checks": [
+    "real_daemon_clean_stream_encrypted_roundtrip",
+    "real_daemon_custom_signature_rejected_without_new_file",
+    "stopped_daemon_unavailable_without_new_file",
+    "daemon_restart_and_ciphertext_copy_reopen_with_separate_key",
+    "restored_store_physical_erasure"
+  ],
+  "engine_version": "ClamAV 1.5.4",
+  "owned_daemons_stopped": true,
+  "owned_daemon_pids": [
+    23096,
+    5328
+  ],
+  "port_released": true,
+  "daemon_config_sha256": "fcbbf2216e85d3dcc8773ee0934bb30b8637f362d2ec1665830fe64e51b35ad7",
+  "application_source_sha256": "52376f29f84a87bd73a071435e7bac36096a8cf8ba6ab08dc3d8bebb48e2f6f6",
+  "test_key_persisted": false,
+  "hosting_or_service_installation_changed": false
+}

@@ -126,8 +126,10 @@ operation that can incur new hosting charges. TLS and matched API/worker rollout
 checks remain the next hosted technical work; hosted schema is still 0052.
 The [database TLS packet](database-tls.md) now implements one verified transport
 policy and passes local trust/rejection probes with an observed restricted
-TLS 1.3 session. New exact-source CI must execute its disposable Docker fixture;
-this does not change the non-TLS hosted baseline described above.
+TLS 1.3 session. [Successor CI 232](database-tls-ci-terminal-20261024.json) passes
+all eight required jobs and all 1,317 backend cases, including eight real TLS
+probes and fixture cleanup. This does not change the non-TLS hosted baseline
+described above; use the guarded rollout packet after current Trial verification.
 
 ## Membership-aware rollback boundary
 

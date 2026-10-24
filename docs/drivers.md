@@ -228,6 +228,10 @@ The city-application document capability:
 
 Document URLs should never be guessable public URLs.
 
+The [protected-document packet](launch/document-storage.md) records scanner
+protocol and ciphertext/key recovery checks. It does not accept hosted storage,
+current signature feeds, real participant documents or jurisdictional policy.
+
 ---
 
 # 8. Driver Profile

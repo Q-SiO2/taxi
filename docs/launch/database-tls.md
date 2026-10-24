@@ -1,6 +1,6 @@
 # Verified PostgreSQL transport — 24 October 2026
 
-Status: **source and local PostgreSQL checks pass; new full CI and hosted TLS open**.
+Status: **source/local and all eight required CI jobs pass; hosted TLS remains open**.
 This R3 packet follows the [backup/restore rehearsal](staging-upgrade.md). The
 live alpha's database connection was observed unencrypted; source implementation
 does not change that state or accept a real-world launch.
@@ -79,6 +79,16 @@ result, not backend acceptance. The successor fakes assert the captured policy
 and retain loss/recovery behavior; all [44 system API tests](database-tls-readiness-verification-20261024.json)
 pass locally. Production implementation is unchanged. Fresh complete CI for the
 successor remains required before hosted rollout.
+
+The successor `29198354250615940fa46ac7c1d8305da743ba86` subsequently passes
+the [full CI 232 backend suite](database-tls-ci-suite-20261024.json): **1,317
+tests, zero failures/errors/skips**, all eight TLS probes and verified fixture
+cleanup. The backend job, including its image/security/deployment checks, also
+passes. [Terminal CI 232](database-tls-ci-terminal-20261024.json) subsequently
+passes **all eight required jobs**, including Android/web, unsigned iOS simulator
+products and full dependency review. Image publication is skipped for the draft
+PR. This accepts the source checks, not signed distribution or a hosted upgrade.
+The failed CI 230 is retained and is not relabelled as a successful run.
 
 ## Deployment sequence and acceptance
 

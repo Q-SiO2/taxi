@@ -1,12 +1,19 @@
 # TaxiMobile documentation
 
+> **Next source packet — 24 October 2026:** the
+> [protected document correction](launch/document-storage.md) passes 1,060 unit
+> tests, two HTTP/PostGIS lifecycle cases and a real local ClamAV/custom-fixture
+> rehearsal. Fresh source CI remains pending. Hosted storage, current signature
+> feeds and key/retention acceptance are open; no real document was used.
+
 > **Current packet — 24 October 2026:** all eight required CI jobs pass for source
-> 90704d1. The [staging upgrade packet](launch/staging-upgrade.md) records an encrypted
+> [2919835](launch/database-tls-ci-terminal-20261024.json). The [staging upgrade packet](launch/staging-upgrade.md) records an encrypted
 > database backup, matching 81 public-table counts after isolated restore and a
 > successful local 0053 migration/readiness check, with explicit platform and
 > failure qualifications. [Verified database transport](launch/database-tls.md)
-> now passes 1,036 unit, 279 infrastructure and eight real local TLS checks;
-> its new full CI is pending. Hosted schema remains 0052 and TLS is disabled;
+> now passes 1,317 full backend CI tests, including eight real TLS checks, with
+> no failures/errors/skips. Android/web, unsigned iOS and dependency review pass.
+> Hosted schema remains 0052 and TLS is disabled;
 > protected document ingestion and matched rollout remain open.
 
 > **Current source packet — 23 October 2026:** the

@@ -12,6 +12,14 @@ The [latest alpha handoff](board-alpha-handoff.md) and
 deployment/credential checkpoints below. Do not repeat that cutover, upgrade
 billing or delete either preserved volume without the applicable authorization.
 
+The [protected-document packet](launch/document-storage.md) identifies a current
+hosting mismatch: the documented filesystem adapter needs shared private API and
+retention-worker persistence, while a Railway volume attaches to one service.
+Keep document ingestion disabled until the target satisfies that contract or an
+explicit architectural decision supplies equivalent protection, erasure and
+recovery. Do not mistake equal per-service paths for shared files. Trial capacity,
+actual scanner feeds and independent key custody remain separate acceptance.
+
 ## Current health and allowance — 20 October 2026
 
 [Read-only staging verification](redesign/board-alpha-evidence/railway-runtime-20261020-native-rehearsal.json)
