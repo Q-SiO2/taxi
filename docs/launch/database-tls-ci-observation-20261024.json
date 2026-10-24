@@ -1,0 +1,53 @@
+{
+  "observed_utc": "2026-10-24T14:23:32.851518+00:00",
+  "commit": "3698f60334721d3289d616bb598ffee36cb81b24",
+  "run_id": 40101311813,
+  "run_number": 230,
+  "job_id": 120893857184,
+  "url": "https://github.com/Q-SiO2/taxi/actions/runs/40101311813",
+  "backend_conclusion": "failure",
+  "artifact_id": 12563505803,
+  "artifact_sha256": "b9c52567e4401a78decab1d3186b4d043b28c381445fdeb71fa213b4ce482019",
+  "fixture_report": {
+    "recorded_utc": "2026-10-24T14:11:40.003319+00:00",
+    "passed": false,
+    "scope": "Disposable CI PostgreSQL identity/transport probes inside the full backend suite; no hosted or phase acceptance",
+    "hosted_accepted": false,
+    "phase": "SUITE_FAILED",
+    "full_suite": {
+      "tests": 1317,
+      "failures": 4,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tls_cases": 8,
+    "tls_passed": true,
+    "junit_sha256": "e433589bf303e8bd311bff3097cdc99bfb5620c5969f22c06edf393484d5848d",
+    "certificate_sha256": "bcf39b88d4c7db76218b53a8ae3422a61da7c37dda54628d6d304fbf2bf7f047",
+    "baseline_restored": true
+  },
+  "failed_cases": [
+    {
+      "classname": "tests.api.test_system",
+      "name": "test_hosted_readiness_tracks_live_listener_loss_and_recovery[staging]",
+      "exception": "TypeError: listener fake did not accept tls keyword"
+    },
+    {
+      "classname": "tests.api.test_system",
+      "name": "test_hosted_readiness_tracks_live_listener_loss_and_recovery[production]",
+      "exception": "TypeError: listener fake did not accept tls keyword"
+    },
+    {
+      "classname": "tests.api.test_system",
+      "name": "test_hosted_readiness_rechecks_listener_after_database_probe[staging]",
+      "exception": "TypeError: listener fake did not accept tls keyword"
+    },
+    {
+      "classname": "tests.api.test_system",
+      "name": "test_hosted_readiness_rechecks_listener_after_database_probe[production]",
+      "exception": "TypeError: listener fake did not accept tls keyword"
+    }
+  ],
+  "interpretation": "All eight real TLS cases and baseline cleanup pass; four existing API readiness fakes reject the new keyword. Full backend and remaining downstream checks are not accepted. Successor updates the fakes to assert the captured policy; no production change or test exclusion.",
+  "hosted_accepted": false
+}

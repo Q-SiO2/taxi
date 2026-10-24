@@ -71,8 +71,14 @@ PKI inside an explicitly guarded disposable GitHub/PostGIS service, verifies
 valid/invalid trust and a separate plaintext service, then restores the original
 server configuration and removes its generated server key/certificate. The full
 JUnit and bounded TLS report are retained and bound to candidate evidence.
-No Docker engine was available for this wrapper locally: its first execution
-must be accepted from fresh exact-source CI before hosted rollout.
+No Docker engine was available locally. [CI 230](database-tls-ci-observation-20261024.json)
+actually executes all eight TLS cases successfully and restores its server
+baseline, but the full suite fails **four existing API readiness fakes** that
+reject the new `tls` keyword (1,313 passed, no errors/skips). This is a failed CI
+result, not backend acceptance. The successor fakes assert the captured policy
+and retain loss/recovery behavior; all [44 system API tests](database-tls-readiness-verification-20261024.json)
+pass locally. Production implementation is unchanged. Fresh complete CI for the
+successor remains required before hosted rollout.
 
 ## Deployment sequence and acceptance
 
@@ -89,3 +95,5 @@ backup/migration recovery and a coordinated rollback that preserves verification
 No paid resource, role/credential recovery, volume deletion or public activation
 is authorized by this source packet. Current funding and all existing R1 gates
 remain prerequisites for their dependent hosting/production actions.
+The concrete [staging rollout packet](staging-tls-rollout.md) identifies existing
+resources, custody, apply/stop points and a verification-preserving rollback.
