@@ -1,0 +1,31 @@
+{
+  "candidate": "candidate-native-v16.json",
+  "started_utc": "2026-10-20T19:40:24.326028+00:00",
+  "passed": false,
+  "scope": "Actual owned driver history detail, fresh feedback read and foreground catch-up; no consequential input",
+  "screenshots": [],
+  "checks": [],
+  "before": {
+    "rides": [],
+    "tickets": [
+      {
+        "id": "1f7c26be-edb3-4b05-bff1-7f4bd2bdaf51",
+        "city_id": "10000000-0000-4000-8000-000000000003",
+        "category": "RIDE_PROBLEM",
+        "subject": "Example driver support request",
+        "description": "Synthetic ticket for local UX review.",
+        "ride_id": "a0ba8798-8536-4420-bde2-12aa9111b817",
+        "status": "OPEN",
+        "latest_public_message": null,
+        "latest_public_message_at": null,
+        "resolved_at": null,
+        "closed_at": null,
+        "created_at": "2026-10-12T11:46:19.121262Z",
+        "updated_at": "2026-10-15T11:46:19.217130Z"
+      }
+    ]
+  },
+  "failure_type": "StopIteration",
+  "failure_detail": "",
+  "finished_utc": "2026-10-20T19:40:26.686999+00:00"
+}

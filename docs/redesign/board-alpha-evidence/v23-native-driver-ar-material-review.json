@@ -1,0 +1,517 @@
+{
+  "candidate": "candidate-native-v23.json",
+  "started_utc": "2026-10-22T18:39:36.610405+00:00",
+  "passed": true,
+  "checks": [
+    {
+      "role": "driver",
+      "width_dp": 360,
+      "style": "Folded Streets",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: mcc310-mnc260-en-rUS-ldltr-sw360dp-w360dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x720-v35",
+      "screenshots": [
+        {
+          "path": "v23-driver-ar-driver-360-folded-streets-account.png",
+          "sha256": "146cbdf338e8ac60e52fc00ff13e65a99d0df3724da1d45f44099ee7fca6df76",
+          "pixel_size": [
+            720,
+            1600
+          ],
+          "visible_text": [
+            "\u0627\u0644\u062d\u0633\u0627\u0628",
+            "9+",
+            "\u0627\u0644\u0639\u0648\u062f\u0629 \u0625\u0644\u0649 \u0627\u0644\u0639\u0645\u0644\u064a\u0627\u062a",
+            "\u0627\u0644\u0645\u0638\u0647\u0631 \u00b7 Folded Streets",
+            "\u062d\u0633\u0627\u0628 \u0627\u0644\u0633\u0627\u0626\u0642",
+            "Youssef UX Driver",
+            "\u0627\u0644\u062a\u062d\u0642\u0642: \u062a\u0645 \u0627\u0644\u062a\u062d\u0642\u0642",
+            "\u062d\u0627\u0644\u0629 \u0627\u0644\u062d\u0633\u0627\u0628: \u0646\u0634\u0637",
+            "\u0627\u0644\u0623\u0631\u0628\u0627\u062d",
+            "\u0627\u0644\u0623\u062c\u0631\u0629 \u0627\u0644\u0646\u0647\u0627\u0626\u064a\u0629",
+            "805.00",
+            "MAD",
+            "\u0623\u062c\u0631\u0629 \u0627\u0644\u0646\u0642\u0644",
+            "805.00 MAD",
+            "\u0631\u0633\u0645 \u0627\u0644\u062d\u062c\u0632 \u0627\u0644\u0645\u0633\u0628\u0642",
+            "0.00 MAD",
+            "\u0631\u0633\u0648\u0645 \u062e\u062f\u0645\u0629 \u0627\u0644\u0645\u0634\u063a\u0651\u0644",
+            "0.00 MAD",
+            "\u062d\u0635\u0629 \u0627\u0644\u0645\u0634\u063a\u0651\u0644",
+            "0.00 MAD",
+            "\u0627\u0644\u0625\u062c\u0645\u0627\u0644\u064a",
+            "805.00 MAD",
+            "\u0627\u0644\u0631\u0633\u0648\u0645",
+            "0.00 MAD"
+          ]
+        },
+        {
+          "path": "v23-driver-ar-driver-360-folded-streets-financial.png",
+          "sha256": "146cbdf338e8ac60e52fc00ff13e65a99d0df3724da1d45f44099ee7fca6df76",
+          "pixel_size": [
+            720,
+            1600
+          ],
+          "visible_text": [
+            "\u0627\u0644\u062d\u0633\u0627\u0628",
+            "9+",
+            "\u0627\u0644\u0639\u0648\u062f\u0629 \u0625\u0644\u0649 \u0627\u0644\u0639\u0645\u0644\u064a\u0627\u062a",
+            "\u0627\u0644\u0645\u0638\u0647\u0631 \u00b7 Folded Streets",
+            "\u062d\u0633\u0627\u0628 \u0627\u0644\u0633\u0627\u0626\u0642",
+            "Youssef UX Driver",
+            "\u0627\u0644\u062a\u062d\u0642\u0642: \u062a\u0645 \u0627\u0644\u062a\u062d\u0642\u0642",
+            "\u062d\u0627\u0644\u0629 \u0627\u0644\u062d\u0633\u0627\u0628: \u0646\u0634\u0637",
+            "\u0627\u0644\u0623\u0631\u0628\u0627\u062d",
+            "\u0627\u0644\u0623\u062c\u0631\u0629 \u0627\u0644\u0646\u0647\u0627\u0626\u064a\u0629",
+            "805.00",
+            "MAD",
+            "\u0623\u062c\u0631\u0629 \u0627\u0644\u0646\u0642\u0644",
+            "805.00 MAD",
+            "\u0631\u0633\u0645 \u0627\u0644\u062d\u062c\u0632 \u0627\u0644\u0645\u0633\u0628\u0642",
+            "0.00 MAD",
+            "\u0631\u0633\u0648\u0645 \u062e\u062f\u0645\u0629 \u0627\u0644\u0645\u0634\u063a\u0651\u0644",
+            "0.00 MAD",
+            "\u062d\u0635\u0629 \u0627\u0644\u0645\u0634\u063a\u0651\u0644",
+            "0.00 MAD",
+            "\u0627\u0644\u0625\u062c\u0645\u0627\u0644\u064a",
+            "805.00 MAD",
+            "\u0627\u0644\u0631\u0633\u0648\u0645",
+            "0.00 MAD"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "driver",
+      "width_dp": 360,
+      "style": "Street Press",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: mcc310-mnc260-en-rUS-ldltr-sw360dp-w360dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x720-v35",
+      "screenshots": [
+        {
+          "path": "v23-driver-ar-driver-360-street-press-account.png",
+          "sha256": "86eceb7b3cb7b836d6a20aaa9d8f71d6416584a0d41502715d58cd6639e15b3f",
+          "pixel_size": [
+            720,
+            1600
+          ],
+          "visible_text": [
+            "\u0627\u0644\u062d\u0633\u0627\u0628",
+            "9+",
+            "\u0627\u0644\u0639\u0648\u062f\u0629 \u0625\u0644\u0649 \u0627\u0644\u0639\u0645\u0644\u064a\u0627\u062a",
+            "\u0627\u0644\u0645\u0638\u0647\u0631 \u00b7 Street Press",
+            "\u062d\u0633\u0627\u0628 \u0627\u0644\u0633\u0627\u0626\u0642",
+            "Youssef UX Driver",
+            "\u0627\u0644\u062a\u062d\u0642\u0642: \u062a\u0645 \u0627\u0644\u062a\u062d\u0642\u0642",
+            "\u062d\u0627\u0644\u0629 \u0627\u0644\u062d\u0633\u0627\u0628: \u0646\u0634\u0637",
+            "\u0627\u0644\u0623\u0631\u0628\u0627\u062d",
+            "\u0627\u0644\u0623\u062c\u0631\u0629 \u0627\u0644\u0646\u0647\u0627\u0626\u064a\u0629",
+            "805.00",
+            "MAD",
+            "\u0623\u062c\u0631\u0629 \u0627\u0644\u0646\u0642\u0644",
+            "805.00 MAD",
+            "\u0631\u0633\u0645 \u0627\u0644\u062d\u062c\u0632 \u0627\u0644\u0645\u0633\u0628\u0642",
+            "0.00 MAD",
+            "\u0631\u0633\u0648\u0645 \u062e\u062f\u0645\u0629 \u0627\u0644\u0645\u0634\u063a\u0651\u0644",
+            "0.00 MAD",
+            "\u062d\u0635\u0629 \u0627\u0644\u0645\u0634\u063a\u0651\u0644",
+            "0.00 MAD",
+            "\u0627\u0644\u0625\u062c\u0645\u0627\u0644\u064a",
+            "805.00 MAD",
+            "\u0627\u0644\u0631\u0633\u0648\u0645",
+            "0.00 MAD"
+          ]
+        },
+        {
+          "path": "v23-driver-ar-driver-360-street-press-financial.png",
+          "sha256": "86eceb7b3cb7b836d6a20aaa9d8f71d6416584a0d41502715d58cd6639e15b3f",
+          "pixel_size": [
+            720,
+            1600
+          ],
+          "visible_text": [
+            "\u0627\u0644\u062d\u0633\u0627\u0628",
+            "9+",
+            "\u0627\u0644\u0639\u0648\u062f\u0629 \u0625\u0644\u0649 \u0627\u0644\u0639\u0645\u0644\u064a\u0627\u062a",
+            "\u0627\u0644\u0645\u0638\u0647\u0631 \u00b7 Street Press",
+            "\u062d\u0633\u0627\u0628 \u0627\u0644\u0633\u0627\u0626\u0642",
+            "Youssef UX Driver",
+            "\u0627\u0644\u062a\u062d\u0642\u0642: \u062a\u0645 \u0627\u0644\u062a\u062d\u0642\u0642",
+            "\u062d\u0627\u0644\u0629 \u0627\u0644\u062d\u0633\u0627\u0628: \u0646\u0634\u0637",
+            "\u0627\u0644\u0623\u0631\u0628\u0627\u062d",
+            "\u0627\u0644\u0623\u062c\u0631\u0629 \u0627\u0644\u0646\u0647\u0627\u0626\u064a\u0629",
+            "805.00",
+            "MAD",
+            "\u0623\u062c\u0631\u0629 \u0627\u0644\u0646\u0642\u0644",
+            "805.00 MAD",
+            "\u0631\u0633\u0645 \u0627\u0644\u062d\u062c\u0632 \u0627\u0644\u0645\u0633\u0628\u0642",
+            "0.00 MAD",
+            "\u0631\u0633\u0648\u0645 \u062e\u062f\u0645\u0629 \u0627\u0644\u0645\u0634\u063a\u0651\u0644",
+            "0.00 MAD",
+            "\u062d\u0635\u0629 \u0627\u0644\u0645\u0634\u063a\u0651\u0644",
+            "0.00 MAD",
+            "\u0627\u0644\u0625\u062c\u0645\u0627\u0644\u064a",
+            "805.00 MAD",
+            "\u0627\u0644\u0631\u0633\u0648\u0645",
+            "0.00 MAD"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "driver",
+      "width_dp": 360,
+      "style": "Glazed Machine",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: mcc310-mnc260-en-rUS-ldltr-sw360dp-w360dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x720-v35",
+      "screenshots": [
+        {
+          "path": "v23-driver-ar-driver-360-glazed-machine-account.png",
+          "sha256": "689a9e544c449d1a93d26848fcbff24b9a30bb0bda4070294521775627cac7c4",
+          "pixel_size": [
+            720,
+            1600
+          ],
+          "visible_text": [
+            "\u0627\u0644\u062d\u0633\u0627\u0628",
+            "9+",
+            "\u0627\u0644\u0639\u0648\u062f\u0629 \u0625\u0644\u0649 \u0627\u0644\u0639\u0645\u0644\u064a\u0627\u062a",
+            "\u0627\u0644\u0645\u0638\u0647\u0631 \u00b7 Glazed Machine",
+            "\u062d\u0633\u0627\u0628 \u0627\u0644\u0633\u0627\u0626\u0642",
+            "Youssef UX Driver",
+            "\u0627\u0644\u062a\u062d\u0642\u0642: \u062a\u0645 \u0627\u0644\u062a\u062d\u0642\u0642",
+            "\u062d\u0627\u0644\u0629 \u0627\u0644\u062d\u0633\u0627\u0628: \u0646\u0634\u0637",
+            "\u0627\u0644\u0623\u0631\u0628\u0627\u062d",
+            "\u0627\u0644\u0623\u062c\u0631\u0629 \u0627\u0644\u0646\u0647\u0627\u0626\u064a\u0629",
+            "805.00",
+            "MAD",
+            "\u0623\u062c\u0631\u0629 \u0627\u0644\u0646\u0642\u0644",
+            "805.00 MAD",
+            "\u0631\u0633\u0645 \u0627\u0644\u062d\u062c\u0632 \u0627\u0644\u0645\u0633\u0628\u0642",
+            "0.00 MAD",
+            "\u0631\u0633\u0648\u0645 \u062e\u062f\u0645\u0629 \u0627\u0644\u0645\u0634\u063a\u0651\u0644",
+            "0.00 MAD",
+            "\u062d\u0635\u0629 \u0627\u0644\u0645\u0634\u063a\u0651\u0644",
+            "0.00 MAD",
+            "\u0627\u0644\u0625\u062c\u0645\u0627\u0644\u064a",
+            "805.00 MAD",
+            "\u0627\u0644\u0631\u0633\u0648\u0645",
+            "0.00 MAD"
+          ]
+        },
+        {
+          "path": "v23-driver-ar-driver-360-glazed-machine-financial.png",
+          "sha256": "8e586359088e9b8332789d04a76b8e05b8316285a2d89127bcb0d5fb8f47012d",
+          "pixel_size": [
+            720,
+            1600
+          ],
+          "visible_text": [
+            "\u0627\u0644\u062d\u0633\u0627\u0628",
+            "9+",
+            "\u0627\u0644\u0639\u0648\u062f\u0629 \u0625\u0644\u0649 \u0627\u0644\u0639\u0645\u0644\u064a\u0627\u062a",
+            "\u0627\u0644\u0645\u0638\u0647\u0631 \u00b7 Glazed Machine",
+            "\u062d\u0633\u0627\u0628 \u0627\u0644\u0633\u0627\u0626\u0642",
+            "Youssef UX Driver",
+            "\u0627\u0644\u062a\u062d\u0642\u0642: \u062a\u0645 \u0627\u0644\u062a\u062d\u0642\u0642",
+            "\u062d\u0627\u0644\u0629 \u0627\u0644\u062d\u0633\u0627\u0628: \u0646\u0634\u0637",
+            "\u0627\u0644\u0623\u0631\u0628\u0627\u062d",
+            "\u0627\u0644\u0623\u062c\u0631\u0629 \u0627\u0644\u0646\u0647\u0627\u0626\u064a\u0629",
+            "805.00",
+            "MAD",
+            "\u0623\u062c\u0631\u0629 \u0627\u0644\u0646\u0642\u0644",
+            "805.00 MAD",
+            "\u0631\u0633\u0645 \u0627\u0644\u062d\u062c\u0632 \u0627\u0644\u0645\u0633\u0628\u0642",
+            "0.00 MAD",
+            "\u0631\u0633\u0648\u0645 \u062e\u062f\u0645\u0629 \u0627\u0644\u0645\u0634\u063a\u0651\u0644",
+            "0.00 MAD",
+            "\u062d\u0635\u0629 \u0627\u0644\u0645\u0634\u063a\u0651\u0644",
+            "0.00 MAD",
+            "\u0627\u0644\u0625\u062c\u0645\u0627\u0644\u064a",
+            "805.00 MAD",
+            "\u0627\u0644\u0631\u0633\u0648\u0645",
+            "0.00 MAD"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "driver",
+      "width_dp": 360,
+      "style": "Notepad",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: mcc310-mnc260-en-rUS-ldltr-sw360dp-w360dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x720-v35",
+      "screenshots": [
+        {
+          "path": "v23-driver-ar-driver-360-notepad-account.png",
+          "sha256": "cb5cc1e900e27aa211b0101bca4860b3c65a68018552d1fe4eb3635e06a8e82f",
+          "pixel_size": [
+            720,
+            1600
+          ],
+          "visible_text": [
+            "\u0627\u0644\u062d\u0633\u0627\u0628",
+            "9+",
+            "\u0627\u0644\u0639\u0648\u062f\u0629 \u0625\u0644\u0649 \u0627\u0644\u0639\u0645\u0644\u064a\u0627\u062a",
+            "\u0627\u0644\u0645\u0638\u0647\u0631 \u00b7 Notepad",
+            "\u062d\u0633\u0627\u0628 \u0627\u0644\u0633\u0627\u0626\u0642",
+            "Youssef UX Driver",
+            "\u0627\u0644\u062a\u062d\u0642\u0642: \u062a\u0645 \u0627\u0644\u062a\u062d\u0642\u0642",
+            "\u062d\u0627\u0644\u0629 \u0627\u0644\u062d\u0633\u0627\u0628: \u0646\u0634\u0637",
+            "\u0627\u0644\u0623\u0631\u0628\u0627\u062d",
+            "\u0627\u0644\u0623\u062c\u0631\u0629 \u0627\u0644\u0646\u0647\u0627\u0626\u064a\u0629",
+            "805.00",
+            "MAD",
+            "\u0623\u062c\u0631\u0629 \u0627\u0644\u0646\u0642\u0644",
+            "805.00 MAD",
+            "\u0631\u0633\u0645 \u0627\u0644\u062d\u062c\u0632 \u0627\u0644\u0645\u0633\u0628\u0642",
+            "0.00 MAD",
+            "\u0631\u0633\u0648\u0645 \u062e\u062f\u0645\u0629 \u0627\u0644\u0645\u0634\u063a\u0651\u0644",
+            "0.00 MAD",
+            "\u062d\u0635\u0629 \u0627\u0644\u0645\u0634\u063a\u0651\u0644",
+            "0.00 MAD",
+            "\u0627\u0644\u0625\u062c\u0645\u0627\u0644\u064a",
+            "805.00 MAD",
+            "\u0627\u0644\u0631\u0633\u0648\u0645",
+            "0.00 MAD"
+          ]
+        },
+        {
+          "path": "v23-driver-ar-driver-360-notepad-financial.png",
+          "sha256": "cb5cc1e900e27aa211b0101bca4860b3c65a68018552d1fe4eb3635e06a8e82f",
+          "pixel_size": [
+            720,
+            1600
+          ],
+          "visible_text": [
+            "\u0627\u0644\u062d\u0633\u0627\u0628",
+            "9+",
+            "\u0627\u0644\u0639\u0648\u062f\u0629 \u0625\u0644\u0649 \u0627\u0644\u0639\u0645\u0644\u064a\u0627\u062a",
+            "\u0627\u0644\u0645\u0638\u0647\u0631 \u00b7 Notepad",
+            "\u062d\u0633\u0627\u0628 \u0627\u0644\u0633\u0627\u0626\u0642",
+            "Youssef UX Driver",
+            "\u0627\u0644\u062a\u062d\u0642\u0642: \u062a\u0645 \u0627\u0644\u062a\u062d\u0642\u0642",
+            "\u062d\u0627\u0644\u0629 \u0627\u0644\u062d\u0633\u0627\u0628: \u0646\u0634\u0637",
+            "\u0627\u0644\u0623\u0631\u0628\u0627\u062d",
+            "\u0627\u0644\u0623\u062c\u0631\u0629 \u0627\u0644\u0646\u0647\u0627\u0626\u064a\u0629",
+            "805.00",
+            "MAD",
+            "\u0623\u062c\u0631\u0629 \u0627\u0644\u0646\u0642\u0644",
+            "805.00 MAD",
+            "\u0631\u0633\u0645 \u0627\u0644\u062d\u062c\u0632 \u0627\u0644\u0645\u0633\u0628\u0642",
+            "0.00 MAD",
+            "\u0631\u0633\u0648\u0645 \u062e\u062f\u0645\u0629 \u0627\u0644\u0645\u0634\u063a\u0651\u0644",
+            "0.00 MAD",
+            "\u062d\u0635\u0629 \u0627\u0644\u0645\u0634\u063a\u0651\u0644",
+            "0.00 MAD",
+            "\u0627\u0644\u0625\u062c\u0645\u0627\u0644\u064a",
+            "805.00 MAD",
+            "\u0627\u0644\u0631\u0633\u0648\u0645",
+            "0.00 MAD"
+          ]
+        }
+      ]
+    }
+  ],
+  "fixtures": [
+    {
+      "role": "driver",
+      "serial": "emulator-5556",
+      "avd": "taximobile-board-api35-driver",
+      "original_app_locales": "en-US",
+      "original_size": "Physical size: 720x1600",
+      "original_density": "Physical density: 320",
+      "font_scale": "1.0",
+      "apk_sha256": "5574f9e20ef5ade1621f58683712b6eb78f556ca828c23d83689a084137657e3",
+      "restored": true,
+      "locale_restored": true
+    }
+  ],
+  "scope": "Actual Arabic API35 driver account/earnings at original 360dp and four styles; OS app locale restored afterward. Presentation settings only; no business commands. No passenger/FR, every view/state, RTL width cross-product, physical Android or full accessibility acceptance.",
+  "before": {
+    "rides": [
+      {
+        "id": "e8e23f90-4329-4381-9391-2dcccfd0b027",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "ef70b9f0-a77d-41b6-923c-7a622a6e1dd6",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "73c4d766-9c7a-4e80-a589-805eb3b8cff2",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "46f115c7-cc34-4161-a3a3-238910b494c9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "8145b32e-4549-4183-bce5-60d3936a4de4",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "93df2c70-fd2b-4e97-8df3-eee368699bea",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d8daeaaa-fbe9-4614-af7e-45b896d30ecb",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "733abbcf-5d1b-4ff2-b7f3-3563052cbd25",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "cb951af4-f5ae-4d05-8a06-a28b49797f33",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "c55e696d-2bae-4640-8801-f50d2c20a42b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "b7aac6ac-cc87-494d-aa95-842c21fc6759",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "98a253df-de13-4029-9daa-e538a520997d",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e531e392-6f5b-4962-9964-3967a4afc418",
+        "status": "UNMATCHED"
+      }
+    ],
+    "availability": {
+      "status": "OFFLINE",
+      "vehicle_id": "d491cb54-7ec1-4b6e-a6f9-1f1a8fd93792",
+      "city_id": "10000000-0000-4000-8000-000000000003",
+      "service_type": "ON_DEMAND"
+    },
+    "pending_cash": 0
+  },
+  "after": {
+    "rides": [
+      {
+        "id": "e8e23f90-4329-4381-9391-2dcccfd0b027",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "ef70b9f0-a77d-41b6-923c-7a622a6e1dd6",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "73c4d766-9c7a-4e80-a589-805eb3b8cff2",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "46f115c7-cc34-4161-a3a3-238910b494c9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "8145b32e-4549-4183-bce5-60d3936a4de4",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "93df2c70-fd2b-4e97-8df3-eee368699bea",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d8daeaaa-fbe9-4614-af7e-45b896d30ecb",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "733abbcf-5d1b-4ff2-b7f3-3563052cbd25",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "cb951af4-f5ae-4d05-8a06-a28b49797f33",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "c55e696d-2bae-4640-8801-f50d2c20a42b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "b7aac6ac-cc87-494d-aa95-842c21fc6759",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "98a253df-de13-4029-9daa-e538a520997d",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e531e392-6f5b-4962-9964-3967a4afc418",
+        "status": "UNMATCHED"
+      }
+    ],
+    "availability": {
+      "status": "OFFLINE",
+      "vehicle_id": "d491cb54-7ec1-4b6e-a6f9-1f1a8fd93792",
+      "city_id": "10000000-0000-4000-8000-000000000003",
+      "service_type": "ON_DEMAND"
+    },
+    "pending_cash": 0
+  },
+  "finished_utc": "2026-10-22T18:41:53.704795+00:00"
+}

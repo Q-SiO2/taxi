@@ -1,0 +1,9 @@
+{
+  "started_utc": "2026-10-22T12:02:57.158063+00:00",
+  "candidate": "candidate-native-v22.json",
+  "passed": false,
+  "roles": [],
+  "scope": "Owned API35 driver/API31 passenger emulators only; existing app data retained; no trip acceptance",
+  "failure_type": "TimeoutExpired",
+  "finished_utc": "2026-10-22T13:37:42.892467+00:00"
+}

@@ -35,9 +35,16 @@
       ],
       "exports": [
         "assets/brand/logo/exports/brand_logo_mark_512.png",
-        "assets/brand/logo/exports/brand_logo_mark_1024.png"
+        "assets/brand/logo/exports/brand_logo_mark_1024.png",
+        "assets/brand/logo/exports/brand_logo_mark_runtime.png"
       ],
       "runtime": "mirrored_by_basename",
+      "runtime_files": [
+        {
+          "source": "assets/brand/logo/exports/brand_logo_mark_runtime.png",
+          "destination": "TaxiMobile/shared/src/commonMain/composeResources/drawable/brand_logo_mark_runtime.png"
+        }
+      ],
       "fallback": "TaxiBrandArtwork keeps a code-drawn fallback path."
     },
     {
@@ -77,9 +84,32 @@
       "name": "Landing transport illustration",
       "priority": "high",
       "status": "ready",
-      "sources": ["assets/illustrations/onboarding/illustration_landing.svg"],
-      "runtime": "mirrored_by_basename",
-      "fallback": "Existing Compose Canvas artwork."
+      "sources": [
+        "assets/illustrations/onboarding/illustration_landing.svg",
+        "assets/illustrations/onboarding/source/illustration_landing_undraw.svg",
+        "assets/illustrations/onboarding/source/illustration_landing_qarawiyyin.svg",
+        "assets/illustrations/onboarding/source/illustration_landing_navy_outline_master.png",
+        "assets/illustrations/onboarding/source/illustration_landing_navy_outline_4x5_legacy.png"
+      ],
+      "runtime": "explicit_exports",
+      "exports": ["assets/illustrations/onboarding/exports/illustration_landing_runtime.png"],
+      "runtime_files": [
+        {
+          "source": "assets/illustrations/onboarding/exports/illustration_landing_runtime.png",
+          "destination": "TaxiMobile/shared/src/commonMain/composeResources/drawable/illustration_landing_runtime.png"
+        }
+      ],
+      "provenance_record": "assets/illustrations/onboarding/LICENSE.md",
+      "source_palettes": {
+        "assets/illustrations/onboarding/source/illustration_landing_undraw.svg": ["#3F3D56", "#2F2E41", "#FFB8B8", "#E6E6E6", "#CCCCCC"]
+      },
+      "selected_source": "assets/illustrations/onboarding/source/illustration_landing_navy_outline_master.png",
+      "generation_record": "assets/illustrations/onboarding/prompts.md",
+      "require_alpha": false,
+      "runtime_dimensions": [941, 1672],
+      "max_runtime_bytes": 2097152,
+      "note": "Owner requested image generation after rejecting the vector attempt, then phone framing and fewer lines. The latest approximately 9:16 portrait simplifies wheels, headlights, interior and repeated arches. Thin light-navy taxi/Al-Qarawiyyin-inspired contours on navy; native 941x1672 PNG is copied unchanged to runtime. Earlier 4:5 PNG and SVG/stock sources are legacy only. Opaque RGB is intentional, not an exception for cutout assets.",
+      "fallback": "Existing Compose Canvas artwork while loading or on missing/corrupt optional PNG."
     },
     {
       "id": "B02",
@@ -233,7 +263,14 @@
         "assets/vehicles/renders/vehicle_silhouette_standard.svg",
         "assets/vehicles/renders/vehicle_silhouette_large.svg"
       ],
-      "runtime": "mirrored_by_basename"
+      "runtime": "mirrored_by_basename",
+      "exports": ["assets/vehicles/renders/exports/vehicle_silhouette_standard_runtime.png"],
+      "runtime_files": [
+        {
+          "source": "assets/vehicles/renders/exports/vehicle_silhouette_standard_runtime.png",
+          "destination": "TaxiMobile/shared/src/commonMain/composeResources/drawable/vehicle_silhouette_standard_runtime.png"
+        }
+      ]
     },
     {
       "id": "F01-F03",

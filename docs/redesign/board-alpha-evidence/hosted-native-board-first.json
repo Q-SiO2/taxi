@@ -1,0 +1,23 @@
+{
+  "utc": "2026-10-15T16:01:01.943244+00:00",
+  "environment": "TaxiMobile Alpha staging",
+  "ride_id": "59576371-85a9-4732-a100-12f7295f0c0a",
+  "fidelity": "two Android API35 emulators; synthetic GPS/accounts/cash",
+  "steps": [
+    "map points selected",
+    "server fare 35.00 MAD",
+    "native request",
+    "private offer accepted",
+    "passenger assigned driver/vehicle",
+    "en route",
+    "arrival",
+    "start",
+    "native completion location",
+    "complete",
+    "passenger Cash Pending",
+    "driver dated cash dialog",
+    "passenger Cash Completed"
+  ],
+  "physical_device": false,
+  "candidate": "board-alpha-candidate.log before final polish rebuild"
+}

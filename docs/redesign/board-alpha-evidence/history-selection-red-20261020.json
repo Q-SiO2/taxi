@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-20T19:27:23.976413+00:00",
+  "phase": "red before production change",
+  "tests": 54,
+  "failures": 4,
+  "errors": 0,
+  "failed": [
+    "passenger history survives refresh with newly confirmed cash status[jvm]",
+    "history read ending after sign out cannot install a selected record[jvm]",
+    "denied history refresh reports the error and forgets the inaccessible selection[jvm]",
+    "driver history survives refresh and reads newly submitted passenger feedback[jvm]"
+  ],
+  "archive": ".tools/alpha-delivery/history-selection-red",
+  "xml_sha256": "a1d4627ad7b752644e6e1989b382e5a2072b88d1d0518b1744f6400c2d3b8f9b"
+}

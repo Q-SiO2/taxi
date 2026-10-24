@@ -1,5 +1,6 @@
 package org.example.taximobile.feature.ui.components
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -30,16 +31,17 @@ import org.example.taximobile.feature.ui.theme.TaxiSpacing
 /** Backend-confirmed success: a 320 ms check draw followed by a static row. */
 @Composable
 fun SuccessConfirmation(label: String, eventSequence: Long, modifier: Modifier = Modifier) {
+    val taxiColors = TaxiTheme.colors
     var started by remember(eventSequence) { mutableStateOf(false) }
     LaunchedEffect(eventSequence) { started = true }
     val progress by animateFloatAsState(
         targetValue = if (started) 1f else 0f,
-        animationSpec = tween(durationMillis = 320),
+        animationSpec = tween(durationMillis = if (TaxiTheme.style.decorativeMotion) 320 else 0),
         label = "confirmed-action-check",
     )
     Surface(
         modifier = modifier.semantics { liveRegion = LiveRegionMode.Polite },
-        color = TaxiColors.Success100,
+        color = taxiColors.Success100,
         shape = MaterialTheme.shapes.medium,
     ) {
         Row(
@@ -56,7 +58,7 @@ fun SuccessConfirmation(label: String, eventSequence: Long, modifier: Modifier =
                 val distance = progress * (firstLength + secondLength)
                 val firstFraction = (distance / firstLength).coerceIn(0f, 1f)
                 drawLine(
-                    color = TaxiColors.Success600,
+                    color = taxiColors.Success600,
                     start = first,
                     end = first + (middle - first) * firstFraction,
                     strokeWidth = 3.dp.toPx(),
@@ -65,7 +67,7 @@ fun SuccessConfirmation(label: String, eventSequence: Long, modifier: Modifier =
                 if (distance > firstLength) {
                     val secondFraction = ((distance - firstLength) / secondLength).coerceIn(0f, 1f)
                     drawLine(
-                        color = TaxiColors.Success600,
+                        color = taxiColors.Success600,
                         start = middle,
                         end = middle + (last - middle) * secondFraction,
                         strokeWidth = 3.dp.toPx(),
@@ -73,7 +75,7 @@ fun SuccessConfirmation(label: String, eventSequence: Long, modifier: Modifier =
                     )
                 }
             }
-            Text(label, color = TaxiColors.Success600, style = MaterialTheme.typography.labelLarge)
+            Text(label, color = taxiColors.Success600, style = MaterialTheme.typography.labelLarge)
         }
     }
 }

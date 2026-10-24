@@ -1,0 +1,80 @@
+{
+  "recorded_utc": "2026-10-23T23:34:49.162643+00:00",
+  "commit": "aeff4a25d1d07ab8f6762fad9826af90cfb5708d",
+  "tree": "c26cd2cd34e83b52b734438e2d9099886e9751ec",
+  "parent": "e73e6b4304325dde90cf9599418891e38b83890b",
+  "files": [
+    "TaxiMobile/shared/src/commonMain/composeResources/values-ar/strings.xml",
+    "TaxiMobile/shared/src/commonMain/composeResources/values-fr/strings.xml",
+    "TaxiMobile/shared/src/commonMain/composeResources/values/strings.xml",
+    "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/data/OperationsAccessRefresh.kt",
+    "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/state/OperationsCoordinator.kt",
+    "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperatorMembershipPanel.kt",
+    "TaxiMobile/webApp/src/webTest/kotlin/org/example/taximobile/operations/data/OperationsAccessRefreshTest.kt",
+    "backend/tests/integration/test_operations_logout_expiry.py",
+    "docs/README.md",
+    "docs/auth.md",
+    "docs/deployment.md",
+    "docs/implementation.md",
+    "docs/launch/member-register-candidate-20261023.json",
+    "docs/launch/member-register-ci-terminal-20261023.json",
+    "docs/launch/member-register.md",
+    "docs/launch/session-recovery-evidence/expired-access-logout.png",
+    "docs/launch/session-recovery-evidence/readonly-driver-id.png",
+    "docs/launch/session-recovery-verification-20261023.json",
+    "docs/launch/session-recovery.md",
+    "docs/launch/staging-upgrade-preflight-20261023.json",
+    "docs/real-world-launch.md",
+    "docs/roadmap.md",
+    "docs/ui.md",
+    "infra/scripts/package_web_release.py"
+  ],
+  "checks": [
+    {
+      "name": "docs",
+      "exit_code": 0,
+      "log": ".tools/real-world-launch/session-candidate-docs-20261023.log"
+    },
+    {
+      "name": "credentials",
+      "exit_code": 0,
+      "log": ".tools/real-world-launch/session-candidate-credentials-20261023.log"
+    },
+    {
+      "name": "whitespace",
+      "exit_code": 0,
+      "log": ".tools/real-world-launch/session-candidate-whitespace-20261023.log"
+    }
+  ],
+  "original_head": "2835c8aa7f5e97a17afcdbe647fe589cbd0421e1",
+  "original_index_preserved": true,
+  "candidate_clean": true,
+  "published": true,
+  "deployment_accepted": false,
+  "pull_request": "https://github.com/Q-SiO2/taxi/pull/74",
+  "pull_request_draft": true,
+  "ci": {
+    "run_id": 40040360195,
+    "run_number": 226,
+    "url": "https://github.com/Q-SiO2/taxi/actions/runs/40040360195",
+    "status": "IN_PROGRESS",
+    "passed": [
+      "documentation-and-provenance",
+      "gradle-wrapper-integrity"
+    ],
+    "overall_pass": false
+  },
+  "local_production": {
+    "status": "RUNNING",
+    "exec_session": 23753,
+    "wasm_optimizer_pid": 22656,
+    "log": ".tools/real-world-launch/logout-web-production-r3-20261023.log"
+  },
+  "next_steps": [
+    "Resume the existing production session, package that complete distribution, and run the existing bounded release-boot collector. Do not rebuild unchanged source to repair an observer failure.",
+    "Observe exact-head CI 226 to terminal state and investigate actual failures; do not transfer parent results.",
+    "Then prepare protected staging backup, isolated restore/0053 migration, owner/runtime privileges and matched API/worker artifacts within existing Trial authorization."
+  ],
+  "field_accepted": false,
+  "public_launch_accepted": false
+}

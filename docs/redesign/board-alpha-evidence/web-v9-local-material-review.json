@@ -1,0 +1,97 @@
+{
+  "candidate": "candidate-web-v9.json",
+  "started_utc": "2026-10-22T18:19:04.666Z",
+  "passed": true,
+  "scope": "Exact optimized package on loopback port8000, normal staging HTTPS authentication/MFA and reads; no deployment, WebSocket or business-write acceptance",
+  "qualification": "Initial MFA challenge rejected; normal cancel and fresh password/MFA succeeded. Cause not attributed to app source. No credentials or code retained.",
+  "screenshots": [
+    {
+      "path": "web-v9-local-staff-folded-en.png",
+      "sha256": "1246a45f70bf81cd4c61fe6e9c7553a4edd23bba66a3da4998dfd206228329fd",
+      "utc": "2026-10-22T18:19:04.737Z"
+    },
+    {
+      "path": "web-v9-local-staff-press-en.png",
+      "sha256": "9b7d86516304acf7151b1bf6ff72d8a655a8f117651e83cc5a3210309ba4033a",
+      "utc": "2026-10-22T18:19:39.025Z"
+    },
+    {
+      "path": "web-v9-local-staff-glazed-en.png",
+      "sha256": "7c8b49e1c92d0c5cdc11bacc1d3977f739e3bd005e23bbe55449b1c9b28c2856",
+      "utc": "2026-10-22T18:20:04.316Z"
+    },
+    {
+      "path": "web-v9-local-staff-notepad-en.png",
+      "sha256": "467a229d61b6f146e301ddb9824b1799cb42fd600fb9f58853e94b381607be5f",
+      "utc": "2026-10-22T18:20:34.312Z"
+    },
+    {
+      "path": "web-v9-local-staff-notepad-ar.png",
+      "sha256": "22a1d6e443536893f88b2a5cd97e6c883233cf4ef5e5fc6911b8d76fa99bcd84",
+      "utc": "2026-10-22T18:21:07.293Z"
+    },
+    {
+      "path": "web-v9-local-staff-folded-ar.png",
+      "sha256": "100de7c32aa3e197acce94d342a7b43da0801c5f13106b8f8b16f0f0b4975631",
+      "utc": "2026-10-22T18:21:39.043Z"
+    },
+    {
+      "path": "web-v9-local-staff-press-ar.png",
+      "sha256": "af93908afd6d3cf61b67c023cf768732e05cbe88dc59f2ec3184b2a3819cae91",
+      "utc": "2026-10-22T18:22:10.586Z"
+    },
+    {
+      "path": "web-v9-local-staff-glazed-ar.png",
+      "sha256": "ce0ee2c4497111a30ea31dda3de5cdb17dcd3b57c815c10957497080dae1d3ee",
+      "utc": "2026-10-22T18:23:03.027Z"
+    },
+    {
+      "path": "web-v9-local-staff-glazed-fr.png",
+      "sha256": "6a4e62ecd742c4cd0f204939b6b2759f1991e19a2515ba0b259d2da20c02b37a",
+      "utc": "2026-10-22T18:23:58.507Z"
+    },
+    {
+      "path": "web-v9-local-applicant-glazed-fr.png",
+      "sha256": "a5224b3e4ad12d315be1cce237af272bf99a3e8c2ca621e62b8fe8702f20b5bd",
+      "utc": "2026-10-22T18:25:10.411Z"
+    },
+    {
+      "path": "web-v9-local-applicant-folded-fr.png",
+      "sha256": "be70751779218cb27355f48c79b0a4291860c411680d4f304eddf56a1eb3d635",
+      "utc": "2026-10-22T18:27:32.765Z"
+    },
+    {
+      "path": "web-v9-local-applicant-press-fr.png",
+      "sha256": "cb7fc1c69e5b701d85f42f29e6dbff452f6d85a4c5086694aeab7ff2456a5af0",
+      "utc": "2026-10-22T18:28:34.721Z"
+    },
+    {
+      "path": "web-v9-local-applicant-notepad-fr.png",
+      "sha256": "ab13c288d5f3447836fdadfe78d34ba873a19e1c47abf1a6eb97ad53ecf8ed08",
+      "utc": "2026-10-22T18:29:38.391Z"
+    },
+    {
+      "path": "web-v9-local-applicant-notepad-ar.png",
+      "sha256": "2a56ee28a0521729df402fa7a2de07a8071ecd6fe661bd889aecc20bded83ae1",
+      "utc": "2026-10-22T18:30:23.416Z"
+    },
+    {
+      "path": "web-v9-local-staff-local-session-cleared-fr.png",
+      "sha256": "f9e6b1fdef2fdea435789ceda456d460b3c45986a6981f5bdcf3865dd4a020b3",
+      "utc": "2026-10-22T18:31:35.293Z"
+    },
+    {
+      "path": "web-v9-local-applicant-logout-ar.png",
+      "sha256": "68626cf8f58011fc35d9a2d52ed2c0dde6f874858df361ae95ebd3e3f19284b7",
+      "utc": "2026-10-22T18:31:35.352Z"
+    }
+  ],
+  "acceptance": "Selected local material rendering and normal initial sign-in/read flows only",
+  "material_cases": {
+    "staff": "Four styles English and Arabic, plus Glazed French",
+    "applicant": "Four styles French plus Notepad Arabic"
+  },
+  "auth_qualification": "Applicant normal logout visibly confirmed. Staff returned to anonymous entry with explicit Local session cleared / server logout unconfirmed. This HTTP loopback review intentionally excludes secure-cookie refresh and is not hosted/session acceptance; no session bypass or security change.",
+  "observer_qualification": "Canvas accessibility trees lagged actual style renders. An attempted helper stopped on stale-tree assertions; actual screenshots establish subsequent selections. No domain command replay.",
+  "finished_utc": "2026-10-22T18:31:35.354Z"
+}

@@ -1,0 +1,10 @@
+{
+  "verified_utc": "2026-10-23T10:08:07.416822+00:00",
+  "checks": [
+    {
+      "host": "backboard.railway.com",
+      "resolved": true
+    }
+  ],
+  "scope": "Fresh host DNS resolution of the public provider hostnames from the failed upload; no credential/URL path/query/IP retained, no host/DNS/TLS configuration change."
+}

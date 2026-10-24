@@ -1,0 +1,83 @@
+{
+  "candidate": "candidate-native-v13.json",
+  "run": "first",
+  "method": "Agent-stepped actual native UI: fresh rendered screenshots, explicit one-time taps, independent owned server readbacks",
+  "fidelity": "Owned API35 driver/API31 passenger emulators, synthetic GPS/accounts/cash",
+  "started_utc": "2026-10-19T20:19:11.540971+00:00",
+  "passed": false,
+  "prior_ride_ids": [
+    "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+    "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+    "98a253df-de13-4029-9daa-e538a520997d",
+    "359279df-4847-4ad3-bfa4-baa2136b45be",
+    "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+    "e531e392-6f5b-4962-9964-3967a4afc418",
+    "082f8b85-6598-423d-aac5-cf31eec3f30a",
+    "e734ed2c-a37c-424b-9d84-b31e6811cd09",
+    "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+    "65f3d974-1cb3-4c43-9486-80cd1007c256",
+    "03756c30-f453-4d09-ae50-c3fa8f3782a4",
+    "59576371-85a9-4732-a100-12f7295f0c0a",
+    "e1b2bf66-0887-4429-a798-e272cc4ebf1a",
+    "d8a67153-d7e5-4d96-8df0-be6ddb329d37",
+    "e8948a59-659f-4d70-b756-eaafd9cc1fa1",
+    "ee13caaa-3461-418d-b0b4-f32eab7dd516",
+    "a0ba8798-8536-4420-bde2-12aa9111b817"
+  ],
+  "steps": [
+    {
+      "action": "online",
+      "role": "driver",
+      "utc": "2026-10-19T20:20:46.260348+00:00",
+      "tap": [
+        360,
+        1410
+      ],
+      "observation": "v13-first-stepped-driver-online-before.png",
+      "server_before": "OFFLINE",
+      "confirmed": false
+    }
+  ],
+  "installed_apks": [
+    {
+      "role": "driver",
+      "sha256": "f3ca278a3b52c60bbf4d17b33c86c4b0cb4a3ac6b81bede07311957d017ce3d8"
+    },
+    {
+      "role": "passenger",
+      "sha256": "9c2f0e5751292b1182fd879e520ca706e9623e25ed1eaf4a203fa99cd5477f34"
+    }
+  ],
+  "clock_fixture": [
+    {
+      "role": "driver",
+      "host_minus_device_seconds": 0.04,
+      "method": "Owned emulator synchronization before availability/trip only"
+    },
+    {
+      "role": "passenger",
+      "host_minus_device_seconds": 0.48,
+      "method": "Owned emulator synchronization before availability/trip only"
+    }
+  ],
+  "screenshots": [
+    {
+      "role": "driver",
+      "path": "v13-first-stepped-driver-online-before.png",
+      "sha256": "c575af8692a7af7f8786b819deb5619566e03381beb3edf0c7fd59f18ea1eda5",
+      "utc": "2026-10-19T20:20:27.711063+00:00"
+    },
+    {
+      "role": "passenger",
+      "path": "v13-first-stepped-passenger-pickup-map-before.png",
+      "sha256": "3d6fde247644fa848c6f90a7cdaf3eeb03afa79fe92766807d9fbbd4fee89795",
+      "utc": "2026-10-19T20:20:54.874309+00:00"
+    }
+  ],
+  "last_observation": {
+    "role": "passenger",
+    "path": "v13-first-stepped-passenger-pickup-map-before.png",
+    "sha256": "3d6fde247644fa848c6f90a7cdaf3eeb03afa79fe92766807d9fbbd4fee89795",
+    "utc": "2026-10-19T20:20:54.874309+00:00"
+  }
+}

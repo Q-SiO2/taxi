@@ -1,0 +1,45 @@
+{
+  "observed_utc": "2026-10-23T23:46:37.472015+00:00",
+  "project_id": "9f841575-c4f3-4a4d-bb83-2e6ff92e436e",
+  "environment_id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+  "service_id": "758fa7d5-f8b8-4730-a00f-438e28184e35",
+  "method": "Existing authorized CLI SSH key; one read-only PostgreSQL transaction via existing runtime connection. No grant/role/DDL/DML/refresh/seed/config/volume operation.",
+  "return_code": 0,
+  "remote_script_sha256": "7093835f2f0efbf12e13b9bdc1ad239c674c221bb922cef3998e91817f9bba22",
+  "stderr_bytes": 0,
+  "observations": [
+    {
+      "passed": true,
+      "deployment_id": "8b03ad50-ba24-4d38-88b3-dc5321cd77cd",
+      "transaction_read_only": "on",
+      "server_version": "16.4 (Debian 16.4-1.pgdg110+2)",
+      "postgis_version": "3.4 USE_GEOS=1 USE_PROJ=1 USE_STATS=1",
+      "migration_head": "20260908_0052",
+      "database_bytes": 41832931,
+      "public_tables": 81,
+      "runtime_role": {
+        "name": "taximobile_runtime",
+        "rolsuper": false,
+        "rolcreatedb": false,
+        "rolcreaterole": false,
+        "rolreplication": false,
+        "rolbypassrls": false
+      },
+      "runtime_public_schema_create": false,
+      "membership_policy_column_present": false,
+      "table_owners": [
+        {
+          "owner": "taximobile_owner",
+          "tables": 81
+        }
+      ],
+      "runtime_group_memberships": [],
+      "tls_connection": false
+    }
+  ],
+  "passed": true,
+  "backup_created": false,
+  "upgrade_applied": false,
+  "deployment_accepted": false,
+  "production_accepted": false
+}

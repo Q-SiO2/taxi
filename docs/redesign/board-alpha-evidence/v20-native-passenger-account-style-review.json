@@ -1,0 +1,280 @@
+{
+  "candidate": "candidate-native-v20.json",
+  "started_utc": "2026-10-22T10:37:35.652457+00:00",
+  "passed": true,
+  "checks": [
+    {
+      "role": "passenger",
+      "style": "Folded Streets",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v20-current-style-passenger-folded-streets-account.png",
+          "sha256": "83294cf99de91af4eeb23ad561c009e38afcab4300f363b42c5c996f89101ebf"
+        },
+        {
+          "path": "v20-current-style-passenger-folded-streets-financial.png",
+          "sha256": "867ed897c5f6837f8fb5d94048441cc3708a9f9e2a7587276f6f2895d5c748fa"
+        }
+      ]
+    },
+    {
+      "role": "passenger",
+      "style": "Street Press",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v20-current-style-passenger-street-press-account.png",
+          "sha256": "153228f54c91d9434c3887ec0dd058ba5e5a2c6054e0ff73c7b0ea7c863c80b9"
+        },
+        {
+          "path": "v20-current-style-passenger-street-press-financial.png",
+          "sha256": "153228f54c91d9434c3887ec0dd058ba5e5a2c6054e0ff73c7b0ea7c863c80b9"
+        }
+      ]
+    },
+    {
+      "role": "passenger",
+      "style": "Glazed Machine",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v20-current-style-passenger-glazed-machine-account.png",
+          "sha256": "c0930cf6e77a65f4d51c275e7ce9cf7889f2aa18de0ce912ecf5627e4bd9c3bc"
+        },
+        {
+          "path": "v20-current-style-passenger-glazed-machine-financial.png",
+          "sha256": "c0930cf6e77a65f4d51c275e7ce9cf7889f2aa18de0ce912ecf5627e4bd9c3bc"
+        }
+      ]
+    },
+    {
+      "role": "passenger",
+      "style": "Notepad",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v20-current-style-passenger-notepad-account.png",
+          "sha256": "9b6c353d152f5f770c2712a2e3d7c6645bf64aa79792001b75d46668e617e715"
+        },
+        {
+          "path": "v20-current-style-passenger-notepad-financial.png",
+          "sha256": "9b6c353d152f5f770c2712a2e3d7c6645bf64aa79792001b75d46668e617e715"
+        }
+      ]
+    }
+  ],
+  "scope": "Actual English selected account/financial views across four styles, Notepad restart and1.3x text; no all-page acceptance",
+  "normal_restore_budget_seconds": 120,
+  "budget_reason": "Prior v18 normal driver restore exceeded the original55s observer wait; this new bounded observation waits once without retry or sign-in",
+  "before": {
+    "rides": [
+      {
+        "id": "46f115c7-cc34-4161-a3a3-238910b494c9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "8145b32e-4549-4183-bce5-60d3936a4de4",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "93df2c70-fd2b-4e97-8df3-eee368699bea",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d8daeaaa-fbe9-4614-af7e-45b896d30ecb",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "733abbcf-5d1b-4ff2-b7f3-3563052cbd25",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "cb951af4-f5ae-4d05-8a06-a28b49797f33",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "c55e696d-2bae-4640-8801-f50d2c20a42b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "b7aac6ac-cc87-494d-aa95-842c21fc6759",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "98a253df-de13-4029-9daa-e538a520997d",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e531e392-6f5b-4962-9964-3967a4afc418",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "082f8b85-6598-423d-aac5-cf31eec3f30a",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "e734ed2c-a37c-424b-9d84-b31e6811cd09",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+        "status": "COMPLETED"
+      }
+    ],
+    "availability": {
+      "status": "OFFLINE",
+      "vehicle_id": "d491cb54-7ec1-4b6e-a6f9-1f1a8fd93792",
+      "city_id": "10000000-0000-4000-8000-000000000003",
+      "service_type": "ON_DEMAND"
+    }
+  },
+  "restart_checks": [
+    {
+      "role": "passenger",
+      "style": "Notepad",
+      "normal_authenticated_restore": true,
+      "screenshot": {
+        "path": "v20-current-style-passenger-notepad-restarted.png",
+        "sha256": "4583c9904eb5005c8ddcef69ae5877f72dbdd89b016a0af5d4dcd654f86e2cf5"
+      }
+    }
+  ],
+  "large_text_checks": [
+    {
+      "role": "passenger",
+      "font_scale": "1.3",
+      "style": "Notepad",
+      "screenshots": [
+        {
+          "path": "v20-current-style-passenger-notepad-large-text-account.png",
+          "sha256": "4d061e1bc0fc4a5b839654b9c87dbf5528107aa63abf6e645dd53e4acd046945"
+        },
+        {
+          "path": "v20-current-style-passenger-notepad-large-text-financial.png",
+          "sha256": "4d061e1bc0fc4a5b839654b9c87dbf5528107aa63abf6e645dd53e4acd046945"
+        }
+      ],
+      "limit": "Selected account/financial views only; no claim of all pages or TalkBack acceptance"
+    }
+  ],
+  "after": {
+    "rides": [
+      {
+        "id": "46f115c7-cc34-4161-a3a3-238910b494c9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "8145b32e-4549-4183-bce5-60d3936a4de4",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "93df2c70-fd2b-4e97-8df3-eee368699bea",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d8daeaaa-fbe9-4614-af7e-45b896d30ecb",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "733abbcf-5d1b-4ff2-b7f3-3563052cbd25",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "cb951af4-f5ae-4d05-8a06-a28b49797f33",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "c55e696d-2bae-4640-8801-f50d2c20a42b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "b7aac6ac-cc87-494d-aa95-842c21fc6759",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "98a253df-de13-4029-9daa-e538a520997d",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e531e392-6f5b-4962-9964-3967a4afc418",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "082f8b85-6598-423d-aac5-cf31eec3f30a",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "e734ed2c-a37c-424b-9d84-b31e6811cd09",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+        "status": "COMPLETED"
+      }
+    ],
+    "availability": {
+      "status": "OFFLINE",
+      "vehicle_id": "d491cb54-7ec1-4b6e-a6f9-1f1a8fd93792",
+      "city_id": "10000000-0000-4000-8000-000000000003",
+      "service_type": "ON_DEMAND"
+    }
+  },
+  "finished_utc": "2026-10-22T10:39:48.469748+00:00"
+}

@@ -1,0 +1,24 @@
+{
+  "candidate": "candidate-native-v20.json",
+  "scope": "Initial retained app-data observation; passenger old access expired, driver prior family already rejected",
+  "observations": [
+    {
+      "role": "passenger",
+      "utc": "2026-10-22T10:19:33.767737+00:00",
+      "account_visible": true,
+      "login_visible": false,
+      "welcome_visible": false,
+      "screenshot": "v20-initial-retained-passenger.png",
+      "sha256": "19bf5c4d4a36d3a2e1854feeec64c9c909d5d752dcbd25908b5ee2b738a372e7"
+    },
+    {
+      "role": "driver",
+      "utc": "2026-10-22T10:19:41.778318+00:00",
+      "account_visible": false,
+      "login_visible": false,
+      "welcome_visible": true,
+      "screenshot": "v20-initial-retained-driver.png",
+      "sha256": "7eacd4330b12b3f1bec0ef6d1cc2b0e25b7f6f53cfb6a9b2b4aa56a601573570"
+    }
+  ]
+}

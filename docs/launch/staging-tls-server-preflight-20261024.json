@@ -1,0 +1,82 @@
+{
+  "recorded_utc": "2026-10-24T14:25:47.390357+00:00",
+  "project_id": "9f841575-c4f3-4a4d-bb83-2e6ff92e436e",
+  "environment_id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+  "service_id": "41ccd6b2-41e2-4886-8d96-cc56f62aaab7",
+  "method": "One read-only transaction through the existing authenticated owner/local socket over authorized SSH; no raw HBA content, credentials or participant data returned",
+  "remote_script_sha256": "362b2ade21a30bac0849548d3a891600c9f721b5afa9e8fc37d4fced6e727503",
+  "return_code": 0,
+  "stderr_bytes": 0,
+  "observations": [
+    {
+      "read_only": "on",
+      "server_version": "16.4 (Debian 16.4-1.pgdg110+2)",
+      "migration_head": "20260908_0052",
+      "settings": {
+        "config_file": {
+          "setting": "/var/lib/postgresql/data/pgdata/postgresql.conf",
+          "context": "postmaster",
+          "source": "override",
+          "pending_restart": false
+        },
+        "data_directory": {
+          "setting": "/var/lib/postgresql/data/pgdata",
+          "context": "postmaster",
+          "source": "override",
+          "pending_restart": false
+        },
+        "hba_file": {
+          "setting": "/var/lib/postgresql/data/pgdata/pg_hba.conf",
+          "context": "postmaster",
+          "source": "override",
+          "pending_restart": false
+        },
+        "ssl": {
+          "setting": "off",
+          "context": "sighup",
+          "source": "default",
+          "pending_restart": false
+        },
+        "ssl_ca_file": {
+          "setting": "",
+          "context": "sighup",
+          "source": "default",
+          "pending_restart": false
+        },
+        "ssl_cert_file": {
+          "setting": "server.crt",
+          "context": "sighup",
+          "source": "default",
+          "pending_restart": false
+        },
+        "ssl_key_file": {
+          "setting": "server.key",
+          "context": "sighup",
+          "source": "default",
+          "pending_restart": false
+        },
+        "ssl_min_protocol_version": {
+          "setting": "TLSv1.2",
+          "context": "sighup",
+          "source": "default",
+          "pending_restart": false
+        }
+      },
+      "config_parse_errors": 1,
+      "hba_parse_errors": 0,
+      "remote_plaintext_reject_rules": 0,
+      "host_rule_types": [
+        "host",
+        "local"
+      ],
+      "sessions": {
+        "all_clients": 6,
+        "encrypted": 0,
+        "plaintext_tcp": 5
+      }
+    }
+  ],
+  "passed": true,
+  "server_settings_files_grants_credentials_or_deployments_changed": false,
+  "hosted_TLS_accepted": false
+}

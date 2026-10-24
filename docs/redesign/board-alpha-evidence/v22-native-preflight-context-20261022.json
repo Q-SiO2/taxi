@@ -1,0 +1,63 @@
+{
+  "recorded_utc": "2026-10-22T16:37:29.209342+00:00",
+  "candidate": "candidate-native-v22.json",
+  "scope": "Preflight context, not a complete trip or controlled expiry experiment",
+  "observations": [
+    {
+      "state": "Driver install timed out, but later installed-hash readback matched v22; continuation skipped duplicate driver installation and installed passenger only",
+      "evidence": [
+        {
+          "path": "native-v22-emulator-install-20261022.json",
+          "sha256": "f29ddc5e566b0c3dc94534a0103073fc2a68102d26603a8618fa03eb11782b3e"
+        },
+        {
+          "path": "native-v22-emulator-install-20261022-r2.json",
+          "sha256": "ad0e760b023fe74fced8e84aae6915b6dbfb4d858b4aec85f0aea23992a3a07a"
+        }
+      ]
+    },
+    {
+      "state": "Actual System UI ANR interrupted the first chrome observer. A later observer had a Python helper error before UI actions. Both retained; separately named r3 passed twelve actual normal/large-text role observations and restored fonts",
+      "evidence": [
+        {
+          "path": "v22-native-map-chrome-verification-20261022.json",
+          "sha256": "21dccae5261020920f6c814ffcd058542accac4edc6eb10c543759492dcb8298"
+        },
+        {
+          "path": "v22-native-map-chrome-verification-20261022-r2.json",
+          "sha256": "180471eb4042e30ed4d64e0d6c1a17067b7838e17569407a57e2059579a6167f"
+        },
+        {
+          "path": "v22-native-map-chrome-verification-20261022-r3.json",
+          "sha256": "0ca156251e93163b8cde6da7c25c708a40f5587693bbab690694f8432c093b30"
+        }
+      ]
+    },
+    {
+      "state": "Fixtures were subsequently observed stopped; saved named AVDs relaunched without reinstall/wipe. Initial preflight started before the driver transport was connected; separate r2 waited for boot. Driver then displayed an actual System UI ANR over a transient connection screen. Selected visible Wait once; no TaxiMobile Retry or fresh sign-in was needed before both authenticated Account toolbars appeared",
+      "evidence": [
+        {
+          "path": "v22-native-reboot-startup-20261022.json",
+          "sha256": "ade45c6f0fa3b8422d6949b98b534f94a0aadd2792a694d822ec9e7eb610367b"
+        },
+        {
+          "path": "v22-native-reboot-startup-20261022-r2.json",
+          "sha256": "48a3862178b7f54edb1ebd512b43aac6171aac52f6ce8d65fa0504b119862027"
+        },
+        {
+          "path": "v22-driver-reboot-diagnostic.png",
+          "sha256": "afd9d787ca9811025152b8088682d477d0e1f14e267783bb0246b0229f944ca3"
+        },
+        {
+          "path": "v22-driver-reboot-after-wait.png",
+          "sha256": "b39f4ae3497ae2ecf5059f62b0bfbb872ad599a7109a5a8c539b0e0cc14baf24"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Do not infer a seamless cold boot, controlled expired-token interval, absence of OS instability or phone behavior",
+    "Presentation timer starts after warm authenticated native preflight; no business command was admitted during these setup observations",
+    "No source change after frozen v22, no credential weakening, no family revocation bypass, no external paid/volume/permission change"
+  ]
+}

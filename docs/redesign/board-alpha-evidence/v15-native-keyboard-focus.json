@@ -1,0 +1,121 @@
+{
+  "candidate": "candidate-native-v15.json",
+  "utc": "2026-10-20T11:02:24.935962+00:00",
+  "scope": "Tab focus only on actual idle native account views; no Enter/activation or business commands; no TalkBack acceptance",
+  "roles": [
+    {
+      "role": "passenger",
+      "checks": [
+        {
+          "tab": 1,
+          "focus_names": [
+            "Account"
+          ],
+          "bounds": [
+            "[32,72][397,168]"
+          ]
+        },
+        {
+          "tab": 2,
+          "focus_names": [
+            "Safety"
+          ],
+          "bounds": [
+            "[413,72][509,168]"
+          ]
+        },
+        {
+          "tab": 3,
+          "focus_names": [
+            "Inbox 20",
+            "9+"
+          ],
+          "bounds": [
+            "[525,72][688,168]"
+          ]
+        },
+        {
+          "tab": 4,
+          "focus_names": [
+            "Back to ride"
+          ],
+          "bounds": [
+            "[48,416][672,512]"
+          ]
+        },
+        {
+          "tab": 5,
+          "focus_names": [
+            "Style · Folded Streets"
+          ],
+          "bounds": [
+            "[48,638][379,734]"
+          ]
+        }
+      ],
+      "all_named": true,
+      "image": {
+        "path": "v15-native-passenger-keyboard-focus.png",
+        "sha256": "299a9b8a790a6db33899e70f258ffc097d4d2f7c749d4439beced8fb908158eb"
+      }
+    },
+    {
+      "role": "driver",
+      "checks": [
+        {
+          "tab": 1,
+          "focus_names": [
+            "Driver account",
+            "Account"
+          ],
+          "bounds": [
+            "[32,72][398,168]"
+          ]
+        },
+        {
+          "tab": 2,
+          "focus_names": [
+            "Safety"
+          ],
+          "bounds": [
+            "[414,72][510,168]"
+          ]
+        },
+        {
+          "tab": 3,
+          "focus_names": [
+            "Inbox 18",
+            "9+"
+          ],
+          "bounds": [
+            "[526,72][688,168]"
+          ]
+        },
+        {
+          "tab": 4,
+          "focus_names": [
+            "Back to operations"
+          ],
+          "bounds": [
+            "[48,416][672,512]"
+          ]
+        },
+        {
+          "tab": 5,
+          "focus_names": [
+            "Style · Folded Streets"
+          ],
+          "bounds": [
+            "[48,544][378,640]"
+          ]
+        }
+      ],
+      "all_named": true,
+      "image": {
+        "path": "v15-native-driver-keyboard-focus.png",
+        "sha256": "33fe609e7969a0e484b9b3f21c4d2498da4bb36d9242ede63f8c214131567d40"
+      }
+    }
+  ],
+  "passed_within_scope": true
+}

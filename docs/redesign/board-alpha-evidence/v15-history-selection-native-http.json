@@ -1,0 +1,62 @@
+{
+  "candidate": "candidate-native-v15.json",
+  "scope": "Sanitized Railway trace for failed native passenger history review; no IP or auth material",
+  "requests": [
+    {
+      "timestamp": "2026-10-20T19:14:49.889699826Z",
+      "method": "GET",
+      "path": "/api/v1/rides/74cf05e3-9d1b-4d15-9a67-804226a20924/ratings",
+      "httpStatus": 200,
+      "clientUa": "ktor-client"
+    },
+    {
+      "timestamp": "2026-10-20T19:14:50.153028097Z",
+      "method": "GET",
+      "path": "/api/v1/rides/74cf05e3-9d1b-4d15-9a67-804226a20924/receipt",
+      "httpStatus": 200,
+      "clientUa": "ktor-client"
+    },
+    {
+      "timestamp": "2026-10-20T19:15:07.835860754Z",
+      "method": "GET",
+      "path": "/api/v1/rides/74cf05e3-9d1b-4d15-9a67-804226a20924/ratings",
+      "httpStatus": 200,
+      "clientUa": "ktor-client"
+    },
+    {
+      "timestamp": "2026-10-20T19:15:08.262316507Z",
+      "method": "GET",
+      "path": "/api/v1/rides/74cf05e3-9d1b-4d15-9a67-804226a20924/receipt",
+      "httpStatus": 200,
+      "clientUa": "ktor-client"
+    },
+    {
+      "timestamp": "2026-10-20T19:15:08.816267430Z",
+      "method": "GET",
+      "path": "/api/v1/rides/74cf05e3-9d1b-4d15-9a67-804226a20924",
+      "httpStatus": 200,
+      "clientUa": "ktor-client"
+    },
+    {
+      "timestamp": "2026-10-20T19:15:09.306241818Z",
+      "method": "GET",
+      "path": "/api/v1/rides/74cf05e3-9d1b-4d15-9a67-804226a20924/receipt",
+      "httpStatus": 200,
+      "clientUa": "ktor-client"
+    },
+    {
+      "timestamp": "2026-10-20T19:15:14.020376592Z",
+      "method": "GET",
+      "path": "/api/v1/rides/74cf05e3-9d1b-4d15-9a67-804226a20924/ratings",
+      "httpStatus": 200,
+      "clientUa": "ktor-client"
+    },
+    {
+      "timestamp": "2026-10-20T19:15:14.286960067Z",
+      "method": "GET",
+      "path": "/api/v1/rides/74cf05e3-9d1b-4d15-9a67-804226a20924/receipt",
+      "httpStatus": 200,
+      "clientUa": "ktor-client"
+    }
+  ]
+}

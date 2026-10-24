@@ -1,0 +1,41 @@
+{
+  "recorded_utc": "2026-10-21T17:42:41.736215+00:00",
+  "passed": false,
+  "expected_red": true,
+  "counts": {
+    "tests": 5,
+    "failures": 3,
+    "errors": 0,
+    "skipped": 0
+  },
+  "failing_cases": [
+    "header_drag_expands_and_collapses_a_long_scrollable_sheet[jvm]",
+    "accessibility_actions_resize_in_both_directions[jvm]",
+    "large_text_does_not_offer_a_collapse_below_its_minimum[jvm]"
+  ],
+  "archive": ".tools/alpha-delivery/sheet-handle-red-20261021",
+  "sources": [
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiSheet.kt",
+      "sha256": "2c34b0e978eb5836e648549dfaccfeaccee4d68534a06c48b43bcb641f13e699"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/ui/components/TaxiSheetUiTest.kt",
+      "sha256": "f44803952a15544c00746f6b2fb846d8d8e1e7621d2f1b63c6991750361e58fe"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/values/strings.xml",
+      "sha256": "23f68aadf4f554cce52a0c753b0758a790f58383cc604a833e5b6224cfa06054"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/values-fr/strings.xml",
+      "sha256": "dfd7bbc8fd93634049539671cb9ac7d0b3602d7e264fcaa60c267e2ee1b722ea"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/values-ar/strings.xml",
+      "sha256": "61217ca0da4daaf32ba3631a5a5f9407852d72aec005278459147666058bcd97"
+    }
+  ],
+  "native_diagnostic": "v18-native-sheet-handle-diagnostic-20261021.json",
+  "scope": "Long scrollable content consumes the existing header swipe; native half viewport remains unchanged. Body scrolling already passes. Resize accessibility actions are absent. No production fix or assertion weakening in this red run."
+}

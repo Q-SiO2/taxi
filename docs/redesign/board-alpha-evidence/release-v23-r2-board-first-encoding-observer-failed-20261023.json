@@ -1,0 +1,10 @@
+{
+  "candidate": "candidate-native-v23.json",
+  "web_candidate": "candidate-web-v10.json",
+  "run": "first",
+  "started_utc": "2026-10-23T10:47:35.733587+00:00",
+  "passed": false,
+  "beats": [],
+  "scope": "Synthetic emulator and normal hosted browser rehearsal; actual elapsed time, not a seven-minute claim",
+  "failure": "Rehearsal helper was copied using Windows legacy decoding, corrupting the middle-dot label. App control is present; zero native business commands. Helper corrected with explicit UTF-8."
+}

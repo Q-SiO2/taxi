@@ -1,0 +1,13 @@
+{
+  "candidate": "candidate-native-v22.json",
+  "closed_utc": "2026-10-22T17:14:36.088Z",
+  "method": "Normal owned reviewer and applicant Logout followed by rendered anonymous/sign-out confirmation",
+  "closed_tab_ids": [
+    "3",
+    "4"
+  ],
+  "original_tabs_untouched": [
+    "1",
+    "2"
+  ]
+}

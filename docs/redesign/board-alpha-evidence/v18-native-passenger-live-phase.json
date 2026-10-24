@@ -1,0 +1,25 @@
+{
+  "candidate": "candidate-native-v18.json",
+  "started_utc": "2026-10-21T11:36:00.658722+00:00",
+  "passed": true,
+  "scope": "Passenger live status read/scroll only while driver runs its independent native lifecycle; no passenger business input",
+  "visible_phase_labels": [
+    "\u0648\u0635\u0644 \u0627\u0644\u0633\u0627\u0626\u0642",
+    "\u0648\u0635\u0644 \u0627\u0644\u0633\u0627\u0626\u0642",
+    "\u0648\u0635\u0644 \u0627\u0644\u0633\u0627\u0626\u0642"
+  ],
+  "screenshot": {
+    "path": "v18-second-passenger-live-phase.png",
+    "sha256": "b43e9202f017fab313ae578519b319c7489342ccad2ddd9008e5c786d022487b"
+  },
+  "finished_utc": "2026-10-21T11:36:04.292100+00:00",
+  "in_progress": {
+    "utc": "2026-10-21T11:36:31.926318+00:00",
+    "actual_native_status_visible": true,
+    "screenshot": {
+      "path": "v18-second-passenger-in-progress.png",
+      "sha256": "c8e36a503611ad0effe0faec2d93a855791736b4ed38536820d36dc039e92768"
+    },
+    "input_sent": false
+  }
+}

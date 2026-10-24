@@ -31,7 +31,16 @@ import org.example.taximobile.feature.app.MobileAppCoordinator
 import org.example.taximobile.feature.auth.AuthenticationSessionCoordinator
 import java.util.Locale
 
-class AndroidAppDependencies(context: Context, role: AppRole) {
+class AndroidAppDependencies private constructor(context: Context, role: AppRole) {
+    companion object {
+        private val instances = mutableMapOf<AppRole, AndroidAppDependencies>()
+
+        /** Activities and Firebase must share one credential owner per process. */
+        fun forApplication(context: Context, role: AppRole): AndroidAppDependencies = synchronized(instances) {
+            instances.getOrPut(role) { AndroidAppDependencies(context.applicationContext, role) }
+        }
+    }
+
     private val client = HttpClient(OkHttp) {
         configureTaxiMobileTransport(
             TaxiMobileClientIdentity(

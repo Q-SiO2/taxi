@@ -1,0 +1,34 @@
+{
+  "candidate": "candidate-native-v21.json",
+  "locale": "fr",
+  "label": "normal",
+  "started_utc": "2026-10-22T11:37:36.008286+00:00",
+  "passed": true,
+  "installed_apk_sha256": "bba9cd2e810659d66002b0b10377e95b275aec16d02424acba7705844a55e297",
+  "screenshots": [
+    {
+      "path": "v21-native-passenger-fr-quote-normal-pickup.png",
+      "sha256": "930fed08353d8fa6382d00147532c0ea2d03fa827f5d3c7381a61289672d5448"
+    },
+    {
+      "path": "v21-native-passenger-fr-quote-normal-destination.png",
+      "sha256": "930fed08353d8fa6382d00147532c0ea2d03fa827f5d3c7381a61289672d5448"
+    },
+    {
+      "path": "v21-native-passenger-fr-quote-normal-fare.png",
+      "sha256": "77cba4161a0e043f8e2957140c2163d627f2ac0539bbfe35d666138e9212dd63"
+    },
+    {
+      "path": "v21-native-passenger-fr-quote-normal-request.png",
+      "sha256": "77cba4161a0e043f8e2957140c2163d627f2ac0539bbfe35d666138e9212dd63"
+    }
+  ],
+  "scope": "Actual reviewed point form after OS locale/font recreation, exact translated labels, both selected-point summaries, fresh fare and enabled Request. Scroll/header only; no point edit, sign-in or booking.",
+  "configuration": "config: mcc310-mnc260-fr-rFR,en-rUS,ar-rMA-ldltr-sw360dp-w360dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x720-v31",
+  "font_scale": "1.0",
+  "pid": "1850",
+  "backend_amount_displayed": "35.00",
+  "currency": "MAD",
+  "request_visible_enabled": true,
+  "finished_utc": "2026-10-22T11:38:16.347348+00:00"
+}

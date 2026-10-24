@@ -1,0 +1,13 @@
+{
+  "observed_utc": "2026-10-21T18:34:00Z",
+  "timestamp_precision": "Approximate minute from the diagnostic tool interval; not a profiling timestamp",
+  "candidate": "candidate-native-v19.json",
+  "owned_serial": "emulator-5556",
+  "driver_task": 33,
+  "driver_main_activity_history_records": 3,
+  "history_indices": [2, 1, 0],
+  "one_top_resumed_main_activity": true,
+  "source_boundary": "MainActivity.onCreate constructs AndroidAppDependencies anew, and Firebase registration separately constructs the same class. Each creates its own AuthenticationSessionCoordinator and sessionMutex, sharing the protected preference record. Android manifest declares no separate process for these components.",
+  "qualification": "Activity records and source establish multiple dependency ownership paths. No token values/family identifiers were inspected and no PID was separately retained in this diagnostic, so exact causal attribution of each proxy refresh remains unproven.",
+  "continuation": "Use one application-context-owned dependency/coordinator per role; reproduce cancellation between server rotation and protected commit; verify replacement with actual repeated activity entry and expired-token recovery. Do not merely change the rehearsal to avoid multiple entries or relax backend refresh reuse rejection."
+}

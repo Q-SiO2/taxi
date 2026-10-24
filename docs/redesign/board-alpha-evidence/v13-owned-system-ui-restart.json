@@ -1,0 +1,22 @@
+{
+  "utc": "2026-10-19T20:10:33.544700+00:00",
+  "scope": "Only observed System UI ANR Close app buttons on owned emulators; OS service restarts normally; no app data reset/security setting change",
+  "roles": [
+    {
+      "role": "driver",
+      "system_ui_close_selected": true,
+      "ui_after": [
+        "TaxiMobile",
+        "جارٍ التحقق من جلستك الآمنة…"
+      ]
+    },
+    {
+      "role": "passenger",
+      "system_ui_close_selected": false,
+      "ui_after": [
+        "TaxiMobile",
+        "جارٍ التحقق من جلستك الآمنة…"
+      ]
+    }
+  ]
+}

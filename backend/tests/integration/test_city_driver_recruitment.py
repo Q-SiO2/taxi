@@ -18,7 +18,11 @@ from taximobile_api.domains.auth.bootstrap import bootstrap_initial_administrato
 from taximobile_api.domains.analytics.service import refresh_operational_analytics
 from taximobile_api.domains.markets.constants import LEGACY_CITY_ID
 from taximobile_api.main import create_app
-from taximobile_api.integrations.driver_documents import InMemoryDriverDocumentStore
+from taximobile_api.integrations.driver_documents import (
+    EncryptedFilesystemDriverDocumentStore,
+    InMemoryDriverDocumentStore,
+    ProtectedDriverDocumentStore,
+)
 from taximobile_api.workers.driver_document_retention import (
     DriverDocumentRetentionProcessor,
 )
@@ -143,7 +147,7 @@ async def refresh_and_reconcile_analytics(settings: Settings) -> tuple[int, int,
 
 async def process_and_verify_document_erasure(
     settings: Settings,
-    store: InMemoryDriverDocumentStore,
+    store: ProtectedDriverDocumentStore,
     document_id: str,
 ) -> tuple[int, int, int]:
     engine = create_async_engine(settings.database_url, pool_pre_ping=True)
@@ -762,12 +766,14 @@ def test_scoped_reviewer_can_verify_only_a_vehicle_selected_in_the_application()
         assert reverified["verification_status"] == "VERIFIED"
 
 
-def test_protected_document_upload_review_replacement_and_deletion() -> None:
+@pytest.mark.parametrize("store_kind", ["memory", "filesystem"])
+def test_protected_document_upload_review_replacement_and_deletion(tmp_path, monkeypatch, store_kind) -> None:
     settings = integration_settings()
     asyncio.run(seed_platform_administrator(settings))
     suffix = uuid4().hex
     city_id = asyncio.run(seed_recruiting_test_city(settings, suffix))
-    store = InMemoryDriverDocumentStore(CleanDocumentScanner(), max_bytes=1024)
+    store = (EncryptedFilesystemDriverDocumentStore(tmp_path, bytes(range(32)), CleanDocumentScanner(), max_bytes=1024)
+             if store_kind == "filesystem" else InMemoryDriverDocumentStore(CleanDocumentScanner(), max_bytes=1024))
 
     with TestClient(create_app(settings=settings, driver_document_store=store)) as client:
         operations_headers = operations_login(client)
@@ -867,6 +873,24 @@ def test_protected_document_upload_review_replacement_and_deletion() -> None:
         )
         assert hidden.status_code == 404
 
+        if store_kind == "filesystem":
+            def unavailable_publish(_source, _target):
+                raise OSError("private-storage-fixture-path")
+            with monkeypatch.context() as fault:
+                fault.setattr("taximobile_api.integrations.driver_documents.os.replace", unavailable_publish)
+                unavailable = client.post(
+                    f"/api/v1/drivers/me/city-applications/{application_id}/documents",
+                    headers=applicant_headers,
+                    data={"requirement_item_id": requirement_item_id, "expected_application_version": 1},
+                    files={"file": ("identity.pdf", DOCUMENT_PDF, "application/pdf")},
+                )
+            assert unavailable.status_code == 503
+            assert "private-storage-fixture" not in unavailable.text
+            unchanged = expect(client.get(f"/api/v1/drivers/me/city-applications/{application_id}", headers=applicant_headers), 200)
+            assert unchanged["optimistic_version"] == 1 and unchanged["documents"] == []
+            assert list(tmp_path.rglob("*.bin")) == []
+            assert list(tmp_path.rglob(".upload-*")) == []
+
         uploaded = expect(
             client.post(
                 f"/api/v1/drivers/me/city-applications/{application_id}/documents",
@@ -883,6 +907,9 @@ def test_protected_document_upload_review_replacement_and_deletion() -> None:
         assert uploaded["optimistic_version"] == 2
         assert uploaded["complete"] is True
         assert uploaded["documents"][0]["scan_status"] == "CLEAN"
+        if store_kind == "filesystem":
+            payloads = [path.read_bytes() for path in tmp_path.rglob("*.bin")]
+            assert len(payloads) == 1 and all(DOCUMENT_PDF not in value for value in payloads)
 
         download = client.get(
             f"/api/v1/operations/driver-applications/{application_id}/documents/"
@@ -940,3 +967,5 @@ def test_protected_document_upload_review_replacement_and_deletion() -> None:
     assert processed >= 1
     assert document_count == 0
     assert audit_count == 1
+    if store_kind == "filesystem":
+        assert list(tmp_path.rglob("*.bin")) == []

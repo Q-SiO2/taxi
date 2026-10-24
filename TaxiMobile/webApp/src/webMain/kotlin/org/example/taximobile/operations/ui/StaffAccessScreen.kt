@@ -1,5 +1,6 @@
 package org.example.taximobile.operations.ui
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,6 +47,7 @@ internal fun StaffAccessScreen(
     onRevokeGrant: (AdministrativeGrantRecord, String) -> Unit,
     onDecideRequest: (AdministrativeGrantChangeRequestRecord, String, String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     val snapshot = state.snapshot ?: return
     val grants = snapshot.grants
     val mayManage = state.session?.hasPermission(MANAGE_SCOPED_STAFF_GRANTS) == true
@@ -66,6 +68,7 @@ internal fun StaffAccessScreen(
             supportingText = "Request, independently approve, and audit scoped authority.",
             action = {
                 Button(
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                     onClick = { showCreateDialog = true },
                     enabled = mayManage && grants != null && state.scope.marketId != null && !state.interactionLocked,
                 ) {
@@ -75,7 +78,7 @@ internal fun StaffAccessScreen(
         )
         Text(
             "Every change requires recent operations MFA and a durable maker-checker request. The requester, target, and approving administrator must be distinct; a revocation does not take effect while it is pending.",
-            color = TaxiColors.Ink700,
+            color = taxiColors.Ink700,
             style = MaterialTheme.typography.bodySmall,
         )
         when {
@@ -123,6 +126,7 @@ internal fun StaffAccessScreen(
                                 TableCell(grant.grantReason, 1.8f)
                                 Box(Modifier.weight(1.0f)) {
                                     OutlinedButton(
+                                        shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                                         onClick = { pendingRevocation = grant },
                                         enabled = !isCurrentUser && isSelectedMarket && !state.interactionLocked,
                                     ) {
@@ -210,22 +214,25 @@ internal fun StaffAccessScreen(
                                 Box(Modifier.weight(1.8f)) {
                                     when {
                                         isRequester -> OutlinedButton(
+                                            shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                                             onClick = { pendingDecision = request to "cancel" },
                                             enabled = !state.interactionLocked,
                                         ) { Text("Cancel request") }
                                         isTarget -> Text(
                                             "Target cannot decide",
-                                            color = TaxiColors.Ink500,
+                                            color = taxiColors.Ink500,
                                             style = MaterialTheme.typography.bodySmall,
                                         )
                                         else -> Row(
                                             horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs),
                                         ) {
                                             Button(
+                                                shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                                                 onClick = { pendingDecision = request to "approve" },
                                                 enabled = !state.interactionLocked,
                                             ) { Text("Approve") }
                                             OutlinedButton(
+                                                shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                                                 onClick = { pendingDecision = request to "reject" },
                                                 enabled = !state.interactionLocked,
                                             ) { Text("Reject") }
@@ -283,6 +290,7 @@ private fun CreateAdministrativeGrantDialog(
     onDismiss: () -> Unit,
     onConfirm: (AdministrativeGrantCreateRequest) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     var userId by remember { mutableStateOf("") }
     var roleTemplate by remember { mutableStateOf("CITY_MANAGER") }
     var expiresAt by remember { mutableStateOf("") }
@@ -317,7 +325,7 @@ private fun CreateAdministrativeGrantDialog(
             ) {
                 Text(
                     "Use the exact UUID of an existing active user. The backend records a pending snapshot and rechecks the user, scope, permission, duplicate state, and MFA again at approval.",
-                    color = TaxiColors.Ink700,
+                    color = taxiColors.Ink700,
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 OutlinedTextField(
@@ -339,11 +347,11 @@ private fun CreateAdministrativeGrantDialog(
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
-                    Text("${role.scopeKind.displayName.uppercase()} SCOPE", color = TaxiColors.Ink500, style = MaterialTheme.typography.labelSmall)
-                    Text(scopeLabel, color = TaxiColors.Navy900, fontWeight = FontWeight.Bold)
+                    Text("${role.scopeKind.displayName.uppercase()} SCOPE", color = taxiColors.Ink500, style = MaterialTheme.typography.labelSmall)
+                    Text(scopeLabel, color = taxiColors.Navy900, fontWeight = FontWeight.Bold)
                     Text(
                         "Change the scope selectors in the page header before opening this review if this is not the intended authority boundary.",
-                        color = TaxiColors.Ink500,
+                        color = taxiColors.Ink500,
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
@@ -368,7 +376,7 @@ private fun CreateAdministrativeGrantDialog(
                 )
                 Text(
                     "Review: ${role.displayName} for ${userId.ifBlank { "target user" }} in $scopeLabel.",
-                    color = TaxiColors.Navy900,
+                    color = taxiColors.Navy900,
                     fontWeight = FontWeight.Bold,
                 )
                 OutlinedTextField(
@@ -380,17 +388,17 @@ private fun CreateAdministrativeGrantDialog(
                     modifier = Modifier.fillMaxWidth(),
                 )
                 inputError?.let {
-                    Text(it, color = TaxiColors.Danger600, style = MaterialTheme.typography.bodySmall)
+                    Text(it, color = taxiColors.Danger600, style = MaterialTheme.typography.bodySmall)
                 }
                 Text(
                     "No authority changes now. A different platform administrator must review and approve this request. A failed command is not automatically replayed after MFA step-up.",
-                    color = TaxiColors.Ink700,
+                    color = taxiColors.Ink700,
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
         },
         confirmButton = {
-            Button(onClick = { onConfirm(request) }, enabled = !busy && valid) {
+            Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onConfirm(request) }, enabled = !busy && valid) {
                 Text(if (busy) "Waiting for backend…" else "Submit request")
             }
         },
@@ -406,6 +414,7 @@ private fun RevokeAdministrativeGrantDialog(
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     var reason by remember(grant.id) { mutableStateOf("") }
     var confirmation by remember(grant.id) { mutableStateOf("") }
     val valid = reason.trim().length in 3..240 && confirmation.trim() == "REVOKE"
@@ -416,7 +425,7 @@ private fun RevokeAdministrativeGrantDialog(
             Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md)) {
                 Text(
                     "Request revocation of ${grant.roleTemplate.replace('_', ' ')} for ${shortId(grant.userId)} in $scopeLabel. Access remains active until a different administrator approves the request.",
-                    color = TaxiColors.Ink700,
+                    color = taxiColors.Ink700,
                 )
                 OutlinedTextField(
                     value = reason,
@@ -438,7 +447,7 @@ private fun RevokeAdministrativeGrantDialog(
             }
         },
         confirmButton = {
-            Button(onClick = { onConfirm(reason.trim()) }, enabled = !busy && valid) {
+            Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onConfirm(reason.trim()) }, enabled = !busy && valid) {
                 Text(if (busy) "Waiting for backend…" else "Submit revocation")
             }
         },
@@ -454,6 +463,7 @@ private fun AdministrativeGrantDecisionDialog(
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     var reason by remember(request.id, decision) { mutableStateOf("") }
     var confirmation by remember(request.id, decision) { mutableStateOf("") }
     val phrase = decision.uppercase()
@@ -468,12 +478,12 @@ private fun AdministrativeGrantDecisionDialog(
                         "${request.roleTemplate.replace('_', ' ')} for " +
                         "${shortId(request.targetUserId)}. You are deciding version " +
                         "${request.optimisticVersion}; the backend will reject stale state.",
-                    color = TaxiColors.Ink700,
+                    color = taxiColors.Ink700,
                 )
                 Text(
                     "Requester: ${shortId(request.requesterUserId)} · original reason: " +
                         request.reason,
-                    color = TaxiColors.Ink500,
+                    color = taxiColors.Ink500,
                     style = MaterialTheme.typography.bodySmall,
                 )
                 OutlinedTextField(
@@ -498,13 +508,14 @@ private fun AdministrativeGrantDecisionDialog(
                 Text(
                     "Approval revalidates current account, scope, live authority, duplicates, " +
                         "expiry, and platform-admin continuity in one transaction.",
-                    color = TaxiColors.Ink500,
+                    color = taxiColors.Ink500,
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
         },
         confirmButton = {
             Button(
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                 onClick = { onConfirm(reason.trim()) },
                 enabled = !busy && valid,
             ) {

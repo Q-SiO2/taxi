@@ -28,6 +28,7 @@ _OPAQUE_KEY_PATTERN = re.compile(r"v1/[0-9a-f]{2}/[0-9a-f]{30}\.bin")
 _ENCRYPTION_VERSION = b"TMDOC1"
 _NONCE_BYTES = 12
 _SCAN_CHUNK_BYTES = 64 * 1024
+_SCAN_RESPONSE_MAX_BYTES = 4096
 
 
 class DriverDocumentError(RuntimeError):
@@ -108,32 +109,40 @@ class ClamAVScanner:
     async def require_clean(self, content: bytes) -> None:
         writer: asyncio.StreamWriter | None = None
         try:
-            reader, writer = await asyncio.wait_for(
-                asyncio.open_connection(self._host, self._port),
-                timeout=self._timeout_seconds,
-            )
-            writer.write(b"zINSTREAM\0")
-            for offset in range(0, len(content), _SCAN_CHUNK_BYTES):
-                chunk = content[offset : offset + _SCAN_CHUNK_BYTES]
-                writer.write(struct.pack("!I", len(chunk)))
-                writer.write(chunk)
-            writer.write(struct.pack("!I", 0))
-            await asyncio.wait_for(writer.drain(), timeout=self._timeout_seconds)
-            response = await asyncio.wait_for(reader.read(4096), timeout=self._timeout_seconds)
+            # One deadline bounds connect, backpressure and the complete reply.
+            # INSTREAM is a non-session command: consume through daemon EOF so
+            # a clean prefix cannot hide a trailing error or additional record.
+            async with asyncio.timeout(self._timeout_seconds):
+                reader, writer = await asyncio.open_connection(self._host, self._port)
+                writer.write(b"zINSTREAM\0")
+                for offset in range(0, len(content), _SCAN_CHUNK_BYTES):
+                    chunk = content[offset : offset + _SCAN_CHUNK_BYTES]
+                    writer.write(struct.pack("!I", len(chunk)))
+                    writer.write(chunk)
+                    await writer.drain()
+                writer.write(struct.pack("!I", 0))
+                await writer.drain()
+                response = bytearray()
+                while True:
+                    part = await reader.read(_SCAN_RESPONSE_MAX_BYTES + 1 - len(response))
+                    if not part:
+                        break
+                    response.extend(part)
+                    if len(response) > _SCAN_RESPONSE_MAX_BYTES:
+                        raise DriverDocumentUnavailable("The malware scanner returned an invalid result.")
         except (OSError, TimeoutError, asyncio.IncompleteReadError) as error:
             raise DriverDocumentUnavailable("Malware scanning is temporarily unavailable.") from error
         finally:
             if writer is not None:
                 writer.close()
                 try:
-                    await writer.wait_closed()
-                except OSError:
-                    pass
+                    await asyncio.wait_for(writer.wait_closed(), timeout=min(1.0, self._timeout_seconds))
+                except (OSError, TimeoutError):
+                    writer.transport.abort()
 
-        normalized = response.rstrip(b"\0\r\n")
-        if normalized.endswith(b" OK"):
+        if response == b"stream: OK\0":
             return
-        if normalized.endswith(b" FOUND"):
+        if re.fullmatch(rb"stream: [^\x00\r\n]+ FOUND\x00", response):
             raise DriverDocumentRejected("The document failed the malware safety scan.")
         raise DriverDocumentUnavailable("The malware scanner returned an invalid result.")
 
@@ -186,7 +195,10 @@ class EncryptedFilesystemDriverDocumentStore:
         nonce = os.urandom(_NONCE_BYTES)
         encrypted = self._cipher.encrypt(nonce, content, opaque_key.encode("ascii"))
         payload = _ENCRYPTION_VERSION + nonce + encrypted
-        await asyncio.to_thread(self._atomic_write, path, payload)
+        try:
+            await asyncio.to_thread(self._atomic_write, path, payload)
+        except OSError as error:
+            raise DriverDocumentUnavailable("Protected driver-document storage is unavailable.") from error
         return StoredDriverDocument(
             opaque_storage_key=opaque_key,
             media_type=detected_media_type,

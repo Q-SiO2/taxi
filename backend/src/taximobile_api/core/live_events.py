@@ -17,6 +17,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from taximobile_api.core.notification_policy import LIVE_EVENT_TYPES
 from taximobile_api.core.realtime import EventHub
+from taximobile_api.db.transport import DatabaseTLS
 
 
 LIVE_EVENT_CHANNEL = "taximobile_live_events_v1"
@@ -71,6 +72,7 @@ class PostgresLiveEventListener:
         heartbeat_seconds: float = 15.0,
         operation_timeout_seconds: float = 5.0,
         connect_timeout_seconds: float = 10.0,
+        tls: DatabaseTLS | None = None,
     ) -> None:
         for value in (
             reconnect_seconds, heartbeat_seconds, operation_timeout_seconds,
@@ -82,6 +84,7 @@ class PostgresLiveEventListener:
         if not url.drivername.startswith("postgresql"):
             raise ValueError("PostgreSQL live events require a PostgreSQL database URL")
         self._dsn = url.set(drivername="postgresql").render_as_string(hide_password=False)
+        self._connect_args = (tls or DatabaseTLS.from_environment()).connect_args(database_url)
         self._hub = hub
         self._reconnect_seconds = reconnect_seconds
         self._heartbeat_seconds = heartbeat_seconds
@@ -122,6 +125,7 @@ class PostgresLiveEventListener:
                     self._dsn,
                     timeout=self._connect_timeout_seconds,
                     command_timeout=self._operation_timeout_seconds,
+                    **self._connect_args,
                 )
                 self._connection = connection
                 connection.add_termination_listener(on_termination)

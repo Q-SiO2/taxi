@@ -16,6 +16,7 @@ from sqlalchemy.exc import ArgumentError
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from taximobile_api.domains.outbox.models import OutboxEvent
+from taximobile_api.db.transport import DatabaseTLS
 
 
 MAX_REPLAY_EVENTS = 100
@@ -70,7 +71,8 @@ def validate_request(
 
 async def replay_dead_letters(database_url: str, request: ReplayRequest) -> int:
     """Atomically requeue exactly the locked, undelivered dead letters requested."""
-    engine = create_async_engine(database_url, pool_pre_ping=True)
+    engine = create_async_engine(database_url, pool_pre_ping=True,
+                                 connect_args=DatabaseTLS.from_environment().connect_args(database_url))
     sessions = async_sessionmaker(engine, expire_on_commit=False)
     try:
         async with sessions() as session:

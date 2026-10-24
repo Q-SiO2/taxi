@@ -1,0 +1,101 @@
+{
+  "recorded_utc": "2026-10-23T23:42:01.788616+00:00",
+  "parent_ci": {
+    "commit": "aeff4a25d1d07ab8f6762fad9826af90cfb5708d",
+    "run_id": 40040360195,
+    "backend_job_id": 120709741892,
+    "backend_conclusion": "FAILURE",
+    "step": "development and Linux requirements pip-audit",
+    "runtime_audit": "PASSED",
+    "advisories": [
+      "CVE-2026-112940",
+      "CVE-2026-112913",
+      "CVE-2026-112907"
+    ],
+    "reported_fixed_version": "4.2.1"
+  },
+  "changes": {
+    "filelock": {
+      "before": "3.32.2",
+      "after": "4.2.4"
+    }
+  },
+  "all_other_dev_lock_text_preserved": true,
+  "release": {
+    "metadata_url": "https://pypi.org/pypi/filelock/4.2.4/json",
+    "requires_python": ">=3.11",
+    "requires_dist": null,
+    "hashes": {
+      "filelock-4.2.4-py3-none-any.whl": "301241438c57936ef93f4243a94f2559022268bfcf9b375a9a72eb0f8db8358e",
+      "filelock-4.2.4.tar.gz": "c6d8663535e1650ee430507b4ffbac7b464dd64b7647ea0112a9f406499d163d"
+    }
+  },
+  "locks": [
+    {
+      "path": "backend/requirements.lock",
+      "bytes": 93131,
+      "sha256": "430ee25c69c5b6abdde7e328d30fc2c1225cc6f8e07a1969c10c8030f2bdadec"
+    },
+    {
+      "path": "backend/requirements-dev.lock",
+      "bytes": 109798,
+      "sha256": "496c6acfbae26c0f5af5a2c21eedb8a2565f3c282bd7d78fb0ca7ef8081be8cb"
+    },
+    {
+      "path": "backend/requirements-linux.lock",
+      "bytes": 663,
+      "sha256": "80fc171715d925f47ec94c7b58b37c2c589a890b78ca681480178b2690ac4baa"
+    }
+  ],
+  "verification": {
+    "hash_required_install": "PASSED; only filelock updated",
+    "pip_check": "PASSED",
+    "windows_dev_audit": {
+      "result": "PASSED",
+      "packages": 68,
+      "findings": 0,
+      "artifact": {
+        "path": ".tools/real-world-launch/filelock-windows-audit-20261023.json",
+        "bytes": 3933,
+        "sha256": "539fb531a6e1ee0d78578bced0c79c102742eec3cd37116c6ae9bcc2960c65fd"
+      }
+    },
+    "consumer": {
+      "recorded_utc": "2026-10-23T23:39:30.270420+00:00",
+      "versions": {
+        "filelock": "4.2.4",
+        "CacheControl": "0.14.4",
+        "pip-audit": "2.10.1"
+      },
+      "checks": [
+        "filecache-write-read",
+        "filecache-replace",
+        "concurrent-filecache-writes-remain-complete",
+        "filecache-delete"
+      ],
+      "passed": true,
+      "scope": "Actual installed CacheControl FileCache consumer on Windows/Python3.14; not a POSIX exploit reproduction or Python3.12 CI result."
+    },
+    "consumer_artifact": {
+      "path": ".tools/real-world-launch/filelock-consumer-20261023.json",
+      "bytes": 483,
+      "sha256": "f2f0f677244e187fc8d595df2d9dc824acfe0b796ce8051fd29dd414165d7736"
+    },
+    "compiler": {
+      "python": "3.14.4",
+      "pip": "25.3",
+      "log": {
+        "path": ".tools/real-world-launch/filelock-compile-r2-20261023.log",
+        "bytes": 111287,
+        "sha256": "0fef37c9025617aaed6e28216c5f937950487b909c8ea95a0ce1c5ab7865fbde"
+      }
+    }
+  },
+  "retained_failures": [
+    "Application pip-tools/pip ImportError before lock modification; existing tool environment used successfully.",
+    "Windows combined Linux lock audit selected uvloop sdist outside approved Linux wheel hashes; lock unchanged, native Linux verification pending."
+  ],
+  "successor_ci_accepted": false,
+  "deployment_accepted": false,
+  "public_launch_accepted": false
+}

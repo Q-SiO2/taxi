@@ -17,7 +17,7 @@ WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
 MANIFEST_PATH = WORKSPACE_ROOT / "assets" / "manifest.json"
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 SAFE_NAME = re.compile(r"^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$")
-HEX_COLOR = re.compile(r"#[0-9A-Fa-f]{6}\b")
+HEX_COLOR = re.compile(r"#(?:[0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})\b")
 SIZED_PNG = re.compile(r"_(128|256|512|1024)\.png$")
 FORBIDDEN_STEMS = ("final2", "copy", "fixed_final", "newcar", "taxi3")
 REQUIRED_PRODUCTION_IDS = {
@@ -94,13 +94,16 @@ def validate_svg(path: Path, allowed_palette: set[str], errors: list[str], root:
                 errors.append(f"{label}: external SVG reference is not allowed: {value}")
 
     contents = path.read_text(encoding="utf-8")
-    colors = {match.upper() for match in HEX_COLOR.findall(contents)}
+    colors = {
+        ("#" + "".join(character * 2 for character in match[1:]) if len(match) == 4 else match).upper()
+        for match in HEX_COLOR.findall(contents)
+    }
     unexpected = sorted(colors - allowed_palette)
     if unexpected:
         errors.append(f"{label}: colors outside the approved palette: {', '.join(unexpected)}")
 
 
-def validate_png(path: Path, errors: list[str], root: Path) -> None:
+def validate_png(path: Path, errors: list[str], root: Path, *, require_alpha: bool = True) -> None:
     label = relative(path, root)
     try:
         width, height, bit_depth, color_type, interlace = read_png_header(path)
@@ -110,8 +113,10 @@ def validate_png(path: Path, errors: list[str], root: Path) -> None:
 
     if bit_depth != 8:
         errors.append(f"{label}: expected 8-bit channels, found {bit_depth}")
-    if color_type not in (4, 6):
+    if require_alpha and color_type not in (4, 6):
         errors.append(f"{label}: expected a real alpha channel, PNG color type is {color_type}")
+    elif not require_alpha and color_type not in (2, 4, 6):
+        errors.append(f"{label}: expected RGB or alpha PNG, found color type {color_type}")
     if interlace not in (0, 1):
         errors.append(f"{label}: invalid interlace method {interlace}")
 
@@ -122,6 +127,29 @@ def validate_png(path: Path, errors: list[str], root: Path) -> None:
             errors.append(
                 f"{label}: filename declares {expected}px but image is {width}x{height}"
             )
+
+
+def validate_runtime_artwork(root: Path = WORKSPACE_ROOT, *, opaque_runtime_files: set[Path] | None = None) -> list[str]:
+    """Master/mirror equality cannot prove that Android can decode an asset."""
+    errors: list[str] = []
+    shared = root / "TaxiMobile/shared/src/commonMain"
+    drawable = shared / "composeResources/drawable"
+    opaque_runtime_files = opaque_runtime_files or set()
+    for source in sorted((shared / "kotlin").rglob("*.kt")):
+        code = source.read_text(encoding="utf-8")
+        for name in set(re.findall(r"Res\.drawable\.([a-z][a-z0-9_]*)", code)):
+            if (drawable / f"{name}.svg").is_file():
+                errors.append(
+                    f"{relative(source, root)}: common UI loads SVG {name}; "
+                    "Android requires a PNG or XML-vector runtime export"
+                )
+        for value in set(re.findall(r'"(drawable/[a-z][a-z0-9_]*_runtime\.png)"', code)):
+            path = shared / "composeResources" / value
+            if not path.is_file():
+                errors.append(f"{relative(source, root)}: missing runtime PNG {value}")
+            else:
+                validate_png(path, errors, root, require_alpha=path.resolve() not in opaque_runtime_files)
+    return errors
 
 
 def validate_assets(root: Path = WORKSPACE_ROOT) -> list[str]:
@@ -173,6 +201,7 @@ def validate_assets(root: Path = WORKSPACE_ROOT) -> list[str]:
     runtime_root_value = manifest.get("runtime_root")
     runtime_root = root / str(runtime_root_value)
     listed_sources: set[Path] = set()
+    opaque_runtime_files: set[Path] = set()
 
     for item in assets:
         if not isinstance(item, dict):
@@ -182,6 +211,25 @@ def validate_assets(root: Path = WORKSPACE_ROOT) -> list[str]:
         status = item.get("status")
         sources = item.get("sources", [])
         exports = item.get("exports", [])
+        require_alpha = item.get("require_alpha", True)
+        if not isinstance(require_alpha, bool):
+            errors.append(f"{asset_id}: require_alpha must be a boolean")
+            require_alpha = True
+        source_palettes = item.get("source_palettes", {})
+        if not isinstance(source_palettes, dict):
+            errors.append(f"{asset_id}: source_palettes must be an object")
+            source_palettes = {}
+        for value, colors in source_palettes.items():
+            if value not in sources or not str(value).endswith(".svg"):
+                errors.append(f"{asset_id}: palette exception must name this asset's SVG source")
+            if not isinstance(colors, list) or any(
+                not isinstance(color, str) or re.fullmatch(r"#[0-9A-Fa-f]{6}", color) is None
+                for color in colors
+            ):
+                errors.append(f"{asset_id}: source palette must contain six-digit hex colours")
+                source_palettes[value] = []
+        if source_palettes and not item.get("provenance_record"):
+            errors.append(f"{asset_id}: source palette exception requires a provenance record")
 
         if status == "ready" and not sources:
             errors.append(f"{asset_id}: ready asset has no source")
@@ -199,9 +247,10 @@ def validate_assets(root: Path = WORKSPACE_ROOT) -> list[str]:
             if any(fragment in source.stem.lower() for fragment in FORBIDDEN_STEMS):
                 errors.append(f"{asset_id}: source uses a forbidden provisional name: {source.name}")
             if source.suffix.lower() == ".svg":
-                validate_svg(source, palette, errors, root)
+                scoped_palette = palette | {color.upper() for color in source_palettes.get(value, [])}
+                validate_svg(source, scoped_palette, errors, root)
             elif source.suffix.lower() == ".png":
-                validate_png(source, errors, root)
+                validate_png(source, errors, root, require_alpha=require_alpha)
             else:
                 errors.append(f"{asset_id}: unsupported source type: {source.name}")
 
@@ -210,7 +259,7 @@ def validate_assets(root: Path = WORKSPACE_ROOT) -> list[str]:
             if not export.is_file():
                 errors.append(f"{asset_id}: missing export {relative(export, root)}")
             elif export.suffix.lower() == ".png":
-                validate_png(export, errors, root)
+                validate_png(export, errors, root, require_alpha=require_alpha)
 
         if item.get("runtime") == "mirrored_by_basename":
             for source in resolved_sources:
@@ -223,16 +272,31 @@ def validate_assets(root: Path = WORKSPACE_ROOT) -> list[str]:
         for mapping in item.get("runtime_files", []):
             source = root / str(mapping.get("source", ""))
             destination = root / str(mapping.get("destination", ""))
+            if not require_alpha:
+                opaque_runtime_files.add(destination.resolve())
             if not source.is_file():
                 errors.append(f"{asset_id}: missing runtime source {relative(source, root)}")
             if not destination.is_file():
                 errors.append(f"{asset_id}: missing runtime destination {relative(destination, root)}")
             if source.is_file() and destination.is_file() and sha256(source) != sha256(destination):
                 errors.append(f"{asset_id}: runtime file differs from {relative(source, root)}")
+            if destination.is_file() and item.get("runtime_dimensions"):
+                try:
+                    width, height, *_ = read_png_header(destination)
+                    if [width, height] != item["runtime_dimensions"]:
+                        errors.append(f"{asset_id}: runtime dimensions differ from the selected artwork")
+                except (OSError, ValueError, struct.error):
+                    errors.append(f"{asset_id}: runtime dimensions cannot be inspected")
+            if destination.is_file() and item.get("max_runtime_bytes"):
+                if destination.stat().st_size > item["max_runtime_bytes"]:
+                    errors.append(f"{asset_id}: runtime image exceeds its bounded loader budget")
 
         generation_record = item.get("generation_record")
         if generation_record and not (root / str(generation_record)).is_file():
             errors.append(f"{asset_id}: missing generation record {generation_record}")
+        provenance_record = item.get("provenance_record")
+        if provenance_record and not (root / str(provenance_record)).is_file():
+            errors.append(f"{asset_id}: missing provenance record {provenance_record}")
 
     source_svgs = {
         path.resolve()
@@ -243,6 +307,7 @@ def validate_assets(root: Path = WORKSPACE_ROOT) -> list[str]:
     if unlisted:
         errors.append("assets/manifest.json: unlisted SVG sources: " + ", ".join(unlisted))
 
+    errors.extend(validate_runtime_artwork(root, opaque_runtime_files=opaque_runtime_files))
     return errors
 
 

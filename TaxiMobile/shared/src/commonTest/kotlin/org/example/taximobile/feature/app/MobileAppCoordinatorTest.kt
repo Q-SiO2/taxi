@@ -3,6 +3,7 @@ package org.example.taximobile.feature.app
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
@@ -34,6 +35,7 @@ import org.example.taximobile.domain.drivers.DriverCityApplicationSummary
 import org.example.taximobile.domain.drivers.DriverCityAuthorization
 import org.example.taximobile.domain.drivers.DriverDocumentUpload
 import org.example.taximobile.domain.drivers.DriverGateway
+import org.example.taximobile.domain.drivers.DriverLocationObservation
 import org.example.taximobile.domain.drivers.DriverRecruitmentGateway
 import org.example.taximobile.domain.drivers.RecruitingCity
 import org.example.taximobile.domain.drivers.RecruitmentCopy
@@ -73,6 +75,12 @@ import org.example.taximobile.domain.cooperatives.CooperativeGateway
 import org.example.taximobile.domain.cooperatives.CooperativeMembership
 import org.example.taximobile.feature.ui.text.UiMessage
 import taximobile.shared.generated.resources.*
+
+private fun observed(location: Coordinates) = DriverLocationObservation(
+    location,
+    kotlin.time.Clock.System.now().toEpochMilliseconds(),
+    8.0,
+)
 
 class MobileAppCoordinatorTest {
     @Test
@@ -300,11 +308,106 @@ class MobileAppCoordinatorTest {
         val coordinator = MobileAppCoordinator(AppRole.DRIVER, unusedAuthentication(), driver = gateway)
         val location = Coordinates(33.5731, -7.5898)
 
-        val state = assertIs<AppUiState.DriverReady>(coordinator.updateDriverLocation(location))
+        val state = assertIs<AppUiState.DriverReady>(coordinator.updateDriverLocation(observed(location)))
 
         assertEquals(location, gateway.submittedLocation)
+        assertEquals(8.0, gateway.submittedAccuracyMeters)
         assertEquals(location, state.currentLocation)
         assertEquals(DriverAvailabilityStatus.OFFLINE, state.availability)
+    }
+
+    @Test
+    fun `native location acknowledgement preserves newest projection without dashboard reload`() = runBlocking {
+        val location = Coordinates(33.5731, -7.5898)
+        var current = AppUiState.DriverReady(availability = DriverAvailabilityStatus.AVAILABLE, displayName = "Before hint")
+        val gateway = object : DriverGateway by RecordingDriverGateway() {
+            override suspend fun updateLocation(location: Coordinates, observedAt: String, accuracyMeters: Double) {
+                current = current.copy(displayName = "After hint", pendingCashLoadFailed = true)
+            }
+            override suspend fun currentAvailability(): DriverAvailability = error("A location acknowledgement must not reload the dashboard")
+        }
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER, unusedAuthentication(), driver = gateway)
+
+        val result = assertIs<AppUiState.DriverReady>(coordinator.updateDriverLocation(observed(location)) { current })
+
+        assertEquals(location, result.currentLocation)
+        assertEquals("After hint", result.displayName)
+        assertEquals(true, result.pendingCashLoadFailed)
+        assertEquals(DriverAvailabilityStatus.AVAILABLE, result.availability)
+    }
+
+    @Test
+    fun `rejected native location never patches the current projection`() = runBlocking {
+        var projectionReads = 0
+        val gateway = object : DriverGateway by RecordingDriverGateway() {
+            override suspend fun updateLocation(location: Coordinates, observedAt: String, accuracyMeters: Double) {
+                throw ApiRequestException(409, "Location rejected")
+            }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER, unusedAuthentication(), driver = gateway)
+
+        val result = coordinator.updateDriverLocation(observed(Coordinates(33.5731, -7.5898))) {
+            projectionReads++
+            AppUiState.DriverReady(availability = DriverAvailabilityStatus.AVAILABLE)
+        }
+
+        assertIs<AppUiState.Offline>(result)
+        assertEquals(0, projectionReads)
+    }
+
+    @Test
+    fun `late native location acknowledgement cannot patch a replaced session`() = runBlocking {
+        val authentication = unusedAuthentication()
+        var projectionReads = 0
+        val gateway = object : DriverGateway by RecordingDriverGateway() {
+            override suspend fun updateLocation(location: Coordinates, observedAt: String, accuracyMeters: Double) {
+                authentication.beginSessionEnd()
+            }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER, authentication, driver = gateway)
+
+        val result = coordinator.updateDriverLocation(observed(Coordinates(33.5731, -7.5898))) {
+            projectionReads++
+            AppUiState.DriverReady(availability = DriverAvailabilityStatus.AVAILABLE)
+        }
+
+        assertTrue(assertIs<AppUiState.SignedOut>(result).requiresSessionRecheck)
+        assertEquals(0, projectionReads)
+    }
+
+    @Test
+    fun `location guidance cannot overwrite a newer trip phase projection`() = runBlocking {
+        val location = Coordinates(33.5731, -7.5898)
+        val pickup = Coordinates(33.5741, -7.5898)
+        val oldRoute = RoutePlan(100, 30, listOf(location, pickup), emptyList())
+        val newerRoute = RoutePlan(200, 40, listOf(pickup, location), emptyList())
+        var current = AppUiState.DriverReady(availability = DriverAvailabilityStatus.EN_ROUTE,
+            activeRideId = "trip", activeRide = RideStatus.DRIVER_EN_ROUTE, pickup = pickup)
+        val routing = object : RoutingGateway {
+            override suspend fun route(pickup: Coordinates, destination: Coordinates): RoutePlan {
+                current = current.copy(activeRide = RideStatus.DRIVER_ARRIVED, routePlan = newerRoute)
+                return oldRoute
+            }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER, unusedAuthentication(), driver = RecordingDriverGateway(), routing = routing)
+
+        val result = assertIs<AppUiState.DriverReady>(coordinator.updateDriverLocation(observed(location)) { current })
+
+        assertEquals(RideStatus.DRIVER_ARRIVED, result.activeRide)
+        assertEquals(newerRoute, result.routePlan)
+        assertEquals(location, result.currentLocation)
+    }
+
+    @Test
+    fun `location resource rejection requests session revalidation instead of declaring refresh expiry`() = runBlocking {
+        val gateway = object : DriverGateway by RecordingDriverGateway() {
+            override suspend fun updateLocation(location: Coordinates, observedAt: String, accuracyMeters: Double) {
+                throw org.example.taximobile.data.auth.AuthenticationRejectedException()
+            }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER, unusedAuthentication(), driver = gateway)
+        val state = assertIs<AppUiState.SignedOut>(coordinator.updateDriverLocation(observed(Coordinates(33.5731, -7.5898))))
+        assertEquals(true, state.requiresSessionRecheck)
     }
 
     @Test
@@ -313,7 +416,7 @@ class MobileAppCoordinatorTest {
         val coordinator = MobileAppCoordinator(AppRole.DRIVER, unusedAuthentication(), driver = gateway)
         val location = Coordinates(33.5731, -7.5898)
 
-        coordinator.updateDriverLocation(location)
+        coordinator.updateDriverLocation(observed(location))
         val state = assertIs<AppUiState.DriverReady>(coordinator.changeDriverAvailability(online = true))
 
         assertEquals(DriverAvailabilityStatus.AVAILABLE, state.availability)
@@ -336,6 +439,23 @@ class MobileAppCoordinatorTest {
         assertEquals("city-casablanca" to "FIXED_ROUTE", gateway.requestedOnlineMarket)
         assertEquals("city-casablanca", state.onlineCityId)
         assertEquals("FIXED_ROUTE", state.onlineServiceType)
+    }
+
+    @Test
+    fun `membership rejection gives localized union review guidance without declaring sign out`() = runBlocking {
+        val gateway = object : DriverGateway by RecordingDriverGateway() {
+            override suspend fun goOnline(cityId: String?, serviceType: String): DriverAvailability {
+                throw org.example.taximobile.data.network.ApiRequestException(409, "safe fallback",
+                    org.example.taximobile.data.network.ApiFailureReason.OPERATOR_MEMBERSHIP_REQUIRED)
+            }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER, unusedAuthentication(), driver = gateway)
+        val rejected = assertIs<AppUiState.Offline>(coordinator.changeDriverAvailability(true))
+        assertEquals(Res.string.message_membership_required, rejected.message.resource)
+        // Ordinary denial is not authentication expiry, and going offline remains
+        // available through the same gateway after membership withdrawal.
+        val offline = assertIs<AppUiState.DriverReady>(coordinator.changeDriverAvailability(false))
+        assertEquals(DriverAvailabilityStatus.OFFLINE, offline.availability)
     }
 
     @Test
@@ -544,7 +664,7 @@ class MobileAppCoordinatorTest {
             driver = RecordingDriverGateway(),
         )
 
-        coordinator.updateDriverLocation(Coordinates(33.5731, -7.5898))
+        coordinator.updateDriverLocation(observed(Coordinates(33.5731, -7.5898)))
         coordinator.logout()
         val state = assertIs<AppUiState.DriverReady>(coordinator.changeDriverAvailability(online = true))
 
@@ -566,7 +686,7 @@ class MobileAppCoordinatorTest {
             routing = routing,
         )
 
-        val state = assertIs<AppUiState.DriverReady>(coordinator.updateDriverLocation(location))
+        val state = assertIs<AppUiState.DriverReady>(coordinator.updateDriverLocation(observed(location)))
 
         assertEquals(location to pickup, routing.lastRequest)
         assertEquals(route, state.routePlan)
@@ -716,6 +836,91 @@ class MobileAppCoordinatorTest {
     }
 
     @Test
+    fun `passenger history survives refresh with newly confirmed cash status`() = runBlocking {
+        val rides = PassengerHistoryDetailGateway().apply { paymentStatus = "PENDING" }
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = rides)
+        val selected = assertIs<AppUiState.PassengerReady>(coordinator.loadPassengerRideHistoryDetail("ride-history"))
+        assertEquals("PENDING", selected.selectedHistoryReceipt?.paymentStatus)
+
+        rides.paymentStatus = "COMPLETED"
+        val refreshed = assertIs<AppUiState.PassengerReady>(coordinator.restore())
+        assertEquals("ride-history", refreshed.selectedHistoryRide?.id)
+        assertEquals("COMPLETED", refreshed.selectedHistoryReceipt?.paymentStatus)
+        assertEquals(2, rides.detailRequests)
+    }
+
+    @Test
+    fun `driver history survives refresh and reads newly submitted passenger feedback`() = runBlocking {
+        val rides = PassengerHistoryDetailGateway().apply { rating = null }
+        val coordinator = MobileAppCoordinator(
+            AppRole.DRIVER, driverAuthentication(), driver = RecordingDriverGateway(),
+            driverRides = CompletedDriverRideGateway(), rides = rides,
+        )
+        val selected = assertIs<AppUiState.DriverReady>(coordinator.loadDriverRideHistoryDetail("ride-history"))
+        assertNull(selected.selectedHistoryRating)
+
+        rides.rating = RideRating("new-feedback", 4, "Clear pickup")
+        val refreshed = assertIs<AppUiState.DriverReady>(coordinator.restore())
+        assertEquals("ride-history", refreshed.selectedHistoryRide?.id)
+        assertEquals(4, refreshed.selectedHistoryRating?.score)
+        assertEquals(2, rides.detailRequests)
+    }
+
+    @Test
+    fun `denied history refresh reports the error and forgets the inaccessible selection`() = runBlocking {
+        val rides = PassengerHistoryDetailGateway()
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = rides)
+        coordinator.loadPassengerRideHistoryDetail("ride-history")
+
+        rides.detailFailure = ApiRequestException(403, "History access withdrawn")
+        assertIs<AppUiState.Offline>(coordinator.restore())
+        assertEquals(2, rides.detailRequests)
+        val nextRefresh = assertIs<AppUiState.PassengerReady>(coordinator.restore())
+        assertNull(nextRefresh.selectedHistoryRide)
+        assertNull(nextRefresh.selectedHistoryReceipt)
+        assertEquals(2, rides.detailRequests)
+    }
+
+    @Test
+    fun `same account sign out and sign in clears its old history navigation`() = runBlocking {
+        val rides = PassengerHistoryDetailGateway()
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = rides)
+        coordinator.loadPassengerRideHistoryDetail("ride-history")
+        coordinator.logout()
+
+        val signedIn = assertIs<AppUiState.PassengerReady>(coordinator.login("passenger", "test-password", null))
+        assertNull(signedIn.selectedHistoryRide)
+        assertNull(signedIn.selectedHistoryReceipt)
+        assertEquals(1, rides.detailRequests)
+    }
+
+    @Test
+    fun `history read ending after sign out cannot install a selected record`() = runBlocking {
+        val rides = PassengerHistoryDetailGateway()
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = rides)
+        rides.onDetailRead = { coordinator.logout() }
+
+        assertIs<AppUiState.SignedOut>(coordinator.loadPassengerRideHistoryDetail("ride-history"))
+        assertEquals(1, rides.receiptRequests)
+        val signedIn = assertIs<AppUiState.PassengerReady>(coordinator.login("passenger", "test-password", null))
+        assertNull(signedIn.selectedHistoryRide)
+        assertEquals(1, rides.detailRequests)
+    }
+
+    @Test
+    fun `a new primary ride clears the previous historical receipt selection`() = runBlocking {
+        val rides = PassengerHistoryDetailGateway()
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = rides)
+        coordinator.loadPassengerRideHistoryDetail("ride-history")
+        rides.history = listOf(RideSummary("new-primary", RideStatus.MATCHING)) + rides.history
+
+        val refreshed = assertIs<AppUiState.PassengerReady>(coordinator.restore())
+        assertEquals("new-primary", refreshed.activeRideId)
+        assertNull(refreshed.selectedHistoryRide)
+        assertNull(refreshed.selectedHistoryReceipt)
+    }
+
+    @Test
     fun `retry restore recovers a retained session after a transient network failure`() = runBlocking {
         var accountRequests = 0
         var tokenClearCount = 0
@@ -776,10 +981,120 @@ class MobileAppCoordinatorTest {
         assertEquals("report-1", state.safetyReports.single().id)
         assertEquals("We received your report.", state.safetyReports.single().latestPublicMessage)
     }
+
+    @Test fun driver_pending_cash_survives_read_only_restore_without_history_inference() = runBlocking {
+        val cash = PendingCashRecoveryFixture()
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER, driverAuthentication(), driver = RecordingDriverGateway(), driverRides = cash)
+        repeat(2) {
+            val restored = assertIs<AppUiState.DriverReady>(coordinator.restore())
+            assertEquals("old-unpaid-ride", restored.pendingCashPayments?.items?.single()?.rideId)
+            assertEquals("ride-history", restored.rideHistory.single().id)
+        }
+        assertEquals(emptyList(), cash.settled)
+    }
+
+    @Test fun driver_cash_read_failure_is_explicit_and_has_no_settlement_control_data() = runBlocking {
+        val cash = PendingCashRecoveryFixture().apply { failure = AuthenticationNetworkException() }
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER, driverAuthentication(), driver = RecordingDriverGateway(), driverRides = cash)
+        val restored = assertIs<AppUiState.DriverReady>(coordinator.restore())
+        assertTrue(restored.pendingCashLoadFailed)
+        assertEquals(null, restored.pendingCashPayments)
+        assertEquals(emptyList(), cash.settled)
+    }
+
+    @Test fun driver_cash_authentication_rejection_requests_normal_session_recheck() = runBlocking {
+        val cash = PendingCashRecoveryFixture().apply { failure = org.example.taximobile.data.auth.AuthenticationRejectedException() }
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER, driverAuthentication(), driver = RecordingDriverGateway(), driverRides = cash)
+        assertTrue(assertIs<AppUiState.SignedOut>(coordinator.restore()).requiresSessionRecheck)
+        assertEquals(emptyList(), cash.settled)
+    }
+
+    @Test fun completing_cash_does_not_manufacture_pending_work_absent_from_server_queue() = runBlocking {
+        val cash = PendingCashRecoveryFixture().apply { queue = org.example.taximobile.domain.drivers.PendingCashPaymentsPage(emptyList(), 1, 20, 0) }
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER, driverAuthentication(), driver = RecordingDriverGateway(), driverRides = cash)
+        val result = assertIs<AppUiState.DriverReady>(coordinator.completeDriverRide("new-ride", Coordinates(33.5899, -7.6039)))
+        assertEquals(emptyList(), result.pendingCashPayments?.items)
+        assertEquals(emptyList(), cash.settled)
+    }
+
+    @Test fun driver_cash_confirmation_reloads_backend_queue_without_stale_item() = runBlocking {
+        val cash = PendingCashRecoveryFixture()
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER, driverAuthentication(), driver = RecordingDriverGateway(), driverRides = cash)
+        val result = assertIs<AppUiState.DriverReady>(coordinator.settleDriverCash("old-unpaid-ride"))
+        assertEquals(listOf("old-unpaid-ride"), cash.settled)
+        assertEquals(0, result.pendingCashPayments?.total)
+        assertEquals(emptyList(), result.pendingCashPayments?.items)
+    }
+
+    @Test fun driver_cash_pagination_reads_requested_page_without_issuing_commands() = runBlocking {
+        val cash = PendingCashRecoveryFixture().apply {
+            queue = queue.copy(page = 2, total = 23)
+        }
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER, driverAuthentication(), driver = RecordingDriverGateway(), driverRides = cash)
+        assertEquals(2, assertIs<AppUiState.DriverReady>(coordinator.loadDriverPendingCashPayments(2)).pendingCashPayments?.page)
+        assertEquals(listOf(2), cash.requestedPages)
+        assertEquals(emptyList(), cash.settled)
+    }
+
+    @Test fun background_read_refresh_keeps_the_selected_pending_cash_page() = runBlocking {
+        val cash = PendingCashRecoveryFixture().apply { queue = queue.copy(page = 2, total = 23) }
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER, driverAuthentication(), driver = RecordingDriverGateway(), driverRides = cash)
+        coordinator.loadDriverPendingCashPayments(2)
+        assertEquals(2, assertIs<AppUiState.DriverReady>(coordinator.restore()).pendingCashPayments?.page)
+        assertEquals(listOf(2, 2), cash.requestedPages)
+        assertEquals(emptyList(), cash.settled)
+    }
+
+    @Test fun a_concurrently_depleted_cash_page_reads_the_new_last_page() = runBlocking {
+        val cash = PendingCashRecoveryFixture().apply { queue = queue.copy(page = 2, total = 23) }
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER, driverAuthentication(), driver = RecordingDriverGateway(), driverRides = cash)
+        coordinator.loadDriverPendingCashPayments(2)
+        cash.pages[1] = cash.queue.copy(page = 1, total = 20)
+        cash.pages[2] = cash.queue.copy(items = emptyList(), page = 2, total = 20)
+        val recovered = assertIs<AppUiState.DriverReady>(coordinator.restore()).pendingCashPayments
+        assertEquals(1, recovered?.page)
+        assertEquals("old-unpaid-ride", recovered?.items?.single()?.rideId)
+        assertEquals(listOf(2, 2, 1), cash.requestedPages)
+        assertEquals(emptyList(), cash.settled)
+    }
+
+    @Test fun cash_confirmation_resets_page_one_after_a_page_two_selection() = runBlocking {
+        val cash = PendingCashRecoveryFixture().apply { queue = queue.copy(page = 2, total = 23) }
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER, driverAuthentication(), driver = RecordingDriverGateway(), driverRides = cash)
+        coordinator.loadDriverPendingCashPayments(2)
+        assertEquals(1, assertIs<AppUiState.DriverReady>(coordinator.settleDriverCash("old-unpaid-ride")).pendingCashPayments?.page)
+        assertEquals(listOf(2, 1), cash.requestedPages)
+        assertEquals(listOf("old-unpaid-ride"), cash.settled)
+    }
+}
+
+private class PendingCashRecoveryFixture : DriverRideGateway by CompletedDriverRideGateway() {
+    var queue = org.example.taximobile.domain.drivers.PendingCashPaymentsPage(
+        listOf(org.example.taximobile.domain.drivers.PendingCashPayment("pending-payment", "old-unpaid-ride", "35.00", "MAD", "2026-10-05T12:00:00Z")), 1, 20, 1,
+    )
+    var failure: Exception? = null
+    val pages = mutableMapOf<Int, org.example.taximobile.domain.drivers.PendingCashPaymentsPage>()
+    val settled = mutableListOf<String>()
+    val requestedPages = mutableListOf<Int>()
+    override suspend fun pendingCashPayments(page: Int): org.example.taximobile.domain.drivers.PendingCashPaymentsPage {
+        requestedPages += page
+        failure?.let { throw it }
+        return pages[page] ?: queue.copy(page = page)
+    }
+    override suspend fun complete(rideId: String, location: Coordinates) = DriverRideSummary(rideId, RideStatus.COMPLETED)
+    override suspend fun settleCash(rideId: String) {
+        settled += rideId
+        queue = org.example.taximobile.domain.drivers.PendingCashPaymentsPage(emptyList(), 1, 20, 0)
+    }
 }
 
 private class PassengerHistoryDetailGateway : RideGateway {
     var requestedDetailId: String? = null
+    var detailRequests = 0
+    var detailFailure: ApiRequestException? = null
+    var onDetailRead: (suspend () -> Unit)? = null
+    var paymentStatus = "COMPLETED"
+    var rating: RideRating? = RideRating("rating", 5, "Smooth ride")
     var receiptRequests = 0
     var ratingRequests = 0
     private val destination = Coordinates(33.5890, -7.5910, "Casa Voyageurs")
@@ -790,19 +1105,23 @@ private class PassengerHistoryDetailGateway : RideGateway {
         pickup = Coordinates(33.5731, -7.5898, "Pickup"),
         destination = destination,
     )
+    var history = listOf(summary)
 
-    override suspend fun listRides() = listOf(summary)
+    override suspend fun listRides() = history
     override suspend fun currentRide(id: String): RideSummary {
         requestedDetailId = id
-        return summary
+        detailRequests += 1
+        detailFailure?.let { throw it }
+        onDetailRead?.invoke()
+        return history.firstOrNull { it.id == id } ?: summary
     }
     override suspend fun receipt(id: String): RideReceipt {
         receiptRequests += 1
-        return RideReceipt(id, summary.completedAt!!, FinalRideFare("42.00", "MAD"), "CASH", "COMPLETED")
+        return RideReceipt(id, summary.completedAt!!, FinalRideFare("42.00", "MAD"), "CASH", paymentStatus)
     }
     override suspend fun ratings(id: String): List<RideRating> {
         ratingRequests += 1
-        return listOf(RideRating("rating", 5, "Smooth ride"))
+        return listOfNotNull(rating)
     }
     override suspend fun estimateRide(pickup: Coordinates, destination: Coordinates): FareEstimate = error("Not used")
     override suspend fun finalFare(id: String): FinalRideFare = error("Not used")
@@ -812,6 +1131,7 @@ private class PassengerHistoryDetailGateway : RideGateway {
 }
 
 private class CompletedDriverRideGateway : DriverRideGateway {
+    override suspend fun pendingCashPayments(page: Int) = org.example.taximobile.domain.drivers.PendingCashPaymentsPage(emptyList(), page, 20, 0)
     override suspend fun rides() = listOf(
         DriverRideSummary("ride-history", RideStatus.COMPLETED, "2026-08-13T12:00:00Z")
     )
@@ -828,6 +1148,7 @@ private class RecordingDriverGateway(
     private val credentialItems: List<DriverCredential> = emptyList(),
 ) : DriverGateway {
     var submittedLocation: Coordinates? = null
+    var submittedAccuracyMeters: Double? = null
     var requestedOnlineMarket: Pair<String?, String>? = null
 
     override suspend fun apply(displayName: String) = error("Not used")
@@ -845,12 +1166,14 @@ private class RecordingDriverGateway(
     override suspend fun registerVehicle(vehicle: VehicleRegistration) = error("Not used")
     override suspend fun selectActiveVehicle(vehicleId: String) = error("Not used")
     override suspend fun deactivateVehicle(vehicleId: String) = error("Not used")
-    override suspend fun updateLocation(location: Coordinates, observedAt: String) {
+    override suspend fun updateLocation(location: Coordinates, observedAt: String, accuracyMeters: Double) {
         submittedLocation = location
+        submittedAccuracyMeters = accuracyMeters
     }
 }
 
 private class ActiveDriverRideGateway : DriverRideGateway {
+    override suspend fun pendingCashPayments(page: Int) = org.example.taximobile.domain.drivers.PendingCashPaymentsPage(emptyList(), page, 20, 0)
     override suspend fun rides() = listOf(DriverRideSummary("ride", RideStatus.ACCEPTED))
     override suspend fun earnings() = DriverEarnings("MAD", "0.00", "0.00", "0.00", "0.00")
     override suspend fun markEnRoute(rideId: String) = error("Not used")

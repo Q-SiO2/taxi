@@ -1,0 +1,30 @@
+{
+  "created_utc": "2026-10-20T19:34:23.539253+00:00",
+  "passed": true,
+  "tests": {
+    "tests": 55,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "scope": "Focused coordinator JVM suite; six common history regressions; actual native acceptance pending",
+  "red": "history-selection-red-20261020.json",
+  "archive": [
+    {
+      "path": ".tools/alpha-delivery/history-selection-green/TEST-org.example.taximobile.feature.app.MobileAppCoordinatorTest.xml",
+      "sha256": "f451dbe49336cea97e2569714dd91b9ce81dfde635ce104f3c6d52201077e892"
+    },
+    {
+      "path": ".tools/alpha-delivery/history-selection-green/history-selection-green-20261020.log",
+      "sha256": "420b77088d974644b34923eb7d7a6af510f293aedabbfda299965267c4e848e6"
+    },
+    {
+      "path": ".tools/alpha-delivery/history-selection-green/MobileAppCoordinator.kt",
+      "sha256": "a91000c691fc56cb3cc7fc00c8cd90becb31a6a14bf9f6cc4e5d09968bc3639b"
+    },
+    {
+      "path": ".tools/alpha-delivery/history-selection-green/MobileAppCoordinatorTest.kt",
+      "sha256": "aafb7e5372e0114d9578fa6c0a3dc3dc6925bd0947845ea01e60124c12e94504"
+    }
+  ]
+}

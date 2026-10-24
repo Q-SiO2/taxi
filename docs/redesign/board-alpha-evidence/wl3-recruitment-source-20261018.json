@@ -1,0 +1,82 @@
+{
+  "verified_utc": "2026-10-18T13:30:24.670659+00:00",
+  "scope": "WL-3 recruitment administration/review/authorization source checkpoint; no optimized package or hosted acceptance",
+  "duration": "6m28s",
+  "tests": {
+    "browser": {
+      "tests": 69,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "shared_jvm": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "catalog_keys": 895,
+  "source_audit": {
+    "views": 213,
+    "declarations": 263,
+    "files": 59
+  },
+  "source_hashes": [
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/values/strings.xml",
+      "sha256": "c31f710dbd763adb5c18900b615e982bb49fd94161c396a2d8fbd51e7f07b0b3"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/values-ar/strings.xml",
+      "sha256": "5386f37fd877feed24ab9691ad6e066e6bb5d8eb3592bff0a0b975f1aa11dba1"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/values-fr/strings.xml",
+      "sha256": "84ef9d860170c85d736a0a555f7cf21a5ba26ee52afe9943f016a65596351aa6"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/text/BidiText.kt",
+      "sha256": "b9edddf81a72ab049a3522be00b6c8496b8e7377ad01e7710a6dd78cc0bb7004"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/ui/text/BidiTextTest.kt",
+      "sha256": "945ebedf070cafc84ae5e27f8d1a8e51d557a5ffeb38fe447008fd1bcae93d98"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/DriverRecruitmentScreen.kt",
+      "sha256": "bbf6a580888f02066f6d684444eb1b4b16b3c4530796633a3459c7f24a6fe3d6"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CityAuthorizationReview.kt",
+      "sha256": "ae2bd7c2640f6d55a8c92f4a562af62ce6047800b1dc7f5adfc85d7421fa3918"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsLabels.kt",
+      "sha256": "69769bdcb7cd983b30d940113879135306784c2e2947f496e6882b96276ec174"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsComponents.kt",
+      "sha256": "257dbd027f36da0aea79cdf55a4869e53efbdc4a2db1fdbac699f8ad70c58048"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsScreens.kt",
+      "sha256": "cf4828a3c188186dde2bc50cea6ee6058495ff31677439ac736155178b29bcc8"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantPortalApp.kt",
+      "sha256": "9bd27c9dbad209efe7d63fd1830230a61672eaa53cf2489ffeb0f2bb479497e7"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webTest/kotlin/org/example/taximobile/operations/ui/DriverRecruitmentScreenTest.kt",
+      "sha256": "45d6c124b07876db91b4f440ac1df1e2045cc821a8e649d413016fb52a3a9bd4"
+    }
+  ],
+  "archive": ".tools/alpha-delivery/wl3-recruitment-source",
+  "limitations": [
+    "Applicant protected dashboard/editor/status and coordinator feedback remain next",
+    "No actual new recruitment or Arabic dialog render yet",
+    "Web v6 remains live; newer source does not change its evidence",
+    "Final native APKs and two complete native rehearsals still required"
+  ]
+}

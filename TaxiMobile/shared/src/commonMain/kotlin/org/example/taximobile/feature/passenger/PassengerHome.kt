@@ -1,14 +1,21 @@
 package org.example.taximobile.feature.passenger
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
@@ -28,6 +35,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import org.example.taximobile.domain.notifications.AppNotification
 import org.example.taximobile.domain.places.PlaceResult
 import org.example.taximobile.domain.rides.Coordinates
@@ -62,6 +71,7 @@ import org.example.taximobile.feature.ui.components.DriverCard
 import org.example.taximobile.feature.ui.components.FareBlock
 import org.example.taximobile.feature.ui.components.FareBreakdownRow
 import org.example.taximobile.feature.ui.components.MapFab
+import org.example.taximobile.feature.ui.components.MapToolbar
 import org.example.taximobile.feature.ui.components.EmptyState
 import org.example.taximobile.feature.ui.components.LocationSelectionField
 import org.example.taximobile.feature.ui.components.RatingStars
@@ -74,6 +84,9 @@ import org.example.taximobile.feature.ui.components.TaxiButtonStyle
 import org.example.taximobile.feature.ui.components.TaxiSegmentedControl
 import org.example.taximobile.feature.ui.components.TaxiSheet
 import org.example.taximobile.feature.ui.components.TaxiSheetSnap
+import org.example.taximobile.feature.ui.components.accessibleTaxiSheetSnap
+import org.example.taximobile.feature.ui.components.taxiSheetAllowsMapActions
+import androidx.compose.ui.platform.LocalDensity
 import org.example.taximobile.feature.ui.components.TaxiTextField
 import org.example.taximobile.feature.ui.components.ToastBanner
 import org.example.taximobile.feature.ui.theme.TaxiColors
@@ -87,7 +100,7 @@ import taximobile.shared.generated.resources.*
 private enum class PassengerSheetPanel { Ride, FixedRoutes, Scheduled, Safety, Account, Inbox }
 internal enum class MapSelectionTarget { Pickup, Destination }
 
-internal class PassengerTripFormState {
+internal class PassengerTripFormState(reviewedInput: Pair<Coordinates, Coordinates>? = null) {
     var pickupLatitude by mutableStateOf("")
     var pickupLongitude by mutableStateOf("")
     var destinationLatitude by mutableStateOf("")
@@ -98,6 +111,21 @@ internal class PassengerTripFormState {
     var selectedPaymentMethod by mutableStateOf(RidePaymentMethod.CASH)
     var selectionTarget by mutableStateOf(MapSelectionTarget.Pickup)
     var locationMessage by mutableStateOf<UiMessage?>(null)
+
+    init {
+        // Hydrate only this new form. Ordinary server refresh must not overwrite
+        // a newer local edit or make reviewed terms apply to different points.
+        reviewedInput?.let { (pickup, destination) ->
+            pickupLatitude = pickup.latitude.toString()
+            pickupLongitude = pickup.longitude.toString()
+            pickupAddress = pickup.address
+            destinationLatitude = destination.latitude.toString()
+            destinationLongitude = destination.longitude.toString()
+            destinationAddress = destination.address
+            estimatedTrip = reviewedInput
+            selectionTarget = MapSelectionTarget.Destination
+        }
+    }
 
     val pickup: Coordinates?
         get() = validCoordinates(pickupLatitude, pickupLongitude)?.copy(address = pickupAddress)
@@ -191,8 +219,10 @@ internal fun PassengerHome(
     onAcknowledgeRecoveryCodes: () -> Unit,
     onRevokeAccountSession: (String) -> Unit,
     onChangeAccountPassword: (String, String) -> Unit,
+    placeSearchEnabled: Boolean = true,
 ) {
-    val form = remember { PassengerTripFormState() }
+    val taxiColors = TaxiTheme.colors
+    val form = remember { PassengerTripFormState(state.reviewedPointQuoteInput) }
     var snap by remember { mutableStateOf(TaxiSheetSnap.Peek) }
     var panel by remember { mutableStateOf(PassengerSheetPanel.Ride) }
     var ridePendingCancellation by remember { mutableStateOf<String?>(null) }
@@ -208,6 +238,13 @@ internal fun PassengerHome(
     val trip = form.trip
     val currentEstimate = state.fareEstimate?.takeIf { trip != null && form.estimatedTrip == trip }
     val hasActiveRide = state.activeRide != null
+    // Keep the compact retry content but give its result and primary action
+    // enough room. Explicit expansion still opens the full selection form.
+    val retryNeedsRoom = state.rideHistory.firstOrNull()?.status == RideStatus.UNMATCHED &&
+        form.pickup == null && form.destination == null && !hasActiveRide && panel == PassengerSheetPanel.Ride
+    val presentedSnap = if (snap == TaxiSheetSnap.Peek && retryNeedsRoom) TaxiSheetSnap.Half else snap
+    val fontScale = LocalDensity.current.fontScale
+    val effectiveSnap = accessibleTaxiSheetSnap(presentedSnap, fontScale)
     val selectedFixedDirection = state.fixedRouteCatalog?.directions?.firstOrNull {
         it.id == selectedFixedDirectionId
     }
@@ -282,7 +319,7 @@ internal fun PassengerHome(
         }
     }
 
-    BoxWithConstraints(Modifier.fillMaxSize().background(TaxiColors.Surface1)) {
+    BoxWithConstraints(Modifier.fillMaxSize().background(taxiColors.Surface1)) {
         MapLibreTripMap(
             pickup = mapPickup,
             destination = mapDestination,
@@ -292,7 +329,10 @@ internal fun PassengerHome(
             cameraFocusRequest = cameraFocusRequest,
             onMapAvailabilityChanged = { mapUnavailable = !it },
             onCoordinateSelected = { coordinates ->
-                if (!hasActiveRide && panel == PassengerSheetPanel.Ride) form.select(coordinates)
+                if (!hasActiveRide && panel == PassengerSheetPanel.Ride) {
+                    form.select(coordinates)
+                    snap = TaxiSheetSnap.Half
+                }
             },
             modifier = Modifier.fillMaxSize(),
         )
@@ -302,12 +342,12 @@ internal fun PassengerHome(
             onAccount = { panel = PassengerSheetPanel.Account },
             onSafety = { panel = PassengerSheetPanel.Safety },
             onInbox = { panel = PassengerSheetPanel.Inbox },
-            modifier = Modifier.align(Alignment.TopCenter).padding(TaxiSpacing.Md),
+            modifier = Modifier.align(Alignment.TopCenter),
         )
-        if (panel == PassengerSheetPanel.Ride) {
+        if (panel == PassengerSheetPanel.Ride && taxiSheetAllowsMapActions(presentedSnap, fontScale, maxHeight)) {
             Column(
                 modifier = Modifier.align(Alignment.BottomEnd)
-                    .padding(end = TaxiSpacing.Md, bottom = maxHeight * snap.heightFraction + TaxiSpacing.Md),
+                    .padding(end = TaxiSpacing.Md, bottom = maxHeight * effectiveSnap.heightFraction + TaxiSpacing.Md),
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm),
             ) {
@@ -354,7 +394,7 @@ internal fun PassengerHome(
                 }
             }
         }
-        TaxiSheet(snap = snap, onSnapChange = { snap = it }) {
+        TaxiSheet(snap = presentedSnap, onSnapChange = { snap = it }) {
             if (mapUnavailable) {
                 ToastBanner(stringResource(Res.string.map_detail_unavailable), StatusTone.Warning)
             }
@@ -371,7 +411,11 @@ internal fun PassengerHome(
                     state = state,
                     pendingAction = pendingAction,
                     form = form,
+                    compactIdle = snap == TaxiSheetSnap.Peek && form.pickup == null &&
+                        form.destination == null && state.activeRide == null && currentEstimate == null,
+                    onExpand = { snap = TaxiSheetSnap.Half },
                     showManualCoordinateEntry = showManualCoordinateEntry || mapUnavailable,
+                    placeSearchEnabled = placeSearchEnabled,
                     selectedPlaceCityId = activePlaceCityId,
                     currentEstimateAvailable = currentEstimate != null,
                     onSelectPlaceCity = { selectedPlaceCityId = it },
@@ -500,34 +544,27 @@ internal fun PassengerHome(
 }
 
 @Composable
-private fun PassengerToolbar(
+internal fun PassengerToolbar(
     displayName: String?,
     unreadCount: Int,
     onAccount: () -> Unit,
     onSafety: () -> Unit,
     onInbox: () -> Unit,
     modifier: Modifier = Modifier,
+    safeInsets: WindowInsets = WindowInsets.safeDrawing,
 ) {
-    Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Surface(shape = MaterialTheme.shapes.medium, color = TaxiColors.Surface0, shadowElevation = TaxiSpacing.Xs) {
-            TextButton(onClick = onAccount) {
-                Text(displayName?.ifBlank { null } ?: stringResource(Res.string.account))
-            }
-        }
-        Surface(shape = MaterialTheme.shapes.medium, color = TaxiColors.Surface0, shadowElevation = TaxiSpacing.Xs) {
-            TextButton(onClick = onSafety) {
-                Text(stringResource(Res.string.safety_reports_title))
-            }
-        }
-        Surface(shape = MaterialTheme.shapes.medium, color = TaxiColors.Surface0, shadowElevation = TaxiSpacing.Xs) {
-            TextButton(onClick = onInbox) {
-                Text(
-                    if (unreadCount > 0) stringResource(Res.string.inbox_count, unreadCount)
-                    else stringResource(Res.string.inbox)
-                )
-            }
-        }
-    }
+    MapToolbar(
+        accountLabel = stringResource(Res.string.account),
+        displayName = displayName,
+        safetyLabel = stringResource(Res.string.safety_reports_title),
+        inboxLabel = if (unreadCount > 0) stringResource(Res.string.inbox_count, unreadCount) else stringResource(Res.string.inbox),
+        unreadCount = unreadCount,
+        onAccount = onAccount,
+        onSafety = onSafety,
+        onInbox = onInbox,
+        modifier = modifier.windowInsetsPadding(safeInsets.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal))
+            .padding(horizontal = TaxiSpacing.Md, vertical = TaxiSpacing.Sm),
+    )
 }
 
 @Composable
@@ -535,8 +572,11 @@ private fun PassengerRideSheet(
     state: AppUiState.PassengerReady,
     pendingAction: AppAction?,
     form: PassengerTripFormState,
+    compactIdle: Boolean,
+    onExpand: () -> Unit,
     showManualCoordinateEntry: Boolean,
     selectedPlaceCityId: String?,
+    placeSearchEnabled: Boolean,
     currentEstimateAvailable: Boolean,
     onSelectPlaceCity: (String) -> Unit,
     onSearchPlaces: (String, String) -> Unit,
@@ -549,8 +589,34 @@ private fun PassengerRideSheet(
     onCancelRequested: () -> Unit,
     onSendRideCoordination: (String, RideCoordinationCode) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     var placeSearchExpanded by remember { mutableStateOf(false) }
     val rideStatus = state.activeRide
+    if (compactIdle) {
+        val noSupply = state.rideHistory.firstOrNull()?.status == RideStatus.UNMATCHED
+        Text(stringResource(Res.string.where_to), style = MaterialTheme.typography.displaySmall)
+        if (noSupply) {
+            Text(stringResource(Res.string.no_drivers_retry_compact),
+                style = MaterialTheme.typography.bodySmall, color = taxiColors.Ink700)
+        }
+        TaxiButton(
+            stringResource(if (placeSearchEnabled) Res.string.place_search_title else Res.string.choose_on_map),
+            onClick = {
+                placeSearchExpanded = placeSearchEnabled
+                onExpand()
+            },
+            enabled = pendingAction == null,
+        )
+        if (!noSupply) {
+            TaxiButton(
+                stringResource(Res.string.fixed_routes_browse),
+                onBrowseFixedRoutes,
+                enabled = pendingAction == null,
+                style = TaxiButtonStyle.Secondary,
+            )
+        }
+        return
+    }
     if (rideStatus != null) {
         val statusLabel = stringResource(rideStatus.passengerStatusResource())
         Text(statusLabel, style = MaterialTheme.typography.titleLarge)
@@ -570,13 +636,13 @@ private fun PassengerRideSheet(
         if (rideStatus == RideStatus.REQUESTED || rideStatus == RideStatus.MATCHING) {
             LinearProgressIndicator(
                 modifier = Modifier.fillMaxWidth(),
-                color = TaxiColors.Accent500,
-                trackColor = TaxiColors.Accent100,
+                color = taxiColors.Accent500,
+                trackColor = taxiColors.Accent100,
             )
             Text(
                 stringResource(Res.string.finding_taxi_help),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TaxiColors.Ink500,
+                color = taxiColors.Ink500,
             )
         }
         state.assignedDriver?.let { driver ->
@@ -590,16 +656,7 @@ private fun PassengerRideSheet(
             )
         }
         RideLatestCoordinationMessage(state.latestCoordinationMessage)
-        state.lastKnownDriverLocation?.let { location ->
-            Text(
-                stringResource(
-                    Res.string.last_known_driver_location_observed,
-                    ltrIsolate(location.observedAt),
-                ),
-                style = MaterialTheme.typography.bodyMedium,
-                color = TaxiColors.Ink500,
-            )
-        }
+        // The map shows the driver position; raw timestamps imply false precision.
         state.routePlan?.let { route ->
             Text(
                 stringResource(
@@ -608,7 +665,6 @@ private fun PassengerRideSheet(
                     formatMinutes(route.durationSeconds),
                 )
             )
-            route.maneuvers.take(3).forEach { Text(it.instruction, style = MaterialTheme.typography.bodyMedium) }
         }
         if (state.routeUnavailable) {
             ToastBanner(stringResource(Res.string.passenger_route_unavailable_active))
@@ -637,31 +693,30 @@ private fun PassengerRideSheet(
 
     Column(
         modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs),
+        verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm),
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(stringResource(Res.string.where_to), style = MaterialTheme.typography.displaySmall)
-            Row {
-                    TextButton(onClick = onOpenScheduled, enabled = pendingAction == null) {
-                        Text(stringResource(Res.string.scheduled_nav))
-                }
-                TextButton(
-                    onClick = onBrowseFixedRoutes,
-                    enabled = pendingAction == null,
-                ) {
-                    Text(stringResource(Res.string.fixed_routes_browse))
-                }
-            }
-        }
+        Text(stringResource(Res.string.where_to), style = MaterialTheme.typography.displaySmall)
         Text(
             stringResource(Res.string.pickup_default_help),
             style = MaterialTheme.typography.bodyMedium,
-            color = TaxiColors.Ink500,
+            color = taxiColors.Ink500,
         )
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
+            TaxiButton(
+                stringResource(Res.string.fixed_routes_browse),
+                onBrowseFixedRoutes,
+                modifier = Modifier.weight(1f),
+                enabled = pendingAction == null,
+                style = TaxiButtonStyle.Secondary,
+            )
+            TaxiButton(
+                stringResource(Res.string.scheduled_nav),
+                onOpenScheduled,
+                modifier = Modifier.weight(1f),
+                enabled = pendingAction == null,
+                style = TaxiButtonStyle.Secondary,
+            )
+        }
     }
     if (state.rideHistory.firstOrNull()?.status == RideStatus.UNMATCHED) {
         ToastBanner(stringResource(Res.string.no_drivers_retry_message), StatusTone.Info)
@@ -674,9 +729,9 @@ private fun PassengerRideSheet(
         onSecondSelected = { form.selectionTarget = MapSelectionTarget.Destination },
     )
     form.locationMessage?.let { ToastBanner(it.resolve()) }
-    SelectionSummary(form, selectedPlaceCityId, pendingAction, onReverseSelected)
+    SelectionSummary(form, selectedPlaceCityId.takeIf { placeSearchEnabled }, pendingAction, onReverseSelected)
     RecentDestinationSection(state.rideHistory) { form.selectRecentDestination(it) }
-    TaxiButton(
+    if (placeSearchEnabled) TaxiButton(
         label = stringResource(
             if (placeSearchExpanded) Res.string.place_search_close else Res.string.place_search_title
         ),
@@ -684,7 +739,7 @@ private fun PassengerRideSheet(
         enabled = pendingAction == null,
         style = TaxiButtonStyle.Secondary,
     )
-    if (placeSearchExpanded) {
+    if (placeSearchEnabled && placeSearchExpanded) {
         PlaceDiscoverySection(
             cities = state.serviceCities,
             selectedCityId = selectedPlaceCityId,
@@ -753,7 +808,6 @@ private fun PassengerRideSheet(
                     formatMinutes(route.durationSeconds),
                 )
             )
-            route.maneuvers.take(3).forEach { Text(it.instruction, style = MaterialTheme.typography.bodyMedium) }
         }
         if (state.routeUnavailable) {
             ToastBanner(stringResource(Res.string.passenger_route_unavailable_quote))
@@ -803,6 +857,7 @@ private fun PassengerScheduledSheet(
     onScheduleFixedRoute: (String, String, String?, ScheduledBookingEstimate) -> Unit,
     onCancel: (String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     var scheduledFor by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
     var useFixedRoute by remember { mutableStateOf(false) }
@@ -823,7 +878,7 @@ private fun PassengerScheduledSheet(
     }
     Text(
         stringResource(Res.string.scheduled_passenger_disclaimer),
-        color = TaxiColors.Ink500,
+        color = taxiColors.Ink500,
         style = MaterialTheme.typography.bodyMedium,
     )
     TaxiSegmentedControl(
@@ -859,17 +914,17 @@ private fun PassengerScheduledSheet(
                     route.currency,
                 )
             } ?: stringResource(Res.string.scheduled_choose_fixed_route),
-            color = if (selectedRoute == null) TaxiColors.Warning600 else TaxiColors.Ink700,
+            color = if (selectedRoute == null) taxiColors.Warning600 else taxiColors.Ink700,
         )
     } else {
         val trip = form.trip
         Text(
             if (trip == null) stringResource(Res.string.scheduled_choose_points)
             else stringResource(Res.string.scheduled_points_ready),
-            color = if (trip == null) TaxiColors.Warning600 else TaxiColors.Ink700,
+            color = if (trip == null) taxiColors.Warning600 else taxiColors.Ink700,
         )
     }
-    Text(stringResource(Res.string.scheduled_cash_notice), color = TaxiColors.Ink500)
+    Text(stringResource(Res.string.scheduled_cash_notice), color = taxiColors.Ink500)
     TaxiButton(
         label = stringResource(Res.string.scheduled_review_price),
         onClick = {
@@ -905,8 +960,8 @@ private fun PassengerScheduledSheet(
                 FareBreakdownRow(stringResource(Res.string.fare_component_operator_service_fee), "${estimate.economics.operatorServiceFee} ${estimate.economics.currency}"),
             ),
         )
-        Text(estimate.cancellationTerms.localizedSummary(), color = TaxiColors.Ink500)
-        Text(stringResource(Res.string.scheduled_confirm_notice), color = TaxiColors.Warning600)
+        Text(estimate.cancellationTerms.localizedSummary(), color = taxiColors.Ink500)
+        Text(stringResource(Res.string.scheduled_confirm_notice), color = taxiColors.Warning600)
         TaxiButton(
             label = stringResource(Res.string.scheduled_confirm),
             onClick = {
@@ -937,7 +992,7 @@ private fun PassengerScheduledSheet(
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.medium,
-            color = TaxiColors.Surface0,
+            color = taxiColors.Surface0,
             shadowElevation = TaxiSpacing.Xs,
         ) {
             Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Md), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
@@ -957,11 +1012,11 @@ private fun PassengerScheduledSheet(
                         FareBreakdownRow(stringResource(Res.string.fare_component_operator_service_fee), "${booking.economics.operatorServiceFee} ${booking.economics.currency}"),
                     ),
                 )
-                Text(booking.cancellationTerms.localizedSummary(), color = TaxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
+                Text(booking.cancellationTerms.localizedSummary(), color = taxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
                 Text(
                     if (booking.driverCommitted) stringResource(Res.string.scheduled_driver_committed)
                     else stringResource(Res.string.scheduled_driver_not_committed),
-                    color = if (booking.driverCommitted) TaxiColors.Success600 else TaxiColors.Warning600,
+                    color = if (booking.driverCommitted) taxiColors.Success600 else taxiColors.Warning600,
                 )
                 if (booking.status in setOf("SCHEDULED", "OFFERING", "DRIVER_COMMITTED", "DISPATCH_HANDOFF")) {
                     TaxiButton(
@@ -1022,6 +1077,7 @@ private fun PassengerFixedRoutesSheet(
     onPaymentMethod: (RidePaymentMethod) -> Unit,
     onRequest: (String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     val language = Locale.current.language
     val catalog = state.fixedRouteCatalog
     val selected = catalog?.directions?.firstOrNull { it.id == selectedDirectionId }
@@ -1035,7 +1091,7 @@ private fun PassengerFixedRoutesSheet(
     }
     Text(
         stringResource(Res.string.fixed_routes_supply_private_help),
-        color = TaxiColors.Ink500,
+        color = taxiColors.Ink500,
         style = MaterialTheme.typography.bodyMedium,
     )
     if (state.serviceCities.size > 1) {
@@ -1111,13 +1167,15 @@ private fun FixedRouteDirectionCard(
     selected: Boolean,
     onClick: () -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        color = if (selected) TaxiColors.Accent100 else TaxiColors.Surface0,
-        shape = androidx.compose.foundation.shape.RoundedCornerShape(org.example.taximobile.feature.ui.theme.TaxiRadii.Lg),
+        color = if (selected) taxiColors.Accent100 else taxiColors.Surface0,
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(taxiRadii.Lg),
         border = androidx.compose.foundation.BorderStroke(
             1.dp,
-            if (selected) TaxiColors.Accent500 else TaxiColors.StrokeSubtle,
+            if (selected) taxiColors.Accent500 else taxiColors.StrokeSubtle,
         ),
         onClick = onClick,
     ) {
@@ -1138,10 +1196,10 @@ private fun FixedRouteDirectionCard(
                     direction.currency,
                     direction.directionCode.replace('_', ' '),
                 ),
-                color = TaxiColors.Ink700,
+                color = taxiColors.Ink700,
             )
             if (direction.stops.isNotEmpty()) {
-                Text(stringResource(Res.string.fixed_routes_stops_count, direction.stops.size), color = TaxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
+                Text(stringResource(Res.string.fixed_routes_stops_count, direction.stops.size), color = taxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
             }
         }
     }
@@ -1202,7 +1260,10 @@ private fun RecentDestinationSection(
     if (destinations.isEmpty()) return
     Text(stringResource(Res.string.recent_destinations), style = MaterialTheme.typography.titleMedium)
     destinations.forEach { destination ->
-        val fallback = ltrIsolate("${destination.latitude}, ${destination.longitude}")
+        // Display precision only: selecting this row still uses the original point.
+        val latitudeLabel = kotlin.math.round(destination.latitude * 100_000) / 100_000
+        val longitudeLabel = kotlin.math.round(destination.longitude * 100_000) / 100_000
+        val fallback = ltrIsolate("$latitudeLabel, $longitudeLabel")
         TaxiButton(
             label = destination.address?.trim()?.takeIf(String::isNotEmpty) ?: fallback,
             onClick = { onSelect(destination) },
@@ -1301,6 +1362,7 @@ private fun PassengerProfileSection(
     onUpdate: (String) -> Unit,
 ) {
     var editedName by remember(displayName) { mutableStateOf(displayName) }
+    org.example.taximobile.feature.ui.components.TaxiStyleChooser()
     Text(stringResource(Res.string.profile), style = MaterialTheme.typography.titleMedium)
     TaxiTextField(editedName, { editedName = it }, stringResource(Res.string.display_name))
     TaxiButton(
@@ -1353,7 +1415,7 @@ private fun PassengerRideHistoryDetail(
         stringResource(ride.status.passengerStatusResource()),
         ride.status.passengerStatusTone(),
     )
-    Text(stringResource(Res.string.ride_identifier, ltrIsolate(ride.id)))
+    Text(stringResource(Res.string.ride_identifier, ltrIsolate(ride.id.take(8))))
     ride.pickup?.let {
         Text(stringResource(Res.string.ride_location_line, stringResource(Res.string.pickup), historyLocationLabel(it)))
     }
@@ -1410,6 +1472,7 @@ private fun PassengerReceipt(
 private fun RefundReceiptSummary(
     refunds: org.example.taximobile.domain.rides.RideRefundSummary,
 ) {
+    val taxiColors = TaxiTheme.colors
     Text(stringResource(Res.string.refunds_title), style = MaterialTheme.typography.titleMedium)
     Text(
         stringResource(
@@ -1434,7 +1497,7 @@ private fun RefundReceiptSummary(
                 refund.currency,
             ),
             style = MaterialTheme.typography.bodyMedium,
-            color = TaxiColors.Ink500,
+            color = taxiColors.Ink500,
         )
     }
 }
@@ -1445,6 +1508,7 @@ private fun ManualTransferReceipt(
     pendingAction: AppAction?,
     onSubmit: (String, String?) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     val instructions = receipt.manualTransfer
     if (instructions == null) {
         ToastBanner(stringResource(Res.string.manual_transfer_instructions_unavailable), StatusTone.Warning)
@@ -1472,7 +1536,7 @@ private fun ManualTransferReceipt(
     Text(
         stringResource(Res.string.manual_transfer_reference_warning),
         style = MaterialTheme.typography.bodyMedium,
-        color = TaxiColors.Ink500,
+        color = taxiColors.Ink500,
     )
     when (receipt.paymentStatus) {
         "PENDING" -> {
@@ -1522,9 +1586,13 @@ private fun ManualTransferReceipt(
     }
 }
 
-private fun historyLocationLabel(location: Coordinates): String =
-    location.address?.trim()?.takeIf(String::isNotEmpty)
-        ?: ltrIsolate("${location.latitude}, ${location.longitude}")
+private fun historyLocationLabel(location: Coordinates): String {
+    location.address?.trim()?.takeIf(String::isNotEmpty)?.let { return it }
+    // Display precision only; the authorized detail keeps its original point.
+    val latitude = kotlin.math.round(location.latitude * 100_000) / 100_000
+    val longitude = kotlin.math.round(location.longitude * 100_000) / 100_000
+    return ltrIsolate("$latitude, $longitude")
+}
 
 @Composable
 private fun RideRatingSection(

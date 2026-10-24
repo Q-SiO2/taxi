@@ -1,0 +1,43 @@
+{
+  "verified_utc": "2026-10-19T19:56:51.234810+00:00",
+  "tests": {
+    "tests": 21,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "sources": [
+    {
+      "path": "TaxiMobile/androidApp/src/main/kotlin/org/example/taximobile/MainActivity.kt",
+      "sha256": "a4117bd3564b165a348d0cd6574fc40579b9e8e3b61334fb0e7cd069e81faaeb"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/DriverCompletionLocationUiTest.kt",
+      "sha256": "c165d57ffe716a2ca03065cb2c4779c571c06252f2503d7aba3578a7ac5f1a79"
+    }
+  ],
+  "test_reports": [
+    {
+      "path": ".tools/alpha-delivery/driver-explicit-location-priority-focused/TEST-org.example.taximobile.feature.app.DriverCompletionLocationUiTest.xml",
+      "sha256": "87d3d35cbfec694622a9f81556787b8bc4ce176f1e604ddc00363645f3f2549b"
+    },
+    {
+      "path": ".tools/alpha-delivery/driver-explicit-location-priority-focused/TEST-org.example.taximobile.feature.location.ForegroundDriverLocationPolicyTest.xml",
+      "sha256": "9562e73bd4f126f52dd21b30fc4729e56567865539a1dc64608190ac74c46ab3"
+    },
+    {
+      "path": ".tools/alpha-delivery/driver-explicit-location-priority-focused/TEST-org.example.taximobile.feature.location.ForegroundDriverLocationResultGuardTest.xml",
+      "sha256": "b1b2f8dc57164423176fa0adb845a84d486ffc119cce0c8adc6c52aca70a1f68"
+    },
+    {
+      "path": ".tools/alpha-delivery/driver-explicit-location-priority-focused/TEST-org.example.taximobile.feature.location.OneShotLocationGateTest.xml",
+      "sha256": "820ed937ba97e2e6835dc13221faf3047858f8411b6dfcbc38655fcd3c0ce5cd"
+    }
+  ],
+  "log": ".tools/alpha-delivery/driver-explicit-location-priority-focused.log",
+  "scope": "Explicit UI retry, duplicate request gate, automatic scheduling and foreground/context guards; source Android root priority repair remains subject to actual replacement APK rehearsal",
+  "limitations": [
+    "No Android platform-owner race reproduction is claimed from JVM tests",
+    "No new APK or recovered Arabic trip is inferred from this focused pass"
+  ]
+}

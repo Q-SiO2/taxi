@@ -1,0 +1,45 @@
+{
+  "verified_utc": "2026-10-19T19:12:11.283157+00:00",
+  "passed_within_scope": true,
+  "candidate": "candidate-native-v12.json",
+  "ride_id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+  "server_status": "COMPLETED",
+  "payment": {
+    "method": "CASH",
+    "status": "COMPLETED"
+  },
+  "fare": "35.00",
+  "driver_availability": "OFFLINE",
+  "actual_native_attempt": "v12-native-preserved-trip-recovery-second.json",
+  "first_attempt": "v12-native-preserved-trip-recovery.json",
+  "qualification": "The second attempt recovered the exact ride and cash in native UI. Its final cleanup step incorrectly expected Go offline although the driver was already Offline. Independent owned GETs and native Offline now verify cleanup without another command.",
+  "first_attempt_limit": "Bundled System UI boot ANR blocked the first attempt before the location button could be tapped; preserve v12-recovery-first-system-ui-anr.png. This did not test or reject v12 completion acquisition.",
+  "screenshots": [
+    {
+      "path": "v12-recovery-second-driver-location-loaded.png",
+      "sha256": "3ac936dd10ce7c12b3801681839c6290b6570bdf0eb164fff94928aa8560c2b8"
+    },
+    {
+      "path": "v12-recovery-second-passenger-cash-pending.png",
+      "sha256": "03a4dc01a4882be8389633f4391a650e92df3029daa32010079ad4f9a153fdd1"
+    },
+    {
+      "path": "v12-recovery-second-driver-cash-dialog.png",
+      "sha256": "207549cef8ad628c7da9ba0258add13c6f313b7899939e713f605ee5fe2ae938"
+    },
+    {
+      "path": "v12-recovery-second-passenger-cash-completed.png",
+      "sha256": "1ae845426aa0de3dc6fe79b8485079ee6c6de86cd484cf8e59fa58c32912e0ed"
+    },
+    {
+      "path": "v12-recovery-driver-offline-confirmed.png",
+      "sha256": "7dacb7878041536afdf9d4cbe1c353d6cfe16fc2c9d883b2bcce8e41e0b5ef05"
+    }
+  ],
+  "limitations": [
+    "Recovery began with an old v11 IN_PROGRESS trip; it never counts as either of two full v12 rehearsals",
+    "Synthetic GPS/accounts/35.00 MAD cash only",
+    "Bundled-system boot dialogs and low host memory are emulator fidelity/performance limits, not physical-device acceptance",
+    "No direct completion/payment API command or database reset was used"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "utc": "2026-10-19T20:07:14.081444+00:00",
+  "actions": [
+    {
+      "role": "driver",
+      "serial": "emulator-5556",
+      "observed_system_dialog": "Pixel Launcher isn't responding",
+      "selected_wait": true
+    },
+    {
+      "role": "passenger",
+      "serial": "emulator-5554",
+      "observed_system_dialog": "واجهة مستخدم النظام لا يستجيب",
+      "selected_wait": true
+    }
+  ],
+  "scope": "Only observed bundled-system boot dialogs, Wait then role activity; no app data reset or security changes"
+}

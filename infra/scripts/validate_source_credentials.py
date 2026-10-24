@@ -1,19 +1,21 @@
 """Reject high-confidence committed credential material without printing values.
 
-CI scans Git-tracked files. A source archive or workspace without Git metadata
-falls back to the documented source roots while skipping known local-only files,
-build output, caches, backups, and generated environments.
+CI scans Git-tracked files. Local candidate preparation can also include
+non-ignored untracked files. A source archive without its own Git root falls back
+to the documented source roots while skipping known local-only files, build
+output, caches, backups, and generated environments.
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 from pathlib import Path
 import re
 import subprocess
 import sys
-from typing import Iterable, NamedTuple
+from typing import Iterable, NamedTuple, Sequence
 
 
 WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
@@ -76,10 +78,27 @@ def _excluded(relative_path: Path) -> bool:
     return any(part in EXCLUDED_DIRECTORIES for part in relative_path.parts)
 
 
-def _git_tracked_files(workspace_root: Path) -> list[Path] | None:
+def _git_tracked_files(
+    workspace_root: Path, *, include_untracked: bool = False
+) -> list[Path] | None:
     try:
+        top_level = subprocess.run(
+            ["git", "-C", str(workspace_root), "rev-parse", "--show-toplevel"],
+            check=False,
+            capture_output=True,
+            timeout=15,
+        )
+        if top_level.returncode != 0:
+            return None
+        if Path(top_level.stdout.decode("utf-8").strip()).resolve() != workspace_root.resolve():
+            # Git otherwise silently discovers a parent checkout and can return
+            # zero tracked files for an ignored source archive inside it.
+            return None
+        arguments = ["git", "-C", str(workspace_root), "ls-files", "-z"]
+        if include_untracked:
+            arguments.extend(("--cached", "--others", "--exclude-standard"))
         result = subprocess.run(
-            ["git", "-C", str(workspace_root), "ls-files", "-z"],
+            arguments,
             check=False,
             capture_output=True,
             timeout=15,
@@ -91,8 +110,10 @@ def _git_tracked_files(workspace_root: Path) -> list[Path] | None:
     return [Path(item.decode("utf-8")) for item in result.stdout.split(b"\0") if item]
 
 
-def discover_source_files(workspace_root: Path) -> tuple[list[Path], bool]:
-    tracked = _git_tracked_files(workspace_root)
+def discover_source_files(
+    workspace_root: Path, *, include_untracked: bool = False
+) -> tuple[list[Path], bool]:
+    tracked = _git_tracked_files(workspace_root, include_untracked=include_untracked)
     if tracked is not None:
         return (
             [
@@ -174,21 +195,31 @@ def scan_files(workspace_root: Path, paths: Iterable[Path], *, tracked: bool) ->
     return sorted(set(findings), key=lambda finding: (str(finding.path), finding.rule))
 
 
-def validate_workspace(workspace_root: Path = WORKSPACE_ROOT) -> None:
-    paths, tracked = discover_source_files(workspace_root)
+def validate_workspace(
+    workspace_root: Path = WORKSPACE_ROOT, *, include_untracked: bool = False
+) -> None:
+    paths, tracked = discover_source_files(workspace_root, include_untracked=include_untracked)
     findings = scan_files(workspace_root, paths, tracked=tracked)
     if findings:
         summary = ", ".join(f"{finding.path} [{finding.rule}]" for finding in findings)
         raise ValueError(f"Credential source gate rejected: {summary}")
 
 
-def main() -> int:
+def main(argv: Sequence[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--include-untracked",
+        action="store_true",
+        help="also scan non-ignored untracked source files during candidate preparation",
+    )
+    arguments = parser.parse_args(argv)
     try:
-        validate_workspace()
+        validate_workspace(include_untracked=arguments.include_untracked)
     except ValueError as error:
         print(str(error), file=sys.stderr)
         return 1
-    print("Validated source credential hygiene without reading local-only secret files.")
+    scope = "tracked and non-ignored untracked source" if arguments.include_untracked else "source"
+    print(f"Validated {scope} credential hygiene without reading local-only secret files.")
     return 0
 
 

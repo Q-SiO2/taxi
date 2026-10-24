@@ -1,0 +1,277 @@
+{
+  "verified_utc": "2026-10-21T12:15:34.362Z",
+  "candidate": "candidate-native-v18.json",
+  "native_record": "v18-native-first.json",
+  "passed": true,
+  "interval": {
+    "start": "2026-10-21T10:47:20Z",
+    "end": "2026-10-21T10:51:20Z"
+  },
+  "api_deployment": "e5e108a0-e5dd-4553-93fd-292026c98b63",
+  "consequential_post_count": 8,
+  "each_consequential_path_once": true,
+  "domain_requests": [
+    {
+      "method": "POST",
+      "path": "/api/v1/drivers/me/availability/online",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:48:43.223329984Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides",
+      "httpStatus": 201,
+      "timestamp": "2026-10-21T10:48:49.409325863Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ride-offers/6472b5e7-face-4dbc-8925-2eb5ec3af918/accept",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:49:03.929193128Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/57bb0f9a-1212-4f81-add4-cc63852a2b68/en-route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:49:26.351116694Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/57bb0f9a-1212-4f81-add4-cc63852a2b68/arrived",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:49:43.646345432Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/57bb0f9a-1212-4f81-add4-cc63852a2b68/start",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:50:00.793041804Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/57bb0f9a-1212-4f81-add4-cc63852a2b68/complete",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:50:26.679108044Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/57bb0f9a-1212-4f81-add4-cc63852a2b68/payments/cash/settle",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:51:02.791054880Z"
+    }
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:47:32.694141235Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:47:33.574737957Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/estimate",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:47:59.684032639Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/routing/route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:48:00.060953720Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/estimate",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:48:16.364484419Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/routing/route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:48:16.647412023Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/estimate",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:48:18.220682827Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/routing/route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:48:18.453548485Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/drivers/me/location",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:48:36.241417034Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/drivers/me/availability/online",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:48:43.223329984Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides",
+      "httpStatus": 201,
+      "timestamp": "2026-10-21T10:48:49.409325863Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/drivers/me/location",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:48:52.586774034Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/routing/route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:48:53.096971552Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ride-offers/6472b5e7-face-4dbc-8925-2eb5ec3af918/accept",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:49:03.929193128Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/routing/route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:49:07.248985593Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/routing/route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:49:08.523373437Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/drivers/me/location",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:49:13.792408459Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/routing/route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:49:14.079152397Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/57bb0f9a-1212-4f81-add4-cc63852a2b68/en-route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:49:26.351116694Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/routing/route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:49:30.435430893Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/routing/route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:49:31.079189253Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/drivers/me/location",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:49:39.563765261Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/routing/route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:49:39.880649751Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/57bb0f9a-1212-4f81-add4-cc63852a2b68/arrived",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:49:43.646345432Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/routing/route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:49:46.367586746Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/routing/route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:49:47.316563909Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/drivers/me/location",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:49:54.074536383Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/routing/route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:49:54.360763983Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/57bb0f9a-1212-4f81-add4-cc63852a2b68/start",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:50:00.793041804Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/routing/route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:50:03.483486550Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/routing/route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:50:04.831820817Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/drivers/me/location",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:50:10.488498226Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/routing/route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:50:10.748221105Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/57bb0f9a-1212-4f81-add4-cc63852a2b68/complete",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:50:26.679108044Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/57bb0f9a-1212-4f81-add4-cc63852a2b68/payments/cash/settle",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T10:51:02.791054880Z"
+    }
+  ],
+  "scope": "Railway API proxy HTTP request corroboration for recorded native run. Source IP, user agent and credentials omitted. Estimate/routing/location/authentication requests are separate from domain command count.",
+  "qualification": "Earlier log retrieval failed during provider incident; fresh read succeeds after API restoration. Builds remain paused."
+}

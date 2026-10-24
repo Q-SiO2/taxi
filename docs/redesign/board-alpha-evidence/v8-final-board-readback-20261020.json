@@ -1,0 +1,35 @@
+{
+  "verified_utc": "2026-10-20T19:01:27.490596+00:00",
+  "web_deployment": "ceee310c-e957-49ad-945d-b9f2d292eb61",
+  "passed_within_scope": true,
+  "scope": "Normal reviewer password/MFA, Casablanca recruitment and matched applicant current-state readback on live v8; pointer-driven review and applicant sign-in; no review decision or application submit",
+  "application_id": "0de83ae6-2f00-4dbd-8f23-34b491e5698e",
+  "application_status": "SUBMITTED",
+  "application_revision": 7,
+  "canonical_applicant_url": "https://alpha-web-staging.up.railway.app/apply/",
+  "noncanonical_redirect": "Failed separately; proxy repair prepared and upload rejected by provider build pause",
+  "extra_staff_roles": "Expired at 2026-10-20 11:27 UTC; baseline recruitment scope used for final readback",
+  "screenshots": [
+    {
+      "path": "v8-final-operations-ar-launch.jpg",
+      "sha256": "d85cf78882bfad6b7b960212cf9b8ed5c64d88bf4ae91a003dccd408ff119eaa"
+    },
+    {
+      "path": "v8-final-operations-ar-recruitment.jpg",
+      "sha256": "2342f0c749e92c579e14fc877275925210e90994457697d8f83a21a8a4664d96"
+    },
+    {
+      "path": "v8-final-reviewer-ar-omar-r7.jpg",
+      "sha256": "f9668def308563eefb8636a4215a0057de73f8a30bd1ba71bdd5d29ce32a2b0d"
+    },
+    {
+      "path": "v8-final-applicant-canonical-entry.jpg",
+      "sha256": "1921cf36c55062d070ec835ec435def51a89791e45fc638fd077d66688712ae4"
+    },
+    {
+      "path": "v8-final-applicant-ar-submitted-r7.jpg",
+      "sha256": "3d04f0b22acc71d877165ce0dcafe83b53757b09c244fcef9638898c74292715"
+    }
+  ],
+  "accessibility_limit": "Browser AX reads retained a stale popup tree while fresh screenshots showed the changed page; this does not establish full web keyboard or screen-reader acceptance."
+}

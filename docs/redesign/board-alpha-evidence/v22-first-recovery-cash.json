@@ -1,0 +1,71 @@
+{
+  "candidate": "candidate-native-v22.json",
+  "started_utc": "2026-10-22T16:50:36.515561+00:00",
+  "passed": true,
+  "ride_id": "73c4d766-9c7a-4e80-a589-805eb3b8cff2",
+  "steps": [
+    {
+      "action": "cash",
+      "utc": "2026-10-22T16:50:54.267641+00:00",
+      "tap": [
+        492,
+        956
+      ],
+      "hold_ms": 80,
+      "confirmed": true
+    }
+  ],
+  "screenshots": [
+    {
+      "role": "passenger",
+      "path": "v22-first-recovery-cash-pending.png",
+      "sha256": "4109ffc48c9cf0c21ccbb84eabaa6e7677726b2eae6b6d04ec7c79b059fcd0f4"
+    },
+    {
+      "role": "driver",
+      "path": "v22-first-recovery-dated-cash-dialog.png",
+      "sha256": "c22f8d2c1d95aba2e3d3acac402ecded8a33563d34f55c33de0b0e478c1e4e37"
+    },
+    {
+      "role": "driver",
+      "path": "v22-first-recovery-cash-confirm-ready.png",
+      "sha256": "c22f8d2c1d95aba2e3d3acac402ecded8a33563d34f55c33de0b0e478c1e4e37"
+    },
+    {
+      "role": "passenger",
+      "path": "v22-first-recovery-cash-completed.png",
+      "sha256": "775c6422106fd13766af0ae05c41375365bc1e00777f0411d064e6c5d2b30bf6"
+    }
+  ],
+  "scope": "Separate deliberate recovery after failed first timed run. Native confirmation only, no HTTP business command and no automatic replay. Original first native/board remains failed.",
+  "payment": {
+    "method": "CASH",
+    "status": "COMPLETED"
+  },
+  "fare": {
+    "amount": "35.00",
+    "currency": "MAD",
+    "pricing_rule_version": "ux-demo-9f3f781b",
+    "components": [
+      {
+        "code": "TRANSPORT_FARE",
+        "label": "Transport fare",
+        "amount": "35.00"
+      }
+    ],
+    "economics": {
+      "transport_fare": "35.00",
+      "scheduling_surcharge": "0.00",
+      "operator_service_fee": "0.00",
+      "passenger_total": "35.00",
+      "expected_driver_net": "35.00",
+      "operator_allocation": "0.00",
+      "operator_fee_policy_version": "legacy-zero-fee-v1",
+      "operator_fee_calculation_mode": "FLAT_PER_COMPLETED_BOOKING",
+      "operator_fee_funding_mode": "DRIVER_SETTLEMENT_DEDUCTION"
+    }
+  },
+  "driver_availability": "OFFLINE",
+  "pending_cash_count": 0,
+  "finished_utc": "2026-10-22T16:51:05.904089+00:00"
+}

@@ -44,6 +44,7 @@ from taximobile_api.domains.notifications.router import router as notifications_
 from taximobile_api.domains.routing.router import router as routing_router
 from taximobile_api.domains.places.router import router as places_router
 from taximobile_api.domains.cooperatives.router import router as cooperatives_router
+from taximobile_api.domains.cooperatives.operations_router import router as memberships_operations_router
 from taximobile_api.domains.administration.operations_auth_router import (
     router as operations_auth_router,
 )
@@ -163,6 +164,7 @@ def create_v1_router(*, legacy_admin_api_enabled: bool) -> APIRouter:
     router.include_router(routing_router)
     router.include_router(places_router)
     router.include_router(cooperatives_router)
+    router.include_router(memberships_operations_router)
     router.include_router(operations_auth_router)
     router.include_router(markets_operations_router)
     router.include_router(markets_configuration_router)

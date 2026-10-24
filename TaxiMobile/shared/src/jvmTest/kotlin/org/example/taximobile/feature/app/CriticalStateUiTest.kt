@@ -166,8 +166,8 @@ class CriticalStateUiTest {
     fun signed_out_passenger_starts_on_a_purpose_built_welcome_surface() = runComposeUiTest {
         setContent { App(state = AppUiState.SignedOut()) }
 
-        onNodeWithText("Your city, one trusted taxi away").assertIsDisplayed()
-        onNodeWithContentDescription("A taxi following a highlighted city route").assertIsDisplayed()
+        onNodeWithText("Your city. Your taxi.").assertIsDisplayed()
+        onNodeWithTag("identity-frame-folded_streets").assertIsDisplayed()
         onNodeWithText("Create account").assertIsDisplayed()
         onNodeWithText("Sign in").assertIsDisplayed()
     }
@@ -318,7 +318,7 @@ class CriticalStateUiTest {
         }
 
         onNodeWithText("Network unavailable. Try again when connected.").assertIsDisplayed()
-        onNodeWithText("Choose the pickup on the map.").assertIsDisplayed()
+        onNodeWithText("Find a place").assertIsDisplayed()
         onAllNodesWithText("Connection unavailable").assertCountEquals(0)
     }
 
@@ -352,7 +352,7 @@ class CriticalStateUiTest {
         )
         onNodeWithText("Samira").assertIsDisplayed()
         onNodeWithText(ltrIsolate("TX-1234")).assertIsDisplayed()
-        onNodeWithText("Last known driver position · observed ${ltrIsolate(observedAt)}").assertIsDisplayed()
+        onAllNodesWithText(observedAt, substring = true).assertCountEquals(0)
         onNodeWithContentDescription("Refresh ride status and driver position").performClick()
         assertTrue(refreshRequested)
         onNodeWithText("Cancel request").assertIsEnabled()
@@ -369,11 +369,11 @@ class CriticalStateUiTest {
             )
         }
 
-        onNodeWithText("Inbox").performClick()
+        onNodeWithContentDescription("Inbox").performClick()
         onNodeWithText("Ride in progress").assertIsDisplayed()
         onNodeWithText("Back to ride").performClick()
 
-        onNodeWithText("Account").performClick()
+        onNodeWithContentDescription("Account").performClick()
         onNodeWithText("Ride in progress").assertIsDisplayed()
     }
 
@@ -402,7 +402,7 @@ class CriticalStateUiTest {
             )
         }
 
-        onNodeWithText("Safety").performClick()
+        onNodeWithContentDescription("Safety").performClick()
         onNodeWithText(
             "TaxiMobile safety reports are not an emergency service. If you are in immediate danger, move to a safe place and contact local emergency services."
         ).performScrollTo().assertIsDisplayed()
@@ -431,11 +431,11 @@ class CriticalStateUiTest {
             )
         }
 
-        onNodeWithText("Inbox").performClick()
+        onNodeWithContentDescription("Inbox").performClick()
         onNodeWithText("Ride in progress").assertIsDisplayed()
         onNodeWithText("Back to operations").performClick()
 
-        onNodeWithText("Driver account").performClick()
+        onNodeWithContentDescription("Driver account").performClick()
         onNodeWithText("Ride in progress").assertIsDisplayed()
     }
 
@@ -456,7 +456,7 @@ class CriticalStateUiTest {
             )
         }
 
-        onNodeWithText("Safety").performClick()
+        onNodeWithContentDescription("Safety").performClick()
         onNodeWithText("Describe the safety concern").performTextInput("Passenger made a threat")
         onNodeWithText("Send safety report").assertIsEnabled().performClick()
 
@@ -512,6 +512,33 @@ class CriticalStateUiTest {
     }
 
     @Test
+    fun offline_driver_waits_for_native_acquisition_before_online_can_be_submitted() = runComposeUiTest {
+        var finishLocation: ((org.example.taximobile.domain.drivers.DriverLocationObservation?) -> Unit)? = null
+        var onlineCommands = 0
+        setContent {
+            App(
+                appRole = AppRole.DRIVER,
+                state = AppUiState.DriverReady(
+                    availability = DriverAvailabilityStatus.OFFLINE,
+                    activeVehicleId = "vehicle-1",
+                    currentLocation = Coordinates(33.5731, -7.5898),
+                    vehicles = listOf(DriverVehicle("vehicle-1", "Dacia", "Logan", "White",
+                        status = "ACTIVE", verificationStatus = "VERIFIED")),
+                ),
+                onRequestDriverObservation = { finishLocation = it },
+                onSetDriverOnline = { _, _, _ -> onlineCommands++ },
+            )
+        }
+        onNodeWithTag("driver-go-online").performScrollTo().assertIsEnabled()
+        onNodeWithContentDescription("Load current driver location").performClick()
+        onNodeWithTag("driver-go-online").assertIsNotEnabled()
+        assertEquals(0, onlineCommands)
+        runOnIdle { requireNotNull(finishLocation).invoke(null) }
+        onNodeWithTag("driver-go-online").assertIsEnabled()
+        assertEquals(0, onlineCommands)
+    }
+
+    @Test
     fun production_passenger_place_selection_hides_manual_coordinate_fields() = runComposeUiTest {
         setContent {
             App(
@@ -520,7 +547,8 @@ class CriticalStateUiTest {
             )
         }
 
-        onNodeWithText("Choose the pickup on the map.").assertIsDisplayed()
+        onNodeWithText("Find a place").performClick()
+        onNodeWithText("Pickup defaults to your selected point.").assertIsDisplayed()
         onAllNodesWithText("Choose the destination on the map.").assertCountEquals(1)
         onAllNodesWithText("Pickup latitude").assertCountEquals(0)
         onAllNodesWithText("Destination longitude").assertCountEquals(0)
@@ -611,6 +639,7 @@ class CriticalStateUiTest {
             )
         }
 
+        onNodeWithText("Find a place").performClick()
         onNodeWithText("Recent destinations").performScrollTo().assertIsDisplayed()
         onNodeWithText("Casa Voyageurs").performScrollTo().performClick()
         // The destination field now presents the useful backend address instead
@@ -622,10 +651,10 @@ class CriticalStateUiTest {
     @Test
     fun passenger_history_row_loads_and_renders_authorized_receipt_detail() = runComposeUiTest {
         val ride = org.example.taximobile.domain.rides.RideSummary(
-            id = "ride-history",
+            id = "12345678-1234-4234-9234-123456789abc",
             status = RideStatus.COMPLETED,
             completedAt = "2026-08-13T12:00:00Z",
-            pickup = Coordinates(33.5731, -7.5898, "Pickup"),
+            pickup = Coordinates(33.573098333333334, -7.5898),
             destination = Coordinates(33.5890, -7.5910, "Casa Voyageurs"),
         )
         val renderedState = mutableStateOf(AppUiState.PassengerReady(rideHistory = listOf(ride)))
@@ -664,9 +693,13 @@ class CriticalStateUiTest {
         }
 
         onNodeWithText("Account").performClick()
-        onNodeWithText("Ride completed · ${ltrIsolate("ride-his")}").performScrollTo().performClick()
-        assertTrue(selectedRideId == "ride-history")
+        onNodeWithText("Ride completed · ${ltrIsolate("12345678")}").performScrollTo().performClick()
+        assertEquals(ride.id, selectedRideId)
         onNodeWithText("Ride details").performScrollTo().assertIsDisplayed()
+        onNodeWithText("Ride ${ltrIsolate("12345678")}").performScrollTo().assertIsDisplayed()
+        onAllNodesWithText(ride.id, substring = true).assertCountEquals(0)
+        onNodeWithText("Pickup: ${ltrIsolate("33.5731, -7.5898")}").performScrollTo().assertIsDisplayed()
+        onAllNodesWithText("33.573098333333334", substring = true).assertCountEquals(0)
         onNodeWithText("Destination: Casa Voyageurs").performScrollTo().assertIsDisplayed()
         onNodeWithText("Receipt").performScrollTo().assertIsDisplayed()
         onNodeWithText("42.00").performScrollTo().assertIsDisplayed()
@@ -692,7 +725,7 @@ class CriticalStateUiTest {
         }
 
         onNodeWithText("Account").performClick()
-        onNodeWithText("Cash settlement is awaiting the driver’s backend confirmation.").assertIsDisplayed()
+        onNodeWithText("Waiting for the driver to confirm cash received.").assertIsDisplayed()
         onAllNodesWithText("Paid").assertCountEquals(0)
     }
 
@@ -795,13 +828,15 @@ class CriticalStateUiTest {
                 appRole = AppRole.DRIVER,
                 state = AppUiState.DriverReady(
                     availability = DriverAvailabilityStatus.AVAILABLE,
-                    pendingCashRideId = "ride-cash",
+                    pendingCashPayments = org.example.taximobile.domain.drivers.PendingCashPaymentsPage(
+                        listOf(org.example.taximobile.domain.drivers.PendingCashPayment("payment-cash", "ride-cash", "35.00", "MAD", "2026-10-05T12:00:00Z")), 1, 20, 1,
+                    ),
                 ),
                 onSettleDriverCash = { settledRideId = it },
             )
         }
 
-        onNodeWithText("Confirm cash received").performClick()
+        onNodeWithText("Confirm cash received").performScrollTo().performClick()
         assertTrue(settledRideId == null)
         onNodeWithText("Cash received").performClick()
         assertTrue(settledRideId == "ride-cash")
@@ -925,7 +960,7 @@ class CriticalStateUiTest {
             )
         }
 
-        onNodeWithText("Driver account").performClick()
+        onNodeWithContentDescription("Driver account").performClick()
         onNodeWithText("Cooperative membership").performScrollTo().assertIsDisplayed()
         onNodeWithText("Casablanca Taxi Cooperative").performScrollTo().assertIsDisplayed()
         onNodeWithText("Status: ACTIVE").performScrollTo().assertIsDisplayed()
@@ -955,8 +990,8 @@ class CriticalStateUiTest {
             )
         }
 
-        onAllNodesWithText("Integration Driver")[0].performClick()
-        onAllNodesWithText("Integration Driver")[1].performScrollTo().assertIsDisplayed()
+        onNodeWithContentDescription("Driver account").performClick()
+        onNodeWithText("Integration Driver").performScrollTo().assertIsDisplayed()
         onNodeWithText("Verification: Verified").performScrollTo().assertIsDisplayed()
         onNodeWithText("Account status: Active").performScrollTo().assertIsDisplayed()
         onNodeWithText("Professional credentials").performScrollTo().assertIsDisplayed()
@@ -998,7 +1033,7 @@ class CriticalStateUiTest {
             )
         }
 
-        onNodeWithText("Driver account").performClick()
+        onNodeWithContentDescription("Driver account").performClick()
         onNodeWithText("Settled rides: 1").performScrollTo().assertIsDisplayed()
         onNodeWithText("Settled through: ${ltrIsolate("2026-08-13T12:00:00Z")}")
             .performScrollTo().assertIsDisplayed()
@@ -1010,10 +1045,10 @@ class CriticalStateUiTest {
     @Test
     fun driver_history_row_loads_and_renders_authorized_passenger_feedback() = runComposeUiTest {
         val detail = RideSummary(
-            id = "ride-history",
+            id = "12345678-1234-4234-9234-123456789abc",
             status = RideStatus.COMPLETED,
             completedAt = "2026-08-13T12:00:00Z",
-            pickup = Coordinates(33.5731, -7.5898, "Pickup"),
+            pickup = Coordinates(33.573098333333334, -7.5898),
             destination = Coordinates(33.5890, -7.5910, "Casa Voyageurs"),
         )
         val renderedState = mutableStateOf(
@@ -1037,10 +1072,14 @@ class CriticalStateUiTest {
             )
         }
 
-        onNodeWithText("Driver account").performClick()
-        onNodeWithTag("driver-history-ride-history").performScrollTo().performClick()
-        assertTrue(selectedRideId == "ride-history")
+        onNodeWithContentDescription("Driver account").performClick()
+        onNodeWithTag("driver-history-${detail.id}").performScrollTo().performClick()
+        assertEquals(detail.id, selectedRideId)
         onNodeWithText("Ride details").performScrollTo().assertIsDisplayed()
+        onNodeWithText("Ride ${ltrIsolate("12345678")}").performScrollTo().assertIsDisplayed()
+        onAllNodesWithText(detail.id, substring = true).assertCountEquals(0)
+        onNodeWithText("Pickup: ${ltrIsolate("33.5731, -7.5898")}").performScrollTo().assertIsDisplayed()
+        onAllNodesWithText("33.573098333333334", substring = true).assertCountEquals(0)
         onNodeWithText("Destination: Casa Voyageurs").performScrollTo().assertIsDisplayed()
         onNodeWithText("Passenger feedback").performScrollTo().assertIsDisplayed()
         onNodeWithText("Passenger rating: 5/5").performScrollTo().assertIsDisplayed()

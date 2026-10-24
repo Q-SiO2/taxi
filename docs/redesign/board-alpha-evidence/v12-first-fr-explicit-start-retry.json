@@ -1,0 +1,31 @@
+{
+  "started_utc": "2026-10-19T19:28:58.298029+00:00",
+  "ride_id": "98a253df-de13-4029-9daa-e538a520997d",
+  "scope": "One explicit native retry after independent DRIVER_ARRIVED readback; no automatic command replay",
+  "passed": true,
+  "before": "DRIVER_ARRIVED",
+  "observed_bounds": "Bounds(left=235, top=1263, right=486, bottom=1303)",
+  "after": "IN_PROGRESS",
+  "ui_texts": [
+    "Affichage d’une carte créée avec MapLibre. Faites la glisser en traînant deux doigts. Zoomez ou dézoomez en écartant ou rapprochant deux doigts.",
+    "Icône d’attribution. Activer pour afficher le dialogue d’attribution.",
+    "Compte chauffeur",
+    "Compte",
+    "Sécurité",
+    "Boîte de réception 12",
+    "9+",
+    "Recentrer l’itinéraire de navigation",
+    "⌖",
+    "Charger la position actuelle",
+    "◎",
+    "État : Au point de départ",
+    "i",
+    "Au point de départ",
+    "Gardez cette application ouverte lorsque vous êtes en ligne. Votre position est actualisée uniquement quand l’application est au premier plan.",
+    "0.6 km · environ 1 min",
+    "Continuez sur Rue 75",
+    "Motif d’annulation"
+  ],
+  "screenshot": "v12-first-fr-explicit-start-retry.png",
+  "finished_utc": "2026-10-19T19:29:07.827052+00:00"
+}

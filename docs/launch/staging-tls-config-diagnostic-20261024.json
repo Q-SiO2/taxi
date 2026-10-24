@@ -1,0 +1,27 @@
+{
+  "recorded_utc": "2026-10-24T14:26:26.072042+00:00",
+  "project_id": "9f841575-c4f3-4a4d-bb83-2e6ff92e436e",
+  "environment_id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+  "service_id": "41ccd6b2-41e2-4886-8d96-cc56f62aaab7",
+  "method": "Read-only follow-up classifying the observed pg_file_settings error; no setting values or raw files returned",
+  "remote_script_sha256": "70273eb7c10fad44e597f8f4fce59c63417464e3db8e9b20adc64f6870df6488",
+  "return_code": 0,
+  "stderr_bytes": 0,
+  "observations": [
+    {
+      "read_only": "on",
+      "diagnostics": [
+        {
+          "name": "shared_buffers",
+          "applied": false,
+          "sourceline": 130,
+          "error_class": "setting could not be applied",
+          "effective_source": "command line"
+        }
+      ]
+    }
+  ],
+  "passed": true,
+  "server_settings_files_grants_credentials_or_deployments_changed": false,
+  "hosted_TLS_accepted": false
+}

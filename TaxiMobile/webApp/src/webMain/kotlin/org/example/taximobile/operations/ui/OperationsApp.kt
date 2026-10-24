@@ -51,6 +51,11 @@ import org.example.taximobile.feature.ui.theme.TaxiColors
 import org.example.taximobile.feature.ui.theme.TaxiRadii
 import org.example.taximobile.feature.ui.theme.TaxiSpacing
 import org.example.taximobile.feature.ui.theme.TaxiTheme
+import org.jetbrains.compose.resources.stringResource
+import taximobile.shared.generated.resources.*
+import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.style.TextDirection
+import org.example.taximobile.feature.ui.text.ltrIsolate
 import org.example.taximobile.operations.model.OperationsDestination
 import org.example.taximobile.operations.state.OperationsCoordinator
 import org.example.taximobile.operations.state.OperationsSessionPhase
@@ -60,7 +65,13 @@ import org.example.taximobile.operations.state.OperationsUiState
 fun OperationsApp(coordinator: OperationsCoordinator) {
     val state by coordinator.state.collectAsState()
     TaxiTheme {
-        Surface(modifier = Modifier.fillMaxSize(), color = TaxiColors.Surface1) {
+        val taxiColors = TaxiTheme.colors
+        Column(Modifier.fillMaxSize()) {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            org.example.taximobile.feature.ui.components.TaxiStyleChooser(Modifier.weight(1f))
+            org.example.taximobile.feature.ui.components.TaxiLanguageChooser()
+        }
+        Surface(modifier = Modifier.weight(1f).fillMaxWidth(), color = taxiColors.Surface1) {
             when (state.sessionPhase) {
                 OperationsSessionPhase.SIGNED_OUT,
                 OperationsSessionPhase.SIGNING_IN,
@@ -85,6 +96,7 @@ fun OperationsApp(coordinator: OperationsCoordinator) {
                 )
             }
         }
+        }
     }
 }
 
@@ -94,10 +106,12 @@ private fun OperationsLogin(
     onLogin: (String, String) -> Unit,
     onDismissError: () -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     var identifier by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val busy = state.sessionPhase == OperationsSessionPhase.SIGNING_IN
-    BoxWithConstraints(Modifier.fillMaxSize().background(TaxiColors.Navy950)) {
+    BoxWithConstraints(Modifier.fillMaxSize().background(taxiColors.Navy950)) {
         val wide = maxWidth >= 860.dp
         if (wide) {
             Row(Modifier.fillMaxSize()) {
@@ -106,7 +120,7 @@ private fun OperationsLogin(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
-                        .background(TaxiColors.Surface1)
+                        .background(taxiColors.Surface1)
                         .verticalScroll(rememberScrollState())
                         .padding(vertical = TaxiSpacing.Xl),
                     contentAlignment = Alignment.Center,
@@ -127,16 +141,16 @@ private fun OperationsLogin(
             Column(
                 Modifier
                     .fillMaxSize()
-                    .background(TaxiColors.Surface1)
+                    .background(taxiColors.Surface1)
                     .verticalScroll(rememberScrollState())
                     .padding(TaxiSpacing.Xl),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
             ) {
                 Surface(
-                    color = TaxiColors.Navy950,
-                    shape = RoundedCornerShape(TaxiRadii.Lg),
-                    modifier = Modifier.fillMaxWidth().widthIn(max = 520.dp),
+                    color = taxiColors.Navy950,
+                    shape = RoundedCornerShape(taxiRadii.Lg),
+                    modifier = Modifier.widthIn(max = 520.dp).fillMaxWidth(),
                 ) {
                     Row(Modifier.padding(TaxiSpacing.Lg), verticalAlignment = Alignment.CenterVertically) {
                         OperationsWordmark()
@@ -160,28 +174,30 @@ private fun OperationsLogin(
 
 @Composable
 private fun LoginBrandPanel(modifier: Modifier = Modifier) {
+    val taxiColors = TaxiTheme.colors
     Column(
         modifier = modifier.fillMaxHeight().padding(64.dp),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         OperationsWordmark()
         Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Lg)) {
+            org.example.taximobile.feature.ui.components.TaxiEntryFrame()
             Text(
-                "Deploy city by city.\nKeep authority explicit.",
+                stringResource(Res.string.web_ops_hero),
                 color = Color.White,
                 style = MaterialTheme.typography.displaySmall,
                 fontWeight = FontWeight.Bold,
             )
             Text(
-                "A protected control plane for rollout readiness, city configuration, operator authority, scoped staff access, and audit review.",
-                color = TaxiColors.Navy200,
+                stringResource(Res.string.web_ops_intro),
+                color = taxiColors.Navy200,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.widthIn(max = 520.dp),
             )
         }
         Text(
-            "National operations · Staged city rollout",
-            color = TaxiColors.Accent400,
+            stringResource(Res.string.web_ops_footer),
+            color = taxiColors.Accent400,
             style = MaterialTheme.typography.labelMedium,
         )
     }
@@ -198,32 +214,36 @@ private fun LoginCard(
     onLogin: (String, String) -> Unit,
     onDismissError: () -> Unit,
 ) {
+    val identifierLabel = stringResource(Res.string.web_identifier)
+    val passwordLabel = stringResource(Res.string.password)
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     Surface(
-        modifier = Modifier.fillMaxWidth().widthIn(max = 480.dp),
-        color = TaxiColors.Surface0,
-        shape = RoundedCornerShape(TaxiRadii.Xl),
-        border = BorderStroke(1.dp, TaxiColors.StrokeSubtle),
-        shadowElevation = 4.dp,
+        modifier = Modifier.widthIn(max = 480.dp).fillMaxWidth(),
+        color = taxiColors.Surface0,
+        shape = RoundedCornerShape(taxiRadii.Xl),
+        border = BorderStroke(1.dp, taxiColors.StrokeSubtle),
+        shadowElevation = if (TaxiTheme.style == org.example.taximobile.feature.ui.theme.TaxiStyle.Notepad) 0.dp else 4.dp,
     ) {
         Column(
             Modifier.padding(TaxiSpacing.Xxl),
             verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md),
         ) {
-            Text("Operations sign in", style = MaterialTheme.typography.headlineSmall, color = TaxiColors.Navy900, fontWeight = FontWeight.Bold)
+            Text(stringResource(Res.string.web_ops_sign_in), style = MaterialTheme.typography.headlineSmall, color = taxiColors.Navy900, fontWeight = FontWeight.Bold)
             Text(
-                "Use an active account with an explicitly bootstrapped operations grant.",
+                stringResource(Res.string.web_ops_access_hint),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TaxiColors.Ink500,
+                color = taxiColors.Ink500,
             )
             Surface(
-                color = TaxiColors.Warning100,
-                shape = RoundedCornerShape(TaxiRadii.Md),
-                border = BorderStroke(1.dp, TaxiColors.Warning600.copy(alpha = 0.25f)),
+                color = taxiColors.Warning100,
+                shape = RoundedCornerShape(taxiRadii.Md),
+                border = BorderStroke(1.dp, taxiColors.Warning600.copy(alpha = 0.25f)),
             ) {
                 Text(
-                    "Production requires an enrolled authenticator factor. Password-only access remains restricted to explicitly configured local/test environments.",
+                    stringResource(Res.string.web_ops_factor_hint),
                     modifier = Modifier.padding(TaxiSpacing.Md),
-                    color = TaxiColors.Warning600,
+                    color = taxiColors.Warning600,
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
@@ -233,42 +253,42 @@ private fun LoginCard(
             OutlinedTextField(
                 value = identifier,
                 onValueChange = { if (it.length <= 320) onIdentifier(it) },
-                modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Email or phone" },
-                label = { Text("Email or phone") },
+                modifier = Modifier.fillMaxWidth().semantics { contentDescription = identifierLabel },
+                label = { Text(stringResource(Res.string.web_identifier)) },
+                textStyle = MaterialTheme.typography.bodyLarge.copy(textDirection = TextDirection.Ltr),
                 singleLine = true,
                 enabled = !busy,
             )
             OutlinedTextField(
                 value = password,
                 onValueChange = { if (it.length <= 256) onPassword(it) },
-                modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Password" },
-                label = { Text("Password") },
+                modifier = Modifier.fillMaxWidth().semantics { contentDescription = passwordLabel },
+                label = { Text(stringResource(Res.string.password)) },
+                textStyle = MaterialTheme.typography.bodyLarge.copy(textDirection = TextDirection.Ltr),
                 singleLine = true,
                 enabled = !busy,
                 visualTransformation = PasswordVisualTransformation(),
             )
             Button(
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                 onClick = { onLogin(identifier, password) },
                 enabled = !busy && identifier.isNotBlank() && password.length >= 8,
-                modifier = Modifier.fillMaxWidth().height(52.dp),
+                modifier = Modifier.fillMaxWidth().height(56.dp),
             ) {
                 if (busy) {
-                    CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp, color = TaxiColors.Navy950)
+                    CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp, color = MaterialTheme.colorScheme.onPrimary)
                     Spacer(Modifier.width(TaxiSpacing.Sm))
-                    Text("Verifying scoped access…")
+                    Text(stringResource(Res.string.web_signing_in))
                 } else {
-                    Text("Sign in")
+                    Text(stringResource(Res.string.sign_in))
                 }
             }
-            HorizontalDivider(color = TaxiColors.StrokeSubtle)
-            Text("API", style = MaterialTheme.typography.labelSmall, color = TaxiColors.Ink500)
-            Text(
-                state.apiBaseUrl,
-                color = TaxiColors.Navy700,
-                style = MaterialTheme.typography.bodySmall,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-            )
+            if (state.isLocalDevelopment) {
+                HorizontalDivider(color = taxiColors.StrokeSubtle)
+                Text("API", style = MaterialTheme.typography.labelSmall, color = taxiColors.Ink500)
+                Text(ltrIsolate(state.apiBaseUrl), color = taxiColors.Navy700,
+                    style = MaterialTheme.typography.bodySmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
+            }
         }
     }
 }
@@ -280,53 +300,59 @@ private fun OperationsMfaVerification(
     onCancel: () -> Unit,
     onDismissError: () -> Unit,
 ) {
+    val codeLabel = stringResource(Res.string.web_mfa_code)
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     var code by remember { mutableStateOf("") }
     val busy = state.sessionPhase == OperationsSessionPhase.VERIFYING_MFA
     Box(
-        Modifier.fillMaxSize().background(TaxiColors.Navy950).padding(TaxiSpacing.Xl),
+        Modifier.fillMaxSize().background(taxiColors.Navy950)
+            .verticalScroll(rememberScrollState()).padding(TaxiSpacing.Xl),
         contentAlignment = Alignment.Center,
     ) {
         Surface(
-            modifier = Modifier.fillMaxWidth().widthIn(max = 480.dp),
-            color = TaxiColors.Surface0,
-            shape = RoundedCornerShape(TaxiRadii.Xl),
-            border = BorderStroke(1.dp, TaxiColors.StrokeSubtle),
-            shadowElevation = 4.dp,
+            modifier = Modifier.widthIn(max = 480.dp).fillMaxWidth(),
+            color = taxiColors.Surface0,
+            shape = RoundedCornerShape(taxiRadii.Xl),
+            border = BorderStroke(1.dp, taxiColors.StrokeSubtle),
+            shadowElevation = if (TaxiTheme.style == org.example.taximobile.feature.ui.theme.TaxiStyle.Notepad) 0.dp else 4.dp,
         ) {
             Column(
                 Modifier.padding(TaxiSpacing.Xxl),
                 verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md),
             ) {
-                Text("Verify your second factor", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+                Text(stringResource(Res.string.web_mfa_title), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
                 Text(
-                    "Enter the current six-digit code from your authenticator app. An unused recovery code also works once.",
-                    color = TaxiColors.Ink500,
+                    stringResource(Res.string.web_mfa_help),
+                    color = taxiColors.Ink500,
                 )
                 state.mfaChallengeExpiresIn?.let {
-                    Text("This password challenge expires in ${it / 60} minutes.", style = MaterialTheme.typography.bodySmall)
+                    Text(stringResource(Res.string.web_mfa_expires, it / 60), style = MaterialTheme.typography.bodySmall)
                 }
                 state.error?.let { MessageBanner(it, error = true, onDismiss = onDismissError) }
                 OutlinedTextField(
                     value = code,
                     onValueChange = { if (it.length <= 32) code = it.uppercase() },
-                    modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Authenticator or recovery code" },
-                    label = { Text("Authenticator or recovery code") },
+                    modifier = Modifier.fillMaxWidth().semantics { contentDescription = codeLabel },
+                    label = { Text(stringResource(Res.string.web_mfa_code)) },
+                    textStyle = MaterialTheme.typography.bodyLarge.copy(textDirection = TextDirection.Ltr),
                     singleLine = true,
                     enabled = !busy,
                 )
                 Button(
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                     onClick = { onVerify(code) },
                     enabled = !busy && code.length >= 6,
-                    modifier = Modifier.fillMaxWidth().height(52.dp),
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
                 ) {
                     if (busy) {
                         CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp)
                         Spacer(Modifier.width(TaxiSpacing.Sm))
                     }
-                    Text(if (busy) "Verifying…" else "Verify and continue")
+                    Text(if (busy) stringResource(Res.string.web_verifying) else stringResource(Res.string.web_verify_continue))
                 }
-                OutlinedButton(onClick = onCancel, enabled = !busy, modifier = Modifier.fillMaxWidth()) {
-                    Text("Cancel sign in")
+                OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = onCancel, enabled = !busy, modifier = Modifier.fillMaxWidth()) {
+                    Text(stringResource(Res.string.web_cancel_sign_in))
                 }
             }
         }
@@ -340,6 +366,7 @@ private fun OperationsShell(
 ) {
     BoxWithConstraints(Modifier.fillMaxSize()) {
         val desktop = maxWidth >= 980.dp
+        val narrow = maxWidth < 600.dp
         if (desktop) {
             Row(Modifier.fillMaxSize()) {
                 OperationsSidebar(
@@ -358,6 +385,7 @@ private fun OperationsShell(
                     onDestination = coordinator::selectDestination,
                     onStepUp = coordinator::showMfaStepUp,
                     onLogout = coordinator::logout,
+                    narrow = narrow,
                 )
                 OperationsWorkspace(state, coordinator, compact = true, modifier = Modifier.weight(1f))
             }
@@ -380,14 +408,17 @@ private fun OperationsSidebar(
     onLogout: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     Column(
-        modifier = modifier.background(TaxiColors.Navy950).padding(TaxiSpacing.Lg),
+        modifier = modifier.background(taxiColors.Navy950).padding(TaxiSpacing.Lg),
         verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Lg),
     ) {
         OperationsWordmark()
-        HorizontalDivider(color = TaxiColors.Navy800)
-        Text("CONTROL PLANE", color = TaxiColors.Navy300, style = MaterialTheme.typography.labelSmall)
-        Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
+        HorizontalDivider(color = taxiColors.Navy800)
+        Text(stringResource(Res.string.web_workspace), color = taxiColors.Navy300, style = MaterialTheme.typography.labelSmall)
+        Column(Modifier.weight(1f).verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
             state.destinations.forEach { destination ->
                 SidebarDestination(
                     destination = destination,
@@ -397,34 +428,36 @@ private fun OperationsSidebar(
                 )
             }
         }
-        Spacer(Modifier.weight(1f))
         Surface(
-            color = TaxiColors.Navy900,
-            shape = RoundedCornerShape(TaxiRadii.Md),
+            color = taxiColors.Navy900,
+            shape = RoundedCornerShape(taxiRadii.Md),
         ) {
             Column(Modifier.padding(TaxiSpacing.Md), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
-                Text("Signed in", color = TaxiColors.Navy300, style = MaterialTheme.typography.labelSmall)
-                Text(shortId(state.session?.userId), color = Color.White, style = MaterialTheme.typography.bodyMedium)
+                Text(stringResource(Res.string.web_signed_in), color = taxiColors.Navy300, style = MaterialTheme.typography.labelSmall)
+                Text(ltrIsolate(shortId(state.session?.userId)), color = Color.White, style = MaterialTheme.typography.bodyMedium)
                 Text(
-                    state.authenticationStrength?.replace('_', ' ') ?: "Operations session",
-                    color = TaxiColors.Accent400,
+                    stringResource(if (state.authenticationStrength?.contains("MFA") == true)
+                        Res.string.web_mfa_verified else Res.string.web_staff_session),
+                    color = taxiColors.Accent400,
                     style = MaterialTheme.typography.labelSmall,
                 )
                 if (state.authenticationStrength?.contains("MFA") == true) {
                     OutlinedButton(
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                         onClick = onStepUp,
                         modifier = Modifier.fillMaxWidth(),
-                        border = BorderStroke(1.dp, TaxiColors.Navy600),
+                        border = BorderStroke(1.dp, taxiColors.Navy600),
                     ) {
-                        Text("Reverify MFA", color = Color.White)
+                        Text(stringResource(Res.string.web_reverify), color = Color.White)
                     }
                 }
                 OutlinedButton(
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                     onClick = onLogout,
                     modifier = Modifier.fillMaxWidth(),
-                    border = BorderStroke(1.dp, TaxiColors.Navy600),
+                    border = BorderStroke(1.dp, taxiColors.Navy600),
                 ) {
-                    Text("Sign out", color = Color.White)
+                    Text(stringResource(Res.string.sign_out), color = Color.White)
                 }
             }
         }
@@ -438,24 +471,19 @@ private fun SidebarDestination(
     enabled: Boolean,
     onClick: () -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     Surface(
         modifier = Modifier.fillMaxWidth().clickable(enabled = enabled, onClick = onClick),
-        color = if (selected) TaxiColors.Accent500 else Color.Transparent,
-        shape = RoundedCornerShape(TaxiRadii.Md),
+        color = if (selected) taxiColors.Accent500 else Color.Transparent,
+        shape = RoundedCornerShape(taxiRadii.Md),
     ) {
         Column(Modifier.padding(horizontal = TaxiSpacing.Md, vertical = TaxiSpacing.Sm)) {
             Text(
-                destination.title,
-                color = if (selected) TaxiColors.Navy950 else Color.White,
+                stringResource(destination.titleResource()),
+                color = if (selected) MaterialTheme.colorScheme.onPrimary else Color.White,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
-            )
-            Text(
-                destination.supportingText,
-                color = if (selected) TaxiColors.Navy700 else TaxiColors.Navy300,
-                style = MaterialTheme.typography.labelSmall,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
             )
         }
     }
@@ -467,27 +495,29 @@ private fun CompactNavigation(
     onDestination: (OperationsDestination) -> Unit,
     onStepUp: () -> Unit,
     onLogout: () -> Unit,
+    narrow: Boolean,
 ) {
-    Column(Modifier.fillMaxWidth().background(TaxiColors.Navy950)) {
+    val taxiColors = TaxiTheme.colors
+    Column(Modifier.fillMaxWidth().background(taxiColors.Navy950)) {
         Row(
             Modifier.fillMaxWidth().padding(horizontal = TaxiSpacing.Md, vertical = TaxiSpacing.Sm),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             OperationsWordmark(compact = true)
-            Text(
-                "National operations",
+            if (narrow) Spacer(Modifier.weight(1f)) else Text(
+                stringResource(Res.string.web_operations),
                 modifier = Modifier.padding(start = TaxiSpacing.Sm).weight(1f),
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
             )
             if (state.authenticationStrength?.contains("MFA") == true) {
-                OutlinedButton(onClick = onStepUp, border = BorderStroke(1.dp, TaxiColors.Navy600)) {
-                    Text("Verify MFA", color = Color.White)
+                OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = onStepUp, border = BorderStroke(1.dp, taxiColors.Navy600)) {
+                    Text(stringResource(Res.string.web_verify), color = Color.White)
                 }
                 Spacer(Modifier.width(TaxiSpacing.Xs))
             }
-            OutlinedButton(onClick = onLogout, border = BorderStroke(1.dp, TaxiColors.Navy600)) {
-                Text("Sign out", color = Color.White)
+            OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = onLogout, border = BorderStroke(1.dp, taxiColors.Navy600)) {
+                Text(stringResource(Res.string.sign_out), color = Color.White)
             }
         }
         Row(
@@ -497,13 +527,13 @@ private fun CompactNavigation(
             state.destinations.forEach { destination ->
                 Surface(
                     modifier = Modifier.clickable(enabled = !state.interactionLocked) { onDestination(destination) },
-                    color = if (destination == state.destination) TaxiColors.Accent500 else TaxiColors.Navy900,
-                    shape = CircleShape,
+                    color = if (destination == state.destination) taxiColors.Accent500 else taxiColors.Navy900,
+                    shape = RoundedCornerShape(TaxiTheme.radii.Pill),
                 ) {
                     Text(
-                        destination.title,
+                        stringResource(destination.titleResource()),
                         modifier = Modifier.padding(horizontal = TaxiSpacing.Md, vertical = TaxiSpacing.Xs),
-                        color = if (destination == state.destination) TaxiColors.Navy950 else Color.White,
+                        color = if (destination == state.destination) MaterialTheme.colorScheme.onPrimary else Color.White,
                         style = MaterialTheme.typography.labelMedium,
                     )
                 }
@@ -518,28 +548,31 @@ private fun MfaStepUpDialog(
     onDismiss: () -> Unit,
     onVerify: (String) -> Unit,
 ) {
+    val codeLabel = stringResource(Res.string.web_mfa_code)
     var code by remember { mutableStateOf("") }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Reverify sensitive access") },
+        title = { Text(stringResource(Res.string.web_step_up_title)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md)) {
-                Text("A current authenticator or unused recovery code unlocks protected commands for ten minutes. A rejected command is never replayed automatically.")
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md)) {
+                Text(stringResource(Res.string.web_step_up_help))
                 OutlinedTextField(
                     value = code,
                     onValueChange = { if (it.length <= 32) code = it.uppercase() },
-                    label = { Text("Authenticator or recovery code") },
+                    modifier = Modifier.semantics { contentDescription = codeLabel },
+                    label = { Text(stringResource(Res.string.web_mfa_code)) },
+                    textStyle = MaterialTheme.typography.bodyLarge.copy(textDirection = TextDirection.Ltr),
                     singleLine = true,
                     enabled = !busy,
                 )
             }
         },
         confirmButton = {
-            Button(onClick = { onVerify(code) }, enabled = !busy && code.length >= 6) {
-                Text(if (busy) "Verifying…" else "Verify")
+            Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onVerify(code) }, enabled = !busy && code.length >= 6) {
+                Text(if (busy) stringResource(Res.string.web_verifying) else stringResource(Res.string.web_verify))
             }
         },
-        dismissButton = { OutlinedButton(onClick = onDismiss, enabled = !busy) { Text("Cancel") } },
+        dismissButton = { OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = onDismiss, enabled = !busy) { Text(stringResource(Res.string.web_cancel)) } },
     )
 }
 
@@ -550,10 +583,14 @@ private fun OperationsWorkspace(
     compact: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier.fillMaxHeight().background(TaxiColors.Surface1)) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
+    Column(org.example.taximobile.feature.ui.components.taxiTaskSurface(
+        modifier.fillMaxHeight().background(taxiColors.Surface1),
+    )) {
         ScopeTopBar(state, coordinator, compact)
         if (state.isRefreshing || state.mutationLabel != null) {
-            LinearProgressIndicator(modifier = Modifier.fillMaxWidth(), color = TaxiColors.Accent500, trackColor = TaxiColors.Navy100)
+            LinearProgressIndicator(modifier = Modifier.fillMaxWidth(), color = taxiColors.Accent500, trackColor = taxiColors.Navy100)
         } else {
             Spacer(Modifier.height(4.dp))
         }
@@ -562,11 +599,11 @@ private fun OperationsWorkspace(
             verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm),
         ) {
             state.mutationLabel?.let {
-                Surface(color = TaxiColors.Info100, shape = RoundedCornerShape(TaxiRadii.Sm)) {
+                Surface(color = taxiColors.Info100, shape = RoundedCornerShape(taxiRadii.Sm)) {
                     Text(
-                        "$it. Waiting for backend authority…",
+                        membershipMutationLabel(it),
                         modifier = Modifier.fillMaxWidth().padding(TaxiSpacing.Sm),
-                        color = TaxiColors.Info600,
+                        color = taxiColors.Info600,
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
@@ -593,6 +630,7 @@ private fun OperationsWorkspace(
                     )
                     OperationsDestination.OPERATORS -> OperatorsScreen(
                         state = state,
+                        coordinator = coordinator,
                         onSelectOperator = coordinator::selectOperator,
                         onCreateOperator = coordinator::createOperator,
                         onUpdateOperatorStatus = coordinator::updateOperatorStatus,
@@ -627,12 +665,14 @@ private fun ScopeTopBar(
     coordinator: OperationsCoordinator,
     compact: Boolean,
 ) {
+    val taxiColors = TaxiTheme.colors
     val snapshot = state.snapshot
+    val language = Locale.current.language
     val market = snapshot?.markets?.items?.firstOrNull { it.id == state.scope.marketId }
     val operator = snapshot?.operators?.items?.firstOrNull { it.id == state.scope.operatorId }
     val city = snapshot?.cities?.items?.firstOrNull { it.id == state.scope.cityId }
     Column(
-        Modifier.fillMaxWidth().background(TaxiColors.Surface0).padding(
+        Modifier.fillMaxWidth().background(taxiColors.Surface0).padding(
             horizontal = if (compact) TaxiSpacing.Md else TaxiSpacing.Xl,
             vertical = TaxiSpacing.Sm,
         ),
@@ -643,12 +683,12 @@ private fun ScopeTopBar(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Column {
-                Text(state.destination.title, color = TaxiColors.Navy900, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                Text("Active scope is presentation; backend grants remain authority.", color = TaxiColors.Ink500, style = MaterialTheme.typography.labelSmall)
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(state.destination.titleResource()), color = taxiColors.Navy900, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                Text(stringResource(Res.string.web_scope_hint), color = taxiColors.Ink500, style = MaterialTheme.typography.labelSmall)
             }
-            OutlinedButton(onClick = coordinator::refresh, enabled = !state.interactionLocked) {
-                Text("Refresh")
+            OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = coordinator::refresh, enabled = !state.interactionLocked) {
+                Text(stringResource(Res.string.web_refresh))
             }
         }
         Row(
@@ -656,43 +696,44 @@ private fun ScopeTopBar(
             horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm),
         ) {
             ScopeMenu(
-                label = "Market",
-                selected = market?.name ?: "No market",
+                label = stringResource(Res.string.web_market),
+                selected = market?.name ?: stringResource(Res.string.web_no_market),
                 options = snapshot?.markets?.items.orEmpty().map { ScopeOption(it.id, it.name) },
                 enabled = !state.interactionLocked,
                 onSelected = coordinator::selectMarket,
             )
             ScopeMenu(
-                label = "Operator",
-                selected = operator?.name ?: "All authorized",
-                options = listOf(ScopeOption(null, "All authorized operators")) +
+                label = stringResource(Res.string.web_operator),
+                selected = operator?.name ?: stringResource(Res.string.web_all),
+                options = listOf(ScopeOption(null, stringResource(Res.string.web_all_operators))) +
                     snapshot?.operators?.items.orEmpty().map { ScopeOption(it.id, it.name) },
                 enabled = !state.interactionLocked,
                 onSelected = coordinator::selectOperator,
             )
             ScopeMenu(
-                label = "City",
-                selected = city?.localizedName?.preferred() ?: "All authorized",
-                options = listOf(ScopeOption(null, "All authorized cities")) +
-                    snapshot?.cities?.items.orEmpty().map { ScopeOption(it.id, it.localizedName.preferred()) },
+                label = stringResource(Res.string.web_city),
+                selected = city?.localizedName?.preferred(language) ?: stringResource(Res.string.web_all),
+                options = listOf(ScopeOption(null, stringResource(Res.string.web_all_cities))) +
+                    snapshot?.cities?.items.orEmpty().map { ScopeOption(it.id, it.localizedName.preferred(language)) },
                 enabled = !state.interactionLocked,
                 onSelected = coordinator::selectCity,
             )
         }
     }
-    HorizontalDivider(color = TaxiColors.StrokeSubtle)
+    HorizontalDivider(color = taxiColors.StrokeSubtle)
 }
 
 @Composable
 private fun InitialLoading() {
+    val taxiColors = TaxiTheme.colors
     Column(
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        CircularProgressIndicator(color = TaxiColors.Accent500)
+        CircularProgressIndicator(color = taxiColors.Accent500)
         Spacer(Modifier.height(TaxiSpacing.Md))
-        Text("Loading authorized operations scope…", color = TaxiColors.Ink700)
+        Text(stringResource(Res.string.web_loading_scope), color = taxiColors.Ink700)
     }
 }
 
@@ -704,11 +745,11 @@ private fun LoadFailure(onRetry: () -> Unit) {
         verticalArrangement = Arrangement.Center,
     ) {
         EmptyState(
-            title = "Operations data is unavailable",
-            detail = "Retry performs read-only scope/session loading and never replays a failed mutation.",
+            title = stringResource(Res.string.web_load_failed),
+            detail = stringResource(Res.string.web_retry_read_only),
             modifier = Modifier.widthIn(max = 560.dp),
         )
         Spacer(Modifier.height(TaxiSpacing.Md))
-        Button(onClick = onRetry) { Text("Retry connection") }
+        Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = onRetry) { Text(stringResource(Res.string.web_retry)) }
     }
 }

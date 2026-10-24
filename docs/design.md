@@ -1,5 +1,89 @@
 # TaxiMobile — Design and UI Guidelines
 
+## Board alpha execution authorized — 15 October 2026
+
+The owner now directs the earliest functional board alpha, authorizes application
+implementation and TaxiMobile Railway staging changes/deployment, and requires
+French, Arabic and English with concise copy. This supersedes the earlier
+planning-only stop. The selected four-style contract remains in force; no further
+palette approval is needed. Follow [the active board alpha checkpoint](board-alpha.md)
+for execution and evidence. Native, integrated staging, device and release
+acceptance must still be demonstrated.
+
+## Selected visual direction — recorded 15 October 2026
+
+The owner approved **Folded Streets, Street Press, Glazed Machine and Notepad**
+as four complete user-selectable styles. The independent five-color theme menu
+is withdrawn. Gradients/collage/grain are treatments inside the expressive styles,
+not additional choices. Notepad is grayscale ruled utility, retaining meaningful
+icons and main workflows while disabling decorative motion.
+
+[The selected four-style contract](redesign/style-options.md),
+[current preview](redesign/abstract-lab.html), [visual system](redesign/visual-system.md)
+and [all-page coverage](redesign/style-coverage.md) supersede earlier identity,
+palette, shape and motion prescriptions below. The dated rejection/research and
+pending-style-selection notes are historical. No further palette confirmation is
+needed. Native implementation/device evidence, complete delivery-plan execution,
+hosted rehearsal and release gates remain separate; this records design selection.
+Backend authority, privacy, accessibility and state/command rules remain in force.
+
+
+## Latest owner correction — 14 October 2026
+
+The owner further directs the art-free identity toward elaborate abstract motion,
+moving color gradients and contrasted collage. Review the
+[abstract lab](redesign/abstract-lab.html) and
+[expression plan](redesign/abstract-expression.md).
+
+The owner subsequently said they love the new interface treatments without the
+main illustration. The current lab defaults to art-free UI and motion; large
+illustrations are an optional unselected archive.
+
+The owner rejected the graphical proposal, especially the incoherent city/taxi
+scene, and requested a unique, unusual, illustrative and animated identity.
+The existing five color directions are proposed themes, not distinct identities.
+Review [redesign/identity-reset.md](redesign/identity-reset.md) and the
+[new art-direction lab](redesign/identity-lab.html). Material, drawing, composition,
+typography and 2D/2.5D/3D motion exploration are reopened. Prior recommendations
+are unaccepted; structural every-page coverage remains useful. The identity goal
+is active, and application implementation still awaits the complete selected plan.
+
+
+## Owner-directed redesign review — latest 14 October 2026
+
+The owner now requests broader graphical decoration and interesting animation.
+The [expressive concept plan](redesign/expressive-motion.md) explores that visual
+layer across the page inventory. Historical anti-decoration clauses below are
+not a restriction on this authorized concept work. No app implementation or
+domain-state change is authorized by a browser specimen.
+
+The owner rejected the current experience, stopped rehearsal, authorized
+unrestricted visual exploration and explicitly requested confirmation of a
+complete plan before execution. Review [redesign/README.md](redesign/README.md).
+This supersedes the earlier direction-refinement approval. The proposal may
+challenge the fixed palette, typography, navigation and chrome in `ui.md`;
+it does not override backend authority, privacy or domain contracts. Until owner
+confirmation, preserve current application source and perform planning only.
+After confirmation, reconcile normative UI/extended/operations visual rules as
+UX-0 before implementing the selected system. Earlier identity-retention clauses
+below describe the prior direction and must not force gold/navy into this review.
+
+## Alpha UX recovery contract — 12 October 2026
+
+The documented alpha wave now permits a substantial passenger/driver UX overhaul
+within the established identity and authority rules. Evaluate entire journeys,
+not just spacing/color patches. Passenger screens are map-first with one dominant
+next action; driver screens make availability, GPS/network, offer/trip phase and
+cash resolution immediately legible. Hide diagnostic UUIDs, raw UTC/routing and
+administrative metadata from primary product copy; retain meaningful human trip
+references and full backend audit records. Represent unavailable, uncertain and
+pending states honestly; never show successful settlement from a local flag.
+
+Use [ui.md](ui.md) for objective visual criteria and [roadmap.md](roadmap.md)
+A-02–A-07/A-10 for delivery. Record visual-direction review and actual rendered
+evidence separately from source tests. Representative operations polish is part
+of A; redesigning every administration screen is not required before presentation.
+
 ## Current standing — 2026-09-03
 
 The map-first Compose identity, shared components, passenger and driver flows,
@@ -189,6 +273,13 @@ authenticated passenger's display name. It sends an explicit profile update to
 the backend and refreshes server-confirmed state; it does not expose or edit
 roles, contact identifiers, authentication credentials, or any other account.
 
+Map events must dispatch to the latest Compose screen callback even when the
+native renderer retains its original listener. The same mounted map must allow
+new selection after trip completion and reject selection when a trip becomes
+active. Recreating the Activity or coordinator is not a callback refresh strategy.
+The native boundary keeps a stable callback adapter whose current target follows
+recomposition; backend authority and the current active-trip guard remain intact.
+
 MapLibre is the selected map renderer for Android and iOS. The passenger flow
 should use an accessible MapLibre map to select pickup and destination, with clear
 text summaries and a non-map fallback so the flow remains usable when location,
@@ -198,13 +289,33 @@ permission flows are configured. The client asks the backend for a fare estimate
 discards that estimate whenever either point changes, and creates the ride only
 through the authoritative ride API.
 
+Read-only foreground/push/reconnect catch-up preserves the current quote input
+identity while rereading the backend estimate and route. It must not replace a
+reviewable quote with an empty projection and collapse Request during ordinary
+session recovery. Retain session-owned point/direction inputs, not a client price
+authority. Owner replacement or a new primary ride clears that intent; revoked
+or invalid estimate inputs yield an explicit failure. Point changes still
+invalidate the UI's reviewed quote, and no quote recovery may replay ride creation.
+Navigation ownership remains stable during valid token rotation. Login/logout
+changes it; realtime subscription generations still rotate independently so
+sockets reconnect with current credentials.
+
+The reviewed point pair must also be present in the passenger render projection
+so a fresh native composition can initialize its form after activity entry. Seed
+only the newly created form; an ordinary refresh must not replace newer local
+point edits or make returned terms apply to a different pair. This projection
+contains inputs only, retains their original precision/labels and adds no fare
+cache or automatic ride command. It is not a general persistent draft store.
+
 Route geometry and maneuver summaries come from the provider-neutral backend
 routing contract backed by Valhalla. A map route is guidance, not evidence that a
 ride progressed, a fare was finalized, or a payment succeeded.
 
 Once a ride is created, the passenger product reloads its authorized detailed
-ride and renders the confirmed pickup, destination, route line, distance,
-duration, and short maneuver summary throughout the active lifecycle. Server
+ride and renders the confirmed pickup, destination, route line, distance and
+duration throughout the active lifecycle. Turn-by-turn maneuvers belong in a
+driver navigation surface when actually implemented, not in the passenger's
+primary booking or active-ride sheet. Server
 refreshes replace status and assigned-driver data; route failure leaves those
 authoritative facts visible and never invents driver movement.
 
@@ -223,6 +334,21 @@ ride history (up to ten status/identifier summaries). Detailed receipts, driver
 identity, vehicle presentation, and route visualization remain authorized API
 work for their corresponding product slices rather than client-side inference.
 
+A selected history ride is local, session-owned navigation intent. Foreground,
+push and reconnect catch-up must preserve that selection while loading its
+current authorized ride and receipt/feedback again. Retain the identifier and
+ownership context, not a cached payment or rating projection. Logout/account
+replacement and a newly started primary ride clear the prior history intent;
+a late old-session read must not reinstall it. Denied or removed history yields
+an explicit error and forgets the inaccessible selection rather than presenting
+a cached receipt or silently substituting success.
+
+Ordinary passenger/driver history uses the same short eight-character reference
+as the recent-ride row. Full UUIDs remain internal API/resource identifiers.
+Prefer an authorized place label; when only a point is available, show at most
+five decimal places. This is display formatting only: callback identifiers,
+selected coordinates, routing, pricing and backend requests retain full precision.
+
 For the most recent completed passenger ride, the app fetches and displays the
 backend-finalized fare and payment method/status as a minimal receipt. It never
 derives a final fare from the quoted estimate or from local distance data, and
@@ -234,7 +360,9 @@ come only from the ride's backend snapshot, remain selectable/read-only, and are
 never replaced with locally configured values. The app accepts no financial
 credential or statement image.
 When the receipt includes stored fare components, the app renders those values
-and the captured tariff version without reconstructing a breakdown locally.
+without reconstructing a breakdown locally. The captured tariff version remains
+in the backend record for audit; the passenger's primary fare hierarchy does not
+expose its internal identifier.
 When confirmed refunds exist, the receipt retains that original fare and renders
 only backend-returned refunded total, net paid, currency, closed reason labels,
 and refund rows. `REFUNDED` means the complete original payment was returned; it
@@ -311,23 +439,32 @@ request can be started.
 For an active assigned ride, the driver UI exposes only the next documented
 server transition: en route, arrived, start, then complete with an explicitly
 reviewed completion coordinate. Android and iOS offer a one-shot foreground
-location request after a user action. While backend-confirmed online, the same
+location request after a user action. Driver completion uses the existing guarded
+driver-observation callback, then presents its returned coordinate for explicit
+completion. It must not fall back to the passenger's cached-coordinate lookup or
+turn acquisition into an automatic completion command. While backend-confirmed online, the same
 authorized one-shot adapter is scheduled only in the foreground and the UI tells
 the driver to keep the app open; it never requests permission automatically or
-starts background tracking. Manual coordinate entry remains a visible fallback when permission,
-location services, or device positioning is unavailable. Cash settlement remains
+starts background tracking. Manual coordinate entry is a visible fallback only
+when enabled for that build. The map-only board build must offer an actionable
+location retry instead of instructing entry into hidden fields. Cash settlement remains
 a separate, explicit confirmation after completion and is never inferred from the
 ride-completion action.
 The current-location control is disabled and shows loading while its one-shot
-platform request is pending. Repeated taps are ignored; they must not cancel or
-replace the callback owned by the first request.
+platform request is pending. Repeated explicit taps are ignored; they must not
+cancel or replace the callback owned by the first explicit request. In Android,
+an explicit driver lookup takes priority over automatic sampling: cancel the
+automatic lookup, suppress its cancellation warning, and defer new automatic
+requests until the explicit callback finishes. Foreground/context/freshness
+validation still applies to the returned observation. This does not authorize
+cached coordinates or automatic completion.
 
 The passenger can use the same one-shot platform location flow to set pickup,
 then choose the destination on MapLibre or through validated coordinate fields.
 Permission denial keeps the map/manual flow usable and displays an actionable
 message. The driver reviews the returned coordinate and explicitly submits it
-before going online or completing a ride. Shared code stamps the observation time
-when posting a driver update; backend freshness and movement validation remain
+before going online or completing a ride. Shared code forwards the native
+observation time and accuracy unchanged when posting a driver update; backend freshness and movement validation remain
 authoritative.
 
 The latest backend-accepted foreground coordinate remains available only for the

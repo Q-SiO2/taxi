@@ -1,0 +1,29 @@
+{
+  "observed_utc": "2026-10-23T16:24:16.403863+00:00",
+  "repo": "Q-SiO2/taxi",
+  "candidate": "45c491a4615d466c74c4bb0ca46fd6d55488ad7f",
+  "pull_request": "https://github.com/Q-SiO2/taxi/pull/74",
+  "runs": [
+    {
+      "id": 39985925635,
+      "head_sha": "45c491a4615d466c74c4bb0ca46fd6d55488ad7f",
+      "head_branch": "codex/real-world-r2-baseline",
+      "event": "pull_request",
+      "status": "in_progress",
+      "conclusion": null,
+      "html_url": "https://github.com/Q-SiO2/taxi/actions/runs/39985925635",
+      "run_number": 216
+    },
+    {
+      "id": 39985812254,
+      "head_sha": "45c491a4615d466c74c4bb0ca46fd6d55488ad7f",
+      "head_branch": "codex/real-world-r2-baseline",
+      "event": "push",
+      "status": "in_progress",
+      "conclusion": null,
+      "html_url": "https://github.com/Q-SiO2/taxi/actions/runs/39985812254",
+      "run_number": 215
+    }
+  ],
+  "launch_accepted": false
+}

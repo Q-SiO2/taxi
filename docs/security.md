@@ -167,7 +167,11 @@ The mobile implementation requests only foreground/when-in-use location after a
 user selects a current-location action. Once an approved driver explicitly goes
 online, it schedules already-authorized one-shot observations only while the app
 is foregrounded: 15 seconds in available/offered states and 10 seconds during an
-active ride. The automatic path never opens permission UI, and it stops when the
+active ride. After automatic submission/readback/reconciliation finishes, the
+same minimum idle interval applies before the next attempt; a slow network must
+not monopolize the driver's single-action gate with immediate sampling bursts.
+This does not weaken server freshness or allow parallel/replayed commands.
+The automatic path never opens permission UI, and it stops when the
 app is backgrounded, offline, paused or disconnected. Neither platform requests
 background-location permission or starts continuous OS tracking.
 Permission denial, timeout, or disabled location services must not submit a stale
@@ -341,6 +345,16 @@ host port. The key must not be reused for JWT, MFA, database, pager, monitoring,
 Firebase, or payment configuration and must be backed up/rotated through the
 deployment secret boundary; losing it makes retained ciphertext unrecoverable.
 
+The INSTREAM adapter consumes a bounded complete non-session response through
+connection closure, accepting only the single `stream: OK` NUL-terminated record.
+TCP fragmentation is permitted; unterminated, wrong-prefix, multiple, oversized
+or error records fail closed. A single deadline covers connection, upload
+backpressure and response; connection cleanup is bounded. Scan cancellation
+propagates without persisting a file. Atomic-write errors become the existing
+safe unavailable response and temporary ciphertext is removed. See the
+[scanner/recovery packet](launch/document-storage.md) for source and local
+evidence, separate from production daemon/storage acceptance.
+
 Review reads require the explicit document permission, application city scope,
 recent operations MFA, clean scan state, and a bounded reviewer quota. Every
 successful read is audited and streamed with an opaque filename, `no-store`, and
@@ -472,9 +486,15 @@ CI also runs a repository-owned high-confidence credential gate over Git-tracked
 source and configuration. It rejects committed Firebase configuration, signing
 containers, local environment files, private-key material, service-account JSON,
 and well-known live token formats without printing matched values. When run from
-a source archive without Git metadata, it scans only documented source roots and
+a source archive without its own Git root, including an archive nested inside
+another checkout, it scans only documented source roots and
 does not read ignored local `.env`, `local.properties`, caches, builds, backups,
 or generated environments.
+During local candidate preparation, run
+`python infra/scripts/validate_source_credentials.py --include-untracked` to also
+scan non-ignored untracked source/configuration before committing or archiving it.
+The default CI mode remains tracked-only. Neither mode substitutes for a complete
+secret-history or independent security review.
 
 Production container inputs are validated before rendering the deployment:
 application images require a full immutable digest; database URLs cannot target

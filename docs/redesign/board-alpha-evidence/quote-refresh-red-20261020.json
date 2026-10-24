@@ -1,0 +1,34 @@
+{
+  "created_utc": "2026-10-20T20:02:11.741654+00:00",
+  "phase": "fresh red reproduction before production correction",
+  "counts": {
+    "tests": 17,
+    "failures": 3,
+    "errors": 0,
+    "skipped": 0
+  },
+  "failed": [
+    "fixed_quote_survives_catch_up_for_its_selected_direction[jvm]",
+    "rejected_quote_catch_up_is_explicit_and_forgets_the_denied_inputs[jvm]",
+    "point_quote_survives_catch_up_with_fresh_server_amount_without_a_ride_command[jvm]"
+  ],
+  "archive": [
+    {
+      "path": ".tools/alpha-delivery/quote-refresh-red/TEST-org.example.taximobile.feature.app.QuoteSessionRecoveryTest.xml",
+      "sha256": "d279536fc9145f1cf4ce32d542b7b3bee9f3fc63eeeffd3cacbe0f4417f93723"
+    },
+    {
+      "path": ".tools/alpha-delivery/quote-refresh-red/quote-refresh-red-20261020.log",
+      "sha256": "f1a00eac291bcc6875d8d68dd1b25f49fa4c0403bf5ff868b42a2c9c6870c77b"
+    },
+    {
+      "path": ".tools/alpha-delivery/quote-refresh-red/MobileAppCoordinator.kt",
+      "sha256": "a91000c691fc56cb3cc7fc00c8cd90becb31a6a14bf9f6cc4e5d09968bc3639b"
+    },
+    {
+      "path": ".tools/alpha-delivery/quote-refresh-red/QuoteSessionRecoveryTest.kt",
+      "sha256": "2907b06fa26e21662204e193448820c552474783b7025f3d2e031666d703f3ab"
+    }
+  ],
+  "interrupted_fixture": "quote-refresh-fixture-interrupted-20261020.json"
+}

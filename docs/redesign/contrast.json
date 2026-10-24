@@ -1,0 +1,225 @@
+[
+  {
+    "direction": "Forest",
+    "pair": "action",
+    "ratio": 12.07399701039183,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "direction": "Forest",
+    "pair": "ink",
+    "ratio": 15.886035349569225,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "direction": "Forest",
+    "pair": "secondary",
+    "ratio": 6.308091240948061,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "direction": "Forest",
+    "pair": "stroke",
+    "ratio": 3.3387789505726873,
+    "threshold": 3,
+    "pass": true
+  },
+  {
+    "direction": "Forest",
+    "pair": "selection",
+    "ratio": 10.273734085218516,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "direction": "Orchid",
+    "pair": "action",
+    "ratio": 11.522281118261514,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "direction": "Orchid",
+    "pair": "ink",
+    "ratio": 16.559469069088173,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "direction": "Orchid",
+    "pair": "secondary",
+    "ratio": 6.624490583692339,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "direction": "Orchid",
+    "pair": "stroke",
+    "ratio": 3.5169558936167964,
+    "threshold": 3,
+    "pass": true
+  },
+  {
+    "direction": "Orchid",
+    "pair": "selection",
+    "ratio": 8.847917226114816,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "direction": "Electric",
+    "pair": "action",
+    "ratio": 6.435776670101435,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "direction": "Electric",
+    "pair": "ink",
+    "ratio": 15.968708177288404,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "direction": "Electric",
+    "pair": "secondary",
+    "ratio": 6.133557594226463,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "direction": "Electric",
+    "pair": "stroke",
+    "ratio": 3.2176394375764734,
+    "threshold": 3,
+    "pass": true
+  },
+  {
+    "direction": "Electric",
+    "pair": "selection",
+    "ratio": 5.194222176553938,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "direction": "Terracotta",
+    "pair": "action",
+    "ratio": 6.415994518343804,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "direction": "Terracotta",
+    "pair": "ink",
+    "ratio": 15.303575613679813,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "direction": "Terracotta",
+    "pair": "secondary",
+    "ratio": 5.977942239520658,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "direction": "Terracotta",
+    "pair": "stroke",
+    "ratio": 3.383591220530056,
+    "threshold": 3,
+    "pass": true
+  },
+  {
+    "direction": "Terracotta",
+    "pair": "selection",
+    "ratio": 5.221813497638869,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "direction": "Graphite/Lime",
+    "pair": "action",
+    "ratio": 12.526475687591685,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "direction": "Graphite/Lime",
+    "pair": "ink",
+    "ratio": 15.494277904526681,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "direction": "Graphite/Lime",
+    "pair": "secondary",
+    "ratio": 6.2017239307697976,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "direction": "Graphite/Lime",
+    "pair": "stroke",
+    "ratio": 3.552005496400268,
+    "threshold": 3,
+    "pass": true
+  },
+  {
+    "direction": "Graphite/Lime",
+    "pair": "selection",
+    "ratio": 13.840126728125243,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "pair": "success",
+    "ratio": 6.521911711706926,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "pair": "warning",
+    "ratio": 6.685036892063845,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "pair": "danger",
+    "ratio": 6.212121954668787,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "pair": "info",
+    "ratio": 7.583015698141392,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "pair": "disabled",
+    "ratio": 5.158683231311618,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "pair": "dark primary",
+    "ratio": 14.069564590077,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "pair": "dark secondary",
+    "ratio": 8.582292561588995,
+    "threshold": 4.5,
+    "pass": true
+  },
+  {
+    "pair": "dark stroke",
+    "ratio": 4.540155639110845,
+    "threshold": 3,
+    "pass": true
+  }
+]

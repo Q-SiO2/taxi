@@ -1,5 +1,23 @@
 # TaxiMobile — Database Specification
 
+## Operator membership policy — source change, 23 October 2026
+
+Migration `20261023_0053` adds non-null Boolean
+`operators.requires_active_membership`, default false, with a database constraint
+requiring `cooperative_id` when enabled. The owner selected the existing register
+for the Fès union. This internal relationship does not certify legal form.
+There is no new membership table, automatic enrollment or grant expansion.
+Existing memberships retain their independent status and optional effective dates.
+
+Scoped register maintenance reuses these existing rows and `updated_at` as the
+reviewed edit token. The member row is refreshed under an exclusive lock and
+the server advances the timestamp after the lock wait. Stale edits fail before
+mutation. Existing idempotency and scoped audit records commit with the member;
+audit changes exclude membership-number values. No further table, role or
+schema migration is introduced by the staff maintenance workflow.
+This source migration requires isolated upgrade/downgrade and runtime acceptance;
+staging remains at its separately verified schema until a deliberate rollout.
+
 ## 1. Purpose
 
 This document defines the logical data model for TaxiMobile.
@@ -2349,6 +2367,14 @@ recovery, a reviewed retention window and a copy outside the primary failure
 domain. Application, migration, monitoring and backup authorities must be
 reviewed separately; the application role must not be superuser or retain
 `CREATEDB`/`CREATEROLE`.
+
+Application database TLS uses the single `DatabaseTLS` policy described in
+[the transport packet](launch/database-tls.md): production requires `verify-full`
+with CA and hostname validation, shared by ORM, hint listener and migration/
+operations connections. Custom trust accepts one PEM file or PEM text input;
+URL transport overrides are rejected. The legacy alpha's staging default is not
+production acceptance. Confirm actual encrypted, identity-verified sessions and
+negative trust/hostname behavior before accepting a deployment.
 
 A backup that cannot be restored should not be considered a reliable backup.
 

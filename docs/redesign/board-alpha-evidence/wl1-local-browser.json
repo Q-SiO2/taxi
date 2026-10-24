@@ -1,0 +1,78 @@
+{
+  "verified_utc": "2026-10-16T18:14:34.053814+00:00",
+  "scope": "unauthenticated local JS presentation boundary only",
+  "passed": true,
+  "build_log": ".tools/alpha-delivery/web-language-font-fix.log",
+  "checks": [
+    "French shared resources update",
+    "Arabic RTL and persisted reload",
+    "Operations unsent identifier survives language switch",
+    "Applicant unsent identifier survives French to Arabic",
+    "Arabic option readable in EN/FR and AR-FR round trip",
+    "No auth or domain write attempted"
+  ],
+  "artifacts": [
+    {
+      "file": "index.html",
+      "sha256": "b4b10ae3605bde7c33b78be93397918b1f21a211a57c3441395faecc2fa259bc"
+    },
+    {
+      "file": "locale.js",
+      "sha256": "eb92b61724f40ae6f134808fc38d7e62503fb0ae36e9ae32a8f670e0153fb56d"
+    },
+    {
+      "file": "compatibility.js",
+      "sha256": "02950c7dec931fba6e213ef6a0c6cd1de899d8d1a6646a10b4ebb5d23ef9263f"
+    },
+    {
+      "file": "webApp.js",
+      "sha256": "988be9c83cdb9444bc55b994c3c35d266d50d6ec24f8a1c5d2e692a5c8cf982f"
+    }
+  ],
+  "preview_requests": [
+    {
+      "method": "OPTIONS",
+      "path": "/api/v1/client-compatibility"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/client-compatibility"
+    },
+    {
+      "method": "OPTIONS",
+      "path": "/api/v1/drivers/recruiting-cities"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/drivers/recruiting-cities"
+    },
+    {
+      "method": "OPTIONS",
+      "path": "/api/v1/client-compatibility"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/client-compatibility"
+    },
+    {
+      "method": "OPTIONS",
+      "path": "/api/v1/drivers/recruiting-cities"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/drivers/recruiting-cities"
+    }
+  ],
+  "captures": [
+    "wl1-language-picker-fr.png",
+    "wl1-applicant-ar-draft.png",
+    "wl1-operations-ar-draft-before-font-fix.png"
+  ],
+  "limitations": [
+    "Full protected-web text remains English",
+    "Authenticated session/scope retention not yet verified",
+    "Local JS development bundle only; no new hosted web deployment",
+    "Older 127.0.0.1 preview retained earlier bundle; corrected font verified at fresh localhost origin",
+    "Native v7 is separate and has no runtime repeat yet"
+  ]
+}

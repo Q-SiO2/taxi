@@ -1,0 +1,9 @@
+{
+  "utc": "2026-10-19T20:23:36.693385+00:00",
+  "failed_record": "v13-first-preflight-availability-rejected-20261019.json",
+  "sha256": "56a780e6a6a9955ad2e6f3628be6d0e60c1a9f1fa84c43e64730a92c9b96fa4d",
+  "scope": "Preflight only; no booking created. Native online command rejected; availability stays offline.",
+  "location_update_http": "v13-first-preflight-location-http.json",
+  "timing": "Accepted location20:19:51.994Z; online native tap20:20:46.260Z, about54sec later. Backend applies configured matching-location freshness. Exact response detail not captured; stale location is the working diagnosis.",
+  "next": "Prepare passenger fare first, then fresh driver coordinate and immediate online/request. Preserve unchanged backend eligibility/freshness."
+}

@@ -1,0 +1,76 @@
+{
+  "verified_utc": "2026-10-23T11:04:20.523394+00:00",
+  "candidate": "candidate-native-v23.json",
+  "native_record": "release-v23-r2-native-first.json",
+  "passed": true,
+  "interval": {
+    "start": "2026-10-23T10:52:11.399118+00:00",
+    "end": "2026-10-23T11:03:08.239132+00:00"
+  },
+  "api_deployment": "8b03ad50-ba24-4d38-88b3-dc5321cd77cd",
+  "consequential_post_count": 8,
+  "each_consequential_path_once": true,
+  "domain_requests": [
+    {
+      "method": "POST",
+      "path": "/api/v1/drivers/me/availability/online",
+      "httpStatus": 200,
+      "timestamp": "2026-10-23T10:54:54.264796027Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides",
+      "httpStatus": 201,
+      "timestamp": "2026-10-23T10:55:13.078343122Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ride-offers/9d92dd80-e333-4e45-a1a6-fc0ecbe5d32f/accept",
+      "httpStatus": 200,
+      "timestamp": "2026-10-23T10:55:56.145650944Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/8acc246a-1e3d-463b-8538-24814c96b16b/en-route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-23T10:58:27.771722969Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/8acc246a-1e3d-463b-8538-24814c96b16b/arrived",
+      "httpStatus": 200,
+      "timestamp": "2026-10-23T10:59:18.879296448Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/8acc246a-1e3d-463b-8538-24814c96b16b/start",
+      "httpStatus": 200,
+      "timestamp": "2026-10-23T11:00:08.306208932Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/8acc246a-1e3d-463b-8538-24814c96b16b/complete",
+      "httpStatus": 200,
+      "timestamp": "2026-10-23T11:01:19.045401376Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/8acc246a-1e3d-463b-8538-24814c96b16b/payments/cash/settle",
+      "httpStatus": 200,
+      "timestamp": "2026-10-23T11:02:48.943430195Z"
+    }
+  ],
+  "other_post_count": 61,
+  "auth_refreshes": [
+    {
+      "utc": "2026-10-23T11:02:11.956626036Z",
+      "status": 200
+    },
+    {
+      "utc": "2026-10-23T11:02:52.476489008Z",
+      "status": 200
+    }
+  ],
+  "privacy": "Only method/path/status/timestamp for synthetic domain commands retained. Raw credential-free proxy logs remain ignored/private; no IP, user-agent, session/family identifier or request body in evidence.",
+  "scope": "Exact native interval, independent authenticated Railway CLI HTTP corroboration. Advisory quote/route/location/auth POSTs separate from eight business requests."
+}

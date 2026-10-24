@@ -1,5 +1,6 @@
 from copy import deepcopy
 import importlib.util
+import re
 from pathlib import Path
 
 import pytest
@@ -43,9 +44,12 @@ def test_graphhopper_cannot_lose_container_hardening() -> None:
 
 
 def test_mutable_extract_example_is_rejected() -> None:
-    example = validator.ENVIRONMENT_EXAMPLE_PATH.read_text(encoding="utf-8").replace(
-        "morocco-260819.osm.pbf", "morocco-latest.osm.pbf"
+    example, replacements = re.subn(
+        r"/morocco-\d{6}\.osm\.pbf",
+        "/morocco-latest.osm.pbf",
+        validator.ENVIRONMENT_EXAMPLE_PATH.read_text(encoding="utf-8"),
     )
+    assert replacements == 2, "The test must mutate both routing engines' pinned extracts"
 
     with pytest.raises(ValueError, match="dated HTTPS extract"):
         validator.validate_files(

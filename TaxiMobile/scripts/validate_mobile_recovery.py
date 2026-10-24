@@ -44,6 +44,9 @@ def validate_mobile_recovery(root: Path = ROOT) -> None:
     driver = (root / "shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt").read_text(
         encoding="utf-8",
     )
+    cash_section = (root / "shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/PendingCashPaymentsSection.kt").read_text(
+        encoding="utf-8",
+    )
     screen = (root / "shared/src/commonMain/kotlin/org/example/taximobile/feature/app/TaxiMobileScreen.kt").read_text(
         encoding="utf-8",
     )
@@ -96,6 +99,12 @@ def validate_mobile_recovery(root: Path = ROOT) -> None:
                 f"{name} location admission gate is never released.")
     require("if (!enabled || loading) disabled()" in map_fab and "stateDescription = loadingDescription" in map_fab,
             "Map location controls must expose accessible disabled/loading state.")
+    android_location = (root / "androidApp/src/main/kotlin/org/example/taximobile/AndroidCurrentLocationRequester.kt").read_text(encoding="utf-8")
+    require("nativeFixAcquiredAfterRequest" in android_location
+            and ".setDurationMillis(CURRENT_LOCATION_TIMEOUT_MILLIS)" in android_location
+            and "LocationManagerCompat.removeUpdates(locationManager, listener)" in android_location
+            and "currentLocationRequester.cancelPending()" in android_root,
+            "Android driver fixes require fresh acquisition and bounded listener cleanup on foreground exit.")
     require("locationRequestInFlight" in passenger and "loading = locationRequestInFlight" in passenger,
             "Passenger one-shot location loading state is missing.")
     require("locationRequestInFlight" in driver and "loading = locationRequestInFlight" in driver,
@@ -106,8 +115,9 @@ def validate_mobile_recovery(root: Path = ROOT) -> None:
             "Malformed or expired offer timing must disable acceptance.")
     require("offer_timing_unavailable_refreshing" in driver,
             "Malformed offer timing needs an explicit localized presentation.")
-    require("durationMillis = 320" in success_confirmation and "LiveRegionMode.Polite" in success_confirmation,
-            "Confirmed actions need the documented accessible 320 ms success check.")
+    require("durationMillis = if (TaxiTheme.style.decorativeMotion) 320 else 0" in success_confirmation
+            and "LiveRegionMode.Polite" in success_confirmation,
+            "Confirmed actions need an accessible bounded success check and immediate Notepad feedback.")
     require("rating_submitted_confirmation" in passenger,
             "Passenger rating confirmation is not rendered from backend completion.")
     require("cash_received_confirmation" in driver and "vehicle_registration_sent_confirmation" in driver,
@@ -125,7 +135,7 @@ def validate_mobile_recovery(root: Path = ROOT) -> None:
         "SET_DRIVER_AVAILABILITY", "UPDATE_DRIVER_LOCATION", "REGISTER_DRIVER_VEHICLE",
         "SELECT_DRIVER_VEHICLE", "DEACTIVATE_DRIVER_VEHICLE", "RESPOND_TO_OFFER",
         "ADVANCE_DRIVER_RIDE", "CANCEL_DRIVER_RIDE", "COMPLETE_DRIVER_RIDE",
-        "SETTLE_DRIVER_CASH", "LOAD_DRIVER_RIDE", "LOGOUT",
+        "LOAD_DRIVER_RIDE", "LOGOUT",
     )
     for action in passenger_loading_actions:
         require(f"pendingAction.isPending(AppActionKind.{action}" in passenger,
@@ -133,6 +143,14 @@ def validate_mobile_recovery(root: Path = ROOT) -> None:
     for action in driver_loading_actions:
         require(f"pendingAction.isPending(AppActionKind.{action}" in driver,
                 f"Driver action {action} has no exact loading presentation.")
+    # Cash controls now live in a focused component. Do not treat unrelated
+    # loading markers elsewhere in DriverHome as proof that it is wired safely.
+    require("PendingCashPaymentsSection(state.pendingCashPayments, state.pendingCashLoadFailed, pendingAction, onSettleCash, onLoadPendingCashPayments)" in driver,
+            "Driver pending-cash component is disconnected from authoritative state/actions.")
+    require("pendingAction.isPending(AppActionKind.SETTLE_DRIVER_CASH, payment.rideId)" in cash_section,
+            "Driver cash action has no exact ride-scoped loading presentation.")
+    require("enabled = pendingAction == null" in cash_section and "{ onSelect(payment) }" in cash_section,
+            "Driver cash controls must select a scoped payment and reject overlapping actions.")
     for action in ("APPLY_TO_DRIVE", "SUBMIT_DRIVER_VERIFICATION"):
         require(f"pendingAction.isPending(AppActionKind.{action}" in screen,
                 f"Driver onboarding action {action} has no loading presentation.")
@@ -175,6 +193,7 @@ def validate_mobile_recovery(root: Path = ROOT) -> None:
             ("RESPOND_TO_OFFER", "respondToOffer"), ("ADVANCE_DRIVER_RIDE", "advanceDriverRide"),
             ("CANCEL_DRIVER_RIDE", "cancelDriverRide"), ("COMPLETE_DRIVER_RIDE", "completeDriverRide"),
             ("SETTLE_DRIVER_CASH", "settleDriverCash"), ("APPLY_TO_DRIVE", "applyToDrive"),
+            ("LOAD_PENDING_CASH_PAYMENTS", "loadDriverPendingCashPayments"),
             ("SUBMIT_DRIVER_VERIFICATION", "submitDriverVerification"),
             ("MARK_NOTIFICATION_READ", "markNotificationRead"),
         )

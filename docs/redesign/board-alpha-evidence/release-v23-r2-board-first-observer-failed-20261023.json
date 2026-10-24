@@ -1,0 +1,10 @@
+{
+  "candidate": "candidate-native-v23.json",
+  "web_candidate": "candidate-web-v10.json",
+  "run": "first",
+  "started_utc": "2026-10-23T10:45:19.658518+00:00",
+  "passed": false,
+  "beats": [],
+  "scope": "Synthetic emulator and normal hosted browser rehearsal; actual elapsed time, not a seven-minute claim",
+  "failure": "Observer asserted style visibility before account composition settled; actual later hierarchy has the expected control. No native business command."
+}

@@ -1,0 +1,22 @@
+{
+  "verified_utc": "2026-10-22T18:35:18.230301+00:00",
+  "passed": true,
+  "scope": "Exact frozen source/artifacts and selected functional material renders; not full board alpha acceptance",
+  "native_candidate": "candidate-native-v23.json",
+  "web_candidate": "candidate-web-v9.json",
+  "unchanged_inputs": 415,
+  "native_width_record": "v23-native-responsive-review.json",
+  "native_width_cases": 16,
+  "native_width_images": 32,
+  "web_local_record": "web-v9-local-material-review.json",
+  "web_local_images_including_logout": 16,
+  "source_artifact_screenshot_hashes_verified": true,
+  "exact_packaged_nginx_parser": "web-v9-nginx-package-parser-20261022.json",
+  "limitations": [
+    "Native large-text chrome observations require final fixture-restoration confirmation; interrupted attempts preserved",
+    "New native full trip repetitions and RTL material acceptance still pending",
+    "HTTP loopback web material review excludes hosted deployment, secure-cookie refresh and WebSocket/session acceptance; staff server logout unconfirmed",
+    "Live web remains v8. Provider Trial recovery and coordinated secret recovery remain pending",
+    "Physical Android, iOS, every view/state, field transport, real money and production remain open"
+  ]
+}

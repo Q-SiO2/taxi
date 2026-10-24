@@ -1,0 +1,32 @@
+{
+  "candidate": "candidate-native-v20.json",
+  "started_utc": "2026-10-22T10:48:09.686595+00:00",
+  "passed": true,
+  "start_record": "v20-driver-cold-expiry-start-20261022.json",
+  "actual_process_absence_seconds": 966.902659,
+  "backend_access_ttl_seconds": 900,
+  "process_absence_confirmed_before_launch": true,
+  "installed_apk_sha256": "bf294a20052ec87ec352083b51ae7bd17082c51542cf2d2eb47eaa852e5142bf",
+  "fresh_native_sign_in": false,
+  "logout_or_data_wipe": false,
+  "clock_changed_during_window": false,
+  "scope": "Actual retained v20 driver session after >=16 real minutes with app force-stopped. Any previously issued access token expires; normal startup must recover through the protected refresh family. No credentials/family identifiers inspected; no proxy-log attribution claimed.",
+  "host_minus_emulator_seconds_before_launch": 1.079,
+  "main_surface": {
+    "path": "v20-driver-cold-expiry-main.png",
+    "sha256": "5e3e490aba233e4585d90ab2e08f33d17484c766f0fcb0aa887ba3eb1eba8a3a"
+  },
+  "account_surface": {
+    "path": "v20-driver-cold-expiry-account.png",
+    "sha256": "d2fad8f5faa1966775b06135ddb7f9ee1bdad60aed52e457646061ca7611dd53"
+  },
+  "pid_after": "7155",
+  "independent_availability": {
+    "status": "OFFLINE",
+    "vehicle_id": "d491cb54-7ec1-4b6e-a6f9-1f1a8fd93792",
+    "city_id": "10000000-0000-4000-8000-000000000003",
+    "service_type": "ON_DEMAND"
+  },
+  "server_date_utc": "2026-10-22T10:48:30+00:00",
+  "finished_utc": "2026-10-22T10:48:29.661403+00:00"
+}

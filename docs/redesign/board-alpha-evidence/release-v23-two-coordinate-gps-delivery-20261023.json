@@ -1,0 +1,31 @@
+{
+  "started_utc": "2026-10-23T10:43:34.179275+00:00",
+  "purpose": "One deliberate fresh native location lookup after 422; no availability/booking command; inspect official two-coordinate emulator geo fix delivery",
+  "observations": [
+    {
+      "utc": "2026-10-23T10:43:34.736411+00:00",
+      "console_result": "OK",
+      "gps_provider": [
+        "last location=Location[gps 39.237255,-123.150032 hAcc=5.0 et=+28m23s832ms alt=0.0 vAcc=0.5 vel=0.0 sAcc=0.5 bear=0.0 bAcc=30.0 {Bundle[{satellites=0, maxCn0=0, meanCn0=0}]}]",
+        "last location=Location[gps 39.237255,-123.150032 hAcc=5.0 et=+28m23s832ms alt=0.0 vAcc=0.5 vel=0.0 sAcc=0.5 bear=0.0 bAcc=30.0 {Bundle[{satellites=0, maxCn0=0, meanCn0=0}]}]"
+      ]
+    },
+    {
+      "utc": "2026-10-23T10:43:37.114568+00:00",
+      "console_result": "OK",
+      "gps_provider": [
+        "last location=Location[gps 39.237255,-123.150032 hAcc=5.0 et=+28m23s832ms alt=0.0 vAcc=0.5 vel=0.0 sAcc=0.5 bear=0.0 bAcc=30.0 {Bundle[{satellites=0, maxCn0=0, meanCn0=0}]}]",
+        "last location=Location[gps 39.237255,-123.150032 hAcc=5.0 et=+28m23s832ms alt=0.0 vAcc=0.5 vel=0.0 sAcc=0.5 bear=0.0 bAcc=30.0 {Bundle[{satellites=0, maxCn0=0, meanCn0=0}]}]"
+      ]
+    },
+    {
+      "utc": "2026-10-23T10:43:39.501133+00:00",
+      "console_result": "OK",
+      "gps_provider": [
+        "last location=Location[gps 33.573098,-7.589800 hAcc=5.0 et=+34m48s711ms alt=0.0 vAcc=0.5 vel=0.0 sAcc=0.5 bear=0.0 bAcc=30.0 {Bundle[{satellites=0, maxCn0=0, meanCn0=0}]}]",
+        "last location=Location[gps 33.573098,-7.589800 hAcc=5.0 et=+34m48s711ms alt=0.0 vAcc=0.5 vel=0.0 sAcc=0.5 bear=0.0 bAcc=30.0 {Bundle[{satellites=0, maxCn0=0, meanCn0=0}]}]"
+      ]
+    }
+  ],
+  "passed": true
+}

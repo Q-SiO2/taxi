@@ -107,8 +107,15 @@ class MarketListResponse(BaseModel):
 class OperatorCreateRequest(StrictModel):
     market_id: UUID
     cooperative_id: UUID | None = None
+    requires_active_membership: bool = False
     name: str = Field(min_length=1, max_length=200)
     operator_type: OperatorType
+
+    @model_validator(mode="after")
+    def membership_register_required(self):
+        if self.requires_active_membership and self.cooperative_id is None:
+            raise ValueError("Closed-shop participation requires a linked membership register.")
+        return self
 
     @field_validator("name")
     @classmethod
@@ -119,6 +126,7 @@ class OperatorCreateRequest(StrictModel):
 class OperatorUpdateRequest(StrictModel):
     name: str | None = Field(default=None, min_length=1, max_length=200)
     status: OperatorStatus | None = None
+    requires_active_membership: bool | None = None
 
     @field_validator("name")
     @classmethod
@@ -127,7 +135,7 @@ class OperatorUpdateRequest(StrictModel):
 
     @model_validator(mode="after")
     def has_change(self):
-        if self.name is None and self.status is None:
+        if self.name is None and self.status is None and self.requires_active_membership is None:
             raise ValueError("At least one operator field is required.")
         return self
 
@@ -136,6 +144,7 @@ class OperatorResponse(BaseModel):
     id: UUID
     market_id: UUID
     cooperative_id: UUID | None
+    requires_active_membership: bool = False
     name: str
     operator_type: str
     status: str

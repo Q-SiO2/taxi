@@ -1,5 +1,6 @@
 package org.example.taximobile.operations.ui
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -44,9 +45,23 @@ import org.example.taximobile.feature.ui.theme.TaxiColors
 import org.example.taximobile.feature.ui.theme.TaxiRadii
 import org.example.taximobile.feature.ui.theme.TaxiSpacing
 import org.example.taximobile.operations.state.OperationsMessage
+import org.example.taximobile.feature.ui.text.resolve
+import org.example.taximobile.feature.ui.text.hasArabicScript
+import org.example.taximobile.feature.ui.text.ltrIsolate
+import org.example.taximobile.feature.ui.theme.taxiArabicFontFamily
+import androidx.compose.ui.text.style.TextDirection
+import org.jetbrains.compose.resources.stringResource
+import taximobile.shared.generated.resources.*
+import androidx.compose.foundation.Canvas
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 
 @Composable
 internal fun OperationsWordmark(compact: Boolean = false) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm),
@@ -54,10 +69,10 @@ internal fun OperationsWordmark(compact: Boolean = false) {
         Box(
             modifier = Modifier
                 .size(38.dp)
-                .background(TaxiColors.Accent500, RoundedCornerShape(TaxiRadii.Md)),
+                .background(taxiColors.Accent500, RoundedCornerShape(taxiRadii.Md)),
             contentAlignment = Alignment.Center,
         ) {
-            Text("TM", color = TaxiColors.Navy950, fontWeight = FontWeight.ExtraBold)
+            Text("TM", color = MaterialTheme.colorScheme.onPrimary, fontWeight = FontWeight.ExtraBold)
         }
         if (!compact) {
             Column {
@@ -68,8 +83,8 @@ internal fun OperationsWordmark(compact: Boolean = false) {
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
-                    "National operations",
-                    color = TaxiColors.Navy200,
+                    stringResource(Res.string.web_operations),
+                    color = taxiColors.Navy200,
                     style = MaterialTheme.typography.labelSmall,
                 )
             }
@@ -78,24 +93,25 @@ internal fun OperationsWordmark(compact: Boolean = false) {
 }
 
 @Composable
-internal fun StatusBadge(status: String, modifier: Modifier = Modifier) {
+internal fun StatusBadge(status: String, modifier: Modifier = Modifier, label: String? = null) {
+    val taxiColors = TaxiTheme.colors
     val normalized = status.uppercase()
     val (background, foreground) = when (normalized) {
-        "ACTIVE", "PASSED", "APPROVED", "RESOLVED" -> TaxiColors.Success100 to TaxiColors.Success600
-        "PILOT", "CONFIGURING", "IN_REVIEW", "PENDING", "HIGH", "ACKNOWLEDGED", "IN_PROGRESS" -> TaxiColors.Warning100 to TaxiColors.Warning600
-        "PAUSED", "FAILED", "URGENT", "OPEN", "ESCALATED" -> TaxiColors.Danger100 to TaxiColors.Danger600
-        "RETIRED", "REPLACED", "REVOKED", "CLOSED" -> TaxiColors.Surface2 to TaxiColors.Ink700
-        "DRAFT" -> TaxiColors.Navy100 to TaxiColors.Navy700
-        else -> TaxiColors.Info100 to TaxiColors.Info600
+        "ACTIVE", "PASSED", "APPROVED", "RESOLVED" -> taxiColors.Success100 to taxiColors.Success600
+        "PILOT", "CONFIGURING", "IN_REVIEW", "PENDING", "HIGH", "ACKNOWLEDGED", "IN_PROGRESS" -> taxiColors.Warning100 to taxiColors.Warning600
+        "PAUSED", "FAILED", "URGENT", "OPEN", "ESCALATED" -> taxiColors.Danger100 to taxiColors.Danger600
+        "RETIRED", "REPLACED", "REVOKED", "CLOSED" -> taxiColors.Surface2 to taxiColors.Ink700
+        "DRAFT" -> taxiColors.Navy100 to taxiColors.Navy700
+        else -> taxiColors.Info100 to taxiColors.Info600
     }
     Surface(
         modifier = modifier,
         color = background,
-        shape = CircleShape,
+        shape = RoundedCornerShape(TaxiTheme.radii.Pill),
         border = BorderStroke(1.dp, foreground.copy(alpha = 0.22f)),
     ) {
         Text(
-            normalized.replace('_', ' '),
+            label ?: normalized.replace('_', ' '),
             modifier = Modifier.padding(horizontal = TaxiSpacing.Sm, vertical = TaxiSpacing.Xs),
             color = foreground,
             style = MaterialTheme.typography.labelSmall,
@@ -111,12 +127,14 @@ internal fun MessageBanner(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val background = if (error) TaxiColors.Danger100 else TaxiColors.Success100
-    val foreground = if (error) TaxiColors.Danger600 else TaxiColors.Success600
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
+    val background = if (error) taxiColors.Danger100 else taxiColors.Success100
+    val foreground = if (error) taxiColors.Danger600 else taxiColors.Success600
     Surface(
         modifier = modifier.fillMaxWidth(),
         color = background,
-        shape = RoundedCornerShape(TaxiRadii.Md),
+        shape = RoundedCornerShape(taxiRadii.Md),
         border = BorderStroke(1.dp, foreground.copy(alpha = 0.25f)),
     ) {
         Row(
@@ -128,15 +146,16 @@ internal fun MessageBanner(
                 Modifier.size(10.dp).background(foreground, CircleShape),
             )
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xxs)) {
-                Text(message.title, color = foreground, fontWeight = FontWeight.Bold)
-                Text(message.detail, color = TaxiColors.Ink700, style = MaterialTheme.typography.bodySmall)
+                Text(message.localizedTitle?.resolve() ?: message.title, color = foreground, fontWeight = FontWeight.Bold)
+                Text(message.localizedDetail?.resolve() ?: message.detail, color = taxiColors.Ink700, style = MaterialTheme.typography.bodySmall)
             }
             OutlinedButton(
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                 onClick = onDismiss,
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = foreground),
                 border = BorderStroke(1.dp, foreground.copy(alpha = 0.45f)),
             ) {
-                Text("Dismiss")
+                Text(stringResource(Res.string.web_dismiss))
             }
         }
     }
@@ -149,19 +168,21 @@ internal fun MetricCard(
     supportingText: String,
     modifier: Modifier = Modifier,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     Surface(
         modifier = modifier.widthIn(min = 180.dp),
-        color = TaxiColors.Surface0,
-        shape = RoundedCornerShape(TaxiRadii.Lg),
-        border = BorderStroke(1.dp, TaxiColors.StrokeSubtle),
+        color = taxiColors.Surface0,
+        shape = RoundedCornerShape(taxiRadii.Lg),
+        border = BorderStroke(1.dp, taxiColors.StrokeSubtle),
     ) {
         Column(
             Modifier.padding(TaxiSpacing.Lg),
             verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs),
         ) {
-            Text(label, color = TaxiColors.Ink500, style = MaterialTheme.typography.labelMedium)
-            Text(value, color = TaxiColors.Navy900, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
-            Text(supportingText, color = TaxiColors.Ink700, style = MaterialTheme.typography.bodySmall)
+            Text(label, color = taxiColors.Ink500, style = MaterialTheme.typography.labelMedium)
+            Text(value, color = taxiColors.Navy900, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+            Text(supportingText, color = taxiColors.Ink700, style = MaterialTheme.typography.bodySmall)
         }
     }
 }
@@ -173,14 +194,15 @@ internal fun SectionHeading(
     modifier: Modifier = Modifier,
     action: (@Composable () -> Unit)? = null,
 ) {
+    val taxiColors = TaxiTheme.colors
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xxs)) {
-            Text(title, style = MaterialTheme.typography.headlineSmall, color = TaxiColors.Navy900, fontWeight = FontWeight.Bold)
-            Text(supportingText, style = MaterialTheme.typography.bodyMedium, color = TaxiColors.Ink500)
+            Text(title, style = MaterialTheme.typography.headlineSmall, color = taxiColors.Navy900, fontWeight = FontWeight.Bold)
+            Text(supportingText, style = MaterialTheme.typography.bodyMedium, color = taxiColors.Ink500)
         }
         action?.invoke()
     }
@@ -192,11 +214,13 @@ internal fun EmptyState(
     detail: String,
     modifier: Modifier = Modifier,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     Surface(
         modifier = modifier.fillMaxWidth(),
-        color = TaxiColors.Surface0,
-        shape = RoundedCornerShape(TaxiRadii.Lg),
-        border = BorderStroke(1.dp, TaxiColors.StrokeSubtle),
+        color = taxiColors.Surface0,
+        shape = RoundedCornerShape(taxiRadii.Lg),
+        border = BorderStroke(1.dp, taxiColors.StrokeSubtle),
     ) {
         Column(
             Modifier.padding(TaxiSpacing.Xxl),
@@ -204,13 +228,13 @@ internal fun EmptyState(
             verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm),
         ) {
             Box(
-                Modifier.size(44.dp).background(TaxiColors.Navy100, CircleShape),
+                Modifier.size(44.dp).background(taxiColors.Navy100, CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
-                Text("—", color = TaxiColors.Navy700, fontWeight = FontWeight.Bold)
+                Text("—", color = taxiColors.Navy700, fontWeight = FontWeight.Bold)
             }
-            Text(title, color = TaxiColors.Navy900, style = MaterialTheme.typography.titleMedium)
-            Text(detail, color = TaxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
+            Text(title, color = taxiColors.Navy900, style = MaterialTheme.typography.titleMedium)
+            Text(detail, color = taxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
         }
     }
 }
@@ -226,25 +250,31 @@ internal fun ScopeMenu(
     onSelected: (String?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     var expanded by remember { mutableStateOf(false) }
     Box(modifier) {
         Surface(
             modifier = Modifier
                 .widthIn(min = 150.dp, max = 230.dp)
-                .clickable(enabled = enabled) { expanded = true },
-            color = TaxiColors.Surface0,
-            shape = RoundedCornerShape(TaxiRadii.Md),
-            border = BorderStroke(1.dp, TaxiColors.StrokeSubtle),
+                .semantics { contentDescription = "$label: $selected" }
+                .clickable(enabled = enabled, role = Role.Button) { expanded = true },
+            color = taxiColors.Surface0,
+            shape = RoundedCornerShape(taxiRadii.Md),
+            border = BorderStroke(1.dp, taxiColors.StrokeSubtle),
         ) {
             Column(Modifier.padding(horizontal = TaxiSpacing.Md, vertical = TaxiSpacing.Xs)) {
-                Text(label.uppercase(), style = MaterialTheme.typography.labelSmall, color = TaxiColors.Ink500)
-                Text(
-                    "$selected  ▾",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = TaxiColors.Navy900,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
+                Text(label.uppercase(), style = MaterialTheme.typography.labelSmall, color = taxiColors.Ink500)
+                Row(verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
+                    Text(selected, Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium,
+                        color = taxiColors.Navy900, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Canvas(Modifier.size(18.dp)) {
+                        val middle = Offset(size.width * 0.5f, size.height * 0.65f)
+                        drawLine(taxiColors.Navy900, Offset(size.width * 0.25f, size.height * 0.4f), middle, 1.8.dp.toPx())
+                        drawLine(taxiColors.Navy900, middle, Offset(size.width * 0.75f, size.height * 0.4f), 1.8.dp.toPx())
+                    }
+                }
             }
         }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
@@ -267,15 +297,17 @@ internal fun DataCard(
     tableMinWidth: Dp? = null,
     content: @Composable () -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     if (tableMinWidth != null) {
         BoxWithConstraints(modifier.fillMaxWidth()) {
             val cardWidth = if (maxWidth < tableMinWidth) tableMinWidth else maxWidth
             Box(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
                 Surface(
                     modifier = Modifier.width(cardWidth),
-                    color = TaxiColors.Surface0,
-                    shape = RoundedCornerShape(TaxiRadii.Lg),
-                    border = BorderStroke(1.dp, TaxiColors.StrokeSubtle),
+                    color = taxiColors.Surface0,
+                    shape = RoundedCornerShape(taxiRadii.Lg),
+                    border = BorderStroke(1.dp, taxiColors.StrokeSubtle),
                     content = content,
                 )
             }
@@ -283,9 +315,9 @@ internal fun DataCard(
     } else {
         Surface(
             modifier = modifier.fillMaxWidth(),
-            color = TaxiColors.Surface0,
-            shape = RoundedCornerShape(TaxiRadii.Lg),
-            border = BorderStroke(1.dp, TaxiColors.StrokeSubtle),
+            color = taxiColors.Surface0,
+            shape = RoundedCornerShape(taxiRadii.Lg),
+            border = BorderStroke(1.dp, taxiColors.StrokeSubtle),
             content = content,
         )
     }
@@ -293,24 +325,28 @@ internal fun DataCard(
 
 @Composable
 internal fun KeyValue(label: String, value: String, modifier: Modifier = Modifier) {
+    val taxiColors = TaxiTheme.colors
     Column(modifier, verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xxs)) {
-        Text(label.uppercase(), style = MaterialTheme.typography.labelSmall, color = TaxiColors.Ink500)
-        Text(value, style = MaterialTheme.typography.bodyMedium, color = TaxiColors.Ink900)
+        Text(label.uppercase(), style = MaterialTheme.typography.labelSmall, color = taxiColors.Ink500)
+        Text(value, style = MaterialTheme.typography.bodyMedium.copy(textDirection = TextDirection.Content),
+            fontFamily = if (hasArabicScript(value)) taxiArabicFontFamily() else null, color = taxiColors.Ink900)
     }
 }
 
 @Composable
 internal fun PageLimitNote(shown: Int, total: Int) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     if (total <= shown) return
     Spacer(Modifier.height(TaxiSpacing.Sm))
     Text(
-        "Showing the first $shown of $total scoped records. API pagination remains authoritative.",
-        color = TaxiColors.Warning600,
+        stringResource(Res.string.web_page_limit_note, ltrIsolate(shown.toString()), ltrIsolate(total.toString())),
+        color = taxiColors.Warning600,
         style = MaterialTheme.typography.bodySmall,
         modifier = Modifier
             .fillMaxWidth()
-            .background(TaxiColors.Warning100, RoundedCornerShape(TaxiRadii.Sm))
-            .border(1.dp, TaxiColors.Warning600.copy(alpha = 0.2f), RoundedCornerShape(TaxiRadii.Sm))
+            .background(taxiColors.Warning100, RoundedCornerShape(taxiRadii.Sm))
+            .border(1.dp, taxiColors.Warning600.copy(alpha = 0.2f), RoundedCornerShape(taxiRadii.Sm))
             .padding(TaxiSpacing.Sm),
     )
 }

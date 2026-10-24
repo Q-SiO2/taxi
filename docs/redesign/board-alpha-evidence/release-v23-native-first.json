@@ -1,0 +1,118 @@
+{
+  "candidate": "candidate-native-v23.json",
+  "run": "first",
+  "method": "Agent-stepped actual native UI: fresh rendered screenshots, explicit one-time taps, independent owned server readbacks",
+  "fidelity": "Owned API35 driver/API31 passenger emulators, synthetic GPS/accounts/cash",
+  "started_utc": "2026-10-23T10:34:27.540390+00:00",
+  "passed": false,
+  "prior_ride_ids": [
+    "6115e0a3-dc3b-4f8a-90ba-c9ccb2fb4965",
+    "e8e23f90-4329-4381-9391-2dcccfd0b027",
+    "ef70b9f0-a77d-41b6-923c-7a622a6e1dd6",
+    "73c4d766-9c7a-4e80-a589-805eb3b8cff2",
+    "46f115c7-cc34-4161-a3a3-238910b494c9",
+    "8145b32e-4549-4183-bce5-60d3936a4de4",
+    "93df2c70-fd2b-4e97-8df3-eee368699bea",
+    "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+    "d8daeaaa-fbe9-4614-af7e-45b896d30ecb",
+    "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+    "733abbcf-5d1b-4ff2-b7f3-3563052cbd25",
+    "74cf05e3-9d1b-4d15-9a67-804226a20924",
+    "cb951af4-f5ae-4d05-8a06-a28b49797f33",
+    "c55e696d-2bae-4640-8801-f50d2c20a42b",
+    "b7aac6ac-cc87-494d-aa95-842c21fc6759",
+    "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+    "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+    "98a253df-de13-4029-9daa-e538a520997d",
+    "359279df-4847-4ad3-bfa4-baa2136b45be",
+    "baf9a4e5-1455-41e1-a0db-6d9c5de96a55"
+  ],
+  "steps": [
+    {
+      "action": "post-trip-destination",
+      "role": "passenger",
+      "utc": "2026-10-23T10:34:49.981532+00:00",
+      "tap": [
+        250,
+        460
+      ],
+      "observation": "release-v23-first-stepped-passenger-same-instance-map-before-selection.png",
+      "server_before": null,
+      "confirmed": true,
+      "visible_result_resource": "destination_selected_on_map",
+      "confirmed_utc": "2026-10-23T10:35:01.648401+00:00"
+    }
+  ],
+  "installed_apks": [
+    {
+      "role": "driver",
+      "sha256": "5574f9e20ef5ade1621f58683712b6eb78f556ca828c23d83689a084137657e3"
+    },
+    {
+      "role": "passenger",
+      "sha256": "d230aef6501397adc7628931a94ea7f67b6459277c573e694fb023641a7e8390"
+    }
+  ],
+  "clock_fixture": [
+    {
+      "role": "driver",
+      "host_minus_device_seconds": 0.38,
+      "method": "Owned emulator synchronization before availability/trip only"
+    },
+    {
+      "role": "passenger",
+      "host_minus_device_seconds": 0.28,
+      "method": "Owned emulator synchronization before availability/trip only"
+    }
+  ],
+  "runtime": [
+    {
+      "role": "driver",
+      "avd": "taximobile-board-api35-driver",
+      "sdk": "35",
+      "configuration": "config: mcc310-mnc260-en-rUS-ldltr-sw360dp-w360dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x720-v35",
+      "app_locales": "Locales for ma.taximobile.driver for user 0 are [en-US]"
+    },
+    {
+      "role": "passenger",
+      "avd": "taximobile-board-aosp31-passenger",
+      "sdk": "31",
+      "configuration": "config: mcc310-mnc260-en-rUS,ar-rMA,fr-rFR-ldltr-sw360dp-w360dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x720-v31"
+    }
+  ],
+  "screenshots": [
+    {
+      "role": "passenger",
+      "path": "release-v23-first-stepped-passenger-same-instance-map-before-selection.png",
+      "sha256": "39134ef8740ba6bfdeb52820a1c55b1846ada1b6305bc393de96b0d34f6a8299",
+      "utc": "2026-10-23T10:34:49.134794+00:00"
+    },
+    {
+      "role": "passenger",
+      "path": "release-v23-first-stepped-passenger-post-trip-destination-after.png",
+      "sha256": "99767345a2b22c20289e6ef6ba471a398489d253b21b2349710fd03941da4b35",
+      "utc": "2026-10-23T10:35:03.521030+00:00"
+    },
+    {
+      "role": "passenger",
+      "path": "release-v23-first-stepped-passenger-quote-before-foreground-refresh.png",
+      "sha256": "71db1c06fd8d92399adff3ac5d2a81a395f31b86b321c116732382ef8cb74c3a",
+      "utc": "2026-10-23T10:35:59.236742+00:00"
+    },
+    {
+      "role": "passenger",
+      "path": "release-v23-first-stepped-passenger-quote-after-foreground-refresh.png",
+      "sha256": "88053cb4d807f7bd6bd1621c8e00980dc7757f85e33b3463a8ebe1e7e89bce8f",
+      "utc": "2026-10-23T10:36:53.527975+00:00"
+    }
+  ],
+  "last_observation": {
+    "role": "passenger",
+    "path": "release-v23-first-stepped-passenger-quote-after-foreground-refresh.png",
+    "sha256": "88053cb4d807f7bd6bd1621c8e00980dc7757f85e33b3463a8ebe1e7e89bce8f",
+    "utc": "2026-10-23T10:36:53.527975+00:00"
+  },
+  "failure_type": "RuntimeError",
+  "failure_detail": "Visible enabled native control not reached: go_online",
+  "finished_utc": "2026-10-23T10:38:26.784260+00:00"
+}

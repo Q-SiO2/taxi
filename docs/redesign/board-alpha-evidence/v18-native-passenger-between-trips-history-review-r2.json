@@ -1,0 +1,270 @@
+{
+  "candidate": "candidate-native-v18.json",
+  "started_utc": "2026-10-21T11:26:06.002518+00:00",
+  "passed": true,
+  "scope": "Actual owned passenger history detail and existing public support acknowledgement; empty form disabled; no consequential input",
+  "screenshots": [
+    {
+      "path": "v18-native-passenger-between-trips-r2-history-list.png",
+      "sha256": "bd6d09c6bb4d236184e914bef800694a7f190f0c8c200e7e97f7c853ea260fd0"
+    },
+    {
+      "path": "v18-native-passenger-between-trips-r2-history-detail.png",
+      "sha256": "bd6d09c6bb4d236184e914bef800694a7f190f0c8c200e7e97f7c853ea260fd0"
+    },
+    {
+      "path": "v18-native-passenger-between-trips-r2-history-detail-after-foreground-refresh.png",
+      "sha256": "374055bfe939893e287f43acc5bc292f3e91761eb260716da93d33f5ce8886b8"
+    },
+    {
+      "path": "v18-native-passenger-between-trips-r2-history-detail-after-live-wait.png",
+      "sha256": "374055bfe939893e287f43acc5bc292f3e91761eb260716da93d33f5ce8886b8"
+    },
+    {
+      "path": "v18-native-passenger-between-trips-r2-historical-cash-receipt.png",
+      "sha256": "d73e44cbe8449034c8cbf9773f6ec7601a375515915e9cd0d352822d24e80c42"
+    },
+    {
+      "path": "v18-native-passenger-between-trips-r2-support-public-acknowledgement.png",
+      "sha256": "0e0f82ecf4ec616b5a0ccd58d35962d8443f1fef3689fbeca8b7d7e2b50c8ab8"
+    },
+    {
+      "path": "v18-native-passenger-between-trips-r2-support-empty-form-disabled.png",
+      "sha256": "a37e31fcfecd6d878a92310d2550ad32d4a3e20b5d0563d9b51918747081195b"
+    }
+  ],
+  "checks": [
+    {
+      "full_api_ride_id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+      "visible_reference": "57bb0f9a",
+      "full_id_absent_from_user_text": true
+    },
+    {
+      "selected_ride_id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+      "same_process_foreground_refresh": true,
+      "live_wait_seconds": 15,
+      "pid": "1860"
+    },
+    {
+      "history_ride_id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+      "server_phase": "COMPLETED",
+      "server_payment": {
+        "method": "CASH",
+        "status": "COMPLETED"
+      },
+      "amount": "35.00"
+    },
+    {
+      "support_ticket_id": "e96bf80f-73d8-4959-a3b6-7c029c62519f",
+      "status": "IN_PROGRESS",
+      "latest_public_message_visible": true
+    },
+    {
+      "empty_support_send_disabled": true,
+      "ticket_create_sent": false
+    }
+  ],
+  "before": {
+    "rides": [
+      {
+        "id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d8daeaaa-fbe9-4614-af7e-45b896d30ecb",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "733abbcf-5d1b-4ff2-b7f3-3563052cbd25",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "cb951af4-f5ae-4d05-8a06-a28b49797f33",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "c55e696d-2bae-4640-8801-f50d2c20a42b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "b7aac6ac-cc87-494d-aa95-842c21fc6759",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "98a253df-de13-4029-9daa-e538a520997d",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e531e392-6f5b-4962-9964-3967a4afc418",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "082f8b85-6598-423d-aac5-cf31eec3f30a",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "e734ed2c-a37c-424b-9d84-b31e6811cd09",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "65f3d974-1cb3-4c43-9486-80cd1007c256",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "03756c30-f453-4d09-ae50-c3fa8f3782a4",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "59576371-85a9-4732-a100-12f7295f0c0a",
+        "status": "COMPLETED"
+      }
+    ],
+    "tickets": [
+      {
+        "id": "e96bf80f-73d8-4959-a3b6-7c029c62519f",
+        "city_id": "10000000-0000-4000-8000-000000000003",
+        "category": "FARE_DISPUTE",
+        "subject": "Example fare question",
+        "description": "Synthetic ticket for local UX review.",
+        "ride_id": "ee13caaa-3461-418d-b0b4-f32eab7dd516",
+        "status": "IN_PROGRESS",
+        "latest_public_message": "ملف تجريبي: تسلّمنا طلب الدعم.",
+        "latest_public_message_at": "2026-10-19T11:43:20.627955Z",
+        "resolved_at": null,
+        "closed_at": null,
+        "created_at": "2026-10-14T11:46:19.121262Z",
+        "updated_at": "2026-10-19T11:43:20.627955Z"
+      }
+    ]
+  },
+  "after": {
+    "rides": [
+      {
+        "id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d8daeaaa-fbe9-4614-af7e-45b896d30ecb",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "733abbcf-5d1b-4ff2-b7f3-3563052cbd25",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "cb951af4-f5ae-4d05-8a06-a28b49797f33",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "c55e696d-2bae-4640-8801-f50d2c20a42b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "b7aac6ac-cc87-494d-aa95-842c21fc6759",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "98a253df-de13-4029-9daa-e538a520997d",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e531e392-6f5b-4962-9964-3967a4afc418",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "082f8b85-6598-423d-aac5-cf31eec3f30a",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "e734ed2c-a37c-424b-9d84-b31e6811cd09",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "65f3d974-1cb3-4c43-9486-80cd1007c256",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "03756c30-f453-4d09-ae50-c3fa8f3782a4",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "59576371-85a9-4732-a100-12f7295f0c0a",
+        "status": "COMPLETED"
+      }
+    ],
+    "tickets": [
+      {
+        "id": "e96bf80f-73d8-4959-a3b6-7c029c62519f",
+        "city_id": "10000000-0000-4000-8000-000000000003",
+        "category": "FARE_DISPUTE",
+        "subject": "Example fare question",
+        "description": "Synthetic ticket for local UX review.",
+        "ride_id": "ee13caaa-3461-418d-b0b4-f32eab7dd516",
+        "status": "IN_PROGRESS",
+        "latest_public_message": "ملف تجريبي: تسلّمنا طلب الدعم.",
+        "latest_public_message_at": "2026-10-19T11:43:20.627955Z",
+        "resolved_at": null,
+        "closed_at": null,
+        "created_at": "2026-10-14T11:46:19.121262Z",
+        "updated_at": "2026-10-19T11:43:20.627955Z"
+      }
+    ]
+  },
+  "finished_utc": "2026-10-21T11:27:33.262073+00:00"
+}

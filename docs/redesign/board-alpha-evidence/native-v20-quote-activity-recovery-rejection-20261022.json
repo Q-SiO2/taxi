@@ -1,0 +1,25 @@
+{
+  "candidate": "candidate-native-v20.json",
+  "recorded_utc": "2026-10-22T11:01:27.318849+00:00",
+  "accepted": false,
+  "native_record": "v20-native-first.json",
+  "timed_board_record": "v20-board-first.json",
+  "business_command_count": 0,
+  "new_ride_count": 0,
+  "driver_availability": "OFFLINE",
+  "screenshot": {
+    "path": "v20-quote-after-new-activity-rejection.png",
+    "sha256": "6ab342705cfade36bacc7277a8fb86a51551a254633789543ef5ce2f9c9bc792"
+  },
+  "actual_failure": "Quoted native form loses selected point fields after HOME/MAIN-launcher creates a new activity in the same process. Request is not reached; no booking command or automatic replay.",
+  "source_boundary": "MobileAppCoordinator retains the owned quote inputs and re-fetches fare/route; PassengerHome creates an empty PassengerTripFormState with remember for each new composition. Fresh UI has no point pair/estimatedTrip to associate with returned terms.",
+  "next_packet": "Project the existing session-owned reviewed point input into PassengerReady and hydrate only a newly created form. Do not overwrite edits during ordinary refresh, cache a fare, persist credentials in UI or replay a command. Focused behavior red/green and replacement APK/native verification required.",
+  "v20_scoped_passes_retained": [
+    "v20-driver-cold-expiry-verification-20261022.json",
+    "v20-driver-cold-expiry-http-20261022.json",
+    "v20-native-account-style-verification-20261022.json",
+    "v20-native-localization-verification-20261022.json",
+    "v20-native-welcome-verification-20261022.json"
+  ],
+  "full_board_acceptance_withheld": true
+}

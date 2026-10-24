@@ -1,0 +1,14 @@
+{
+  "candidate": "candidate-native-v20.json",
+  "web_candidate": "candidate-web-v8.json",
+  "run": "first",
+  "started_utc": "2026-10-22T10:52:47.408061+00:00",
+  "passed": false,
+  "beats": [],
+  "scope": "Synthetic emulator and normal hosted browser rehearsal; actual elapsed time, not a seven-minute claim",
+  "failure_type": "Observer preflight: passenger not foreground",
+  "failure_detail": "Driver role style review intentionally returned the other emulator to HOME. Initial timed observer attempted Account without foregrounding passenger; no identity or trip input delivered. Preserve attempt, foreground normally and restart a fresh timer after warm preflight.",
+  "finished_utc": "2026-10-22T10:54:43.373229+00:00",
+  "diagnostic": "v20-board-first-not-foreground.png",
+  "timed_rehearsal_accepted": false
+}

@@ -1,0 +1,11 @@
+{
+  "candidate": "candidate-native-v22.json",
+  "started_utc": "2026-10-22T13:43:24.782827+00:00",
+  "passed": false,
+  "observations": [],
+  "scope": "Actual API31 passenger/API35 driver, normal/1.6 system text, expanded sheet, visible Inbox navigation and restored map actions. No business input or physical-device acceptance.",
+  "failure_type": "UnboundLocalError",
+  "failure_detail": "cannot access local variable 'matches' where it is not associated with a value",
+  "diagnostic_failure_type": "TypeError",
+  "finished_utc": "2026-10-22T13:43:33.135969+00:00"
+}

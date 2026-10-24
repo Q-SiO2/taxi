@@ -1,0 +1,176 @@
+{
+  "recorded_utc": "2026-10-23T23:32:14.856723+00:00",
+  "scope": "Local source, two real HTTP/PostGIS scenarios and synthetic localhost browser verification. Successor commit/CI is recorded separately.",
+  "parent": "e73e6b4304325dde90cf9599418891e38b83890b",
+  "schema_head": "20261023_0053",
+  "tests": {
+    "backend_http_postgis": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "javascript_browser": {
+      "tests": 84,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "wasm_browser": {
+      "tests": 84,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "infrastructure": {
+      "tests": 277,
+      "failures": 0,
+      "errors": 0
+    }
+  },
+  "source_checks": [
+    {
+      "name": "infra",
+      "exit_code": 0,
+      "log": ".tools/real-world-launch/session-source-infra-20261023.log"
+    },
+    {
+      "name": "docs",
+      "exit_code": 0,
+      "log": ".tools/real-world-launch/session-source-docs-20261023.log"
+    },
+    {
+      "name": "ci-security",
+      "exit_code": 0,
+      "log": ".tools/real-world-launch/session-source-ci-security-20261023.log"
+    },
+    {
+      "name": "mobile-api",
+      "exit_code": 0,
+      "log": ".tools/real-world-launch/session-source-mobile-api-20261023.log"
+    },
+    {
+      "name": "web-api",
+      "exit_code": 0,
+      "log": ".tools/real-world-launch/session-source-web-api-20261023.log"
+    },
+    {
+      "name": "credentials",
+      "exit_code": 0,
+      "log": ".tools/real-world-launch/session-source-credentials-20261023.log"
+    }
+  ],
+  "compilation_inputs": {
+    "files": 371,
+    "manifest_sha256": "ec040056ba94968a60954b0e0dc2005ac5731662f51a834c2654854fa1ff02c4",
+    "manifest": ".tools/real-world-launch/session-compilation-inputs-20261023.json"
+  },
+  "javascript": {
+    "bytes": 6935862,
+    "gzip9_bytes": 1646781,
+    "sha256": "27103dc3db272e21d891ed467fc759a46530bec764eb8795f83d12261ec299bf",
+    "parent_rejected_bytes": 6984560,
+    "selection_support_removed_bytes": 48698,
+    "previous_reviewed_budget_bytes": 6900000,
+    "current_reviewed_budget_bytes": 7000000,
+    "headroom_bytes": 64138,
+    "startup_performance_accepted": false
+  },
+  "production_distribution": {
+    "status": "RUNNING",
+    "log": {
+      "path": ".tools/real-world-launch/logout-web-production-r3-20261023.log",
+      "bytes": 9588,
+      "sha256": "0345193744043ccb07fa34d32235aa458c22e26e34448fa4ad73697a838d8b72"
+    }
+  },
+  "browser_expired_access": {
+    "verified_utc": "2026-10-23T23:23:36.272526+00:00",
+    "scope": "Actual localhost console with synthetic one-minute remaining first bearer; clock and JWT validation unchanged.",
+    "authentication_posts": [
+      {
+        "route": "login",
+        "status": 200
+      },
+      {
+        "route": "mfa/verify",
+        "status": 200
+      },
+      {
+        "route": "logout",
+        "status": 401
+      },
+      {
+        "route": "refresh",
+        "status": 200
+      },
+      {
+        "route": "logout",
+        "status": 200
+      }
+    ],
+    "token_issuances": 2,
+    "database": {
+      "same_refresh_family": true,
+      "old_session_rotated": true,
+      "replacement_revoked": true,
+      "replacement_marked_as_reuse": false,
+      "active_sessions_in_family": 0,
+      "members_after": 3,
+      "membership_audit_counts_unchanged": {
+        "OPERATOR_MEMBERSHIP_CREATED": 1,
+        "OPERATOR_MEMBERSHIP_UPDATED": 1
+      }
+    },
+    "roster_commands_replayed": false,
+    "mfa_factor_replaced": false,
+    "fixture_reseeded": false,
+    "ui": "Arabic sign-in form after successful revocation; screenshot retained.",
+    "observer_qualifications": [
+      "Stale AX/shadow-root controls and changing viewport/appearance observed; reacquired the same live tab and used the rendered sign-out control. No extra authentication or roster command was submitted.",
+      "Read-only complete driver ID selection rendered. Clipboard equality check returned false while observation context changed; copying remains unverified, with no unrelated clipboard contents printed."
+    ]
+  },
+  "artifacts": [
+    {
+      "path": ".tools/real-world-launch/union-membership-tests-20261023-225619.xml",
+      "bytes": 557,
+      "sha256": "51044d13962248125d0c1fad3cb9d085b50435b8c0a331e5323348ccd6e1f54e"
+    },
+    {
+      "path": "docs/launch/session-recovery-evidence/readonly-driver-id.png",
+      "bytes": 62778,
+      "sha256": "73a107f371aedcb3af7c68e919e559a33bf41ea0dbd061da57d25410dd25249b"
+    },
+    {
+      "path": "docs/launch/session-recovery-evidence/expired-access-logout.png",
+      "bytes": 20149,
+      "sha256": "822318583383eed1b27dc5a0cdaf5fc5653f8c83d39a66d71edbdf7e78ae627a"
+    }
+  ],
+  "retained_observations": [
+    "Initial client build cancelled before selection-field source change; no pass claimed.",
+    "Combined JS/Wasm tests and development build passed; later production sync rejected overlapping task outputs. Separate production invocation matches CI.",
+    "Parent web packaging failed at 6,984,560 against 6,900,000 bytes. Successor saves 48,698 but exceeds the old limit by 35,862; explicit reviewed ceiling is 7,000,000. No shipping minifier or dependency change.",
+    "Clipboard equality returned false during changing browser observation context; full ID selection rendered but copying is not accepted.",
+    "Stale accessibility/shadow-root observations require screen-reader/focus follow-up. No reset, factor recovery, reseed or roster replay was used."
+  ],
+  "owned_resource_shutdown": {
+    "api_port_8000": "STOPPED",
+    "web_port_4193": "STOPPED",
+    "postgis_port_55439": "STOPPED",
+    "postmaster_pid_before_stop": 20336,
+    "local_logs_and_database_preserved": true,
+    "owned_browser_tab_closed": true
+  },
+  "constraints_preserved": [
+    "Trial-only; no purchases or hosting mutations",
+    "Both Railway volumes retained",
+    "No staff privilege changes",
+    "No credential/MFA recovery replay",
+    "Original HEAD/index preserved by candidate capture"
+  ],
+  "deployment_accepted": false,
+  "physical_or_field_accepted": false,
+  "public_launch_accepted": false
+}

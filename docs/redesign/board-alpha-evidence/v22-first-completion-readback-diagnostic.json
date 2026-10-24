@@ -1,0 +1,153 @@
+{
+  "recorded_utc": "2026-10-22T16:43:40.163208+00:00",
+  "candidate": "candidate-native-v22.json",
+  "failed_native_record": "v22-native-first.json",
+  "ride_id": "73c4d766-9c7a-4e80-a589-805eb3b8cff2",
+  "before_status": "IN_PROGRESS",
+  "after_status": "IN_PROGRESS",
+  "native_tap": {
+    "action": "complete",
+    "role": "driver",
+    "utc": "2026-10-22T16:39:08.295616+00:00",
+    "tap": [
+      360,
+      906
+    ],
+    "observation": "v22-first-stepped-driver-complete-ready.png",
+    "server_before": "IN_PROGRESS",
+    "confirmed": false
+  },
+  "provider_completion_requests_in_original_window": [],
+  "provider_window": {
+    "from": "2026-10-22T16:35:00Z",
+    "until": "2026-10-22T16:40:00Z",
+    "rows": 43
+  },
+  "actual_native_text": [
+    {
+      "text": "",
+      "description": "Showing a Map created with MapLibre. Scroll by dragging two fingers. Zoom by pinching two fingers.",
+      "enabled": "true",
+      "bounds": "[0,0][720,1600]"
+    },
+    {
+      "text": "",
+      "description": "Attribution icon. Activate to show attribution dialog.",
+      "enabled": "true",
+      "bounds": "[662,1542][704,1584]"
+    },
+    {
+      "text": "",
+      "description": "Driver account",
+      "enabled": "true",
+      "bounds": "[32,72][398,168]"
+    },
+    {
+      "text": "Account",
+      "description": "",
+      "enabled": "true",
+      "bounds": "[120,102][229,139]"
+    },
+    {
+      "text": "",
+      "description": "Safety",
+      "enabled": "true",
+      "bounds": "[414,72][510,168]"
+    },
+    {
+      "text": "",
+      "description": "Inbox 20",
+      "enabled": "true",
+      "bounds": "[526,72][688,168]"
+    },
+    {
+      "text": "9+",
+      "description": "",
+      "enabled": "true",
+      "bounds": "[624,104][654,136]"
+    },
+    {
+      "text": "",
+      "description": "Recenter navigation route",
+      "enabled": "true",
+      "bounds": "[584,568][688,672]"
+    },
+    {
+      "text": "⌖",
+      "description": "",
+      "enabled": "true",
+      "bounds": "[626,600][647,640]"
+    },
+    {
+      "text": "",
+      "description": "Load current driver location",
+      "enabled": "true",
+      "bounds": "[584,696][688,800]"
+    },
+    {
+      "text": "◎",
+      "description": "",
+      "enabled": "true",
+      "bounds": "[627,728][645,768]"
+    },
+    {
+      "text": "Driver home",
+      "description": "",
+      "enabled": "true",
+      "bounds": "[48,896][311,958]"
+    },
+    {
+      "text": "",
+      "description": "Ride in progress status",
+      "enabled": "true",
+      "bounds": "[48,990][306,1054]"
+    },
+    {
+      "text": "i",
+      "description": "",
+      "enabled": "true",
+      "bounds": "[72,1006][79,1038]"
+    },
+    {
+      "text": "Ride in progress",
+      "description": "",
+      "enabled": "true",
+      "bounds": "[95,1006][282,1038]"
+    },
+    {
+      "text": "Keep this app open while online. Your location updates only while the app is in the foreground.",
+      "description": "",
+      "enabled": "true",
+      "bounds": "[48,1086][672,1154]"
+    },
+    {
+      "text": "0.6 km · about 1 min",
+      "description": "",
+      "enabled": "true",
+      "bounds": "[48,1186][346,1238]"
+    },
+    {
+      "text": "Continue onto Rue 75",
+      "description": "",
+      "enabled": "true",
+      "bounds": "[48,1270][323,1307]"
+    },
+    {
+      "text": "Load completion location",
+      "description": "",
+      "enabled": "true",
+      "bounds": "[194,1367][527,1407]"
+    },
+    {
+      "text": "Location loaded. Review it before completing the ride.",
+      "description": "",
+      "enabled": "true",
+      "bounds": "[80,1499][640,1552]"
+    }
+  ],
+  "screenshot": {
+    "path": "v22-first-completion-driver-header.png",
+    "sha256": "dc60ceeef7efa0c2df8a34f28bfeb38d683e8a9609d64e7131bc75a0b89ed988"
+  },
+  "scope": "Read-only body scroll and owner-authorized GETs only. No native business tap or HTTP ride/payment command. Absence of a proxy request alone does not establish where native touch/dispatch failed."
+}

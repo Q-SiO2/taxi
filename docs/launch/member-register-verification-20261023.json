@@ -1,0 +1,841 @@
+{
+  "recorded_utc": "2026-10-23T19:10:34.560499+00:00",
+  "scope": "Local source and synthetic runtime verification only; successor commit/CI is recorded separately.",
+  "schema_head": "20261023_0053",
+  "tests": [
+    {
+      "target": "shared-jvm",
+      "tests": 392,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "reports": [
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.core.network.ApiConfigurationTest.xml",
+          "sha256": "9832eec25c5ad3c43faa782068ebeb4ac78801834bea93cde8a3f8f3947ef912",
+          "bytes": 643
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.core.network.IdempotencyKeyTest.xml",
+          "sha256": "c8f7de16b4b26bd03cef7135233bd5484ac26b06fbe5d8d8a9035714f415c3c4",
+          "bytes": 497
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.data.auth.KtorAuthenticationCancellationTest.xml",
+          "sha256": "a30703d82842f88c8661b308a0c3c799dfc192ae1efc3acec59f0ab6caa2cba4",
+          "bytes": 927
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.data.auth.SecureTokenStoreTest.xml",
+          "sha256": "409afc3d53a95221a5fe45a3f4177a5f437e3a34b983387987e50f26b5486b31",
+          "bytes": 836
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.data.cooperatives.CooperativeMembershipDecodingTest.xml",
+          "sha256": "3f8de4c6a494f5b9ae1f4edfba464f30eb4a28dd2fa56ed93184e7eb41d1e985",
+          "bytes": 554
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.data.drivers.DriverCredentialDecodingTest.xml",
+          "sha256": "deea3b15d74cdc4c3191435b02c9926e0ca176f3ba7e1c9817bcbff5b3501f1e",
+          "bytes": 547
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.data.drivers.DriverEarningsDecodingTest.xml",
+          "sha256": "ad28ffe0db703e4343eacf86c3ecf6a4936a72c501a7036a64da6601456557a2",
+          "bytes": 541
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.data.drivers.DriverOfferEconomicsDecodingTest.xml",
+          "sha256": "f7181406c1d90a6a1332cc56983a61e81b83c3e168f2d5f563ac51e211ddf390",
+          "bytes": 546
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.data.drivers.KtorDriverRecruitmentRequestTest.xml",
+          "sha256": "6a1412b1b40a90c9332f2226bb6152e07352c55160adb345cd86fa874c685a38",
+          "bytes": 885
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.data.drivers.PendingCashPaymentsTest.xml",
+          "sha256": "53969c7147dc77551d09c69ca61bdc244e5e246f7345f669326d308e8b158254",
+          "bytes": 1487
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.data.network.ApiFailureTest.xml",
+          "sha256": "f554ac7741c2cbd44abcf3d9e052e288df22e9f781ae4da0c98d5413930fd116",
+          "bytes": 678
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.data.network.TaxiMobileHttpClientTest.xml",
+          "sha256": "a826e74abd79765d56cb899b2ab6494e924830b6e977a56f73300a2b1d66e8f3",
+          "bytes": 686
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.data.places.PlaceLanguageTest.xml",
+          "sha256": "66c89b7ce9a2350ce38fd101a9498a3854988f88e3daa03c52e0509a1163192a",
+          "bytes": 497
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.data.realtime.KtorLiveEventGatewayTest.xml",
+          "sha256": "00802d202ea4159029b5284c6c74bab554fd3cf14cf5eb3c10b8a2e68e58cc8d",
+          "bytes": 1255
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.data.rides.FixedRouteCatalogDecodingTest.xml",
+          "sha256": "6b02648d74188dbd147c8699096d2e9e73155367ad4e4d8052ceaa4311a078d4",
+          "bytes": 718
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.data.rides.RideCoordinationDecodingTest.xml",
+          "sha256": "b36bedff05716e9b77d4752a147b9805fe4a4364bb0654ee83432a1e22789b3b",
+          "bytes": 727
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.data.rides.RideHistoryDecodingTest.xml",
+          "sha256": "ae96789019af1d64a0c726e5dc680e5a6e9f3ae0ce27ff5286b78aa011406c1c",
+          "bytes": 529
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.data.rides.RideReceiptDecodingTest.xml",
+          "sha256": "99247746b97808682de621d848c8a954e31d40eb24ce57cbf11e6dedf4665cc7",
+          "bytes": 693
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.data.routing.RoutingLanguageTest.xml",
+          "sha256": "9096389c04e7c5f687a75999136877e6bf039f2163aa882ee285a19e7ea10c8f",
+          "bytes": 678
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.data.safety.SafetyReportDecodingTest.xml",
+          "sha256": "e81cbd02c377686953aa6ffe3e94dd7606da4adab40d60ed0390aa7c6f3508ce",
+          "bytes": 700
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.data.scheduling.ScheduledBookingDecodingTest.xml",
+          "sha256": "6d9edc22c9b2377d3a1e56256a318881910919e43cf6ba24bdd7d5d731e5f27b",
+          "bytes": 943
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.domain.drivers.DriverEarningsTest.xml",
+          "sha256": "ec5002de5a3a573b055fcda58b94551fd6672a0418a351f735169815994293df",
+          "bytes": 531
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.domain.drivers.DriverLocationObservationTest.xml",
+          "sha256": "8a9f9283667c50464601c1767d0ee15544a2d8b0a93db16bea804439848f4ae7",
+          "bytes": 844
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.domain.rides.FareEstimateTest.xml",
+          "sha256": "09b3f899d27c08b59b0ab520d24ac5fdd1772ff691c8ec77a2694c67b40da9f8",
+          "bytes": 491
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.domain.rides.FinalRideFareTest.xml",
+          "sha256": "51e808b2b5eaba252ef290282f0e929a2b5a82f576872843770bc55fb3eaeb09",
+          "bytes": 510
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.domain.rides.RideRatingTest.xml",
+          "sha256": "92ee44a76528bf2ea8cddf14768e955fd1d1f52eb35b4c49b9ca0f5a612ee337",
+          "bytes": 512
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.app.AppActionTest.xml",
+          "sha256": "6f21bf947c355ef53c4f9aec0bff28bf6214646589cd255bbf86d3a470970f04",
+          "bytes": 803
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.app.AppUiStateTest.xml",
+          "sha256": "c75ac7f39b566f526a691ee99c08faf70672a5c62a0de2ab48d86d6b7214f91d",
+          "bytes": 497
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.app.ClientCompatibilityCoordinatorTest.xml",
+          "sha256": "c0d7adbb6f9c607603a46685bad2b2631fa784ec2f39f6620b2cc6e3fd4987f6",
+          "bytes": 902
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.app.CriticalStateUiTest.xml",
+          "sha256": "376d86bae23f714aa8139726dc755f9d7a3fe8b547752a41e5ecb48ba0eb5f94",
+          "bytes": 7213
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.app.DriverCompletionLocationUiTest.xml",
+          "sha256": "ff96bf0f5471626d3e0fe9231e5bbabbbb0db261751083857754420ad9c36a92",
+          "bytes": 1113
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.app.DriverOnboardingInsetsUiTest.xml",
+          "sha256": "c757d1393ef384c803a40bbe702be0ef28ec79412a67b47f583cd923c5bce96d",
+          "bytes": 557
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.app.GatePageInsetsUiTest.xml",
+          "sha256": "7d2260e0af577979a79776ae7820293014d55ed97ebc7e89f4ae855f6c919ead",
+          "bytes": 532
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.app.MapSheetInsetsUiTest.xml",
+          "sha256": "aaabcfd1102f86893a4436e2ca4b7852ff7713bd3ecdc3ef0a4c9fbf925d3836",
+          "bytes": 1391
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.app.MapToolbarInsetsUiTest.xml",
+          "sha256": "9b3e9a7c23038dce14949eade86ed1b75edf1e66fdd2ac0af3cdf6fb56c38274",
+          "bytes": 889
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.app.MobileAppCoordinatorTest.xml",
+          "sha256": "b3404d74c21faca16a770774aafa25609af5adda2373585fea921da9dd80ef8e",
+          "bytes": 10388
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.app.NotificationPresentationTest.xml",
+          "sha256": "6d9dcc7e00b68b2271f9f5b8a90f1f1973dfd273ad8f0d657856751d9cd94f34",
+          "bytes": 1567
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.app.PassengerIdlePeekUiTest.xml",
+          "sha256": "155e6c03deaa43bd6f9a4d6cd5b414439fd712911f7f3fdc3efe61b325bf979e",
+          "bytes": 1065
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.app.PassengerQuoteRecreationUiTest.xml",
+          "sha256": "0da6e6992945b1bdd369d6aada12414db8a7598d59bf59e8089e7007e7e9e538",
+          "bytes": 747
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.app.PendingCashRecoveryUiTest.xml",
+          "sha256": "afc56346f2d3b3bae1e4fab80d592e4c8d650b333ad318013b9b4d5f9c808017",
+          "bytes": 1245
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.app.QuoteSessionRecoveryTest.xml",
+          "sha256": "0e2cf765000d91d640b73e50f177c004ddf21037019a596d930291f229dcc7b3",
+          "bytes": 3639
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.app.RidePresentationMappingTest.xml",
+          "sha256": "17a33af1022b70c9e634e8cd20a44fbd0ffb7be8872cf9303cfe2758b39e925b",
+          "bytes": 1027
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.app.StyleLanguageRenderTest.xml",
+          "sha256": "9cd0ea0c620afc521a941d96cab04d0a2b3433fec58185d6b694b1fc96470eb0",
+          "bytes": 539
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.app.StyleSwitchUiTest.xml",
+          "sha256": "5e2ee4ce7b37e2cd8ebf038e051d0b912568322794ba821b2bb567af70936f2f",
+          "bytes": 529
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.app.SupportCategoryTest.xml",
+          "sha256": "25dfb0ab4e3c73f78d8c4e8e89c0feb7146491658b73677e969758133b773b02",
+          "bytes": 521
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.auth.AuthenticatedReadRecoveryTest.xml",
+          "sha256": "d4749d1d38a0ad55444c94cedf321a91990abe1247a9c9811b9516c257200ba1",
+          "bytes": 3696
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.auth.AuthenticationSessionCancellationTest.xml",
+          "sha256": "170b8cb59320f979696d6134e0304e3e714ba13800efe2666d406d2da41cbcd9",
+          "bytes": 1589
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.auth.AuthenticationSessionLifetimeTest.xml",
+          "sha256": "20d579ea9c67587c0b4daf7009e99c404ae60d48b5ff7f47c4ee926e51f2f7c3",
+          "bytes": 1886
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.auth.AuthenticationSessionStorageTest.xml",
+          "sha256": "5e8993050a046696765919754a86c0e83c68f01e3ca906d4ffb1cc758875b439",
+          "bytes": 1123
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.auth.AuthenticationStateTest.xml",
+          "sha256": "a3bfbaf2bdb25d5012a7016fd25297d6de19885765215b0ad0c5d0184d49e830",
+          "bytes": 854
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.auth.RegistrationInputTest.xml",
+          "sha256": "1032a890e891eb5851b03a92fc0afe616d00eb202aa218838243c9c2beea8579",
+          "bytes": 882
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.connectivity.ConnectivityTest.xml",
+          "sha256": "2066d606957f6e0e03f203998dae02e4ba56ef402d12b13f345025b2d986461e",
+          "bytes": 2994
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.driver.OfferCountdownTest.xml",
+          "sha256": "1b5ed21b39b80745f74ee74971a59f2191841a2b54fd1bbe2265e34332ad2407",
+          "bytes": 861
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.driver.onboarding.CityAuthorizationPresentationTest.xml",
+          "sha256": "dada33096188fe7d788ab9b439a9f4b1d1b4fbe63c102ce25d11b42dfbb668d8",
+          "bytes": 753
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.location.ForegroundDriverLocationPolicyTest.xml",
+          "sha256": "89a4396ec3b123bf8647bc96dbd1475a95ef1eea7388661881adbffb87763677",
+          "bytes": 1826
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.location.ForegroundDriverLocationResultGuardTest.xml",
+          "sha256": "fbea6d4499135974d3e177f52b49c1fd3ed9dd1dc8b468540baab48c92cf4e49",
+          "bytes": 1920
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.location.NativeFixFreshnessTest.xml",
+          "sha256": "7e0e316652a1b3d1f890aeab5b5c258235c474f3bdce05eb007cfa97dc9c580a",
+          "bytes": 1006
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.location.OneShotLocationGateTest.xml",
+          "sha256": "76838a0b19df7193a6edd4c445e8d59a2f43cb2240891843fe5839af5f01a491",
+          "bytes": 539
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.maps.MapCameraFocusTest.xml",
+          "sha256": "c53b50bd44664e20eaadf107425153db4067403d1e649aae939c9a12cf448d2b",
+          "bytes": 1326
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.maps.MapCoordinateCallbackUiTest.xml",
+          "sha256": "10205138976d1774afef21645264ff20366b0e6dc7a559276416cfb695c5f7dd",
+          "bytes": 742
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.maps.MapStyleFallbackTest.xml",
+          "sha256": "1a998fb12a3b448a78a602f49b37676ef1966d9165e1d88e0ee34e9fa4ad9d01",
+          "bytes": 510
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.notifications.PushRefreshHintRelayTest.xml",
+          "sha256": "c9b473290a1fa2fedd3727ffec079e4d97ca747818f24c6e24fb2bf1f018a58f",
+          "bytes": 1694
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.notifications.PushRegistrationRelayTest.xml",
+          "sha256": "20c648339f410b221bbd6aa96ca49666d6163b42f9e7cf444e416d6655ace3ef",
+          "bytes": 930
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.passenger.PassengerReverseSelectionTest.xml",
+          "sha256": "16fb135599e463318c5241c60b16ba56abd0380430042c5dd5b503cfe0e6fcaf",
+          "bytes": 1094
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.passenger.PlaceDiscoveryFreshnessUiTest.xml",
+          "sha256": "5e88b773cf5224cfbf6166dc14fcf0eee78f577b966622c23c2c449f6872663b",
+          "bytes": 919
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.passenger.RecentDestinationsTest.xml",
+          "sha256": "e3fcc60fdd74690a35ca2d03ad5ba18393879c6550780f499f2b8dd46a40ed99",
+          "bytes": 731
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.realtime.LiveUpdateSubscriptionTest.xml",
+          "sha256": "5540be899fd62f8049a4c3afe005dc90cc6ddef6b47a770f19f57532585c97ce",
+          "bytes": 3715
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.rides.RideCoordinationSectionUiTest.xml",
+          "sha256": "b44e67ee2be755c6b13badc893553f4f2e703111177c13bbba56d94368de6eae",
+          "bytes": 1054
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.ui.components.FarePresentationUiTest.xml",
+          "sha256": "0132b2dee7510318d17d19057d5553b259492a4553623c6c7be1224ffcac2fc0",
+          "bytes": 542
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.ui.components.OptionalArtworkTest.xml",
+          "sha256": "649572d9b0934dcad554f1515a1c13ceade6fa9343f5fb673e36e5755c2fc5b8",
+          "bytes": 1775
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.ui.components.SpecializedFieldsTest.xml",
+          "sha256": "be3ef04e65c55da933e1633dea9f441ac605bab92ebcde3a27bd386c0970ca48",
+          "bytes": 722
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.ui.components.TaxiArtworkUiTest.xml",
+          "sha256": "89332d395326d6fdbf2a25f0894c2005210b36f5cbf9b6893249e9b3b8ae0592",
+          "bytes": 1055
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.ui.components.TaxiSheetUiTest.xml",
+          "sha256": "0c8a8ff418ec7c88e5c3590be75ebfdd63debbe9cb66d566cce7a0731792c7e8",
+          "bytes": 1356
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.ui.TaxiDesignTokensTest.xml",
+          "sha256": "39f78d0ce3b68d4f5a8e2e08b022bbc22c958e45f084c819afb432a2f9ecf2d9",
+          "bytes": 1327
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.ui.text.BidiTextTest.xml",
+          "sha256": "7af55be2993d205f30d1d7169824724713db1434c0951345ba13fcc88b04c14d",
+          "bytes": 684
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.ui.text.TaxiLanguagePreferencesTest.xml",
+          "sha256": "568989ec7a711888b4f20cfa0818ad0394c6874f33674479841d84ed6368c97b",
+          "bytes": 1110
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.ui.theme.TaxiColorContrastTest.xml",
+          "sha256": "1b4da524eeac4ba66587edd19e2405a0072ac0fa09e20bb3b97c895426a6bdaf",
+          "bytes": 903
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.feature.ui.theme.TaxiStylePreferencesTest.xml",
+          "sha256": "b96a2304f8b2c79d87ea221d87c34c09b25e6ac0ce3a81f900756336bc7ab1e6",
+          "bytes": 1088
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.SharedCommonTest.xml",
+          "sha256": "1c1929cf7347096dd9f30a1b9a0193f2438ddce1454925f7ac33873393e0daaf",
+          "bytes": 432
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/shared-jvm/TEST-org.example.taximobile.SharedLogicDesktopTest.xml",
+          "sha256": "32d4da52133fcbdb020c31bb5f911b9a116dc61a6f76f2dcb55799aaf40da243",
+          "bytes": 444
+        }
+      ]
+    },
+    {
+      "target": "web-javascript",
+      "tests": 79,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "reports": [
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-javascript/TEST-org.example.taximobile.applicant.state.ApplicantPortalCoordinatorTest.xml",
+          "sha256": "5b4ccb0de64a23338882cf5fc4c09a9e14aabd6a1df2d584d5757373a30f298d",
+          "bytes": 2063
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-javascript/TEST-org.example.taximobile.application.WebFailurePresentationTest.xml",
+          "sha256": "43b82d65bdc668743425e2c80e4bc3c6b9d3764add93db805aa292aecbe20c43",
+          "bytes": 1262
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-javascript/TEST-org.example.taximobile.application.WebSurfaceTest.xml",
+          "sha256": "e12997629c61f7808d0ebe3a3885b76822fb588f17e7c2ba9eebe21541b461cf",
+          "bytes": 751
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-javascript/TEST-org.example.taximobile.operations.data.OperationsApiEndpointsTest.xml",
+          "sha256": "b72f8749822fd96ffc5d5a6ffaaeadcacbe056f90ba188c2530fd8ac26f9d372",
+          "bytes": 958
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-javascript/TEST-org.example.taximobile.operations.model.AccountSecurityModelsTest.xml",
+          "sha256": "c9bc11d19db5a3356b95d1f81b712cb65f4e559853c40ec9e1fc7d5c3703df13",
+          "bytes": 993
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-javascript/TEST-org.example.taximobile.operations.model.AnalyticsModelsTest.xml",
+          "sha256": "db6b7524f456843c0bb3ecdd7f45827d53a3b341157e7405270c4047593f196f",
+          "bytes": 547
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-javascript/TEST-org.example.taximobile.operations.model.CaseOperationsModelsTest.xml",
+          "sha256": "be931a92405d40916c08671cebfd048e61f08b050e14b30829db8fbc806129c2",
+          "bytes": 1244
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-javascript/TEST-org.example.taximobile.operations.model.CityAuthorizationModelsTest.xml",
+          "sha256": "e909d7f9c7717729e209810c9fef1ca45fa21e4de95f45b1036b5af85fc7c92d",
+          "bytes": 798
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-javascript/TEST-org.example.taximobile.operations.model.ControlPlaneModelsTest.xml",
+          "sha256": "45a7094a9138d52fe608e7c66f1eeea400c25a8970e0ef9b462d75d9a5c5abaa",
+          "bytes": 1449
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-javascript/TEST-org.example.taximobile.operations.model.DriverRecruitmentModelsTest.xml",
+          "sha256": "d5639b2b459280c28914ea2c6ced4150a764a4e66820abf62b7e1e0ee980348b",
+          "bytes": 821
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-javascript/TEST-org.example.taximobile.operations.model.FixedRouteModelsTest.xml",
+          "sha256": "8aae0da6e2ea37d7175b1a41b5fbe24f829edb220da509722d583b48e88812ae",
+          "bytes": 966
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-javascript/TEST-org.example.taximobile.operations.model.OperationsModelsTest.xml",
+          "sha256": "c2088a191d59a65c7071993c2b362ee3d1a76990a3988d317e143e4edae969d8",
+          "bytes": 1632
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-javascript/TEST-org.example.taximobile.operations.model.OperatorMembershipModelsTest.xml",
+          "sha256": "c5606045ef8adec3f601c78a7fca00d34d971ea0eafc83e1b4da6c36340980b3",
+          "bytes": 1314
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-javascript/TEST-org.example.taximobile.operations.model.PaymentOperationsModelsTest.xml",
+          "sha256": "ddb63d3d966c0c766b13325f005deee5fb846b8499917479ddb79c543c6d6bd8",
+          "bytes": 1068
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-javascript/TEST-org.example.taximobile.operations.model.PricingEconomicsModelsTest.xml",
+          "sha256": "1bcdf4d96cc824ed8e649276eb128448d9e2b28c1ded1a957630e389f3a07bc0",
+          "bytes": 1482
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-javascript/TEST-org.example.taximobile.operations.model.SecurityIncidentModelsTest.xml",
+          "sha256": "4176ff3a4f88e8f8a3c3130804b9d6904ff2e9cf8490d77a4ead6eea6e29fd74",
+          "bytes": 1943
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-javascript/TEST-org.example.taximobile.operations.model.StaffAccessModelsTest.xml",
+          "sha256": "4a7e28a0e61c457b177084334c8829f55e1e4d0b6fd0cd559b9533f8a5574550",
+          "bytes": 1864
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-javascript/TEST-org.example.taximobile.operations.ui.DriverRecruitmentScreenTest.xml",
+          "sha256": "8804db29fcd700cd4caea6627ac14d7cb94dcf14db49aa9a645c2ef17f048bf6",
+          "bytes": 1552
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-javascript/TEST-org.example.taximobile.operations.ui.OperationsComponentsTest.xml",
+          "sha256": "5da11b5cc7b1d003b4c84d84eff5322376bbb81938980dd331fa6d8f53a5260c",
+          "bytes": 1656
+        }
+      ]
+    },
+    {
+      "target": "web-webassembly",
+      "tests": 79,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "reports": [
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-webassembly/TEST-org.example.taximobile.applicant.state.ApplicantPortalCoordinatorTest.xml",
+          "sha256": "3d7a65a999302834946acba5d69a20e8f60ec6dc0ad33575289da830aa74e37b",
+          "bytes": 2090
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-webassembly/TEST-org.example.taximobile.application.WebFailurePresentationTest.xml",
+          "sha256": "478fedc8899e7eec1df4353c1e0450e39245778554242579df0b5d435e4bfaf1",
+          "bytes": 1280
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-webassembly/TEST-org.example.taximobile.application.WebSurfaceTest.xml",
+          "sha256": "e698c54a4ab81a7551bfb30928ec16e34357f34c5ed354056ba0f302699472e0",
+          "bytes": 763
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-webassembly/TEST-org.example.taximobile.operations.data.OperationsApiEndpointsTest.xml",
+          "sha256": "03d11fc16d8c76e9d8f3ea7faa4d228b62d3a72c1b77f762804906884c3a434c",
+          "bytes": 976
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-webassembly/TEST-org.example.taximobile.operations.model.AccountSecurityModelsTest.xml",
+          "sha256": "660233101af4b83f220d0c60b6a200541b9550a9a587105b01aa63372cbcb975",
+          "bytes": 1005
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-webassembly/TEST-org.example.taximobile.operations.model.AnalyticsModelsTest.xml",
+          "sha256": "d24cf70e34cc433a00c5ddf1363b58f9eba48da5b1c8867bf5158226dc2feb3f",
+          "bytes": 551
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-webassembly/TEST-org.example.taximobile.operations.model.CaseOperationsModelsTest.xml",
+          "sha256": "437a5c1860155ebbb5d117d4ad4750a2b8e9e06a8596f88fbb9aae0e68f1365e",
+          "bytes": 1260
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-webassembly/TEST-org.example.taximobile.operations.model.CityAuthorizationModelsTest.xml",
+          "sha256": "9c6a989623cbd6170b00257f3f4a545bad097ce484d118acab0d12884e0f17f3",
+          "bytes": 806
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-webassembly/TEST-org.example.taximobile.operations.model.ControlPlaneModelsTest.xml",
+          "sha256": "9f8e3697e8385f852e5019f73d1a1f020caf277cf4957e64cf52ff4afd976370",
+          "bytes": 1465
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-webassembly/TEST-org.example.taximobile.operations.model.DriverRecruitmentModelsTest.xml",
+          "sha256": "568bf81ea92f2f4fde383cfd14bad8d311547088c9d1e846da42d6c64b4c8a56",
+          "bytes": 829
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-webassembly/TEST-org.example.taximobile.operations.model.FixedRouteModelsTest.xml",
+          "sha256": "e0441005eb5aa8488e73d95b71049448b529efb04552a50d1f98e26edffb460f",
+          "bytes": 980
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-webassembly/TEST-org.example.taximobile.operations.model.OperationsModelsTest.xml",
+          "sha256": "cd2dfdb7c113547317f371edb0294a7494a8de5c4e1f586acfad024501cc1371",
+          "bytes": 1656
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-webassembly/TEST-org.example.taximobile.operations.model.OperatorMembershipModelsTest.xml",
+          "sha256": "e5cc847e0af94f51148192878d0c59bb4e065149bddd8971611fbe0216db63d5",
+          "bytes": 1334
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-webassembly/TEST-org.example.taximobile.operations.model.PaymentOperationsModelsTest.xml",
+          "sha256": "2cf4f73a79c1e975a6ba12a015aa84bcb6c3a2c11b44d1fbc940180ceacf0b07",
+          "bytes": 1076
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-webassembly/TEST-org.example.taximobile.operations.model.PricingEconomicsModelsTest.xml",
+          "sha256": "7a8a8a1e056594d0f4381fbb96d33c72a10c69f5de7a1c88084d2dbfc9f70732",
+          "bytes": 1502
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-webassembly/TEST-org.example.taximobile.operations.model.SecurityIncidentModelsTest.xml",
+          "sha256": "489c27c5d090b019ba63e0d7d9b39344d46efefe1ea5f1b889eb999b0a7b7d0f",
+          "bytes": 1973
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-webassembly/TEST-org.example.taximobile.operations.model.StaffAccessModelsTest.xml",
+          "sha256": "98ad0957c487253fee36a32f38e0dc5857478e230a0b0c9edee350ffb3d452f8",
+          "bytes": 1892
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-webassembly/TEST-org.example.taximobile.operations.ui.DriverRecruitmentScreenTest.xml",
+          "sha256": "3e526aa7798a814cdbb6d9a4de1a9ab93f9ffe737cddd5712acb8f7f8e9e2926",
+          "bytes": 1572
+        },
+        {
+          "path": ".tools/real-world-launch/member-register-final-reports-20261023/web-webassembly/TEST-org.example.taximobile.operations.ui.OperationsComponentsTest.xml",
+          "sha256": "41ba109908ccbe18c426ee5783b517e6cb92fe7cbd7ecc1c0a2371dbd0a76f1f",
+          "bytes": 1674
+        }
+      ]
+    },
+    {
+      "target": "backend-focused",
+      "tests": 19,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "report": {
+        "path": ".tools/real-world-launch/union-membership-tests-20261023-185829.xml",
+        "sha256": "2ab7c1547ff9e42c4cce02a829f6e7ecae67e5157fcec8f8e3e1c6b1255657bf",
+        "bytes": 3282
+      }
+    }
+  ],
+  "gradle": {
+    "exit_code": 0,
+    "tasks": [
+      ":shared:jvmTest",
+      ":webApp:jsBrowserTest",
+      ":webApp:wasmJsBrowserTest",
+      ":webApp:jsBrowserDevelopmentExecutableDistribution"
+    ],
+    "log": {
+      "path": ".tools/real-world-launch/member-register-web-tests-r2-20261023.log",
+      "sha256": "e9f2a3e9a65763a2322f1086ebca722f29a8ceebe634ae8a4aad07d5df2d588b",
+      "bytes": 18838
+    },
+    "runtime_bundle": {
+      "path": "TaxiMobile/webApp/build/dist/js/developmentExecutable/webApp.js",
+      "sha256": "84f3cf64a19dcfce7ac0fe1822a504cba4ab2539f5eaede6de3251267f652f90",
+      "bytes": 59625072
+    }
+  },
+  "infrastructure": {
+    "tests": 277,
+    "exit_code": 0,
+    "log": {
+      "path": ".tools/real-world-launch/member-register-infrastructure-20261023.log",
+      "sha256": "28951eec7b250ab2261096320ef41d15df65c9c3ab1f247da7483bc9bd1bf58e",
+      "bytes": 637
+    },
+    "final_guard_rerun": {
+      "tests": 6,
+      "exit_code": 0,
+      "log": {
+        "path": ".tools/real-world-launch/member-register-dependency-guard-final-20261023.log",
+        "sha256": "37cd37af0422c59fa511ad8aeedb2075f7c09188e55439a3186c7c34001e6522",
+        "bytes": 109
+      }
+    }
+  },
+  "browser": {
+    "url": "http://127.0.0.1:4193",
+    "api": "http://127.0.0.1:8000",
+    "screenshots": [
+      {
+        "path": "docs/launch/member-register-evidence/notepad-en.png",
+        "sha256": "5fa87efe532a8eac00da361cce6ac76b52248015d735955e8bede3daec99800d",
+        "bytes": 61011
+      },
+      {
+        "path": "docs/launch/member-register-evidence/street-press-fr.png",
+        "sha256": "da69f1730e4d63bcc2f9376f289ffb4696899fb7aad331533448880f807c3cdd",
+        "bytes": 70446
+      },
+      {
+        "path": "docs/launch/member-register-evidence/glazed-machine-ar.png",
+        "sha256": "08dddffd50a6477c4174c4cd1ec3bc8f58a780b1a6f334ff4189c85c05c90a1e",
+        "bytes": 60241
+      },
+      {
+        "path": "docs/launch/member-register-evidence/folded-streets-ar.png",
+        "sha256": "fd4e896e220755e0c2ab2bb1cca3e84553c6fa649b2aa21b2dfe8afb05109d51",
+        "bytes": 60427
+      }
+    ],
+    "database_observation": {
+      "scope": "Synthetic local browser QA only; legacy city geography is not a Fes pilot.",
+      "members": {
+        "c9b90856-1550-4453-a2ba-d355fd60b12e": {
+          "status": "PENDING",
+          "number_present": true,
+          "joined_at": null,
+          "ended_at": null
+        },
+        "e022ab44-fea7-4852-b93c-84141227e79f": {
+          "status": "ACTIVE",
+          "number_present": true,
+          "joined_at": "2026-10-22 12:00:00+00:00",
+          "ended_at": null
+        },
+        "6c3a8b43-c22c-492a-9cb9-476d978f3d9a": {
+          "status": "SUSPENDED",
+          "number_present": false,
+          "joined_at": null,
+          "ended_at": null
+        }
+      },
+      "audit_counts": {
+        "OPERATOR_MEMBERSHIP_CREATED": 1,
+        "OPERATOR_MEMBERSHIP_UPDATED": 1
+      },
+      "database_assertions_passed": true,
+      "business_commands": {
+        "enroll": 1,
+        "edit": 1
+      }
+    },
+    "coverage": [
+      "synthetic MFA sign-in",
+      "on-demand-only operator inspection",
+      "scoped register load",
+      "one active enrollment with start date",
+      "one suspension with number cleared",
+      "four selected style/language views"
+    ],
+    "not_executed": [
+      "browser reinstatement/end workflow",
+      "browser policy mutation",
+      "full page/state/language/style matrix",
+      "physical device or screen-reader acceptance"
+    ],
+    "logout": "UI returned to sign-in; server logout returned 401 after the rehearsal. Server-side refresh-session revocation is not accepted and needs an expiry/logout regression."
+  },
+  "retained_observations": [
+    {
+      "kind": "test-signature-failure",
+      "path": ".tools/real-world-launch/member-register-jvm-first-20261023",
+      "resolution": "Corrected JUnit test to return Unit; coherent 392-case JVM pass."
+    },
+    {
+      "kind": "synthetic-signin-input-observation",
+      "resolution": "Direct semantic setter did not commit Compose input; local empty-code validation and one MFA 401 retained. Fresh challenge with committed keyboard input passed; no factor recovery or reseed."
+    },
+    {
+      "kind": "on-demand-operator-snapshot-500",
+      "log": {
+        "path": ".tools/real-world-launch/member-register-local-qa/first-api.stderr.log",
+        "sha256": "30fee0d98e5c2956a86e4687e6616d5b9b38cd887356701059eb1024048568de",
+        "bytes": 37914
+      },
+      "resolution": "Scoped fixed-route reads no longer require an active assignment; writes retain the requirement. Regression and actual browser inspection pass."
+    },
+    {
+      "kind": "broad-local-route-batch-timeout",
+      "budget_seconds": 300,
+      "log": {
+        "path": ".tools/real-world-launch/union-membership-tests-20261023-185209.log",
+        "sha256": "706175462dc34c062f0faa2324c72ed263a44fdec7857dec319d4525ec53cd88",
+        "bytes": 29
+      },
+      "result": "Partial batch is not a route-suite pass; matching remaining processes checked absent; 19 focused cases subsequently passed."
+    },
+    {
+      "kind": "post-dialog-accessibility-observation",
+      "result": "Some AX snapshots contain only containers after dismissal; screenshot/coordinate actions work. Root cause and screen-reader acceptance remain open under R9."
+    }
+  ],
+  "constraints_preserved": [
+    "existing register and permission templates",
+    "no real staff grant changes",
+    "no staging/provider/billing/volume mutation",
+    "accepted-trip preservation",
+    "no original-checkout staging or commit"
+  ],
+  "deployment_accepted": false,
+  "physical_or_field_accepted": false,
+  "public_launch_accepted": false,
+  "source_checks": {
+    "results": [
+      {
+        "name": "ci-security",
+        "exit_code": 0,
+        "log": ".tools\\real-world-launch\\member-register-final-source-ci-security-20261023.log"
+      },
+      {
+        "name": "docs",
+        "exit_code": 0,
+        "log": ".tools\\real-world-launch\\member-register-final-source-docs-20261023.log"
+      },
+      {
+        "name": "mobile-api",
+        "exit_code": 0,
+        "log": ".tools\\real-world-launch\\member-register-final-source-mobile-api-20261023.log"
+      },
+      {
+        "name": "web-api",
+        "exit_code": 0,
+        "log": ".tools\\real-world-launch\\member-register-final-source-web-api-20261023.log"
+      },
+      {
+        "name": "credentials",
+        "exit_code": 0,
+        "log": ".tools\\real-world-launch\\member-register-final-source-credentials-20261023.log"
+      },
+      {
+        "name": "compile",
+        "exit_code": 0,
+        "log": ".tools\\real-world-launch\\member-register-final-source-compile-20261023.log"
+      },
+      {
+        "name": "whitespace",
+        "exit_code": 0,
+        "log": ".tools\\real-world-launch\\member-register-final-source-whitespace-20261023.log"
+      }
+    ],
+    "manifest": {
+      "path": ".tools/real-world-launch/member-register-final-source-checks-20261023.json",
+      "sha256": "e84b91a99e7f8721f8854187267fbec86b2b4d5620a6a655c3509b60b96ab227"
+    }
+  },
+  "owned_resource_shutdown": {
+    "verified_utc": "2026-10-23T19:12:28.105730+00:00",
+    "local_api_stopped": true,
+    "local_web_stopped": true,
+    "owned_postgis_stopped": true,
+    "database_files_preserved": true,
+    "staging_changed": false
+  }
+}

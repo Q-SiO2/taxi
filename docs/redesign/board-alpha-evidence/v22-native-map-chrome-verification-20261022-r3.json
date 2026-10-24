@@ -1,0 +1,211 @@
+{
+  "candidate": "candidate-native-v22.json",
+  "started_utc": "2026-10-22T13:44:26.042930+00:00",
+  "passed": true,
+  "observations": [
+    {
+      "role": "passenger",
+      "label": "normal-roomy",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,1152][720,1504]"
+      ],
+      "recenter_bounds": [
+        "Bounds(left=584, top=888, right=688, bottom=992)"
+      ],
+      "inbox_bounds": [
+        "Bounds(left=525, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v22-map-chrome-r3-passenger-normal-roomy.png",
+        "sha256": "34bca5adb554be9e0e2d77e2a4f05ad9d8fa12acfd13d36ecf6478aed54c3076"
+      }
+    },
+    {
+      "role": "passenger",
+      "label": "normal-expanded",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,352][720,1504]"
+      ],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=525, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v22-map-chrome-r3-passenger-normal-expanded.png",
+        "sha256": "42d8c8d36726f43e6414e56c3e445c28904c3865065cd7d2753e3d0f8114faec"
+      }
+    },
+    {
+      "role": "passenger",
+      "label": "normal-inbox-open",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,352][720,1504]"
+      ],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=525, top=72, right=688, bottom=168)",
+        "Bounds(left=48, top=544, right=173, bottom=606)"
+      ],
+      "screenshot": {
+        "path": "v22-map-chrome-r3-passenger-normal-inbox-open.png",
+        "sha256": "435e0a06b56c2fa897270de99f78f9dfb92dd90878d9139127f6bbb5cbd0794f"
+      }
+    },
+    {
+      "role": "passenger",
+      "label": "normal-collapse-restored",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,1152][720,1504]"
+      ],
+      "recenter_bounds": [
+        "Bounds(left=584, top=888, right=688, bottom=992)"
+      ],
+      "inbox_bounds": [
+        "Bounds(left=525, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v22-map-chrome-r3-passenger-normal-collapse-restored.png",
+        "sha256": "4cad6a85634b140a132e1e3d0412b597009b218f65af54432525f48a37b4a59a"
+      }
+    },
+    {
+      "role": "passenger",
+      "label": "large-text-promoted",
+      "font_scale": "1.6",
+      "viewport": [],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=506, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v22-map-chrome-r3-passenger-large-text-promoted.png",
+        "sha256": "4306552700c3b80423e25a640269cab38c88956558e89aac388c499d8963a78f"
+      }
+    },
+    {
+      "role": "passenger",
+      "label": "large-text-inbox-open",
+      "font_scale": "1.6",
+      "viewport": [
+        "[0,352][720,1504]"
+      ],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=506, top=72, right=688, bottom=168)",
+        "Bounds(left=48, top=546, right=203, bottom=623)"
+      ],
+      "screenshot": {
+        "path": "v22-map-chrome-r3-passenger-large-text-inbox-open.png",
+        "sha256": "08986c5409fee6d112bae083fe4dffe9d2560ba11bccd0379dbcddec4832975f"
+      }
+    },
+    {
+      "role": "driver",
+      "label": "normal-roomy",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,832][720,1552]"
+      ],
+      "recenter_bounds": [
+        "Bounds(left=584, top=568, right=688, bottom=672)"
+      ],
+      "inbox_bounds": [
+        "Bounds(left=526, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v22-map-chrome-r3-driver-normal-roomy.png",
+        "sha256": "33713f52ac0eb69186e2e3f1d638fc5003865e6816bef484c478cfef18d9d01d"
+      }
+    },
+    {
+      "role": "driver",
+      "label": "normal-expanded",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,352][720,1552]"
+      ],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=526, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v22-map-chrome-r3-driver-normal-expanded.png",
+        "sha256": "2a215cc01c4fabf2f16745d817f10a7d1a5bf305bf9e28388e8e39cf5d3adabe"
+      }
+    },
+    {
+      "role": "driver",
+      "label": "normal-inbox-open",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,352][720,1552]"
+      ],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=526, top=72, right=688, bottom=168)",
+        "Bounds(left=48, top=544, right=173, bottom=606)"
+      ],
+      "screenshot": {
+        "path": "v22-map-chrome-r3-driver-normal-inbox-open.png",
+        "sha256": "111365af3349385e50bbd1e3164919e071559ded6471d9ac97e0125ff23864c7"
+      }
+    },
+    {
+      "role": "driver",
+      "label": "normal-collapse-restored",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,1152][720,1552]"
+      ],
+      "recenter_bounds": [
+        "Bounds(left=584, top=888, right=688, bottom=992)"
+      ],
+      "inbox_bounds": [
+        "Bounds(left=526, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v22-map-chrome-r3-driver-normal-collapse-restored.png",
+        "sha256": "4d8508f0604acaf9508ec809857f1cbbba68c963f05b2dbb32dac09aa2d75793"
+      }
+    },
+    {
+      "role": "driver",
+      "label": "large-text-promoted",
+      "font_scale": "1.6",
+      "viewport": [
+        "[0,352][720,1552]"
+      ],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=507, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v22-map-chrome-r3-driver-large-text-promoted.png",
+        "sha256": "0f6666f4ec35bbe0404a16fc082e0be5853f82f9c5a2472ecfb1db95c8d4872d"
+      }
+    },
+    {
+      "role": "driver",
+      "label": "large-text-inbox-open",
+      "font_scale": "1.6",
+      "viewport": [
+        "[0,352][720,1552]"
+      ],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=507, top=72, right=688, bottom=168)",
+        "Bounds(left=48, top=546, right=203, bottom=623)"
+      ],
+      "screenshot": {
+        "path": "v22-map-chrome-r3-driver-large-text-inbox-open.png",
+        "sha256": "6e32de086ca99d6684008e98eedb316e60c73f31b198eb0d2dbd4f4f5d8e3d74"
+      }
+    }
+  ],
+  "scope": "Actual API31 passenger/API35 driver, normal/1.6 system text, expanded sheet, visible Inbox navigation and restored map actions. No business input or physical-device acceptance.",
+  "finished_utc": "2026-10-22T13:47:19.484236+00:00"
+}

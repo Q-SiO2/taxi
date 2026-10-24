@@ -78,6 +78,7 @@ kotlin {
             implementation(libs.kotlin.test)
         }
         jvmTest.dependencies {
+            implementation(libs.ktor.client.mock)
             implementation("org.jetbrains.compose.ui:ui-test:1.11.1")
             implementation(compose.desktop.currentOs)
         }
@@ -89,6 +90,10 @@ kotlin {
             implementation(libs.maplibre.compose)
         }
     }
+}
+
+compose.resources {
+    publicResClass = true
 }
 
 dependencies {

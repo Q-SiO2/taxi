@@ -24,6 +24,10 @@ from generate_source_contract_inventory import api_inventory, InventoryError
 WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
 PROFILES = {"launch-api": False, "local-compatibility-api": True}
 MANIFEST_NAME = "openapi-manifest.json"
+# Both complete schemas are generated in a fresh interpreter. A measured Windows
+# run needed 114 seconds under concurrent PostGIS tests; keep a finite budget
+# without mistaking interpreter/schema startup for a contract failure.
+SCHEMA_WORKER_TIMEOUT_SECONDS = 180
 
 
 class OpenApiEvidenceError(RuntimeError):
@@ -94,7 +98,8 @@ def load_documents(root: Path = WORKSPACE_ROOT) -> dict[str, dict]:
     try:
         result = subprocess.run([sys.executable, str(Path(__file__).resolve()),
                                  "--schema-worker", str(root.resolve())],
-                                env=environment, capture_output=True, timeout=45, check=False)
+                                env=environment, capture_output=True,
+                                timeout=SCHEMA_WORKER_TIMEOUT_SECONDS, check=False)
         if result.returncode != 0:
             raise OpenApiEvidenceError("Isolated schema generation failed.")
         documents = json.loads(result.stdout)

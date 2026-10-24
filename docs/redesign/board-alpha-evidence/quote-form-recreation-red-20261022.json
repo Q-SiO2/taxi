@@ -1,0 +1,53 @@
+{
+  "recorded_utc": "2026-10-22T11:08:35.082356+00:00",
+  "kind": "red",
+  "totals": {
+    "tests": 21,
+    "failures": 5,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "class": "org.example.taximobile.feature.app.PassengerQuoteRecreationUiTest",
+      "tests": 2,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "de7cfa8677f86e98562cae72eac2442567216f3952a70d45adb75c244f3b0716"
+    },
+    {
+      "class": "org.example.taximobile.feature.app.QuoteSessionRecoveryTest",
+      "tests": 19,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "a89916fdebfa92675a09c0275ac78ad08bf3f6a1f4568c78656436b642b633bc"
+    }
+  ],
+  "sources": [
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/AppUiState.kt",
+      "sha256": "b7b198fe34b9d5be41672a6bd5f8ac15a9c7528d2b90459640968c31604d0739"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/MobileAppCoordinator.kt",
+      "sha256": "81e2f7061c5d380493c78631cc355cf8af068236bdbc2545a62760c13a2c4f90"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+      "sha256": "c7dad0af530dd019daeb7f4475566c7f795d05fab63309ff74b78a45fdf0aabf"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/app/QuoteSessionRecoveryTest.kt",
+      "sha256": "d5d05f89595b35baeadf13ed776850dc847d3bd2679d775719736c3d6291b164"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/PassengerQuoteRecreationUiTest.kt",
+      "sha256": "da28e0fcc8d41a659cabe38cfd9d999b1d1875ecb57ed43c296ffe307e153a50"
+    }
+  ],
+  "archive": ".tools/alpha-delivery/quote-form-recreation-red-20261022",
+  "log_sha256": "d58986379cbf131ce166442d86dba2b2d9b7a76c1cf24817faa84ee1396d97df",
+  "scope": "Coordinator quote input projection and actual fresh-composition/request/edit guards. Red includes only default-null projection field scaffolding, no form hydration or coordinator population. No backend/pricing/credential/schema or command-replay change."
+}

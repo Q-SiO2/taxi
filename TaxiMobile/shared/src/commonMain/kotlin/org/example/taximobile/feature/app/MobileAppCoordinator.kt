@@ -78,7 +78,30 @@ class MobileAppCoordinator(
     // foreground app process. This is navigation presentation state, not a
     // location history or an alternative source of dispatch truth.
     private var latestAcceptedDriverLocation: Coordinates? = null
+    // Navigation preference only. Every page is read afresh from the server;
+    // this never retains a payment, amount or settlement authority.
+    private var selectedPendingCashPage: Int = 1
     private var selectedFixedRouteCityId: String? = null
+    // Session-owned navigation only. Every refresh reauthorizes and rereads
+    // the selected ride and receipt/feedback; no financial projection is cached.
+    private data class HistorySelection(
+        val rideId: String,
+        val owner: Long,
+        val primaryRideId: String?,
+    )
+    private var historySelection: HistorySelection? = null
+    private sealed interface RideQuoteInput {
+        data class Point(val pickup: Coordinates, val destination: Coordinates) : RideQuoteInput
+        data class Fixed(val directionId: String) : RideQuoteInput
+    }
+    private data class RideQuoteSelection(
+        val input: RideQuoteInput,
+        val owner: Long,
+        val primaryRideId: String?,
+    )
+    // Inputs only: catch-up fetches current server terms, never caches a price
+    // or replays the consequential create-ride command.
+    private var rideQuoteSelection: RideQuoteSelection? = null
     private var placeDiscoveryRevision: Long = 0
     private val pushRegistrationMutex = Mutex()
     private var registeredPushRegistration: Pair<String, DevicePlatform>? = null
@@ -109,7 +132,10 @@ class MobileAppCoordinator(
     /** Local credential removal succeeds even when the backend cannot be reached. */
     suspend fun logout(): AppUiState {
         authentication.beginSessionEnd()
+        historySelection = null
+        rideQuoteSelection = null
         latestAcceptedDriverLocation = null
+        selectedPendingCashPage = 1
         revokeRegisteredPushRegistration()
         return stateFor(authentication.logout())
     }
@@ -118,6 +144,9 @@ class MobileAppCoordinator(
         // A coordinator may outlive one signed-in account. Never carry a
         // previous driver's coordinate into a new authentication attempt.
         latestAcceptedDriverLocation = null
+        selectedPendingCashPage = 1
+        historySelection = null
+        rideQuoteSelection = null
         return authenticatedProductState(authentication.login(identifier, password, deviceLabel))
     }
 
@@ -511,16 +540,51 @@ class MobileAppCoordinator(
             signedOut(Res.string.message_session_expired)
         } catch (_: AuthenticationNetworkException) {
             offline(Res.string.message_network_unavailable)
-        } catch (_: ApiRequestException) {
-            offline(Res.string.message_availability_failed)
+        } catch (error: ApiRequestException) {
+            offline(if (error.reason == org.example.taximobile.data.network.ApiFailureReason.OPERATOR_MEMBERSHIP_REQUIRED)
+                Res.string.message_membership_required else Res.string.message_availability_failed)
         }
     }
 
-    suspend fun updateDriverLocation(location: Coordinates): AppUiState {
+    suspend fun updateDriverLocation(
+        observation: org.example.taximobile.domain.drivers.DriverLocationObservation,
+        currentDriverState: (() -> AppUiState.DriverReady?)? = null,
+    ): AppUiState {
         val gateway = driver ?: return offline(Res.string.message_driver_services_unavailable)
+        if (!observation.isUsableAt(Clock.System.now().toEpochMilliseconds())) {
+            return offline(Res.string.message_location_update_failed)
+        }
+        val owner = liveSessionLifetime.value
         return try {
-            gateway.updateLocation(location, Clock.System.now().toString())
-            latestAcceptedDriverLocation = location
+            gateway.updateLocation(observation.coordinates, observation.observedAtIso, observation.accuracyMeters)
+            // A location acknowledgement changes only this fact. Do not reload
+            // every dashboard resource while holding the native command gate.
+            // Read the latest projection after IO, so concurrent hints are kept.
+            if (owner != liveSessionLifetime.value) return signedOut(Res.string.message_session_expired)
+            latestAcceptedDriverLocation = observation.coordinates
+            currentDriverState?.invoke()?.let { rendered ->
+                val destination = when (rendered.activeRide) {
+                    RideStatus.ACCEPTED, RideStatus.DRIVER_EN_ROUTE -> rendered.pickup
+                    RideStatus.DRIVER_ARRIVED, RideStatus.IN_PROGRESS -> rendered.destination
+                    else -> null
+                }
+                val route = try {
+                    destination?.let { routing?.route(observation.coordinates, it) }
+                } catch (_: AuthenticationNetworkException) {
+                    null
+                } catch (_: ApiRequestException) {
+                    null
+                }
+                if (owner != liveSessionLifetime.value) return signedOut(Res.string.message_session_expired)
+                currentDriverState.invoke()?.let { latest ->
+                    val sameTripPhase = latest.activeRideId == rendered.activeRideId && latest.activeRide == rendered.activeRide
+                    return latest.copy(
+                        currentLocation = observation.coordinates,
+                        routePlan = if (sameTripPhase) route else latest.routePlan,
+                        routeUnavailable = if (sameTripPhase) routing != null && destination != null && route == null else latest.routeUnavailable,
+                    )
+                }
+            }
             refreshDriverState()
         } catch (_: AuthenticationRejectedException) {
             signedOut(Res.string.message_session_expired)
@@ -581,8 +645,9 @@ class MobileAppCoordinator(
             signedOut(Res.string.message_session_expired)
         } catch (_: AuthenticationNetworkException) {
             offline(Res.string.message_network_unavailable)
-        } catch (_: ApiRequestException) {
-            offline(Res.string.message_offer_update_failed)
+        } catch (error: ApiRequestException) {
+            offline(if (error.reason == org.example.taximobile.data.network.ApiFailureReason.OPERATOR_MEMBERSHIP_REQUIRED)
+                Res.string.message_membership_required else Res.string.message_offer_update_failed)
         }
     }
 
@@ -621,12 +686,9 @@ class MobileAppCoordinator(
     suspend fun completeDriverRide(rideId: String, location: Coordinates): AppUiState {
         val gateway = driverRides ?: return offline(Res.string.message_driver_ride_services_unavailable)
         return try {
-            val completed = gateway.complete(rideId, location)
-            (refreshDriverState() as? AppUiState.DriverReady)?.copy(
-                pendingCashRideId = rideId.takeIf {
-                    completed.paymentMethod == RidePaymentMethod.CASH
-                },
-            )
+            gateway.complete(rideId, location)
+            selectedPendingCashPage = 1
+            (refreshDriverState() as? AppUiState.DriverReady)
                 ?: offline(Res.string.message_driver_refresh_after_completion_failed)
         } catch (_: AuthenticationRejectedException) {
             signedOut(Res.string.message_session_expired)
@@ -641,6 +703,7 @@ class MobileAppCoordinator(
         val gateway = driverRides ?: return offline(Res.string.message_driver_ride_services_unavailable)
         return try {
             gateway.settleCash(rideId)
+            selectedPendingCashPage = 1
             refreshDriverState()
         } catch (_: AuthenticationRejectedException) {
             signedOut(Res.string.message_session_expired)
@@ -653,24 +716,33 @@ class MobileAppCoordinator(
 
     suspend fun estimateRide(pickup: Coordinates, destination: Coordinates): AppUiState {
         val gateway = rides ?: return offline(Res.string.message_ride_services_unavailable)
+        rideQuoteSelection = null
         return try {
-            val estimate = gateway.estimateRide(pickup, destination)
-            val routePlan = try {
-                routing?.route(pickup, destination)
-            } catch (_: AuthenticationNetworkException) {
-                null
-            } catch (_: ApiRequestException) {
-                null
-            }
-            val refreshed = authenticatedProductState(authentication.restore())
-            if (refreshed is AppUiState.PassengerReady) {
-                refreshed.copy(
-                    fareEstimate = estimate,
-                    routePlan = routePlan,
-                    routeUnavailable = routing != null && routePlan == null,
-                )
-            } else {
-                refreshed
+            authentication.readWithSessionRecovery { account ->
+                val owner = authentication.localSessionOwnerEpoch
+                val estimate = gateway.estimateRide(pickup, destination)
+                val routePlan = try {
+                    routing?.route(pickup, destination)
+                } catch (_: AuthenticationNetworkException) {
+                    null
+                } catch (_: ApiRequestException) {
+                    null
+                }
+                val refreshed = quoteProductState(account)
+                if (!navigationOwnerIsCurrent(owner)) return@readWithSessionRecovery signedOut(Res.string.message_session_expired)
+                if (refreshed is AppUiState.PassengerReady && refreshed.activeRide == null) {
+                    rideQuoteSelection = RideQuoteSelection(
+                        RideQuoteInput.Point(pickup, destination), owner, refreshed.rideHistory.firstOrNull()?.id,
+                    )
+                    refreshed.copy(
+                        fareEstimate = estimate,
+                        reviewedPointQuoteInput = pickup to destination,
+                        routePlan = routePlan,
+                        routeUnavailable = routing != null && routePlan == null,
+                    )
+                } else {
+                    refreshed
+                }
             }
         } catch (_: AuthenticationRejectedException) {
             signedOut(Res.string.message_session_expired)
@@ -755,15 +827,23 @@ class MobileAppCoordinator(
 
     suspend fun estimateFixedRoute(directionVersionId: String): AppUiState {
         val gateway = rides ?: return offline(Res.string.message_ride_services_unavailable)
+        rideQuoteSelection = null
         return try {
-            val estimate = gateway.estimateFixedRoute(directionVersionId)
-            val refreshed = authenticatedProductState(authentication.restore())
-            if (refreshed is AppUiState.PassengerReady) {
-                refreshed.copy(
-                    fareEstimate = estimate,
-                    selectedFixedRouteDirectionId = directionVersionId,
-                )
-            } else refreshed
+            authentication.readWithSessionRecovery { account ->
+                val owner = authentication.localSessionOwnerEpoch
+                val estimate = gateway.estimateFixedRoute(directionVersionId)
+                val refreshed = quoteProductState(account)
+                if (!navigationOwnerIsCurrent(owner)) return@readWithSessionRecovery signedOut(Res.string.message_session_expired)
+                if (refreshed is AppUiState.PassengerReady && refreshed.activeRide == null) {
+                    rideQuoteSelection = RideQuoteSelection(
+                        RideQuoteInput.Fixed(directionVersionId), owner, refreshed.rideHistory.firstOrNull()?.id,
+                    )
+                    refreshed.copy(
+                        fareEstimate = estimate,
+                        selectedFixedRouteDirectionId = directionVersionId,
+                    )
+                } else refreshed
+            }
         } catch (_: AuthenticationRejectedException) {
             signedOut(Res.string.message_session_expired)
         } catch (_: AuthenticationNetworkException) {
@@ -831,11 +911,13 @@ class MobileAppCoordinator(
     ): AppUiState {
         val gateway = scheduling ?: return offline(Res.string.message_ride_services_unavailable)
         return try {
-            val result = estimate(gateway)
-            val refreshed = authenticatedProductState(authentication.restore())
-            if (refreshed is AppUiState.PassengerReady) {
-                refreshed.copy(scheduledBookingEstimate = result)
-            } else refreshed
+            authentication.readWithSessionRecovery { account ->
+                val result = estimate(gateway)
+                val refreshed = quoteProductState(account)
+                if (refreshed is AppUiState.PassengerReady) {
+                    refreshed.copy(scheduledBookingEstimate = result)
+                } else refreshed
+            }
         } catch (_: AuthenticationRejectedException) {
             signedOut(Res.string.message_session_expired)
         } catch (_: AuthenticationNetworkException) {
@@ -843,6 +925,16 @@ class MobileAppCoordinator(
         } catch (_: ApiRequestException) {
             offline(Res.string.message_ride_estimate_failed)
         }
+    }
+
+    private suspend fun quoteProductState(account: CurrentAccount): AppUiState {
+        // Quote reads already hold the non-reentrant credential mutex. Their
+        // base projection must not enter navigation's owned quote read again.
+        val state = baseAuthenticatedProductState(AuthenticationState.Authenticated(account))
+        if (state is AppUiState.SignedOut && state.message?.resource == Res.string.message_session_expired) {
+            throw AuthenticationRejectedException()
+        }
+        return state
     }
 
     suspend fun cancelScheduledBooking(bookingId: String): AppUiState = schedulingMutation {
@@ -868,8 +960,9 @@ class MobileAppCoordinator(
             signedOut(Res.string.message_session_expired)
         } catch (_: AuthenticationNetworkException) {
             offline(Res.string.message_network_unavailable)
-        } catch (_: ApiRequestException) {
-            offline(Res.string.message_ride_request_failed)
+        } catch (error: ApiRequestException) {
+            offline(if (error.reason == org.example.taximobile.data.network.ApiFailureReason.OPERATOR_MEMBERSHIP_REQUIRED)
+                Res.string.message_membership_required else Res.string.message_ride_request_failed)
         }
     }
 
@@ -920,13 +1013,18 @@ class MobileAppCoordinator(
 
     suspend fun loadPassengerRideHistoryDetail(rideId: String): AppUiState {
         val gateway = rides ?: return offline(Res.string.message_ride_services_unavailable)
+        historySelection = null
         return try {
             // Reload the collection and account state first, then authorize the
             // selected resource independently through its detail endpoint.
-            val refreshed = authenticatedProductState(authentication.restore())
+            val refreshed = baseAuthenticatedProductState(authentication.restore())
             if (refreshed !is AppUiState.PassengerReady) return refreshed
+            val owner = authentication.localSessionOwnerEpoch
             val detail = gateway.currentRide(rideId)
+            if (!navigationOwnerIsCurrent(owner)) return signedOut(Res.string.message_session_expired)
             val receipt = if (detail.status == RideStatus.COMPLETED) gateway.receipt(rideId) else null
+            if (!navigationOwnerIsCurrent(owner)) return signedOut(Res.string.message_session_expired)
+            historySelection = HistorySelection(rideId, owner, refreshed.rideHistory.firstOrNull()?.id)
             refreshed.copy(selectedHistoryRide = detail, selectedHistoryReceipt = receipt)
         } catch (_: AuthenticationRejectedException) {
             signedOut(Res.string.message_session_expired)
@@ -939,17 +1037,22 @@ class MobileAppCoordinator(
 
     suspend fun loadDriverRideHistoryDetail(rideId: String): AppUiState {
         val gateway = rides ?: return offline(Res.string.message_ride_services_unavailable)
+        historySelection = null
         return try {
             // Refresh owner-scoped driver collections first. The detail and
             // feedback endpoints still independently authorize this ride.
-            val refreshed = authenticatedProductState(authentication.restore())
+            val refreshed = baseAuthenticatedProductState(authentication.restore())
             if (refreshed !is AppUiState.DriverReady) return refreshed
+            val owner = authentication.localSessionOwnerEpoch
             val detail = gateway.currentRide(rideId)
+            if (!navigationOwnerIsCurrent(owner)) return signedOut(Res.string.message_session_expired)
             val rating = if (detail.status == RideStatus.COMPLETED) {
                 gateway.ratings(rideId).firstOrNull()
             } else {
                 null
             }
+            if (!navigationOwnerIsCurrent(owner)) return signedOut(Res.string.message_session_expired)
+            historySelection = HistorySelection(rideId, owner, refreshed.rideHistory.firstOrNull()?.id)
             refreshed.copy(selectedHistoryRide = detail, selectedHistoryRating = rating)
         } catch (_: AuthenticationRejectedException) {
             signedOut(Res.string.message_session_expired)
@@ -1083,7 +1186,110 @@ class MobileAppCoordinator(
         liveSubscription?.run(onRefresh)
     }
 
+    private fun navigationOwnerIsCurrent(owner: Long): Boolean {
+        val lifetime = liveSessionLifetime.value
+        return owner == authentication.localSessionOwnerEpoch && lifetime.active && !lifetime.ending
+    }
+
+    private suspend fun refreshRideQuote(state: AppUiState): AppUiState {
+        val selection = rideQuoteSelection ?: return state
+        if (!navigationOwnerIsCurrent(selection.owner)) {
+            if (rideQuoteSelection == selection) rideQuoteSelection = null
+            return state
+        }
+        if (state !is AppUiState.PassengerReady) return state
+        if (state.activeRide != null || state.rideHistory.firstOrNull()?.id != selection.primaryRideId) {
+            if (rideQuoteSelection == selection) rideQuoteSelection = null
+            return state
+        }
+        val gateway = rides ?: return state
+        return try {
+            authentication.readWithSessionRecovery {
+                if (!navigationOwnerIsCurrent(selection.owner)) throw AuthenticationRejectedException()
+                val estimate = when (val input = selection.input) {
+                    is RideQuoteInput.Point -> gateway.estimateRide(input.pickup, input.destination)
+                    is RideQuoteInput.Fixed -> gateway.estimateFixedRoute(input.directionId)
+                }
+                val route = try {
+                    (selection.input as? RideQuoteInput.Point)?.let { routing?.route(it.pickup, it.destination) }
+                } catch (_: AuthenticationNetworkException) {
+                    null
+                } catch (_: ApiRequestException) {
+                    null
+                }
+                if (!navigationOwnerIsCurrent(selection.owner)) throw AuthenticationRejectedException()
+                if (rideQuoteSelection != selection) return@readWithSessionRecovery state
+                state.copy(
+                    fareEstimate = estimate,
+                    reviewedPointQuoteInput = (selection.input as? RideQuoteInput.Point)?.let {
+                        it.pickup to it.destination
+                    },
+                    selectedFixedRouteDirectionId = (selection.input as? RideQuoteInput.Fixed)?.directionId,
+                    routePlan = route,
+                    routeUnavailable = selection.input is RideQuoteInput.Point && routing != null && route == null,
+                )
+            }
+        } catch (_: AuthenticationRejectedException) {
+            if (rideQuoteSelection == selection) rideQuoteSelection = null
+            signedOut(Res.string.message_session_expired)
+        } catch (_: AuthenticationNetworkException) {
+            offline(Res.string.message_network_unavailable)
+        } catch (error: ApiRequestException) {
+            if (error.statusCode in setOf(400, 403, 404, 409, 422) && rideQuoteSelection == selection) rideQuoteSelection = null
+            offline(Res.string.message_ride_estimate_failed)
+        }
+    }
+
     private suspend fun authenticatedProductState(state: AuthenticationState): AppUiState {
+        val refreshed = refreshRideQuote(baseAuthenticatedProductState(state))
+        val selection = historySelection ?: return refreshed
+        if (!navigationOwnerIsCurrent(selection.owner)) {
+            if (historySelection == selection) historySelection = null
+            return refreshed
+        }
+        val primaryRideId = when (refreshed) {
+            is AppUiState.PassengerReady -> refreshed.rideHistory.firstOrNull()?.id
+            is AppUiState.DriverReady -> refreshed.rideHistory.firstOrNull()?.id
+            else -> return refreshed
+        }
+        // A new primary journey returns the account surface to its current
+        // receipt rather than leaving a previous trip's cash result selected.
+        if (primaryRideId != selection.primaryRideId) {
+            if (historySelection == selection) historySelection = null
+            return refreshed
+        }
+        val gateway = rides ?: return refreshed
+        return try {
+            authentication.readWithSessionRecovery {
+                if (!navigationOwnerIsCurrent(selection.owner)) throw AuthenticationRejectedException()
+                val detail = gateway.currentRide(selection.rideId)
+                if (!navigationOwnerIsCurrent(selection.owner)) throw AuthenticationRejectedException()
+                val result = when (refreshed) {
+                    is AppUiState.PassengerReady -> refreshed.copy(
+                        selectedHistoryRide = detail,
+                        selectedHistoryReceipt = if (detail.status == RideStatus.COMPLETED) gateway.receipt(selection.rideId) else null,
+                    )
+                    is AppUiState.DriverReady -> refreshed.copy(
+                        selectedHistoryRide = detail,
+                        selectedHistoryRating = if (detail.status == RideStatus.COMPLETED) gateway.ratings(selection.rideId).firstOrNull() else null,
+                    )
+                    else -> refreshed
+                }
+                if (!navigationOwnerIsCurrent(selection.owner)) throw AuthenticationRejectedException()
+                if (historySelection == selection) result else refreshed
+            }
+        } catch (_: AuthenticationRejectedException) {
+            if (historySelection == selection) historySelection = null
+            signedOut(Res.string.message_session_expired)
+        } catch (_: AuthenticationNetworkException) {
+            offline(Res.string.message_network_unavailable)
+        } catch (error: ApiRequestException) {
+            if (error.statusCode in setOf(403, 404) && historySelection == selection) historySelection = null
+            offline(Res.string.message_ride_history_detail_failed)
+        }
+    }
+
+    private suspend fun baseAuthenticatedProductState(state: AuthenticationState): AppUiState {
         val rendered = stateFor(state)
         if (
             appRole == AppRole.DRIVER &&
@@ -1235,7 +1441,21 @@ class MobileAppCoordinator(
         }
     }
 
-    private suspend fun driverReadyWithOffers(availability: DriverAvailability): AppUiState {
+    suspend fun loadDriverPendingCashPayments(page: Int): AppUiState {
+        require(page >= 1)
+        val gateway = driver ?: return offline(Res.string.message_driver_services_unavailable)
+        return try {
+            driverReadyWithOffers(gateway.currentAvailability(), pendingCashPage = page)
+        } catch (_: AuthenticationRejectedException) {
+            signedOut(Res.string.message_session_expired)
+        } catch (_: AuthenticationNetworkException) {
+            offline(Res.string.message_network_unavailable)
+        } catch (_: ApiRequestException) {
+            offline(Res.string.message_pending_cash_unavailable)
+        }
+    }
+
+    private suspend fun driverReadyWithOffers(availability: DriverAvailability, pendingCashPage: Int = selectedPendingCashPage): AppUiState {
         val profile = driver?.profile()
         val offers = driverOffers?.currentOffers() ?: emptyList()
         val scheduledOffers = scheduling?.driverOffers().orEmpty()
@@ -1266,6 +1486,25 @@ class MobileAppCoordinator(
             null
         }
         val earnings = driverRides?.earnings()
+        var pendingCashLoadFailed = driverRides == null
+        val pendingCashPayments = try {
+            var queue = driverRides?.pendingCashPayments(pendingCashPage)
+            if (queue != null && queue.page > 1 && queue.items.isEmpty()) {
+                // Another device may settle the last item on this page. Read
+                // the new final page instead of leaving the user stranded.
+                val lastPage = ((queue.total.toLong() + queue.limit - 1) / queue.limit)
+                    .coerceAtLeast(1).toInt()
+                if (lastPage < queue.page) queue = driverRides?.pendingCashPayments(lastPage)
+            }
+            queue?.let { selectedPendingCashPage = it.page }
+            queue
+        } catch (_: AuthenticationNetworkException) {
+            pendingCashLoadFailed = true
+            null
+        } catch (_: ApiRequestException) {
+            pendingCashLoadFailed = true
+            null
+        }
         val notificationHistory = notifications?.list() ?: emptyList()
         val supportHistory = support?.tickets() ?: emptyList()
         val safetyHistory = safety?.reports() ?: emptyList()
@@ -1300,6 +1539,8 @@ class MobileAppCoordinator(
             scheduledCommitments = scheduledCommitments,
             scheduledOfferPreferences = scheduledOfferPreferences,
             earnings = earnings,
+            pendingCashPayments = pendingCashPayments,
+            pendingCashLoadFailed = pendingCashLoadFailed,
             rideHistory = rideHistory,
             notifications = notificationHistory,
             supportTickets = supportHistory,
@@ -1349,7 +1590,7 @@ private fun offline(resource: StringResource): AppUiState.Offline =
     AppUiState.Offline(message(resource))
 
 private fun signedOut(resource: StringResource): AppUiState.SignedOut =
-    AppUiState.SignedOut(message(resource))
+    AppUiState.SignedOut(message(resource), requiresSessionRecheck = true)
 
 private fun AppUiState.withAccountSecurity(security: AccountSecurityUiState): AppUiState =
     when (this) {

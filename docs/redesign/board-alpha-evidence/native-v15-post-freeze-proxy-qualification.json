@@ -1,0 +1,13 @@
+{
+  "candidate": "candidate-native-v15.json",
+  "broad_archived_inputs": 412,
+  "current_checkout_drift": [
+    {
+      "path": "infra/deploy/railway-web/nginx.conf",
+      "frozen_sha256": "1b9df308847c387bdbefe888ff1a24b2d5a3950871614c4ba4d08be3b016c1ee",
+      "current_sha256": "2ec82c8833c30e1f7acddc180295e1de6104252ca47c9a1f7854b7b5039b0196"
+    }
+  ],
+  "native_compiled_application_drift": [],
+  "qualification": "Native v15 snapshot and APKs preserved; only current web container config changed after native verification. No native rebuild or new native acceptance claim."
+}

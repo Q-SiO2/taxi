@@ -1,0 +1,259 @@
+{
+  "artifacts": [
+    {
+      "bytes": 2623,
+      "path": "r2-focused-tests-20261023.xml",
+      "sha256": "6c695a60e8881f1148c51b659dbee7aa7e4b44f0033f2e378d4a3cc5471a6f26"
+    },
+    {
+      "bytes": 2154,
+      "path": "r2-local-checks-20261023.json",
+      "sha256": "faf5513962dff3d931664be1535ff74610e41a8df52628b376ce45395372c07b"
+    }
+  ],
+  "ci": {
+    "provider": "local"
+  },
+  "deployment_acceptance_note": "This record proves source/artifact identity only. It cannot prove city, legal, provider, operational, security, device, payment, or real-user acceptance.",
+  "deployment_accepted": false,
+  "evidence_level": "SOURCE_CANDIDATE",
+  "generated_at": "2026-10-23T16:09:31.704744+00:00",
+  "label": "real-world-r2-local-20261023",
+  "schema_version": 1,
+  "source": {
+    "clean": true,
+    "commit": "45c491a4615d466c74c4bb0ca46fd6d55488ad7f",
+    "commit_time": "2026-10-23T16:08:50Z",
+    "migration_head": "20260908_0052",
+    "tracked_change_count": 0,
+    "tree": "6f2c2dbf6e096af613bd3d84f4e7bd01f827b137",
+    "untracked_file_count": 0
+  },
+  "source_inputs": [
+    {
+      "bytes": 45079,
+      "path": ".github/workflows/ci.yml",
+      "sha256": "e73923cd0cf3ca22942e77bb86b2684430644e5f73b01a7c25169cea49c0d748"
+    },
+    {
+      "bytes": 94620,
+      "path": "backend/requirements.lock",
+      "sha256": "9145bb6b51101f686f6b8f9e2a8e289ce7fd14836fbbda6d3f8d152c51971fb6"
+    },
+    {
+      "bytes": 109821,
+      "path": "backend/requirements-dev.lock",
+      "sha256": "f966121969b019d636e710a9d0a0939afb3fb14f6cf5704f53a0052fd9749fa0"
+    },
+    {
+      "bytes": 663,
+      "path": "backend/requirements-linux.lock",
+      "sha256": "80fc171715d925f47ec94c7b58b37c2c589a890b78ca681480178b2690ac4baa"
+    },
+    {
+      "bytes": 1484,
+      "path": "backend/Dockerfile",
+      "sha256": "185a8597242c2ecc2b4c67f377682b4f446071c10c5f48be341b44cc9183c989"
+    },
+    {
+      "bytes": 4867,
+      "path": "TaxiMobile/gradle/libs.versions.toml",
+      "sha256": "9f979dc17fb6ff72b89d93377a0fae4ec40857a74b2022f7f7af0c1e2dc93b43"
+    },
+    {
+      "bytes": 338,
+      "path": "TaxiMobile/gradle/wrapper/gradle-wrapper.properties",
+      "sha256": "478f02397cd4dc16c7b668555734e37e1dbc57ee5766a6cce4313571f59e918e"
+    },
+    {
+      "bytes": 1323,
+      "path": "TaxiMobile/settings.gradle.kts",
+      "sha256": "55c5f1498027cb2f72990c355cf351dfc1fad3528d3aeb0854c32b620913eb31"
+    },
+    {
+      "bytes": 4145,
+      "path": "TaxiMobile/build.gradle.kts",
+      "sha256": "8912a31d4a3fddfa0f0aba1b6b8b4f47d882282ec9c3c84911b1e09c2a037aa3"
+    },
+    {
+      "bytes": 15627,
+      "path": "TaxiMobile/androidApp/build.gradle.kts",
+      "sha256": "2f7fdaeb95bbf06a831aadfd4cf0ea1c38bc62dd4646360853dc96f7ccf9758e"
+    },
+    {
+      "bytes": 7389,
+      "path": "TaxiMobile/scripts/generate_ios_verification_manifest.py",
+      "sha256": "bad6f34337d96658171483a574977938a4bef7818a09a0f1fff718733d2ec2d4"
+    },
+    {
+      "bytes": 18102,
+      "path": "TaxiMobile/scripts/generate_android_verification_manifest.py",
+      "sha256": "af33aaae0c7c918d39f20d22cac82dc33ac2fc470609ab732eea2d0e1ef8df06"
+    },
+    {
+      "bytes": 1946,
+      "path": "TaxiMobile/scripts/validate_android_release_log.py",
+      "sha256": "6f29ea2e847fc2cfa9a2c7d040f272cb7ad819a18ece50170016e7ccc51fe7fa"
+    },
+    {
+      "bytes": 4732,
+      "path": "TaxiMobile/scripts/verify_android_apk_signatures.py",
+      "sha256": "4565a075a3c7ec3b8d394df46ae8d94fbd112e6dc957583799e406cd120ffb3b"
+    },
+    {
+      "bytes": 29700,
+      "path": "TaxiMobile/scripts/android_registration_smoke.py",
+      "sha256": "6d51ece2e2f56abf1ee267b0d4129c5297f8ec00647fc6dd247f8fefce67ad11"
+    },
+    {
+      "bytes": 6826,
+      "path": "TaxiMobile/scripts/run-android-device.ps1",
+      "sha256": "a70a98544b08889155e6b2f0d8c859cdd6fadecf409ac30a154215c0ccda404a"
+    },
+    {
+      "bytes": 9185,
+      "path": "TaxiMobile/scripts/test-web-compatibility-loader.mjs",
+      "sha256": "af1b90348a74ecde221d31ab1e257f0082fc86d32c34b47943c0744864ad4878"
+    },
+    {
+      "bytes": 2202,
+      "path": "TaxiMobile/scripts/verify-android-release-artifacts.ps1",
+      "sha256": "9b015ad76cec1ad67bb2a696b9d1c03c3683a9e86aff7c8bc89523772fe2c1ce"
+    },
+    {
+      "bytes": 4748,
+      "path": "TaxiMobile/webApp/src/webMain/resources/compatibility.js",
+      "sha256": "02950c7dec931fba6e213ef6a0c6cd1de899d8d1a6646a10b4ebb5d23ef9263f"
+    },
+    {
+      "bytes": 12860,
+      "path": "infra/deploy/compose.production.yaml",
+      "sha256": "24f9c7cf05d76a70858a1b46bfad100f73b09fffd0835fa0bdca16bd28816d0f"
+    },
+    {
+      "bytes": 8250,
+      "path": "infra/scripts/generate_release_evidence.py",
+      "sha256": "b7fc6a7e9e5fed140efe0f5ee2e602116525e1778e3a426a77ebef6e84b53aa0"
+    },
+    {
+      "bytes": 11464,
+      "path": "infra/scripts/generate_source_contract_inventory.py",
+      "sha256": "0f27484c1dab96aeb45874a488067ffa7f0c31aa1676a2b86776a54c28c16a29"
+    },
+    {
+      "bytes": 8843,
+      "path": "infra/scripts/generate_openapi_evidence.py",
+      "sha256": "1cce597bb689a21fa2867dde9b803b8c55b6ef23a54b3c2e36ddf26cdd94a94b"
+    },
+    {
+      "bytes": 11239,
+      "path": "infra/scripts/registry_image_evidence.py",
+      "sha256": "c069e4684546ab37247c9e9ce4b5e4603463705000df620ba241b4896e264e0b"
+    },
+    {
+      "bytes": 8824,
+      "path": "infra/scripts/collect_t3_database_metadata.py",
+      "sha256": "3dcc0594f261c7730ae0b2804a0e253c54644bfed32890e7ff1627a4e3e6336a"
+    },
+    {
+      "bytes": 5582,
+      "path": "infra/scripts/emit_ci_failure_annotation.py",
+      "sha256": "d730aa2c92169c75ccc87d9de3e1aefba2f93ebe7911796e766a75e09e28f064"
+    },
+    {
+      "bytes": 16853,
+      "path": "infra/scripts/generate_t3_system_report.py",
+      "sha256": "5fffb66760266eb0b51f0e4f1b802776b1ca5defc57d46785a29d6e804dfd69e"
+    },
+    {
+      "bytes": 10548,
+      "path": "infra/scripts/package_web_release.py",
+      "sha256": "c8f4eea15a78cc8474499b3181690f260291a7aa24159084033edf296feae2a2"
+    },
+    {
+      "bytes": 31292,
+      "path": "infra/scripts/run_t4_browser_smoke.py",
+      "sha256": "7264debea83aa25bd6a6ee93eae2ce38380a235ca362e4c8e67d179654fff183"
+    },
+    {
+      "bytes": 14529,
+      "path": "infra/scripts/run_simulated_persona_suite.py",
+      "sha256": "ebc7bad60022c6e57d9d033d4c0979f8484f3bf5adfed51a99d3f5a54693e7fa"
+    },
+    {
+      "bytes": 18770,
+      "path": "infra/scripts/run_t3_backup_restore_rehearsal.py",
+      "sha256": "064c2d0afeb471b26d11a17482c08af1841383e5dc7d6b34cd6941dfad876378"
+    },
+    {
+      "bytes": 2773,
+      "path": "infra/scripts/t2_no_network.py",
+      "sha256": "51fadfb8f575681666433217000cf3c223ea5a2978679e83837e5eb0ec7f1f62"
+    },
+    {
+      "bytes": 11124,
+      "path": "infra/scripts/test-portable-backend.ps1",
+      "sha256": "4b5253ab1302010b6afbe2f543cd5eb6e562ff57abd51c46168cd4ee3bef68df"
+    },
+    {
+      "bytes": 9365,
+      "path": "infra/scripts/validate_docs.py",
+      "sha256": "04cce2bbb7c9392dea89c7af2255b44531ff5140fd6d4bd8af97c6f51a516105"
+    },
+    {
+      "bytes": 24309,
+      "path": "infra/scripts/validate_test_phase_evidence.py",
+      "sha256": "a640e5adc26b11afa13827d3b1b5beb311864f2a30a8847b506c68fa17469dd1"
+    },
+    {
+      "bytes": 17207,
+      "path": "infra/scripts/validate_t4_lab_evidence.py",
+      "sha256": "dd04a7405efa8f21d41133034895d60a28eab5b58c8944e5c8cbc7d970d24af0"
+    },
+    {
+      "bytes": 7657,
+      "path": "infra/testing/test-phase-catalog.json",
+      "sha256": "e3eb67d4433841496928bc8fb387902be2cb587258e366279b2fade3c0adfd9d"
+    },
+    {
+      "bytes": 582,
+      "path": "infra/testing/test-evidence-index.template.json",
+      "sha256": "6ee70363f60bf6fce3caf65537a56611e5defc7ead8f3e02c63cd4b02bec3908"
+    },
+    {
+      "bytes": 15747,
+      "path": "infra/testing/simulated-persona-catalog.json",
+      "sha256": "36c4b0c79445ee18a2e66f488668ae2ce0d9de36e3bf831e55fbfdedd30e9d65"
+    },
+    {
+      "bytes": 30367,
+      "path": "infra/testing/t4-lab-catalog.json",
+      "sha256": "7ca3fa672410c314a965da27eb37934861b76fecc90e99713c327a3149d1f57a"
+    },
+    {
+      "bytes": 913,
+      "path": "infra/testing/t4-lab-evidence.template.json",
+      "sha256": "9b78f901cd66c738833c7ccddbd778ae858e859b2d3739bb873b7acc12dc4199"
+    },
+    {
+      "bytes": 18902,
+      "path": "docs/README.md",
+      "sha256": "c8a938201bb08e938e21a9f7c67fa84d139efbaf7ae6232a7a57656436a77c8d"
+    },
+    {
+      "bytes": 168502,
+      "path": "docs/gaps.md",
+      "sha256": "c194b8b88567e28ea0ba1a0de3852846d9b9f4a8baa077545f52286c90d40d92"
+    },
+    {
+      "bytes": 164309,
+      "path": "docs/testing.md",
+      "sha256": "3925c2e783c79f9ffad426e1e1273eb7560c3a6da90106a77abf25594bdd3f4b"
+    },
+    {
+      "bytes": 53120,
+      "path": "docs/testing_execution_map.md",
+      "sha256": "ea5dd063af423272bf73280ef69ae72576a5a82d8c33db4cf0103e506464b6c2"
+    }
+  ]
+}

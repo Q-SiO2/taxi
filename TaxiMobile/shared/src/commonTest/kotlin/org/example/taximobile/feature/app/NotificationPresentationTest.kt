@@ -10,8 +10,18 @@ import taximobile.shared.generated.resources.notification_credential_expired_bod
 import taximobile.shared.generated.resources.notification_credential_expired_title
 import taximobile.shared.generated.resources.notification_city_authorization_title
 import taximobile.shared.generated.resources.notification_city_authorization_body
+import taximobile.shared.generated.resources.notification_ride_update_title
+import taximobile.shared.generated.resources.notification_ride_update_body
 
 class NotificationPresentationTest {
+    @Test
+    fun lifecycle_hint_uses_generic_localized_reload_copy_not_historical_status() {
+        assertEquals(
+            Res.string.notification_ride_update_title to Res.string.notification_ride_update_body,
+            notificationCopyResources("RIDE_UPDATED"),
+        )
+    }
+
     @Test
     fun city_authorization_change_uses_current_status_refresh_copy() {
         assertEquals(

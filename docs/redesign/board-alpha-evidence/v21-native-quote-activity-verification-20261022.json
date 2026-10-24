@@ -1,0 +1,121 @@
+{
+  "candidate": "candidate-native-v21.json",
+  "verified_utc": "2026-10-22T11:37:38.075041+00:00",
+  "passed": true,
+  "activity_recovery_record": "v21-native-quote-style-review-20261022-r4.json",
+  "activity_recovery": {
+    "before_history_count": 4,
+    "observations": [
+      {
+        "mode": "plain",
+        "history_count": 5,
+        "pid": "1850",
+        "selection": {
+          "path": "v21-quote-style-r4-fresh-plain-selection.png",
+          "sha256": "c41cc61f7b4127b9a6bb51de76b4da00fa401ae1743be4eecac5d62164ad6152"
+        },
+        "fare": {
+          "path": "v21-quote-style-r4-fresh-plain-fare.png",
+          "sha256": "ad9620c0759c387538e13de3de52a459ad8dd822f5b30586c851e740f02542cc"
+        },
+        "request_visible_enabled": true
+      },
+      {
+        "mode": "launcher",
+        "history_count": 5,
+        "pid": "1850",
+        "selection": {
+          "path": "v21-quote-style-r4-fresh-launcher-selection.png",
+          "sha256": "312a9cede17809a2a7667df611612dc8a81b0104bec5710d5deffb137a521bb3"
+        },
+        "fare": {
+          "path": "v21-quote-style-r4-fresh-launcher-fare.png",
+          "sha256": "9535fb4d510622d0c172ac1f486ecfa96dc9069c49095c0ecf946a1fe7b8cb26"
+        },
+        "request_visible_enabled": true
+      }
+    ],
+    "passed": true
+  },
+  "four_style_continuation_record": "v21-native-quote-style-review-20261022-r5.json",
+  "four_styles": [
+    {
+      "style": "Folded Streets",
+      "pickup_and_destination_selected_labels_retained": true,
+      "request_control_visible_enabled": true,
+      "displayed_amount": "35.00",
+      "displayed_currency": "MAD",
+      "screenshots": [
+        {
+          "path": "v21-quote-style-r5-folded-streets-selection.png",
+          "sha256": "6194660b8511f2ba84decc655fe1f38c6301399317ad458b07be18262c74ea59"
+        },
+        {
+          "path": "v21-quote-style-r5-folded-streets-fare.png",
+          "sha256": "188b297d04e39f5a86f58d35b1f4e518ea03733ee34f9761f6ae76c85fcfb620"
+        }
+      ]
+    },
+    {
+      "style": "Street Press",
+      "pickup_and_destination_selected_labels_retained": true,
+      "request_control_visible_enabled": true,
+      "displayed_amount": "35.00",
+      "displayed_currency": "MAD",
+      "screenshots": [
+        {
+          "path": "v21-quote-style-r5-street-press-selection.png",
+          "sha256": "54225b9ceb86e3a8f00b96e4d746a0f60b00516753e40206cca540d4b229aa24"
+        },
+        {
+          "path": "v21-quote-style-r5-street-press-fare.png",
+          "sha256": "9a18fd0458feb42d9b60dea7c2d9e3edefccb6affae1abfdaa464d068a8beb41"
+        }
+      ]
+    },
+    {
+      "style": "Glazed Machine",
+      "pickup_and_destination_selected_labels_retained": true,
+      "request_control_visible_enabled": true,
+      "displayed_amount": "35.00",
+      "displayed_currency": "MAD",
+      "screenshots": [
+        {
+          "path": "v21-quote-style-r5-glazed-machine-selection.png",
+          "sha256": "3c0503c90f62f0adc9752bfe96bfccce7013240eb1fa8b1c89405c84c4dae084"
+        },
+        {
+          "path": "v21-quote-style-r5-glazed-machine-fare.png",
+          "sha256": "ed86b3349eb42bc3bab8acf32ed90f25853774c0e78262c5ae11d039281e4ab8"
+        }
+      ]
+    },
+    {
+      "style": "Notepad",
+      "pickup_and_destination_selected_labels_retained": true,
+      "request_control_visible_enabled": true,
+      "displayed_amount": "35.00",
+      "displayed_currency": "MAD",
+      "screenshots": [
+        {
+          "path": "v21-quote-style-r5-notepad-selection.png",
+          "sha256": "bbaafc527c453e41a34a3d435928fdf60ae1636795e9a2a08bd787335e706acc"
+        },
+        {
+          "path": "v21-quote-style-r5-notepad-fare.png",
+          "sha256": "9ab1b09d92d523fcb747e5dabe2c5d3ec6ff8f2a14fd4bd24b41add311fa232c"
+        }
+      ]
+    }
+  ],
+  "same_process": true,
+  "business_state_unchanged": true,
+  "verifier_logout_status": 200,
+  "all_linked_images_hash_verified": true,
+  "scope": "Actual exact-v21 reviewed point/fare/enabled Request survive an observed new MainActivity and both normal entry intents, then four style options. No booking or native sign-in. Values are synthetic backend35MAD; no authority transfer to client.",
+  "observer_qualifications": [
+    "Initial and r2 observers asserted clipped second card/premature restoration viewport; retained separately.",
+    "R3 reached enabled Request, then attempted a hidden header and searched in the wrong direction; retained failure plus actual restored Request diagnostic.",
+    "R4 actual new-activity proof passes, overall style observer then failed on clipped second card. R5 continues only four-style view review by expanding visible header first; it does not repeat initial selections/activity proof."
+  ]
+}

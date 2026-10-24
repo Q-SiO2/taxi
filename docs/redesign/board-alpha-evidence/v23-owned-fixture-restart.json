@@ -1,0 +1,19 @@
+{
+  "observed_utc": "2026-10-22T18:34:39.322567+00:00",
+  "candidate": "candidate-native-v23.json",
+  "availability": {
+    "status": "OFFLINE",
+    "vehicle_id": "d491cb54-7ec1-4b6e-a6f9-1f1a8fd93792",
+    "city_id": "10000000-0000-4000-8000-000000000003",
+    "service_type": "ON_DEMAND"
+  },
+  "pending_cash": 0,
+  "scope": "Owned fixture recovery, no active synthetic work; no reinstall, data wipe, native sign-in or business-command replay",
+  "qualification": "After stopping local preview unified session16819, passenger emulator5554 is absent; driver5556 has no active default network although both radios are1. Preview and passenger were launched from the same shell. Process lifetime coupling is a fixture explanation, not an established app cause. One Wi-Fi bounce and saved AndroidWifi connection request did not restore transport. Preserve all prior observations and restart named fixtures separately.",
+  "prior_chrome": [
+    "v23-native-map-chrome-verification-20261022.json",
+    "v23-native-map-chrome-verification-20261022-r2.json"
+  ],
+  "radio_setup": "v23-driver-network-fixture-recovery.json",
+  "recovered": false
+}

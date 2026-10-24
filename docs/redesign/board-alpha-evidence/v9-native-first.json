@@ -1,0 +1,90 @@
+{
+  "candidate": "candidate-native-v9.json",
+  "run": "first",
+  "started_utc": "2026-10-17T09:16:52.560881+00:00",
+  "fidelity": "two Android emulators, synthetic GPS/accounts/cash; native writes and server reads",
+  "emulators": [
+    {
+      "role": "driver",
+      "serial": "emulator-5556",
+      "api_level": 35,
+      "avd": "taximobile-board-api35-driver"
+    },
+    {
+      "role": "passenger",
+      "serial": "emulator-5554",
+      "api_level": 31,
+      "avd": "taximobile-board-aosp31-passenger"
+    }
+  ],
+  "passed": true,
+  "steps": [
+    {
+      "name": "Native on-demand availability visible",
+      "utc": "2026-10-17T09:17:15.321632+00:00"
+    },
+    {
+      "name": "Server on-demand availability confirmed",
+      "utc": "2026-10-17T09:17:18.522018+00:00"
+    },
+    {
+      "name": "Native booking confirmed",
+      "utc": "2026-10-17T09:17:34.300474+00:00"
+    },
+    {
+      "name": "Private acceptance confirmed",
+      "utc": "2026-10-17T09:18:03.280070+00:00"
+    },
+    {
+      "name": "Native DRIVER_EN_ROUTE",
+      "utc": "2026-10-17T09:18:21.479221+00:00"
+    },
+    {
+      "name": "Native DRIVER_ARRIVED",
+      "utc": "2026-10-17T09:18:38.442408+00:00"
+    },
+    {
+      "name": "Native IN_PROGRESS",
+      "utc": "2026-10-17T09:18:56.193011+00:00"
+    },
+    {
+      "name": "Native completion confirmed",
+      "utc": "2026-10-17T09:19:02.264550+00:00"
+    },
+    {
+      "name": "Passenger pending cash visible",
+      "utc": "2026-10-17T09:19:07.828420+00:00"
+    },
+    {
+      "name": "Passenger confirmed cash visible",
+      "utc": "2026-10-17T09:19:23.049564+00:00"
+    }
+  ],
+  "installed_apks": [
+    {
+      "role": "driver",
+      "sha256": "a7171bd6a6dc21f3bf5c1f6a072ebcc5e88f759c5741e80827eacad911d62e56"
+    },
+    {
+      "role": "passenger",
+      "sha256": "255fe68cd7eaed0ba41996130d11f08d6f03e5aec09baa35bff591521766bbc0"
+    }
+  ],
+  "clock_fixture": [
+    {
+      "role": "driver",
+      "host_minus_device_seconds_before": 0.62,
+      "host_minus_device_seconds_after": 0.72,
+      "method": "owned emulator cmd alarm set-time before trip only"
+    },
+    {
+      "role": "passenger",
+      "host_minus_device_seconds_before": 0.77,
+      "host_minus_device_seconds_after": 0.86,
+      "method": "owned emulator cmd alarm set-time before trip only"
+    }
+  ],
+  "ride_id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+  "fare": "35.00",
+  "finished_utc": "2026-10-17T09:19:23.050618+00:00"
+}

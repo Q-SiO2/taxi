@@ -1,0 +1,8 @@
+{
+  "recorded_utc": "2026-10-22T11:20:32.808168+00:00",
+  "candidate": "candidate-native-v21.json",
+  "failed_observer": "v21-native-quote-style-review-20261022.json",
+  "failure": "Observer located the first selected-point card at the bottom of a Half sheet and immediately asserted the second card was simultaneously visible; it was clipped below the viewport. No Request/booking delivered.",
+  "diagnostic": "v21-quote-activity-half-sheet-diagnostic.png",
+  "next_observer": "Use the actual visible header to expand the fresh sheet, locate both selected-point labels and enabled Request/fare, and require an actual activity-count increase/same PID. No APK/source change or weakened command/price predicate."
+}

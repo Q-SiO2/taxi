@@ -1,0 +1,16 @@
+{
+  "started_utc": "2026-10-19T19:49:21.512033+00:00",
+  "candidate": "candidate-native-v12.json",
+  "ride_id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+  "passed": false,
+  "recovered": false,
+  "steps": [
+    {
+      "name": "Preserved server IN_PROGRESS verified; exact APKs and existing clocks match",
+      "utc": "2026-10-19T19:49:22.938385+00:00"
+    }
+  ],
+  "scope": "Same frozen-v12 Arabic trip after explicit failed-location UI; one fresh native lookup retry, then native completion/cash and independent readback; initial harness failure remains separate",
+  "failure_type": "SmokeFailure",
+  "finished_utc": "2026-10-19T19:50:42.415093+00:00"
+}

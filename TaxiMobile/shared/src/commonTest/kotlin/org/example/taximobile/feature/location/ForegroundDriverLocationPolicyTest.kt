@@ -7,6 +7,44 @@ import org.example.taximobile.domain.drivers.DriverAvailabilityStatus
 
 class ForegroundDriverLocationPolicyTest {
     @Test
+    fun slow_submission_leaves_an_idle_interval_for_user_commands() {
+        val policy = ForegroundDriverLocationPolicy()
+        assertTrue(policy.shouldRequest(1_000, DriverAvailabilityStatus.ON_RIDE, true, true, false, false))
+        assertFalse(policy.shouldRequest(20_000, DriverAvailabilityStatus.ON_RIDE, true, true, false, true))
+        policy.recordSubmissionFinished(20_000)
+        assertFalse(policy.shouldRequest(29_999, DriverAvailabilityStatus.ON_RIDE, true, true, false, false))
+        assertTrue(policy.shouldRequest(30_000, DriverAvailabilityStatus.ON_RIDE, true, true, false, false))
+    }
+
+    @Test
+    fun available_submission_keeps_its_longer_idle_interval() {
+        val policy = ForegroundDriverLocationPolicy()
+        assertTrue(policy.shouldRequest(1_000, DriverAvailabilityStatus.AVAILABLE, true, true, false, false))
+        policy.recordSubmissionFinished(20_000)
+        assertFalse(policy.shouldRequest(34_999, DriverAvailabilityStatus.AVAILABLE, true, true, false, false))
+        assertTrue(policy.shouldRequest(35_000, DriverAvailabilityStatus.AVAILABLE, true, true, false, false))
+    }
+
+    @Test
+    fun late_submission_finish_does_not_rearm_a_background_window() {
+        val policy = ForegroundDriverLocationPolicy()
+        assertTrue(policy.shouldRequest(1_000, DriverAvailabilityStatus.ON_RIDE, true, true, false, false))
+        assertFalse(policy.shouldRequest(2_000, DriverAvailabilityStatus.ON_RIDE, false, true, false, false))
+        policy.recordSubmissionFinished(20_000)
+        assertTrue(policy.shouldRequest(20_001, DriverAvailabilityStatus.ON_RIDE, true, true, false, false))
+    }
+
+    @Test
+    fun submission_finish_does_not_shorten_unavailable_backoff() {
+        val policy = ForegroundDriverLocationPolicy()
+        assertTrue(policy.shouldRequest(1_000, DriverAvailabilityStatus.ON_RIDE, true, true, false, false))
+        policy.recordUnavailable(2_000)
+        policy.recordSubmissionFinished(3_000)
+        assertFalse(policy.shouldRequest(61_999, DriverAvailabilityStatus.ON_RIDE, true, true, false, false))
+        assertTrue(policy.shouldRequest(62_000, DriverAvailabilityStatus.ON_RIDE, true, true, false, false))
+    }
+
+    @Test
     fun sampling_starts_immediately_and_uses_state_specific_intervals() {
         val policy = ForegroundDriverLocationPolicy(
             availableIntervalMillis = 15_000,

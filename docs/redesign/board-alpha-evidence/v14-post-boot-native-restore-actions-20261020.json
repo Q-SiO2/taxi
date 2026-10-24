@@ -1,0 +1,24 @@
+{
+  "utc": "2026-10-20T09:43:37.620226+00:00",
+  "roles": [
+    {
+      "role": "passenger",
+      "actions": [
+        "Closed observed bundled System UI ANR"
+      ],
+      "wifi_on": "1",
+      "mobile_data": "1",
+      "host_minus_device_seconds": 0.61
+    },
+    {
+      "role": "driver",
+      "actions": [
+        "Explicit native Retry connection; normal read-only session restore"
+      ],
+      "wifi_on": "1",
+      "mobile_data": "1",
+      "host_minus_device_seconds": 0.62
+    }
+  ],
+  "scope": "Observed system dialog and read-only session retry; no app reset, network setting change or business command"
+}

@@ -1,0 +1,12 @@
+{
+  "candidate": "candidate-native-v15.json",
+  "before": "IN_PROGRESS",
+  "wifi_before": "1",
+  "data_before": "1",
+  "no_business_input_during_outage": true,
+  "started_utc": "2026-10-20T10:43:27.603202+00:00",
+  "server_during_outage": "IN_PROGRESS",
+  "server_after_restore": "IN_PROGRESS",
+  "passed": true,
+  "finished_utc": "2026-10-20T10:43:51.768267+00:00"
+}

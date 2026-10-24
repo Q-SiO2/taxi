@@ -1,12 +1,92 @@
 # TaxiMobile documentation
 
+> **Next source packet — 24 October 2026:** the
+> [protected document correction](launch/document-storage.md) passes 1,060 unit
+> tests, two HTTP/PostGIS lifecycle cases and a real local ClamAV/custom-fixture
+> rehearsal. Fresh source CI remains pending. Hosted storage, current signature
+> feeds and key/retention acceptance are open; no real document was used.
+
+> **Current packet — 24 October 2026:** all eight required CI jobs pass for source
+> [2919835](launch/database-tls-ci-terminal-20261024.json). The [staging upgrade packet](launch/staging-upgrade.md) records an encrypted
+> database backup, matching 81 public-table counts after isolated restore and a
+> successful local 0053 migration/readiness check, with explicit platform and
+> failure qualifications. [Verified database transport](launch/database-tls.md)
+> now passes 1,317 full backend CI tests, including eight real TLS checks, with
+> no failures/errors/skips. Android/web, unsigned iOS and dependency review pass.
+> Hosted schema remains 0052 and TLS is disabled;
+> protected document ingestion and matched rollout remain open.
+
+> **Current source packet — 23 October 2026:** the
+> [session/release correction](launch/session-recovery.md) addresses idle logout
+> and the actual member-register CI packaging failure. Local protocol, production
+> packaging and bounded Chrome boot now pass. The [dependency correction](launch/dependency-refresh.md)
+> addresses the next actual CI audit failure; its eight required CI jobs pass,
+> while hosted acceptance remains open.
+
+> **Source migration - 23 October 2026:** `20261023_0053` adds the explicit
+> operator membership policy for the Fès union launch. It is a source change;
+> [isolated migration/authority verification](launch/union-membership.md) is
+> recorded. The [staff-register extension](launch/member-register.md) adds scoped
+> audited operations UX and localized driver guidance; its runtime verification,
+> immutable CI and deliberate deployment remain separate acceptance steps.
+> The alpha's deployed schema/evidence retain their original identity.
+
+> **Active goal - 23 October 2026:** establish real-world deployment with full
+> documented functionality. Start with [the detailed execution plan](real-world-launch.md)
+> and [roadmap](roadmap.md): R0 reconciliation, production capability closure,
+> real device/provider/staff acceptance, authorized city pilot and public release.
+> Android, iOS and both web portals are included. Spending, operator/legal and
+> activation decisions retain their explicit gates. The alpha below is the
+> regression baseline, not real-world acceptance.
+
+> **Active delivery - 23 October 2026:** native v23 / live web v10 now pass the
+> scoped synthetic board path twice, at **16:22 / 11:07**, with disclosed
+> observer/setup qualifications. Both cash rides have eight successful business
+> requests exactly once; final driver state is offline and pending cash zero.
+> Folded Streets, Street Press, Glazed Machine and Notepad are implemented choices;
+> there is no separate color menu or taxi/city hero. The deployed web passes
+> 103 HTTP checks and selected actual four-style/EN/FR/AR timeline review.
+>
+> Start with [the current checkpoint](board-alpha.md), [the handoff](board-alpha-handoff.md)
+> and [presenter script](board-demo.md). [roadmap.md](roadmap.md) remains the plan
+> for **board alpha -> authorized pilot -> public release**. Railway recovery is
+> applied within Trial limits, with both volumes preserved. Owner visual review,
+> physical Android, iOS, broader accessibility/state coverage, field transport,
+> real money and later launch gates remain separate. The 213-view inventory is
+> not runtime acceptance of every view. Historical records keep their own identity.
+
+## Six core entry points
+
+| Read to | Start here | Detailed authority when needed |
+| --- | --- | --- |
+| Understand the project and status | This README | Dated [readiness.md](readiness.md); source inventory below. |
+| Implement product journeys | [product.md](product.md) | [design.md](design.md), [ui.md](ui.md), [extended_ui.md](extended_ui.md) and relevant domain. |
+| Understand system boundaries | [architecture.md](architecture.md) | [implementation.md](implementation.md), [api.md](api.md), [database.md](database.md), [security.md](security.md). |
+| Set up, build, test and hand off | [workflow.md](workflow.md) | Linked backend/client/infra setup guides, [testing.md](testing.md) and evidence catalogs. |
+| Deploy and verify staging | [deployment.md](deployment.md) | Railway preflight, resource/cost/secret controls, actual integration and safe shutdown. |
+| Choose and execute the next task | [roadmap.md](roadmap.md) | [union_demo.md](union_demo.md) scenarios; [gaps.md](gaps.md) real-world acceptance. |
+
+These entry points consolidate delivery navigation without deleting specialized
+API, legal/privacy, security, data or business contracts referenced by code and
+project instructions. The old numbered delivery plan is [historical](history/roadmap_before_alpha_20261012.md).
+Read relevant sections rather than every document; no separate audit or historical
+percentage overrides the active A/B/C sequence. Future consolidation must preserve
+contracts and update all links/instructions/validators before removing an authority.
+
 This directory is the product, architecture, security, and delivery authority for
 TaxiMobile. It describes both the intended system and the software currently in
 the repository. Those are not the same kind of statement.
 
 ## Current project standing
 
-**Source assessment date:** 2026-09-09. **Standing refreshed:** 2026-10-02.
+**Current delivery priority:** the essential alpha journeys and ten exit gates in
+[roadmap.md](roadmap.md). [union_demo.md](union_demo.md) retains the wider 20-journey
+board, including optional advanced demonstrations, and the rehearsal procedure.
+Report both separately; neither automated tests nor fixture screens accept a
+physical passenger/driver/browser journey or authorize live transport.
+
+**Historical source assessment:** 2026-09-09, refreshed 2026-10-02.
+Current alpha evidence and candidate identities are in [board-alpha.md](board-alpha.md).
 
 **Migration head:** `20260908_0052`
 
@@ -98,6 +178,7 @@ quality.
 | System boundaries and source of truth | [`architecture.md`](architecture.md) | Implemented architecture plus explicit provider/deployment boundaries. |
 | Concrete repository structure | [`implementation.md`](implementation.md) | Current technical baseline and verification claims. |
 | Delivery sequence | [`roadmap.md`](roadmap.md) | Source phases versus deployment acceptance. |
+| Railway staging and release operations | [`deployment.md`](deployment.md) | Minimal topology, actual provider/account preflight, hosted verification, cost and safe shutdown. |
 | Deployment gap register | [`gaps.md`](gaps.md) | Prioritized remediation and acceptance criteria. |
 | Testing and acceptance map | [`testing.md`](testing.md) | Promotion gates from static checks and an executable 20-scenario simulated-persona baseline through real-city rollout. |
 | Test execution control board | [`testing_execution_map.md`](testing_execution_map.md) | Entry/exit gates, executable evidence-index and T2 catalog rules, owners, stop rules and cohort progression from simulation to national replication. |
@@ -122,8 +203,9 @@ not normative and must be regenerated when the status summary materially changes
 
 ## Reading order for implementation work
 
-1. Read this file, [`gaps.md`](gaps.md), and [`testing.md`](testing.md) to
-   understand current standing and the required evidence path.
+1. Read this file and [`roadmap.md`](roadmap.md) for the current milestone,
+   next task and exit evidence. Use [`union_demo.md`](union_demo.md) for A journeys;
+   [`gaps.md`](gaps.md) and [`testing.md`](testing.md) for real-world release gates.
 2. Read [`roadmap.md`](roadmap.md) and [`implementation.md`](implementation.md)
    to confirm scope and delivery gates.
 3. Read [`architecture.md`](architecture.md) and the relevant domain document.
