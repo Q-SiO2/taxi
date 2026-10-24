@@ -13,6 +13,7 @@ import re
 from urllib.parse import urlparse
 from sqlalchemy.engine import make_url
 from sqlalchemy.exc import ArgumentError
+from taximobile_api.db.transport import DatabaseTLS, DatabaseTLSConfigurationError
 
 from taximobile_api.core.client_compatibility import (
     ClientCompatibilityPolicy,
@@ -146,6 +147,7 @@ class Settings:
     routing_rate_limit_per_minute: int
     place_search_rate_limit_per_minute: int
     place_reverse_rate_limit_per_minute: int
+    database_tls: DatabaseTLS = DatabaseTLS()
 
     @property
     def is_production(self) -> bool:
@@ -253,6 +255,12 @@ class Settings:
                 raise ConfigurationError("TAXIMOBILE_DATABASE_URL must be a valid database URL") from error
             if database_host is None or _is_loopback_host(database_host):
                 raise ConfigurationError("Staging and production require a non-local TAXIMOBILE_DATABASE_URL")
+
+        try:
+            database_tls = DatabaseTLS.from_environment()
+            database_tls.connect_args(database_url)
+        except DatabaseTLSConfigurationError as error:
+            raise ConfigurationError(str(error)) from None
 
         jwt_secret = getenv("TAXIMOBILE_JWT_SECRET")
         if (
@@ -573,6 +581,7 @@ class Settings:
             environment=environment,
             process_role=process_role,
             database_url=database_url,
+            database_tls=database_tls,
             database_pool_size=bounded_integer(
                 "TAXIMOBILE_DATABASE_POOL_SIZE", "5", 100
             ),

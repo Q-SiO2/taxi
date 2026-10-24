@@ -1,10 +1,20 @@
 # TaxiMobile documentation
 
+> **Current packet — 24 October 2026:** all eight required CI jobs pass for source
+> 90704d1. The [staging upgrade packet](launch/staging-upgrade.md) records an encrypted
+> database backup, matching 81 public-table counts after isolated restore and a
+> successful local 0053 migration/readiness check, with explicit platform and
+> failure qualifications. [Verified database transport](launch/database-tls.md)
+> now passes 1,036 unit, 279 infrastructure and eight real local TLS checks;
+> its new full CI is pending. Hosted schema remains 0052 and TLS is disabled;
+> protected document ingestion and matched rollout remain open.
+
 > **Current source packet — 23 October 2026:** the
 > [session/release correction](launch/session-recovery.md) addresses idle logout
 > and the actual member-register CI packaging failure. Local protocol, production
 > packaging and bounded Chrome boot now pass. The [dependency correction](launch/dependency-refresh.md)
-> addresses the next actual CI audit failure; full CI and hosted acceptance remain open.
+> addresses the next actual CI audit failure; its eight required CI jobs pass,
+> while hosted acceptance remains open.
 
 > **Source migration - 23 October 2026:** `20261023_0053` adds the explicit
 > operator membership policy for the Fès union launch. It is a source change;

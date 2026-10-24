@@ -1,5 +1,19 @@
 # Implementation Blueprint
 
+## Staging backup and restore — 24 October 2026
+
+The [R3 packet](launch/staging-upgrade.md) records eight passing source CI jobs,
+encrypted owner-authority snapshot backup and a qualified isolated restore with
+81 exact public-table counts. Local 0053 migration, rollback-only constraint and
+runtime DDL probes, and actual restricted-role health/readiness pass. First
+controller/import failures and patch/platform limits are retained. Hosted source
+is unchanged. [One immutable database TLS policy](launch/database-tls.md) now
+covers ORM, worker, LISTEN, Alembic and operational direct connections; production
+requires verified CA/hostname trust. Local unit/infrastructure and real TLS
+positive/negative tests pass. Fresh full CI, hosted TLS, protected document
+ingestion and matching API/worker rollout remain required. No live
+role/credential/MFA reset or volume change.
+
 ## Operations expiry/logout and web release — 23 October 2026
 
 [The session/release checkpoint](launch/session-recovery.md) follows the actual

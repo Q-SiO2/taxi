@@ -341,7 +341,8 @@ async def seed_demo(
             raise DemoSeedRefused("Hosted alpha requires the fresh-dispatch union_live profile.")
     profile = DemoProfile(profile)
     live_demo = profile == DemoProfile.UNION_LIVE
-    engine = create_async_engine(settings.database_url, pool_pre_ping=True, hide_parameters=True)
+    engine = create_async_engine(settings.database_url, pool_pre_ping=True, hide_parameters=True,
+                                 connect_args=settings.database_tls.connect_args(settings.database_url))
     sessions = async_sessionmaker(engine, expire_on_commit=False)
     suffix = railway_target.suffix if railway_target is not None else token_hex(4)
     password = railway_target.password if railway_target is not None else f"Demo-{token_hex(6)}-Aa9!"

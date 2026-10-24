@@ -84,7 +84,8 @@ def test_migration_refuses_wrong_database_or_host(url):
 def test_failed_migration_does_not_grant_runtime_access(monkeypatch):
     calls = []
 
-    async def provision(url, password, *, grant):
+    async def provision(url, password, *, grant, tls):
+        assert tls.mode == "disable"
         calls.append(grant)
 
     class Failed:
@@ -110,6 +111,31 @@ def test_busy_deployment_guard_refuses_before_role_changes(monkeypatch):
         migrate(target())
     provision.assert_not_awaited()
     guard.close.assert_awaited_once()
+
+
+def test_verified_tls_reaches_the_deployment_guard(monkeypatch):
+    import ssl
+    guard = MagicMock(fetchval=AsyncMock(return_value=False), close=AsyncMock())
+    connect = AsyncMock(return_value=guard)
+    monkeypatch.setattr("taximobile_api.operations.railway_entrypoint.asyncpg.connect", connect)
+    with pytest.raises(RailwayConfigurationError, match="Another alpha migrator"):
+        migrate(target() | {"TAXIMOBILE_DATABASE_TLS_MODE": "verify-full"})
+    context = connect.await_args.kwargs["ssl"]
+    assert context.check_hostname and context.verify_mode == ssl.CERT_REQUIRED
+    guard.close.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_required_tls_refuses_unencrypted_runtime_observation_before_refresh(monkeypatch):
+    from taximobile_api.operations.railway_entrypoint import verify_runtime
+    role = {"name": "taximobile_runtime", **{field: False for field in ("rolsuper", "rolcreatedb", "rolcreaterole", "rolreplication", "rolbypassrls")}}
+    connection = MagicMock(fetchrow=AsyncMock(side_effect=[role, {"ssl": False, "version": None}]),
+                           fetchval=AsyncMock(return_value=False), execute=AsyncMock(), close=AsyncMock())
+    monkeypatch.setattr("taximobile_api.operations.railway_entrypoint.asyncpg.connect", AsyncMock(return_value=connection))
+    with pytest.raises(RailwayConfigurationError, match="no encrypted session"):
+        await verify_runtime({"TAXIMOBILE_DATABASE_URL": "postgresql+asyncpg://runtime:fixture@private/alpha", "TAXIMOBILE_DATABASE_TLS_MODE": "verify-full"})
+    connection.execute.assert_not_awaited()
+    connection.close.assert_awaited_once()
 
 
 @pytest.mark.asyncio
@@ -170,7 +196,8 @@ async def test_runtime_verification_rejects_privileged_login_and_closes_connecti
 
     connection = Connection()
 
-    async def connect(url):
+    async def connect(url, *, ssl):
+        assert ssl is False
         return connection
 
     monkeypatch.setattr("taximobile_api.operations.railway_entrypoint.asyncpg.connect", connect)

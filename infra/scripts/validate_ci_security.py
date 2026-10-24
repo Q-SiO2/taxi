@@ -9,6 +9,7 @@ security settings whose weakening would otherwise look like an ordinary CI edit.
 from __future__ import annotations
 
 import json
+import ast
 import re
 from pathlib import Path
 import sys
@@ -16,6 +17,7 @@ import sys
 
 WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW_PATH = WORKSPACE_ROOT / ".github" / "workflows" / "ci.yml"
+TLS_RUNNER_PATH = WORKSPACE_ROOT / "infra" / "scripts" / "run_database_tls_ci.py"
 IOS_PROJECT_PATH = WORKSPACE_ROOT / "TaxiMobile" / "iosApp" / "iosApp.xcodeproj" / "project.pbxproj"
 IOS_PACKAGE_RESOLVED_PATH = (
     WORKSPACE_ROOT
@@ -372,6 +374,25 @@ def _validate_registry_publication(workflow: str) -> None:
             raise CiSecurityError("Registry digest and source/SBOM binding must be retained.")
 
 
+def validate_tls_runner(source: str) -> None:
+    """Keep the TLS wrapper's pytest invocation full-suite and unfiltered."""
+    matches = []
+    for node in ast.walk(ast.parse(source)):
+        if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Attribute):
+            continue
+        if ast.unparse(node.func) != "subprocess.run" or not node.args or not isinstance(node.args[0], ast.List):
+            continue
+        command = node.args[0].elts
+        if len(command) == 4 and ast.unparse(command[0]) == "sys.executable" and [getattr(item, "value", None) for item in command[1:3]] == ["-m", "pytest"]:
+            if isinstance(command[3], ast.BinOp) and getattr(command[3].left, "value", None) == "--junitxml=":
+                matches.append(node)
+    if len(matches) != 1:
+        raise CiSecurityError("TLS runner must execute exactly one unfiltered full backend pytest invocation.")
+    for required in ("len(cases) == 8", '"skipped"', 'GITHUB_ACTIONS', 'taximobile_ci', 'baseline_restored'):
+        if required not in source:
+            raise CiSecurityError("TLS runner lost its disposable-target, complete-probe or cleanup guard.")
+
+
 def validate_ci_security(workflow: str) -> None:
     try:
         package_lock = IOS_PACKAGE_RESOLVED_PATH.read_text(encoding="utf-8")
@@ -529,7 +550,12 @@ def validate_ci_security(workflow: str) -> None:
         )
 
     t3_system_requirements = (
-        "python -m pytest --junitxml=/tmp/taximobile-t3-full-backend.junit.xml",
+        "python ../infra/scripts/run_database_tls_ci.py",
+        "--container ${{ job.services.postgres.id }}",
+        "--report /tmp/taximobile-database-tls-ci.json",
+        "--artifact /tmp/taximobile-database-tls-ci.json",
+        "plaintext-postgres:",
+        "5433:5432",
         "python ../infra/scripts/collect_t3_database_metadata.py",
         "--authority-mode EPHEMERAL_CI_SERVICE_ROLE",
         "--database-lifecycle EPHEMERAL_SERVICE_DATABASE",
@@ -786,6 +812,7 @@ def validate_ci_security(workflow: str) -> None:
 def main() -> int:
     try:
         validate_ci_security(WORKFLOW_PATH.read_text(encoding="utf-8"))
+        validate_tls_runner(TLS_RUNNER_PATH.read_text(encoding="utf-8"))
     except (OSError, CiSecurityError) as error:
         print(f"CI security validation failed: {error}", file=sys.stderr)
         return 1

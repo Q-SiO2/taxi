@@ -18,6 +18,7 @@ from urllib.parse import urlparse
 import asyncpg
 
 from taximobile_api.core.config import _is_valid_http_host
+from taximobile_api.db.transport import DatabaseTLS
 
 DEPLOY_LOCK_NAMESPACE = 0x54415849  # TAXI
 DEPLOY_LOCK_RESOURCE = 0x5241494C  # RAIL; distinct from Alembic's MIGR lock
@@ -78,8 +79,9 @@ def migration_target(environment: MutableMapping[str, str]) -> tuple[str, str]:
     return url, password
 
 
-async def provision_runtime(url: str, password: str, *, grant: bool) -> None:
-    connection = await asyncpg.connect(url.replace("postgresql+asyncpg://", "postgresql://", 1))
+async def provision_runtime(url: str, password: str, *, grant: bool, tls: DatabaseTLS | None = None) -> None:
+    connection = await asyncpg.connect(url.replace("postgresql+asyncpg://", "postgresql://", 1),
+                                      **(tls or DatabaseTLS.from_environment()).connect_args(url))
     try:
         async with connection.transaction():
             if grant:
@@ -131,7 +133,9 @@ async def provision_runtime(url: str, password: str, *, grant: bool) -> None:
 async def verify_runtime(environment: MutableMapping[str, str]) -> dict[str, object]:
     """Prove the migrated schema is reachable with the restricted app login."""
     url = environment.get("TAXIMOBILE_DATABASE_URL", "")
-    connection = await asyncpg.connect(url.replace("postgresql+asyncpg://", "postgresql://", 1))
+    tls = DatabaseTLS.from_environment(environment)
+    connection = await asyncpg.connect(url.replace("postgresql+asyncpg://", "postgresql://", 1),
+                                      **tls.connect_args(url))
     try:
         identity = await connection.fetchrow(
             "SELECT current_user AS name, rolsuper, rolcreatedb, rolcreaterole, "
@@ -141,8 +145,16 @@ async def verify_runtime(environment: MutableMapping[str, str]) -> dict[str, obj
                 or any(identity[field] for field in ("rolsuper", "rolcreatedb", "rolcreaterole", "rolreplication", "rolbypassrls"))
                 or await connection.fetchval("SELECT has_schema_privilege(current_user,'public','CREATE')")):
             raise RailwayConfigurationError("The runtime login must not have schema or administrator authority.")
+        transport = None
+        if tls.mode == "verify-full":
+            transport = await connection.fetchrow("SELECT ssl, version FROM pg_stat_ssl WHERE pid=pg_backend_pid()")
+            if transport is None or not transport["ssl"]:
+                raise RailwayConfigurationError("Verified database TLS was required but no encrypted session was observed.")
         await connection.execute("REFRESH MATERIALIZED VIEW public.operational_metric_facts_hourly_v1")
         return {
+            "database_tls_mode": tls.mode,
+            "database_tls_identity_verified": tls.mode == "verify-full" and transport is not None,
+            "database_tls_version": transport["version"] if transport is not None else None,
             "migration_head": await connection.fetchval("SELECT version_num FROM alembic_version"),
             "postgis_version": await connection.fetchval("SELECT PostGIS_Version()"),
             "public_tables": await connection.fetchval("SELECT count(*) FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'"),
@@ -161,17 +173,18 @@ async def verify_runtime(environment: MutableMapping[str, str]) -> dict[str, obj
 
 async def migrate_locked(environment: MutableMapping[str, str]) -> dict[str, object]:
     url, password = migration_target(environment)
-    guard = await asyncpg.connect(url.replace("postgresql+asyncpg://", "postgresql://", 1))
+    tls = DatabaseTLS.from_environment(environment)
+    guard = await asyncpg.connect(url.replace("postgresql+asyncpg://", "postgresql://", 1), **tls.connect_args(url))
     try:
         if not await guard.fetchval("SELECT pg_try_advisory_lock($1,$2)", DEPLOY_LOCK_NAMESPACE, DEPLOY_LOCK_RESOURCE):
             raise RailwayConfigurationError("Another alpha migrator is running; retry after it finishes.")
-        await provision_runtime(url, password, grant=False)
+        await provision_runtime(url, password, grant=False, tls=tls)
         migration_environment = dict(environment)
         migration_environment["TAXIMOBILE_DATABASE_URL"] = url
         result = subprocess.run(["alembic", "upgrade", "head"], env=migration_environment, check=False)
         if result.returncode:
             raise RailwayConfigurationError("Railway alpha migration failed; traffic must not start.")
-        await provision_runtime(url, password, grant=True)
+        await provision_runtime(url, password, grant=True, tls=tls)
         return await verify_runtime(environment)
     finally:
         # Session lock spans role setup, Alembic and grants; connection loss or

@@ -1,5 +1,18 @@
 # TaxiMobile — Alpha, Pilot and Public Release Roadmap
 
+## Current packet — 24 October 2026
+
+R3 [staging preparation](launch/staging-upgrade.md) now has exact-source CI,
+encrypted snapshot backup and qualified local restore/0053 migration evidence.
+The [TLS source packet](launch/database-tls.md) passes unit/infrastructure and
+real local PostgreSQL trust/rejection checks; fresh full CI must run its new
+disposable TLS fixture before any hosted upgrade acceptance.
+The live source still uses schema 0052, a non-TLS private database connection and
+disabled driver-document ingestion. Close transport/storage/rollout work with
+actual evidence while retaining the full R0–R12 scope and R1 decisions. Preserve
+the membership policy through rollback; a pre-policy build cannot serve a union
+operator with the requirement enabled.
+
 ## Current source packet — 23 October 2026
 
 [The session/release successor](launch/session-recovery.md) addresses the actual

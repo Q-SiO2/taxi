@@ -2368,6 +2368,14 @@ domain. Application, migration, monitoring and backup authorities must be
 reviewed separately; the application role must not be superuser or retain
 `CREATEDB`/`CREATEROLE`.
 
+Application database TLS uses the single `DatabaseTLS` policy described in
+[the transport packet](launch/database-tls.md): production requires `verify-full`
+with CA and hostname validation, shared by ORM, hint listener and migration/
+operations connections. Custom trust accepts one PEM file or PEM text input;
+URL transport overrides are rejected. The legacy alpha's staging default is not
+production acceptance. Confirm actual encrypted, identity-verified sessions and
+negative trust/hostname behavior before accepting a deployment.
+
 A backup that cannot be restored should not be considered a reliable backup.
 
 Recovery must be tested into isolated staging with the same PostgreSQL/PostGIS

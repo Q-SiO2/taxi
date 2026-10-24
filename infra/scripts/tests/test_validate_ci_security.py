@@ -14,6 +14,8 @@ from validate_ci_security import (
     WORKFLOW_PATH,
     validate_ci_security,
     validate_ios_package_lock,
+    validate_tls_runner,
+    TLS_RUNNER_PATH,
 )
 
 
@@ -26,6 +28,18 @@ class CiSecurityValidationTests(unittest.TestCase):
 
     def test_committed_workflow_passes(self) -> None:
         validate_ci_security(self.workflow)
+        validate_tls_runner(TLS_RUNNER_PATH.read_text(encoding="utf-8"))
+
+    def test_tls_fixture_cannot_replace_full_suite_with_filtered_pytest(self) -> None:
+        source = TLS_RUNNER_PATH.read_text(encoding="utf-8")
+        self.assertIn('"-m", "pytest",', source)
+        with self.assertRaisesRegex(CiSecurityError, "unfiltered full backend"):
+            validate_tls_runner(source.replace('"-m", "pytest",', '"-m", "pytest", "-k", "tls",'))
+
+    def test_real_tls_runner_and_evidence_are_required(self) -> None:
+        for snippet in ("python ../infra/scripts/run_database_tls_ci.py", "--artifact /tmp/taximobile-database-tls-ci.json", "5433:5432"):
+            with self.subTest(snippet=snippet), self.assertRaises(CiSecurityError):
+                validate_ci_security(self.workflow.replace(snippet, ""))
 
     def test_dependency_review_cannot_skip_snapshot_completeness(self) -> None:
         mutations = (

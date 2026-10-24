@@ -1,0 +1,20 @@
+{
+  "observed_utc": "2026-10-24T12:58:26.238494+00:00",
+  "scope": "Read-only configuration presence and bounded file aggregate; no encryption key, filename, content, participant data or provider call exposed.",
+  "observations": {
+    "configured_fields_present": {
+      "TAXIMOBILE_DRIVER_DOCUMENT_STORAGE_ROOT": false,
+      "TAXIMOBILE_DRIVER_DOCUMENT_ENCRYPTION_KEY": false,
+      "TAXIMOBILE_DRIVER_DOCUMENT_CLAMAV_HOST": false
+    },
+    "storage_enabled": false,
+    "expected_root_exists": true,
+    "file_count": 0,
+    "total_file_bytes": 0,
+    "file_content_or_names_exposed": false,
+    "aggregate_manifest_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "deployment_id": "8b03ad50-ba24-4d38-88b3-dc5321cd77cd"
+  },
+  "storage_or_service_changed": false,
+  "driver_document_production_accepted": false
+}

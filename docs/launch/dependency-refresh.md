@@ -51,3 +51,31 @@ retains the package comparison, release hashes, audit/consumer results and sourc
 failure identity. Fresh immutable CI and any deliberate staging rollout remain
 separate. Existing Trial-only spending, protected volumes and staff/credential
 boundaries remain in force.
+
+## Published correction and next packet
+
+The [source record](dependency-refresh-candidate-20261023.json) identifies
+**90704d136ca32ad7212243208fac92c606e1764d**, tree
+`9076dd265ae7ad3171dfc7110503605af4db86d6`, published to
+[draft PR #74](https://github.com/Q-SiO2/taxi/pull/74), unmerged. The clean clone
+contains nine intended changed files; original workspace HEAD/index are preserved.
+
+The [fresh CI observation](dependency-refresh-ci-observation-20261023.json) for
+[run 228](https://github.com/Q-SiO2/taxi/actions/runs/40041253043) confirms successful
+native Linux hash installation, both runtime and combined development/Linux audits,
+migration and bounded T2 baseline. Documentation/provenance, wrapper, Gradle graph
+submission and complete dependency review pass. Full backend, web, Android and iOS
+jobs are still running at this checkpoint; no overall CI pass is claimed.
+
+The [next staging packet](staging-upgrade.md) now has actual read-only database
+evidence: schema 0052, restricted runtime and separate table owner, no deployed
+membership-policy column, and an unencrypted private database connection. Prepare
+protected backup/isolated restore and verified TLS before their respective upgrade
+and production gates. No hosting or credential change was made. These
+post-publication observations do not change the frozen source SHA.
+
+The [24 October terminal record](dependency-refresh-ci-terminal-20261024.json)
+supersedes the in-progress observation: all eight required jobs pass for 90704d1;
+PR image publication is skipped. The [staging packet](staging-upgrade.md) now
+records the protected backup and qualified local restore/0053 migration. Hosted
+upgrade, verified TLS, document ingestion and real-world acceptance remain open.

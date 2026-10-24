@@ -113,7 +113,7 @@ def create_app(
     live_event_listener = None
     if active_settings.environment in {"staging", "production"}:
         live_event_publisher = PostgresLiveEventPublisher(sessions)
-        live_event_listener = PostgresLiveEventListener(active_settings.database_url, event_hub)
+        live_event_listener = PostgresLiveEventListener(active_settings.database_url, event_hub, tls=active_settings.database_tls)
     else:
         live_event_publisher = LocalLiveEventPublisher(event_hub)
     documents = driver_document_store or create_driver_document_store(
