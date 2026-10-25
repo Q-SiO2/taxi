@@ -1,13 +1,25 @@
 # TaxiMobile — Alpha, Pilot and Public Release Roadmap
 
-## Current packet — 24 October 2026
+## Current packet — 25 October 2026
+
+R3/R8 [durable document source](launch/document-s3.md) adds migration
+`20261025_0054`, hidden upload leases, final version-checked activation and bounded
+repeated orphan recovery under the upload key lock. Source API/worker selection,
+secret redaction and client ownership have 185 focused passes after the final
+listing cancellation correction. Local reports
+contain 1,142 unit, 62 API and 17 recovery/lifecycle passes, plus three later
+lease regressions; source bindings remain separate until native CI. Hosted ingestion remains
+disabled. Native CI, real private provider/scanner/feed/key recovery, compatible
+rollback and capacity/retention acceptance still gate deployment.
 
 R3/R8 [document pipeline recovery](launch/document-storage.md) now fixes verified
 scanner protocol/write failures, with 1,060 unit, two HTTP/PostGIS and real local
-ClamAV/custom-fixture checks passing. Fresh candidate CI and actual hosted
-storage/scanner/key/retention acceptance remain open. Separate Railway API and
-worker services require a reviewed persistence decision; equal filesystem paths
-do not prove a shared volume. No unapproved architecture or spending change.
+ClamAV/custom-fixture checks passing. All eight CI jobs now pass for source
+1e30102, including 1,342 backend cases and native PostGIS 3.4 lifecycle tests.
+The owner selected a [private encrypted S3 successor](launch/document-s3.md);
+transport/configuration checkpoint passed 1,115 local unit tests. The successor
+does not inherit its source CI or actual hosted storage/scanner/key acceptance.
+No unapproved spending, bucket, credential or real-document change.
 
 R3 [staging preparation](launch/staging-upgrade.md) now has exact-source CI,
 encrypted snapshot backup and qualified local restore/0053 migration evidence.

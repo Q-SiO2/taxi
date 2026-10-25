@@ -1,10 +1,20 @@
 # TaxiMobile documentation
 
-> **Next source packet — 24 October 2026:** the
-> [protected document correction](launch/document-storage.md) passes 1,060 unit
-> tests, two HTTP/PostGIS lifecycle cases and a real local ClamAV/custom-fixture
-> rehearsal. Fresh source CI remains pending. Hosted storage, current signature
-> feeds and key/retention acceptance are open; no real document was used.
+> **Next source packet — 25 October 2026:** migration `20261025_0054` and the
+> [durable S3 workflow](launch/document-s3.md) now reserve hidden upload metadata,
+> enforce a final owner/version/lease transaction and reconcile interrupted/late
+> writes. API/worker configuration and shutdown ownership are wired in source;
+> local reports contain 1,142 unit, 62 API and 17 PostGIS recovery/lifecycle
+> passes, plus three subsequent SQL lock/lease regressions. Their source scopes
+> are qualified in the packet. Native full-suite CI, hosted storage/feeds/key
+> recovery and rollout remain open.
+>
+> **Accepted source predecessor — 24 October 2026:** the
+> [protected document correction](launch/document-storage.md) passes all eight
+> required CI jobs and 1,342 backend tests, plus a real local ClamAV/custom-fixture
+> rehearsal. The owner-selected [private S3 successor](launch/document-s3.md)
+> transport checkpoint passed 1,115 local unit tests before the durable successor.
+> Hosted storage, feeds and key/retention acceptance remain open.
 
 > **Current packet — 24 October 2026:** all eight required CI jobs pass for source
 > [2919835](launch/database-tls-ci-terminal-20261024.json). The [staging upgrade packet](launch/staging-upgrade.md) records an encrypted

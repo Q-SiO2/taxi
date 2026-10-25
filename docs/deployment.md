@@ -20,6 +20,14 @@ explicit architectural decision supplies equivalent protection, erasure and
 recovery. Do not mistake equal per-service paths for shared files. Trial capacity,
 actual scanner feeds and independent key custody remain separate acceptance.
 
+The owner selected the [private encrypted S3 successor](launch/document-s3.md).
+Its 25 October source implements migration `20261025_0054`, durable upload leases,
+reconciliation and matching API/worker configuration. Hosted ingestion is still
+disabled: no bucket/credentials or environment values have been changed. Require
+exact-source CI, actual provider/feeds/key recovery, bounded capacity and an
+accepted data-preserving rollback before applying this migration and configuration.
+The guarded downgrade refuses pending uploads or immutable new-reason history.
+
 ## Current health and allowance — 20 October 2026
 
 [Read-only staging verification](redesign/board-alpha-evidence/railway-runtime-20261020-native-rehearsal.json)

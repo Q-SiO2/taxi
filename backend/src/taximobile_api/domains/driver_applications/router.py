@@ -29,6 +29,7 @@ from taximobile_api.domains.driver_applications.models import (
 from taximobile_api.domains.driver_applications.documents import (
     attach_clean_document,
     preflight_document_change,
+    reserve_document_upload,
     remove_document,
 )
 from taximobile_api.domains.driver_applications.presenters import (
@@ -546,13 +547,36 @@ async def upload_city_application_document(
     store = request.app.state.driver_document_store
     try:
         content = await read_bounded_upload(file, store.max_bytes)
-        stored = await store.store(content, declared_media_type=file.content_type)
+        prepared = await store.prepare(content, declared_media_type=file.content_type)
     except DriverDocumentRejected as error:
         raise HTTPException(status_code=422, detail=str(error)) from error
     except DriverDocumentError as error:
         raise HTTPException(status_code=503, detail=str(error)) from error
     finally:
         await file.close()
+
+    # This transaction must commit before storage publication. A cancelled
+    # request or unknown result then leaves durable, hidden cleanup authority.
+    try:
+        async with session.begin():
+            application = await my_application_or_404(
+                session, user_id=principal.user_id, application_id=application_id, lock=True,
+            )
+            pending = await reserve_document_upload(
+                session, application, requirement_item_id=requirement_item_id,
+                expected_version=expected_application_version, stored=prepared.stored,
+                retention_days=request.app.state.settings.driver_document_retention_days,
+            )
+            pending_id = pending.id
+    except (RecruitmentNotFound, RecruitmentConflict, ApplicationReferenceInvalid) as error:
+        raise recruitment_http_error(error) from error
+
+    try:
+        await store.publish(prepared)
+    except DriverDocumentError as error:
+        # A provider may still complete this write. The lease and repeated
+        # orphan sweep reconcile it; a best-effort request DELETE cannot do so.
+        raise HTTPException(status_code=503, detail=str(error)) from error
 
     replaced_key: str | None = None
     try:
@@ -568,8 +592,7 @@ async def upload_city_application_document(
                 application,
                 requirement_item_id=requirement_item_id,
                 expected_version=expected_application_version,
-                stored=stored,
-                retention_days=request.app.state.settings.driver_document_retention_days,
+                document_id=pending_id,
             )
             city = await session.get(City, application.city_id)
             assert city is not None
@@ -595,17 +618,9 @@ async def upload_city_application_document(
                 document_upload_available=True,
             )
     except (RecruitmentNotFound, RecruitmentConflict, ApplicationReferenceInvalid) as error:
-        try:
-            await store.delete(stored.opaque_storage_key)
-        except DriverDocumentError:
-            pass
         raise recruitment_http_error(error) from error
-    except Exception:
-        try:
-            await store.delete(stored.opaque_storage_key)
-        except DriverDocumentError:
-            pass
-        raise
+    # Do not delete on other exceptions: a failed commit acknowledgement may
+    # mean the activation committed. The worker rechecks authoritative state.
 
     if replaced_key is not None:
         try:

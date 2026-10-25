@@ -1,7 +1,7 @@
 # Protected driver documents — scanner and recovery
 
 Prepared 24 October 2026 for R3/R8. Status: **local correction verified;
-fresh source CI and actual deployment acceptance pending**.
+all eight source CI jobs pass; actual deployment acceptance pending**.
 
 The [actual hosted preflight](staging-document-storage-preflight-20261024.json)
 finds root/key/scanner settings absent and zero files: driver-document ingestion
@@ -37,6 +37,13 @@ binds regression logs, final test reports and source hashes. Thirty-two focused
 cases cover the real loopback TCP exchange and encrypted store. They use a
 protocol fixture and synthetic file bytes; they do not establish a production
 antimalware daemon or current vendor signature feeds.
+
+[Terminal CI 234](document-storage-ci-terminal-20261024.json) passes all eight
+required jobs for `1e30102c5e6d0c863e02c37bcf48cb5f4488a8ad`: **1,342 backend
+tests, zero failures/errors/skips**, including native PostGIS 3.4 lifecycle
+variants and eight real TLS probes/cleanup, plus image/security, Android/web,
+unsigned iOS and complete dependency review. S3 successor work is separate and
+does not inherit those results.
 
 All **1,060 unit tests** pass without failures/errors/skips. Two
 [HTTP/PostGIS lifecycle cases](document-lifecycle-local-20261024.json) pass using
@@ -74,7 +81,7 @@ Cancellation during the scan is covered; interruption during atomic filesystem
 publication, file/database commit gaps and process death still require separate
 consistency/orphan-recovery evidence before real-document acceptance.
 
-## Hosting decision still required
+## Owner-selected hosting direction; acceptance still required
 
 The existing filesystem adapter requires API and retention worker access to the
 same private persistent files and key. The portable Compose deployment supplies
@@ -83,12 +90,14 @@ attaches a volume to one service; equal paths or equal environment variables in
 separate services do not establish a shared filesystem. Mounting a volume only
 on the API cannot establish retention-worker deletion.
 
-Keep ingestion disabled until a reviewed target topology satisfies that existing
-contract, or an explicit owner-approved architectural change supplies equivalent
-private persistence, erasure and recovery. Do not silently introduce public
-object URLs, duplicate independent stores, a new storage service/framework or a
-combined API/worker process to conceal the mismatch. Both preserved PostGIS
-volumes and Trial-only/no-purchase constraints remain binding.
+The owner has [selected the private encrypted S3 adapter](document-storage-decision-20261024.json)
+for Railway. [Implementation is in progress](document-s3.md): verified source
+transport/config/envelope work is not yet wired into activation, and durable
+upload/worker reconciliation remains required. Keep ingestion disabled until
+the reviewed target supplies persistence, erasure and recovery. Both preserved
+PostGIS volumes and Trial-only/no-purchase constraints remain binding. No bucket,
+credential distribution, real document or paid resource is authorized by the
+source choice.
 
 The next deployment packet must bind: actual private scanner/healthy current
 signatures and capacity; persistent cross-process storage permissions; independent

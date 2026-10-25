@@ -1,5 +1,14 @@
 # TaxiMobile — Real-World Deployment Gap Audit
 
+## R3/R8 document recovery source — 25 October 2026
+
+Migration `20261025_0054` and the [durable upload workflow](launch/document-s3.md)
+add hidden leases, final authoritative version checks and bounded repeated orphan
+recovery. Source API/worker S3 configuration is wired, with 185 focused local
+passes and qualified unit/API/PostGIS recovery reports in the packet. Native CI, real provider/feeds/key
+recovery, hosted migration/rollback and participant acceptance remain open.
+This source work does not close GAP-003/007/019 or any pilot/public release gate.
+
 ## Membership source packet — 23 October 2026
 
 The owner selected the existing member register for the Fès union's closed-shop

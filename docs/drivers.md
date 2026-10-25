@@ -215,6 +215,14 @@ The backend must contain the authoritative verification state.
 
 Driver documents may contain highly sensitive information.
 
+The [25 October durable upload source](launch/document-s3.md) records hidden
+pending metadata before publication, then attaches confirmed bytes only after
+the final owner/version/lease transaction. Pending uploads are not evidence of
+driver eligibility. Expired leases and repeated bounded orphan sweeps reconcile
+interrupted/late writes. S3 API/worker configuration is source work under the
+owner-selected design; actual private storage, scanner feeds, key recovery and
+participant-document acceptance remain required before hosted ingestion.
+
 The city-application document capability:
 
 * accepts only bounded PDF, JPEG, and PNG bytes whose declared and detected types match;

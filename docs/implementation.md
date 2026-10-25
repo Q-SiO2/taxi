@@ -1,15 +1,31 @@
 # Implementation Blueprint
 
+## Durable document publication — 25 October 2026
+
+Migration `20261025_0054` and the [S3 successor](launch/document-s3.md) reserve
+hidden cleanup metadata before publication and refresh the authoritative final
+application lock. An unexpired lease and expected version are required to attach
+evidence. The worker skips active leases, erases expired pending uploads and
+repeatedly reconciles old unreferenced objects with bounded listing and key locks.
+Source API/worker backend selection, complete configuration and lifecycle
+ownership pass 185 focused checks after the listing cancellation correction.
+Local reports contain 1,142 unit, 62 API and
+17 isolated PostGIS recovery/HTTP passes; a subsequent post-lock clock correction
+has three passing SQL-wait regressions and its own source binding. Source CI and real provider/hosted
+acceptance remain separate open gates; no environment/bucket/secrets were changed.
+
 ## Protected document pipeline — 24 October 2026
 
 The [R3/R8 document packet](launch/document-storage.md) fixes scanner framing,
 fragmentation and whole-exchange timeout handling, plus safe atomic-write failure
 classification. Thirty-two focused cases, all 1,060 unit tests, two actual
 HTTP/PostGIS lifecycle variants and five real local ClamAV/custom-fixture checks
-pass. Signature-download/import failures and the original eleven protocol
-regressions are retained. Fresh candidate CI remains required. Hosted ingestion
-is disabled; shared persistence/key recovery and actual scanner-feed acceptance
-must be resolved within a reviewed topology and authorized budget.
+pass. All eight required CI jobs pass for source 1e30102, with 1,342 backend tests
+including native PostGIS 3.4 lifecycle variants. Signature-download/import failures
+and the original eleven protocol regressions are retained. Hosted ingestion is
+disabled. The owner-selected [S3 source successor](launch/document-s3.md) passes
+1,115 local unit tests and clean dependency audits at its transport checkpoint;
+the durable source successor above has its own validation and acceptance gates.
 
 ## Staging backup and restore — 24 October 2026
 

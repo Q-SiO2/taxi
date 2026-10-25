@@ -1,0 +1,175 @@
+{
+  "recorded_utc": "2026-10-25T14:57:37.523255+00:00",
+  "scope": "Owner-selected private S3 source: durable upload lease/finalization, bounded orphan recovery, process wiring and shutdown; no actual bucket or hosting mutation",
+  "reports": {
+    "focused_activation": {
+      "file": "document-storage-activation-r1-20261025.xml",
+      "junit_sha256": "a729d0322c81e77a944af8d4fb8a921877afd1439980916efb836f4131927d6e",
+      "totals": {
+        "tests": 184,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "retained_broad_report_with_one_api_timing_failure": {
+      "file": "document-recovery-unit-api-r2-20261025.xml",
+      "junit_sha256": "0ad9017267ddda774da32a6d4fdea54e0ad6b65083dae2fda2892b23790ca812",
+      "totals": {
+        "tests": 1204,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "corrected_api": {
+      "file": "document-recovery-api-r3-20261025.xml",
+      "junit_sha256": "d57c27c4e341532fe39f0a1f3c19601d0becddf7ca33d8aa27a76ae1e6cdc925",
+      "totals": {
+        "tests": 62,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "postgis_lifecycle_recovery": {
+      "file": "document-recovery-r3-20261025.xml",
+      "junit_sha256": "aa8a90fc038a4cd942730b9646eb023fcf268749aeb9852ec31171e428e046bf",
+      "totals": {
+        "tests": 17,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "retained_pre_fix_lease_failure": {
+      "file": "document-recovery-r4-20261025.xml",
+      "junit_sha256": "008c4581b38954c3820f5a160b937b81820c11a1da8ef741185bc33eec1969ef",
+      "totals": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "corrected_post_lock_lease_regressions": {
+      "file": "document-recovery-r5-20261025.xml",
+      "junit_sha256": "e2ba8003e8d68b4cbc924a755d914e322ea76df52d46adedc2c0ccbb6a0e4104",
+      "totals": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "unit_subset_of_retained_broad_report": {
+    "tests": 1142,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "source_scopes": "17 PostGIS cases precede the final post-lock clock correction; 3 later SQL-wait cases bind the correction. Native complete CI remains required.",
+  "retained_observations": [
+    {
+      "record": "document-upload-recovery-r1-20261025.json",
+      "reason": "Two tri-language fixture validation failures, 12 passes"
+    },
+    {
+      "record": "document-upload-recovery-r2-20261025.json",
+      "reason": "Non-propagating logger observer failure; erasure and emitted event were already observed, 14 passes"
+    },
+    {
+      "record": "document-upload-recovery-r4-20261025.json",
+      "reason": "Real lease expiry during lock wait incorrectly activated before correction"
+    },
+    {
+      "report": "document-recovery-unit-api-r2-20261025.xml",
+      "reason": "Two-second test JWT expired during TestClient startup; corrected mint point preserves timing assertions"
+    },
+    {
+      "check": "initial_docs_validation",
+      "reason": "Four standing documents lacked the new 0054 migration head; fixed before passing validation"
+    }
+  ],
+  "audits": {
+    "runtime": {
+      "packages": 48,
+      "findings": 0,
+      "skipped": 0,
+      "report_sha256": "adece5e4096ed242b630db6f32b4e2f20bb02d441454e4ea7f19d1efd6b5977c"
+    },
+    "dev": {
+      "packages": 74,
+      "findings": 0,
+      "skipped": 0,
+      "report_sha256": "ebdbceea11135ad5e9b225dfdb101b8f6bb97aa989063b9effe742a0f42fa208"
+    }
+  },
+  "checks": [
+    {
+      "name": "compile",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "docs",
+      "exit_code": 0,
+      "log_sha256": "c1e23f3047573093d06110e855d89a9c4f140360994e15260383e19ea8a45b61"
+    },
+    {
+      "name": "source_credentials",
+      "exit_code": 0,
+      "log_sha256": "2ac62c5a29699feb338f9b6c4a4023d635f61d0f4deec37b7d158d50cab9d235"
+    },
+    {
+      "name": "ci_security",
+      "exit_code": 0,
+      "log_sha256": "25537fc036d76a1eebcaa1531d91842d592a58cd0dac89b597ebc2f708465cfe"
+    },
+    {
+      "name": "pip_check",
+      "exit_code": 0,
+      "log_sha256": "672aec65a45bed50e70229c70934a7eebf0462595c459b83023027645d57cccf"
+    }
+  ],
+  "source_sha256": {
+    "backend/migrations/versions/20261025_0054_document_upload_lease.py": "df78793e8bb4a9e20cc251b14013f3768a4efbdd662fc24400463f6eedbfb3ff",
+    "backend/pyproject.toml": "032fa5b71749270a1bf67a86ca1726d8b5355e419cb057d978e43712d43132d6",
+    "backend/requirements-dev.lock": "8895d90c0994e832b0f404fa7d302f4a2bac4644538305ecdd9fbabefff927fd",
+    "backend/requirements-linux.lock": "80fc171715d925f47ec94c7b58b37c2c589a890b78ca681480178b2690ac4baa",
+    "backend/requirements.lock": "ecc65e0dabc61ea1a5b31c474737a5e8d7e19510fe648ad7517efeb3a15b5bea",
+    "backend/src/taximobile_api/core/config.py": "8ca5fb88c1eed64f7541797aaca797284f12a6d7c0b4a90d49560a61fde1273b",
+    "backend/src/taximobile_api/domains/driver_applications/documents.py": "4a03126209e5d32da2c368b2f0ec6a9c333723163ab6fe869ac6112c34dd9893",
+    "backend/src/taximobile_api/domains/driver_applications/models.py": "6f2c932f288321fec7aa377b182c1e936c1abf65705a4f30ed6ebc1712329796",
+    "backend/src/taximobile_api/domains/driver_applications/router.py": "5a68354c8a7c92d95cf22a0753c932568161d7fc1b2f763a61b8e435bd5a892f",
+    "backend/src/taximobile_api/domains/driver_applications/service.py": "be2a9d78f7eb1f3f543541160d34b337c93900626094cf1470d2c8061c660248",
+    "backend/src/taximobile_api/integrations/document_storage_config.py": "1bf3b4334420eb8689c1b6a16dad1541eea098ed16d448a34884271ca7a1d545",
+    "backend/src/taximobile_api/integrations/driver_documents.py": "b6b59de0b0b360bb3be55221c923e0a17d276b32e91f72814742375fcf97d956",
+    "backend/src/taximobile_api/integrations/s3_driver_documents.py": "836d24ccbc618dbe21edac80ac0ae51ffaef74e935393d53ff0441b516e73aaf",
+    "backend/src/taximobile_api/main.py": "5e54ccbd8ecb4591dcfac166080da1854b09b20e3d267fe1fe0b0dfd92a7a392",
+    "backend/src/taximobile_api/workers/application.py": "6db27e8f58da9fff6d25162ec6e1d28d5a115bb527e22758b6cd984d2fd09a16",
+    "backend/src/taximobile_api/workers/driver_document_retention.py": "c6288f90b8dbdb3165619b2ad406275f4f235c891ff226d4053b4bfd8f681955",
+    "backend/tests/api/test_live_sessions.py": "35b408edcacbc044f7d023a2be4bb0e7edf03f1d8a900e51ed56066f978ef862",
+    "backend/tests/integration/s3_document_fixtures.py": "cb48d6769c3db4ef6d01ad7837e514f08c18ce28bc960fd543de1c78e9e1876f",
+    "backend/tests/integration/test_city_driver_recruitment.py": "47059ea5fae43cc22c8805deb50d5d4ce8afaefe468fef637343e1f6654f29ec",
+    "backend/tests/integration/test_document_upload_recovery.py": "fabc241ddf3c4662a3e98bd9152a672abb63e3d4fa2b7ff6c32bedecdf429e0a",
+    "backend/tests/unit/test_document_orphan_recovery.py": "261bfbcc6140bb79ca6cc7d3de66938cc48803f10b95e2baa1b23240f9e45c75",
+    "backend/tests/unit/test_document_storage_activation.py": "06fd0f9b32a3fb45a659d992cbb250138f765c90c2a4205ca25f9ac1ff4b3340",
+    "backend/tests/unit/test_document_storage_config.py": "6770256e41af74094ee879a4c3a421abef309e28c96bec34074e751376bbafdd",
+    "backend/tests/unit/test_driver_documents.py": "5e1f9d95a27e194f8c0952a5f02bf86ab338296e1cc96ad520c91925bbce91c0",
+    "backend/tests/unit/test_s3_driver_documents.py": "f22e8c8c09e68456a4e8be65825b9ba8d18f5d4fbb29478a5063f154620bb339"
+  },
+  "source_manifest_sha256": "e67b51bf128dc6a4872f71877b2d096c7e8fd361357f20b0bd77336a2679f76f",
+  "original_root_head_and_index_preserved": true,
+  "mobile_web_compilation_inputs_unchanged": 371,
+  "previous_dependency_pins_preserved": true,
+  "linux_lock_unchanged": true,
+  "owned_test_cluster_stopped": true,
+  "original_template_preserved_at": "20261023_0053",
+  "isolated_document_template_at": "20261025_0054",
+  "native_successor_ci_accepted": false,
+  "actual_s3_or_official_scanner_feeds_accepted": false,
+  "hosted_environment_bucket_credentials_real_documents_or_paid_resources_changed": false,
+  "field_or_public_release_gates_closed": false
+}

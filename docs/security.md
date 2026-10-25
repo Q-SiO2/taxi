@@ -366,6 +366,30 @@ only one immutable content-free erasure record. Production promotion requires a
 controlled clean/malware/reviewer/deletion drill plus encrypted-volume backup,
 key recovery, expiry, and restore evidence.
 
+On 24 October the owner selected a private encrypted S3-compatible adapter for
+Railway's separate API/worker. The existing filesystem adapter remains the
+portable default. See the [approved implementation packet](launch/document-s3.md):
+source transport work alone cannot activate ingestion before durable upload/
+orphan recovery, private credentials, actual scanner feeds and provider/restore
+acceptance. Public or presigned document URLs remain excluded.
+
+The [25 October source workflow](launch/document-s3.md) reserves hidden metadata
+with an upload lease before publishing ciphertext. Finalization refreshes the
+owner/application lock and checks its expected version and pending lease.
+Cancellation and unknown outcomes retain cleanup authority; an uncertain commit
+must never cause blind request deletion. Expired pending uploads have immutable
+`UPLOAD_UNCOMMITTED` erasure evidence. A bounded repeated sweep reconciles late
+unreferenced writes under the same opaque-key lock as upload registration,
+checking current database authority before deletion. Orphan operational logs
+contain only a fixed event and worker label, without keys, hashes or fabricated
+actors. Actual central log retention remains an operational acceptance gate.
+
+The source S3 selector requires explicit private endpoint/bucket credentials,
+the independent encryption key and scanner; mixed filesystem/S3 settings fail
+startup. Filesystem remains default and unconfigured storage remains disabled.
+The new lease migration and source wiring do not establish actual provider,
+scanner-feed, key recovery, capacity or real-document acceptance.
+
 ## Logging
 
 Logs must not contain sensitive information unnecessarily.

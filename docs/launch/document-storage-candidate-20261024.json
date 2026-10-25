@@ -1,0 +1,78 @@
+{
+  "recorded_utc": "2026-10-24T18:11:20.164549+00:00",
+  "commit": "1e30102c5e6d0c863e02c37bcf48cb5f4488a8ad",
+  "tree": "bc27caa1f7455f7b781059251838a2984c5b2768",
+  "parent": "29198354250615940fa46ac7c1d8305da743ba86",
+  "files": [
+    "backend/src/taximobile_api/integrations/driver_documents.py",
+    "backend/tests/integration/test_city_driver_recruitment.py",
+    "backend/tests/unit/test_clamav_protocol.py",
+    "backend/tests/unit/test_driver_documents.py",
+    "docs/README.md",
+    "docs/deployment.md",
+    "docs/drivers.md",
+    "docs/implementation.md",
+    "docs/launch/database-tls-ci-successor-observation-20261024.json",
+    "docs/launch/database-tls-ci-suite-20261024.json",
+    "docs/launch/database-tls-ci-terminal-20261024.json",
+    "docs/launch/database-tls-successor-candidate-20261024.json",
+    "docs/launch/database-tls.md",
+    "docs/launch/document-lifecycle-local-20261024.json",
+    "docs/launch/document-scanner-daemon-20261024.json",
+    "docs/launch/document-scanner-runtime-20261024.json",
+    "docs/launch/document-scanner-runtime-r2-20261024.json",
+    "docs/launch/document-scanner-runtime-r3-20261024.json",
+    "docs/launch/document-scanner-runtime-r4-20261024.json",
+    "docs/launch/document-storage-verification-20261024.json",
+    "docs/launch/document-storage.md",
+    "docs/launch/staging-tls-config-diagnostic-20261024.json",
+    "docs/launch/staging-tls-rollout.md",
+    "docs/launch/staging-tls-server-preflight-20261024.json",
+    "docs/launch/staging-upgrade.md",
+    "docs/roadmap.md",
+    "docs/security.md"
+  ],
+  "checks": [
+    {
+      "name": "compile",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "docs",
+      "exit_code": 0,
+      "log_sha256": "f6ea2398eab7aebf09d0e4b0f907919e56a05dc9dd12913a2a49bff8f84550f0"
+    },
+    {
+      "name": "ci-security",
+      "exit_code": 0,
+      "log_sha256": "25537fc036d76a1eebcaa1531d91842d592a58cd0dac89b597ebc2f708465cfe"
+    },
+    {
+      "name": "credentials",
+      "exit_code": 0,
+      "log_sha256": "ec562be1f9b3c881f1e32d3aa314eefa6912c2c503d134556121e20f81327e3f"
+    },
+    {
+      "name": "mobile-api",
+      "exit_code": 0,
+      "log_sha256": "5a1d49760ca50404af36e34959e40718782fee4d95ffc796a768cdaf9ca934a0"
+    },
+    {
+      "name": "web-api",
+      "exit_code": 0,
+      "log_sha256": "e631f107e93b281afdfb44b028b0d6b9873b5b342e82445fb0e4c0869e9200ea"
+    }
+  ],
+  "original_head": "2835c8aa7f5e97a17afcdbe647fe589cbd0421e1",
+  "original_index_preserved": true,
+  "candidate_clean": true,
+  "compilation_inputs_identical": 371,
+  "dependency_locks_unchanged": true,
+  "published": true,
+  "hosted_accepted": false,
+  "source_ci_passed": true,
+  "ci_run_id": 40119576061,
+  "ci_run_number": 234,
+  "pull_request": "https://github.com/Q-SiO2/taxi/pull/74"
+}

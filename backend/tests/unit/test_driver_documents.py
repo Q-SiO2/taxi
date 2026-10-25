@@ -1,5 +1,9 @@
 from pathlib import Path
 import shutil
+import os
+import asyncio
+import threading
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
@@ -8,6 +12,7 @@ from taximobile_api.integrations.driver_documents import (
     DriverDocumentRejected,
     DriverDocumentUnavailable,
     EncryptedFilesystemDriverDocumentStore,
+    InMemoryDriverDocumentStore,
     create_driver_document_store,
     detect_media_type,
 )
@@ -160,3 +165,107 @@ async def test_failed_atomic_publish_is_explicit_and_removes_temporary_ciphertex
     assert "private-fixture" not in str(error.value)
     assert list(tmp_path.rglob("*.bin")) == []
     assert list(tmp_path.rglob(".upload-*")) == []
+    assert list(tmp_path.rglob("*.upload")) == []
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("kind", ["filesystem", "memory"])
+async def test_preparation_does_not_publish_and_payload_is_not_in_repr(tmp_path, kind):
+    store = (EncryptedFilesystemDriverDocumentStore(tmp_path, bytes(range(32)), CleanScanner())
+             if kind == "filesystem" else InMemoryDriverDocumentStore(CleanScanner()))
+    prepared = await store.prepare(PDF, declared_media_type="application/pdf")
+    assert "PDF" not in repr(prepared) and "payload=" not in repr(prepared)
+    with pytest.raises(DriverDocumentNotFound):
+        await store.read(prepared.stored.opaque_storage_key)
+    if kind == "filesystem":
+        assert list(tmp_path.rglob("*.bin")) == []
+        assert PDF not in prepared.payload
+    assert await store.publish(prepared) == prepared.stored
+    assert await store.read(prepared.stored.opaque_storage_key) == PDF
+    await store.aclose()
+
+
+@pytest.mark.asyncio
+async def test_filesystem_object_pages_bound_foreign_entries_and_resume(tmp_path):
+    store = EncryptedFilesystemDriverDocumentStore(tmp_path, bytes(range(32)), CleanScanner())
+    saved = [await store.store(PDF, declared_media_type="application/pdf") for _ in range(4)]
+    folder = tmp_path / "v1" / "00"
+    folder.mkdir(parents=True, exist_ok=True)
+    for i in range(5):
+        (folder / f"foreign-{i}.txt").write_text("not an owned object")
+    cursor = None
+    observed = []
+    pages = 0
+    while True:
+        page = await store.objects_page(cursor=cursor, limit=2)
+        pages += 1
+        assert len(page.objects) <= 2
+        observed.extend(item.opaque_storage_key for item in page.objects)
+        assert all(item.last_modified.utcoffset() == timedelta(0) for item in page.objects)
+        cursor = page.next_cursor
+        if cursor is None:
+            break
+        assert pages < 20
+    assert pages >= 5  # Foreign entries also consume bounded scan work.
+    assert sorted(observed) == sorted(item.opaque_storage_key for item in saved)
+    await store.aclose()
+
+
+@pytest.mark.asyncio
+async def test_filesystem_crashed_staging_file_is_listed_and_erased_by_its_durable_key(tmp_path):
+    store = EncryptedFilesystemDriverDocumentStore(tmp_path, bytes(range(32)), CleanScanner())
+    prepared = await store.prepare(PDF, declared_media_type="application/pdf")
+    path = tmp_path.joinpath(*prepared.stored.opaque_storage_key.split("/")).with_suffix(".upload")
+    path.parent.mkdir(parents=True)
+    path.write_bytes(prepared.payload[:20])  # Process died before rename/finally.
+    old = (datetime.now(UTC) - timedelta(hours=1)).timestamp()
+    os.utime(path, (old, old))
+    reopened = EncryptedFilesystemDriverDocumentStore(tmp_path, bytes(range(32)), CleanScanner())
+    page = await reopened.objects_page(cursor=None, limit=10)
+    assert [item.opaque_storage_key for item in page.objects] == [prepared.stored.opaque_storage_key]
+    assert page.objects[0].last_modified < datetime.now(UTC) - timedelta(minutes=59)
+    await reopened.delete(prepared.stored.opaque_storage_key)
+    assert not path.exists()
+    await store.aclose()
+    await reopened.aclose()
+
+
+@pytest.mark.asyncio
+async def test_filesystem_read_bounds_ciphertext_before_decryption(tmp_path):
+    store = EncryptedFilesystemDriverDocumentStore(tmp_path, bytes(range(32)), CleanScanner(), max_bytes=128)
+    saved = await store.store(PDF, declared_media_type="application/pdf")
+    path = tmp_path.joinpath(*saved.opaque_storage_key.split("/"))
+    path.write_bytes(b"x" * 1024)
+    with pytest.raises(DriverDocumentUnavailable, match="object length is invalid"):
+        await store.read(saved.opaque_storage_key)
+    await store.aclose()
+
+
+@pytest.mark.asyncio
+async def test_repeated_listing_cancellation_keeps_iterator_owned_until_thread_finishes(tmp_path):
+    store = EncryptedFilesystemDriverDocumentStore(tmp_path, bytes(range(32)), CleanScanner())
+    entered, release = threading.Event(), threading.Event()
+
+    def blocked_listing():
+        entered.set()
+        assert release.wait(5)
+        yield None
+    store._walk_objects = blocked_listing
+    listing = asyncio.create_task(store.objects_page(cursor=None, limit=1))
+    closing = None
+    try:
+        assert await asyncio.to_thread(entered.wait, 5)
+        listing.cancel()
+        await asyncio.sleep(0)
+        listing.cancel()
+        with pytest.raises(asyncio.CancelledError):
+            await listing
+        closing = asyncio.create_task(store.aclose())
+        await asyncio.sleep(.01)
+        assert not closing.done(), "Shutdown must not close a generator whose listing thread still owns it"
+        release.set()
+        await asyncio.wait_for(closing, 2)
+        assert store._listing is None
+    finally:
+        release.set()
+        await asyncio.gather(listing, *([closing] if closing is not None else []), return_exceptions=True)

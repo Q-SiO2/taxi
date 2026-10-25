@@ -1,5 +1,32 @@
 # TaxiMobile — Database Specification
 
+## Durable document uploads — source change, 25 October 2026
+
+Migration `20261025_0054` follows `20261023_0053`. It adds nullable
+`driver_application_documents.upload_lease_until` and the bounded erasure reason
+`UPLOAD_UNCOMMITTED`. A pending upload reuses a scanned document row with
+`deleted_at` set, no evidence link and a five-minute technical publication lease.
+The constraint requires a pending lease to follow `uploaded_at` and coexist with
+`deleted_at`. This hidden state is not an applicant deletion or accepted evidence.
+
+The API commits this row before publishing bytes. A second owner/version-checked
+transaction locks and activates the same unexpired row, clears its lease and
+deletion marker, links evidence and advances the application once. Interruption,
+uncertain storage/commit outcomes and stale edits leave the row for reconciliation;
+the API must never blindly delete after an uncertain database commit.
+
+The worker skips active leases and erases expired pending uploads with immutable
+`UPLOAD_UNCOMMITTED` evidence. A key-scoped transaction advisory lock serializes
+new pending records with orphan recheck/deletion. A bounded object sweep is also
+required to find writes which complete after their pending row was erased.
+The five-minute lease is a concurrency fence, not a participant retention policy.
+
+Downgrade refuses while pending uploads or new-reason erasure evidence exist;
+it must not discard recovery state or rewrite immutable audit history. This is
+source work in progress. Earlier 0053 tests do not accept this migration, and
+hosted schema remains independently verified at 0052. S3 activation remains closed
+until the complete recovery workflow and affected checks pass.
+
 ## Operator membership policy — source change, 23 October 2026
 
 Migration `20261023_0053` adds non-null Boolean
@@ -487,13 +514,14 @@ driver_application_documents
 ├── media_type / byte_size / sha256
 ├── malware_scan_status
 ├── uploaded_at / deleted_at
+├── upload_lease_until             # nullable; hidden pending uploads only
 └── retention_deadline
 
 driver_document_retention_actions
 ├── id
 ├── original_document_id          # unique, no FK after hard deletion
 ├── application_id / city_id
-├── reason                        # applicant deletion / replacement / expiry
+├── reason                        # applicant deletion / replacement / expiry / uncommitted upload
 ├── retention_policy_version
 ├── retention_due_at / executed_at
 └── created_at
