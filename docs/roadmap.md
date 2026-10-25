@@ -5,12 +5,20 @@
 R3/R8 [durable document source](launch/document-s3.md) adds migration
 `20261025_0054`, hidden upload leases, final version-checked activation and bounded
 repeated orphan recovery under the upload key lock. Source API/worker selection,
-secret redaction and client ownership have 185 focused passes after the final
-listing cancellation correction. Local reports
-contain 1,142 unit, 62 API and 17 recovery/lifecycle passes, plus three later
-lease regressions; source bindings remain separate until native CI. Hosted ingestion remains
-disabled. Native CI, real private provider/scanner/feed/key recovery, compatible
-rollback and capacity/retention acceptance still gate deployment.
+secret redaction and client ownership pass [CI 236](launch/document-s3-ci-terminal-20261025.json):
+all eight required jobs and 1,443 backend cases, with no failures/errors/skips.
+A separately approved [real S3 probe](launch/document-s3-provider-probe-20261025.json)
+passes with three synthetic objects/19 requests and cleanup. Hosted ingestion
+remains disabled; official scanner capacity/feeds, service credentials/key
+recovery, compatible rollback and capacity/retention acceptance still gate
+deployment. Actual Trial limits are insufficient for the reviewed full scanner.
+
+The next hosted technical gate is matched API/worker rollout with verified
+database TLS and schema 0054. The [runtime-preserving migrator](launch/runtime-preservation.md)
+now rejects mismatched established credentials before Alembic; local unit and
+real SCRAM checks pass. Its own fresh CI, qualified 0054 restore/upgrade and the
+existing guarded staging packet precede application. No public promotion follows
+from this staging work.
 
 R3/R8 [document pipeline recovery](launch/document-storage.md) now fixes verified
 scanner protocol/write failures, with 1,060 unit, two HTTP/PostGIS and real local

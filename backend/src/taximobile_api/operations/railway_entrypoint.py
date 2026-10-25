@@ -13,9 +13,10 @@ import os
 import subprocess
 import sys
 from collections.abc import MutableMapping
-from urllib.parse import urlparse
 
 import asyncpg
+from sqlalchemy.engine import make_url
+from sqlalchemy.exc import ArgumentError
 
 from taximobile_api.core.config import _is_valid_http_host
 from taximobile_api.db.transport import DatabaseTLS
@@ -69,13 +70,23 @@ def command_for(role: str, environment: MutableMapping[str, str]) -> list[str]:
 def migration_target(environment: MutableMapping[str, str]) -> tuple[str, str]:
     url = environment.get("TAXIMOBILE_MIGRATION_DATABASE_URL", "")
     password = environment.get("TAXIMOBILE_RUNTIME_DATABASE_PASSWORD", "")
-    parsed = urlparse(url.replace("postgresql+asyncpg://", "postgresql://", 1))
+    try:
+        parsed = make_url(url)
+        runtime = make_url(environment.get("TAXIMOBILE_DATABASE_URL", ""))
+    except (ArgumentError, ValueError):
+        raise RailwayConfigurationError("Migration and runtime PostgreSQL URLs must be configured correctly.") from None
     expected_database = "taximobile_alpha_" + environment["RAILWAY_ENVIRONMENT_ID"].replace("-", "")[:12]
-    if (parsed.scheme != "postgresql" or parsed.hostname != "alpha-postgis.railway.internal"
-            or parsed.path != "/" + expected_database or not parsed.username or not parsed.password):
+    if (parsed.drivername not in {"postgresql", "postgresql+asyncpg"}
+            or parsed.host != "alpha-postgis.railway.internal"
+            or parsed.database != expected_database or not parsed.username or not parsed.password):
         raise RailwayConfigurationError("Migration target must be the isolated alpha PostGIS database.")
     if len(password) < 32:
         raise RailwayConfigurationError("A dedicated 32+ character runtime password is required.")
+    if (runtime.drivername not in {"postgresql", "postgresql+asyncpg"}
+            or runtime.username != "taximobile_runtime" or runtime.password != password
+            or runtime.host != parsed.host or runtime.database != parsed.database
+            or (runtime.port or 5432) != (parsed.port or 5432)):
+        raise RailwayConfigurationError("Runtime configuration must match the isolated migration target and established login.")
     return url, password
 
 
@@ -117,17 +128,60 @@ async def provision_runtime(url: str, password: str, *, grant: bool, tls: Databa
                     await connection.execute("ALTER MATERIALIZED VIEW public.operational_metric_facts_hourly_v1 OWNER TO taximobile_runtime")
             else:
                 exists = await connection.fetchval("SELECT EXISTS(SELECT 1 FROM pg_roles WHERE rolname='taximobile_runtime')")
-                action = "ALTER" if exists else "CREATE"
+                if exists:
+                    # An ordinary deployment is not credential recovery. Prove
+                    # the established login before Alembic instead of replacing
+                    # its password/role attributes to make startup appear valid.
+                    runtime_url = make_url(url).set(
+                        drivername="postgresql", username="taximobile_runtime", password=password,
+                    ).render_as_string(hide_password=False)
+                    policy = tls or DatabaseTLS.from_environment()
+                    try:
+                        runtime = await asyncpg.connect(
+                            runtime_url, **policy.connect_args(runtime_url), timeout=10,
+                            server_settings={"default_transaction_read_only": "on",
+                                             "statement_timeout": "5000", "lock_timeout": "2000",
+                                             "application_name": "taximobile-runtime-preserve"},
+                        )
+                    except (asyncpg.PostgresError, OSError, TimeoutError):
+                        raise RailwayConfigurationError(
+                            "Existing runtime login could not be verified; preserve credentials "
+                            "and inspect the connection/transport configuration."
+                        ) from None
+                    try:
+                        async with runtime.transaction(readonly=True):
+                            await require_runtime_identity(runtime, policy)
+                    finally:
+                        await runtime.close()
+                    return
                 # Let PostgreSQL quote the password; never interpolate a secret
                 # into an unescaped SQL literal or emit it in command output.
                 statement = await connection.fetchval(
                     "SELECT format($1::text, $2::text)",
-                    f"{action} ROLE taximobile_runtime LOGIN PASSWORD %L NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS",
+                    "CREATE ROLE taximobile_runtime LOGIN PASSWORD %L NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS",
                     password,
                 )
                 await connection.execute(statement)
     finally:
         await connection.close()
+
+
+async def require_runtime_identity(connection: asyncpg.Connection, tls: DatabaseTLS) -> asyncpg.Record | None:
+    """Read-only identity/transport checks shared by preflight and final verification."""
+    identity = await connection.fetchrow(
+        "SELECT current_user AS name, rolsuper, rolcreatedb, rolcreaterole, "
+        "rolreplication, rolbypassrls FROM pg_roles WHERE rolname=current_user"
+    )
+    if (identity is None or identity["name"] != "taximobile_runtime"
+            or any(identity[field] for field in ("rolsuper", "rolcreatedb", "rolcreaterole", "rolreplication", "rolbypassrls"))
+            or await connection.fetchval("SELECT has_schema_privilege(current_user,'public','CREATE')")):
+        raise RailwayConfigurationError("The runtime login must not have schema or administrator authority.")
+    transport = None
+    if tls.mode == "verify-full":
+        transport = await connection.fetchrow("SELECT ssl, version FROM pg_stat_ssl WHERE pid=pg_backend_pid()")
+        if transport is None or not transport["ssl"]:
+            raise RailwayConfigurationError("Verified database TLS was required but no encrypted session was observed.")
+    return transport
 
 
 async def verify_runtime(environment: MutableMapping[str, str]) -> dict[str, object]:
@@ -137,19 +191,7 @@ async def verify_runtime(environment: MutableMapping[str, str]) -> dict[str, obj
     connection = await asyncpg.connect(url.replace("postgresql+asyncpg://", "postgresql://", 1),
                                       **tls.connect_args(url))
     try:
-        identity = await connection.fetchrow(
-            "SELECT current_user AS name, rolsuper, rolcreatedb, rolcreaterole, "
-            "rolreplication, rolbypassrls FROM pg_roles WHERE rolname=current_user"
-        )
-        if (identity is None or identity["name"] != "taximobile_runtime"
-                or any(identity[field] for field in ("rolsuper", "rolcreatedb", "rolcreaterole", "rolreplication", "rolbypassrls"))
-                or await connection.fetchval("SELECT has_schema_privilege(current_user,'public','CREATE')")):
-            raise RailwayConfigurationError("The runtime login must not have schema or administrator authority.")
-        transport = None
-        if tls.mode == "verify-full":
-            transport = await connection.fetchrow("SELECT ssl, version FROM pg_stat_ssl WHERE pid=pg_backend_pid()")
-            if transport is None or not transport["ssl"]:
-                raise RailwayConfigurationError("Verified database TLS was required but no encrypted session was observed.")
+        transport = await require_runtime_identity(connection, tls)
         await connection.execute("REFRESH MATERIALIZED VIEW public.operational_metric_facts_hourly_v1")
         return {
             "database_tls_mode": tls.mode,
@@ -174,6 +216,9 @@ async def verify_runtime(environment: MutableMapping[str, str]) -> dict[str, obj
 async def migrate_locked(environment: MutableMapping[str, str]) -> dict[str, object]:
     url, password = migration_target(environment)
     tls = DatabaseTLS.from_environment(environment)
+    # Reject runtime host/SSL overrides before opening the migration owner
+    # connection, not only during verification after schema changes.
+    tls.connect_args(environment["TAXIMOBILE_DATABASE_URL"])
     guard = await asyncpg.connect(url.replace("postgresql+asyncpg://", "postgresql://", 1), **tls.connect_args(url))
     try:
         if not await guard.fetchval("SELECT pg_try_advisory_lock($1,$2)", DEPLOY_LOCK_NAMESPACE, DEPLOY_LOCK_RESOURCE):

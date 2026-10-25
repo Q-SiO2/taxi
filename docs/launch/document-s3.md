@@ -2,7 +2,36 @@
 
 Owner selected this source work on 24 October 2026 in the
 [persistence decision](document-storage-decision-20261024.json).
-Status: **source workflow implemented; qualified local checks pass; native CI and deployment acceptance pending**.
+Status: **source/native CI verified; bounded real S3 probe passed; hosted ingestion unaccepted**.
+
+[CI 236](document-s3-ci-terminal-20261025.json) passes all eight required jobs for
+source `9e94fda14f8b18e26e26cebf3f8faad80bbdf96a`: **1,443 backend tests, zero
+failures/errors/skips**, including all 14 upload-recovery and six HTTP lifecycle
+cases, the listing cancellation regression and eight real database TLS probes.
+The tested merge commit and branch head have the same immutable tree. Native
+PostGIS, hash-locked runtime/development/Linux audits, image/security controls,
+Android/web and unsigned iOS simulator verification pass. This resolves the
+different local source bindings below without borrowing predecessor results.
+
+After separate [owner approval](document-s3-provider-probe-approval-20261025.json),
+the [real Railway Amsterdam probe](document-s3-provider-probe-20261025.json)
+passes five bounded provider checks using three synthetic objects and 19 S3
+requests. It verifies encrypted roundtrip, conditional overwrite rejection,
+pagination, ciphertext recovery/wrong-key rejection and simulated acknowledgement
+loss after an actual write. Generated objects were erased, the new bucket's
+staging deletion committed, and the live staging bucket inventory is empty.
+Project registration metadata remains; the retained observer correction separates
+that row from a live bucket. Existing five service IDs and both preserved volume
+IDs remain, with no pending environment patches. Credentials/key material were
+not persisted or distributed to app services.
+
+The probe is not production scanner, privacy-policy, credential-custody,
+capacity/retention, physical-client or deployment acceptance. It uses only a
+built-in fixture checker, not official ClamAV feeds. Actual Trial limits are
+1 GB container memory and five services (all five already present); the standard
+scanner's reviewed memory guidance exceeds that profile. An accepted scanner
+host, current feeds, service credentials/key recovery and controlled migration/
+TLS/ingestion rollout remain required. R3/R8 and the full launch goal remain open.
 
 Retain `ProtectedDriverDocumentStore`, the `TMDOC1` AES-256-GCM envelope,
 opaque-key associated data, bounded media/scanning, scoped/audited API reads and
@@ -143,7 +172,8 @@ encryption key and ClamAV host; file/S3 settings cannot be mixed. Partial or
 implicit configuration fails startup, and document encryption/credentials are
 redacted from configuration repr/errors. Owned SDK clients and listing handles
 close during process shutdown; an inline worker does not close the API's shared
-store. No hosted environment values, bucket or credentials have been changed.
+store. These source changes did not change hosted environment values. The
+subsequent separately approved disposable provider probe is recorded above.
 
 Seventeen isolated PostGIS recovery/HTTP cases pass, including actual writer
 termination before/after rename, cancellation with late completion, both key-lock
@@ -166,7 +196,9 @@ assertion, and all 62 API cases now pass. Retain the initial tri-language fixtur
 failures, non-propagating-logger observer failure, lock regression and timing
 failure. They are not green runs. The original 0053 database is preserved, the
 0054 template is isolated, and the owned cluster is stopped after every run.
-Native full-suite CI, actual provider/physical/release acceptance remain required.
+These were local-only checkpoints; the subsequent native CI result above now
+owns complete source verification. Physical/release and full hosted acceptance
+remain required.
 
 The [workflow verification record](document-storage-workflow-verification-20261025.json)
 binds these reports, retained failures, source hashes, clean 48-package runtime/
@@ -181,4 +213,4 @@ caller cancellation. The listing job now owns lock release until its thread
 finishes; abandoned exceptions are observed without emitting private paths.
 The pre-fix regression is retained and all 185 affected/configuration/worker
 checks pass after correction. Its two changed source inputs are bound separately
-from the prior checkpoint; native full-suite CI still owns final acceptance.
+from the prior checkpoint; the subsequent native full suite includes this fix.

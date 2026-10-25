@@ -23,9 +23,11 @@ The five-minute lease is a concurrency fence, not a participant retention policy
 
 Downgrade refuses while pending uploads or new-reason erasure evidence exist;
 it must not discard recovery state or rewrite immutable audit history. This is
-source work in progress. Earlier 0053 tests do not accept this migration, and
-hosted schema remains independently verified at 0052. S3 activation remains closed
-until the complete recovery workflow and affected checks pass.
+source work with [CI 236 verification](launch/document-s3-ci-terminal-20261025.json):
+1,443 backend cases pass, including 0054 roundtrip/refusal and actual lock-wait
+regressions. Earlier 0053 restore evidence still does not accept a hosted 0054
+migration; the last separately verified hosted schema is 0052. S3 ingestion
+activation remains closed pending approved scanner/feeds, key custody and rollout.
 
 ## Operator membership policy — source change, 23 October 2026
 

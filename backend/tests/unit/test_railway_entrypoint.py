@@ -63,6 +63,8 @@ def test_invalid_port_cannot_be_passed_to_server(port):
 
 def target():
     return staging() | {"TAXIMOBILE_RUNTIME_DATABASE_PASSWORD": "x" * 40,
+        "TAXIMOBILE_DATABASE_URL":
+        "postgresql+asyncpg://taximobile_runtime:" + "x" * 40 + "@alpha-postgis.railway.internal:5432/taximobile_alpha_testenvironm",
         "TAXIMOBILE_MIGRATION_DATABASE_URL":
         "postgresql+asyncpg://owner:secret@alpha-postgis.railway.internal:5432/taximobile_alpha_testenvironm"}
 

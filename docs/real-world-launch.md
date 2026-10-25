@@ -189,6 +189,12 @@ rehearsal passed; terminal CI rejected web size. The
 [session/release successor](launch/session-recovery.md) verifies expired-access
 revocation and explicitly reviews the expanded web budget. Fresh immutable CI,
 hosted upgrade and deployment acceptance remain open.
+The [runtime-preserving migration fix](launch/runtime-preservation.md) closes a
+source defect that could reset established credentials during normal deployment.
+Focused unit and real local SCRAM checks pass; fresh successor CI and actual
+guarded TLS/schema rollout remain required. The approved temporary S3 probe has
+its own [provider evidence](launch/document-s3-provider-probe-20261025.json),
+without accepting permanent document storage or the Trial scanner profile.
 
 The earlier physical-Android deferral leaves hardware work pending. This new goal
 includes preparing and obtaining that acceptance; it does not mean a device is

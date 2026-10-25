@@ -1,0 +1,41 @@
+{
+  "prepared_utc": "2026-10-25T15:27:18.224862+00:00",
+  "status": "NOT_APPLIED_OWNER_APPROVAL_REQUIRED",
+  "project_id": "9f841575-c4f3-4a4d-bb83-2e6ff92e436e",
+  "environment_id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+  "bucket_display_name": "tm-docs-probe-20261025",
+  "region": "ams",
+  "max_new_buckets": 1,
+  "max_new_services": 0,
+  "max_objects": 3,
+  "max_s3_operations": 32,
+  "max_ciphertext_bytes": 4096,
+  "reserve_existing_trial_credit_usd": 0.02,
+  "require_fresh_remaining_credit_at_least_usd": 0.02,
+  "credentials_scope": "Only new bucket; transient local process; no app/worker distribution or logging",
+  "cleanup_scope": "Generated keys, then only the new verified-empty probe bucket; preserve everything else",
+  "paid_plan_or_real_documents_authorized": false,
+  "applied": false,
+  "default_probe_mode": "PLAN_ONLY",
+  "offline_totals": {
+    "tests": 9,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "junit_sha256": "0c91ce5625b4bdaaeb0217bd0d78c3dc3df77b5c0b16abd8ea34e5bdc62225b5",
+  "tool_sha256": "c3282171f4e3ec79cefde5cd82d5f5b856d17b1cb6c662d722462b2bbb3d169a",
+  "offline_test_sha256": "8a32519f6ed80b3521ad948faad335dce6640cf8cf249224a9c6d3b23a82a140",
+  "read_only_preflight": {
+    "subscription_type": "trial",
+    "buckets": 0,
+    "services": 5,
+    "maximum_buckets": 3,
+    "maximum_services": 5,
+    "container_memory_bytes": 1000000000,
+    "volume_max_mb": 500
+  },
+  "full_official_feed_scanner_host_accepted": false,
+  "hosting_changes_performed": false,
+  "full_deployment_pilot_and_public_release_accepted": false
+}

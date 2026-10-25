@@ -223,6 +223,11 @@ interrupted/late writes. S3 API/worker configuration is source work under the
 owner-selected design; actual private storage, scanner feeds, key recovery and
 participant-document acceptance remain required before hosted ingestion.
 
+Source 9e94fda passes all eight CI 236 jobs and 1,443 backend tests. A separately
+approved [actual S3 protocol probe](launch/document-s3-provider-probe-20261025.json)
+passes with built-in synthetic fixtures and cleanup; it does not provision a
+permanent driver-document service boundary or accept production scanner feeds.
+
 The city-application document capability:
 
 * accepts only bounded PDF, JPEG, and PNG bytes whose declared and detected types match;

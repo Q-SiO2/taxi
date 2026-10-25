@@ -22,10 +22,14 @@ actual scanner feeds and independent key custody remain separate acceptance.
 
 The owner selected the [private encrypted S3 successor](launch/document-s3.md).
 Its 25 October source implements migration `20261025_0054`, durable upload leases,
-reconciliation and matching API/worker configuration. Hosted ingestion is still
-disabled: no bucket/credentials or environment values have been changed. Require
-exact-source CI, actual provider/feeds/key recovery, bounded capacity and an
-accepted data-preserving rollback before applying this migration and configuration.
+reconciliation and matching API/worker configuration. Exact-source CI 236 passes
+all eight required jobs and 1,443 backend tests. A separately approved disposable
+Railway S3 probe passes and its objects/staging bucket are removed. Hosted
+ingestion remains disabled; app environment values and service credentials are
+unchanged. Require official scanner capacity/feeds, service key recovery, bounded
+capacity and an accepted data-preserving rollback before migration/configuration
+activation. The live Trial's 1 GB memory/five-service profile does not establish
+capacity for the reviewed full scanner.
 The guarded downgrade refuses pending uploads or immutable new-reason history.
 
 ## Current health and allowance — 20 October 2026
@@ -274,6 +278,11 @@ public-schema CREATE, and an actual analytics projection refresh. PostgreSQL 16
 requires ownership for that refresh, so only the derived
 `operational_metric_facts_hourly_v1` projection is owned by the runtime role;
 database/schema/base-table ownership is retained by the migration owner.
+The [25 October migration correction](launch/runtime-preservation.md) now verifies
+an existing runtime login read-only before Alembic and preserves its established
+password/role attributes. Configuration or login mismatch stops migration rather
+than replaying credential recovery. Its separate CI and hosted rollout gates remain
+open; this source behavior does not change the historical deployed result above.
 This narrow maintenance ownership is an explicit privilege, not a claim that
 the runtime cannot alter its owned projection. Review separate API/worker
 identities and production maintenance privileges before B/C.

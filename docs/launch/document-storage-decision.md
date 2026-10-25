@@ -65,4 +65,7 @@ over "Major architectural changes" and requires asking before making a major
 architectural decision when a requirement conflicts with current documentation.
 The existing filesystem contract and Railway placement are the concrete mismatch.
 The [recorded owner choice](document-storage-decision-20261024.json) selects A;
-[source implementation](document-s3.md) is now in progress.
+[source implementation](document-s3.md) now passes all eight CI 236 jobs and
+1,443 backend cases. A separately approved disposable provider probe on 25
+October passes and is removed from staging; that later approval does not
+authorize permanent service credentials, real documents or a paid plan.

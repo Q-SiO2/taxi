@@ -131,6 +131,14 @@ all eight required jobs and all 1,317 backend cases, including eight real TLS
 probes and fixture cleanup. This does not change the non-TLS hosted baseline
 described above; use the guarded rollout packet after current Trial verification.
 
+The [25 October runtime-preservation correction](runtime-preservation.md) removes
+password/role resets from ordinary migrations and verifies an established login
+read-only before Alembic. Its fresh native CI remains required. The
+[25 October hosted observation](staging-tls-server-preflight-20261025.json) still
+records schema 0052 and SSL off; neither the accepted S3 predecessor nor local
+SCRAM tests establish a hosted upgrade. Target 0054 now requires its own qualified
+restore/upgrade check in addition to the retained 0053 rehearsal.
+
 ## Membership-aware rollback boundary
 
 The preserved pre-policy alpha is a staging fallback only while every operator's

@@ -4,10 +4,11 @@
 > [durable S3 workflow](launch/document-s3.md) now reserve hidden upload metadata,
 > enforce a final owner/version/lease transaction and reconcile interrupted/late
 > writes. API/worker configuration and shutdown ownership are wired in source;
-> local reports contain 1,142 unit, 62 API and 17 PostGIS recovery/lifecycle
-> passes, plus three subsequent SQL lock/lease regressions. Their source scopes
-> are qualified in the packet. Native full-suite CI, hosted storage/feeds/key
-> recovery and rollout remain open.
+> [CI 236](launch/document-s3-ci-terminal-20261025.json) passes all eight required
+> jobs and 1,443 backend cases for source 9e94fda. A separately approved real
+> Railway probe passes with three synthetic objects/19 requests; its objects and
+> staging bucket are removed. Official scanner capacity/feeds, service key
+> custody, hosted migration/TLS/ingestion and physical rollout remain open.
 >
 > **Accepted source predecessor — 24 October 2026:** the
 > [protected document correction](launch/document-storage.md) passes all eight

@@ -4,9 +4,11 @@
 
 Migration `20261025_0054` and the [durable upload workflow](launch/document-s3.md)
 add hidden leases, final authoritative version checks and bounded repeated orphan
-recovery. Source API/worker S3 configuration is wired, with 185 focused local
-passes and qualified unit/API/PostGIS recovery reports in the packet. Native CI, real provider/feeds/key
-recovery, hosted migration/rollback and participant acceptance remain open.
+recovery. Source API/worker S3 configuration passes CI 236: all eight required
+jobs and 1,443 backend cases. A separately approved real S3 probe passes with
+three synthetic objects/19 requests and cleanup. Official scanner capacity/feeds,
+service credentials/key recovery, hosted migration/rollback and participant
+acceptance remain open; the probe does not close those gates.
 This source work does not close GAP-003/007/019 or any pilot/public release gate.
 
 ## Membership source packet — 23 October 2026

@@ -1,12 +1,16 @@
 # Staging database TLS rollout packet
 
-Prepared 24 October 2026. Status: **PREPARED, NOT APPLIED**. Implements the
+Prepared 24 October; refreshed 25 October 2026. Status: **PREPARED, NOT APPLIED**. Implements the
 [transport contract](database-tls.md) within the existing synthetic alpha.
 [CI 230](database-tls-ci-observation-20261024.json) for source
 `3698f60334721d3289d616bb598ffee36cb81b24` passes all eight real TLS probes but
 fails four API test fakes. The local correction passes 44 system API tests;
 [Terminal successor CI 232](database-tls-ci-terminal-20261024.json) now passes
 all eight required jobs for `29198354250615940fa46ac7c1d8305da743ba86`.
+Subsequent [CI 236](document-s3-ci-terminal-20261025.json) passes all eight required
+jobs and 1,443 backend cases through schema 0054. The
+[runtime-preservation correction](runtime-preservation.md) must receive its own
+fresh CI acceptance before rollout; its predecessor's green jobs are insufficient.
 Current Trial capacity and actual server/consumer apply remain pending.
 No certificate, server/consumer setting, HBA rule or deployment has been changed
 by this packet. Do not reuse the localhost test certificate for this target.
@@ -30,7 +34,7 @@ order, ownership, capacity and active connections before mutation. An unexpected
 target, concurrent deployment or changed baseline invalidates this preparation.
 Do not copy connection credentials or HBA address details into public evidence.
 
-The [read-only server preflight](staging-tls-server-preflight-20261024.json)
+The [fresh read-only server preflight](staging-tls-server-preflight-20261025.json)
 confirms PG data at `/var/lib/postgresql/data/pgdata`, with `postgresql.conf`
 and `pg_hba.conf` in that directory. SSL is off; its certificate/key and minimum
 protocol settings are reloadable and have no command-line override. Five TCP
@@ -48,7 +52,9 @@ parse/application error rather than requiring or claiming a blanket zero count.
 
 1. Require the exact candidate's required CI jobs and retained TLS/JUnit evidence
    to pass. Keep the failed local observer records. Bind matched API/worker images
-   to the accepted commit, migration 0053 and deployment configuration.
+   to the accepted commit, migration 0054 and deployment configuration. The
+   existing database-only restore rehearsed 0053; preserve that qualification and
+   verify the successor's 0054 restore/upgrade path separately before applying it.
 2. Verify current Trial availability/capacity without upgrading the plan, adding
    a resource or deleting either volume. A usage total alone is insufficient
    evidence of the plan or remaining credit. Stop dependent hosting changes if
@@ -86,8 +92,10 @@ parse/application error rather than requiring or claiming a blanket zero count.
    `TAXIMOBILE_DATABASE_TLS_MODE=verify-full` and exactly one correct CA source.
    Remove URL SSL/host overrides. No runtime role elevation or credential/MFA
    recovery is needed for TLS; never run bootstrap/seed as a transport repair.
-   Use deliberate migration authority only if applying 0053 from the accepted
-   source; check its separately rehearsed constraint and grant protocol.
+   Use deliberate migration authority only if applying 0053/0054 from the accepted
+   source; check their separately rehearsed constraint, upload-recovery and grant
+   protocols. Use the runtime-preserving migrator: an established login mismatch
+   must stop before Alembic, never reset the password to make deployment succeed.
 3. Verify actual API readiness, restricted runtime role/schema and encrypted
    connection; verify worker health/loops and API LISTEN registration. Reconnect
    each consumer so an old plaintext pooled session cannot masquerade as proof.

@@ -8,11 +8,14 @@ application lock. An unexpired lease and expected version are required to attach
 evidence. The worker skips active leases, erases expired pending uploads and
 repeatedly reconciles old unreferenced objects with bounded listing and key locks.
 Source API/worker backend selection, complete configuration and lifecycle
-ownership pass 185 focused checks after the listing cancellation correction.
-Local reports contain 1,142 unit, 62 API and
-17 isolated PostGIS recovery/HTTP passes; a subsequent post-lock clock correction
-has three passing SQL-wait regressions and its own source binding. Source CI and real provider/hosted
-acceptance remain separate open gates; no environment/bucket/secrets were changed.
+ownership pass [CI 236](launch/document-s3-ci-terminal-20261025.json), with all
+eight required jobs and 1,443 backend cases passing. The source includes the
+post-lock clock and repeated-cancellation corrections; earlier failures remain
+retained. A separately approved [actual provider probe](launch/document-s3-provider-probe-20261025.json)
+uses three synthetic objects/19 requests, verifies five checks and removes the
+objects/new staging bucket. App environment values and credentials are unchanged.
+Official scanner capacity/feeds, separate production key custody, hosted
+migration/TLS/ingestion, physical and real-world launch acceptance remain open.
 
 ## Protected document pipeline — 24 October 2026
 

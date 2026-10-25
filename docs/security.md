@@ -390,6 +390,16 @@ startup. Filesystem remains default and unconfigured storage remains disabled.
 The new lease migration and source wiring do not establish actual provider,
 scanner-feed, key recovery, capacity or real-document acceptance.
 
+[CI 236](launch/document-s3-ci-terminal-20261025.json) subsequently passes all
+eight required jobs and 1,443 backend cases for source 9e94fda. The separately
+approved [bounded actual S3 probe](launch/document-s3-provider-probe-20261025.json)
+passes five protocol/crypto checks with three synthetic objects and cleanup.
+It uses only a built-in fixture checker and transient local credentials; no
+application-service keys/configuration or real documents are introduced. Its
+new staging bucket is removed, while project registration metadata remains.
+Actual scanner feeds/capacity, service key custody, privacy/retention and hosted
+ingestion acceptance remain open.
+
 ## Logging
 
 Logs must not contain sensitive information unnecessarily.
