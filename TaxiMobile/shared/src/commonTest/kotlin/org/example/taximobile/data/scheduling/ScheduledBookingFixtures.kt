@@ -2,6 +2,41 @@ package org.example.taximobile.data.scheduling
 
 import org.example.taximobile.domain.rides.Coordinates
 import org.example.taximobile.domain.scheduling.*
+import kotlin.time.TimeMark
+import kotlin.time.TimeSource
+
+internal fun scheduledOfferFixture(readStartedAt: TimeMark = TimeSource.Monotonic.markNow()) = bookingFixture().let { b -> ScheduledOffer(
+    "offer-synthetic", b.id, "PENDING", b.cityId, "ON_DEMAND", b.scheduledFor, b.cityTimezone,
+    "2026-11-01T08:01:00Z", b.pickup, b.destination, b.economics, b.cancellationTerms, "2026-11-01T08:00:00Z", readStartedAt,
+) }
+
+internal fun commitmentFixture(offer: ScheduledOffer) = ScheduledCommitment(
+    "commitment-synthetic", offer.bookingId, offer.cityId, offer.serviceType, offer.scheduledFor,
+    offer.cityTimezone, "ACTIVE", offer.scheduledFor, "2026-11-01T09:00:00Z", offer.pickup, offer.destination, offer.economics,
+)
+
+internal class DriverScheduledFixture : ScheduledBookingGateway by PagedBookingFixture() {
+    var offers = listOf(scheduledOfferFixture())
+    var onOffers: (suspend () -> List<ScheduledOffer>)? = null
+    var reads = 0
+    val accepted = mutableListOf<String>()
+    val declined = mutableListOf<String>()
+    var onAccept: (suspend (String) -> ScheduledCommitment)? = null
+    override suspend fun driverOffers(): List<ScheduledOffer> {
+        reads++
+        return onOffers?.invoke() ?: offers.filter { it.id !in accepted && it.id !in declined }
+    }
+    override suspend fun driverCommitments() = offers.filter { it.id in accepted }.map(::commitmentFixture)
+    override suspend fun driverPreferences(): List<ScheduledOfferPreference> = emptyList()
+    override suspend fun acceptOffer(offerId: String): ScheduledCommitment {
+        accepted += offerId
+        return onAccept?.invoke(offerId) ?: commitmentFixture(offers.single { it.id == offerId })
+    }
+    override suspend fun declineOffer(offerId: String, reason: String?): ScheduledOffer {
+        declined += offerId
+        return offers.single { it.id == offerId }.copy(status = "DECLINED")
+    }
+}
 
 internal fun bookingFixture(id: String = "booking-21") = ScheduledBooking(
     id, "synthetic-city", "synthetic-union", "POINT_TO_POINT", null,

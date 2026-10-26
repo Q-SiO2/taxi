@@ -2,10 +2,16 @@
 
 ## Current packet — 26 October 2026
 
+The [driver scheduled-offer correction](launch/scheduled-driver-review.md) follows
+the remaining driver financial-review and expiry defects. Affected local shared,
+rendered and Android checks pass. Complete its fresh native checks without borrowing the passenger predecessor's
+[CI 246](launch/scheduled-cancellation-review-ci-terminal-20261026.json), which
+passes all eight required jobs and 1,482 backend cases for source `b1be457`.
+
 The [scheduled cancellation review correction](launch/scheduled-cancellation-review.md)
 addresses the next confirmed R6/R9 gap: unknown refund modes must not become
-claimed non-refundable terms. Local backend/shared/rendered/Android checks pass;
-publish and observe the successor's exact CI. Existing
+claimed non-refundable terms. Its own CI 246 now passes; those source results do
+not accept the later driver correction. Existing
 pagination [CI 244](launch/scheduled-pagination-ci-terminal-20261026.json) passes
 all eight required jobs and 1,458 backend cases for its own source. No
 financial-policy or hosting change.

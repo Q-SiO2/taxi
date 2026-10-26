@@ -1,5 +1,7 @@
 package org.example.taximobile.feature.app
 
+import org.example.taximobile.domain.scheduling.canReviewAcceptance
+
 import org.example.taximobile.app.AppRole
 import org.example.taximobile.data.auth.AuthenticationNetworkException
 import org.example.taximobile.data.auth.AuthenticationRejectedException
@@ -986,17 +988,27 @@ class MobileAppCoordinator(
     suspend fun setScheduledOfferPreference(cityId: String, enabled: Boolean): AppUiState =
         schedulingMutation { it.setDriverPreference(cityId, enabled) }
 
-    suspend fun respondToScheduledOffer(offerId: String, accept: Boolean): AppUiState =
-        schedulingMutation {
-            if (accept) it.acceptOffer(offerId) else it.declineOffer(offerId, "DRIVER_DECLINED")
+    suspend fun respondToScheduledOffer(offerId: String, accept: Boolean): AppUiState {
+        if (!accept) return schedulingMutation { it.declineOffer(offerId, "DRIVER_DECLINED") }
+        val owner = authentication.localSessionOwnerEpoch
+        return schedulingMutation(Res.string.scheduled_offer_unavailable) { gateway ->
+            val offer = authentication.readWithSessionRecovery {
+                if (owner != authentication.localSessionOwnerEpoch) throw AuthenticationRejectedException()
+                gateway.driverOffers().filter { it.id == offerId }.singleOrNull()
+            }
+            if (!navigationOwnerIsCurrent(owner)) throw AuthenticationRejectedException()
+            if (offer?.canReviewAcceptance != true) return@schedulingMutation null
+            gateway.acceptOffer(offerId)
         }
+    }
 
     private suspend fun schedulingMutation(
+        reviewUnavailableMessage: StringResource = Res.string.scheduled_refund_unavailable,
         mutation: suspend (ScheduledBookingGateway) -> Any?,
     ): AppUiState {
         val gateway = scheduling ?: return offline(Res.string.message_ride_services_unavailable)
         return try {
-            mutation(gateway) ?: return offline(Res.string.scheduled_refund_unavailable)
+            mutation(gateway) ?: return offline(reviewUnavailableMessage)
             authenticatedProductState(authentication.restore())
         } catch (_: AuthenticationRejectedException) {
             signedOut(Res.string.message_session_expired)

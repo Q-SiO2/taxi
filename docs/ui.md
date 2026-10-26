@@ -969,6 +969,15 @@ The driver can enable/disable new scheduled offers with a separate city-scoped
 control; it never changes the green immediate Online pill and does not cancel
 existing commitments.
 
+Scheduled-offer review shares the passenger's explicit known refund-term copy;
+unsupported terms cannot enable Accept, while explicit Decline remains available.
+Its response countdown uses the server envelope and monotonic elapsed time from
+before the owned list request, retaining that anchor when the sheet reopens.
+Local zero or invalid timing disables acceptance and requests a bounded refresh;
+repeated invalid responses must not create a refresh loop. The coordinator reloads
+the selected owned offer before accepting and does not session-replay a rejected
+acceptance command. See the [driver review packet](launch/scheduled-driver-review.md).
+
 ### T. National Operations Web Console
 
 The protected console uses the same fixed palette, Sora/Manrope/IBM Plex Mono

@@ -1,6 +1,8 @@
 package org.example.taximobile.domain.scheduling
 
 import org.example.taximobile.domain.rides.Coordinates
+import kotlin.time.TimeMark
+import kotlin.time.TimeSource
 
 /** Exact server amounts. Clients display these values and never recompute allocations. */
 data class ScheduledEconomics(
@@ -75,6 +77,8 @@ data class ScheduledOffer(
     val economics: ScheduledEconomics,
     val cancellationTerms: ScheduledCancellationTerms,
     val serverTime: String,
+    /** Conservative elapsed-time anchor captured before the owned list request. */
+    val readStartedAt: TimeMark = TimeSource.Monotonic.markNow(),
 )
 
 data class ScheduledCommitment(

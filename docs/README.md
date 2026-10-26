@@ -1,11 +1,20 @@
 # TaxiMobile documentation
 
-> **Current bounded source work — 26 October 2026:**
+> **Current source work — 26 October 2026:** [driver scheduled review](launch/scheduled-driver-review.md)
+> fixes the remaining driver refund fallback and expiry controls. Local verification
+> passes 179 JVM and 178 Android-host cases, both Android role compilations,
+> and rendered driver review across all 12 language/style combinations. These
+> test sets overlap; fresh successor native CI remains required. The passenger predecessor passes
+> [CI 246](launch/scheduled-cancellation-review-ci-terminal-20261026.json) across
+> all eight required jobs and 1,482 backend cases for its own source.
+
+> **Accepted source predecessor — 26 October 2026:**
 > [scheduled cancellation review](launch/scheduled-cancellation-review.md) removes
 > the unknown-mode non-refundable fallback. Local checks pass: 90 affected backend,
 > 97 JVM and 88 Android-host cases, both Android role compilations and localized
-> rendering across all four styles. These test sets overlap. This successor needs
-> its own immutable CI and acceptance.
+> rendering across all four styles. These test sets overlap. Its own
+> [CI 246](launch/scheduled-cancellation-review-ci-terminal-20261026.json) now
+> passes all eight required jobs; hosted and physical acceptance remain open.
 
 > **Current source packet — 26 October 2026:** [passenger scheduled pagination](launch/scheduled-pagination.md)
 > makes records beyond page one reachable with bounded reads, owner/race guards,

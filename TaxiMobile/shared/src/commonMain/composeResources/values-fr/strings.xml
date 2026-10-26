@@ -552,6 +552,10 @@
     <string name="scheduled_refund_unavailable">Conditions d’annulation indisponibles. Actualisez ou mettez l’application à jour avant de confirmer.</string>
     <string name="scheduled_work_summary">Travail planifié (%1$d offres · %2$d engagements)</string>
     <string name="scheduled_work_title">Travail planifié</string>
+    <string name="scheduled_refresh_offers">Actualiser le travail planifié</string>
+    <string name="scheduled_offer_timing_unavailable">Délai de l’offre indisponible. Actualisez le travail planifié.</string>
+    <string name="scheduled_offer_expired">Offre expirée. Actualisez le travail planifié.</string>
+    <string name="scheduled_offer_unavailable">Offre indisponible. Actualisez le travail planifié avant d’accepter.</string>
     <string name="scheduled_back_to_live">Retour au travail immédiat</string>
     <string name="scheduled_driver_participation">La participation aux offres planifiées dépend de la ville et reste distincte du statut en ligne. La désactivation des nouvelles offres n’annule pas les engagements.</string>
     <string name="scheduled_no_authorized_city">Aucune ville autorisée</string>

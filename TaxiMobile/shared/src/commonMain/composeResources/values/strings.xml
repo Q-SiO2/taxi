@@ -552,6 +552,10 @@
     <string name="scheduled_refund_unavailable">Cancellation terms unavailable. Refresh or update the app before confirming.</string>
     <string name="scheduled_work_summary">Scheduled work (%1$d offers · %2$d commitments)</string>
     <string name="scheduled_work_title">Scheduled work</string>
+    <string name="scheduled_refresh_offers">Refresh scheduled work</string>
+    <string name="scheduled_offer_timing_unavailable">Offer timing unavailable. Refresh scheduled work.</string>
+    <string name="scheduled_offer_expired">Offer expired. Refresh scheduled work.</string>
+    <string name="scheduled_offer_unavailable">Offer unavailable. Refresh scheduled work before accepting.</string>
     <string name="scheduled_back_to_live">Back to live work</string>
     <string name="scheduled_driver_participation">Scheduled-offer participation is city-scoped and separate from going online. Disabling future offers does not cancel commitments.</string>
     <string name="scheduled_no_authorized_city">No authorized city</string>

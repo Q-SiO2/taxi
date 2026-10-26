@@ -1101,6 +1101,117 @@ class MobileAppCoordinatorTest {
         assertEquals(1, commands)
     }
 
+    @Test fun unsupported_missing_or_duplicate_driver_offer_never_sends_an_acceptance() = runBlocking {
+        val offer = org.example.taximobile.data.scheduling.scheduledOfferFixture()
+        val unsupported = listOf(
+            offer.copy(status = "EXPIRED"), offer.copy(status = "PRIVATE_UNKNOWN"),
+            offer.copy(serviceType = "PRIVATE_UNKNOWN"), offer.copy(serverTime = "PRIVATE_INVALID"),
+            offer.copy(expiresAt = offer.serverTime),
+            offer.copy(cancellationTerms = offer.cancellationTerms.copy(surchargeRefundMode = "PRIVATE_UNKNOWN")),
+            offer.copy(cancellationTerms = offer.cancellationTerms.copy(passengerCancelCutoffMinutes = -1)),
+        ).map { listOf(it) } + listOf(emptyList(),listOf(offer,offer))
+        for (items in unsupported) {
+            val bookings = org.example.taximobile.data.scheduling.DriverScheduledFixture().apply { offers = items }
+            val coordinator = MobileAppCoordinator(AppRole.DRIVER,driverAuthentication(),driver = RecordingDriverGateway(),scheduling = bookings)
+            val result = assertIs<AppUiState.Offline>(coordinator.respondToScheduledOffer(offer.id,true))
+            assertEquals(Res.string.scheduled_offer_unavailable,result.message.resource)
+            assertEquals(1,bookings.reads)
+            assertTrue(bookings.accepted.isEmpty())
+            assertTrue(bookings.declined.isEmpty())
+        }
+    }
+
+    @Test fun freshly_reviewable_driver_offer_accepts_once_then_reads_authoritative_commitment() = runBlocking {
+        val bookings = org.example.taximobile.data.scheduling.DriverScheduledFixture()
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER,driverAuthentication(),driver = RecordingDriverGateway(),scheduling = bookings)
+        val state = assertIs<AppUiState.DriverReady>(coordinator.respondToScheduledOffer("offer-synthetic",true))
+        assertEquals(listOf("offer-synthetic"),bookings.accepted)
+        assertEquals(2,bookings.reads)
+        assertTrue(state.scheduledOffers.isEmpty())
+        assertEquals("ACTIVE",state.scheduledCommitments.single().status)
+        assertEquals(DriverAvailabilityStatus.OFFLINE,state.availability)
+    }
+
+    @Test fun driver_offer_read_recovers_once_without_replaying_acceptance() = runBlocking {
+        val bookings = org.example.taximobile.data.scheduling.DriverScheduledFixture().apply {
+            onOffers = { if (reads == 1) throw org.example.taximobile.data.auth.AuthenticationRejectedException()
+                offers.filter { it.id !in accepted } }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER,driverAuthentication(),driver = RecordingDriverGateway(),scheduling = bookings)
+        assertIs<AppUiState.DriverReady>(coordinator.respondToScheduledOffer("offer-synthetic",true))
+        assertEquals(3,bookings.reads)
+        assertEquals(listOf("offer-synthetic"),bookings.accepted)
+    }
+
+    @Test fun failed_or_cancelled_driver_offer_read_sends_no_acceptance() = runBlocking {
+        for (failure in listOf(AuthenticationNetworkException(),ApiRequestException(403,"Synthetic denial"),CancellationException("Synthetic cancellation"))) {
+            val bookings = org.example.taximobile.data.scheduling.DriverScheduledFixture().apply { onOffers = { throw failure } }
+            val coordinator = MobileAppCoordinator(AppRole.DRIVER,driverAuthentication(),driver = RecordingDriverGateway(),scheduling = bookings)
+            if (failure is CancellationException) assertFailsWith<CancellationException> { coordinator.respondToScheduledOffer("offer-synthetic",true) }
+            else assertIs<AppUiState.Offline>(coordinator.respondToScheduledOffer("offer-synthetic",true))
+            assertEquals(1,bookings.reads)
+            assertTrue(bookings.accepted.isEmpty())
+        }
+    }
+
+    @Test fun logout_during_driver_offer_read_prevents_the_acceptance() = runBlocking {
+        val entered = CompletableDeferred<Unit>()
+        val release = CompletableDeferred<Unit>()
+        val bookings = org.example.taximobile.data.scheduling.DriverScheduledFixture().apply {
+            onOffers = { entered.complete(Unit); release.await(); offers }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER,driverAuthentication(),driver = RecordingDriverGateway(),scheduling = bookings)
+        val pending = async { coordinator.respondToScheduledOffer("offer-synthetic",true) }
+        entered.await()
+        val logout = async { coordinator.logout() }
+        kotlinx.coroutines.yield()
+        release.complete(Unit)
+        assertIs<AppUiState.SignedOut>(pending.await())
+        logout.await()
+        assertTrue(bookings.accepted.isEmpty())
+    }
+
+    @Test fun rejected_driver_acceptance_is_not_session_recovered_or_replayed() = runBlocking {
+        val bookings = org.example.taximobile.data.scheduling.DriverScheduledFixture().apply {
+            onAccept = { throw org.example.taximobile.data.auth.AuthenticationRejectedException() }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER,driverAuthentication(),driver = RecordingDriverGateway(),scheduling = bookings)
+        assertIs<AppUiState.SignedOut>(coordinator.respondToScheduledOffer("offer-synthetic",true))
+        assertEquals(listOf("offer-synthetic"),bookings.accepted)
+        assertEquals(1,bookings.reads)
+    }
+
+    @Test fun unsupported_terms_do_not_prevent_an_explicit_decline_or_make_the_driver_online() = runBlocking {
+        val bookings = org.example.taximobile.data.scheduling.DriverScheduledFixture().apply {
+            offers = offers.map { it.copy(cancellationTerms = it.cancellationTerms.copy(surchargeRefundMode = "PRIVATE_UNKNOWN")) }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER,driverAuthentication(),driver = RecordingDriverGateway(),scheduling = bookings)
+        val state = assertIs<AppUiState.DriverReady>(coordinator.respondToScheduledOffer("offer-synthetic",false))
+        assertEquals(listOf("offer-synthetic"),bookings.declined)
+        assertTrue(bookings.accepted.isEmpty())
+        assertEquals(1,bookings.reads) // Only post-command readback, no acceptance preflight.
+        assertEquals(DriverAvailabilityStatus.OFFLINE,state.availability)
+    }
+
+    @OptIn(kotlin.time.ExperimentalTime::class)
+    @Test fun a_driver_offer_that_expires_while_the_owned_read_is_suspended_is_not_accepted() = runBlocking {
+        val clock = kotlin.time.TestTimeSource()
+        val offer = org.example.taximobile.data.scheduling.scheduledOfferFixture(clock.markNow())
+        val entered = CompletableDeferred<Unit>()
+        val release = CompletableDeferred<Unit>()
+        val bookings = org.example.taximobile.data.scheduling.DriverScheduledFixture().apply {
+            onOffers = { entered.complete(Unit); release.await(); listOf(offer) }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.DRIVER,driverAuthentication(),driver = RecordingDriverGateway(),scheduling = bookings)
+        val pending = async { coordinator.respondToScheduledOffer(offer.id,true) }
+        entered.await()
+        clock += kotlin.time.Duration.parse("61s")
+        release.complete(Unit)
+        val result = assertIs<AppUiState.Offline>(pending.await())
+        assertEquals(Res.string.scheduled_offer_unavailable,result.message.resource)
+        assertTrue(bookings.accepted.isEmpty())
+    }
+
     @Test fun failed_booking_page_removes_stale_rows_and_preserves_the_live_ride() = runBlocking {
         val bookings = PagedBookingFixture().apply { onRead = { throw AuthenticationNetworkException() } }
         val live = object : RideGateway by ActiveRideGateway(Coordinates(34.03, -5.00)) {

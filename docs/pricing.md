@@ -638,8 +638,9 @@ arbitrary client-provided fee.
 Review recognizes the exact declared scheduling refund modes (`ALWAYS_FULL`,
 `FULL_BEFORE_CUTOFF`, `NON_REFUNDABLE`) and the existing policy cutoff range
 of 0–10,080 minutes. Unknown modes or invalid cutoffs are unavailable terms,
-never an inferred non-refundable policy. Passenger confirmation must not proceed
-through an unsupported review. The server still decides and records the actual
+never an inferred non-refundable policy. Passenger confirmation and driver offer
+acceptance must not proceed through an unsupported review; explicit driver
+decline remains available. The server still decides and records the actual
 cancellation/refund result. See the [review correction](launch/scheduled-cancellation-review.md).
 
 ---

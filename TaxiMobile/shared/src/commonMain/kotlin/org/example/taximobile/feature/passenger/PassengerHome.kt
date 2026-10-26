@@ -1,5 +1,7 @@
 package org.example.taximobile.feature.passenger
 
+import org.example.taximobile.feature.scheduling.localizedSummary
+
 import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -48,7 +50,6 @@ import org.example.taximobile.domain.rides.RideServiceType
 import org.example.taximobile.domain.rides.PublishedFixedRouteDirection
 import org.example.taximobile.domain.safety.SafetyCategory
 import org.example.taximobile.domain.scheduling.ScheduledBookingEstimate
-import org.example.taximobile.domain.scheduling.ScheduledCancellationTerms
 import org.example.taximobile.domain.support.SupportCategory
 import org.example.taximobile.feature.app.AppUiState
 import org.example.taximobile.feature.scheduling.scheduledBookingStatusLabel
@@ -1071,17 +1072,6 @@ private fun PassengerScheduledSheet(
 
 private fun String.hasExplicitTimezone(): Boolean =
     endsWith("Z", ignoreCase = true) || Regex("[+-]\\d{2}:\\d{2}$").containsMatchIn(this)
-
-@Composable
-private fun ScheduledCancellationTerms.localizedSummary(): String = when {
-    !isSupportedForReview -> stringResource(Res.string.scheduled_refund_unavailable)
-    surchargeRefundMode == "ALWAYS_FULL" -> stringResource(Res.string.scheduled_refund_always_full)
-    surchargeRefundMode == "FULL_BEFORE_CUTOFF" -> stringResource(
-        Res.string.scheduled_refund_before_cutoff,
-        passengerCancelCutoffMinutes,
-    )
-    else -> stringResource(Res.string.scheduled_refund_never)
-}
 
 private fun scheduledStatusTone(status: String): StatusTone = when (status) {
     "LIVE_RIDE_CREATED" -> StatusTone.Success

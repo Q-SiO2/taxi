@@ -17,6 +17,7 @@ import io.ktor.serialization.ContentConvertException
 import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.time.TimeSource
 import org.example.taximobile.core.network.ApiConfiguration
 import org.example.taximobile.data.auth.AuthenticationNetworkException
 import org.example.taximobile.data.auth.AuthenticationRejectedException
@@ -37,6 +38,7 @@ import org.example.taximobile.domain.scheduling.ScheduledOfferPreference
 class KtorScheduledBookingGateway(
     private val client: HttpClient,
     private val api: ApiConfiguration,
+    private val readClock: TimeSource = TimeSource.Monotonic,
     private val accessToken: suspend () -> String,
 ) : ScheduledBookingGateway {
     override suspend fun passengerBookings(page: Int): ScheduledBookingPage {
@@ -165,9 +167,10 @@ class KtorScheduledBookingGateway(
     }
 
     override suspend fun driverOffers(): List<ScheduledOffer> = request {
+        val started = readClock.markNow()
         val response = client.get(api.endpoint("drivers/me/scheduled-offers")) { authorize() }
         response.requireSuccess("load scheduled offers")
-        response.body<ScheduledOfferListResponse>().items.map(ScheduledOfferResponse::toDomain)
+        response.body<ScheduledOfferListResponse>().items.map { it.toDomain().copy(readStartedAt = started) }
     }
 
     override suspend fun driverCommitments(): List<ScheduledCommitment> = request {

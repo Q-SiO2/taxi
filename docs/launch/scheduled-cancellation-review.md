@@ -63,3 +63,11 @@ open. The [Trial capacity stop](staging-capacity-stop-20261026.json) and the
 owner's instruction to continue source work remain in force. Do not apply the
 prepared TLS deployment or replay credentials, storage probes or business
 commands to obtain evidence.
+
+Published source `b1be457` passes [CI 246](scheduled-cancellation-review-ci-terminal-20261026.json)
+across all eight required jobs and 1,482 backend cases, including eight disposable
+TLS probes and cleanup. Artifact digests bind the tested merge to the same source
+tree; both unsigned iOS simulator products build. The [earlier observation](scheduled-cancellation-review-ci-observation-20261026.json)
+is retained. The [driver review successor](scheduled-driver-review.md) addresses
+the separate remaining driver fallback and expiry controls. This passenger CI
+does not accept that successor or hosted/physical/operational/field behavior.

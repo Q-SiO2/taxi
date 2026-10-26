@@ -18,8 +18,9 @@ sequence existing requirements; they do not create a competing definition of don
 26 October R6/R9 checkpoint: [passenger pagination](launch/scheduled-pagination.md)
 passes its own full [CI 244](launch/scheduled-pagination-ci-terminal-20261026.json).
 The subsequent [cancellation review correction](launch/scheduled-cancellation-review.md)
-passes affected local backend/shared/rendered/Android checks and needs fresh
-immutable CI. These source packets do not accept hosted, physical, operational
+passes its own [CI 246](launch/scheduled-cancellation-review-ci-terminal-20261026.json)
+across all eight required jobs. The [driver review successor](launch/scheduled-driver-review.md)
+is undergoing independent local/native verification. These source packets do not accept hosted, physical, operational
 or field journeys. The Trial capacity stop and source-only continuation persist.
 
 ## Starting point and interpretation of full functionality

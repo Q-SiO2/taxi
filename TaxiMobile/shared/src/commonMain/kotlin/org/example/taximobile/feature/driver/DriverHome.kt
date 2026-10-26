@@ -52,6 +52,9 @@ import org.example.taximobile.domain.safety.SafetyCategory
 import org.example.taximobile.domain.support.SupportCategory
 import org.example.taximobile.feature.app.AppUiState
 import org.example.taximobile.feature.scheduling.scheduledCommitmentStatusLabel
+import org.example.taximobile.feature.scheduling.localizedSummary
+import org.example.taximobile.domain.scheduling.canReviewAcceptance
+import org.example.taximobile.domain.scheduling.responseSecondsRemaining
 import org.example.taximobile.feature.app.AppAction
 import org.example.taximobile.feature.app.AppActionCompletion
 import org.example.taximobile.feature.app.AppActionKind
@@ -313,6 +316,7 @@ internal fun DriverHome(
                     onBack = { panel = DriverSheetPanel.Operations },
                     onPreference = onSetScheduledOfferPreference,
                     onRespond = onRespondToScheduledOffer,
+                    onRefresh = onOfferExpired,
                 )
                 DriverSheetPanel.Account -> DriverAccountSheet(
                     state = state,
@@ -744,12 +748,23 @@ private fun DriverScheduledSheet(
     onBack: () -> Unit,
     onPreference: (String, Boolean) -> Unit,
     onRespond: (String, Boolean) -> Unit,
+    onRefresh: () -> Unit,
 ) {
     val taxiColors = TaxiTheme.colors
+    // Repeated invalid/expired envelopes must not trigger a refresh loop.
+    val expiryRefreshAttempted = remember { mutableSetOf<String>() }
+    LaunchedEffect(state.scheduledOffers.map { it.id }) {
+        expiryRefreshAttempted.retainAll(state.scheduledOffers.map { it.id }.toSet())
+    }
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Text(stringResource(Res.string.scheduled_work_title), style = MaterialTheme.typography.headlineSmall)
         TextButton(onClick = onBack) { Text(stringResource(Res.string.scheduled_back_to_live)) }
     }
+    val refreshLabel = stringResource(Res.string.scheduled_refresh_offers)
+    TaxiButton(refreshLabel, onRefresh,
+        modifier = Modifier.semantics { contentDescription = refreshLabel },
+        enabled = pendingAction == null, loading = pendingAction.isPending(AppActionKind.REFRESH),
+        style = TaxiButtonStyle.Secondary)
     Text(
         stringResource(Res.string.scheduled_driver_participation),
         color = taxiColors.Ink500,
@@ -808,14 +823,36 @@ private fun DriverScheduledSheet(
         )
     }
     state.scheduledOffers.forEach { offer ->
+        var responseSeconds by remember(offer.id, offer.readStartedAt) {
+            mutableStateOf(offer.responseSecondsRemaining())
+        }
+        LaunchedEffect(offer.id, offer.readStartedAt) {
+            while (true) {
+                val seconds = offer.responseSecondsRemaining()
+                responseSeconds = seconds
+                if (seconds == null || seconds == 0) {
+                    if (expiryRefreshAttempted.add(offer.id)) onRefresh()
+                    break
+                }
+                delay(500)
+            }
+        }
         Surface(Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.medium, color = taxiColors.Surface0) {
             Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Md), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Text(offer.scheduledFor, style = MaterialTheme.typography.titleMedium)
-                    StatusPill(offer.serviceType.replace('_', ' '), StatusTone.Info)
+                    StatusPill(stringResource(when (offer.serviceType) {
+                        "ON_DEMAND" -> Res.string.scheduled_point_to_point
+                        "FIXED_ROUTE" -> Res.string.scheduled_fixed_route
+                        else -> Res.string.scheduled_state_unknown
+                    }), StatusTone.Info)
                 }
                 Text(stringResource(Res.string.scheduled_location_summary, offer.pickup.address ?: stringResource(Res.string.pickup), offer.destination.address ?: stringResource(Res.string.destination)))
-                Text(stringResource(Res.string.scheduled_offer_deadline, offer.expiresAt, offer.serverTime), color = taxiColors.Warning600)
+                Text(when {
+                    responseSeconds == null -> stringResource(Res.string.scheduled_offer_timing_unavailable)
+                    responseSeconds == 0 -> stringResource(Res.string.scheduled_offer_expired)
+                    else -> stringResource(Res.string.seconds_remaining, responseSeconds!!)
+                }, color = taxiColors.Warning600)
                 FareBlock(
                     amount = offer.economics.expectedDriverNet,
                     currency = offer.economics.currency,
@@ -828,22 +865,16 @@ private fun DriverScheduledSheet(
                     ),
                 )
                 Text(
-                    when (offer.cancellationTerms.surchargeRefundMode) {
-                        "ALWAYS_FULL" -> stringResource(Res.string.scheduled_refund_always_full)
-                        "FULL_BEFORE_CUTOFF" -> stringResource(
-                            Res.string.scheduled_refund_before_cutoff,
-                            offer.cancellationTerms.passengerCancelCutoffMinutes,
-                        )
-                        else -> stringResource(Res.string.scheduled_refund_never)
-                    },
+                    offer.cancellationTerms.localizedSummary(),
                     color = taxiColors.Ink500,
                 )
+                val acceptLabel = stringResource(Res.string.scheduled_accept_commitment)
                 Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
                     TaxiButton(
-                        stringResource(Res.string.scheduled_accept_commitment),
-                        { onRespond(offer.id, true) },
-                        modifier = Modifier.weight(1f),
-                        enabled = pendingAction == null,
+                        acceptLabel,
+                        { if (pendingAction == null && offer.canReviewAcceptance) onRespond(offer.id, true) },
+                        modifier = Modifier.weight(1f).semantics { contentDescription = acceptLabel },
+                        enabled = pendingAction == null && offer.canReviewAcceptance,
                         loading = pendingAction.isPending(AppActionKind.RESPOND_TO_SCHEDULED_OFFER, offer.id),
                     )
                     TaxiButton(

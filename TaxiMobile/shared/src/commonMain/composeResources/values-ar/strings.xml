@@ -552,6 +552,10 @@
     <string name="scheduled_refund_unavailable">شروط الإلغاء غير متاحة. حدّث البيانات أو التطبيق قبل التأكيد.</string>
     <string name="scheduled_work_summary">العمل المجدول (%1$d عروض · %2$d التزامات)</string>
     <string name="scheduled_work_title">العمل المجدول</string>
+    <string name="scheduled_refresh_offers">تحديث العمل المجدول</string>
+    <string name="scheduled_offer_timing_unavailable">مهلة العرض غير متاحة. حدّث العمل المجدول.</string>
+    <string name="scheduled_offer_expired">انتهت مهلة العرض. حدّث العمل المجدول.</string>
+    <string name="scheduled_offer_unavailable">العرض غير متاح. حدّث العمل المجدول قبل القبول.</string>
     <string name="scheduled_back_to_live">العودة إلى العمل الفوري</string>
     <string name="scheduled_driver_participation">المشاركة في العروض المجدولة خاصة بكل مدينة ومنفصلة عن حالة الاتصال. إيقاف العروض الجديدة لا يلغي الالتزامات.</string>
     <string name="scheduled_no_authorized_city">لا توجد مدينة مصرح بها</string>
