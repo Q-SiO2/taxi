@@ -464,6 +464,11 @@ class MainActivity : ComponentActivity() {
                         dependencies.appCoordinator.cancelScheduledBooking(bookingId)
                     }
                 },
+                onLoadPassengerScheduledBookings = { page ->
+                    submitAction(AppAction(AppActionKind.LOAD_PASSENGER_SCHEDULED_BOOKINGS, page.toString())) {
+                        dependencies.appCoordinator.loadPassengerScheduledBookings(page)
+                    }
+                },
                 onSubmitManualTransfer = { rideId, payerReference ->
                     submitAction(AppAction(AppActionKind.SUBMIT_MANUAL_TRANSFER, rideId)) {
                         dependencies.appCoordinator.submitManualTransfer(rideId, payerReference)

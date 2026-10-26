@@ -28,6 +28,7 @@ import org.example.taximobile.domain.scheduling.ScheduledBookingEstimate
 import org.example.taximobile.domain.drivers.VehicleRegistration
 import kotlin.time.Clock
 import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.sync.withLock
 import org.example.taximobile.domain.support.SupportCategory
 import org.example.taximobile.domain.support.SupportGateway
@@ -81,6 +82,9 @@ class MobileAppCoordinator(
     // Navigation preference only. Every page is read afresh from the server;
     // this never retains a payment, amount or settlement authority.
     private var selectedPendingCashPage: Int = 1
+    private data class BookingPageSelection(val page: Int, val owner: Long)
+    private var selectedBookingPage: BookingPageSelection? = null
+    private var bookingPageReadRevision: Long = 0
     private var selectedFixedRouteCityId: String? = null
     // Session-owned navigation only. Every refresh reauthorizes and rereads
     // the selected ride and receipt/feedback; no financial projection is cached.
@@ -136,6 +140,8 @@ class MobileAppCoordinator(
         rideQuoteSelection = null
         latestAcceptedDriverLocation = null
         selectedPendingCashPage = 1
+        selectedBookingPage = null
+        bookingPageReadRevision++
         revokeRegisteredPushRegistration()
         return stateFor(authentication.logout())
     }
@@ -145,6 +151,8 @@ class MobileAppCoordinator(
         // previous driver's coordinate into a new authentication attempt.
         latestAcceptedDriverLocation = null
         selectedPendingCashPage = 1
+        selectedBookingPage = null
+        bookingPageReadRevision++
         historySelection = null
         rideQuoteSelection = null
         return authenticatedProductState(authentication.login(identifier, password, deviceLabel))
@@ -937,6 +945,27 @@ class MobileAppCoordinator(
         return state
     }
 
+    suspend fun loadPassengerScheduledBookings(page: Int): AppUiState {
+        require(page >= 1)
+        if (appRole != AppRole.PASSENGER || scheduling == null || rides == null) return offline(Res.string.message_ride_services_unavailable)
+        val selection = BookingPageSelection(page, authentication.localSessionOwnerEpoch)
+        selectedBookingPage = selection
+        bookingPageReadRevision++
+        return try {
+            authentication.readWithSessionRecovery { account ->
+                if (selection.owner != authentication.localSessionOwnerEpoch) throw AuthenticationRejectedException()
+                if (selectedBookingPage !== selection) throw CancellationException("Superseded booking page read")
+                quoteProductState(account)
+            }
+        } catch (_: AuthenticationRejectedException) {
+            signedOut(Res.string.message_session_expired)
+        } catch (_: AuthenticationNetworkException) {
+            offline(Res.string.message_network_unavailable)
+        } catch (_: ApiRequestException) {
+            offline(Res.string.message_scheduled_bookings_unavailable)
+        }
+    }
+
     suspend fun cancelScheduledBooking(bookingId: String): AppUiState = schedulingMutation {
         it.cancelPassengerBooking(bookingId, "PASSENGER_CANCELLED")
     }
@@ -1191,6 +1220,13 @@ class MobileAppCoordinator(
         return owner == authentication.localSessionOwnerEpoch && lifetime.active && !lifetime.ending
     }
 
+    private fun requireCurrentBookingRead(selection: BookingPageSelection, revision: Long) {
+        if (!navigationOwnerIsCurrent(selection.owner)) throw AuthenticationRejectedException()
+        if (selectedBookingPage !== selection || bookingPageReadRevision != revision) {
+            throw CancellationException("Superseded booking page read")
+        }
+    }
+
     private suspend fun refreshRideQuote(state: AppUiState): AppUiState {
         val selection = rideQuoteSelection ?: return state
         if (!navigationOwnerIsCurrent(selection.owner)) {
@@ -1323,8 +1359,31 @@ class MobileAppCoordinator(
         if (appRole == AppRole.PASSENGER && rendered is AppUiState.PassengerReady && rides != null) {
             val passengerRideGateway = rides
             return try {
+                val owner = authentication.localSessionOwnerEpoch
+                val selection = selectedBookingPage?.takeIf { it.owner == owner }
+                    ?: BookingPageSelection(1, owner).also { selectedBookingPage = it }
+                val revision = ++bookingPageReadRevision
+                requireCurrentBookingRead(selection, revision)
                 val passengerRides = passengerRideGateway.listRides()
-                val scheduledBookings = scheduling?.passengerBookings().orEmpty()
+                requireCurrentBookingRead(selection, revision)
+                var scheduledBookingsLoadFailed = false
+                val scheduledBookingPage = try {
+                    var result = scheduling?.passengerBookings(selection.page)
+                    requireCurrentBookingRead(selection, revision)
+                    if (result != null && result.items.isEmpty() && result.page > 1) {
+                        val lastPage = ((result.total.toLong() + result.limit - 1) / result.limit).coerceAtLeast(1).toInt()
+                        if (lastPage < result.page) result = scheduling?.passengerBookings(lastPage)
+                        requireCurrentBookingRead(selection, revision)
+                    }
+                    result
+                } catch (_: AuthenticationNetworkException) {
+                    scheduledBookingsLoadFailed = true
+                    null
+                } catch (_: ApiRequestException) {
+                    scheduledBookingsLoadFailed = true
+                    null
+                }
+                requireCurrentBookingRead(selection, revision)
                 var catalogUnavailable = false
                 val serviceCities = try {
                     passengerRideGateway.publicCities()
@@ -1353,7 +1412,7 @@ class MobileAppCoordinator(
                 val notificationHistory = notifications?.list() ?: emptyList()
                 val supportHistory = support?.tickets() ?: emptyList()
                 val safetyHistory = safety?.reports() ?: emptyList()
-                passengerRides
+                val product = passengerRides
                     .firstOrNull {
                         it.status !in setOf(RideStatus.COMPLETED, RideStatus.CANCELLED, RideStatus.UNMATCHED)
                     }
@@ -1386,7 +1445,9 @@ class MobileAppCoordinator(
                             activeServiceType = activeRide.serviceType,
                             activeFixedRoute = activeRide.fixedRoute,
                             rideHistory = passengerRides,
-                            scheduledBookings = scheduledBookings,
+                            scheduledBookingPage = scheduledBookingPage,
+                            scheduledBookingsLoadFailed = scheduledBookingsLoadFailed,
+                            scheduledBookingRequestedPage = selection.page,
                             notifications = notificationHistory,
                             supportTickets = supportHistory,
                             safetyReports = safetyHistory,
@@ -1400,7 +1461,9 @@ class MobileAppCoordinator(
                                 profile = profile,
                                 rateableRideId = completedRide.id.takeUnless { ratingExists },
                                 rideHistory = passengerRides,
-                                scheduledBookings = scheduledBookings,
+                                scheduledBookingPage = scheduledBookingPage,
+                                scheduledBookingsLoadFailed = scheduledBookingsLoadFailed,
+                                scheduledBookingRequestedPage = selection.page,
                                 latestCompletedReceipt = receipt,
                                 serviceCities = serviceCities,
                                 fixedRouteCatalog = fixedRouteCatalog,
@@ -1416,11 +1479,18 @@ class MobileAppCoordinator(
                         fixedRouteCatalog = fixedRouteCatalog,
                         fixedRouteCatalogUnavailable = catalogUnavailable,
                         rideHistory = passengerRides,
-                        scheduledBookings = scheduledBookings,
+                        scheduledBookingPage = scheduledBookingPage,
+                        scheduledBookingsLoadFailed = scheduledBookingsLoadFailed,
+                        scheduledBookingRequestedPage = selection.page,
                         notifications = notificationHistory,
                         supportTickets = supportHistory,
                         safetyReports = safetyHistory,
                     )
+                requireCurrentBookingRead(selection, revision)
+                if (scheduledBookingPage != null && scheduledBookingPage.page != selection.page) {
+                    selectedBookingPage = selection.copy(page = scheduledBookingPage.page)
+                }
+                product
             } catch (_: AuthenticationRejectedException) {
                 signedOut(Res.string.message_session_expired)
             } catch (_: AuthenticationNetworkException) {

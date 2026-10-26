@@ -1,5 +1,14 @@
 # TaxiMobile documentation
 
+> **Current source packet — 26 October 2026:** [passenger scheduled pagination](launch/scheduled-pagination.md)
+> makes records beyond page one reachable with bounded reads, owner/race guards,
+> localized retry and current-row confirmation. Local evidence: 145 JVM,
+> 156 Android-host and five rendered cases, including all 12 language/style
+> variants. Fresh successor native CI remains required. Predecessor
+> [CI 240](launch/journey-cancellation-ci-terminal-20261026.json) and
+> [CI 242](launch/scheduled-localization-ci-terminal-20261026.json) now pass all
+> eight jobs for their own sources. Hosting and physical acceptance remain open.
+
 > **Current source/hosting gate — 26 October 2026:** the
 > [runtime-preserving migrator](launch/runtime-preservation.md) passes
 > [CI 238](launch/runtime-preservation-ci-terminal-20261026.json), all eight

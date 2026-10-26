@@ -1099,6 +1099,11 @@ Forbidden:
   codes, turn a created live ride into a claim of travel starting, or turn a
   pending refund into a completed one. The [source packet](launch/scheduled-localization.md)
   records its catalog/compilation and pending acceptance boundaries.
+* Passenger scheduled bookings retain bounded backend page metadata and explicit
+  localized Previous/Next controls. Failed reads show retry without stale rows or
+  a false empty-list claim. Loading controls retain their accessible names; a page
+  replacement removes an obsolete cancellation confirmation. See the
+  [source and rendered checks](launch/scheduled-pagination.md).
 * Fare numerals remain Western digits unless product later decides otherwise; keep mono IDs LTR embeds in RTL layouts.
 * Do not bake English string lengths into fixed-width buttons; use min width + horizontal padding.
 

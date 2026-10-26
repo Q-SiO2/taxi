@@ -8,7 +8,8 @@ needed to implement the existing contracts.
 
 The [label correction](scheduled-localization.md) is now implemented and passes
 catalog and JVM/Android compilation checks. Its native/rendered/linguistic gates
-remain open. Pagination is still unimplemented; the findings below retain their
+remain open. [Pagination is now implemented and locally verified](scheduled-pagination.md);
+fresh native/hosted/device acceptance remains open. The findings below retain their
 pre-fix source boundary rather than representing accepted current UI behavior.
 
 ## Findings

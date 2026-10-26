@@ -5,6 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.patch
+import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -12,6 +13,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
+import io.ktor.serialization.ContentConvertException
 import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -25,6 +27,7 @@ import org.example.taximobile.domain.rides.Coordinates
 import org.example.taximobile.domain.scheduling.ScheduledBooking
 import org.example.taximobile.domain.scheduling.ScheduledBookingEstimate
 import org.example.taximobile.domain.scheduling.ScheduledBookingGateway
+import org.example.taximobile.domain.scheduling.ScheduledBookingPage
 import org.example.taximobile.domain.scheduling.ScheduledCancellationTerms
 import org.example.taximobile.domain.scheduling.ScheduledCommitment
 import org.example.taximobile.domain.scheduling.ScheduledEconomics
@@ -36,10 +39,23 @@ class KtorScheduledBookingGateway(
     private val api: ApiConfiguration,
     private val accessToken: suspend () -> String,
 ) : ScheduledBookingGateway {
-    override suspend fun passengerBookings(): List<ScheduledBooking> = request {
-        val response = client.get(api.endpoint("scheduled-bookings")) { authorize() }
-        response.requireSuccess("load scheduled bookings")
-        response.body<ScheduledBookingListResponse>().items.map(ScheduledBookingResponse::toDomain)
+    override suspend fun passengerBookings(page: Int): ScheduledBookingPage {
+        require(page >= 1)
+        return request {
+            val response = client.get(api.endpoint("scheduled-bookings")) {
+                authorize()
+                parameter("page", page)
+                parameter("limit", 20)
+            }
+            response.requireSuccess("load scheduled bookings")
+            try {
+                response.body<ScheduledBookingListResponse>().toDomain(page)
+            } catch (_: ContentConvertException) {
+                throw ApiRequestException(502, "The server returned an invalid scheduled booking page.")
+            } catch (_: IllegalArgumentException) {
+                throw ApiRequestException(502, "The server returned an invalid scheduled booking page.")
+            }
+        }
     }
 
     override suspend fun estimatePointToPoint(
@@ -307,7 +323,17 @@ internal fun ScheduledBookingResponse.toDomain() = ScheduledBooking(
     cancellationTerms.toDomain(), driverCommitted, liveRideId, cancellationFinancialOutcome, createdAt,
 )
 
-@Serializable internal data class ScheduledBookingListResponse(val items: List<ScheduledBookingResponse>)
+@Serializable internal data class ScheduledBookingListResponse(
+    val items: List<ScheduledBookingResponse>,
+    val page: Int,
+    val limit: Int,
+    val total: Int,
+) {
+    fun toDomain(requestedPage: Int): ScheduledBookingPage {
+        require(page == requestedPage && limit == 20)
+        return ScheduledBookingPage(items.map(ScheduledBookingResponse::toDomain), page, limit, total)
+    }
+}
 
 @Serializable
 internal data class ScheduledOfferResponse(

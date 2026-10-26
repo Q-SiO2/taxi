@@ -540,6 +540,12 @@
     <string name="scheduled_outcome_refund_pending">استرداد المبلغ قيد الانتظار</string>
     <string name="scheduled_outcome_refunded">تم رد المبلغ</string>
     <string name="scheduled_outcome_unknown">الحالة المالية غير متاحة</string>
+    <string name="scheduled_page_summary">الصفحة %1$d · %2$d حجزًا</string>
+    <string name="scheduled_page_previous">الحجوزات السابقة</string>
+    <string name="scheduled_page_next">الحجوزات التالية</string>
+    <string name="scheduled_page_reload">إعادة تحميل الحجوزات</string>
+    <string name="scheduled_page_empty">لا توجد حجوزات في هذه الصفحة.</string>
+    <string name="message_scheduled_bookings_unavailable">تعذر تحميل الحجوزات. حاول مجددًا.</string>
     <string name="scheduled_refund_always_full">لا يحتفظ الإلغاء برسوم الجدولة.</string>
     <string name="scheduled_refund_before_cutoff">يمكن استرداد رسوم الجدولة حتى %1$d دقيقة قبل الانطلاق.</string>
     <string name="scheduled_refund_never">لا يمكن استرداد رسوم الجدولة بعد التأكيد.</string>

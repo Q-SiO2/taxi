@@ -9,6 +9,13 @@ import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.async
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CancellationException
+import org.example.taximobile.data.scheduling.PagedBookingFixture
+import org.example.taximobile.data.scheduling.bookingFixture
+import org.example.taximobile.domain.scheduling.ScheduledBookingPage
+import kotlin.test.assertFailsWith
 import org.example.taximobile.app.AppRole
 import org.example.taximobile.data.auth.AuthenticationGateway
 import org.example.taximobile.data.auth.AccountSecurityGateway
@@ -980,6 +987,97 @@ class MobileAppCoordinatorTest {
         )
         assertEquals("report-1", state.safetyReports.single().id)
         assertEquals("We received your report.", state.safetyReports.single().latestPublicMessage)
+    }
+
+    @Test fun passenger_booking_page_two_survives_refresh_and_explicit_cancellation() = runBlocking {
+        val bookings = PagedBookingFixture()
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = bookings)
+        assertEquals(1, assertIs<AppUiState.PassengerReady>(coordinator.restore()).scheduledBookingPage?.page)
+        val second = assertIs<AppUiState.PassengerReady>(coordinator.loadPassengerScheduledBookings(2))
+        assertEquals("booking-21", second.scheduledBookings.single().id)
+        assertEquals(2, assertIs<AppUiState.PassengerReady>(coordinator.restore()).scheduledBookingPage?.page)
+        assertTrue(bookings.cancelled.isEmpty())
+        val cancelled = assertIs<AppUiState.PassengerReady>(coordinator.cancelScheduledBooking("booking-21"))
+        assertEquals(listOf("booking-21"), bookings.cancelled)
+        assertEquals("CANCELLED", cancelled.scheduledBookings.single().status)
+        assertEquals(2, cancelled.scheduledBookingPage?.page)
+    }
+
+    @Test fun empty_out_of_range_booking_page_is_clamped_with_one_bounded_extra_read() = runBlocking {
+        val bookings = PagedBookingFixture().apply {
+            onRead = { page -> if (page == 99) ScheduledBookingPage(emptyList(), 99, 20, 21)
+                else ScheduledBookingPage(listOf(bookingFixture()), page, 20, 21) }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = bookings)
+        val state = assertIs<AppUiState.PassengerReady>(coordinator.loadPassengerScheduledBookings(99))
+        assertEquals(2, state.scheduledBookingPage?.page)
+        assertEquals(listOf(99, 2), bookings.pages)
+        coordinator.restore()
+        assertEquals(listOf(99, 2, 2), bookings.pages)
+    }
+
+    @Test fun failed_booking_page_removes_stale_rows_and_preserves_the_live_ride() = runBlocking {
+        val bookings = PagedBookingFixture().apply { onRead = { throw AuthenticationNetworkException() } }
+        val live = object : RideGateway by ActiveRideGateway(Coordinates(34.03, -5.00)) {
+            override suspend fun listRides() = listOf(currentRide("active-synthetic-ride"))
+        }
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = live, scheduling = bookings)
+        val state = assertIs<AppUiState.PassengerReady>(coordinator.loadPassengerScheduledBookings(2))
+        assertTrue(state.scheduledBookingsLoadFailed)
+        assertNull(state.scheduledBookingPage)
+        assertTrue(state.scheduledBookings.isEmpty())
+        assertEquals(2, state.scheduledBookingRequestedPage)
+        assertNotNull(state.activeRide)
+        assertTrue(bookings.cancelled.isEmpty())
+    }
+
+    @Test fun newer_page_read_prevents_a_late_first_page_from_painting_or_restoring_navigation() = runBlocking {
+        val entered = CompletableDeferred<Unit>()
+        val release = CompletableDeferred<Unit>()
+        val bookings = PagedBookingFixture().apply { onRead = { page ->
+            if (page == 1) { entered.complete(Unit); release.await() }
+            ScheduledBookingPage(listOf(bookingFixture("booking-$page")), page, 20, 21)
+        } }
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = bookings)
+        val old = async { coordinator.restore() }
+        entered.await()
+        assertEquals(2, assertIs<AppUiState.PassengerReady>(coordinator.loadPassengerScheduledBookings(2)).scheduledBookingPage?.page)
+        release.complete(Unit)
+        assertFailsWith<CancellationException> { old.await() }
+        assertEquals(2, assertIs<AppUiState.PassengerReady>(coordinator.restore()).scheduledBookingPage?.page)
+    }
+
+    @Test fun logout_fences_an_inflight_booking_page_and_a_new_login_starts_at_page_one() = runBlocking {
+        val entered = CompletableDeferred<Unit>()
+        val release = CompletableDeferred<Unit>()
+        var delayed = false
+        val bookings = PagedBookingFixture().apply { onRead = { page ->
+            if (delayed) { entered.complete(Unit); release.await() }
+            ScheduledBookingPage(listOf(bookingFixture()), page, 20, 21)
+        } }
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = bookings)
+        coordinator.loadPassengerScheduledBookings(2)
+        delayed = true
+        val old = async { coordinator.restore() }
+        entered.await()
+        coordinator.logout()
+        release.complete(Unit)
+        assertIs<AppUiState.SignedOut>(old.await())
+        delayed = false
+        val newState = assertIs<AppUiState.PassengerReady>(coordinator.login("synthetic", "synthetic-password", null))
+        assertEquals(1, newState.scheduledBookingPage?.page)
+    }
+
+    @Test fun a_page_read_reauthorizes_once_without_replaying_a_booking_command() = runBlocking {
+        var calls = 0
+        val bookings = PagedBookingFixture().apply { onRead = { page ->
+            if (++calls == 1) throw org.example.taximobile.data.auth.AuthenticationRejectedException()
+            ScheduledBookingPage(listOf(bookingFixture()), page, 20, 21)
+        } }
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = bookings)
+        assertEquals(2, assertIs<AppUiState.PassengerReady>(coordinator.loadPassengerScheduledBookings(2)).scheduledBookingPage?.page)
+        assertEquals(2, calls)
+        assertTrue(bookings.cancelled.isEmpty())
     }
 
     @Test fun driver_pending_cash_survives_read_only_restore_without_history_inference() = runBlocking {

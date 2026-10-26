@@ -324,7 +324,7 @@ private class QuoteScheduling(private val store: QuoteStore, private val auth: Q
         return scheduleEstimate(direction)
     }
     private fun rejectedCommand(): Nothing { commands++; throw AuthenticationRejectedException() }
-    override suspend fun passengerBookings(): List<ScheduledBooking> = emptyList()
+    override suspend fun passengerBookings(page: Int) = org.example.taximobile.domain.scheduling.ScheduledBookingPage(emptyList(), page, 20, 0)
     override suspend fun estimatePointToPoint(scheduledFor: String, cityId: String?, pickup: Coordinates, destination: Coordinates) = quote(null)
     override suspend fun estimateFixedRoute(scheduledFor: String, directionVersionId: String) = quote(directionVersionId)
     override suspend fun createPointToPoint(scheduledFor: String, cityId: String?, pickup: Coordinates, destination: Coordinates, passengerNote: String?, reviewedEconomics: ScheduledEconomics): ScheduledBooking = rejectedCommand()

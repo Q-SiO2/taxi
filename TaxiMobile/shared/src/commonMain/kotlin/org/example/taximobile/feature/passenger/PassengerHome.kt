@@ -53,6 +53,7 @@ import org.example.taximobile.domain.support.SupportCategory
 import org.example.taximobile.feature.app.AppUiState
 import org.example.taximobile.feature.scheduling.scheduledBookingStatusLabel
 import org.example.taximobile.feature.scheduling.scheduledFinancialOutcomeLabel
+import org.example.taximobile.feature.scheduling.ScheduledBookingPageControls
 import org.example.taximobile.feature.rides.RideCoordinationActions
 import org.example.taximobile.feature.rides.RideLatestCoordinationMessage
 import org.example.taximobile.feature.app.AppAction
@@ -207,6 +208,7 @@ internal fun PassengerHome(
     onSchedulePointToPoint: (String, String?, Coordinates, Coordinates, String?, ScheduledBookingEstimate) -> Unit,
     onScheduleFixedRoute: (String, String, String?, ScheduledBookingEstimate) -> Unit,
     onCancelScheduledBooking: (String) -> Unit,
+    onLoadPassengerScheduledBookings: (Int) -> Unit,
     onSubmitManualTransfer: (String, String?) -> Unit,
     onCancelRide: (String) -> Unit,
     onSendRideCoordination: (String, RideCoordinationCode) -> Unit,
@@ -496,6 +498,7 @@ internal fun PassengerHome(
                     onSchedulePointToPoint = onSchedulePointToPoint,
                     onScheduleFixedRoute = onScheduleFixedRoute,
                     onCancel = onCancelScheduledBooking,
+                    onPage = onLoadPassengerScheduledBookings,
                 )
                 PassengerSheetPanel.Account -> PassengerAccountSheet(
                     state = state,
@@ -858,12 +861,18 @@ private fun PassengerScheduledSheet(
     onSchedulePointToPoint: (String, String?, Coordinates, Coordinates, String?, ScheduledBookingEstimate) -> Unit,
     onScheduleFixedRoute: (String, String, String?, ScheduledBookingEstimate) -> Unit,
     onCancel: (String) -> Unit,
+    onPage: (Int) -> Unit,
 ) {
     val taxiColors = TaxiTheme.colors
     var scheduledFor by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
     var useFixedRoute by remember { mutableStateOf(false) }
     var cancelCandidate by remember { mutableStateOf<String?>(null) }
+    LaunchedEffect(state.scheduledBookingPage, state.scheduledBookingsLoadFailed) {
+        if (state.scheduledBookingsLoadFailed || state.scheduledBookings.none {
+            it.id == cancelCandidate && it.status in setOf("SCHEDULED", "OFFERING", "DRIVER_COMMITTED", "DISPATCH_HANDOFF")
+        }) cancelCandidate = null
+    }
     val selectedRoute = state.fixedRouteCatalog?.directions?.firstOrNull {
         it.id == selectedFixedDirectionId && it.scheduledBookingEnabled
     }
@@ -987,8 +996,12 @@ private fun PassengerScheduledSheet(
         )
     }
     Text(stringResource(Res.string.scheduled_upcoming), style = MaterialTheme.typography.titleLarge)
-    if (state.scheduledBookings.isEmpty()) {
+    ScheduledBookingPageControls(state.scheduledBookingPage, state.scheduledBookingsLoadFailed,
+        state.scheduledBookingRequestedPage, pendingAction, onPage)
+    if (!state.scheduledBookingsLoadFailed && state.scheduledBookingPage?.total == 0) {
         EmptyState(stringResource(Res.string.scheduled_empty), stringResource(Res.string.scheduled_empty_help))
+    } else if (!state.scheduledBookingsLoadFailed && state.scheduledBookingPage != null && state.scheduledBookings.isEmpty()) {
+        Text(stringResource(Res.string.scheduled_page_empty))
     }
     state.scheduledBookings.forEach { booking ->
         Surface(
@@ -1042,7 +1055,11 @@ private fun PassengerScheduledSheet(
             body = booking?.cancellationTerms?.localizedSummary() ?: stringResource(Res.string.scheduled_cancel_backend_policy),
             confirmLabel = stringResource(Res.string.scheduled_cancel_confirm),
             destructive = true,
-            onConfirm = { cancelCandidate = null; onCancel(bookingId) },
+            onConfirm = {
+                cancelCandidate = null
+                if (pendingAction == null && !state.scheduledBookingsLoadFailed && booking != null &&
+                    booking.status in setOf("SCHEDULED", "OFFERING", "DRIVER_COMMITTED", "DISPATCH_HANDOFF")) onCancel(bookingId)
+            },
             onCancel = { cancelCandidate = null },
         )
     }

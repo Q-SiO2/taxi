@@ -93,7 +93,7 @@ data class ScheduledOfferPreference(
 )
 
 interface ScheduledBookingGateway {
-    suspend fun passengerBookings(): List<ScheduledBooking>
+    suspend fun passengerBookings(page: Int = 1): ScheduledBookingPage
     suspend fun estimatePointToPoint(
         scheduledFor: String,
         cityId: String?,

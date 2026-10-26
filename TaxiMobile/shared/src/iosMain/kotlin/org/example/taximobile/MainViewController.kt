@@ -334,6 +334,7 @@ fun MainViewController(
         onSchedulePointToPoint = { scheduledFor, cityId, pickup, destination, note, estimate -> submitAction(AppAction(AppActionKind.CREATE_SCHEDULED_BOOKING)) { dependencies.appCoordinator.schedulePointToPoint(scheduledFor, cityId, pickup, destination, note, estimate) } },
         onScheduleFixedRoute = { scheduledFor, directionId, note, estimate -> submitAction(AppAction(AppActionKind.CREATE_SCHEDULED_BOOKING)) { dependencies.appCoordinator.scheduleFixedRoute(scheduledFor, directionId, note, estimate) } },
         onCancelScheduledBooking = { bookingId -> submitAction(AppAction(AppActionKind.CANCEL_SCHEDULED_BOOKING, bookingId)) { dependencies.appCoordinator.cancelScheduledBooking(bookingId) } },
+        onLoadPassengerScheduledBookings = { page -> submitAction(AppAction(AppActionKind.LOAD_PASSENGER_SCHEDULED_BOOKINGS, page.toString())) { dependencies.appCoordinator.loadPassengerScheduledBookings(page) } },
         onSubmitManualTransfer = { rideId, payerReference -> submitAction(AppAction(AppActionKind.SUBMIT_MANUAL_TRANSFER, rideId)) { dependencies.appCoordinator.submitManualTransfer(rideId, payerReference) } },
         onCancelRide = { rideId -> submitAction(AppAction(AppActionKind.CANCEL_RIDE, rideId)) { dependencies.appCoordinator.cancelRide(rideId) } },
         onSendRideCoordination = { rideId, code -> submitAction(AppAction(AppActionKind.SEND_RIDE_COORDINATION, "$rideId:${code.name}")) { dependencies.appCoordinator.sendRideCoordinationMessage(rideId, code) } },

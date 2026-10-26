@@ -123,7 +123,9 @@ sealed interface AppUiState {
         val activeFixedRoute: FixedRouteRideSummary? = null,
         val rateableRideId: String? = null,
         val rideHistory: List<RideSummary> = emptyList(),
-        val scheduledBookings: List<ScheduledBooking> = emptyList(),
+        val scheduledBookingPage: org.example.taximobile.domain.scheduling.ScheduledBookingPage? = null,
+        val scheduledBookingsLoadFailed: Boolean = false,
+        val scheduledBookingRequestedPage: Int = 1,
         val scheduledBookingEstimate: ScheduledBookingEstimate? = null,
         val latestCompletedReceipt: RideReceipt? = null,
         val selectedHistoryRide: RideSummary? = null,
@@ -133,7 +135,9 @@ sealed interface AppUiState {
         val safetyReports: List<SafetyReport> = emptyList(),
         val accountSecurity: AccountSecurityUiState = AccountSecurityUiState(),
         val placeDiscovery: PlaceDiscoveryUiState = PlaceDiscoveryUiState(),
-    ) : AppUiState
+    ) : AppUiState {
+        val scheduledBookings: List<ScheduledBooking> get() = scheduledBookingPage?.items.orEmpty()
+    }
     data class DriverReady(
         val availability: DriverAvailabilityStatus,
         val displayName: String? = null,

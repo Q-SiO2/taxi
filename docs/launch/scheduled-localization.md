@@ -24,13 +24,24 @@ correction is retained and the final source recompiles successfully. Existing
 unrelated compiler warnings remain. A distinct cancelled-commitment label preserves
 French/Arabic agreement; the earlier 16-key compiled record is retained separately.
 
-This is source/catalog/compilation evidence. Fresh successor native CI, rendered
-screen coverage across all four styles, linguistic review, RTL/assistive
+This source now also has [terminal CI 242 acceptance](scheduled-localization-ci-terminal-20261026.json)
+across all eight required jobs and 1,458 backend cases. Rendered screen coverage
+across all four styles, linguistic review, RTL/assistive
 technology and actual devices remain separate requirements. The owner again
 selected source continuation on 26 October; no phone was connected at the device
 inventory check. [CI 240](journey-cancellation.md) belongs to the preceding
 cancellation candidate and cannot accept these later labels automatically.
 
-Passenger booking pagination remains the other confirmed R6 follow-up. This
+Passenger booking pagination was the other confirmed R6 follow-up; its
+[subsequent source packet](scheduled-pagination.md) is now locally verified. This
 presentation fix does not make records beyond the first page reachable, close
 R6/R9 or reopen the [Trial hosting gate](staging-capacity-stop-20261026.json).
+
+Published source `36b2d8e` is now running its own
+[CI 242](scheduled-localization-ci-observation-20261026.json). At this observation,
+four required jobs pass and Android/web/backend/iOS checks remain live. No later
+test outcome or tested-merge-tree equality is inferred from the local compilation
+or predecessor's artifacts.
+
+The terminal record above supersedes the earlier in-progress CI observation for
+`36b2d8e`; later pagination requires its own native CI and acceptance.

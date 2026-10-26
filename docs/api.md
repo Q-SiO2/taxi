@@ -3036,6 +3036,13 @@ GET  /scheduled-bookings/{booking_id}
 POST /scheduled-bookings/{booking_id}/cancel
 ```
 
+The passenger collection accepts `page` (starting at 1), `limit` (1–100, default
+20), and optional `status`. Responses retain `items`, `page`, `limit`, and `total`,
+ordered by scheduled time descending and ID. The mobile client uses explicit
+20-row pages; navigation never sends a booking command. The
+[pagination packet](launch/scheduled-pagination.md) records metadata validation,
+session-owned navigation, bounded empty-page recovery and acceptance limits.
+
 Estimate and creation include either validated point-to-point locations or one
 published direction version plus `scheduled_for`. Estimate is authenticated and
 non-mutating; it returns the resolved endpoints, timezone, exact economics, and

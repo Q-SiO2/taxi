@@ -540,6 +540,12 @@
     <string name="scheduled_outcome_refund_pending">Refund pending</string>
     <string name="scheduled_outcome_refunded">Refunded</string>
     <string name="scheduled_outcome_unknown">Financial status unavailable</string>
+    <string name="scheduled_page_summary">Page %1$d · %2$d bookings</string>
+    <string name="scheduled_page_previous">Previous bookings</string>
+    <string name="scheduled_page_next">Next bookings</string>
+    <string name="scheduled_page_reload">Reload bookings</string>
+    <string name="scheduled_page_empty">No bookings on this page.</string>
+    <string name="message_scheduled_bookings_unavailable">Could not load bookings. Try again.</string>
     <string name="scheduled_refund_always_full">Cancellation does not retain the scheduling surcharge.</string>
     <string name="scheduled_refund_before_cutoff">The scheduling surcharge is refundable until %1$d minutes before pickup.</string>
     <string name="scheduled_refund_never">The scheduling surcharge is non-refundable after confirmation.</string>

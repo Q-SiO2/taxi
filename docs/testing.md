@@ -1,5 +1,18 @@
 # TaxiMobile — Testing and Deployment Acceptance Map
 
+## Passenger scheduled pagination — 26 October 2026
+
+The [source packet](launch/scheduled-pagination.md) and
+[verification record](launch/scheduled-pagination-verification-20261026.json)
+cover explicit page two beyond twenty records, metadata/duplicate failures,
+bounded empty-page repair, current-page cancellation/readback, session recovery,
+logout and late-response races. Five rendered cases cover navigation/confirmation,
+unavailable reads, stale dialogs, pending accessible controls and all 12
+language/style variants. Final local selections pass 145 JVM and 156 Android-host
+tests; Android role entrypoints compile. Fresh successor native CI and actual
+hosted/device/field acceptance remain separate. Predecessor CI 240/242 is terminal
+green for its own sources, not for this later implementation.
+
 ## Ride and scheduled-booking cancellation — 26 October 2026
 
 The [gateway correction](launch/journey-cancellation.md) adds ten common Ktor

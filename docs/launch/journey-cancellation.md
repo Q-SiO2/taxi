@@ -42,3 +42,17 @@ successor CI is still required for the final source. [CI 238](runtime-preservati
 accepts the predecessor, not these mobile changes. Actual Android/iOS lifecycle,
 provider, hosted and field acceptance remain open. The existing
 [Trial capacity stop](staging-capacity-stop-20261026.json) remains binding.
+
+The published cancellation source `5023ffc` now has
+[CI 240 observation](journey-cancellation-ci-observation-20261026.json): seven
+required jobs pass, including Android/web and the full 1,458-case backend suite.
+The retained backend artifact binds the tested merge tree to that source; iOS
+shared-source compilation passes while application builds remain live. This is
+not terminal native acceptance. Later [label source](scheduled-localization.md)
+has its own CI and does not inherit these checks.
+
+The [terminal CI 240 record](journey-cancellation-ci-terminal-20261026.json) now
+supersedes that in-progress observation: all eight required jobs pass for
+`5023ffc`, including both unsigned iOS simulator app builds. This accepts that
+source and its 1,458 backend cases, not the subsequent label/pagination sources
+or any hosted/physical launch gate.

@@ -19,7 +19,11 @@ R6/R9 [scheduled-state labels](launch/scheduled-localization.md) now use EN/FR/A
 resources for booking, commitment and financial outcomes, with conservative
 unknown labels. Catalog validation and shared JVM/Android compilation pass;
 fresh native/rendered/linguistic/device acceptance remains open. The separate
-[pagination gap](launch/r6-scheduling-follow-up-20261026.md) remains unimplemented.
+[pagination packet](launch/scheduled-pagination.md) now adds explicit bounded
+navigation with session/stale-response guards, honest retry and cancellation
+confirmation refresh. Local checks pass 145 affected JVM, 156 Android-host and
+five rendered UI cases, including 12 language/style variants. Fresh successor
+native CI and actual hosted/device/field acceptance remain open.
 
 R3/R8 [durable document source](launch/document-s3.md) adds migration
 `20261025_0054`, hidden upload leases, final version-checked activation and bounded
