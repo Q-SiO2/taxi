@@ -610,7 +610,8 @@ private fun DriverOperationsSheet(
                     when (offer.serviceType) {
                         org.example.taximobile.domain.rides.RideServiceType.FIXED_ROUTE -> Res.string.service_type_fixed_route
                         org.example.taximobile.domain.rides.RideServiceType.SCHEDULED -> Res.string.service_type_scheduled
-                        else -> Res.string.service_type_on_demand
+                        org.example.taximobile.domain.rides.RideServiceType.ON_DEMAND -> Res.string.service_type_on_demand
+                        org.example.taximobile.domain.rides.RideServiceType.UNKNOWN -> Res.string.service_type_unknown
                     }
                 )
             )
@@ -924,27 +925,24 @@ private fun TimedOfferCard(
     pendingAction: AppAction?,
     modifier: Modifier = Modifier,
 ) {
-    var elapsedSeconds by remember(offer.id, offer.serverTimeAtFetch) { mutableIntStateOf(0) }
-    val countdown = offerCountdown(offer, elapsedSeconds)
+    var countdown by remember(offer.id, offer.readStartedAt) { mutableStateOf(offerCountdown(offer)) }
+    var refreshRequested by remember(offer.id) { mutableStateOf(false) }
+    val supportedService = offer.serviceType != org.example.taximobile.domain.rides.RideServiceType.UNKNOWN
     val hapticFeedback = LocalHapticFeedback.current
     LaunchedEffect(offer.id) {
         // Use the platform action-oriented effect so device capability and the
         // user's haptic-feedback preference remain authoritative.
         hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
     }
-    LaunchedEffect(offer.id, offer.serverTimeAtFetch) {
+    LaunchedEffect(offer.id, offer.readStartedAt) {
         while (true) {
-            val current = offerCountdown(offer, elapsedSeconds)
-            if (current == null) {
-                onExpired()
+            val current = offerCountdown(offer)
+            countdown = current
+            if (current == null || current.expired) {
+                if (!refreshRequested) { refreshRequested = true; onExpired() }
                 break
             }
-            if (current.expired) {
-                onExpired()
-                break
-            }
-            delay(1_000)
-            elapsedSeconds += 1
+            delay(500)
         }
     }
     OfferCard(
@@ -954,17 +952,20 @@ private fun TimedOfferCard(
         details = economicsDetails,
         expiryLabel = when {
             countdown == null -> stringResource(Res.string.offer_timing_unavailable_refreshing)
-            countdown.expired -> stringResource(Res.string.offer_expired_refreshing)
-            else -> stringResource(Res.string.seconds_remaining, countdown.remainingSeconds)
+            countdown?.expired == true -> stringResource(Res.string.offer_expired_refreshing)
+            else -> stringResource(Res.string.seconds_remaining, countdown!!.remainingSeconds)
         },
         expiryFraction = countdown?.remainingFraction,
-        acceptEnabled = countdown?.expired == false && pendingAction == null,
+        acceptEnabled = countdown?.expired == false && supportedService && pendingAction == null,
         declineEnabled = pendingAction == null,
         acceptLoading = pendingAction.isPending(AppActionKind.RESPOND_TO_OFFER, "${offer.id}:accept"),
         declineLoading = pendingAction.isPending(AppActionKind.RESPOND_TO_OFFER, "${offer.id}:decline"),
-        onAccept = onAccept,
+        onAccept = { if (pendingAction == null && supportedService && offerCountdown(offer)?.expired == false) onAccept() },
         onDecline = onDecline,
         modifier = modifier,
+        onRefresh = if (countdown?.expired != false || !supportedService) onExpired else null,
+        refreshEnabled = pendingAction == null,
+        refreshLoading = pendingAction.isPending(AppActionKind.REFRESH),
     )
 }
 

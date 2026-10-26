@@ -284,8 +284,10 @@
     <string name="current_latitude">خط العرض الحالي</string>
     <string name="current_longitude">خط الطول الحالي</string>
     <string name="submit_location">إرسال الموقع</string>
-    <string name="offer_expired_refreshing">انتهت صلاحية العرض · جارٍ التحديث</string>
-    <string name="offer_timing_unavailable_refreshing">توقيت العرض غير متاح · جارٍ التحديث</string>
+    <string name="offer_expired_refreshing">انتهت صلاحية العرض · حدّث العروض</string>
+    <string name="offer_timing_unavailable_refreshing">توقيت العرض غير متاح · حدّث العروض</string>
+    <string name="offer_refresh">تحديث العروض</string>
+    <string name="service_type_unknown">الخدمة غير متاحة</string>
     <string name="rating_submitted_confirmation">تم إرسال التقييم</string>
     <string name="cash_received_confirmation">تم تأكيد استلام المبلغ النقدي</string>
     <string name="support_request_sent_confirmation">تم إرسال طلب الدعم</string>

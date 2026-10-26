@@ -73,6 +73,11 @@ source-only continuation and [Trial stop](staging-capacity-stop-20261026.json).
 
 Further confirmed presentation work remains: scheduled pickup/protected-window
 rows still print raw timestamp strings instead of the required city-local time
-and timezone. The immediate-offer UI also advances elapsed seconds by timer
-callback count. Review those paths independently; this packet does not claim
-to close their device/background or timezone acceptance.
+and timezone. The [immediate-offer correction](immediate-offer-review.md) now owns
+the separate callback-count timing and cancellation defects. This scheduled
+packet does not close their device/background or timezone acceptance.
+
+Published source `9b656d9` is running [CI 248](scheduled-driver-review-ci-observation-20261026.json).
+Observe that exact run to terminal and verify its own artifact/source binding.
+This later observation is retained in the main checkout for the next checkpoint;
+the published candidate records its local acceptance boundary.

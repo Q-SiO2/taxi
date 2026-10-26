@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import org.example.taximobile.feature.ui.theme.TaxiColors
 import org.example.taximobile.feature.ui.theme.TaxiSpacing
 import org.jetbrains.compose.resources.stringResource
@@ -33,8 +35,13 @@ fun OfferCard(
     onAccept: () -> Unit,
     onDecline: () -> Unit,
     modifier: Modifier = Modifier,
+    onRefresh: (() -> Unit)? = null,
+    refreshEnabled: Boolean = true,
+    refreshLoading: Boolean = false,
 ) {
     val taxiColors = TaxiTheme.colors
+    val acceptLabel = stringResource(Res.string.accept)
+    val declineLabel = stringResource(Res.string.decline)
     Surface(modifier, shape = MaterialTheme.shapes.large, color = taxiColors.Surface0, shadowElevation = if (TaxiTheme.style == org.example.taximobile.feature.ui.theme.TaxiStyle.Notepad) 0.dp else TaxiSpacing.Xs) {
         Column(Modifier.padding(TaxiSpacing.Md), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
             Text(stringResource(Res.string.ride_offer), style = MaterialTheme.typography.titleMedium)
@@ -52,19 +59,25 @@ fun OfferCard(
                 )
             }
             TaxiButton(
-                stringResource(Res.string.accept),
+                acceptLabel,
                 onAccept,
-                modifier = Modifier.heightIn(min = 64.dp),
+                modifier = Modifier.heightIn(min = 64.dp).semantics { contentDescription = acceptLabel },
                 enabled = acceptEnabled,
                 loading = acceptLoading,
             )
             TaxiButton(
-                stringResource(Res.string.decline),
+                declineLabel,
                 onDecline,
+                modifier = Modifier.semantics { contentDescription = declineLabel },
                 enabled = declineEnabled,
                 loading = declineLoading,
                 style = TaxiButtonStyle.Secondary,
             )
+            onRefresh?.let { refresh ->
+                val label = stringResource(Res.string.offer_refresh)
+                TaxiButton(label, refresh, modifier = Modifier.semantics { contentDescription = label },
+                    enabled = refreshEnabled, loading = refreshLoading, style = TaxiButtonStyle.Secondary)
+            }
         }
     }
 }

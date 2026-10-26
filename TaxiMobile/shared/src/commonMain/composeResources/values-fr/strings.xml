@@ -284,8 +284,10 @@
     <string name="current_latitude">Latitude actuelle</string>
     <string name="current_longitude">Longitude actuelle</string>
     <string name="submit_location">Envoyer la position</string>
-    <string name="offer_expired_refreshing">Proposition expirée · actualisation</string>
-    <string name="offer_timing_unavailable_refreshing">Horaire de la proposition indisponible · actualisation</string>
+    <string name="offer_expired_refreshing">Proposition expirée · actualisez les offres</string>
+    <string name="offer_timing_unavailable_refreshing">Horaire de la proposition indisponible · actualisez les offres</string>
+    <string name="offer_refresh">Actualiser les offres</string>
+    <string name="service_type_unknown">Service indisponible</string>
     <string name="rating_submitted_confirmation">Évaluation envoyée</string>
     <string name="cash_received_confirmation">Réception des espèces confirmée</string>
     <string name="support_request_sent_confirmation">Demande d’assistance envoyée</string>

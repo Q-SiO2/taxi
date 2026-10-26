@@ -1,5 +1,11 @@
 # TaxiMobile documentation
 
+> **Current source work — 26 October 2026:** [immediate-offer review](launch/immediate-offer-review.md)
+> corrects callback-count timing and swallowed coroutine cancellation, with explicit
+> unavailable review and refresh. Local checks pass 225 JVM and 181 Android-host
+> cases, both role compilations and rendered review across all 12 language/style
+> combinations. Test sets overlap. Fresh successor native CI remains required.
+
 > **Current source work — 26 October 2026:** [driver scheduled review](launch/scheduled-driver-review.md)
 > fixes the remaining driver refund fallback and expiry controls. Local verification
 > passes 179 JVM and 178 Android-host cases, both Android role compilations,

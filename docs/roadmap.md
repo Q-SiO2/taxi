@@ -2,6 +2,12 @@
 
 ## Current packet — 26 October 2026
 
+The [immediate-offer correction](launch/immediate-offer-review.md) follows the
+confirmed callback-count countdown and swallowed cancellation failures. Its
+affected local shared/rendered/Android checks pass; complete fresh native CI.
+The driver's scheduled-review CI
+accepts only its own predecessor source; timing/background and field gates remain.
+
 The [driver scheduled-offer correction](launch/scheduled-driver-review.md) follows
 the remaining driver financial-review and expiry defects. Affected local shared,
 rendered and Android checks pass. Complete its fresh native checks without borrowing the passenger predecessor's

@@ -23,6 +23,11 @@ across all eight required jobs. The [driver review successor](launch/scheduled-d
 is undergoing independent local/native verification. These source packets do not accept hosted, physical, operational
 or field journeys. The Trial capacity stop and source-only continuation persist.
 
+The [immediate-offer follow-up](launch/immediate-offer-review.md) now passes its
+affected local shared/rendered/Android checks for elapsed timing, cancellation
+and unavailable review. It still requires its own immutable native CI; scheduled
+city-local timestamp presentation remains a distinct confirmed source follow-up.
+
 ## Starting point and interpretation of full functionality
 
 [The board-alpha handoff](board-alpha-handoff.md) records native v23 / web v10,

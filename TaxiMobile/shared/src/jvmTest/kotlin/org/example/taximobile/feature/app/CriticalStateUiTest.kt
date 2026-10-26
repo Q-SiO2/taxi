@@ -1109,7 +1109,7 @@ class CriticalStateUiTest {
             )
         }
 
-        onNodeWithText("Offer expired · refreshing").assertIsDisplayed()
+        onNodeWithText("Offer expired · refresh offers").assertIsDisplayed()
         onNodeWithText("Accept").assertIsNotEnabled()
         assertTrue(refreshRequested)
     }
@@ -1137,7 +1137,7 @@ class CriticalStateUiTest {
             )
         }
 
-        onNodeWithText("Offer timing unavailable · refreshing").assertIsDisplayed()
+        onNodeWithText("Offer timing unavailable · refresh offers").assertIsDisplayed()
         onNodeWithText("Accept").assertIsNotEnabled()
         assertTrue(refreshRequested)
     }

@@ -284,8 +284,10 @@
     <string name="current_latitude">Current latitude</string>
     <string name="current_longitude">Current longitude</string>
     <string name="submit_location">Submit location</string>
-    <string name="offer_expired_refreshing">Offer expired · refreshing</string>
-    <string name="offer_timing_unavailable_refreshing">Offer timing unavailable · refreshing</string>
+    <string name="offer_expired_refreshing">Offer expired · refresh offers</string>
+    <string name="offer_timing_unavailable_refreshing">Offer timing unavailable · refresh offers</string>
+    <string name="offer_refresh">Refresh offers</string>
+    <string name="service_type_unknown">Service unavailable</string>
     <string name="rating_submitted_confirmation">Rating submitted</string>
     <string name="cash_received_confirmation">Cash receipt confirmed</string>
     <string name="support_request_sent_confirmation">Support request sent</string>

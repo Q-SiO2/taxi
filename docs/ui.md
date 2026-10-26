@@ -593,8 +593,15 @@ Never show private contact, home address, or earnings to passengers.
 * Pickup neighborhood / distance / ETA from API
 * Locked estimated fare
 * Countdown bar mapped to offer expiry
+* Use server-relative timing with a retained monotonic request-start anchor;
+  delayed callbacks or reopening the card cannot restart the window.
 * Accept (primary) / Decline (secondary)
-* On expiry: card exits; list refreshes from API
+* On expiry/invalid timing: disable Accept, refresh once per retained offer ID,
+  and expose explicit retry. Remove the card when the owned list confirms it;
+  repeated invalid readback cannot cause an automatic refresh loop.
+* Unsupported service is unavailable review, never an inferred on-demand label.
+  Explicit confirmed Decline remains available. See the
+  [immediate-offer packet](launch/immediate-offer-review.md).
 
 ### 8. `MapFAB`
 
