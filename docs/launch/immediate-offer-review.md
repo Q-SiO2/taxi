@@ -70,3 +70,11 @@ confirmed source follow-up. Physical timing/background/lock/process-death,
 assistive/linguistic review, signed distribution, provider/hosted operation and
 staffed pilot/public acceptance remain open. The owner's source-only continuation
 and [Trial capacity stop](staging-capacity-stop-20261026.json) still apply.
+
+Published source `e38ae7b` failed [CI 250](immediate-offer-review-ci-terminal-20261026.json)
+at the mobile Python source gate; Android packaging/minification was skipped.
+The [focused source-gate correction](immediate-offer-source-gate.md) owns the fix
+and fresh CI requirement. The [earlier observation](immediate-offer-review-ci-observation-20261026.json)
+is retained. Scheduled-driver predecessor [CI 248](scheduled-driver-review-ci-terminal-20261026.json)
+now passes all eight required jobs for its own source; it cannot accept this
+immediate-offer successor or its later corrections.

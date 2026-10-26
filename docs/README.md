@@ -1,5 +1,10 @@
 # TaxiMobile documentation
 
+> **Current CI repair — 26 October 2026:** [source-gate correction](launch/immediate-offer-source-gate.md)
+> addresses the mobile Python check that rejected the combined expiry guard in
+> CI 250. The focused successor passes 117 source/build-tool tests; it still
+> requires complete native CI. Calendar/timezone work remains separate.
+
 > **Current source work — 26 October 2026:** [immediate-offer review](launch/immediate-offer-review.md)
 > corrects callback-count timing and swallowed coroutine cancellation, with explicit
 > unavailable review and refresh. Local checks pass 225 JVM and 181 Android-host

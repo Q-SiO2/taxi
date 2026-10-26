@@ -1,0 +1,49 @@
+{
+  "recorded_utc": "2026-10-26 16:10:19 UTC",
+  "source_head": "e38ae7b59da64b73966a7e794b30382df572502f",
+  "candidate_tree": "4392f303363d39e37ec9f537ae0d66fdc50f5c52",
+  "run_id": 40356220628,
+  "run_number": 250,
+  "status": "in_progress",
+  "conclusion": null,
+  "required_jobs": {
+    "gradle-dependency-submission": {
+      "id": 121689292471,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "mobile": {
+      "id": 121689292732,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "gradle-wrapper-integrity": {
+      "id": 121689292942,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "backend": {
+      "id": 121689292945,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "web": {
+      "id": 121689293215,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "ios-shared": {
+      "id": 121689293276,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "documentation-and-provenance": {
+      "id": 121689293414,
+      "status": "completed",
+      "conclusion": "success"
+    }
+  },
+  "predecessor_ci_248_does_not_accept_this_source": true,
+  "physical_hosted_pilot_or_public_accepted": false,
+  "next_action": "Observe this exact run to terminal and verify source-tree/artifact digests; also finish observing CI 248. Do not restart for unchanged polling or borrow predecessor checks."
+}

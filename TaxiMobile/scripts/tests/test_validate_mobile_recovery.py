@@ -15,6 +15,51 @@ SPEC.loader.exec_module(MODULE)
 
 
 class MobileRecoveryValidationTest(unittest.TestCase):
+    def test_offer_guard_requires_null_expiry_refresh_and_loop_protection(self) -> None:
+        original = Path.read_text
+        mutations = (
+            ("current == null || current.expired", "current.expired"),
+            ("current == null || current.expired", "current == null"),
+            ("onExpired()", "missing_refresh()"),
+            ("if (!refreshRequested)", "if (true)"),
+            ("refreshRequested = true; onExpired()", "onExpired(); refreshRequested = true"),
+        )
+        for before, after in mutations:
+            with self.subTest(mutation=after):
+                def read(path, *args, **kwargs):
+                    text = original(path, *args, **kwargs)
+                    if path.name == "DriverHome.kt":
+                        self.assertIn(before, text)
+                        text = text.replace(before, after)
+                    return text
+                with patch.object(Path, "read_text", read):
+                    with self.assertRaisesRegex(MODULE.MobileRecoveryConfigurationError, "authoritative refresh"):
+                        MODULE.validate_mobile_recovery()
+
+    def test_comment_decoy_cannot_supply_an_offer_refresh_guard(self) -> None:
+        original = Path.read_text
+        def read(path, *args, **kwargs):
+            text = original(path, *args, **kwargs)
+            if path.name == "DriverHome.kt":
+                text = text.replace("current == null || current.expired", "current.expired")
+                text = text.replace("val current = offerCountdown(offer)",
+                    "val current = offerCountdown(offer)\n// if (current == null || current.expired) { if (!refreshRequested) { refreshRequested = true; onExpired() }; break }")
+            return text
+        with patch.object(Path, "read_text", read):
+            with self.assertRaisesRegex(MODULE.MobileRecoveryConfigurationError, "authoritative refresh"):
+                MODULE.validate_mobile_recovery()
+
+    def test_equivalent_combined_guard_whitespace_is_accepted(self) -> None:
+        original = Path.read_text
+        def read(path, *args, **kwargs):
+            text = original(path, *args, **kwargs)
+            if path.name == "DriverHome.kt":
+                text = text.replace("current == null || current.expired", "current == null\n                || current.expired")
+                text = text.replace("refreshRequested = true; onExpired()", "refreshRequested=true; onExpired( )")
+            return text
+        with patch.object(Path, "read_text", read):
+            MODULE.validate_mobile_recovery()
+
     def test_repository_wiring_is_valid(self) -> None:
         MODULE.validate_mobile_recovery()
 

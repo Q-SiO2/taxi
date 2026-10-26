@@ -77,7 +77,9 @@ and timezone. The [immediate-offer correction](immediate-offer-review.md) now ow
 the separate callback-count timing and cancellation defects. This scheduled
 packet does not close their device/background or timezone acceptance.
 
-Published source `9b656d9` is running [CI 248](scheduled-driver-review-ci-observation-20261026.json).
-Observe that exact run to terminal and verify its own artifact/source binding.
-This later observation is retained in the main checkout for the next checkpoint;
-the published candidate records its local acceptance boundary.
+Published source `9b656d9` passes [CI 248](scheduled-driver-review-ci-terminal-20261026.json)
+across all eight required jobs and 1,482 backend cases, including eight disposable
+TLS probes and cleanup. Artifact digests bind the tested merge to the same source
+tree; both unsigned iOS simulator products build. The [earlier observation](scheduled-driver-review-ci-observation-20261026.json)
+is retained. These results cannot accept the later immediate-offer, verifier or
+city-time source, actual devices, signing, providers, hosted or field behavior.

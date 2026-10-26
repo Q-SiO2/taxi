@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,6 +16,35 @@ class MobileRecoveryConfigurationError(ValueError):
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise MobileRecoveryConfigurationError(message)
+
+
+def _refreshes_unavailable_offer(driver: str) -> bool:
+    """A scoped wiring check; executed UI tests still prove runtime behavior."""
+    start = driver.find("private fun TimedOfferCard(")
+    if start < 0:
+        return False
+    end = driver.find("\n@Composable", start)
+    timer = driver[start:end if end >= 0 else len(driver)]
+    timer = re.sub(r"/\*.*?\*/|//[^\n]*", "", timer, flags=re.S)
+    condition = re.search(r"if\s*\(\s*current\s*==\s*null\s*\|\|\s*current\.expired\s*\)\s*\{", timer)
+    if condition is None:
+        return False
+    depth = 1
+    position = condition.end()
+    while position < len(timer) and depth:
+        depth += (timer[position] == "{") - (timer[position] == "}")
+        position += 1
+    if depth:
+        return False
+    branch = timer[condition.end():position - 1]
+    flag = re.search(r"refreshRequested\s*=\s*true", branch)
+    refresh = re.search(r"\bonExpired\s*\(\s*\)", branch)
+    return (
+        re.search(r"val\s+current\s*=\s*offerCountdown\s*\(\s*offer\s*\)", timer) is not None
+        and re.search(r"if\s*\(\s*!refreshRequested\s*\)", branch) is not None
+        and flag is not None and refresh is not None and flag.end() <= refresh.start()
+        and re.search(r"\bbreak\b", branch) is not None
+    )
 
 
 def validate_mobile_recovery(root: Path = ROOT) -> None:
@@ -109,7 +139,7 @@ def validate_mobile_recovery(root: Path = ROOT) -> None:
             "Passenger one-shot location loading state is missing.")
     require("locationRequestInFlight" in driver and "loading = locationRequestInFlight" in driver,
             "Driver one-shot location loading state is missing.")
-    require("if (current == null)" in driver and "onExpired()" in driver,
+    require(_refreshes_unavailable_offer(driver),
             "Malformed offer timing must request authoritative refresh.")
     require("acceptEnabled = countdown?.expired == false" in driver,
             "Malformed or expired offer timing must disable acceptance.")

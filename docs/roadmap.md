@@ -2,6 +2,11 @@
 
 ## Current packet — 26 October 2026
 
+The [focused source-gate repair](launch/immediate-offer-source-gate.md) follows
+CI 250's mobile Python failure. Its 117-test local suite passes; complete fresh
+native CI, including Android packaging/minification skipped by that failed run.
+The city-time implementation remains a separate verification packet.
+
 The [immediate-offer correction](launch/immediate-offer-review.md) follows the
 confirmed callback-count countdown and swallowed cancellation failures. Its
 affected local shared/rendered/Android checks pass; complete fresh native CI.
