@@ -1,5 +1,18 @@
 # TaxiMobile — Testing and Deployment Acceptance Map
 
+## Ride and scheduled-booking cancellation — 26 October 2026
+
+The [gateway correction](launch/journey-cancellation.md) adds ten common Ktor
+pipeline cases for caller cancellation in reads, first command attempts and the
+bounded second attempt. Assert propagation without a network-error substitution
+or further request, plus unchanged URL/method/key/body for an ordinary transport
+retry. The predecessor reproduces nine failures; the corrected focused JVM run
+passes ten, and the affected data/coordinator selection passes 109 JVM and 128
+Android-host cases. The [verification record](launch/journey-cancellation-verification-20261026.json)
+binds their source scopes; exact successor native CI remains required.
+Physical lifecycle, process-death and hosted acceptance remain open. This source
+work does not reopen the [Trial hosting gate](launch/staging-capacity-stop-20261026.json).
+
 ## Active board alpha execution — 15 October 2026
 
 The owner has authorized implementation, Railway staging deployment and renewed

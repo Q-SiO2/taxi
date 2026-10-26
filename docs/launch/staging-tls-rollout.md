@@ -12,6 +12,16 @@ jobs and 1,443 backend cases through schema 0054. The
 [runtime-preservation correction](runtime-preservation.md) must receive its own
 fresh CI acceptance before rollout; its predecessor's green jobs are insufficient.
 Current Trial capacity and actual server/consumer apply remain pending.
+
+**26 October stop:** [CI 238](runtime-preservation-ci-terminal-20261026.json) now
+passes all eight required jobs and 1,458 backend cases for the runtime-preserving
+successor. The [fresh Railway read](staging-capacity-stop-20261026.json), however,
+reports `remainingUsageCreditBalance=-1.2347478455828274` and `isTrialing=false`
+despite `hasExhaustedFreePlan=false`. Usable Trial capacity is not established.
+No server TLS apply, consumer deployment or HBA change has run. Keep dependent
+hosting changes stopped; refresh capacity, backup/configuration and target guards
+before resuming. No upgrade, purchase, service/volume deletion or repeated
+credential/MFA recovery is authorized by this result.
 No certificate, server/consumer setting, HBA rule or deployment has been changed
 by this packet. Do not reuse the localhost test certificate for this target.
 
@@ -47,6 +57,28 @@ One file-setting diagnostic is [classified separately](staging-tls-config-diagno
 the existing command line. Preserve that startup override. Treat it as an
 explicit baseline precedence diagnostic; distinguish any new TLS setting or HBA
 parse/application error rather than requiring or claiming a blanket zero count.
+
+25 October preparation now also retains a [fresh protected database capture](staging-backup-20261025.json),
+[protected config rollback/ownership/capacity read](staging-tls-config-rollback-preflight-20261025.json)
+and [consumer baseline](staging-tls-consumer-preflight-20261025.json). Both runtime
+configurations agree with the existing login, the API pre-deploy command is
+ordinary `migrate`, and the worker has no pre-deploy command. All three ordinary
+public views and 81 base tables are already owned by the migration owner in
+staging. No hosted ownership repair is needed. The active volume had 303,681,536
+bytes available at observation; this is not a production capacity threshold.
+
+The [distinct staging PKI](staging-tls-pki-preparation-20261025.json) is prepared
+locally, with private material protected by DPAPI and the operator/SYSTEM ACL.
+It has not been installed or distributed. The new
+[0054 restore continuation](staging-restore-schema54-r2-20261025.json) qualifies the
+retained 24 October database archive through direct 0052→0054 upgrade, restricted
+runtime/readiness and an empty-recovery-state 0054→0053→0054 roundtrip. It preserves
+all 81 exact public-table row counts. Its [first observation](staging-restore-schema54-20261025.json)
+is retained: the no-owner import left three local views owned by the restore
+administrator. Only that new local target's view ownership was corrected; the
+archive was not restored again. Both local targets are stopped and original
+archives remain intact. The fresh 25 October capture has not itself been restored;
+neither exercise accepts exact platform/collation parity or production PITR/RTO.
 
 ## Preparation before applying
 

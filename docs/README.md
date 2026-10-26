@@ -1,5 +1,13 @@
 # TaxiMobile documentation
 
+> **Current source/hosting gate — 26 October 2026:** the
+> [runtime-preserving migrator](launch/runtime-preservation.md) passes
+> [CI 238](launch/runtime-preservation-ci-terminal-20261026.json), all eight
+> required jobs and 1,458 backend cases. A fresh local restore verifies 0054 with
+> restricted-runtime readiness. The [current Trial read](launch/staging-capacity-stop-20261026.json)
+> reports negative credit and `isTrialing=false`; prepared TLS/schema deployment
+> remains unapplied. Preserve both volumes, archives and Trial-only boundaries.
+
 > **Next source packet — 25 October 2026:** migration `20261025_0054` and the
 > [durable S3 workflow](launch/document-s3.md) now reserve hidden upload metadata,
 > enforce a final owner/version/lease transaction and reconcile interrupted/late

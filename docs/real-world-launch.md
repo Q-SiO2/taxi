@@ -191,8 +191,11 @@ revocation and explicitly reviews the expanded web budget. Fresh immutable CI,
 hosted upgrade and deployment acceptance remain open.
 The [runtime-preserving migration fix](launch/runtime-preservation.md) closes a
 source defect that could reset established credentials during normal deployment.
-Focused unit and real local SCRAM checks pass; fresh successor CI and actual
-guarded TLS/schema rollout remain required. The approved temporary S3 probe has
+Focused unit and real local SCRAM checks pass; [CI 238](launch/runtime-preservation-ci-terminal-20261026.json)
+now passes all eight required jobs and 1,458 backend cases. The actual guarded
+TLS/schema rollout remains open and is stopped by the
+[26 October Trial capacity read](launch/staging-capacity-stop-20261026.json).
+The approved temporary S3 probe has
 its own [provider evidence](launch/document-s3-provider-probe-20261025.json),
 without accepting permanent document storage or the Trial scanner profile.
 

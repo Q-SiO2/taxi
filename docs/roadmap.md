@@ -1,6 +1,19 @@
 # TaxiMobile — Alpha, Pilot and Public Release Roadmap
 
-## Current packet — 25 October 2026
+## Current packet — 26 October 2026
+
+[CI 238](launch/runtime-preservation-ci-terminal-20261026.json) accepts source
+314fcee across all eight required jobs and 1,458 backend tests. The
+[Trial capacity stop](launch/staging-capacity-stop-20261026.json) prevents the
+prepared hosted TLS/migration apply: current credit is negative and `isTrialing`
+is false. Preserve the existing resources and protected rollback material; no
+purchase, upgrade or credential/MFA replay. Continue independent source work.
+
+R5/R6 [ride/scheduled gateway cancellation](launch/journey-cancellation.md) now
+propagates caller cancellation before network normalization or command retries.
+The failing predecessor is retained; ten focused, 109 affected JVM and 128
+Android-host cases pass. Fresh successor CI remains required. This does not change
+backend booking policy, pricing, physical lifecycle or the hosting capacity gate.
 
 R3/R8 [durable document source](launch/document-s3.md) adds migration
 `20261025_0054`, hidden upload leases, final version-checked activation and bounded
@@ -16,9 +29,9 @@ deployment. Actual Trial limits are insufficient for the reviewed full scanner.
 The next hosted technical gate is matched API/worker rollout with verified
 database TLS and schema 0054. The [runtime-preserving migrator](launch/runtime-preservation.md)
 now rejects mismatched established credentials before Alembic; local unit and
-real SCRAM checks pass. Its own fresh CI, qualified 0054 restore/upgrade and the
-existing guarded staging packet precede application. No public promotion follows
-from this staging work.
+real SCRAM checks, its own full CI and a qualified local 0054 restore/upgrade now
+pass. Hosting capacity and refreshed guarded staging prerequisites still precede
+application. No public promotion follows from this staging work.
 
 R3/R8 [document pipeline recovery](launch/document-storage.md) now fixes verified
 scanner protocol/write failures, with 1,060 unit, two HTTP/PostGIS and real local

@@ -44,11 +44,26 @@ two-second lock timeouts. Its synthetic credentials are protected locally; neith
 passwords nor password verifiers enter the evidence. The cluster is stopped.
 Retained restore/membership fixtures and Railway were not mutated.
 
-This is focused source/local acceptance. A fresh complete native CI run for the
-successor remains required; [CI 236](document-s3-ci-terminal-20261025.json) accepts
-its predecessor's 1,443 backend cases, not this correction. The [fresh hosted read](staging-tls-server-preflight-20261025.json)
+The successor subsequently passes [terminal CI 238](runtime-preservation-ci-terminal-20261026.json):
+all eight required jobs and **1,458 backend cases**, with zero failures/errors/skips,
+including all 15 new preservation cases and eight real TLS probes with cleanup.
+The tested merge and branch head have the same immutable tree. Android/web,
+unsigned iOS simulator verification, audits and blocking image checks pass.
+[CI 236](document-s3-ci-terminal-20261025.json) remains its predecessor's evidence.
+The [25 October hosted read](staging-tls-server-preflight-20261025.json)
 still observes schema 0052, SSL off and five plaintext TCP clients. Apply the
 [guarded TLS/migration packet](staging-tls-rollout.md) only after its target,
 capacity, protected rollback and matched-source prerequisites hold. Hosted
 document ingestion, official scanner capacity, real devices and public launch
 remain separately unaccepted.
+
+Subsequent [local 0054 restore verification](staging-restore-schema54-r2-20261025.json)
+also exercises this successor's existing-role preflight and unchanged grant
+protocol against restored application state. Three imported views initially had
+the local restore administrator as owner; the failed observation is retained and
+only that new local target's ownership was corrected before continuation. A
+fresh hosted ownership read confirms those views already belong to the expected
+migration owner. This fixture correction does not authorize a hosted role/grant
+expansion or establish a hosted upgrade. Native CI is now accepted separately;
+the [26 October capacity stop](staging-capacity-stop-20261026.json) prevents the
+prepared hosting apply under the existing Trial-only boundary.

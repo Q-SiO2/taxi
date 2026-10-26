@@ -224,6 +224,14 @@ make the driver UI look actively on-trip before dispatch handoff.
 
 UI should reflect backend state rather than inventing its own authoritative state.
 
+Coroutine cancellation must propagate through ride and scheduled-booking reads
+and commands, including both attempts of a bounded idempotent request. It must
+not become a network-error state or trigger another attempt after cancellation.
+An ordinary transport retry retains the exact original command/key. Cancelling
+the caller does not establish that the backend rejected or cancelled a booking;
+resume by reloading authorized backend state rather than inventing that outcome.
+The [source correction](launch/journey-cancellation.md) retains this distinction.
+
 For example:
 
 ```text

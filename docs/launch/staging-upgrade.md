@@ -133,11 +133,29 @@ described above; use the guarded rollout packet after current Trial verification
 
 The [25 October runtime-preservation correction](runtime-preservation.md) removes
 password/role resets from ordinary migrations and verifies an established login
-read-only before Alembic. Its fresh native CI remains required. The
+read-only before Alembic. Its [fresh CI 238](runtime-preservation-ci-terminal-20261026.json)
+now passes all eight required jobs and 1,458 backend tests. The
 [25 October hosted observation](staging-tls-server-preflight-20261025.json) still
 records schema 0052 and SSL off; neither the accepted S3 predecessor nor local
-SCRAM tests establish a hosted upgrade. Target 0054 now requires its own qualified
-restore/upgrade check in addition to the retained 0053 rehearsal.
+SCRAM tests establish a hosted upgrade. Target 0054 required its own qualified
+restore/upgrade check in addition to the retained 0053 rehearsal; its subsequent
+result is recorded below.
+
+That [0054 check now passes](staging-restore-schema54-r2-20261025.json) on a fresh
+owned local restore of the original protected 24 October archive: all 81 public
+table counts, direct 0052→0054 upgrade, restricted runtime, analytics refresh,
+readiness and empty-recovery-state 0054→0053→0054 roundtrip. The failed first grant
+observation is retained; a local import-view ownership correction allowed safe
+continuation without replaying import. The new target is stopped. A separate
+[fresh 25 October capture](staging-backup-20261025.json) preserves the current
+hosted rollback state without overwriting either earlier archive or fixture; it
+has not itself been restored. Platform/patch/collation and production recovery
+qualifications remain unchanged.
+
+The [26 October capacity stop](staging-capacity-stop-20261026.json) now prevents
+the prepared hosting apply. The workspace reports negative credit and no active
+trial despite an unexhausted-plan flag. Do not infer usable capacity from that
+flag, reuse yesterday's positive balance or purchase a replacement plan.
 
 ## Membership-aware rollback boundary
 

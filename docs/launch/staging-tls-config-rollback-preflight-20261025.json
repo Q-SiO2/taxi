@@ -1,0 +1,35 @@
+{
+  "recorded_utc": "2026-10-25T16:20:08.798757+00:00",
+  "scope": "Read-only protected configuration rollback capture and ownership/capacity preflight",
+  "observations": {
+    "AVAILABLE_BYTES": "303681536",
+    "PGDATA_STAT": "postgres:root:700:directory",
+    "EFFECTIVE_UID": "0",
+    "OPENSSL_PRESENT": "true",
+    "CATALOG": {
+      "database": "taximobile_alpha_ed891bc651ff",
+      "data_directory": "/var/lib/postgresql/data/pgdata",
+      "schema_head": "20260908_0052",
+      "ssl": "off",
+      "ordinary_views": [
+        {
+          "name": "geography_columns",
+          "owner": "taximobile_owner"
+        },
+        {
+          "name": "geometry_columns",
+          "owner": "taximobile_owner"
+        },
+        {
+          "name": "operational_domain_events_v1",
+          "owner": "taximobile_owner"
+        }
+      ],
+      "non_owner_base_tables": 0
+    }
+  },
+  "config_archive_sha256": "a19011710bb75bd1df5082aa7087253f0b024947865c2eb900190b9c8c2481c8",
+  "protected_archive_sha256": "b8ac390febf3f29f5feacd95d7a3a7cae7cce414b423de6febae3e90b86eec36",
+  "remote_script_sha256": "6e5e2197249827fe789bbae85b7ad9951ea464a07100dce6de278195455c5cee",
+  "server_or_consumer_changes_performed": false
+}

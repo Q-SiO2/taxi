@@ -12,6 +12,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
+import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.example.taximobile.core.network.ApiConfiguration
@@ -194,6 +195,8 @@ class KtorScheduledBookingGateway(
 
     private suspend fun <T> request(block: suspend () -> T): T = try {
         block()
+    } catch (error: CancellationException) {
+        throw error
     } catch (error: AuthenticationRejectedException) {
         throw error
     } catch (error: ApiRequestException) {
@@ -204,6 +207,8 @@ class KtorScheduledBookingGateway(
 
     private suspend fun <T> idempotentRequest(block: suspend () -> T): T = try {
         block()
+    } catch (error: CancellationException) {
+        throw error
     } catch (error: AuthenticationRejectedException) {
         throw error
     } catch (error: ApiRequestException) {
@@ -211,6 +216,8 @@ class KtorScheduledBookingGateway(
     } catch (_: Exception) {
         try {
             block()
+        } catch (error: CancellationException) {
+            throw error
         } catch (error: AuthenticationRejectedException) {
             throw error
         } catch (error: ApiRequestException) {
