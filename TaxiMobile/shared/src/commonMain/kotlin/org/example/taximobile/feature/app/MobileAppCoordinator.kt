@@ -1,6 +1,7 @@
 package org.example.taximobile.feature.app
 
 import org.example.taximobile.domain.scheduling.canReviewAcceptance
+import org.example.taximobile.domain.scheduling.scheduledCityTime
 
 import org.example.taximobile.app.AppRole
 import org.example.taximobile.data.auth.AuthenticationNetworkException
@@ -887,9 +888,12 @@ class MobileAppCoordinator(
         destination: Coordinates,
         note: String?,
         estimate: ScheduledBookingEstimate,
-    ): AppUiState = schedulingMutation {
-        if (!estimate.cancellationTerms.isSupportedForReview) return@schedulingMutation null
-        it.createPointToPoint(scheduledFor, cityId, pickup, destination, note, estimate.economics)
+    ): AppUiState {
+        if (scheduledCityTime(estimate.scheduledFor, estimate.cityTimezone) == null) return offline(Res.string.scheduled_time_unavailable)
+        return schedulingMutation {
+            if (!estimate.cancellationTerms.isSupportedForReview) return@schedulingMutation null
+            it.createPointToPoint(scheduledFor, cityId, pickup, destination, note, estimate.economics)
+        }
     }
 
     suspend fun scheduleFixedRoute(
@@ -897,9 +901,12 @@ class MobileAppCoordinator(
         directionVersionId: String,
         note: String?,
         estimate: ScheduledBookingEstimate,
-    ): AppUiState = schedulingMutation {
-        if (!estimate.cancellationTerms.isSupportedForReview) return@schedulingMutation null
-        it.createFixedRoute(scheduledFor, directionVersionId, note, estimate.economics)
+    ): AppUiState {
+        if (scheduledCityTime(estimate.scheduledFor, estimate.cityTimezone) == null) return offline(Res.string.scheduled_time_unavailable)
+        return schedulingMutation {
+            if (!estimate.cancellationTerms.isSupportedForReview) return@schedulingMutation null
+            it.createFixedRoute(scheduledFor, directionVersionId, note, estimate.economics)
+        }
     }
 
     suspend fun estimateScheduledPointToPoint(

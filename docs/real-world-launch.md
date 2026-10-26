@@ -20,13 +20,22 @@ passes its own full [CI 244](launch/scheduled-pagination-ci-terminal-20261026.js
 The subsequent [cancellation review correction](launch/scheduled-cancellation-review.md)
 passes its own [CI 246](launch/scheduled-cancellation-review-ci-terminal-20261026.json)
 across all eight required jobs. The [driver review successor](launch/scheduled-driver-review.md)
-is undergoing independent local/native verification. These source packets do not accept hosted, physical, operational
+passes its own [CI 248](launch/scheduled-driver-review-ci-terminal-20261026.json).
+These source packets do not accept hosted, physical, operational
 or field journeys. The Trial capacity stop and source-only continuation persist.
 
 The [immediate-offer follow-up](launch/immediate-offer-review.md) now passes its
 affected local shared/rendered/Android checks for elapsed timing, cancellation
-and unavailable review. It still requires its own immutable native CI; scheduled
+and unavailable review. Its verifier successor now passes all eight required
+jobs in [CI 252](launch/immediate-offer-source-gate-ci-terminal-20261026.json);
 city-local timestamp presentation remains a distinct confirmed source follow-up.
+
+The [city-local time packet](launch/scheduled-city-time.md) now implements that
+presentation rule in the shared passenger/driver review without rewriting command
+instants. Local shared/rendered and both browser targets pass; finish Android
+release packaging, complete production web size/boot and fresh immutable native CI. The manual time
+input remains an explicit UX follow-up. The owner requested continued source work
+while physical Android verification is deferred; the full R0-R12 goal is retained.
 
 ## Starting point and interpretation of full functionality
 

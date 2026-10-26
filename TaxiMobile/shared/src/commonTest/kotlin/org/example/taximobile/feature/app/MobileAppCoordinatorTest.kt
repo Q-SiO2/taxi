@@ -1036,6 +1036,23 @@ class MobileAppCoordinatorTest {
         assertTrue(bookings.cancelled.isEmpty())
     }
 
+    @Test fun unsupported_city_time_prevents_both_creation_paths_without_guessing_a_timezone() = runBlocking {
+        val bookings = PagedBookingFixture()
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER,passengerAuthentication(),rides = PassengerHistoryDetailGateway(),scheduling = bookings)
+        val b = bookingFixture()
+        val original = org.example.taximobile.domain.scheduling.ScheduledBookingEstimate(
+            b.cityId,b.operatorId,b.serviceType,null,b.scheduledFor,b.cityTimezone,b.pickup,b.destination,b.economics,b.cancellationTerms,"CASH",
+        )
+        for (estimate in listOf(original.copy(cityTimezone = "PRIVATE-invalid"),original.copy(scheduledFor = "PRIVATE-invalid"))) {
+            val point = assertIs<AppUiState.Offline>(coordinator.schedulePointToPoint(b.scheduledFor,b.cityId,b.pickup,b.destination,null,estimate))
+            val fixed = assertIs<AppUiState.Offline>(coordinator.scheduleFixedRoute(b.scheduledFor,"synthetic-direction",null,estimate))
+            assertEquals(Res.string.scheduled_time_unavailable,point.message.resource)
+            assertEquals(Res.string.scheduled_time_unavailable,fixed.message.resource)
+        }
+        assertTrue(bookings.pages.isEmpty())
+        assertTrue(bookings.detailReads.isEmpty())
+    }
+
     @Test fun fresh_unknown_booking_terms_prevent_a_cancel_even_when_a_list_row_was_supported() = runBlocking {
         val bookings = PagedBookingFixture().apply { onDetail = { bookingFixture(it).let { b ->
             b.copy(cancellationTerms = b.cancellationTerms.copy(surchargeRefundMode = "FUTURE_PRIVATE_POLICY"))

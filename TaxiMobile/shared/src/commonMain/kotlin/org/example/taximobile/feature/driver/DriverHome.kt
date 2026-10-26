@@ -53,6 +53,8 @@ import org.example.taximobile.domain.support.SupportCategory
 import org.example.taximobile.feature.app.AppUiState
 import org.example.taximobile.feature.scheduling.scheduledCommitmentStatusLabel
 import org.example.taximobile.feature.scheduling.localizedSummary
+import org.example.taximobile.feature.scheduling.scheduledPickupTime
+import org.example.taximobile.feature.scheduling.scheduledProtectedTime
 import org.example.taximobile.domain.scheduling.canReviewAcceptance
 import org.example.taximobile.domain.scheduling.responseSecondsRemaining
 import org.example.taximobile.feature.app.AppAction
@@ -840,8 +842,8 @@ private fun DriverScheduledSheet(
         }
         Surface(Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.medium, color = taxiColors.Surface0) {
             Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Md), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(offer.scheduledFor, style = MaterialTheme.typography.titleMedium)
+                Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
+                    Text(scheduledPickupTime(offer.scheduledFor, offer.cityTimezone), style = MaterialTheme.typography.titleMedium)
                     StatusPill(stringResource(when (offer.serviceType) {
                         "ON_DEMAND" -> Res.string.scheduled_point_to_point
                         "FIXED_ROUTE" -> Res.string.scheduled_fixed_route
@@ -899,11 +901,11 @@ private fun DriverScheduledSheet(
     state.scheduledCommitments.forEach { commitment ->
         Surface(Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.medium, color = taxiColors.Surface0) {
             Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Md), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(commitment.scheduledFor, style = MaterialTheme.typography.titleMedium)
+                Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
+                    Text(scheduledPickupTime(commitment.scheduledFor, commitment.cityTimezone), style = MaterialTheme.typography.titleMedium)
                     StatusPill(stringResource(scheduledCommitmentStatusLabel(commitment.status)), if (commitment.status == "ACTIVE") StatusTone.Success else StatusTone.Info)
                 }
-                Text(stringResource(Res.string.scheduled_protected_window, commitment.protectedFrom, commitment.protectedUntil))
+                Text(scheduledProtectedTime(commitment.protectedFrom, commitment.protectedUntil, commitment.cityTimezone))
                 Text(stringResource(Res.string.scheduled_location_summary, commitment.pickup.address ?: stringResource(Res.string.pickup), commitment.destination.address ?: stringResource(Res.string.destination)))
                 Text(stringResource(Res.string.scheduled_expected_driver_net, commitment.economics.expectedDriverNet, commitment.economics.currency))
                 Text(stringResource(Res.string.scheduled_commitment_warning), color = taxiColors.Warning600)

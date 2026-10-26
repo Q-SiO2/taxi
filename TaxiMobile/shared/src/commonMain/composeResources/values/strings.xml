@@ -512,6 +512,8 @@
     <string name="scheduled_cash_notice">Cash is collected at ride settlement. No online payment is claimed at reservation time.</string>
     <string name="scheduled_review_price">Review price and terms</string>
     <string name="scheduled_review_title">Review before confirming</string>
+    <string name="scheduled_city_time">%1$s · %2$s (%3$s)</string>
+    <string name="scheduled_time_unavailable">Time unavailable. Refresh the booking details.</string>
     <string name="scheduled_location_summary">%1$s → %2$s</string>
     <string name="scheduled_confirm_notice">Cash will be collected at ride settlement. A driver is not guaranteed.</string>
     <string name="scheduled_confirm">Confirm scheduled ride</string>

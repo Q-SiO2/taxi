@@ -74,7 +74,8 @@ and [Trial capacity stop](staging-capacity-stop-20261026.json) still apply.
 Published source `e38ae7b` failed [CI 250](immediate-offer-review-ci-terminal-20261026.json)
 at the mobile Python source gate; Android packaging/minification was skipped.
 The [focused source-gate correction](immediate-offer-source-gate.md) owns the fix
-and fresh CI requirement. The [earlier observation](immediate-offer-review-ci-observation-20261026.json)
+and now passes all eight jobs in [CI 252](immediate-offer-source-gate-ci-terminal-20261026.json).
+The [earlier observation](immediate-offer-review-ci-observation-20261026.json)
 is retained. Scheduled-driver predecessor [CI 248](scheduled-driver-review-ci-terminal-20261026.json)
 now passes all eight required jobs for its own source; it cannot accept this
 immediate-offer successor or its later corrections.

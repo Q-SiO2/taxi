@@ -1,21 +1,30 @@
 # TaxiMobile documentation
 
+> **Current local source work — 26 October 2026:** [scheduled city-local time](launch/scheduled-city-time.md)
+> replaces raw UTC presentation in passenger/driver scheduled review and preserves
+> original command instants. Affected JVM/rendered and JS/Wasm browser checks pass;
+> Minified Android packaging, complete production web size/boot and fresh native CI remain required.
+> The owner deferred physical Android verification; continue source work.
+
 > **Current CI repair — 26 October 2026:** [source-gate correction](launch/immediate-offer-source-gate.md)
 > addresses the mobile Python check that rejected the combined expiry guard in
-> CI 250. The focused successor passes 117 source/build-tool tests; it still
-> requires complete native CI. Calendar/timezone work remains separate.
+> CI 250. The focused successor passes 117 local source/build-tool tests and all
+> eight required jobs in [CI 252](launch/immediate-offer-source-gate-ci-terminal-20261026.json).
+> Calendar/timezone work remains separate.
 
 > **Current source work — 26 October 2026:** [immediate-offer review](launch/immediate-offer-review.md)
 > corrects callback-count timing and swallowed coroutine cancellation, with explicit
 > unavailable review and refresh. Local checks pass 225 JVM and 181 Android-host
 > cases, both role compilations and rendered review across all 12 language/style
-> combinations. Test sets overlap. Fresh successor native CI remains required.
+> combinations. Test sets overlap. [CI 252](launch/immediate-offer-source-gate-ci-terminal-20261026.json)
+> now accepts this unchanged app source through the focused verifier repair.
 
 > **Current source work — 26 October 2026:** [driver scheduled review](launch/scheduled-driver-review.md)
 > fixes the remaining driver refund fallback and expiry controls. Local verification
 > passes 179 JVM and 178 Android-host cases, both Android role compilations,
 > and rendered driver review across all 12 language/style combinations. These
-> test sets overlap; fresh successor native CI remains required. The passenger predecessor passes
+> test sets overlap; its own [CI 248](launch/scheduled-driver-review-ci-terminal-20261026.json)
+> passes all eight required jobs. The passenger predecessor passes
 > [CI 246](launch/scheduled-cancellation-review-ci-terminal-20261026.json) across
 > all eight required jobs and 1,482 backend cases for its own source.
 

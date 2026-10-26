@@ -24,8 +24,12 @@ The exact successor checkout's [local evidence](immediate-offer-source-gate-veri
 passes **117 Python source/build-tool tests**,
 including all existing mutations and the new guard cases. The earlier baseline
 reproduction and working-directory copy observation remain in ignored local
-logs. The repair needs its own complete immutable CI, including actual Android
-assembly/minification/identity checks. It cannot borrow predecessor results.
+logs. The repair's own [CI 252](immediate-offer-source-gate-ci-terminal-20261026.json)
+now passes all eight required jobs, including Android assembly/minification and
+packaged identities, web release/browser checks, 1,482 backend cases and both
+unsigned iOS Release simulator products. Verified artifact hashes bind its tested
+merge to the candidate's identical tree. This accepts source verification only;
+it cannot accept later code or physical, hosted, signing or public operation.
 
 The separate city-local time implementation is under local verification in the
 main checkout and is excluded from this focused candidate. The existing Trial,

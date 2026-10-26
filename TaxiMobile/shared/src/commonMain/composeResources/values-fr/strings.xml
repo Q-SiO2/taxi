@@ -512,6 +512,8 @@
     <string name="scheduled_cash_notice">Le paiement en espèces est encaissé à la fin de la course. Aucun paiement en ligne n’est déclaré lors de la réservation.</string>
     <string name="scheduled_review_price">Vérifier le prix et les conditions</string>
     <string name="scheduled_review_title">Vérifier avant de confirmer</string>
+    <string name="scheduled_city_time">%1$s · %2$s (%3$s)</string>
+    <string name="scheduled_time_unavailable">Horaire indisponible. Actualisez les détails de la réservation.</string>
     <string name="scheduled_location_summary">%1$s → %2$s</string>
     <string name="scheduled_confirm_notice">Le paiement en espèces sera encaissé à la fin de la course. Un chauffeur n’est pas garanti.</string>
     <string name="scheduled_confirm">Confirmer la course planifiée</string>

@@ -15,6 +15,10 @@ junit = "4.13.2"
 kotlin = "2.4.10"
 kotlin-wrappers = "2026.7.7"
 kotlinx-coroutines = "1.11.0"
+kotlinx-datetime = "0.8.0"
+desugar-jdk = "2.1.5"
+js-joda-core = "5.7.0"
+js-joda-timezone = "2.26.0"
 ktor = "3.5.1"
 material3 = "1.11.0-alpha07"
 maplibre-compose = "0.14.0"
@@ -23,6 +27,8 @@ google-services = "4.5.0"
 firebase-crashlytics-plugin = "3.0.7"
 
 [libraries]
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+desugar-jdk = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar-jdk" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { module = "junit:junit", version.ref = "junit" }

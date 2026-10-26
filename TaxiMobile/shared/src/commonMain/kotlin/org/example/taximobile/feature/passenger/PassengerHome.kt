@@ -1,6 +1,8 @@
 package org.example.taximobile.feature.passenger
 
 import org.example.taximobile.feature.scheduling.localizedSummary
+import org.example.taximobile.feature.scheduling.scheduledPickupTime
+import org.example.taximobile.domain.scheduling.scheduledCityTime
 
 import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.background
@@ -960,6 +962,7 @@ private fun PassengerScheduledSheet(
     )
     reviewedEstimate?.let { estimate ->
         Text(stringResource(Res.string.scheduled_review_title), style = MaterialTheme.typography.titleLarge)
+        Text(scheduledPickupTime(estimate.scheduledFor, estimate.cityTimezone))
         Text(stringResource(Res.string.scheduled_location_summary, estimate.pickup.address ?: stringResource(Res.string.pickup), estimate.destination.address ?: stringResource(Res.string.destination)))
         FareBlock(
             amount = estimate.economics.passengerTotal,
@@ -977,7 +980,7 @@ private fun PassengerScheduledSheet(
         TaxiButton(
             label = stringResource(Res.string.scheduled_confirm),
             onClick = {
-                if (!estimate.cancellationTerms.isSupportedForReview) Unit
+                if (!estimate.cancellationTerms.isSupportedForReview || scheduledCityTime(estimate.scheduledFor, estimate.cityTimezone) == null) Unit
                 else if (useFixedRoute) {
                     selectedRoute?.let { onScheduleFixedRoute(scheduledFor.trim(), it.id, note.ifBlank { null }, estimate) }
                 } else {
@@ -993,13 +996,21 @@ private fun PassengerScheduledSheet(
                     }
                 }
             },
-            enabled = pendingAction == null && estimate.cancellationTerms.isSupportedForReview,
+            enabled = pendingAction == null && estimate.cancellationTerms.isSupportedForReview &&
+                scheduledCityTime(estimate.scheduledFor, estimate.cityTimezone) != null,
             loading = pendingAction.isPending(AppActionKind.CREATE_SCHEDULED_BOOKING),
         )
     }
     Text(stringResource(Res.string.scheduled_upcoming), style = MaterialTheme.typography.titleLarge)
     ScheduledBookingPageControls(state.scheduledBookingPage, state.scheduledBookingsLoadFailed,
         state.scheduledBookingRequestedPage, pendingAction, onPage)
+    if (!state.scheduledBookingsLoadFailed && state.scheduledBookings.any { scheduledCityTime(it.scheduledFor, it.cityTimezone) == null }) {
+        val page = state.scheduledBookingPage?.page ?: state.scheduledBookingRequestedPage
+        val label = stringResource(Res.string.scheduled_page_reload)
+        TaxiButton(label, { onPage(page) }, modifier = Modifier.semantics { contentDescription = label },
+            enabled = pendingAction == null, style = TaxiButtonStyle.Secondary,
+            loading = pendingAction.isPending(AppActionKind.LOAD_PASSENGER_SCHEDULED_BOOKINGS, page.toString()))
+    }
     if (!state.scheduledBookingsLoadFailed && state.scheduledBookingPage?.total == 0) {
         EmptyState(stringResource(Res.string.scheduled_empty), stringResource(Res.string.scheduled_empty_help))
     } else if (!state.scheduledBookingsLoadFailed && state.scheduledBookingPage != null && state.scheduledBookings.isEmpty()) {
@@ -1013,8 +1024,8 @@ private fun PassengerScheduledSheet(
             shadowElevation = TaxiSpacing.Xs,
         ) {
             Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Md), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(booking.scheduledFor, style = MaterialTheme.typography.titleMedium)
+                Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
+                    Text(scheduledPickupTime(booking.scheduledFor, booking.cityTimezone), style = MaterialTheme.typography.titleMedium)
                     StatusPill(stringResource(scheduledBookingStatusLabel(booking.status)), scheduledStatusTone(booking.status))
                 }
                 Text(stringResource(Res.string.scheduled_location_summary, booking.pickup.address ?: stringResource(Res.string.pickup), booking.destination.address ?: stringResource(Res.string.destination)))
@@ -1054,7 +1065,8 @@ private fun PassengerScheduledSheet(
         val booking = state.scheduledBookings.firstOrNull { it.id == bookingId }
         ConfirmDialog(
             title = stringResource(Res.string.scheduled_cancel_question),
-            body = booking?.cancellationTerms?.localizedSummary() ?: stringResource(Res.string.scheduled_cancel_backend_policy),
+            body = booking?.let { "${scheduledPickupTime(it.scheduledFor, it.cityTimezone)}\n${it.cancellationTerms.localizedSummary()}" }
+                ?: stringResource(Res.string.scheduled_cancel_backend_policy),
             confirmLabel = stringResource(Res.string.scheduled_cancel_confirm),
             destructive = true,
             confirmEnabled = pendingAction == null && !state.scheduledBookingsLoadFailed &&

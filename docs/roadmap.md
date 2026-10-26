@@ -2,20 +2,29 @@
 
 ## Current packet — 26 October 2026
 
+The [city-local time packet](launch/scheduled-city-time.md) implements the existing
+city-time presentation rule across shared scheduled review, with explicit invalid
+data and unchanged server instants. JVM/rendered and JS/Wasm checks pass; finish
+minified Android packaging, complete production web size/boot and its own immutable native CI.
+The scheduling input still needs a friendly city-local picker. Physical testing
+remains deferred by the owner; hosting remains stopped at the recorded Trial gate.
+
 The [focused source-gate repair](launch/immediate-offer-source-gate.md) follows
-CI 250's mobile Python failure. Its 117-test local suite passes; complete fresh
-native CI, including Android packaging/minification skipped by that failed run.
+CI 250's mobile Python failure. Its 117-test local suite and all eight required
+jobs in [CI 252](launch/immediate-offer-source-gate-ci-terminal-20261026.json) pass,
+including Android packaging/minification skipped by that failed run.
 The city-time implementation remains a separate verification packet.
 
 The [immediate-offer correction](launch/immediate-offer-review.md) follows the
 confirmed callback-count countdown and swallowed cancellation failures. Its
-affected local shared/rendered/Android checks pass; complete fresh native CI.
+affected local shared/rendered/Android checks and the verifier successor's CI 252 pass.
 The driver's scheduled-review CI
 accepts only its own predecessor source; timing/background and field gates remain.
 
 The [driver scheduled-offer correction](launch/scheduled-driver-review.md) follows
 the remaining driver financial-review and expiry defects. Affected local shared,
-rendered and Android checks pass. Complete its fresh native checks without borrowing the passenger predecessor's
+rendered and Android checks and its own [CI 248](launch/scheduled-driver-review-ci-terminal-20261026.json)
+pass. These results remain distinct from the passenger predecessor's
 [CI 246](launch/scheduled-cancellation-review-ci-terminal-20261026.json), which
 passes all eight required jobs and 1,482 backend cases for source `b1be457`.
 
@@ -84,8 +93,8 @@ real local PostgreSQL trust/rejection checks. Successor CI 232 passes all 1,317
 backend tests including its disposable TLS fixture, plus image/security checks.
 [All eight required jobs pass](launch/database-tls-ci-terminal-20261024.json),
 including iOS. Actual hosted verification remains required before upgrade acceptance.
-The live source still uses schema 0052, a non-TLS private database connection and
-disabled driver-document ingestion. Close transport/storage/rollout work with
+The last confirmed hosted observation (25 October) used schema 0052, a non-TLS
+private database connection and disabled driver-document ingestion. Close transport/storage/rollout work with
 actual evidence while retaining the full R0–R12 scope and R1 decisions. Preserve
 the membership policy through rollback; a pre-policy build cannot serve a union
 operator with the requirement enabled.

@@ -60,6 +60,7 @@ kotlin {
             implementation(libs.maplibre.compose)
         }
         commonMain.dependencies {
+            implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.coroutinesCore)
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
@@ -83,7 +84,11 @@ kotlin {
             implementation(compose.desktop.currentOs)
         }
         jsMain.dependencies {
+            implementation(npm("@js-joda/timezone", libs.versions.js.joda.timezone.get()))
             implementation(libs.wrappers.browser)
+        }
+        wasmJsMain.dependencies {
+            implementation(npm("@js-joda/timezone", libs.versions.js.joda.timezone.get()))
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

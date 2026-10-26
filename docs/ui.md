@@ -968,6 +968,16 @@ existing confirmation patterns. Upcoming rows distinguish **Request received**,
 **Cancelled**, and **Unfulfilled**. “Scheduled” alone must never be styled as a
 driver guarantee.
 
+Pickup review, booking rows, cancellation confirmation, driver offers and
+commitment windows display the backend city timezone as `YYYY-MM-DD · HH:mm
+(UTC±HH:mm)` (or `UTC`), retaining nonzero seconds/fractions. Isolate the complete
+value for RTL; wrap headers at large text sizes. Repeated local hours retain the
+actual offset of each instant. Invalid named zones or instants show localized
+unavailable copy and a read refresh, without a device-time fallback. New booking
+confirmation and driver acceptance require interpretable pickup timing; existing
+known-policy cancellation remains available. Authoritative commands retain the
+original reviewed instant. See [city-local time](launch/scheduled-city-time.md).
+
 The driver receives a normal high-attention offer with scheduled timing and may
 accept or decline. Accepted commitments appear in a calm upcoming-work list;
 they do not replace the online HUD or active-ride CTA until dispatch handoff.

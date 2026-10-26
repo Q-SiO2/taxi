@@ -48,6 +48,7 @@ class ScheduledOfferReviewTest {
         assertTrue(offer.canReviewAcceptance)
         assertTrue(offer.copy(serviceType = "FIXED_ROUTE").canReviewAcceptance)
         for (bad in listOf(offer.copy(status = "EXPIRED"), offer.copy(status = "FUTURE_PRIVATE_STATUS"),
+            offer.copy(cityTimezone = "PRIVATE-invalid"), offer.copy(scheduledFor = "PRIVATE-invalid"),
             offer.copy(serviceType = "FUTURE_PRIVATE_SERVICE"), offer.copy(id = ""),
             offer.copy(cancellationTerms = offer.cancellationTerms.copy(surchargeRefundMode = "FUTURE_PRIVATE_POLICY")),
             offer.copy(cancellationTerms = offer.cancellationTerms.copy(passengerCancelCutoffMinutes = -1)))) {

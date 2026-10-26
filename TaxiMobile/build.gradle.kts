@@ -19,6 +19,19 @@ plugins {
     alias(libs.plugins.firebaseCrashlytics) apply false
 }
 
+// kotlinx-datetime uses the js-joda API. Both browser graphs must resolve one
+// compatible core so the current timezone database registers on that same copy.
+plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin> {
+    rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension> {
+        resolution("@js-joda/core", libs.versions.js.joda.core.get())
+    }
+}
+plugins.withType<org.jetbrains.kotlin.gradle.targets.wasm.yarn.WasmYarnPlugin> {
+    rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.wasm.yarn.WasmYarnRootExtension> {
+        resolution("@js-joda/core", libs.versions.js.joda.core.get())
+    }
+}
+
 abstract class VerifyAndroidShrinker : DefaultTask() {
     @get:Input
     abstract val expectedR8Version: Property<String>

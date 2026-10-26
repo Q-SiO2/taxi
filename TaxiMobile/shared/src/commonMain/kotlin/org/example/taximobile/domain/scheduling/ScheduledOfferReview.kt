@@ -20,4 +20,5 @@ fun ScheduledOffer.responseSecondsRemaining(elapsed: Duration = readStartedAt.el
 val ScheduledOffer.canReviewAcceptance: Boolean
     get() = id.isNotBlank() && status == "PENDING" &&
         serviceType in setOf("ON_DEMAND", "FIXED_ROUTE") &&
+        scheduledCityTime(scheduledFor, cityTimezone) != null &&
         cancellationTerms.isSupportedForReview && (responseSecondsRemaining() ?: 0) > 0
