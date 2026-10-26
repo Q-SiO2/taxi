@@ -549,6 +549,7 @@
     <string name="scheduled_refund_always_full">Cancellation does not retain the scheduling surcharge.</string>
     <string name="scheduled_refund_before_cutoff">The scheduling surcharge is refundable until %1$d minutes before pickup.</string>
     <string name="scheduled_refund_never">The scheduling surcharge is non-refundable after confirmation.</string>
+    <string name="scheduled_refund_unavailable">Cancellation terms unavailable. Refresh or update the app before confirming.</string>
     <string name="scheduled_work_summary">Scheduled work (%1$d offers · %2$d commitments)</string>
     <string name="scheduled_work_title">Scheduled work</string>
     <string name="scheduled_back_to_live">Back to live work</string>

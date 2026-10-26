@@ -2,6 +2,14 @@
 
 ## Current packet — 26 October 2026
 
+The [scheduled cancellation review correction](launch/scheduled-cancellation-review.md)
+addresses the next confirmed R6/R9 gap: unknown refund modes must not become
+claimed non-refundable terms. Local backend/shared/rendered/Android checks pass;
+publish and observe the successor's exact CI. Existing
+pagination [CI 244](launch/scheduled-pagination-ci-terminal-20261026.json) passes
+all eight required jobs and 1,458 backend cases for its own source. No
+financial-policy or hosting change.
+
 [CI 238](launch/runtime-preservation-ci-terminal-20261026.json) accepts source
 314fcee across all eight required jobs and 1,458 backend tests. The
 [Trial capacity stop](launch/staging-capacity-stop-20261026.json) prevents the

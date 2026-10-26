@@ -15,6 +15,13 @@ acceptance authority for GAP-001 through GAP-037; [testing.md](testing.md) owns
 T0-T10 promotion. Domain documents continue to own business rules. R0-R12 below
 sequence existing requirements; they do not create a competing definition of done.
 
+26 October R6/R9 checkpoint: [passenger pagination](launch/scheduled-pagination.md)
+passes its own full [CI 244](launch/scheduled-pagination-ci-terminal-20261026.json).
+The subsequent [cancellation review correction](launch/scheduled-cancellation-review.md)
+passes affected local backend/shared/rendered/Android checks and needs fresh
+immutable CI. These source packets do not accept hosted, physical, operational
+or field journeys. The Trial capacity stop and source-only continuation persist.
+
 ## Starting point and interpretation of full functionality
 
 [The board-alpha handoff](board-alpha-handoff.md) records native v23 / web v10,

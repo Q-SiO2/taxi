@@ -56,6 +56,14 @@ Actual devices, assistive technology, operator/linguistic review, signed release
 hosted operation and field acceptance remain open. The owner's source-only
 continuation and [Trial capacity stop](staging-capacity-stop-20261026.json) persist.
 
+Published candidate `1f8bfb9` now passes [CI 244](scheduled-pagination-ci-terminal-20261026.json)
+across all eight required jobs and 1,458 backend cases, including eight disposable
+TLS probes and cleanup. Verified artifact digests bind the tested merge to the
+same source tree. Android/shared/minified and web/browser checks pass; both iOS
+unsigned Release simulator products build. The [earlier live observation](scheduled-pagination-ci-observation-20261026.json)
+is retained. These results cannot accept the later cancellation-review source,
+physical devices, signing, providers, hosted operation or public release.
+
 ## Further scheduled-service review
 
 This closes the confirmed source truncation path, not R6 or the whole launch.
@@ -63,3 +71,7 @@ The passenger cancellation-term helper still uses its non-refundable text for an
 unrecognized refund mode; that is a separate confirmed source follow-up. Compare
 it with the existing strict known-mode web presentation and retain an explicit
 unknown/unavailable review state rather than guessing a financial policy.
+
+The [bounded review correction](scheduled-cancellation-review.md) now owns this
+follow-up implementation and its independent verification. It cannot inherit
+this pagination source's CI acceptance.

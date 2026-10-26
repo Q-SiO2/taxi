@@ -325,6 +325,7 @@ private class QuoteScheduling(private val store: QuoteStore, private val auth: Q
     }
     private fun rejectedCommand(): Nothing { commands++; throw AuthenticationRejectedException() }
     override suspend fun passengerBookings(page: Int) = org.example.taximobile.domain.scheduling.ScheduledBookingPage(emptyList(), page, 20, 0)
+    override suspend fun passengerBooking(bookingId: String): ScheduledBooking = error("Not used")
     override suspend fun estimatePointToPoint(scheduledFor: String, cityId: String?, pickup: Coordinates, destination: Coordinates) = quote(null)
     override suspend fun estimateFixedRoute(scheduledFor: String, directionVersionId: String) = quote(directionVersionId)
     override suspend fun createPointToPoint(scheduledFor: String, cityId: String?, pickup: Coordinates, destination: Coordinates, passengerNote: String?, reviewedEconomics: ScheduledEconomics): ScheduledBooking = rejectedCommand()
@@ -345,5 +346,5 @@ private fun scheduleEstimate(direction: String?) = ScheduledBookingEstimate(
     "city", "operator", if (direction == null) "ON_DEMAND" else "FIXED_ROUTE", direction,
     SCHEDULED_FOR, "Africa/Casablanca", PICKUP, DESTINATION,
     ScheduledEconomics("35.00", "5.00", "0.00", "40.00", "40.00", "0.00", "MAD", "server-rule", "free", "schedule-policy"),
-    ScheduledCancellationTerms(30, "FULL", "Server cancellation terms"), "CASH",
+    ScheduledCancellationTerms(30, "FULL_BEFORE_CUTOFF", "Server cancellation terms"), "CASH",
 )

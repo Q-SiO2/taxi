@@ -21,6 +21,7 @@ fun ConfirmDialog(
     onConfirm: () -> Unit,
     onCancel: () -> Unit,
     destructive: Boolean = false,
+    confirmEnabled: Boolean = true,
 ) {
     val taxiColors = TaxiTheme.colors
     AlertDialog(
@@ -31,6 +32,7 @@ fun ConfirmDialog(
         confirmButton = {
             Button(
                 onClick = onConfirm,
+                enabled = confirmEnabled,
                 shape = RoundedCornerShape(TaxiTheme.radii.Md),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (destructive) taxiColors.Danger600 else taxiColors.Accent500,

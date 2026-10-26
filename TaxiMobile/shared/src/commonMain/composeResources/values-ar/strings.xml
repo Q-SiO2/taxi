@@ -549,6 +549,7 @@
     <string name="scheduled_refund_always_full">لا يحتفظ الإلغاء برسوم الجدولة.</string>
     <string name="scheduled_refund_before_cutoff">يمكن استرداد رسوم الجدولة حتى %1$d دقيقة قبل الانطلاق.</string>
     <string name="scheduled_refund_never">لا يمكن استرداد رسوم الجدولة بعد التأكيد.</string>
+    <string name="scheduled_refund_unavailable">شروط الإلغاء غير متاحة. حدّث البيانات أو التطبيق قبل التأكيد.</string>
     <string name="scheduled_work_summary">العمل المجدول (%1$d عروض · %2$d التزامات)</string>
     <string name="scheduled_work_title">العمل المجدول</string>
     <string name="scheduled_back_to_live">العودة إلى العمل الفوري</string>

@@ -976,7 +976,8 @@ private fun PassengerScheduledSheet(
         TaxiButton(
             label = stringResource(Res.string.scheduled_confirm),
             onClick = {
-                if (useFixedRoute) {
+                if (!estimate.cancellationTerms.isSupportedForReview) Unit
+                else if (useFixedRoute) {
                     selectedRoute?.let { onScheduleFixedRoute(scheduledFor.trim(), it.id, note.ifBlank { null }, estimate) }
                 } else {
                     form.trip?.let { (pickup, destination) ->
@@ -991,7 +992,7 @@ private fun PassengerScheduledSheet(
                     }
                 }
             },
-            enabled = pendingAction == null,
+            enabled = pendingAction == null && estimate.cancellationTerms.isSupportedForReview,
             loading = pendingAction.isPending(AppActionKind.CREATE_SCHEDULED_BOOKING),
         )
     }
@@ -1055,9 +1056,12 @@ private fun PassengerScheduledSheet(
             body = booking?.cancellationTerms?.localizedSummary() ?: stringResource(Res.string.scheduled_cancel_backend_policy),
             confirmLabel = stringResource(Res.string.scheduled_cancel_confirm),
             destructive = true,
+            confirmEnabled = pendingAction == null && !state.scheduledBookingsLoadFailed &&
+                booking?.cancellationTerms?.isSupportedForReview == true,
             onConfirm = {
                 cancelCandidate = null
                 if (pendingAction == null && !state.scheduledBookingsLoadFailed && booking != null &&
+                    booking.cancellationTerms.isSupportedForReview &&
                     booking.status in setOf("SCHEDULED", "OFFERING", "DRIVER_COMMITTED", "DISPATCH_HANDOFF")) onCancel(bookingId)
             },
             onCancel = { cancelCandidate = null },
@@ -1069,9 +1073,10 @@ private fun String.hasExplicitTimezone(): Boolean =
     endsWith("Z", ignoreCase = true) || Regex("[+-]\\d{2}:\\d{2}$").containsMatchIn(this)
 
 @Composable
-private fun ScheduledCancellationTerms.localizedSummary(): String = when (surchargeRefundMode) {
-    "ALWAYS_FULL" -> stringResource(Res.string.scheduled_refund_always_full)
-    "FULL_BEFORE_CUTOFF" -> stringResource(
+private fun ScheduledCancellationTerms.localizedSummary(): String = when {
+    !isSupportedForReview -> stringResource(Res.string.scheduled_refund_unavailable)
+    surchargeRefundMode == "ALWAYS_FULL" -> stringResource(Res.string.scheduled_refund_always_full)
+    surchargeRefundMode == "FULL_BEFORE_CUTOFF" -> stringResource(
         Res.string.scheduled_refund_before_cutoff,
         passengerCancelCutoffMinutes,
     )

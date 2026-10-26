@@ -106,4 +106,39 @@ class ScheduledBookingPaginationUiTest {
         onNodeWithContentDescription("Next bookings").performScrollTo().assertIsNotEnabled()
         assertEquals(0, calls)
     }
+
+    @Test fun unknown_terms_show_unavailable_copy_and_disable_confirmation_in_all_styles_and_languages() {
+        val original = Locale.getDefault()
+        try {
+            for (case in listOf(
+                listOf("en", "Choose on the map", "Schedule", "Cancel scheduled ride", "Cancel booking", "Cancellation terms unavailable. Refresh or update the app before confirming."),
+                listOf("fr", "Choisir sur la carte", "Planifier", "Annuler la course planifiée", "Annuler la réservation", "Conditions d’annulation indisponibles. Actualisez ou mettez l’application à jour avant de confirmer."),
+                listOf("ar", "اختر على الخريطة", "جدولة", "إلغاء الرحلة المجدولة", "إلغاء الحجز", "شروط الإلغاء غير متاحة. حدّث البيانات أو التطبيق قبل التأكيد."),
+            )) {
+                val (language, choose, schedule, cancel, confirm) = case
+                val unavailable = case[5]
+                Locale.setDefault(Locale.forLanguageTag(language))
+                for (style in TaxiStyle.entries) {
+                    val preferences = TaxiStylePreferences(object : TaxiStyleStore {
+                        override fun read() = style.storageValue
+                        override fun write(value: String) = Unit
+                    })
+                    val booking = bookingFixture().let { b -> b.copy(cancellationTerms = b.cancellationTerms.copy(surchargeRefundMode = "FUTURE_PRIVATE_POLICY", summary = "Refund guaranteed PRIVATE")) }
+                    runComposeUiTest {
+                        var commands = 0
+                        setContent { App(state = AppUiState.PassengerReady(scheduledBookingPage = ScheduledBookingPage(listOf(booking), 1, 20, 1)),
+                            placeSearchEnabled = false, stylePreferences = preferences, onCancelScheduledBooking = { commands++ }) }
+                        onNodeWithText(choose).performScrollTo().performClick()
+                        onNodeWithText(schedule).performScrollTo().performClick()
+                        onNodeWithText(unavailable).performScrollTo().assertIsDisplayed()
+                        onAllNodesWithText("Refund guaranteed PRIVATE").assertCountEquals(0)
+                        onAllNodesWithText("FUTURE_PRIVATE_POLICY").assertCountEquals(0)
+                        onNodeWithText(cancel).performScrollTo().performClick()
+                        onNodeWithText(confirm).assertIsNotEnabled()
+                        assertEquals(0, commands)
+                    }
+                }
+            }
+        } finally { Locale.setDefault(original) }
+    }
 }

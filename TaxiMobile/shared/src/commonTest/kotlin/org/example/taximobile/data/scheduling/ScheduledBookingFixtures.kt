@@ -27,6 +27,12 @@ internal class PagedBookingFixture : ScheduledBookingGateway {
     val pages = mutableListOf<Int>()
     val cancelled = mutableListOf<String>()
     var onRead: (suspend (Int) -> ScheduledBookingPage)? = null
+    val detailReads = mutableListOf<String>()
+    var onDetail: (suspend (String) -> ScheduledBooking)? = null
+    override suspend fun passengerBooking(bookingId: String): ScheduledBooking {
+        detailReads += bookingId
+        return onDetail?.invoke(bookingId) ?: bookingFixture(bookingId)
+    }
     override suspend fun passengerBookings(page: Int): ScheduledBookingPage {
         pages += page
         return onRead?.invoke(page) ?: ScheduledBookingPage(

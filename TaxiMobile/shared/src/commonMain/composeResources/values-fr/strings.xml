@@ -549,6 +549,7 @@
     <string name="scheduled_refund_always_full">L’annulation ne retient pas le supplément de planification.</string>
     <string name="scheduled_refund_before_cutoff">Le supplément de planification est remboursable jusqu’à %1$d minutes avant le départ.</string>
     <string name="scheduled_refund_never">Le supplément de planification n’est pas remboursable après confirmation.</string>
+    <string name="scheduled_refund_unavailable">Conditions d’annulation indisponibles. Actualisez ou mettez l’application à jour avant de confirmer.</string>
     <string name="scheduled_work_summary">Travail planifié (%1$d offres · %2$d engagements)</string>
     <string name="scheduled_work_title">Travail planifié</string>
     <string name="scheduled_back_to_live">Retour au travail immédiat</string>

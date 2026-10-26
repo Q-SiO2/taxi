@@ -1104,6 +1104,11 @@ Forbidden:
   a false empty-list claim. Loading controls retain their accessible names; a page
   replacement removes an obsolete cancellation confirmation. See the
   [source and rendered checks](launch/scheduled-pagination.md).
+* Scheduled refund review uses explicit known modes and valid policy cutoffs.
+  Unsupported terms show localized unavailable copy and disable consequential
+  confirmation; raw server summaries cannot replace a financial review. The
+  coordinator also checks the current independently authorized booking before
+  cancelling. See the [review correction](launch/scheduled-cancellation-review.md).
 * Fare numerals remain Western digits unless product later decides otherwise; keep mono IDs LTR embeds in RTL layouts.
 * Do not bake English string lengths into fixed-width buttons; use min width + horizontal padding.
 

@@ -1,10 +1,19 @@
 # TaxiMobile documentation
 
+> **Current bounded source work — 26 October 2026:**
+> [scheduled cancellation review](launch/scheduled-cancellation-review.md) removes
+> the unknown-mode non-refundable fallback. Local checks pass: 90 affected backend,
+> 97 JVM and 88 Android-host cases, both Android role compilations and localized
+> rendering across all four styles. These test sets overlap. This successor needs
+> its own immutable CI and acceptance.
+
 > **Current source packet — 26 October 2026:** [passenger scheduled pagination](launch/scheduled-pagination.md)
 > makes records beyond page one reachable with bounded reads, owner/race guards,
 > localized retry and current-row confirmation. Local evidence: 145 JVM,
 > 156 Android-host and five rendered cases, including all 12 language/style
-> variants. Fresh successor native CI remains required. Predecessor
+> variants. [CI 244](launch/scheduled-pagination-ci-terminal-20261026.json) now
+> passes all eight required jobs and 1,458 backend cases for this pagination source.
+> Predecessor
 > [CI 240](launch/journey-cancellation-ci-terminal-20261026.json) and
 > [CI 242](launch/scheduled-localization-ci-terminal-20261026.json) now pass all
 > eight jobs for their own sources. Hosting and physical acceptance remain open.

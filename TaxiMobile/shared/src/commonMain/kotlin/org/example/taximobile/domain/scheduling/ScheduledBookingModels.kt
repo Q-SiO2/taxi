@@ -20,7 +20,13 @@ data class ScheduledCancellationTerms(
     val passengerCancelCutoffMinutes: Int,
     val surchargeRefundMode: String,
     val summary: String,
-)
+) {
+    /** Client compatibility for review only; the backend decides all refunds. */
+    val isSupportedForReview: Boolean
+        get() = passengerCancelCutoffMinutes in 0..10080 && surchargeRefundMode in setOf(
+            "ALWAYS_FULL", "FULL_BEFORE_CUTOFF", "NON_REFUNDABLE",
+        )
+}
 
 data class ScheduledBookingEstimate(
     val cityId: String,
@@ -94,6 +100,7 @@ data class ScheduledOfferPreference(
 
 interface ScheduledBookingGateway {
     suspend fun passengerBookings(page: Int = 1): ScheduledBookingPage
+    suspend fun passengerBooking(bookingId: String): ScheduledBooking
     suspend fun estimatePointToPoint(
         scheduledFor: String,
         cityId: String?,

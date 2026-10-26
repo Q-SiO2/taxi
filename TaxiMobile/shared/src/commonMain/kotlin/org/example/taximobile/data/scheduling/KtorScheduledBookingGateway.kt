@@ -58,6 +58,14 @@ class KtorScheduledBookingGateway(
         }
     }
 
+    override suspend fun passengerBooking(bookingId: String): ScheduledBooking = request {
+        val response = client.get(api.endpoint("scheduled-bookings/$bookingId")) { authorize() }
+        response.requireSuccess("load this scheduled booking")
+        response.body<ScheduledBookingResponse>().toDomain().also {
+            if (it.id != bookingId) throw ApiRequestException(502, "The server returned a different scheduled booking.")
+        }
+    }
+
     override suspend fun estimatePointToPoint(
         scheduledFor: String,
         cityId: String?,

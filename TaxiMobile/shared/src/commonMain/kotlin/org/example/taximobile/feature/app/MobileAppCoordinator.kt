@@ -886,6 +886,7 @@ class MobileAppCoordinator(
         note: String?,
         estimate: ScheduledBookingEstimate,
     ): AppUiState = schedulingMutation {
+        if (!estimate.cancellationTerms.isSupportedForReview) return@schedulingMutation null
         it.createPointToPoint(scheduledFor, cityId, pickup, destination, note, estimate.economics)
     }
 
@@ -895,6 +896,7 @@ class MobileAppCoordinator(
         note: String?,
         estimate: ScheduledBookingEstimate,
     ): AppUiState = schedulingMutation {
+        if (!estimate.cancellationTerms.isSupportedForReview) return@schedulingMutation null
         it.createFixedRoute(scheduledFor, directionVersionId, note, estimate.economics)
     }
 
@@ -966,8 +968,19 @@ class MobileAppCoordinator(
         }
     }
 
-    suspend fun cancelScheduledBooking(bookingId: String): AppUiState = schedulingMutation {
-        it.cancelPassengerBooking(bookingId, "PASSENGER_CANCELLED")
+    suspend fun cancelScheduledBooking(bookingId: String): AppUiState {
+        val owner = authentication.localSessionOwnerEpoch
+        return schedulingMutation { gateway ->
+            // The selected row may have moved to another page. Authorize and read
+            // its current terms independently; only this read may recover a session.
+            val booking = authentication.readWithSessionRecovery {
+                if (owner != authentication.localSessionOwnerEpoch) throw AuthenticationRejectedException()
+                gateway.passengerBooking(bookingId)
+            }
+            if (!navigationOwnerIsCurrent(owner)) throw AuthenticationRejectedException()
+            if (!booking.cancellationTerms.isSupportedForReview) return@schedulingMutation null
+            gateway.cancelPassengerBooking(bookingId, "PASSENGER_CANCELLED")
+        }
     }
 
     suspend fun setScheduledOfferPreference(cityId: String, enabled: Boolean): AppUiState =
@@ -979,11 +992,11 @@ class MobileAppCoordinator(
         }
 
     private suspend fun schedulingMutation(
-        mutation: suspend (ScheduledBookingGateway) -> Any,
+        mutation: suspend (ScheduledBookingGateway) -> Any?,
     ): AppUiState {
         val gateway = scheduling ?: return offline(Res.string.message_ride_services_unavailable)
         return try {
-            mutation(gateway)
+            mutation(gateway) ?: return offline(Res.string.scheduled_refund_unavailable)
             authenticatedProductState(authentication.restore())
         } catch (_: AuthenticationRejectedException) {
             signedOut(Res.string.message_session_expired)

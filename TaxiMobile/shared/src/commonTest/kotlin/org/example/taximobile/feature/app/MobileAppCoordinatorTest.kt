@@ -1016,6 +1016,91 @@ class MobileAppCoordinatorTest {
         assertEquals(listOf(99, 2, 2), bookings.pages)
     }
 
+    @Test fun unsupported_review_never_creates_a_point_or_fixed_scheduled_booking() = runBlocking {
+        val bookings = PagedBookingFixture()
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = bookings)
+        val b = bookingFixture()
+        for (terms in listOf(b.cancellationTerms.copy(surchargeRefundMode = "FUTURE_PRIVATE_POLICY"),
+            b.cancellationTerms.copy(passengerCancelCutoffMinutes = -1), b.cancellationTerms.copy(passengerCancelCutoffMinutes = 10081))) {
+            val estimate = org.example.taximobile.domain.scheduling.ScheduledBookingEstimate(
+                b.cityId, b.operatorId, b.serviceType, null, b.scheduledFor, b.cityTimezone,
+                b.pickup, b.destination, b.economics, terms, "CASH",
+            )
+            for (state in listOf(coordinator.schedulePointToPoint(b.scheduledFor, b.cityId, b.pickup, b.destination, null, estimate),
+                coordinator.scheduleFixedRoute(b.scheduledFor, "synthetic-direction", null, estimate))) {
+                assertEquals(Res.string.scheduled_refund_unavailable, assertIs<AppUiState.Offline>(state).message.resource)
+            }
+        }
+        assertTrue(bookings.pages.isEmpty())
+        assertTrue(bookings.detailReads.isEmpty())
+        assertTrue(bookings.cancelled.isEmpty())
+    }
+
+    @Test fun fresh_unknown_booking_terms_prevent_a_cancel_even_when_a_list_row_was_supported() = runBlocking {
+        val bookings = PagedBookingFixture().apply { onDetail = { bookingFixture(it).let { b ->
+            b.copy(cancellationTerms = b.cancellationTerms.copy(surchargeRefundMode = "FUTURE_PRIVATE_POLICY"))
+        } } }
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = bookings)
+        coordinator.restore()
+        val result = assertIs<AppUiState.Offline>(coordinator.cancelScheduledBooking("booking-21"))
+        assertEquals(Res.string.scheduled_refund_unavailable, result.message.resource)
+        assertEquals(listOf("booking-21"), bookings.detailReads)
+        assertTrue(bookings.cancelled.isEmpty())
+    }
+
+    @Test fun booking_detail_read_recovers_once_then_cancels_once_without_replaying_the_command() = runBlocking {
+        val bookings = PagedBookingFixture().apply { onDetail = {
+            if (detailReads.size == 1) throw org.example.taximobile.data.auth.AuthenticationRejectedException()
+            bookingFixture(it)
+        } }
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = bookings)
+        assertIs<AppUiState.PassengerReady>(coordinator.cancelScheduledBooking("booking-21"))
+        assertEquals(listOf("booking-21", "booking-21"), bookings.detailReads)
+        assertEquals(listOf("booking-21"), bookings.cancelled)
+    }
+
+    @Test fun failed_or_cancelled_booking_detail_read_never_sends_a_cancel_command() = runBlocking {
+        for (failure in listOf(AuthenticationNetworkException(), ApiRequestException(403, "Synthetic denial"), CancellationException("Synthetic cancellation"))) {
+            val bookings = PagedBookingFixture().apply { onDetail = { throw failure } }
+            val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = bookings)
+            if (failure is CancellationException) assertFailsWith<CancellationException> { coordinator.cancelScheduledBooking("booking-21") }
+            else assertIs<AppUiState.Offline>(coordinator.cancelScheduledBooking("booking-21"))
+            assertEquals(listOf("booking-21"), bookings.detailReads)
+            assertTrue(bookings.cancelled.isEmpty())
+        }
+    }
+
+    @Test fun logout_during_a_booking_detail_read_fences_the_cancel_command() = runBlocking {
+        val entered = CompletableDeferred<Unit>()
+        val release = CompletableDeferred<Unit>()
+        val bookings = PagedBookingFixture().apply { onDetail = { entered.complete(Unit); release.await(); bookingFixture(it) } }
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = bookings)
+        val pending = async { coordinator.cancelScheduledBooking("booking-21") }
+        entered.await()
+        val logout = async { coordinator.logout() }
+        // logout() stages ownership invalidation before it waits for the read mutex.
+        kotlinx.coroutines.yield()
+        release.complete(Unit)
+        assertIs<AppUiState.SignedOut>(pending.await())
+        logout.await()
+        assertTrue(bookings.cancelled.isEmpty())
+    }
+
+    @Test fun cancellation_command_rejection_is_never_recovered_or_replayed() = runBlocking {
+        val reads = PagedBookingFixture()
+        var commands = 0
+        val bookings = object : org.example.taximobile.domain.scheduling.ScheduledBookingGateway by reads {
+            override suspend fun cancelPassengerBooking(bookingId: String, reason: String): org.example.taximobile.domain.scheduling.ScheduledBooking {
+                commands++
+                throw org.example.taximobile.data.auth.AuthenticationRejectedException()
+            }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = bookings)
+        assertIs<AppUiState.SignedOut>(coordinator.cancelScheduledBooking("booking-21"))
+        assertEquals(listOf("booking-21"), reads.detailReads)
+        assertEquals(1, commands)
+    }
+
     @Test fun failed_booking_page_removes_stale_rows_and_preserves_the_live_ride() = runBlocking {
         val bookings = PagedBookingFixture().apply { onRead = { throw AuthenticationNetworkException() } }
         val live = object : RideGateway by ActiveRideGateway(Coordinates(34.03, -5.00)) {
