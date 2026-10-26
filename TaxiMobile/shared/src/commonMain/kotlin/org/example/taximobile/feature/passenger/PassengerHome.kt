@@ -51,6 +51,8 @@ import org.example.taximobile.domain.scheduling.ScheduledBookingEstimate
 import org.example.taximobile.domain.scheduling.ScheduledCancellationTerms
 import org.example.taximobile.domain.support.SupportCategory
 import org.example.taximobile.feature.app.AppUiState
+import org.example.taximobile.feature.scheduling.scheduledBookingStatusLabel
+import org.example.taximobile.feature.scheduling.scheduledFinancialOutcomeLabel
 import org.example.taximobile.feature.rides.RideCoordinationActions
 import org.example.taximobile.feature.rides.RideLatestCoordinationMessage
 import org.example.taximobile.feature.app.AppAction
@@ -998,7 +1000,7 @@ private fun PassengerScheduledSheet(
             Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Md), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Text(booking.scheduledFor, style = MaterialTheme.typography.titleMedium)
-                    StatusPill(booking.status.replace('_', ' '), scheduledStatusTone(booking.status))
+                    StatusPill(stringResource(scheduledBookingStatusLabel(booking.status)), scheduledStatusTone(booking.status))
                 }
                 Text(stringResource(Res.string.scheduled_location_summary, booking.pickup.address ?: stringResource(Res.string.pickup), booking.destination.address ?: stringResource(Res.string.destination)))
                 FareBlock(
@@ -1027,7 +1029,9 @@ private fun PassengerScheduledSheet(
                         style = TaxiButtonStyle.Secondary,
                     )
                 }
-                booking.cancellationFinancialOutcome?.let { Text(stringResource(Res.string.scheduled_cancellation_outcome, it)) }
+                booking.cancellationFinancialOutcome?.let {
+                    Text(stringResource(Res.string.scheduled_cancellation_outcome, stringResource(scheduledFinancialOutcomeLabel(it))))
+                }
             }
         }
     }

@@ -15,6 +15,12 @@ The failing predecessor is retained; ten focused, 109 affected JVM and 128
 Android-host cases pass. Fresh successor CI remains required. This does not change
 backend booking policy, pricing, physical lifecycle or the hosting capacity gate.
 
+R6/R9 [scheduled-state labels](launch/scheduled-localization.md) now use EN/FR/AR
+resources for booking, commitment and financial outcomes, with conservative
+unknown labels. Catalog validation and shared JVM/Android compilation pass;
+fresh native/rendered/linguistic/device acceptance remains open. The separate
+[pagination gap](launch/r6-scheduling-follow-up-20261026.md) remains unimplemented.
+
 R3/R8 [durable document source](launch/document-s3.md) adds migration
 `20261025_0054`, hidden upload leases, final version-checked activation and bounded
 repeated orphan recovery under the upload key lock. Source API/worker selection,

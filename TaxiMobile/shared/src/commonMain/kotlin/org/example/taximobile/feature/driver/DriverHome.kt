@@ -51,6 +51,7 @@ import org.example.taximobile.domain.rides.RideStatus
 import org.example.taximobile.domain.safety.SafetyCategory
 import org.example.taximobile.domain.support.SupportCategory
 import org.example.taximobile.feature.app.AppUiState
+import org.example.taximobile.feature.scheduling.scheduledCommitmentStatusLabel
 import org.example.taximobile.feature.app.AppAction
 import org.example.taximobile.feature.app.AppActionCompletion
 import org.example.taximobile.feature.app.AppActionKind
@@ -868,7 +869,7 @@ private fun DriverScheduledSheet(
             Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Md), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Text(commitment.scheduledFor, style = MaterialTheme.typography.titleMedium)
-                    StatusPill(commitment.status, if (commitment.status == "ACTIVE") StatusTone.Success else StatusTone.Info)
+                    StatusPill(stringResource(scheduledCommitmentStatusLabel(commitment.status)), if (commitment.status == "ACTIVE") StatusTone.Success else StatusTone.Info)
                 }
                 Text(stringResource(Res.string.scheduled_protected_window, commitment.protectedFrom, commitment.protectedUntil))
                 Text(stringResource(Res.string.scheduled_location_summary, commitment.pickup.address ?: stringResource(Res.string.pickup), commitment.destination.address ?: stringResource(Res.string.destination)))

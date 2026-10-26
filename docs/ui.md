@@ -1094,6 +1094,11 @@ Forbidden:
   client catalog entry ships.
 * The localization validator requires exact key and format-placeholder parity
   and rejects newly embedded presentation literals in the covered UI surfaces.
+* Scheduled booking/commitment states and cancellation financial outcomes map to
+  local resource labels, with explicit unknown labels. Do not print raw enum
+  codes, turn a created live ride into a claim of travel starting, or turn a
+  pending refund into a completed one. The [source packet](launch/scheduled-localization.md)
+  records its catalog/compilation and pending acceptance boundaries.
 * Fare numerals remain Western digits unless product later decides otherwise; keep mono IDs LTR embeds in RTL layouts.
 * Do not bake English string lengths into fixed-width buttons; use min width + horizontal padding.
 

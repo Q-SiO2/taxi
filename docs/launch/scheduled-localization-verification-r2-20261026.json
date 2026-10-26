@@ -1,0 +1,109 @@
+{
+  "recorded_utc": "2026-10-26T08:49:43.007036+00:00",
+  "source_predecessor": "5023ffcb9d16fae34893187574786dc57742a0ed",
+  "scope": "Scheduled passenger/driver lifecycle and cancellation-outcome display labels only",
+  "source_sha256": {
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt": "8b600b5c17f67e7dfb912adb4c1af8bedcae621c46803c8d76db2a4adcbcc438",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt": "246d364d1d973ea797e81bae1cb58354011a0b4dbef29644f9775e230eda5418",
+    "TaxiMobile/shared/src/commonMain/composeResources/values/strings.xml": "d47066743ec9cd8319146ff1e54c99ac6a98ac5f22d620bddf365499ef7282d0",
+    "TaxiMobile/shared/src/commonMain/composeResources/values-fr/strings.xml": "3dfdeb1d798c2e4a6f9fd5d9bf286ece6fd4c35791a25e45eee288fc21bc4874",
+    "TaxiMobile/shared/src/commonMain/composeResources/values-ar/strings.xml": "f1dfe608f2a184870dc42fea31135ea5e3f2345056c579ec39ea8345144bf697",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/scheduling/ScheduledStatusPresentation.kt": "c4555eda7e53d08d4bf0ad94a1e6b12a827315647ab95858b839c3771d7ddcad"
+  },
+  "known_booking_states": 7,
+  "known_commitment_states": 4,
+  "known_financial_outcomes": 4,
+  "explicit_unknown_status_and_financial_labels": true,
+  "new_keys_per_catalog": 17,
+  "catalogs": {
+    "values": {
+      "total_strings": 1279,
+      "new_scheduling_keys": [
+        "scheduled_commitment_active",
+        "scheduled_commitment_cancelled",
+        "scheduled_commitment_fulfilled",
+        "scheduled_commitment_released",
+        "scheduled_outcome_no_charge",
+        "scheduled_outcome_refund_pending",
+        "scheduled_outcome_refunded",
+        "scheduled_outcome_surcharge_retained",
+        "scheduled_outcome_unknown",
+        "scheduled_state_cancelled",
+        "scheduled_state_dispatch_handoff",
+        "scheduled_state_driver_committed",
+        "scheduled_state_live_ride_created",
+        "scheduled_state_offering",
+        "scheduled_state_scheduled",
+        "scheduled_state_unfulfilled",
+        "scheduled_state_unknown"
+      ],
+      "sha256": "d47066743ec9cd8319146ff1e54c99ac6a98ac5f22d620bddf365499ef7282d0"
+    },
+    "values-fr": {
+      "total_strings": 1279,
+      "new_scheduling_keys": [
+        "scheduled_commitment_active",
+        "scheduled_commitment_cancelled",
+        "scheduled_commitment_fulfilled",
+        "scheduled_commitment_released",
+        "scheduled_outcome_no_charge",
+        "scheduled_outcome_refund_pending",
+        "scheduled_outcome_refunded",
+        "scheduled_outcome_surcharge_retained",
+        "scheduled_outcome_unknown",
+        "scheduled_state_cancelled",
+        "scheduled_state_dispatch_handoff",
+        "scheduled_state_driver_committed",
+        "scheduled_state_live_ride_created",
+        "scheduled_state_offering",
+        "scheduled_state_scheduled",
+        "scheduled_state_unfulfilled",
+        "scheduled_state_unknown"
+      ],
+      "sha256": "3dfdeb1d798c2e4a6f9fd5d9bf286ece6fd4c35791a25e45eee288fc21bc4874"
+    },
+    "values-ar": {
+      "total_strings": 1279,
+      "new_scheduling_keys": [
+        "scheduled_commitment_active",
+        "scheduled_commitment_cancelled",
+        "scheduled_commitment_fulfilled",
+        "scheduled_commitment_released",
+        "scheduled_outcome_no_charge",
+        "scheduled_outcome_refund_pending",
+        "scheduled_outcome_refunded",
+        "scheduled_outcome_surcharge_retained",
+        "scheduled_outcome_unknown",
+        "scheduled_state_cancelled",
+        "scheduled_state_dispatch_handoff",
+        "scheduled_state_driver_committed",
+        "scheduled_state_live_ride_created",
+        "scheduled_state_offering",
+        "scheduled_state_scheduled",
+        "scheduled_state_unfulfilled",
+        "scheduled_state_unknown"
+      ],
+      "sha256": "f1dfe608f2a184870dc42fea31135ea5e3f2345056c579ec39ea8345144bf697"
+    }
+  },
+  "catalog_validator_passed": true,
+  "catalog_validator_unit_tests": 3,
+  "compile_tasks": [
+    ":shared:compileKotlinJvm",
+    ":shared:compileAndroidMain"
+  ],
+  "final_compile_exit_code": 0,
+  "retained_compile_logs": [
+    "scheduled-localization-compile-r1-20261026.log",
+    "scheduled-localization-compile-r2-20261026.log",
+    "scheduled-localization-compile-r3-20261026.log"
+  ],
+  "format_correction": "Preserved original CRLF after insertion; no label text changed; final source recompiled successfully",
+  "existing_unrelated_compiler_warnings_retained": true,
+  "backend_action_eligibility_financial_outcomes_or_hosted_changes": false,
+  "native_successor_ci_accepted": false,
+  "rendered_all_styles_or_linguistic_physical_or_field_acceptance": false,
+  "supersedes": "scheduled-localization-verification-20261026.json",
+  "copy_refinement": "Separate cancelled-commitment wording preserves French/Arabic agreement; French no-charge wording refined. Earlier compiled 16-key record retained.",
+  "final_compile_log": "scheduled-localization-compile-r3-20261026.log"
+}
