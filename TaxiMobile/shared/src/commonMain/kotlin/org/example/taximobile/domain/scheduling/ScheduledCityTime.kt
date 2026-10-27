@@ -12,12 +12,15 @@ data class ScheduledCityTime(val date: String, val time: String, val utcOffset: 
 
 data class ScheduledCityWindow(val from: ScheduledCityTime, val until: ScheduledCityTime)
 
-private val namedCityZones by lazy {
-    if (cityTimeZoneSupportAvailable()) TimeZone.availableZoneIds + "UTC" else emptySet()
+// Keep cache creation behind object initialization so unused browser entry
+// points can discard the formatter and its timezone module together.
+private object NamedCityZones {
+    val ids: Set<String> =
+        if (cityTimeZoneSupportAvailable()) TimeZone.availableZoneIds + "UTC" else emptySet()
 }
 
 fun scheduledCityTime(timestamp: String, cityTimezone: String): ScheduledCityTime? = try {
-    if (cityTimezone !in namedCityZones) return null
+    if (cityTimezone !in NamedCityZones.ids) return null
     val instant = Instant.parse(timestamp)
     cityTime(instant, TimeZone.of(cityTimezone))
 } catch (_: IllegalArgumentException) {
@@ -27,7 +30,7 @@ fun scheduledCityTime(timestamp: String, cityTimezone: String): ScheduledCityTim
 }
 
 fun scheduledCityWindow(from: String, until: String, cityTimezone: String): ScheduledCityWindow? = try {
-    if (cityTimezone !in namedCityZones) return null
+    if (cityTimezone !in NamedCityZones.ids) return null
     val start = Instant.parse(from)
     val end = Instant.parse(until)
     if (start >= end) return null

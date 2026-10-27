@@ -15,6 +15,13 @@ acceptance authority for GAP-001 through GAP-037; [testing.md](testing.md) owns
 T0-T10 promotion. Domain documents continue to own business rules. R0-R12 below
 sequence existing requirements; they do not create a competing definition of done.
 
+The current R2/R6/R9 [packaging repair](launch/scheduled-city-time-packaging.md)
+addresses [CI 254](launch/scheduled-city-time-ci-terminal-20261026.json)'s Wasm
+size and Android artifact-verifier failures. Its six passing jobs do not accept
+that complete source. The corrected local package and four Chrome boot scenarios
+pass unchanged caps. Preserve failed observations and finish the bounded
+successor's current-source minified Android products and immutable native checks.
+
 26 October R6/R9 checkpoint: [passenger pagination](launch/scheduled-pagination.md)
 passes its own full [CI 244](launch/scheduled-pagination-ci-terminal-20261026.json).
 The subsequent [cancellation review correction](launch/scheduled-cancellation-review.md)

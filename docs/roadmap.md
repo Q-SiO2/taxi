@@ -2,6 +2,13 @@
 
 ## Current packet — 26 October 2026
 
+The [city-time packaging repair](launch/scheduled-city-time-packaging.md) follows
+[CI 254](launch/scheduled-city-time-ci-terminal-20261026.json)'s two failures.
+Preserve the Wasm 700 KB / fallback JS 7 MB caps; keep application mapping checks
+while recognizing the pinned, separate desugared-library compiler cohort.
+The corrected local package and four Chrome boot scenarios pass unchanged caps;
+finish current-source minified Android products and the successor's own native CI.
+
 The [city-local time packet](launch/scheduled-city-time.md) implements the existing
 city-time presentation rule across shared scheduled review, with explicit invalid
 data and unchanged server instants. JVM/rendered and JS/Wasm checks pass; finish

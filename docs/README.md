@@ -1,5 +1,12 @@
 # TaxiMobile documentation
 
+> **Current source repair — 27 October 2026:** [city-time packaging](launch/scheduled-city-time-packaging.md)
+> corrects [CI 254](launch/scheduled-city-time-ci-terminal-20261026.json)'s Wasm
+> size failure and Android desugared-library marker rejection. The repaired
+> verifier passes 121 source/build-tool tests and re-inspects the existing APKs;
+> the corrected package and four Chrome boot scenarios now pass unchanged size
+> caps. Current-source minified Android products and immutable native CI remain required.
+
 > **Current local source work — 26 October 2026:** [scheduled city-local time](launch/scheduled-city-time.md)
 > replaces raw UTC presentation in passenger/driver scheduled review and preserves
 > original command instants. Affected JVM/rendered and JS/Wasm browser checks pass;

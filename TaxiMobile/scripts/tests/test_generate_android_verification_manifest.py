@@ -282,6 +282,72 @@ class AndroidVerificationManifestTests(unittest.TestCase):
         self.assertIn("isMinifyEnabled = true", app_build)
         self.assertIn("isShrinkResources = true", app_build)
 
+    def desugared_markers(self):
+        identifiers = ["com.tools.android:desugar_jdk_libs_configuration:2.1.5"]
+        app = {**self.marker, "min-api": 24, "desugared-library-identifiers": identifiers}
+        library = {key: value for key, value in app.items() if key not in ("pg-map-id", "desugared-library-identifiers")}
+        l8 = {"version": android.R8_VERSION, "backend": "cf", "compilation-mode": "release",
+              "min-api": 24, "desugared-library-identifiers": identifiers}
+        return app, l8, library
+
+    def compiler_fixture(self, cohorts):
+        path = self.root / "desugared.apk"
+        with zipfile.ZipFile(path, "w") as archive:
+            for name, markers in cohorts.items():
+                payload = b"dex\n039\x00"
+                for kind, marker in markers:
+                    payload += b"~~" + kind.encode() + json.dumps(marker).encode() + b"\x00"
+                archive.writestr(name, payload)
+        return path
+
+    def test_valid_l8_library_pair_does_not_need_the_application_mapping_id(self):
+        app, l8, library = self.desugared_markers()
+        path = self.compiler_fixture({"classes.dex": [("R8", app)], "classes2.dex": [("L8", l8), ("R8", library)]})
+        result = android.verify_dex_compiler(path, {"pg_map_id": self.marker["pg-map-id"]})
+        self.assertEqual(1, result["program_marker_count"])
+        self.assertEqual(1, result["desugared_library_dex_count"])
+        self.assertEqual(l8["desugared-library-identifiers"][0], result["desugared_library_configuration"])
+
+    def test_library_pair_cannot_bless_a_missing_or_different_application(self):
+        app, l8, library = self.desugared_markers()
+        candidates = [None, {**app, "pg-map-id": "c" * 64}, {**app, "version": "9.0.32"},
+                      {**app, "min-api": 25}, {**app, "desugared-library-identifiers": []}]
+        for marker in candidates:
+            cohorts = {"classes.dex": [] if marker is None else [("R8", marker)],
+                       "classes2.dex": [("L8", l8), ("R8", library)]}
+            with self.subTest(marker=marker), self.assertRaises(android.AndroidVerificationError):
+                android.verify_dex_compiler(self.compiler_fixture(cohorts), {"pg_map_id": self.marker["pg-map-id"]})
+
+    def test_l8_library_requires_the_pinned_compiler_configuration_and_api(self):
+        app, l8, library = self.desugared_markers()
+        mutations = [("version", "9.0.32"), ("backend", "dex"), ("compilation-mode", "debug"),
+                     ("min-api", 25), ("pg-map-id", "b" * 64), ("desugared-library-identifiers", []),
+                     ("desugared-library-identifiers", ["unreviewed"]),
+                     ("desugared-library-identifiers", l8["desugared-library-identifiers"] * 2)]
+        for key, value in mutations:
+            cohorts = {"classes.dex": [("R8", app)], "classes2.dex": [("L8", {**l8, key: value}), ("R8", library)]}
+            with self.subTest(key=key, value=value), self.assertRaises(android.AndroidVerificationError):
+                android.verify_dex_compiler(self.compiler_fixture(cohorts), {"pg_map_id": self.marker["pg-map-id"]})
+        for key, value in (("version", "9.0.32"), ("backend", "cf"), ("r8-mode", "compat"),
+                           ("compilation-mode", "debug"), ("min-api", 25), ("pg-map-id", "b" * 64),
+                           ("desugared-library-identifiers", ["unreviewed"])):
+            cohorts = {"classes.dex": [("R8", app)], "classes2.dex": [("L8", l8), ("R8", {**library, key: value})]}
+            with self.subTest(key=key, value=value), self.assertRaises(android.AndroidVerificationError):
+                android.verify_dex_compiler(self.compiler_fixture(cohorts), {"pg_map_id": self.marker["pg-map-id"]})
+
+    def test_unmapped_markers_cannot_borrow_an_l8_marker_from_another_dex(self):
+        app, l8, library = self.desugared_markers()
+        cases = [
+            {"classes.dex": [("R8", app)], "classes2.dex": [("R8", library)]},
+            {"classes.dex": [("R8", app)], "classes2.dex": [("L8", l8)], "classes3.dex": [("R8", library)]},
+            {"classes.dex": [("R8", app)], "classes2.dex": [("L8", l8), ("R8", library), ("R8", library)]},
+            {"classes.dex": [("R8", app)], "classes2.dex": [("L8", l8), ("L8", l8), ("R8", library)]},
+            {"classes.dex": [("R8", app), ("L8", l8), ("R8", library)]},
+        ]
+        for cohorts in cases:
+            with self.subTest(cohorts=cohorts), self.assertRaises(android.AndroidVerificationError):
+                android.verify_dex_compiler(self.compiler_fixture(cohorts), {"pg_map_id": self.marker["pg-map-id"]})
+
 
 if __name__ == "__main__":
     unittest.main()

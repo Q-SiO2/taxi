@@ -56,7 +56,7 @@ Both browser tests and production size/boot must pass again for this correction.
 
 ## Verification and remaining gates
 
-The current shared regression run passes 170 affected JVM cases, including six
+The initial source's shared regression run passes 170 affected JVM cases, including six
 pure time cases, eight city-time rendered cases, coordinator creation guards and
 existing critical-state, immediate-offer, scheduled-driver and pagination UI. The rendered
 suite checks all twelve language/style combinations at 200% text and a 360-pixel
@@ -81,6 +81,12 @@ the complete compatibility distribution must still pass its own checks. The
 review candidate may be published to start clean CI while local optimization
 continues, with these pending gates recorded explicitly. Complete
 packaging acceptance cannot be inferred from the shared tests or raw JS size.
+
+The published `2e9275a` source subsequently fails [CI 254](scheduled-city-time-ci-terminal-20261026.json)
+at the complete Wasm size check and Android artifact-verifier step, despite
+successful browser/shared tests and minified builds. The [packaging repair](scheduled-city-time-packaging.md)
+owns those fixes and fresh verification, including the explicit provider-only
+test startup allowance. The earlier source-hash checkpoint remains historical.
 
 The manual RFC3339 scheduling input still needs a friendly city-local picker;
 this packet fixes review/presentation and does not claim that input task complete.
