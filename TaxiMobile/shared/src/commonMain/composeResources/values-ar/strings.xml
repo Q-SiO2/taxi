@@ -512,6 +512,7 @@
     <string name="scheduled_cash_notice">يُحصّل النقد عند تسوية الرحلة. لا يُدّعى إجراء دفع إلكتروني وقت الحجز.</string>
     <string name="scheduled_review_price">مراجعة السعر والشروط</string>
     <string name="scheduled_review_title">راجع قبل التأكيد</string>
+    <string name="scheduled_review_unavailable">المراجعة غير متاحة. راجع الوقت والمسار والسعر.</string>
     <string name="scheduled_city_time">%1$s · %2$s (%3$s)</string>
     <string name="scheduled_time_unavailable">الوقت غير متاح. حدّث تفاصيل الحجز.</string>
     <string name="scheduled_location_summary">%1$s ← %2$s</string>

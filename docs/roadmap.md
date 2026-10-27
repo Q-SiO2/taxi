@@ -1,18 +1,25 @@
 # TaxiMobile — Alpha, Pilot and Public Release Roadmap
 
-## Current packet — 26 October 2026
+## Current packet — 27 October 2026
+
+The R6/R9 [scheduled review binding](launch/scheduled-review-binding.md) follows
+confirmed stale-review confirmation and command-boundary failures. Bind the
+returned estimate to the requested instant and point/city or fixed direction;
+preserve backend economics and explicit recovery. Verify the affected source,
+large-text language/style renders, Android and a fresh immutable CI candidate.
 
 The [city-time packaging repair](launch/scheduled-city-time-packaging.md) follows
 [CI 254](launch/scheduled-city-time-ci-terminal-20261026.json)'s two failures.
 Preserve the Wasm 700 KB / fallback JS 7 MB caps; keep application mapping checks
 while recognizing the pinned, separate desugared-library compiler cohort.
 The corrected local package and four Chrome boot scenarios pass unchanged caps;
-finish current-source minified Android products and the successor's own native CI.
+its own [CI 256](launch/scheduled-city-time-packaging-ci-terminal-20261027.json)
+passes all eight required jobs. Later review-binding work needs its own checks.
 
 The [city-local time packet](launch/scheduled-city-time.md) implements the existing
 city-time presentation rule across shared scheduled review, with explicit invalid
-data and unchanged server instants. JVM/rendered and JS/Wasm checks pass; finish
-minified Android packaging, complete production web size/boot and its own immutable native CI.
+data and unchanged server instants. Its packaging successor passes minified Android,
+production web size/boot and native CI gates for that source in CI 256.
 The scheduling input still needs a friendly city-local picker. Physical testing
 remains deferred by the owner; hosting remains stopped at the recorded Trial gate.
 

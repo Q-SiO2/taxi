@@ -978,6 +978,13 @@ confirmation and driver acceptance require interpretable pickup timing; existing
 known-policy cancellation remains available. Authoritative commands retain the
 original reviewed instant. See [city-local time](launch/scheduled-city-time.md).
 
+A retained estimate for another requested time, point pair, city or fixed-route
+direction cannot show its fare or confirmation as the current review. Show
+localized unavailable-review copy and keep explicit price/terms review available.
+After a matching response, show the ordinary review and confirmation. Compare
+instants rather than timestamp spellings; preserve the original command input.
+See [scheduled review binding](launch/scheduled-review-binding.md).
+
 The driver receives a normal high-attention offer with scheduled timing and may
 accept or decline. Accepted commitments appear in a calm upcoming-work list;
 they do not replace the online HUD or active-ride CTA until dispatch handoff.

@@ -39,7 +39,7 @@ internal class DriverScheduledFixture : ScheduledBookingGateway by PagedBookingF
 }
 
 internal fun bookingFixture(id: String = "booking-21") = ScheduledBooking(
-    id, "synthetic-city", "synthetic-union", "POINT_TO_POINT", null,
+    id, "synthetic-city", "synthetic-union", "ON_DEMAND", null,
     "2026-11-01T08:30:00Z", "Africa/Casablanca", "SCHEDULED",
     Coordinates(34.03, -5.00), Coordinates(34.04, -5.01),
     ScheduledEconomics("8.00", "3.00", "0.00", "11.00", "8.00", "3.00", "MAD", "fare-v1", "fee-v1", "schedule-v1"),
@@ -48,7 +48,7 @@ internal fun bookingFixture(id: String = "booking-21") = ScheduledBooking(
 )
 
 internal fun bookingWire(id: String) = """{
- "id":"$id","city_id":"synthetic-city","operator_id":"synthetic-union","service_type":"POINT_TO_POINT",
+ "id":"$id","city_id":"synthetic-city","operator_id":"synthetic-union","service_type":"ON_DEMAND",
  "scheduled_for":"2026-11-01T08:30:00Z","city_timezone":"Africa/Casablanca","status":"SCHEDULED",
  "pickup":{"latitude":34.03,"longitude":-5.00},"destination":{"latitude":34.04,"longitude":-5.01},
  "economics":{"transport_fare":"8.00","scheduling_surcharge":"3.00","operator_service_fee":"0.00",

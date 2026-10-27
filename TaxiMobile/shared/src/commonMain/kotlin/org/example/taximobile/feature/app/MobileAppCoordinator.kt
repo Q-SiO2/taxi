@@ -2,6 +2,8 @@ package org.example.taximobile.feature.app
 
 import org.example.taximobile.domain.scheduling.canReviewAcceptance
 import org.example.taximobile.domain.scheduling.scheduledCityTime
+import org.example.taximobile.domain.scheduling.matchesPointRequest
+import org.example.taximobile.domain.scheduling.matchesFixedRouteRequest
 
 import org.example.taximobile.app.AppRole
 import org.example.taximobile.data.auth.AuthenticationNetworkException
@@ -890,8 +892,9 @@ class MobileAppCoordinator(
         estimate: ScheduledBookingEstimate,
     ): AppUiState {
         if (scheduledCityTime(estimate.scheduledFor, estimate.cityTimezone) == null) return offline(Res.string.scheduled_time_unavailable)
+        if (!estimate.cancellationTerms.isSupportedForReview) return offline(Res.string.scheduled_refund_unavailable)
+        if (!estimate.matchesPointRequest(scheduledFor, cityId, pickup, destination)) return offline(Res.string.scheduled_review_unavailable)
         return schedulingMutation {
-            if (!estimate.cancellationTerms.isSupportedForReview) return@schedulingMutation null
             it.createPointToPoint(scheduledFor, cityId, pickup, destination, note, estimate.economics)
         }
     }
@@ -903,8 +906,9 @@ class MobileAppCoordinator(
         estimate: ScheduledBookingEstimate,
     ): AppUiState {
         if (scheduledCityTime(estimate.scheduledFor, estimate.cityTimezone) == null) return offline(Res.string.scheduled_time_unavailable)
+        if (!estimate.cancellationTerms.isSupportedForReview) return offline(Res.string.scheduled_refund_unavailable)
+        if (!estimate.matchesFixedRouteRequest(scheduledFor, directionVersionId)) return offline(Res.string.scheduled_review_unavailable)
         return schedulingMutation {
-            if (!estimate.cancellationTerms.isSupportedForReview) return@schedulingMutation null
             it.createFixedRoute(scheduledFor, directionVersionId, note, estimate.economics)
         }
     }
@@ -914,24 +918,26 @@ class MobileAppCoordinator(
         cityId: String?,
         pickup: Coordinates,
         destination: Coordinates,
-    ): AppUiState = scheduledEstimate {
+    ): AppUiState = scheduledEstimate({ it.matchesPointRequest(scheduledFor, cityId, pickup, destination) }) {
         it.estimatePointToPoint(scheduledFor, cityId, pickup, destination)
     }
 
     suspend fun estimateScheduledFixedRoute(
         scheduledFor: String,
         directionVersionId: String,
-    ): AppUiState = scheduledEstimate {
+    ): AppUiState = scheduledEstimate({ it.matchesFixedRouteRequest(scheduledFor, directionVersionId) }) {
         it.estimateFixedRoute(scheduledFor, directionVersionId)
     }
 
     private suspend fun scheduledEstimate(
+        matchesRequest: (ScheduledBookingEstimate) -> Boolean,
         estimate: suspend (ScheduledBookingGateway) -> ScheduledBookingEstimate,
     ): AppUiState {
         val gateway = scheduling ?: return offline(Res.string.message_ride_services_unavailable)
         return try {
             authentication.readWithSessionRecovery { account ->
                 val result = estimate(gateway)
+                if (!matchesRequest(result)) return@readWithSessionRecovery offline(Res.string.scheduled_review_unavailable)
                 val refreshed = quoteProductState(account)
                 if (refreshed is AppUiState.PassengerReady) {
                     refreshed.copy(scheduledBookingEstimate = result)

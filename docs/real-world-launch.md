@@ -15,12 +15,19 @@ acceptance authority for GAP-001 through GAP-037; [testing.md](testing.md) owns
 T0-T10 promotion. Domain documents continue to own business rules. R0-R12 below
 sequence existing requirements; they do not create a competing definition of done.
 
-The current R2/R6/R9 [packaging repair](launch/scheduled-city-time-packaging.md)
+The current R6/R9 [scheduled review binding](launch/scheduled-review-binding.md)
+corrects confirmed stale-estimate confirmation and command-boundary failures.
+Its own source/rendered/Android and immutable CI evidence is required; the
+accepted predecessor cannot accept later source. Manual scheduling input remains
+a separate UX follow-up, with physical testing deferred as requested.
+
+The R2/R6/R9 [packaging repair](launch/scheduled-city-time-packaging.md)
 addresses [CI 254](launch/scheduled-city-time-ci-terminal-20261026.json)'s Wasm
 size and Android artifact-verifier failures. Its six passing jobs do not accept
 that complete source. The corrected local package and four Chrome boot scenarios
-pass unchanged caps. Preserve failed observations and finish the bounded
-successor's current-source minified Android products and immutable native checks.
+pass unchanged caps. Its own [CI 256](launch/scheduled-city-time-packaging-ci-terminal-20261027.json)
+passes all eight required jobs. Preserve failed observations; later review-binding
+changes remain separate.
 
 26 October R6/R9 checkpoint: [passenger pagination](launch/scheduled-pagination.md)
 passes its own full [CI 244](launch/scheduled-pagination-ci-terminal-20261026.json).
@@ -39,8 +46,8 @@ city-local timestamp presentation remains a distinct confirmed source follow-up.
 
 The [city-local time packet](launch/scheduled-city-time.md) now implements that
 presentation rule in the shared passenger/driver review without rewriting command
-instants. Local shared/rendered and both browser targets pass; finish Android
-release packaging, complete production web size/boot and fresh immutable native CI. The manual time
+instants. The packaging successor's CI 256 passes release-artifact, production web
+and native CI gates for that source. The manual time
 input remains an explicit UX follow-up. The owner requested continued source work
 while physical Android verification is deferred; the full R0-R12 goal is retained.
 

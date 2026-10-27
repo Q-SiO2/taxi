@@ -15,6 +15,9 @@ import kotlinx.coroutines.CancellationException
 import org.example.taximobile.data.scheduling.PagedBookingFixture
 import org.example.taximobile.data.scheduling.bookingFixture
 import org.example.taximobile.domain.scheduling.ScheduledBookingPage
+import org.example.taximobile.domain.scheduling.ScheduledBookingEstimate
+import org.example.taximobile.domain.scheduling.ScheduledBookingGateway
+import org.example.taximobile.domain.scheduling.ScheduledEconomics
 import kotlin.test.assertFailsWith
 import org.example.taximobile.app.AppRole
 import org.example.taximobile.data.auth.AuthenticationGateway
@@ -1051,6 +1054,93 @@ class MobileAppCoordinatorTest {
         }
         assertTrue(bookings.pages.isEmpty())
         assertTrue(bookings.detailReads.isEmpty())
+    }
+
+    @Test fun changed_scheduled_time_never_sends_a_command_with_an_old_review() = runBlocking {
+        val b = bookingFixture()
+        var commands = 0
+        val gateway = object : ScheduledBookingGateway by PagedBookingFixture() {
+            override suspend fun createPointToPoint(scheduledFor: String, cityId: String?, pickup: Coordinates,
+                destination: Coordinates, passengerNote: String?, reviewedEconomics: ScheduledEconomics) = b.also { commands++ }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = gateway)
+        assertIs<AppUiState.PassengerReady>(coordinator.restore())
+        val estimate = ScheduledBookingEstimate(b.cityId, b.operatorId, "ON_DEMAND", null, b.scheduledFor,
+            b.cityTimezone, b.pickup, b.destination, b.economics, b.cancellationTerms, "CASH")
+        val result = coordinator.schedulePointToPoint("2026-11-02T08:30:00Z", b.cityId, b.pickup, b.destination, null, estimate)
+        assertEquals(0, commands)
+        assertTrue(result is AppUiState.Offline)
+    }
+
+    @Test fun changed_scheduled_direction_never_sends_a_command_with_an_old_review() = runBlocking {
+        val b = bookingFixture()
+        var commands = 0
+        val gateway = object : ScheduledBookingGateway by PagedBookingFixture() {
+            override suspend fun createFixedRoute(scheduledFor: String, directionVersionId: String,
+                passengerNote: String?, reviewedEconomics: ScheduledEconomics) = b.also { commands++ }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = gateway)
+        assertIs<AppUiState.PassengerReady>(coordinator.restore())
+        val estimate = ScheduledBookingEstimate(b.cityId, b.operatorId, "FIXED_ROUTE", "direction-A", b.scheduledFor,
+            b.cityTimezone, b.pickup, b.destination, b.economics, b.cancellationTerms, "CASH")
+        val result = coordinator.scheduleFixedRoute(b.scheduledFor, "direction-B", null, estimate)
+        assertEquals(0, commands)
+        assertTrue(result is AppUiState.Offline)
+    }
+
+    @Test fun mismatched_scheduled_point_response_is_not_published_as_a_review() = runBlocking {
+        val b = bookingFixture()
+        val estimate = ScheduledBookingEstimate(b.cityId, b.operatorId, "ON_DEMAND", null, b.scheduledFor,
+            b.cityTimezone, b.pickup, b.destination, b.economics, b.cancellationTerms, "CASH")
+        val gateway = object : ScheduledBookingGateway by PagedBookingFixture() {
+            override suspend fun estimatePointToPoint(scheduledFor: String, cityId: String?, pickup: Coordinates,
+                destination: Coordinates) = estimate
+        }
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = gateway)
+        val result = coordinator.estimateScheduledPointToPoint("2026-11-02T08:30:00Z", b.cityId, b.pickup, b.destination)
+        assertEquals(Res.string.scheduled_review_unavailable, assertIs<AppUiState.Offline>(result).message.resource)
+    }
+
+    @Test fun mismatched_scheduled_fixed_response_is_not_published_as_a_review() = runBlocking {
+        val b = bookingFixture()
+        val estimate = ScheduledBookingEstimate(b.cityId, b.operatorId, "FIXED_ROUTE", "direction-A", b.scheduledFor,
+            b.cityTimezone, b.pickup, b.destination, b.economics, b.cancellationTerms, "CASH")
+        val gateway = object : ScheduledBookingGateway by PagedBookingFixture() {
+            override suspend fun estimateFixedRoute(scheduledFor: String, directionVersionId: String) = estimate
+        }
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = gateway)
+        val result = coordinator.estimateScheduledFixedRoute(b.scheduledFor, "direction-B")
+        assertEquals(Res.string.scheduled_review_unavailable, assertIs<AppUiState.Offline>(result).message.resource)
+    }
+
+    @Test fun matching_point_review_keeps_the_original_offset_payload_and_server_economics() = runBlocking {
+        val b = bookingFixture()
+        val estimate = ScheduledBookingEstimate(b.cityId, b.operatorId, "ON_DEMAND", null, b.scheduledFor,
+            b.cityTimezone, b.pickup, b.destination, b.economics, b.cancellationTerms, "CASH")
+        val sent = mutableListOf<Pair<String, ScheduledEconomics>>()
+        val gateway = object : ScheduledBookingGateway by PagedBookingFixture() {
+            override suspend fun createPointToPoint(scheduledFor: String, cityId: String?, pickup: Coordinates,
+                destination: Coordinates, passengerNote: String?, reviewedEconomics: ScheduledEconomics) = b.also {
+                sent += scheduledFor to reviewedEconomics
+            }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = gateway)
+        assertIs<AppUiState.PassengerReady>(coordinator.schedulePointToPoint("2026-11-01T09:30:00+01:00", b.cityId, b.pickup, b.destination, null, estimate))
+        assertEquals(listOf("2026-11-01T09:30:00+01:00" to b.economics), sent)
+    }
+
+    @Test fun matching_fixed_review_keeps_the_original_direction_and_offset_payload() = runBlocking {
+        val b = bookingFixture()
+        val estimate = ScheduledBookingEstimate(b.cityId, b.operatorId, "FIXED_ROUTE", "direction-A", b.scheduledFor,
+            b.cityTimezone, b.pickup, b.destination, b.economics, b.cancellationTerms, "CASH")
+        val sent = mutableListOf<Pair<String, String>>()
+        val gateway = object : ScheduledBookingGateway by PagedBookingFixture() {
+            override suspend fun createFixedRoute(scheduledFor: String, directionVersionId: String,
+                passengerNote: String?, reviewedEconomics: ScheduledEconomics) = b.also { sent += scheduledFor to directionVersionId }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = gateway)
+        assertIs<AppUiState.PassengerReady>(coordinator.scheduleFixedRoute("2026-11-01T09:30:00+01:00", "direction-A", null, estimate))
+        assertEquals(listOf("2026-11-01T09:30:00+01:00" to "direction-A"), sent)
     }
 
     @Test fun fresh_unknown_booking_terms_prevent_a_cancel_even_when_a_list_row_was_supported() = runBlocking {

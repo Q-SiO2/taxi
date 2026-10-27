@@ -321,6 +321,15 @@ Route geometry and maneuver summaries come from the provider-neutral backend
 routing contract backed by Valhalla. A map route is guidance, not evidence that a
 ride progressed, a fare was finalized, or a payment succeeded.
 
+Scheduled review must match the current requested instant and trip context before
+it is displayed or submitted. Point requests bind city and exact coordinates;
+fixed requests bind the immutable direction version. Equivalent explicit-offset
+timestamps may identify the same instant, and normalized address labels may
+differ. A stale response cannot authorize confirmation for another request, even
+when its pricing versions remain current. The coordinator also rejects mismatches;
+only an explicit new read can supply the matching backend review. See
+[scheduled review binding](launch/scheduled-review-binding.md).
+
 Once a ride is created, the passenger product reloads its authorized detailed
 ride and renders the confirmed pickup, destination, route line, distance and
 duration throughout the active lifecycle. Turn-by-turn maneuvers belong in a

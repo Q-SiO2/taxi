@@ -3,6 +3,8 @@ package org.example.taximobile.feature.passenger
 import org.example.taximobile.feature.scheduling.localizedSummary
 import org.example.taximobile.feature.scheduling.scheduledPickupTime
 import org.example.taximobile.domain.scheduling.scheduledCityTime
+import org.example.taximobile.domain.scheduling.matchesPointRequest
+import org.example.taximobile.domain.scheduling.matchesFixedRouteRequest
 
 import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.background
@@ -885,7 +887,13 @@ private fun PassengerScheduledSheet(
         "POINT|${form.trip}|${scheduledFor.trim()}|${state.serviceCities.firstOrNull()?.id}"
     }
     var reviewedRequestKey by remember { mutableStateOf<String?>(null) }
-    val reviewedEstimate = state.scheduledBookingEstimate?.takeIf { reviewedRequestKey == requestKey }
+    fun matchesRequest(estimate: org.example.taximobile.domain.scheduling.ScheduledBookingEstimate): Boolean =
+        if (useFixedRoute) selectedRoute?.let { estimate.matchesFixedRouteRequest(scheduledFor.trim(), it.id) } == true
+        else form.trip?.let { (pickup, destination) ->
+            estimate.matchesPointRequest(scheduledFor.trim(), state.serviceCities.firstOrNull()?.id, pickup, destination)
+        } == true
+    val candidateEstimate = state.scheduledBookingEstimate?.takeIf { reviewedRequestKey == requestKey }
+    val reviewedEstimate = candidateEstimate?.takeIf(::matchesRequest)
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Text(stringResource(Res.string.scheduled_title), style = MaterialTheme.typography.headlineSmall)
         TextButton(onClick = onBack) { Text(stringResource(Res.string.scheduled_back_to_ride)) }
@@ -960,6 +968,9 @@ private fun PassengerScheduledSheet(
             (if (useFixedRoute) selectedRoute != null else form.trip != null) && pendingAction == null,
         loading = pendingAction.isPending(AppActionKind.ESTIMATE_SCHEDULED_BOOKING),
     )
+    if (candidateEstimate != null && reviewedEstimate == null && pendingAction == null) {
+        Text(stringResource(Res.string.scheduled_review_unavailable), color = taxiColors.Warning600)
+    }
     reviewedEstimate?.let { estimate ->
         Text(stringResource(Res.string.scheduled_review_title), style = MaterialTheme.typography.titleLarge)
         Text(scheduledPickupTime(estimate.scheduledFor, estimate.cityTimezone))
@@ -980,7 +991,7 @@ private fun PassengerScheduledSheet(
         TaxiButton(
             label = stringResource(Res.string.scheduled_confirm),
             onClick = {
-                if (!estimate.cancellationTerms.isSupportedForReview || scheduledCityTime(estimate.scheduledFor, estimate.cityTimezone) == null) Unit
+                if (!matchesRequest(estimate) || !estimate.cancellationTerms.isSupportedForReview || scheduledCityTime(estimate.scheduledFor, estimate.cityTimezone) == null) Unit
                 else if (useFixedRoute) {
                     selectedRoute?.let { onScheduleFixedRoute(scheduledFor.trim(), it.id, note.ifBlank { null }, estimate) }
                 } else {

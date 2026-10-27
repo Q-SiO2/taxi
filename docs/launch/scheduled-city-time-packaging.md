@@ -75,8 +75,13 @@ optimized package passes unchanged caps with JS **6,953,397 bytes**, Wasm loader
 source maps and the test-only startup hook. Four Chrome boot/preflight scenarios
 pass; they cover no T4 catalog case and do not accept the phase or deployment.
 
-Complete current-source minified Android products and the successor's own
-immutable native CI. Preserve CI 254 and the failed local observations. The friendly
+The successor `53d6531` now passes all eight required jobs in
+[CI 256](scheduled-city-time-packaging-ci-terminal-20261027.json), including
+current-source minified Android identity checks, web packaging/boot, 1,482 backend
+cases and both unsigned iOS simulator products. Artifact hashes bind the tested
+merge to the candidate's identical tree. Later review-binding changes need their
+own verification; this accepts neither those changes nor physical/hosted operation.
+Preserve CI 254 and the failed local observations. The friendly
 city-local scheduling input remains the [next functional packet](scheduled-city-time.md#next-bounded-source-packet-scheduling-input).
 Physical testing stays deferred by the owner, and hosting remains at the recorded
 Trial capacity stop. No provider, operational, pilot or public acceptance follows.
