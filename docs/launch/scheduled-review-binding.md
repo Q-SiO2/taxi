@@ -59,9 +59,12 @@ viewport; Arabic Folded Streets and French Notepad captures were visually
 inspected. The initial platform invocation named a nonexistent Gradle project and
 ran no compilation/tests; its corrected role tasks pass without a source change.
 
-Run fresh immutable CI for this candidate, including minified Android identity,
-iOS simulator products and production web size/boot under the unchanged caps.
-The prior candidate's CI cannot satisfy those gates. Continue the
+Published `8514a92` now passes all eight required jobs in its own
+[CI 258](scheduled-review-binding-ci-terminal-20261027.json), including minified
+Android identity, both unsigned iOS Release simulator products and production web
+size/boot under unchanged caps. Verified artifact digests bind the tested merge
+to its identical tree. This accepts neither later source nor physical/hosted
+operation. Continue the
 [friendly city-local scheduling input](scheduled-city-time.md#next-bounded-source-packet-scheduling-input)
 after the request/review boundary is verified. That input remains manual RFC3339
 and this packet does not claim the picker complete.

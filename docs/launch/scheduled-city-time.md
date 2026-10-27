@@ -116,3 +116,52 @@ context. Establish these cases before selecting the conversion implementation:
 
 This is a follow-up acceptance packet, not a claim that the input conversion or
 its full platform/device behavior has already been implemented.
+
+### Conversion boundary and execution order — 27 October
+
+The [review-binding correction](scheduled-review-binding.md) implements the
+request/estimate fence before replacing the input. Keep that fence when adding
+date/time controls; a resolved clock selection is not a price or booking.
+
+The pinned [kotlinx-datetime 0.8.0 conversion contract](https://github.com/Kotlin/kotlinx-datetime/blob/v0.8.0/core/common/src/TimeZone.kt)
+chooses an earlier instant for a repeated hour and applies an earlier offset
+across a gap. Calling that conversion alone cannot satisfy the explicit-choice
+and no-silent-shift requirements above. Do not approximate transitions using a
+fixed Moroccan offset or a few adjacent-day samples.
+
+Use the following bounded implementation sequence, retaining the existing
+explicit-instant estimate/create contracts until an extension is documented:
+
+1. The [input boundary](scheduled-local-input.md) now selects and implements an
+   authenticated backend read using the configured city's packaged named rules,
+   returning zero, one or two instants. This avoids separate native transition
+   adapters and internal shared-library APIs. Before that packet, the local
+   Windows API environment lacked `tzdata` and the Alpine image had no explicit
+   rule provisioning. The new pinned data package addresses that source/runtime
+   dependency; deployed-image acceptance is still separate. Never infer rules
+   from CI host files or a local tool's bundled database.
+2. Establish ordinary, skipped and repeated Moroccan hours before API/UI wiring.
+   Include a half-hour transition, a skipped calendar day, invalid zones/dates,
+   finite input bounds and missing rule data. Round-trip each candidate through
+   UTC and the named zone; deduplicate identical instants. Feasibility with an
+   explicitly supplied local rules database is not an application acceptance.
+3. If adding a backend read, document its authenticated non-mutating request,
+   city/route context, bounded options and unavailable errors in `api.md` first.
+   It must not reserve supply, calculate client policy or imply that lead-time,
+   fare or eligibility checks passed. Maintain exact source-contract inventory
+   and provide an explicit response when the hosted API lacks the capability.
+4. Add shared gateway/coordinator state with session-owner and late-response
+   fences. Changing clock, city or direction clears resolved options and quote
+   review. Recovery may repeat a read, never a creation command. A unique option
+   can select its instant; an overlap requires a visible offset choice; a gap
+   leaves review disabled and asks for a different clock time.
+5. Replace manual RFC3339 entry with compact date/time controls and visible city
+   context, then use the unchanged backend estimate/review/create sequence.
+   Test normal and ambiguous selection, corrections, context changes, delayed
+   replies, cancellation and process/composition recreation across EN/FR/AR,
+   RTL, all styles and large text. Preserve exact selected instants and server
+   economics at the command boundary.
+6. Bind the completed packet to its own Android/iOS/web CI and packaged evidence.
+   Actual phone keyboard/picker, screen-reader, low-end latency and hosted rules
+   freshness remain distinct acceptance gates under the owner's device deferral
+   and Trial hosting stop. Do not promote a conversion probe to field readiness.

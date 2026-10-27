@@ -763,6 +763,13 @@ City scheduling policy defines:
 * Passenger/driver cancellation cutoffs, scheduling-surcharge refund rules,
   no-show handling, and support ownership.
 * City timezone for user presentation; authoritative timestamps remain UTC.
+* City-local scheduling planning reads the pinned packaged IANA rules and returns
+  their version. A rule-data update needs reviewed dependency hashes, transition
+  regressions and restarted application instances; never silently inherit an OS
+  database. Unavailable rules block clock planning explicitly without inventing
+  options or acquiring booking availability. Existing explicit-instant pricing,
+  lead-time and eligibility checks remain authoritative. See
+  [the input boundary](launch/scheduled-local-input.md).
 
 “Scheduled” means the backend accepted a future request, not that a driver is
 guaranteed. The passenger sees distinct states for request received, driver

@@ -23,6 +23,7 @@ dependencies = [
     "PyJWT==2.15.1",
     "requests==2.34.2",
     "sqlalchemy==2.0.51",
+    "tzdata==2026.2",
     "uvicorn[standard]==0.52.1",
 ]
 

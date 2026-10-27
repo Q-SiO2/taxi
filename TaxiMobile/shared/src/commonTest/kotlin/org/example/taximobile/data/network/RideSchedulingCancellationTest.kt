@@ -25,6 +25,10 @@ import kotlin.test.assertIs
 
 /** Real Ktor request pipelines with deterministic failures, never live providers. */
 class RideSchedulingCancellationTest {
+    @Test fun local_clock_read_cancellation_is_not_a_network_failure() = fixture { _, scheduled, engine ->
+        assertFailsWith<CancellationException> { scheduled.localTimeOptions("synthetic-city", "Africa/Casablanca", "2026-11-01", "09:30") }
+        assertEquals(1, engine.requests.size)
+    }
     private val pickup = Coordinates(34.03, -5.00)
     private val destination = Coordinates(34.04, -5.01)
     private val scheduledFor = "2026-11-01T08:30:00Z"

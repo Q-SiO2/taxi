@@ -34,6 +34,9 @@ import org.example.taximobile.domain.scheduling.ScheduledCommitment
 import org.example.taximobile.domain.scheduling.ScheduledEconomics
 import org.example.taximobile.domain.scheduling.ScheduledOffer
 import org.example.taximobile.domain.scheduling.ScheduledOfferPreference
+import org.example.taximobile.domain.scheduling.ScheduledLocalTimeOption
+import org.example.taximobile.domain.scheduling.ScheduledLocalTimeOptions
+import org.example.taximobile.domain.scheduling.matchesRequest
 
 class KtorScheduledBookingGateway(
     private val client: HttpClient,
@@ -41,6 +44,26 @@ class KtorScheduledBookingGateway(
     private val readClock: TimeSource = TimeSource.Monotonic,
     private val accessToken: suspend () -> String,
 ) : ScheduledBookingGateway {
+    override suspend fun localTimeOptions(cityId: String, cityTimezone: String, localDate: String, localTime: String): ScheduledLocalTimeOptions = request {
+        val response = client.post(api.endpoint("cities/$cityId/scheduled-time-options")) {
+            authorize()
+            contentType(ContentType.Application.Json)
+            setBody(ScheduledLocalTimeRequest(localDate, localTime))
+        }
+        response.requireSuccess("resolve this pickup time")
+        try {
+            response.body<ScheduledLocalTimeResponse>().toDomain().also {
+                if (!it.matchesRequest(cityId, cityTimezone, localDate, localTime)) {
+                    throw ApiRequestException(502, "The server returned invalid pickup time options.")
+                }
+            }
+        } catch (_: ContentConvertException) {
+            throw ApiRequestException(502, "The server returned invalid pickup time options.")
+        } catch (_: IllegalArgumentException) {
+            throw ApiRequestException(502, "The server returned invalid pickup time options.")
+        }
+    }
+
     override suspend fun passengerBookings(page: Int): ScheduledBookingPage {
         require(page >= 1)
         return request {
@@ -277,6 +300,33 @@ private fun ScheduledEconomicsResponse.toDomain() = ScheduledEconomics(
     transportFare, schedulingSurcharge, operatorServiceFee, passengerTotal,
     expectedDriverNet, operatorAllocation, currency, pricingRuleVersion,
     operatorFeePolicyVersion, schedulingPolicyVersion,
+)
+
+@Serializable
+internal data class ScheduledLocalTimeRequest(
+    @SerialName("local_date") val localDate: String,
+    @SerialName("local_time") val localTime: String,
+)
+
+@Serializable
+internal data class ScheduledLocalTimeOptionResponse(
+    @SerialName("scheduled_for") val scheduledFor: String,
+    @SerialName("utc_offset_seconds") val utcOffsetSeconds: Int,
+)
+
+@Serializable
+internal data class ScheduledLocalTimeResponse(
+    @SerialName("city_id") val cityId: String,
+    @SerialName("city_timezone") val cityTimezone: String,
+    @SerialName("local_date") val localDate: String,
+    @SerialName("local_time") val localTime: String,
+    @SerialName("booking_available") val bookingAvailable: Boolean,
+    @SerialName("rules_version") val rulesVersion: String,
+    val options: List<ScheduledLocalTimeOptionResponse>,
+)
+private fun ScheduledLocalTimeResponse.toDomain() = ScheduledLocalTimeOptions(
+    cityId, cityTimezone, localDate, localTime, bookingAvailable, rulesVersion,
+    options.map { ScheduledLocalTimeOption(it.scheduledFor, it.utcOffsetSeconds) },
 )
 
 @Serializable

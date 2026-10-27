@@ -15,11 +15,17 @@ acceptance authority for GAP-001 through GAP-037; [testing.md](testing.md) owns
 T0-T10 promotion. Domain documents continue to own business rules. R0-R12 below
 sequence existing requirements; they do not create a competing definition of done.
 
-The current R6/R9 [scheduled review binding](launch/scheduled-review-binding.md)
+The current R6/R9 [city-local input boundary](launch/scheduled-local-input.md)
+implements a non-mutating clock-planning read and shared response/owner fences,
+using pinned packaged rules. Verify that source separately, then complete native
+date/time controls and explicit overlap selection. The input remains manual at
+this checkpoint; the backend read is not a quote or booking approval.
+
+The R6/R9 [scheduled review binding](launch/scheduled-review-binding.md)
 corrects confirmed stale-estimate confirmation and command-boundary failures.
-Its own source/rendered/Android and immutable CI evidence is required; the
-accepted predecessor cannot accept later source. Manual scheduling input remains
-a separate UX follow-up, with physical testing deferred as requested.
+Its own [CI 258](launch/scheduled-review-binding-ci-terminal-20261027.json) passes
+all eight required jobs. Later input-boundary work needs separate evidence.
+Physical testing remains deferred as requested.
 
 The R2/R6/R9 [packaging repair](launch/scheduled-city-time-packaging.md)
 addresses [CI 254](launch/scheduled-city-time-ci-terminal-20261026.json)'s Wasm

@@ -1300,4 +1300,5 @@
     <string name="web_members_date_error">Indiquez le fuseau. La fin ne peut pas précéder le début.</string>
     <string name="web_logout_local_title">Déconnecté sur cet appareil</string>
     <string name="web_logout_unconfirmed">La déconnexion côté serveur reste non confirmée. Fermez cette fenêtre et demandez à votre administrateur de révoquer la session.</string>
+    <string name="scheduled_clock_unavailable">Heure indisponible. Vérifiez la ville et réessayez.</string>
 </resources>

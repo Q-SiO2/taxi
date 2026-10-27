@@ -127,6 +127,7 @@ sealed interface AppUiState {
         val scheduledBookingsLoadFailed: Boolean = false,
         val scheduledBookingRequestedPage: Int = 1,
         val scheduledBookingEstimate: ScheduledBookingEstimate? = null,
+        val scheduledLocalTimeOptions: org.example.taximobile.domain.scheduling.ScheduledLocalTimeOptions? = null,
         val latestCompletedReceipt: RideReceipt? = null,
         val selectedHistoryRide: RideSummary? = null,
         val selectedHistoryReceipt: RideReceipt? = null,

@@ -103,6 +103,8 @@ data class ScheduledOfferPreference(
 )
 
 interface ScheduledBookingGateway {
+    /** Null explicitly means this gateway lacks clock-resolution capability. */
+    suspend fun localTimeOptions(cityId: String, cityTimezone: String, localDate: String, localTime: String): ScheduledLocalTimeOptions? = null
     suspend fun passengerBookings(page: Int = 1): ScheduledBookingPage
     suspend fun passengerBooking(bookingId: String): ScheduledBooking
     suspend fun estimatePointToPoint(

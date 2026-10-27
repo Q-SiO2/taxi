@@ -1,9 +1,14 @@
 # TaxiMobile documentation
 
+> **Current R6/R9 source work — 27 October 2026:** [city-local input boundary](launch/scheduled-local-input.md)
+> implements the authenticated clock-planning read and shared response/owner
+> fences using pinned rules. Native input controls and explicit repeated-hour
+> choice remain next; the passenger input is still manual at this checkpoint.
+
 > **Current source packet — 27 October 2026:** [scheduled review binding](launch/scheduled-review-binding.md)
 > prevents a retained estimate from confirming another time, city, point pair or
-> fixed-route direction. Fresh affected tests and immutable CI must verify this
-> successor; the accepted packaging predecessor cannot accept later source.
+> fixed-route direction. Its own [CI 258](launch/scheduled-review-binding-ci-terminal-20261027.json)
+> passes all eight required jobs; later input-boundary source remains separate.
 
 > **Current source repair — 27 October 2026:** [city-time packaging](launch/scheduled-city-time-packaging.md)
 > corrects [CI 254](launch/scheduled-city-time-ci-terminal-20261026.json)'s Wasm

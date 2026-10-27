@@ -2,11 +2,20 @@
 
 ## Current packet — 27 October 2026
 
+The [city-local input boundary](launch/scheduled-local-input.md) adds a bounded
+authenticated planning read backed by pinned packaged rules, plus shared typed
+response/context and session-owner fences. It resolves skipped/repeated hours
+without choosing a booking. Finish its own verification and implement the
+dependent date/time controls and explicit overlap choice; the passenger input is
+still manual RFC3339 at this checkpoint. Existing estimate/create contracts and
+the full R0-R12 goal remain unchanged.
+
 The R6/R9 [scheduled review binding](launch/scheduled-review-binding.md) follows
 confirmed stale-review confirmation and command-boundary failures. Bind the
 returned estimate to the requested instant and point/city or fixed direction;
-preserve backend economics and explicit recovery. Verify the affected source,
-large-text language/style renders, Android and a fresh immutable CI candidate.
+preserve backend economics and explicit recovery. Its own
+[CI 258](launch/scheduled-review-binding-ci-terminal-20261027.json) now passes all
+eight required jobs. Later input-boundary source requires its own evidence.
 
 The [city-time packaging repair](launch/scheduled-city-time-packaging.md) follows
 [CI 254](launch/scheduled-city-time-ci-terminal-20261026.json)'s two failures.

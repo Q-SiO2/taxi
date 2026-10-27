@@ -1300,4 +1300,5 @@
     <string name="web_members_date_error">Include a timezone. The end cannot precede the join date.</string>
     <string name="web_logout_local_title">Signed out on this device</string>
     <string name="web_logout_unconfirmed">Server sign-out could not be confirmed. Close this window and ask your operations administrator to revoke the session.</string>
+    <string name="scheduled_clock_unavailable">Pickup time unavailable. Check the city and try again.</string>
 </resources>

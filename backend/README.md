@@ -181,6 +181,16 @@ verified PyPI request pass. This is a source/local dependency fix, not proof tha
 staging or production images have been rebuilt with it. See the
 [reviewed advisory](https://github.com/advisories/GHSA-6q48-6c7w-9gw2).
 
+City-local scheduling planning reads packaged `tzdata==2026.2` rules directly,
+instead of inheriting different OS databases on Windows, Alpine or CI. The
+runtime and development locks include the reviewed PyPI hashes. This first-party
+data dependency is required to reject skipped local times and expose both
+instants of a repeated hour through the authenticated city planning read; it
+adds no booking or pricing authority. Missing/unknown/corrupt rules fail with a
+sanitized unavailable error. See [the implementation boundary](../docs/launch/scheduled-local-input.md),
+[PSF package](https://pypi.org/project/tzdata/2026.2/) and
+[Python zoneinfo data sources](https://docs.python.org/3.12/library/zoneinfo.html#data-sources).
+
 The test toolchain pins pytest 9.0.3 with pytest-asyncio 1.4.0;
 both fixture and test event loops are explicitly function-scoped. A runner/plugin
 upgrade must pass the complete guarded migrated-PostGIS suite and restore

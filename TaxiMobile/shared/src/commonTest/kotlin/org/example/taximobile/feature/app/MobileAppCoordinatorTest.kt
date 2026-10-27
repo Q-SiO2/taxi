@@ -18,6 +18,9 @@ import org.example.taximobile.domain.scheduling.ScheduledBookingPage
 import org.example.taximobile.domain.scheduling.ScheduledBookingEstimate
 import org.example.taximobile.domain.scheduling.ScheduledBookingGateway
 import org.example.taximobile.domain.scheduling.ScheduledEconomics
+import org.example.taximobile.domain.scheduling.ScheduledLocalTimeOptions
+import org.example.taximobile.domain.scheduling.ScheduledLocalTimeOption
+import kotlinx.coroutines.CoroutineStart
 import kotlin.test.assertFailsWith
 import org.example.taximobile.app.AppRole
 import org.example.taximobile.data.auth.AuthenticationGateway
@@ -1141,6 +1144,65 @@ class MobileAppCoordinatorTest {
         val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = gateway)
         assertIs<AppUiState.PassengerReady>(coordinator.scheduleFixedRoute("2026-11-01T09:30:00+01:00", "direction-A", null, estimate))
         assertEquals(listOf("2026-11-01T09:30:00+01:00" to "direction-A"), sent)
+    }
+
+    @Test fun local_clock_resolution_publishes_only_matching_read_context_without_a_booking_command() = runBlocking {
+        val value = ScheduledLocalTimeOptions("city", "Africa/Casablanca", "2026-11-01", "09:30", true,
+            "2026b", listOf(ScheduledLocalTimeOption("2026-11-01T08:30:00Z", 3600)))
+        var reads = 0
+        val gateway = object : ScheduledBookingGateway by PagedBookingFixture() {
+            override suspend fun localTimeOptions(cityId: String, cityTimezone: String, localDate: String, localTime: String) = value.also { reads++ }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = gateway)
+        val result = assertIs<AppUiState.PassengerReady>(coordinator.resolveScheduledLocalTime("city", "Africa/Casablanca", "2026-11-01", "09:30"))
+        assertEquals(value, result.scheduledLocalTimeOptions)
+        assertNull(result.scheduledBookingEstimate)
+        assertEquals(1, reads)
+    }
+
+    @Test fun wrong_local_clock_context_and_missing_capability_never_publish_options() = runBlocking {
+        val value = ScheduledLocalTimeOptions("other-city", "Africa/Casablanca", "2026-11-01", "09:30", true,
+            "2026b", listOf(ScheduledLocalTimeOption("2026-11-01T08:30:00Z", 3600)))
+        for (response in listOf(value, null)) {
+            val gateway = object : ScheduledBookingGateway by PagedBookingFixture() {
+                override suspend fun localTimeOptions(cityId: String, cityTimezone: String, localDate: String, localTime: String) = response
+            }
+            val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = gateway)
+            assertEquals(Res.string.scheduled_clock_unavailable, assertIs<AppUiState.Offline>(
+                coordinator.resolveScheduledLocalTime("city", "Africa/Casablanca", "2026-11-01", "09:30")).message.resource)
+        }
+    }
+
+    @Test fun local_clock_read_cancellation_propagates_without_retry() = runBlocking {
+        var reads = 0
+        val gateway = object : ScheduledBookingGateway by PagedBookingFixture() {
+            override suspend fun localTimeOptions(cityId: String, cityTimezone: String, localDate: String, localTime: String): ScheduledLocalTimeOptions {
+                reads++; throw CancellationException("Synthetic caller cancellation")
+            }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = gateway)
+        assertFailsWith<CancellationException> { coordinator.resolveScheduledLocalTime("city", "Africa/Casablanca", "2026-11-01", "09:30") }
+        assertEquals(1, reads)
+    }
+
+    @Test fun a_superseded_local_clock_read_cannot_publish_old_options() = runBlocking {
+        val entered = CompletableDeferred<Unit>(); val release = CompletableDeferred<Unit>()
+        var reads = 0
+        val gateway = object : ScheduledBookingGateway by PagedBookingFixture() {
+            override suspend fun localTimeOptions(cityId: String, cityTimezone: String, localDate: String, localTime: String): ScheduledLocalTimeOptions {
+                if (++reads == 1) { entered.complete(Unit); release.await() }
+                return ScheduledLocalTimeOptions(cityId, cityTimezone, localDate, localTime, true, "2026b", listOf(
+                    ScheduledLocalTimeOption(if (localTime == "09:30") "2026-11-01T08:30:00Z" else "2026-11-01T09:30:00Z", 3600)))
+            }
+        }
+        val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = gateway)
+        val first = async { coordinator.resolveScheduledLocalTime("city", "Africa/Casablanca", "2026-11-01", "09:30") }
+        entered.await()
+        val second = async(start = CoroutineStart.UNDISPATCHED) { coordinator.resolveScheduledLocalTime("city", "Africa/Casablanca", "2026-11-01", "10:30") }
+        release.complete(Unit)
+        assertIs<AppUiState.Offline>(first.await())
+        assertEquals("10:30", assertIs<AppUiState.PassengerReady>(second.await()).scheduledLocalTimeOptions?.localTime)
+        assertEquals(2, reads)
     }
 
     @Test fun fresh_unknown_booking_terms_prevent_a_cancel_even_when_a_list_row_was_supported() = runBlocking {

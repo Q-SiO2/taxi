@@ -3036,6 +3036,26 @@ GET  /scheduled-bookings/{booking_id}
 POST /scheduled-bookings/{booking_id}/cancel
 ```
 
+The city-local input uses an authenticated, non-mutating planning read:
+`POST /cities/{city_id}/scheduled-time-options`, with exactly `local_date`
+(`YYYY-MM-DD`) and `local_time` (`HH:mm`, 24-hour, minute precision). City
+visibility is identical to the public city catalog; a hidden/missing city is
+`404`. The response echoes city ID, configured `city_timezone`, both input
+strings, current `booking_available`, the pinned IANA `rules_version`, and an
+`options` array of zero, one or two `{scheduled_for, utc_offset_seconds}` values,
+ordered by UTC instant. Zero means the local clock time does not exist; two
+requires an explicit passenger offset choice. One may be selected automatically.
+Malformed/out-of-range clock input is `422`; unavailable/unknown configured rules
+is a sanitized `503`. Successful responses use `Cache-Control: no-store`. This read creates
+no booking, quote, reservation, idempotency record or pricing/eligibility approval.
+Paused cities can resolve clock times with `booking_available=false`.
+
+The resolver reads the hash-pinned `tzdata` package, independently of OS timezone
+files, and checks both folds by round-tripping through UTC. It never shifts a
+gap or chooses one overlap by default. The client fences context/owner changes,
+offers explicit retry, and treats a hosted `404`/`405` capability absence as
+unavailable. Existing explicit-instant estimate/create contracts remain unchanged.
+
 The passenger collection accepts `page` (starting at 1), `limit` (1–100, default
 20), and optional `status`. Responses retain `items`, `page`, `limit`, and `total`,
 ordered by scheduled time descending and ID. The mobile client uses explicit

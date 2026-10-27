@@ -4,6 +4,8 @@ import org.example.taximobile.domain.scheduling.canReviewAcceptance
 import org.example.taximobile.domain.scheduling.scheduledCityTime
 import org.example.taximobile.domain.scheduling.matchesPointRequest
 import org.example.taximobile.domain.scheduling.matchesFixedRouteRequest
+import org.example.taximobile.domain.scheduling.matchesRequest
+import org.example.taximobile.domain.scheduling.isScheduledLocalClockInput
 
 import org.example.taximobile.app.AppRole
 import org.example.taximobile.data.auth.AuthenticationNetworkException
@@ -90,6 +92,7 @@ class MobileAppCoordinator(
     private data class BookingPageSelection(val page: Int, val owner: Long)
     private var selectedBookingPage: BookingPageSelection? = null
     private var bookingPageReadRevision: Long = 0
+    private var scheduledClockReadRevision: Long = 0
     private var selectedFixedRouteCityId: String? = null
     // Session-owned navigation only. Every refresh reauthorizes and rereads
     // the selected ride and receipt/feedback; no financial projection is cached.
@@ -910,6 +913,32 @@ class MobileAppCoordinator(
         if (!estimate.matchesFixedRouteRequest(scheduledFor, directionVersionId)) return offline(Res.string.scheduled_review_unavailable)
         return schedulingMutation {
             it.createFixedRoute(scheduledFor, directionVersionId, note, estimate.economics)
+        }
+    }
+
+    suspend fun resolveScheduledLocalTime(cityId: String, cityTimezone: String, localDate: String, localTime: String): AppUiState {
+        val revision = ++scheduledClockReadRevision
+        val gateway = scheduling ?: return offline(Res.string.message_ride_services_unavailable)
+        if (appRole != AppRole.PASSENGER || cityId.isBlank() || !isScheduledLocalClockInput(localDate, localTime)) {
+            return offline(Res.string.scheduled_clock_unavailable)
+        }
+        return try {
+            authentication.readWithSessionRecovery { account ->
+                val result = gateway.localTimeOptions(cityId, cityTimezone, localDate, localTime)
+                if (revision != scheduledClockReadRevision || result == null ||
+                    !result.matchesRequest(cityId, cityTimezone, localDate, localTime)) {
+                    return@readWithSessionRecovery offline(Res.string.scheduled_clock_unavailable)
+                }
+                val refreshed = quoteProductState(account)
+                if (revision != scheduledClockReadRevision) return@readWithSessionRecovery offline(Res.string.scheduled_clock_unavailable)
+                if (refreshed is AppUiState.PassengerReady) refreshed.copy(scheduledLocalTimeOptions = result) else refreshed
+            }
+        } catch (_: AuthenticationRejectedException) {
+            signedOut(Res.string.message_session_expired)
+        } catch (_: AuthenticationNetworkException) {
+            offline(Res.string.message_network_unavailable)
+        } catch (_: ApiRequestException) {
+            offline(Res.string.scheduled_clock_unavailable)
         }
     }
 

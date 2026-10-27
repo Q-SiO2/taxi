@@ -24,6 +24,27 @@ import kotlin.test.assertNull
 
 /** Real coordinator boundary, with explicitly simulated transport/credentials. */
 class QuoteSessionRecoveryTest {
+    @Test fun clock_read_rejected_after_preflight_recovers_only_the_read_once() = runBlocking {
+        val f = QuoteFixture(initiallyExpired = false)
+        f.scheduling.rejectClockOnce = true
+        val state = assertIs<AppUiState.PassengerReady>(f.app.resolveScheduledLocalTime("city", "Africa/Casablanca", "2026-11-01", "09:30"))
+        assertEquals("2026-11-01T08:30:00Z", state.scheduledLocalTimeOptions?.options?.single()?.scheduledFor)
+        assertEquals(2, f.scheduling.clockReads)
+        assertEquals(1, f.auth.refreshes)
+        assertEquals(0, f.scheduling.commands)
+    }
+
+    @Test fun clock_response_finishing_after_logout_cannot_install_previous_owner_options() = runBlocking {
+        val f = QuoteFixture(initiallyExpired = false)
+        lateinit var logout: Job
+        f.scheduling.onClock = { logout = launch(start = CoroutineStart.UNDISPATCHED) { f.app.logout() } }
+        assertIs<AppUiState.SignedOut>(f.app.resolveScheduledLocalTime("city", "Africa/Casablanca", "2026-11-01", "09:30"))
+        logout.join()
+        assertNull(assertIs<AppUiState.PassengerReady>(f.app.login("passenger", "test-password", null)).scheduledLocalTimeOptions)
+        assertEquals(1, f.scheduling.clockReads)
+        assertEquals(0, f.scheduling.commands)
+    }
+
     @Test fun point_quote_survives_catch_up_with_fresh_server_amount_without_a_ride_command() = runBlocking {
         val f = QuoteFixture(initiallyExpired = false)
         f.app.estimateRide(PICKUP, DESTINATION)
@@ -318,6 +339,17 @@ private class QuoteRides(private val store: QuoteStore, private val auth: QuoteA
 private class QuoteScheduling(private val store: QuoteStore, private val auth: QuoteAuth) : ScheduledBookingGateway {
     var quotes = 0
     var commands = 0
+    var clockReads = 0
+    var rejectClockOnce = false
+    var onClock: (suspend () -> Unit)? = null
+    override suspend fun localTimeOptions(cityId: String, cityTimezone: String, localDate: String, localTime: String): ScheduledLocalTimeOptions {
+        clockReads++
+        onClock?.invoke()
+        if (rejectClockOnce) { rejectClockOnce = false; auth.expired = true; throw AuthenticationRejectedException() }
+        if (auth.expired && store.value?.accessToken == "old-access") throw AuthenticationRejectedException()
+        return ScheduledLocalTimeOptions(cityId, cityTimezone, localDate, localTime, true, "2026b",
+            listOf(ScheduledLocalTimeOption("2026-11-01T08:30:00Z", 3600)))
+    }
     private fun quote(direction: String?): ScheduledBookingEstimate {
         quotes++
         if (auth.expired && store.value?.accessToken == "old-access") throw AuthenticationRejectedException()

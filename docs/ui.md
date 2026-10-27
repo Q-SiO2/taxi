@@ -985,6 +985,14 @@ After a matching response, show the ordinary review and confirmation. Compare
 instants rather than timestamp spellings; preserve the original command input.
 See [scheduled review binding](launch/scheduled-review-binding.md).
 
+The [city-local input packet](launch/scheduled-local-input.md) owns the next
+functional control integration: compact date/calendar and 24-hour time fields,
+visible city context, typed correction, explicit offset choices only for repeated
+hours and an actionable gap message. Reuse the existing styles, form controls and
+review patterns; Notepad remains static. The backend/shared planning boundary is
+implemented in source, while these native controls and their full rendered/device
+acceptance remain pending. Do not style resolved clock options as a taxi guarantee.
+
 The driver receives a normal high-attention offer with scheduled timing and may
 accept or decline. Accepted commitments appear in a calm upcoming-work list;
 they do not replace the online HUD or active-ride CTA until dispatch handoff.

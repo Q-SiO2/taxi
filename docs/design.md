@@ -330,6 +330,15 @@ when its pricing versions remain current. The coordinator also rejects mismatche
 only an explicit new read can supply the matching backend review. See
 [scheduled review binding](launch/scheduled-review-binding.md).
 
+City-local input resolves civil date/time through the authenticated
+[clock-planning read](launch/scheduled-local-input.md), without a quote or booking
+command. Missing rules are unavailable, a gap yields no instant, and an overlap
+requires a visible offset choice. Match each user-requested read and current
+form/owner context before accepting options; retained data after a failed read
+must not impersonate a new successful response. Only the selected explicit instant
+enters the ordinary backend price/terms review. The native controls remain a
+dependent implementation step; the current screen still uses manual RFC3339.
+
 Once a ride is created, the passenger product reloads its authorized detailed
 ride and renders the confirmed pickup, destination, route line, distance and
 duration throughout the active lifecycle. Turn-by-turn maneuvers belong in a

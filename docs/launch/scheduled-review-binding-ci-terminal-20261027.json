@@ -1,0 +1,90 @@
+{
+  "recorded_utc": "2026-10-27T13:55:10.447303+00:00",
+  "source_head": "8514a92525e28822d6f0480177f8daed85c20f3c",
+  "tested_merge_commit": "fda696bebf6ad85692fbd5b8517996a6f865d3a4",
+  "tree": "284e944d4f07a9cbacba5020e2cba6c7a4b716f1",
+  "run_id": 40511964116,
+  "run_number": 258,
+  "status": "completed",
+  "conclusion": "success",
+  "required_jobs": {
+    "backend": {
+      "id": 122215918615,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "dependency-review": {
+      "id": 122217356077,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "documentation-and-provenance": {
+      "id": 122215918326,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "gradle-dependency-submission": {
+      "id": 122215918472,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "gradle-wrapper-integrity": {
+      "id": 122215918115,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "ios-shared": {
+      "id": 122215918503,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "mobile": {
+      "id": 122215918726,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "web": {
+      "id": 122215918637,
+      "status": "completed",
+      "conclusion": "success"
+    }
+  },
+  "full_backend_suite": {
+    "tests": 1482,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "tls_cases": 8,
+  "tls_baseline_restored": true,
+  "backend_junit_sha256": "6a4ac893504d0292892ee3ada5900a7083a388c6174517257fd7f51b5c8f39f7",
+  "artifacts": {
+    "tls": {
+      "id": 12737633229,
+      "zip_sha256": "ae5470668636e2611422d026bce1b11d478f9b786f4d9b3025c00105b502e3dd"
+    },
+    "provenance": {
+      "id": 12736869676,
+      "zip_sha256": "56f3cef53365861cb14a39f944c0546def5ad900dc5d3eebba814b4cfec3687e"
+    },
+    "web_boot": {
+      "id": 12737448611,
+      "zip_sha256": "8052dc38b42838aab0e959d2cb3ac8f24474d3b6744dfb1060997a8e9e7f312a"
+    }
+  },
+  "web_boot": {
+    "scenarios": [
+      "SUPPORTED_APPLICANT",
+      "SUPPORTED_OPERATIONS",
+      "UPGRADE_REQUIRED",
+      "PREFLIGHT_FAILURE"
+    ],
+    "passed": 4,
+    "covered_catalog_cases": [],
+    "phase_accepted": false,
+    "deployment_accepted": false
+  },
+  "ios_products": "unsigned Release simulator passenger and driver; no device/distribution acceptance",
+  "root_head_and_index_preserved": true,
+  "later_source_physical_hosted_provider_operational_pilot_or_public_accepted": false
+}
