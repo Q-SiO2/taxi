@@ -989,9 +989,13 @@ The [city-local input packet](launch/scheduled-local-input.md) owns the next
 functional control integration: compact date/calendar and 24-hour time fields,
 visible city context, typed correction, explicit offset choices only for repeated
 hours and an actionable gap message. Reuse the existing styles, form controls and
-review patterns; Notepad remains static. The backend/shared planning boundary is
-implemented in source, while these native controls and their full rendered/device
-acceptance remain pending. Do not style resolved clock options as a taxi guarantee.
+review patterns; Notepad remains static. The working native source now exposes
+these controls, including explicit city selection when multiple cities are
+available. A clock refresh remains reachable after selection and invalidates
+the old price review. The published backend/shared boundary has its own
+[CI 260](launch/scheduled-local-input-ci-terminal-20261028.json); the later
+native source still needs candidate-linked package and device acceptance. Do
+not style resolved clock options as a taxi guarantee.
 
 The driver receives a normal high-attention offer with scheduled timing and may
 accept or decline. Accepted commitments appear in a calm upcoming-work list;

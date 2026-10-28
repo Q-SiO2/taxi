@@ -439,14 +439,19 @@ class MainActivity : ComponentActivity() {
                         dependencies.appCoordinator.requestFixedRoute(directionId, paymentMethod)
                     }
                 },
-                onEstimateScheduledPointToPoint = { scheduledFor, cityId, pickup, destination ->
+                onResolveScheduledLocalTime = { cityId, timezone, date, time, readId ->
                     submitAction(AppAction(AppActionKind.ESTIMATE_SCHEDULED_BOOKING)) {
-                        dependencies.appCoordinator.estimateScheduledPointToPoint(scheduledFor, cityId, pickup, destination)
+                        dependencies.appCoordinator.resolveScheduledLocalTime(cityId, timezone, date, time, readId)
                     }
                 },
-                onEstimateScheduledFixedRoute = { scheduledFor, directionId ->
+                onEstimateScheduledPointToPoint = { scheduledFor, cityId, pickup, destination, readId ->
+                    submitAction(AppAction(AppActionKind.ESTIMATE_SCHEDULED_BOOKING)) {
+                        dependencies.appCoordinator.estimateScheduledPointToPoint(scheduledFor, cityId, pickup, destination, readId)
+                    }
+                },
+                onEstimateScheduledFixedRoute = { scheduledFor, directionId, readId ->
                     submitAction(AppAction(AppActionKind.ESTIMATE_SCHEDULED_BOOKING, directionId)) {
-                        dependencies.appCoordinator.estimateScheduledFixedRoute(scheduledFor, directionId)
+                        dependencies.appCoordinator.estimateScheduledFixedRoute(scheduledFor, directionId, readId)
                     }
                 },
                 onSchedulePointToPoint = { scheduledFor, cityId, pickup, destination, note, estimate ->

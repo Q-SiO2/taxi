@@ -1,14 +1,15 @@
 # TaxiMobile — Alpha, Pilot and Public Release Roadmap
 
-## Current packet — 27 October 2026
+## Current packet — 28 October 2026
 
 The [city-local input boundary](launch/scheduled-local-input.md) adds a bounded
 authenticated planning read backed by pinned packaged rules, plus shared typed
 response/context and session-owner fences. It resolves skipped/repeated hours
-without choosing a booking. Finish its own verification and implement the
-dependent date/time controls and explicit overlap choice; the passenger input is
-still manual RFC3339 at this checkpoint. Existing estimate/create contracts and
-the full R0-R12 goal remain unchanged.
+without choosing a booking. Its published boundary passed all eight jobs in
+[CI 260](launch/scheduled-local-input-ci-terminal-20261028.json). The subsequent
+working source implements native city/date/time controls and explicit overlap
+choice; verify that source and its platform packages separately. Existing
+estimate/create contracts and the full R0-R12 goal remain unchanged.
 
 The R6/R9 [scheduled review binding](launch/scheduled-review-binding.md) follows
 confirmed stale-review confirmation and command-boundary failures. Bind the

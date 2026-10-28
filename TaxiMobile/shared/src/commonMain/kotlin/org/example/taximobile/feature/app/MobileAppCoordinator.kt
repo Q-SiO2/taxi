@@ -916,7 +916,7 @@ class MobileAppCoordinator(
         }
     }
 
-    suspend fun resolveScheduledLocalTime(cityId: String, cityTimezone: String, localDate: String, localTime: String): AppUiState {
+    suspend fun resolveScheduledLocalTime(cityId: String, cityTimezone: String, localDate: String, localTime: String, readId: String? = null): AppUiState {
         val revision = ++scheduledClockReadRevision
         val gateway = scheduling ?: return offline(Res.string.message_ride_services_unavailable)
         if (appRole != AppRole.PASSENGER || cityId.isBlank() || !isScheduledLocalClockInput(localDate, localTime)) {
@@ -931,7 +931,7 @@ class MobileAppCoordinator(
                 }
                 val refreshed = quoteProductState(account)
                 if (revision != scheduledClockReadRevision) return@readWithSessionRecovery offline(Res.string.scheduled_clock_unavailable)
-                if (refreshed is AppUiState.PassengerReady) refreshed.copy(scheduledLocalTimeOptions = result) else refreshed
+                if (refreshed is AppUiState.PassengerReady) refreshed.copy(scheduledLocalTimeOptions = result, scheduledLocalTimeReadId = readId) else refreshed
             }
         } catch (_: AuthenticationRejectedException) {
             signedOut(Res.string.message_session_expired)
@@ -947,18 +947,21 @@ class MobileAppCoordinator(
         cityId: String?,
         pickup: Coordinates,
         destination: Coordinates,
-    ): AppUiState = scheduledEstimate({ it.matchesPointRequest(scheduledFor, cityId, pickup, destination) }) {
+        readId: String? = null,
+    ): AppUiState = scheduledEstimate(readId, { it.matchesPointRequest(scheduledFor, cityId, pickup, destination) }) {
         it.estimatePointToPoint(scheduledFor, cityId, pickup, destination)
     }
 
     suspend fun estimateScheduledFixedRoute(
         scheduledFor: String,
         directionVersionId: String,
-    ): AppUiState = scheduledEstimate({ it.matchesFixedRouteRequest(scheduledFor, directionVersionId) }) {
+        readId: String? = null,
+    ): AppUiState = scheduledEstimate(readId, { it.matchesFixedRouteRequest(scheduledFor, directionVersionId) }) {
         it.estimateFixedRoute(scheduledFor, directionVersionId)
     }
 
     private suspend fun scheduledEstimate(
+        readId: String?,
         matchesRequest: (ScheduledBookingEstimate) -> Boolean,
         estimate: suspend (ScheduledBookingGateway) -> ScheduledBookingEstimate,
     ): AppUiState {
@@ -969,7 +972,7 @@ class MobileAppCoordinator(
                 if (!matchesRequest(result)) return@readWithSessionRecovery offline(Res.string.scheduled_review_unavailable)
                 val refreshed = quoteProductState(account)
                 if (refreshed is AppUiState.PassengerReady) {
-                    refreshed.copy(scheduledBookingEstimate = result)
+                    refreshed.copy(scheduledBookingEstimate = result, scheduledBookingEstimateReadId = readId)
                 } else refreshed
             }
         } catch (_: AuthenticationRejectedException) {

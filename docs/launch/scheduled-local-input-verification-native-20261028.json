@@ -1,0 +1,174 @@
+{
+  "recorded_utc": "2026-10-28T23:58:02.969304+00:00",
+  "source_predecessor": "d95de9e01ebfdafc8dcc0ba515c20941fd2111a2",
+  "source_sha256": {
+    "TaxiMobile/androidApp/src/main/kotlin/org/example/taximobile/MainActivity.kt": "2b4c87d5955441e1fc3a9cc76372f576ea7bc855ba1558b450f8514dd5307abf",
+    "TaxiMobile/shared/src/commonMain/composeResources/values-ar/strings.xml": "6beaa17bd30f0e9e0a6c908f7e1e487a004a36a615e968095fbc2deb87cd5a30",
+    "TaxiMobile/shared/src/commonMain/composeResources/values-fr/strings.xml": "15183a7d749e4be2f3041c1217ac66f6083876e59b84a3f6d59ce46b71b093c8",
+    "TaxiMobile/shared/src/commonMain/composeResources/values/strings.xml": "01c0fa8750711c3598166837b48c8a482194c99c32f9dafdf1df610720365ac2",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/App.kt": "619c696a98329a2c6abbcfc81ad2cb0ab9461c6343421599faea648661455ac0",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/AppUiState.kt": "a578e16d3712a74f609a002ecdb34b5a90a5502a5dcc1965abba4dc1311d895f",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/MobileAppCoordinator.kt": "58b068dd061b11b4a8d2bf7410a46aa946c427189882335d71ba4faf4985e7e8",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/TaxiMobileScreen.kt": "7882fee15cb5954fcc95376758b00633c4f8b1a5eb5321f3d7c4d733d79cca01",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt": "9f9eb62b2ce81d8149e28e3a97d60718ffd8d655921d9615e0bcf139187aeec5",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/scheduling/ScheduledPickupDraft.kt": "a97ba86c137997e3839808430c4cfb3e0dbf5ff7af588e6b623d4860a4150b54",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/scheduling/ScheduledPickupInput.kt": "2cb67ba5dd68c05ca8b3623b0f353119f3991052c5cb5fba576c30fa547ad343",
+    "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/app/MobileAppCoordinatorTest.kt": "2705d2129dd02278670d4a82ae8b4d8cb7df50e49a456ac6f304a55c28c7cffb",
+    "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/app/QuoteSessionRecoveryTest.kt": "8a79c30658cd2d0dc35e9bebf3566212815c5bddfe3f4ead08c22abdeb934d6e",
+    "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/scheduling/ScheduledPickupDraftTest.kt": "8fb9fad830fabed4aefff96d708c6b6e941e01a7eab2ac1c3cc28b67abd3c8c3",
+    "TaxiMobile/shared/src/iosMain/kotlin/org/example/taximobile/MainViewController.kt": "901605da5a3d1031ed432efebe0534c7309c8745b8e62918cd0d576fc0244c45",
+    "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/ScheduledCityTimeUiTest.kt": "c34a6b3384b66ec422f05026657aeb76554b323ea099cafcc5c67e7071ba45cb",
+    "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/ScheduledInputUiFixtures.kt": "549907d36f9b7e1027ca294043f92bd8fd7ed61207c7b765a6a09e3763d00cb0",
+    "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/ScheduledPickupInputUiTest.kt": "a9202c7c8a6b0e7b9380929d7bcb1dfe48de3c85dff309e4bc46f6e1edd88d3c",
+    "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/ScheduledQuoteBindingUiTest.kt": "2a860242224a8996f4d6070098a9a4610e02da8c6614dd60c013ac42a20eee7f"
+  },
+  "platform": {
+    "android_host": {
+      "tests": 394,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "web_js": {
+      "tests": 86,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "web_wasm": {
+      "tests": 86,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "android_passenger_driver_debug_builds": true
+  },
+  "focused_jvm_classes": {
+    "ScheduledPickupInputUiTest": {
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "ScheduledPickupDraftTest": {
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "MobileAppCoordinatorTest": {
+      "tests": 87,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "QuoteSessionRecoveryTest": {
+      "tests": 21,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "ScheduledCityTimeUiTest": {
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "ScheduledQuoteBindingUiTest": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "catalog_entries_per_language": 1307,
+  "source_build_tool_cases": 121,
+  "web_package": {
+    "release_manifest_sha256": "2edc5f08d6191bee462e9eca973457d24f459093f7cf20af89c51a7e37f9d0fa",
+    "source_bytes_excluding_maps": 29884401,
+    "source_map_count_excluded": 3,
+    "javascript": {
+      "originJsWebApp.js": {
+        "bytes": 6960431,
+        "sha256": "f4b64a247b17d520f0292bc2a07303d742f74f560b300ae2732cd3bc7cfdc618"
+      },
+      "originWasmWebApp.js": {
+        "bytes": 543264,
+        "sha256": "915f667c5d49c3375e7a317d234c82eb2f112b4cbc2aad08e0c5d94a5fc94f6c"
+      }
+    },
+    "caps_unchanged_and_passed": true
+  },
+  "chrome_boot": {
+    "report_sha256": "b6c9596509a33032be3aef7c66fc4e3cfeda1f6afbc715733a7fa453643baeeb",
+    "scenarios": [
+      "SUPPORTED_APPLICANT",
+      "SUPPORTED_OPERATIONS",
+      "UPGRADE_REQUIRED",
+      "PREFLIGHT_FAILURE"
+    ],
+    "passed": 4,
+    "covered_catalog_cases": [],
+    "phase_accepted": false,
+    "deployment_accepted": false
+  },
+  "large_text_captures": {
+    "folded_streets-ar-large.png": {
+      "bytes": 34834,
+      "sha256": "4ec5b8df5abdba075b39e1ab6b844f0231731a152fb0973f33bde17fc565096b"
+    },
+    "folded_streets-en-large.png": {
+      "bytes": 34884,
+      "sha256": "a4644c541f9e9f6e79f694c3c4d27187e381efbbc344cd205c9bad54674ff246"
+    },
+    "folded_streets-fr-large.png": {
+      "bytes": 34417,
+      "sha256": "140290bc47d511a00e412b99ed9b8367d3b671a311f7e11a50ce70912ffbb9fc"
+    },
+    "glazed_machine-ar-large.png": {
+      "bytes": 40600,
+      "sha256": "b7528e002b4c9abd3a7ad42ada3fa65513c4a7bd53232a5aef6daa41849282c0"
+    },
+    "glazed_machine-en-large.png": {
+      "bytes": 45320,
+      "sha256": "d6803187343c200258be469d312c89974abeeffebd25508b989f8983c0207416"
+    },
+    "glazed_machine-fr-large.png": {
+      "bytes": 43392,
+      "sha256": "60e73b0795be5dac61e90e7d3b8c156827058a1b9c8da76d0394dcf45ebf6848"
+    },
+    "notepad-ar-large.png": {
+      "bytes": 30249,
+      "sha256": "206902dc4e63ce0b5cecb9fe7d24b25315ce48788b4eb219f29587b6be547b36"
+    },
+    "notepad-en-large.png": {
+      "bytes": 30375,
+      "sha256": "bda81127e3a6690e518ae4e710233a044188b9dd665f2ff554b2a665591cd7c4"
+    },
+    "notepad-fr-large.png": {
+      "bytes": 29997,
+      "sha256": "1519a7ea940fdb7ae78a362aaabd5f9f36cc7efd348164b53086e13399d54b36"
+    },
+    "street_press-ar-large.png": {
+      "bytes": 31615,
+      "sha256": "f60455c549f715cb506a48187b7800851f5efa9c7d94d0dcc7be4f51afa73959"
+    },
+    "street_press-en-large.png": {
+      "bytes": 31893,
+      "sha256": "dddaee7814a059ff4e4d6f3a75f41c8853803827c2f8b7391edd3a3a5d0fd684"
+    },
+    "street_press-fr-large.png": {
+      "bytes": 31251,
+      "sha256": "39072850ef325c35c6529cad00e4675dbd33be0b09492ecbade04852384305cb"
+    }
+  },
+  "log_sha256": {
+    "native_jvm": "a2de225e445fcbb7386b0863d1185a5cf728370e82257931eda4152137de966e",
+    "android_final": "797b9ab2d8e3e696e6540ef8fc161514b8e4e4cf9c65f375e23d686d20a9f865",
+    "web": "01b6240a081f4afac4573551149d9ac97ad96cba3353d8480f12e71e0917ceb0"
+  },
+  "root_head_and_index_preserved": true,
+  "current_source_immutable_ci_accepted": false,
+  "physical_hosted_provider_operational_pilot_or_public_accepted": false,
+  "overlapping_test_sets_must_not_be_summed": true
+}

@@ -59,33 +59,35 @@ class ScheduledCityTimeUiTest {
 
     @Test fun quote_review_shows_the_server_city_time_and_keeps_the_original_request_instant() = runComposeUiTest {
         val b = bookingFixture()
-        val ui = mutableStateOf(AppUiState.PassengerReady(reviewedPointQuoteInput = b.pickup to b.destination))
+        val ui = mutableStateOf(AppUiState.PassengerReady(reviewedPointQuoteInput = b.pickup to b.destination).withScheduledTestCity())
         val requests = mutableListOf<String>()
         setContent { App(state = ui.value,placeSearchEnabled = false,
-            onEstimateScheduledPointToPoint = { time,_,_,_ -> ui.value = ui.value.copy(scheduledBookingEstimate = ScheduledBookingEstimate(
+            onResolveScheduledLocalTime = clockResponder(ui),
+            onEstimateScheduledPointToPoint = { time,_,_,_,readId -> ui.value = ui.value.copy(scheduledBookingEstimateReadId = readId, scheduledBookingEstimate = ScheduledBookingEstimate(
                 b.cityId,b.operatorId,b.serviceType,null,time,b.cityTimezone,b.pickup,b.destination,b.economics,b.cancellationTerms,"CASH")) },
             onSchedulePointToPoint = { time,_,_,_,_,_ -> requests += time }) }
         onNodeWithText("Schedule").performScrollTo().performClick()
-        onNodeWithText("Pickup time with timezone").performScrollTo().performTextInput(b.scheduledFor)
+        chooseScheduledClock("2026-11-01", "09:30")
         onNodeWithText("Review price and terms").performScrollTo().performClick()
         onNodeWithText("2026-11-01 · 09:30 (UTC+01:00)",substring = true).performScrollTo().assertIsDisplayed()
         onNodeWithText("Confirm scheduled ride").performScrollTo().performClick()
         assertEquals(listOf(b.scheduledFor),requests)
     }
 
-    @Test fun unsupported_quote_time_is_visible_and_cannot_be_confirmed() = runComposeUiTest {
+    @Test fun unsupported_quote_timezone_is_unreviewable_and_cannot_be_confirmed() = runComposeUiTest {
         val b = bookingFixture()
-        val ui = mutableStateOf(AppUiState.PassengerReady(reviewedPointQuoteInput = b.pickup to b.destination))
+        val ui = mutableStateOf(AppUiState.PassengerReady(reviewedPointQuoteInput = b.pickup to b.destination).withScheduledTestCity())
         var commands = 0
         setContent { App(state = ui.value,placeSearchEnabled = false,
-            onEstimateScheduledPointToPoint = { time,_,_,_ -> ui.value = ui.value.copy(scheduledBookingEstimate = ScheduledBookingEstimate(
+            onResolveScheduledLocalTime = clockResponder(ui),
+            onEstimateScheduledPointToPoint = { time,_,_,_,readId -> ui.value = ui.value.copy(scheduledBookingEstimateReadId = readId, scheduledBookingEstimate = ScheduledBookingEstimate(
                 b.cityId,b.operatorId,b.serviceType,null,time,"PRIVATE-invalid",b.pickup,b.destination,b.economics,b.cancellationTerms,"CASH")) },
             onSchedulePointToPoint = { _,_,_,_,_,_ -> commands++ }) }
         onNodeWithText("Schedule").performScrollTo().performClick()
-        onNodeWithText("Pickup time with timezone").performScrollTo().performTextInput(b.scheduledFor)
+        chooseScheduledClock("2026-11-01", "09:30")
         onNodeWithText("Review price and terms").performScrollTo().performClick()
-        onNodeWithText("Time unavailable. Refresh the booking details.").performScrollTo().assertIsDisplayed()
-        onNodeWithText("Confirm scheduled ride").performScrollTo().assertIsNotEnabled()
+        onNodeWithText("Trip review unavailable. Review the time, route and price again.").performScrollTo().assertIsDisplayed()
+        onNodeWithText("Confirm scheduled ride").assertDoesNotExist()
         onAllNodesWithText("PRIVATE-invalid",substring = true).assertCountEquals(0)
         assertEquals(0,commands)
     }

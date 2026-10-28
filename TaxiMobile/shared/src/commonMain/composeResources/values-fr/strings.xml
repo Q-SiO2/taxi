@@ -1301,4 +1301,15 @@
     <string name="web_logout_local_title">Déconnecté sur cet appareil</string>
     <string name="web_logout_unconfirmed">La déconnexion côté serveur reste non confirmée. Fermez cette fenêtre et demandez à votre administrateur de révoquer la session.</string>
     <string name="scheduled_clock_unavailable">Heure indisponible. Vérifiez la ville et réessayez.</string>
+    <string name="scheduled_city_choose">Choisir la ville</string>
+    <string name="scheduled_date">Date</string>
+    <string name="scheduled_time">Heure</string>
+    <string name="scheduled_date_choose">Choisir la date</string>
+    <string name="scheduled_time_choose">Choisir l’heure</string>
+    <string name="scheduled_city_unavailable">Choisissez une ville disponible.</string>
+    <string name="scheduled_time_gap">Cette heure n’existe pas ici. Choisissez une autre heure.</string>
+    <string name="scheduled_time_overlap">Choisissez l’heure de départ.</string>
+    <string name="scheduled_time_check">Vérifier l’heure</string>
+    <string name="scheduled_picker_apply">Choisir</string>
+    <string name="scheduled_picker_cancel">Annuler</string>
 </resources>

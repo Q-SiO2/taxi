@@ -1301,4 +1301,15 @@
     <string name="web_logout_local_title">Signed out on this device</string>
     <string name="web_logout_unconfirmed">Server sign-out could not be confirmed. Close this window and ask your operations administrator to revoke the session.</string>
     <string name="scheduled_clock_unavailable">Pickup time unavailable. Check the city and try again.</string>
+    <string name="scheduled_city_choose">Choose city</string>
+    <string name="scheduled_date">Date</string>
+    <string name="scheduled_time">Time</string>
+    <string name="scheduled_date_choose">Choose date</string>
+    <string name="scheduled_time_choose">Choose time</string>
+    <string name="scheduled_city_unavailable">Choose an available city.</string>
+    <string name="scheduled_time_gap">This time is skipped here. Choose another time.</string>
+    <string name="scheduled_time_overlap">Choose which pickup time.</string>
+    <string name="scheduled_time_check">Check pickup time</string>
+    <string name="scheduled_picker_apply">Use this</string>
+    <string name="scheduled_picker_cancel">Cancel</string>
 </resources>

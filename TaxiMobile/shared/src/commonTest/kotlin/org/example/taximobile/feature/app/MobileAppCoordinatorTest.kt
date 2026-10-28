@@ -1154,8 +1154,9 @@ class MobileAppCoordinatorTest {
             override suspend fun localTimeOptions(cityId: String, cityTimezone: String, localDate: String, localTime: String) = value.also { reads++ }
         }
         val coordinator = MobileAppCoordinator(AppRole.PASSENGER, passengerAuthentication(), rides = PassengerHistoryDetailGateway(), scheduling = gateway)
-        val result = assertIs<AppUiState.PassengerReady>(coordinator.resolveScheduledLocalTime("city", "Africa/Casablanca", "2026-11-01", "09:30"))
+        val result = assertIs<AppUiState.PassengerReady>(coordinator.resolveScheduledLocalTime("city", "Africa/Casablanca", "2026-11-01", "09:30", "clock-read-1"))
         assertEquals(value, result.scheduledLocalTimeOptions)
+        assertEquals("clock-read-1", result.scheduledLocalTimeReadId)
         assertNull(result.scheduledBookingEstimate)
         assertEquals(1, reads)
     }

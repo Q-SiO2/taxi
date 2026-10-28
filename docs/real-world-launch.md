@@ -17,9 +17,14 @@ sequence existing requirements; they do not create a competing definition of don
 
 The current R6/R9 [city-local input boundary](launch/scheduled-local-input.md)
 implements a non-mutating clock-planning read and shared response/owner fences,
-using pinned packaged rules. Verify that source separately, then complete native
-date/time controls and explicit overlap selection. The input remains manual at
-this checkpoint; the backend read is not a quote or booking approval.
+using pinned packaged rules. The later working source adds native date/time
+controls, explicit city choice and repeated-hour selection. That source still
+needs candidate-linked verification; the backend read is not a quote or booking
+approval.
+Its published source passed all eight jobs in
+[CI 260](launch/scheduled-local-input-ci-terminal-20261028.json), including
+1,513 backend tests and four Chrome boot scenarios. Native picker work started
+after that source snapshot and requires its own candidate-linked verification.
 
 The R6/R9 [scheduled review binding](launch/scheduled-review-binding.md)
 corrects confirmed stale-estimate confirmation and command-boundary failures.

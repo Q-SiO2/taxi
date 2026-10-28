@@ -166,9 +166,10 @@ class QuoteSessionRecoveryTest {
     @Test fun scheduled_point_quote_refreshes_without_submitting_booking() = runBlocking {
         val f = QuoteFixture()
         val state = assertIs<AppUiState.PassengerReady>(
-            f.app.estimateScheduledPointToPoint(SCHEDULED_FOR, "city", PICKUP, DESTINATION),
+            f.app.estimateScheduledPointToPoint(SCHEDULED_FOR, "city", PICKUP, DESTINATION, "point-review-1"),
         )
         assertEquals(SCHEDULED_FOR, state.scheduledBookingEstimate?.scheduledFor)
+        assertEquals("point-review-1", state.scheduledBookingEstimateReadId)
         assertEquals("40.00", state.scheduledBookingEstimate?.economics?.passengerTotal)
         assertEquals(1, f.auth.refreshes)
         assertEquals(1, f.scheduling.quotes)
@@ -178,9 +179,10 @@ class QuoteSessionRecoveryTest {
     @Test fun scheduled_fixed_quote_refreshes_without_submitting_booking() = runBlocking {
         val f = QuoteFixture()
         val state = assertIs<AppUiState.PassengerReady>(
-            f.app.estimateScheduledFixedRoute(SCHEDULED_FOR, "direction"),
+            f.app.estimateScheduledFixedRoute(SCHEDULED_FOR, "direction", "fixed-review-1"),
         )
         assertEquals("direction", state.scheduledBookingEstimate?.fixedRouteDirectionVersionId)
+        assertEquals("fixed-review-1", state.scheduledBookingEstimateReadId)
         assertEquals(1, f.auth.refreshes)
         assertEquals(1, f.scheduling.quotes)
         assertEquals(0, f.scheduling.commands)

@@ -34,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,6 +60,10 @@ import org.example.taximobile.feature.app.AppUiState
 import org.example.taximobile.feature.scheduling.scheduledBookingStatusLabel
 import org.example.taximobile.feature.scheduling.scheduledFinancialOutcomeLabel
 import org.example.taximobile.feature.scheduling.ScheduledBookingPageControls
+import org.example.taximobile.feature.scheduling.ScheduledPickupDraft
+import org.example.taximobile.feature.scheduling.ScheduledPickupInput
+import org.example.taximobile.feature.scheduling.ScheduledCityChooser
+import org.example.taximobile.feature.scheduling.newScheduledReadId
 import org.example.taximobile.feature.rides.RideCoordinationActions
 import org.example.taximobile.feature.rides.RideLatestCoordinationMessage
 import org.example.taximobile.feature.app.AppAction
@@ -208,8 +213,9 @@ internal fun PassengerHome(
     onLoadFixedRoutes: (String) -> Unit,
     onEstimateFixedRoute: (String) -> Unit,
     onRequestFixedRoute: (String, RidePaymentMethod) -> Unit,
-    onEstimateScheduledPointToPoint: (String, String?, Coordinates, Coordinates) -> Unit,
-    onEstimateScheduledFixedRoute: (String, String) -> Unit,
+    onResolveScheduledLocalTime: (String, String, String, String, String) -> Unit,
+    onEstimateScheduledPointToPoint: (String, String?, Coordinates, Coordinates, String) -> Unit,
+    onEstimateScheduledFixedRoute: (String, String, String) -> Unit,
     onSchedulePointToPoint: (String, String?, Coordinates, Coordinates, String?, ScheduledBookingEstimate) -> Unit,
     onScheduleFixedRoute: (String, String, String?, ScheduledBookingEstimate) -> Unit,
     onCancelScheduledBooking: (String) -> Unit,
@@ -498,6 +504,7 @@ internal fun PassengerHome(
                     form = form,
                     selectedFixedDirectionId = selectedFixedDirectionId,
                     onBack = { panel = PassengerSheetPanel.Ride },
+                    onResolveTime = onResolveScheduledLocalTime,
                     onEstimatePointToPoint = onEstimateScheduledPointToPoint,
                     onEstimateFixedRoute = onEstimateScheduledFixedRoute,
                     onSchedulePointToPoint = onSchedulePointToPoint,
@@ -861,15 +868,15 @@ private fun PassengerScheduledSheet(
     form: PassengerTripFormState,
     selectedFixedDirectionId: String?,
     onBack: () -> Unit,
-    onEstimatePointToPoint: (String, String?, Coordinates, Coordinates) -> Unit,
-    onEstimateFixedRoute: (String, String) -> Unit,
+    onResolveTime: (String, String, String, String, String) -> Unit,
+    onEstimatePointToPoint: (String, String?, Coordinates, Coordinates, String) -> Unit,
+    onEstimateFixedRoute: (String, String, String) -> Unit,
     onSchedulePointToPoint: (String, String?, Coordinates, Coordinates, String?, ScheduledBookingEstimate) -> Unit,
     onScheduleFixedRoute: (String, String, String?, ScheduledBookingEstimate) -> Unit,
     onCancel: (String) -> Unit,
     onPage: (Int) -> Unit,
 ) {
     val taxiColors = TaxiTheme.colors
-    var scheduledFor by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
     var useFixedRoute by remember { mutableStateOf(false) }
     var cancelCandidate by remember { mutableStateOf<String?>(null) }
@@ -881,18 +888,26 @@ private fun PassengerScheduledSheet(
     val selectedRoute = state.fixedRouteCatalog?.directions?.firstOrNull {
         it.id == selectedFixedDirectionId && it.scheduledBookingEnabled
     }
-    val requestKey = if (useFixedRoute) {
-        "FIXED|${selectedRoute?.id}|${scheduledFor.trim()}"
-    } else {
-        "POINT|${form.trip}|${scheduledFor.trim()}|${state.serviceCities.firstOrNull()?.id}"
-    }
+    var selectedPointCityId by rememberSaveable { mutableStateOf<String?>(null) }
+    val availableCities = state.serviceCities.filter { it.bookingAvailable }
+    val pointCity = availableCities.firstOrNull { it.id == selectedPointCityId } ?: availableCities.singleOrNull()
+    val selectedCity = if (useFixedRoute) state.fixedRouteCatalog?.city?.takeIf { selectedRoute != null && it.bookingAvailable } else pointCity
+    val tripContext = "${if (useFixedRoute) "FIXED|${selectedRoute?.id}" else "POINT|${form.trip}"}|${selectedCity?.id}|${selectedCity?.timezone}|${selectedCity?.bookingAvailable}"
+    val clockDraft = rememberSaveable(tripContext, saver = ScheduledPickupDraft.Saver) { ScheduledPickupDraft() }
+    val scheduledFor = clockDraft.selectedInstant.orEmpty()
+    val selectionRevision = clockDraft.selectionRevision
+    val requestKey = "$tripContext|$scheduledFor|${clockDraft.acceptedReadId}|$selectionRevision"
     var reviewedRequestKey by remember { mutableStateOf<String?>(null) }
+    var reviewReadId by remember { mutableStateOf<String?>(null) }
     fun matchesRequest(estimate: org.example.taximobile.domain.scheduling.ScheduledBookingEstimate): Boolean =
-        if (useFixedRoute) selectedRoute?.let { estimate.matchesFixedRouteRequest(scheduledFor.trim(), it.id) } == true
+        if (scheduledFor.isBlank() || clockDraft.selectedInstant != scheduledFor || clockDraft.selectionRevision != selectionRevision ||
+            selectedCity == null || estimate.cityId != selectedCity.id || estimate.cityTimezone != selectedCity.timezone ||
+            (!useFixedRoute && selectedPointCityId != null && selectedPointCityId != selectedCity.id)) false
+        else if (useFixedRoute) selectedRoute?.let { estimate.matchesFixedRouteRequest(scheduledFor, it.id) } == true
         else form.trip?.let { (pickup, destination) ->
-            estimate.matchesPointRequest(scheduledFor.trim(), state.serviceCities.firstOrNull()?.id, pickup, destination)
+            estimate.matchesPointRequest(scheduledFor, selectedCity.id, pickup, destination)
         } == true
-    val candidateEstimate = state.scheduledBookingEstimate?.takeIf { reviewedRequestKey == requestKey }
+    val candidateEstimate = state.scheduledBookingEstimate?.takeIf { reviewedRequestKey == requestKey && reviewReadId != null && state.scheduledBookingEstimateReadId == reviewReadId }
     val reviewedEstimate = candidateEstimate?.takeIf(::matchesRequest)
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Text(stringResource(Res.string.scheduled_title), style = MaterialTheme.typography.headlineSmall)
@@ -910,14 +925,11 @@ private fun PassengerScheduledSheet(
         onFirstSelected = { useFixedRoute = false },
         onSecondSelected = { useFixedRoute = true },
     )
-    OutlinedTextField(
-        value = scheduledFor,
-        onValueChange = { scheduledFor = it.take(40) },
-        modifier = Modifier.fillMaxWidth(),
-        label = { Text(stringResource(Res.string.scheduled_pickup_time)) },
-        supportingText = { Text(stringResource(Res.string.scheduled_pickup_example)) },
-        singleLine = true,
-    )
+    if (useFixedRoute) selectedCity?.let { Text(it.name.preferred(Locale.current.language)) }
+    else ScheduledCityChooser(state.serviceCities, pointCity) { selectedPointCityId = it }
+    ScheduledPickupInput(clockDraft, selectedCity, state.scheduledLocalTimeReadId, state.scheduledLocalTimeOptions,
+        busy = pendingAction != null, checking = pendingAction?.kind == AppActionKind.ESTIMATE_SCHEDULED_BOOKING,
+        onResolve = onResolveTime)
     OutlinedTextField(
         value = note,
         onValueChange = { note = it.take(1000) },
@@ -947,28 +959,24 @@ private fun PassengerScheduledSheet(
         )
     }
     Text(stringResource(Res.string.scheduled_cash_notice), color = taxiColors.Ink500)
-    TaxiButton(
+    if (scheduledFor.isNotBlank()) TaxiButton(
         label = stringResource(Res.string.scheduled_review_price),
         onClick = {
-            reviewedRequestKey = requestKey
-            if (useFixedRoute) {
-                selectedRoute?.let { onEstimateFixedRoute(scheduledFor.trim(), it.id) }
-            } else {
-                form.trip?.let { (pickup, destination) ->
-                    onEstimatePointToPoint(
-                        scheduledFor.trim(),
-                        state.serviceCities.firstOrNull()?.id,
-                        pickup,
-                        destination,
-                    )
+            if (clockDraft.selectedInstant == scheduledFor && clockDraft.selectionRevision == selectionRevision && selectedCity != null) {
+                val id = newScheduledReadId()
+                reviewedRequestKey = requestKey; reviewReadId = id
+                if (useFixedRoute) {
+                    selectedRoute?.let { onEstimateFixedRoute(scheduledFor, it.id, id) }
+                } else {
+                    form.trip?.let { (pickup, destination) -> onEstimatePointToPoint(scheduledFor, selectedCity.id, pickup, destination, id) }
                 }
             }
         },
         enabled = scheduledFor.hasExplicitTimezone() &&
             (if (useFixedRoute) selectedRoute != null else form.trip != null) && pendingAction == null,
-        loading = pendingAction.isPending(AppActionKind.ESTIMATE_SCHEDULED_BOOKING),
+        loading = pendingAction?.kind == AppActionKind.ESTIMATE_SCHEDULED_BOOKING,
     )
-    if (candidateEstimate != null && reviewedEstimate == null && pendingAction == null) {
+    if (reviewReadId != null && reviewedRequestKey == requestKey && reviewedEstimate == null && pendingAction == null) {
         Text(stringResource(Res.string.scheduled_review_unavailable), color = taxiColors.Warning600)
     }
     reviewedEstimate?.let { estimate ->
@@ -998,7 +1006,7 @@ private fun PassengerScheduledSheet(
                     form.trip?.let { (pickup, destination) ->
                         onSchedulePointToPoint(
                             scheduledFor.trim(),
-                            state.serviceCities.firstOrNull()?.id,
+                            selectedCity?.id,
                             pickup,
                             destination,
                             note.ifBlank { null },

@@ -49,30 +49,47 @@ logout/replacement cannot publish the previous owner's options. No booking
 command is invoked. A gateway without the capability returns an explicit null
 that becomes localized unavailable copy rather than invented options.
 
-## Remaining input integration
+## Native input integration in the next source candidate
 
-The passenger screen still uses manual RFC3339 input at this checkpoint. This
-packet delivers the backend and shared read boundary; it does not claim a
-completed passenger picker. Continue with the following directly dependent work:
+The working source after published `d95de9e` replaces manual RFC3339 entry with
+date/calendar and 24-hour time controls. Typed Arabic and Eastern Arabic digits
+normalize before the strict ASCII wire request. The point flow shows the sole
+available city by name or requires an explicit city choice among multiple cities;
+it no longer uses catalog order at review/create. Fixed-route scheduling uses its
+published direction's catalog city. The existing Android and iOS action gate
+starts both time and fare reads.
 
-1. Wire compact date/calendar and 24-hour time controls with visible city context
-   through the existing Android/iOS action gate. Keep typed correction available.
-2. Tag each user-requested clock read with a fresh presentation identity. Match
-   that identity plus current city/timezone/date/time and trip context before
-   adopting options. Retained matching data after a failed read must not be
-   mistaken for a fresh successful response. Clear selection/review on edits and
-   navigation-owner changes; reject delayed replies.
-3. Keep zero-option gaps unconfirmable with an adjustment message. Select a unique
-   option, or require an explicit visible offset choice for an overlap. Only
-   then obtain the existing backend fare/terms review. A clock read never submits
-   creation; confirmation still passes the independent estimate/request fence.
-4. Preserve validated selection through ordinary price readback while keeping
-   it session-owned and tied to the current form. Handle missing capability,
-   retry, metadata/rule changes, composition/process recreation and cancellation.
-   Do not use cached clock options as pricing or booking authority.
-5. Verify point/fixed-route flows, all languages/styles/RTL, 200% text and actual
-   picker/keyboard behavior. New UI/native wiring and exposed states require
-   their own tests and immutable platform/package evidence.
+Each clock request carries a new presentation-only read identity, and each price
+review carries a separate one. A result is adopted only for the current city,
+zone, date, time, form and session owner. Editing or changing city, route or
+points drops the selected instant and old review. A successful single option
+selects its exact UTC instant; a gap shows correction copy; a repeated hour
+requires an explicit visible offset choice. The time-check button remains
+available after selection so changed rules can be checked again. Starting that
+read clears previous clock and price authority even if the response fails.
+Only a selected instant can start the existing backend price/terms review, and
+confirmation still has an independent estimate/request match.
+
+The saveable form retains date and time text only. It does not save the clock
+result, read identities, chosen instant or price authority across recreation.
+The new JVM UI tests cover Fès after another first city, fixed catalog city,
+gap, explicit overlap selection and changed review, failed recheck, calendar/time
+controls, plus all twelve language/style combinations at 200% text. Draft tests
+cover digit normalization, stale reads, city metadata and restoration. These are
+source checks; candidate-linked Android/iOS, browser package, physical device,
+provider and operational acceptance are still required. The local JS and Wasm
+browser suites passed 86 cases each, the production package passed unchanged
+size caps, and four Chrome compatibility/boot scenarios passed with zero T4
+catalog-case or deployment acceptance. The refreshed Android host suite passed
+394 cases, and both passenger and driver debug APKs built. These local outputs
+are not signed distribution or physical-device evidence.
+
+The [native source-hash checkpoint](scheduled-local-input-verification-native-20261028.json)
+records the 19 changed source files, six affected JVM classes (134 cases), 394
+Android-host cases, 86 JS and 86 Wasm browser cases, both debug role builds,
+the unchanged web-package caps and twelve large-text language/style captures.
+Test sets overlap and must not be summed. It is local source evidence until the
+exact candidate passes its own immutable CI run.
 
 ## Evidence and limits
 
@@ -93,9 +110,14 @@ commitment, event, idempotency and outbox counts remain unchanged. The separate
 owned test cluster is stopped after verification, with its data retained. The
 preserved database cluster and hosted resources are untouched.
 
-Fresh CI must verify this successor's full backend suite, native products,
-dependency/image audits and production web caps/boot. Local source evidence and
-the predecessor's CI cannot establish those results. Physical Android remains
+The published `d95de9e` source boundary now has [terminal CI 260 evidence](scheduled-local-input-ci-terminal-20261028.json):
+all eight required jobs passed against the identical source tree, with 1,513
+backend tests, eight disposable TLS transport cases and four Chrome boot
+scenarios. The web scenarios cover compatibility and loader boot only; their
+T4 catalog and deployment acceptance fields remain false. Unsigned iOS
+simulator products are build evidence only. This run does not cover the
+subsequent, still-unpublished native date/time and city-selection changes in
+this packet; they require their own source and CI verification. Physical Android remains
 deferred; signing/store, iOS devices, low-end latency, linguistic/assistive,
 hosted/provider, operational, pilot and public acceptance remain separate.
 Preserve the Trial-only hosting stop, both volumes, rollback archives and

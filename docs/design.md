@@ -336,8 +336,11 @@ command. Missing rules are unavailable, a gap yields no instant, and an overlap
 requires a visible offset choice. Match each user-requested read and current
 form/owner context before accepting options; retained data after a failed read
 must not impersonate a new successful response. Only the selected explicit instant
-enters the ordinary backend price/terms review. The native controls remain a
-dependent implementation step; the current screen still uses manual RFC3339.
+enters the ordinary backend price/terms review. The later working source uses
+native date/calendar and 24-hour time controls, explicit city selection and
+presentation-only identities for clock and price reads. It retains typed Arabic
+digit correction and clears read/review authority on refresh or recreation.
+Platform and device acceptance remain separate from source implementation.
 
 Once a ride is created, the passenger product reloads its authorized detailed
 ride and renders the confirmed pickup, destination, route line, distance and

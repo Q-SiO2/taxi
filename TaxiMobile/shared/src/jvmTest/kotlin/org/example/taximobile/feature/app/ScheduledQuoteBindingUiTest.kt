@@ -34,11 +34,12 @@ class ScheduledQuoteBindingUiTest {
         val estimate = ScheduledBookingEstimate(b.cityId, b.operatorId, "ON_DEMAND", null, b.scheduledFor,
             b.cityTimezone, b.pickup, b.destination, b.economics, b.cancellationTerms, "CASH")
         val reads = mutableListOf<String>()
-        setContent { App(state = AppUiState.PassengerReady(reviewedPointQuoteInput = b.pickup to b.destination,
-            scheduledBookingEstimate = estimate), placeSearchEnabled = false,
-            onEstimateScheduledPointToPoint = { time, _, _, _ -> reads += time }) }
+        val ui = mutableStateOf(AppUiState.PassengerReady(reviewedPointQuoteInput = b.pickup to b.destination,
+            scheduledBookingEstimate = estimate).withScheduledTestCity())
+        setContent { App(state = ui.value, placeSearchEnabled = false, onResolveScheduledLocalTime = clockResponder(ui),
+            onEstimateScheduledPointToPoint = { time, _, _, _, _ -> reads += time }) }
         onNodeWithText("Schedule").performScrollTo().performClick()
-        onNodeWithText("Pickup time with timezone").performScrollTo().performTextInput("2026-11-02T08:30:00Z")
+        chooseScheduledClock("2026-11-02", "09:30")
         onNodeWithText("Review price and terms").performScrollTo().performClick()
         assertEquals(listOf("2026-11-02T08:30:00Z"), reads)
         onNodeWithText("Confirm scheduled ride").assertDoesNotExist()
@@ -49,15 +50,15 @@ class ScheduledQuoteBindingUiTest {
         val estimate = ScheduledBookingEstimate(b.cityId, b.operatorId, "ON_DEMAND", null, b.scheduledFor,
             b.cityTimezone, b.pickup, b.destination, b.economics, b.cancellationTerms, "CASH")
         val ui = mutableStateOf(AppUiState.PassengerReady(reviewedPointQuoteInput = b.pickup to b.destination,
-            scheduledBookingEstimate = estimate))
+            scheduledBookingEstimate = estimate).withScheduledTestCity())
         var correctResponse = false
         val commands = mutableListOf<String>()
-        setContent { App(state = ui.value, placeSearchEnabled = false,
-            onEstimateScheduledPointToPoint = { time, _, _, _ ->
-                if (correctResponse) ui.value = ui.value.copy(scheduledBookingEstimate = estimate.copy(scheduledFor = time))
+        setContent { App(state = ui.value, placeSearchEnabled = false, onResolveScheduledLocalTime = clockResponder(ui),
+            onEstimateScheduledPointToPoint = { time, _, _, _, readId ->
+                if (correctResponse) ui.value = ui.value.copy(scheduledBookingEstimateReadId = readId, scheduledBookingEstimate = estimate.copy(scheduledFor = time))
             }, onSchedulePointToPoint = { time, _, _, _, _, _ -> commands += time }) }
         onNodeWithText("Schedule").performScrollTo().performClick()
-        onNodeWithText("Pickup time with timezone").performScrollTo().performTextInput("2026-11-02T08:30:00Z")
+        chooseScheduledClock("2026-11-02", "09:30")
         onNodeWithText("Review price and terms").performScrollTo().performClick()
         onNodeWithText("Trip review unavailable. Review the time, route and price again.").performScrollTo().assertIsDisplayed()
         onNodeWithText("Confirm scheduled ride").assertDoesNotExist()
@@ -67,34 +68,34 @@ class ScheduledQuoteBindingUiTest {
         assertEquals(listOf("2026-11-02T08:30:00Z"), commands)
     }
 
-    @Test fun server_utc_normalization_does_not_reject_the_same_requested_instant() = runComposeUiTest {
+    @Test fun server_offset_normalization_does_not_replace_the_selected_instant() = runComposeUiTest {
         val b = bookingFixture()
         val estimate = ScheduledBookingEstimate(b.cityId, b.operatorId, "ON_DEMAND", null, b.scheduledFor,
             b.cityTimezone, b.pickup, b.destination, b.economics, b.cancellationTerms, "CASH")
-        val ui = mutableStateOf(AppUiState.PassengerReady(reviewedPointQuoteInput = b.pickup to b.destination))
+        val ui = mutableStateOf(AppUiState.PassengerReady(reviewedPointQuoteInput = b.pickup to b.destination).withScheduledTestCity())
         val commands = mutableListOf<String>()
-        setContent { App(state = ui.value, placeSearchEnabled = false,
-            onEstimateScheduledPointToPoint = { _, _, _, _ -> ui.value = ui.value.copy(scheduledBookingEstimate = estimate) },
+        setContent { App(state = ui.value, placeSearchEnabled = false, onResolveScheduledLocalTime = clockResponder(ui),
+            onEstimateScheduledPointToPoint = { _, _, _, _, readId -> ui.value = ui.value.copy(scheduledBookingEstimateReadId = readId, scheduledBookingEstimate = estimate.copy(scheduledFor = "2026-11-01T09:30:00+01:00")) },
             onSchedulePointToPoint = { time, _, _, _, _, _ -> commands += time }) }
         onNodeWithText("Schedule").performScrollTo().performClick()
-        onNodeWithText("Pickup time with timezone").performScrollTo().performTextInput("2026-11-01T09:30:00+01:00")
+        chooseScheduledClock("2026-11-01", "09:30")
         onNodeWithText("Review price and terms").performScrollTo().performClick()
         onNodeWithText("Confirm scheduled ride").performScrollTo().assertIsEnabled().performClick()
-        assertEquals(listOf("2026-11-01T09:30:00+01:00"), commands)
+        assertEquals(listOf("2026-11-01T08:30:00Z"), commands)
     }
 
     @Test fun changed_trip_warning_wraps_in_every_language_and_style_at_two_hundred_percent_text() {
         val original = Locale.getDefault()
         try {
             val labels = listOf(
-                listOf("en", "Schedule", "Pickup time with timezone", "Review price and terms",
+                listOf("en", "Schedule", "Review price and terms",
                     "Trip review unavailable. Review the time, route and price again."),
-                listOf("fr", "Planifier", "Heure de prise en charge avec fuseau", "Vérifier le prix et les conditions",
+                listOf("fr", "Planifier", "Vérifier le prix et les conditions",
                     "Vérification indisponible. Revoyez l’heure, le trajet et le prix."),
-                listOf("ar", "جدولة", "وقت الانطلاق مع المنطقة الزمنية", "مراجعة السعر والشروط",
+                listOf("ar", "جدولة", "مراجعة السعر والشروط",
                     "المراجعة غير متاحة. راجع الوقت والمسار والسعر."),
             )
-            for ((language, schedule, pickup, review, warning) in labels) {
+            for ((language, schedule, review, warning) in labels) {
                 Locale.setDefault(Locale.forLanguageTag(language))
                 for (style in TaxiStyle.entries) {
                     val preferences = TaxiStylePreferences(object : TaxiStyleStore {
@@ -105,16 +106,18 @@ class ScheduledQuoteBindingUiTest {
                     val estimate = ScheduledBookingEstimate(b.cityId, b.operatorId, "ON_DEMAND", null, b.scheduledFor,
                         b.cityTimezone, b.pickup, b.destination, b.economics, b.cancellationTerms, "CASH")
                     var commands = 0
+                    val ui = mutableStateOf(AppUiState.PassengerReady(reviewedPointQuoteInput = b.pickup to b.destination,
+                        scheduledBookingEstimate = estimate).withScheduledTestCity())
                     runComposeUiTest {
                         setContent { CompositionLocalProvider(LocalDensity provides Density(1f, 2f)) {
                             Box(Modifier.size(360.dp, 800.dp).testTag("scheduled-review-viewport")) {
-                                App(state = AppUiState.PassengerReady(reviewedPointQuoteInput = b.pickup to b.destination,
-                                    scheduledBookingEstimate = estimate), placeSearchEnabled = false, stylePreferences = preferences,
+                                App(state = ui.value, placeSearchEnabled = false, stylePreferences = preferences,
+                                    onResolveScheduledLocalTime = clockResponder(ui),
                                     onSchedulePointToPoint = { _, _, _, _, _, _ -> commands++ })
                             }
                         } }
                         onNodeWithText(schedule).performScrollTo().performClick()
-                        onNodeWithText(pickup).performScrollTo().performTextInput("2026-11-02T08:30:00Z")
+                        chooseScheduledClock("2026-11-02", "09:30", language)
                         onNodeWithText(review).performScrollTo().performClick()
                         val message = onNodeWithText(warning)
                         message.performScrollTo().assertIsDisplayed()

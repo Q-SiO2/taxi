@@ -1301,4 +1301,15 @@
     <string name="web_logout_local_title">تم تسجيل الخروج على هذا الجهاز</string>
     <string name="web_logout_unconfirmed">تعذر تأكيد إلغاء الجلسة على الخادم. أغلق هذه النافذة واطلب من مسؤول العمليات إلغاء الجلسة.</string>
     <string name="scheduled_clock_unavailable">وقت الانطلاق غير متاح. تحقق من المدينة وأعد المحاولة.</string>
+    <string name="scheduled_city_choose">اختر المدينة</string>
+    <string name="scheduled_date">التاريخ</string>
+    <string name="scheduled_time">الوقت</string>
+    <string name="scheduled_date_choose">اختر التاريخ</string>
+    <string name="scheduled_time_choose">اختر الوقت</string>
+    <string name="scheduled_city_unavailable">اختر مدينة متاحة.</string>
+    <string name="scheduled_time_gap">هذا الوقت غير موجود هنا. اختر وقتًا آخر.</string>
+    <string name="scheduled_time_overlap">اختر وقت الانطلاق المقصود.</string>
+    <string name="scheduled_time_check">تحقق من وقت الانطلاق</string>
+    <string name="scheduled_picker_apply">اختيار</string>
+    <string name="scheduled_picker_cancel">إلغاء</string>
 </resources>

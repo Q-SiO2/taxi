@@ -1,0 +1,39 @@
+{
+  "recorded_utc": "2026-10-28T18:57:51+00:00",
+  "source_head": "d95de9e01ebfdafc8dcc0ba515c20941fd2111a2",
+  "tested_merge_commit": "e29e591a829d1fa2067815904de5b7c7ae7460d7",
+  "tree": "fc9336553e8f3ceec0ca68379cc04edea28fcb76",
+  "run_id": 40521199223,
+  "run_number": 260,
+  "status": "completed",
+  "conclusion": "success",
+  "required_jobs": {
+    "backend": {"id": 122248452715, "status": "completed", "conclusion": "success"},
+    "dependency-review": {"id": 122250306524, "status": "completed", "conclusion": "success"},
+    "documentation-and-provenance": {"id": 122248453443, "status": "completed", "conclusion": "success"},
+    "gradle-dependency-submission": {"id": 122248453109, "status": "completed", "conclusion": "success"},
+    "gradle-wrapper-integrity": {"id": 122248453118, "status": "completed", "conclusion": "success"},
+    "ios-shared": {"id": 122248452443, "status": "completed", "conclusion": "success"},
+    "mobile": {"id": 122248453052, "status": "completed", "conclusion": "success"},
+    "web": {"id": 122248453129, "status": "completed", "conclusion": "success"}
+  },
+  "full_backend_suite": {"tests": 1513, "failures": 0, "errors": 0, "skipped": 0},
+  "tls_cases": 8,
+  "tls_baseline_restored": true,
+  "backend_junit_sha256": "69f9a2e9e4646b1e0d0937830805b4a55ce008dee330dd56bc1c151b743a170e",
+  "artifacts": {
+    "tls": {"id": 12741573845, "zip_sha256": "6af73840bbcc000ffd11edd8f107d458f2c62844525523cf7d1b2a8e26b19b1e"},
+    "provenance": {"id": 12741494896, "zip_sha256": "77bd07594accd01ac88b579fa7fa35fdf5714520c8d950998445a92f78eb8ef6"},
+    "web_boot": {"id": 12742841671, "zip_sha256": "02a91463af60274bdf4af234d78ba769a245f4d6a6ad5f1673aa462fb6baed69"}
+  },
+  "web_boot": {
+    "scenarios": ["SUPPORTED_APPLICANT", "SUPPORTED_OPERATIONS", "UPGRADE_REQUIRED", "PREFLIGHT_FAILURE"],
+    "passed": 4,
+    "covered_catalog_cases": [],
+    "phase_accepted": false,
+    "deployment_accepted": false
+  },
+  "ios_products": "unsigned Release simulator passenger and driver; no device/distribution acceptance",
+  "root_head_and_index_preserved": true,
+  "later_source_physical_hosted_provider_operational_pilot_or_public_accepted": false
+}
