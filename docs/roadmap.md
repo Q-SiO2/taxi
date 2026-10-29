@@ -1,6 +1,12 @@
 # TaxiMobile — Alpha, Pilot and Public Release Roadmap
 
-## Current packet — 28 October 2026
+## Current packet — 29 October 2026
+
+The [development lock security repair](launch/msgpack-dev-lock-repair.md)
+follows CI 262's backend audit failure on `msgpack 1.2.1`. Its successor pins
+the reported fixed version with verified distribution hashes. Treat CI 262 as
+failed backend evidence; a new Linux CI audit and complete required-job run
+must pass before source acceptance.
 
 The [city-local input boundary](launch/scheduled-local-input.md) adds a bounded
 authenticated planning read backed by pinned packaged rules, plus shared typed
