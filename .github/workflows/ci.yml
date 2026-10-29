@@ -9,21 +9,28 @@ permissions:
 
 jobs:
   dependency-review:
-    if: github.event_name == 'pull_request'
+    needs: gradle-dependency-submission
+    if: always() && !cancelled() && github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      DEPENDENCY_SUBMISSION_RESULT: ${{ needs.gradle-dependency-submission.result }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Require complete immutable dependency snapshots
+        run: python infra/scripts/require_complete_dependency_comparison.py --wait-seconds 180
       - name: Reject newly introduced high or critical dependencies
         uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
         with:
           fail-on-severity: high
           license-check: false
-          retry-on-snapshot-warnings: true
-          retry-on-snapshot-warnings-timeout: 600
+          retry-on-snapshot-warnings: false
+      - name: Reject comparison warnings after vulnerability review
+        run: python infra/scripts/require_complete_dependency_comparison.py --wait-seconds 0
 
   gradle-dependency-submission:
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
@@ -97,6 +104,19 @@ jobs:
           --health-interval 5s
           --health-timeout 5s
           --health-retries 12
+      plaintext-postgres:
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: taximobile
+          POSTGRES_PASSWORD: taximobile-ci-only
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U taximobile -d postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
     env:
       TAXIMOBILE_ENV: test
       TAXIMOBILE_DATABASE_URL: postgresql+asyncpg://taximobile:taximobile-ci-only@127.0.0.1:5432/taximobile_ci
@@ -135,7 +155,21 @@ jobs:
           --output /tmp/taximobile-t2-simulated-personas.json
           --junit-output /tmp/taximobile-t2-simulated-personas.junit.xml
       - name: Execute full backend and fresh-PostGIS T3 baseline
-        run: python -m pytest --junitxml=/tmp/taximobile-t3-full-backend.junit.xml
+        run: >-
+          python ../infra/scripts/run_database_tls_ci.py
+          --container ${{ job.services.postgres.id }}
+          --junit /tmp/taximobile-t3-full-backend.junit.xml
+          --report /tmp/taximobile-database-tls-ci.json
+      - name: Retain database TLS test evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: taximobile-database-tls-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/taximobile-t3-full-backend.junit.xml
+            /tmp/taximobile-database-tls-ci.json
+          if-no-files-found: warn
+          retention-days: 30
       - name: Collect bounded T3 database and system evidence
         shell: bash
         run: |
@@ -179,6 +213,7 @@ jobs:
           --artifact /tmp/taximobile-t3-database-metadata.json
           --artifact /tmp/taximobile-t3-backup-restore.json
           --artifact /tmp/taximobile-t3-system-evidence.json
+          --artifact /tmp/taximobile-database-tls-ci.json
           --output /tmp/taximobile-backend-evidence.json
       - name: Retain exact OpenAPI candidate evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

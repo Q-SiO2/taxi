@@ -1,0 +1,235 @@
+{
+  "verified_utc": "2026-10-18T14:44:31.631254+00:00",
+  "scope": "Actual protected operations review and submitted applicant rendering; partial WL-3 runtime evidence, not complete board or all-view acceptance",
+  "web_deployment": "7e30999d-719b-4f84-bda0-8bf45baccc2a",
+  "candidate": "candidate-web-v7.json",
+  "package_manifest_sha256": "bc66d981f36bda6eb5bfb0253e6660cc47e7b527f93840bd9778d048ad17997a",
+  "http_verification": {
+    "passed_record": "hosted-web-v7-20261018-client-headers.json",
+    "checks": 102,
+    "assets": 93,
+    "preserved_failed_attempt": "hosted-web-v7-20261018.json",
+    "failed_probe_reason": "The first probe omitted required client-version headers and correctly received 426 before the anonymous-auth guard. The corrected probe verifies 426 without metadata and 401 with supported metadata."
+  },
+  "operations": {
+    "viewport": {
+      "width": 665,
+      "height": 524
+    },
+    "account": "existing synthetic operations cohort",
+    "scope": "Casablanca",
+    "verified": [
+      "Fresh ordinary password/TOTP sign-in; no recovery code consumed",
+      "Drivers/recruitment selected and Casablanca explicitly scoped",
+      "English to Arabic to French retains authenticated task and selected city",
+      "Arabic privacy suppression, active requirement version, isolated timestamp and evidence labels render",
+      "RTL horizontal queue scrolling exposes review buttons",
+      "Synthetic Funnel Applicant 4 selected through actual review action",
+      "Submitted application revision 2 and submission revision 1 render with restricted-data warning",
+      "Arabic applicant-safe message draft retained in French and across Folded Streets, Notepad, Street Press and Glazed Machine",
+      "Review checkbox remains unchecked and decision confirmation disabled; no decision submitted",
+      "Notepad review and style dialog render grayscale"
+    ],
+    "unsent_draft": "مراجعة تجريبية للعرض فقط — Alpha 18",
+    "not_accepted": [
+      "Full 12 style/language matrix",
+      "Requirement editor/create/update/transition and city-authorization commands",
+      "Review submission, document retrieval and recent-MFA success sequence",
+      "Broad keyboard or screen-reader acceptance"
+    ]
+  },
+  "applicant": {
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "account": "existing synthetic Nadia Pending Driver cohort",
+    "city": "Casablanca",
+    "status": "SUBMITTED",
+    "revision": 2,
+    "requirement_version": "legacy-compatibility-v1",
+    "verified": [
+      "Ordinary existing-account sign-in on hosted /apply/",
+      "French, Arabic and English retain selected application without another sign-in",
+      "Current submitted timeline remains distinguished from possible later statuses",
+      "Profile ownership requirement and account-linked evidence guidance render in each language",
+      "Arabic withdrawal review shows consequence and distinct keep/confirm controls",
+      "Keep application cancels the review; submitted state remains visible"
+    ],
+    "not_accepted": [
+      "Editable application create/save/submit and all seven evidence types",
+      "Actual document upload/replacement/deletion",
+      "Applicant-safe message after an operations decision",
+      "All styles/locales/viewport combinations"
+    ]
+  },
+  "known_source_or_render_gaps": [
+    {
+      "item": "Shared MFA reverify-success notice remains English",
+      "evidence": "source review; not exercised in this runtime pass",
+      "next": "Translate with WL-4 protected presentation batch"
+    },
+    {
+      "item": "Raw ISO queue timestamps wrap into dense lines",
+      "evidence": "wl3-v7-ar-queue-actions.jpg",
+      "next": "Use concise unambiguous timestamp presentation with explicit timezone"
+    },
+    {
+      "item": "Refresh label has low contrast in the dark applicant header",
+      "evidence": "wl3-v7-en-applicant-submitted.jpg",
+      "next": "Use an explicit readable on-dark content role"
+    },
+    {
+      "item": "Shared style-choice copy refers to a ride in an operations review",
+      "evidence": "wl3-v7-fr-notepad-style-dialog.jpg",
+      "next": "Use concise role-neutral preference copy"
+    },
+    {
+      "item": "Startup compatibility copy and full accessibility remain unaccepted",
+      "evidence": "Initial boot text remained English before Compose rendering; automation main-body accessibility tree is incomplete",
+      "next": "Inspect startup/error localization and perform actual keyboard/screen-reader review"
+    }
+  ],
+  "limitations": [
+    "Nineteen captures are distinct observed views, not a Cartesian style/language matrix",
+    "No business decision, withdrawal, eligibility approval or monetary action was performed",
+    "Desktop operations login draft survived a resize in this turn, but its permanent capture and full desktop MFA-bound proof remain pending",
+    "V9 native trip remains historical baseline; final paired freeze and two complete native runs remain",
+    "Physical Android remains deferred by the owner; pilot/public/provider/real-world gates remain open"
+  ],
+  "captures": [
+    {
+      "path": "wl3-v7-ar-applicant-requirements.jpg",
+      "mime_type": "image/jpeg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "05c6282f5a1fca8f82b67f06b035d7fff493369723a5e36d6661e783b2db7790"
+    },
+    {
+      "path": "wl3-v7-ar-applicant-withdraw-cancelled.jpg",
+      "mime_type": "image/jpeg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "cebcfa38592273054313d88a5b9412d33b081de35094d3162f0be2c364198706"
+    },
+    {
+      "path": "wl3-v7-ar-applicant-withdraw-review.jpg",
+      "mime_type": "image/jpeg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "793cd90d5203a38f2073e40832dd948918f6af3bd761b6a280d7d98e8d1cb4be"
+    },
+    {
+      "path": "wl3-v7-ar-funnel-privacy.jpg",
+      "mime_type": "image/jpeg",
+      "width": 665,
+      "height": 524,
+      "sha256": "e28c5f1a274ba18af976b0e18b68a5fb21e294118294951c5423f13f43696b82"
+    },
+    {
+      "path": "wl3-v7-ar-queue-actions.jpg",
+      "mime_type": "image/jpeg",
+      "width": 665,
+      "height": 524,
+      "sha256": "ed7771c5ae35b1c1077510850a3b91ef7c3a2383d2c91d9b7bd16e654cd2bdeb"
+    },
+    {
+      "path": "wl3-v7-ar-recruitment-compact.jpg",
+      "mime_type": "image/jpeg",
+      "width": 665,
+      "height": 524,
+      "sha256": "a4f70bb329950d04f17d7678bd3af23b18150180f6fc6f04c5f03d25b7f25ed1"
+    },
+    {
+      "path": "wl3-v7-ar-requirement-version.jpg",
+      "mime_type": "image/jpeg",
+      "width": 665,
+      "height": 524,
+      "sha256": "1649335edf923d6d7c92bbc7fa172ed464d8d9061d9d9e039c1e1afcf4bda5d9"
+    },
+    {
+      "path": "wl3-v7-ar-review-context.jpg",
+      "mime_type": "image/jpeg",
+      "width": 665,
+      "height": 524,
+      "sha256": "7fc61e9a895e4d04e4578492002bf37f7e7f1db79cd9ffe5edeea710fee254f8"
+    },
+    {
+      "path": "wl3-v7-ar-review-evidence.jpg",
+      "mime_type": "image/jpeg",
+      "width": 665,
+      "height": 524,
+      "sha256": "5557ad2dc09536011166ed606b6036cd20f6f1bed59d41675062c0027958b6c9"
+    },
+    {
+      "path": "wl3-v7-en-applicant-submitted.jpg",
+      "mime_type": "image/jpeg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "9b69fd0ead8f52db01908e82e88f15a5c109d131c048f36c76bcdb945d96d49e"
+    },
+    {
+      "path": "wl3-v7-en-recruitment-compact.jpg",
+      "mime_type": "image/jpeg",
+      "width": 665,
+      "height": 524,
+      "sha256": "b8cac98e3eed99c936302abe5182303e3dc728d1f9e51c3949beb8de3866ce62"
+    },
+    {
+      "path": "wl3-v7-fr-applicant-dashboard.jpg",
+      "mime_type": "image/jpeg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "3d35f7809cdc3b2f6a2d5b0e1bd067788762fae75db6fba825679eb44ac28723"
+    },
+    {
+      "path": "wl3-v7-fr-applicant-entry-desktop.jpg",
+      "mime_type": "image/jpeg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "7b467c117efd219692a96dd7765fa69ad43180b978026e3514cf1b63f7b7b890"
+    },
+    {
+      "path": "wl3-v7-fr-applicant-requirements.jpg",
+      "mime_type": "image/jpeg",
+      "width": 1280,
+      "height": 720,
+      "sha256": "fc3f50fd3ffacadaea2013a0be6a9c2692223afffc1a9bd503fccb5bbe790245"
+    },
+    {
+      "path": "wl3-v7-fr-glazed-machine-draft-retained.jpg",
+      "mime_type": "image/jpeg",
+      "width": 665,
+      "height": 524,
+      "sha256": "de6e9ff794487705f370b642e21bc1e154a28efef32966458928730f02117eba"
+    },
+    {
+      "path": "wl3-v7-fr-notepad-draft-retained.jpg",
+      "mime_type": "image/jpeg",
+      "width": 665,
+      "height": 524,
+      "sha256": "dc9c388fc1ec03edf27973ed850983a823cc1c9296f53e0fd6a5028731691f8f"
+    },
+    {
+      "path": "wl3-v7-fr-notepad-style-dialog.jpg",
+      "mime_type": "image/jpeg",
+      "width": 665,
+      "height": 524,
+      "sha256": "6c4b2e660b548c5886ab3d00ead6da0d2c1f54ba403d3d97cf1de296629dc0c6"
+    },
+    {
+      "path": "wl3-v7-fr-review-draft-retained.jpg",
+      "mime_type": "image/jpeg",
+      "width": 665,
+      "height": 524,
+      "sha256": "d360fad7c224846bf0eb9c9200bb3f091e23ee909e8f532228957439209ec73a"
+    },
+    {
+      "path": "wl3-v7-fr-street-press-draft-retained.jpg",
+      "mime_type": "image/jpeg",
+      "width": 665,
+      "height": 524,
+      "sha256": "2a0722995a1b5c61745ca30eeb88d1890a7aaf8c84e39a77654a18f346f5f874"
+    }
+  ]
+}

@@ -4,15 +4,19 @@ from __future__ import annotations
 
 from base64 import b64decode
 from binascii import Error as Base64Error
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from ipaddress import ip_address
 from math import isfinite
-from os import getenv
+from os import environ, getenv
 from pathlib import Path
 import re
 from urllib.parse import urlparse
 from sqlalchemy.engine import make_url
 from sqlalchemy.exc import ArgumentError
+from taximobile_api.db.transport import DatabaseTLS, DatabaseTLSConfigurationError
+from taximobile_api.integrations.document_storage_config import (
+    DocumentStorageConfigurationError, S3DocumentStorageSettings,
+)
 
 from taximobile_api.core.client_compatibility import (
     ClientCompatibilityPolicy,
@@ -102,7 +106,7 @@ class Settings:
     case_retention_poll_seconds: float
     case_retention_batch_size: int
     driver_document_storage_root: Path | None
-    driver_document_encryption_key: bytes | None
+    driver_document_encryption_key: bytes | None = field(repr=False)
     driver_document_clamav_host: str | None
     driver_document_clamav_port: int
     driver_document_clamav_timeout_seconds: float
@@ -146,6 +150,9 @@ class Settings:
     routing_rate_limit_per_minute: int
     place_search_rate_limit_per_minute: int
     place_reverse_rate_limit_per_minute: int
+    database_tls: DatabaseTLS = DatabaseTLS()
+    driver_document_storage_backend: str = "filesystem"
+    driver_document_s3: S3DocumentStorageSettings | None = field(default=None, repr=False)
 
     @property
     def is_production(self) -> bool:
@@ -253,6 +260,12 @@ class Settings:
                 raise ConfigurationError("TAXIMOBILE_DATABASE_URL must be a valid database URL") from error
             if database_host is None or _is_loopback_host(database_host):
                 raise ConfigurationError("Staging and production require a non-local TAXIMOBILE_DATABASE_URL")
+
+        try:
+            database_tls = DatabaseTLS.from_environment()
+            database_tls.connect_args(database_url)
+        except DatabaseTLSConfigurationError as error:
+            raise ConfigurationError(str(error)) from None
 
         jwt_secret = getenv("TAXIMOBILE_JWT_SECRET")
         if (
@@ -468,28 +481,46 @@ class Settings:
             getenv("TAXIMOBILE_DRIVER_DOCUMENT_CLAMAV_HOST", "").strip().lower()
             or None
         )
+        driver_document_storage_backend = getenv(
+            "TAXIMOBILE_DRIVER_DOCUMENT_STORAGE_BACKEND", "filesystem"
+        ).strip().lower()
+        if driver_document_storage_backend not in {"filesystem", "s3"}:
+            raise ConfigurationError("Driver-document storage backend must be filesystem or s3")
+        driver_document_s3: S3DocumentStorageSettings | None = None
+        s3_values = any(name.startswith("TAXIMOBILE_DRIVER_DOCUMENT_S3_") and value.strip()
+                        for name, value in environ.items())
+        if driver_document_storage_backend == "filesystem" and s3_values:
+            raise ConfigurationError("Document S3 settings require the explicit s3 storage backend")
+        if driver_document_storage_backend == "s3":
+            if driver_document_root_text:
+                raise ConfigurationError("Document S3 and filesystem settings cannot be mixed")
+            try:
+                driver_document_s3 = S3DocumentStorageSettings.from_environment(environ)
+            except DocumentStorageConfigurationError as error:
+                raise ConfigurationError(str(error)) from None
         document_security_values = (
-            bool(driver_document_root_text),
+            bool(driver_document_root_text) or driver_document_s3 is not None,
             bool(driver_document_key_text),
             driver_document_clamav_host is not None,
         )
         if any(document_security_values) and not all(document_security_values):
             raise ConfigurationError(
-                "Driver-document storage root, encryption key, and ClamAV host must be "
+                "Driver-document persistence, encryption key, and ClamAV host must be "
                 "configured together"
             )
         driver_document_storage_root: Path | None = None
         driver_document_encryption_key: bytes | None = None
         if all(document_security_values):
-            driver_document_storage_root = Path(driver_document_root_text).expanduser()
-            if not driver_document_storage_root.is_absolute():
-                raise ConfigurationError(
-                    "TAXIMOBILE_DRIVER_DOCUMENT_STORAGE_ROOT must be an absolute path"
-                )
-            if driver_document_storage_root == Path(driver_document_storage_root.anchor):
-                raise ConfigurationError(
-                    "TAXIMOBILE_DRIVER_DOCUMENT_STORAGE_ROOT cannot be a filesystem root"
-                )
+            if driver_document_storage_backend == "filesystem":
+                driver_document_storage_root = Path(driver_document_root_text).expanduser()
+                if not driver_document_storage_root.is_absolute():
+                    raise ConfigurationError(
+                        "TAXIMOBILE_DRIVER_DOCUMENT_STORAGE_ROOT must be an absolute path"
+                    )
+                if driver_document_storage_root == Path(driver_document_storage_root.anchor):
+                    raise ConfigurationError(
+                        "TAXIMOBILE_DRIVER_DOCUMENT_STORAGE_ROOT cannot be a filesystem root"
+                    )
             if not _is_valid_http_host(driver_document_clamav_host or ""):
                 raise ConfigurationError(
                     "TAXIMOBILE_DRIVER_DOCUMENT_CLAMAV_HOST must be an exact host name or IPv4 address"
@@ -573,6 +604,7 @@ class Settings:
             environment=environment,
             process_role=process_role,
             database_url=database_url,
+            database_tls=database_tls,
             database_pool_size=bounded_integer(
                 "TAXIMOBILE_DATABASE_POOL_SIZE", "5", 100
             ),
@@ -643,6 +675,8 @@ class Settings:
                 "TAXIMOBILE_CASE_RETENTION_BATCH_SIZE", "100", 1000
             ),
             driver_document_storage_root=driver_document_storage_root,
+            driver_document_storage_backend=driver_document_storage_backend,
+            driver_document_s3=driver_document_s3,
             driver_document_encryption_key=driver_document_encryption_key,
             driver_document_clamav_host=driver_document_clamav_host,
             driver_document_clamav_port=bounded_integer(

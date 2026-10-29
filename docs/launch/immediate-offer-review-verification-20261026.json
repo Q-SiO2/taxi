@@ -1,0 +1,477 @@
+{
+  "recorded_utc": "2026-10-26T16:04:21.545109+00:00",
+  "source_predecessor": "9b656d960bf5057511815136fbaa032a6fad9f6d",
+  "source_sha256": {
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/drivers/DriverOfferGateway.kt": "bed71dc8c60daaa2877c548f74a56877c64574ad38dc769abafd9db32ad6a6b6",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/drivers/KtorDriverOfferGateway.kt": "5983678e84ca9a37db7b7a05f59a5378ba2be86af522a65cfe5ffc3361275be5",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/OfferCountdown.kt": "8d9993792553cbdb46f734d8b08367c2090eb8786e2b0703035d52d3bb3070a8",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt": "bbc5f2c80aae487d0f735a3bbf4cfad9762a433706c64df4205744498c05244d",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/OfferCard.kt": "f31a4013efdb95301688c1ca30434f1f9c7bb5bbad2f3b658a460f0202c57852",
+    "TaxiMobile/shared/src/commonMain/composeResources/values/strings.xml": "49c69c2d73e59b09a0425728cd19323422611a8ea5e2787dcb1ae57f61c67af7",
+    "TaxiMobile/shared/src/commonMain/composeResources/values-fr/strings.xml": "59869f6149bd8e46e0225563d975ccc2e96c8c6c378e5772e3a7355f7fd0a5a0",
+    "TaxiMobile/shared/src/commonMain/composeResources/values-ar/strings.xml": "2ede33cebc438f7af126f806b82b3774f32c74bf1dd5d0fd4061fea2ebf9340d",
+    "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/driver/OfferCountdownTest.kt": "a2185953bc862e79fd334e47c20674bbcb03060c7e83df464bfaf08ca780d7d3",
+    "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/data/drivers/DriverOfferCancellationTest.kt": "cda00a1f81aa1c96e84a0f79e83041a72a4fe834441232509f504d2dc9a73ce4",
+    "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/data/drivers/DriverOfferTimingGatewayTest.kt": "ba78787fa5511eaa081124cb68b6a0bc27716ef4ee363b275889aec83460bfd9",
+    "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/ImmediateOfferTimingUiTest.kt": "d82401f702c4fee88b872fd9ac8e60392314cf4c79ef03059bb8d43f22713bcc",
+    "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/CriticalStateUiTest.kt": "f8b187cb4b466b19c9d094e33aa770694729fb2c50b940f99f0c7500058e43fc"
+  },
+  "platform": {
+    "jvm": {
+      "totals": {
+        "tests": 225,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suites": [
+        {
+          "suite": "org.example.taximobile.data.auth.KtorAuthenticationCancellationTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.auth.SecureTokenStoreTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.cooperatives.CooperativeMembershipDecodingTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.drivers.DriverCredentialDecodingTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.drivers.DriverEarningsDecodingTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.drivers.DriverOfferCancellationTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.drivers.DriverOfferEconomicsDecodingTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.drivers.DriverOfferTimingGatewayTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.drivers.KtorDriverRecruitmentRequestTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.drivers.PendingCashPaymentsTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.network.ApiFailureTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.network.RideSchedulingCancellationTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.network.TaxiMobileHttpClientTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.places.PlaceLanguageTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.realtime.KtorLiveEventGatewayTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.rides.FixedRouteCatalogDecodingTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.rides.RideCoordinationDecodingTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.rides.RideHistoryDecodingTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.rides.RideReceiptDecodingTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.routing.RoutingLanguageTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.safety.SafetyReportDecodingTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.scheduling.ScheduledBookingDecodingTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.scheduling.ScheduledBookingDetailGatewayTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.scheduling.ScheduledBookingPageTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.scheduling.ScheduledBookingPaginationGatewayTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.scheduling.ScheduledDriverOfferGatewayTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.feature.app.CriticalStateUiTest",
+          "tests": 40,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.feature.app.ImmediateOfferTimingUiTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.feature.app.MobileAppCoordinatorTest",
+          "tests": 76,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.feature.app.QuoteSessionRecoveryTest",
+          "tests": 19,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.feature.app.ScheduledDriverOfferUiTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.feature.driver.OfferCountdownTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "archive": "immediate-offer-final-jvm-r2-20261026.zip",
+      "zip_sha256": "37756950cfa1f26261ef57afffe30be3e7ba2a52db4ad26be823dbb5c7c46c58"
+    },
+    "android_host": {
+      "totals": {
+        "tests": 181,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suites": [
+        {
+          "suite": "org.example.taximobile.data.auth.AndroidSecureTokenStoreTest",
+          "tests": 22,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.auth.KtorAuthenticationCancellationTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.auth.SecureTokenStoreTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.cooperatives.CooperativeMembershipDecodingTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.drivers.DriverCredentialDecodingTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.drivers.DriverEarningsDecodingTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.drivers.DriverOfferEconomicsDecodingTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.drivers.PendingCashPaymentsTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.network.ApiFailureTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.network.RideSchedulingCancellationTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.network.TaxiMobileHttpClientTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.places.PlaceLanguageTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.realtime.KtorLiveEventGatewayTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.rides.FixedRouteCatalogDecodingTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.rides.RideCoordinationDecodingTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.rides.RideHistoryDecodingTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.rides.RideReceiptDecodingTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.routing.RoutingLanguageTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.safety.SafetyReportDecodingTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.scheduling.ScheduledBookingDecodingTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.data.scheduling.ScheduledBookingPageTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.domain.scheduling.ScheduledOfferReviewTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.feature.app.MobileAppCoordinatorTest",
+          "tests": 76,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.feature.app.QuoteSessionRecoveryTest",
+          "tests": 19,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.feature.driver.OfferCountdownTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "archive": "immediate-offer-final-android_host-r2-20261026.zip",
+      "zip_sha256": "20236240bdcd81c559dec640d33816a942698bb6a403abaa237891bb068029ba"
+    }
+  },
+  "scope": "Immediate-offer advisory request-start countdown, caller cancellation, unavailable service and bounded explicit refresh. No server expiry/assignment policy or deployment change.",
+  "corrected_baseline": {
+    "tests": 5,
+    "failures": 4,
+    "errors": 0,
+    "skipped": 0,
+    "archive_sha256": "0c5f57519e845826002896179acf1b183493295335d47f432fad1a83223470e3"
+  },
+  "initial_viewport_observation": {
+    "tests": 5,
+    "failures": 5,
+    "note": "Positive control needed performScrollTo; corrected baseline retained.",
+    "archive_sha256": "5a276c2e5605fb9e7343282f1f37f2a5e0671979ae0ac95dc1b2f164746fe9e7"
+  },
+  "initial_jvm": {
+    "tests": 13,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "archive_sha256": "28305631b27d8bf76443a3f545ecffcfa78a3862805b1a6a948bd10389a4066a"
+  },
+  "baseline_elapsed_test": "Original used a bounded 1.2-second real pause with UI clock callbacks suspended; final cases use controlled TestTimeSource and UI clock independently.",
+  "rendered_scope": "Eight immediate-offer UI cases include all12 EN/FR/AR x four styles, frame-independent expiry, reopening, loop prevention, explicit confirmed decline, unavailable service and pending accessible purpose; critical and scheduled-driver UI regressions also run. No physical or linguistic acceptance.",
+  "overlapping_test_sets_must_not_be_summed": true,
+  "both_android_role_kotlin_compilations": "passed",
+  "platform_log_sha256": "001f818cce6b4c84f52754e44de6362707062feaf5a52c10f6d1c2f3ec025062",
+  "catalog_keys_per_language": 1292,
+  "mobile_contract_http_operations": 85,
+  "mobile_contract_websocket_operations": 1,
+  "existing_backend_python_inputs_match_predecessor": 458,
+  "root_head_and_index_preserved": true,
+  "immutable_successor_ci_accepted": false,
+  "physical_hosted_provider_operational_pilot_or_public_accepted": false
+}

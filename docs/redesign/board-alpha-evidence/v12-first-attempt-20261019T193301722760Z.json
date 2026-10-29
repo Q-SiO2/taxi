@@ -1,0 +1,79 @@
+{
+  "candidate": "candidate-native-v12.json",
+  "run": "first",
+  "started_utc": "2026-10-19T19:19:31.515182+00:00",
+  "fidelity": "two Android emulators, synthetic GPS/accounts/cash; native writes and server reads",
+  "emulators": [
+    {
+      "role": "driver",
+      "serial": "emulator-5556",
+      "api_level": 35,
+      "avd": "taximobile-board-api35-driver"
+    },
+    {
+      "role": "passenger",
+      "serial": "emulator-5554",
+      "api_level": 31,
+      "avd": "taximobile-board-aosp31-passenger"
+    }
+  ],
+  "passed": false,
+  "steps": [
+    {
+      "name": "Native on-demand availability visible",
+      "utc": "2026-10-19T19:20:21.343612+00:00"
+    },
+    {
+      "name": "Server on-demand availability confirmed",
+      "utc": "2026-10-19T19:20:25.195120+00:00"
+    },
+    {
+      "name": "Native server fare review visible before request",
+      "utc": "2026-10-19T19:20:44.202815+00:00"
+    },
+    {
+      "name": "Native booking confirmed",
+      "utc": "2026-10-19T19:20:47.622520+00:00"
+    },
+    {
+      "name": "Private acceptance confirmed",
+      "utc": "2026-10-19T19:21:36.064871+00:00"
+    },
+    {
+      "name": "Native DRIVER_EN_ROUTE",
+      "utc": "2026-10-19T19:22:07.186806+00:00"
+    },
+    {
+      "name": "Native DRIVER_ARRIVED",
+      "utc": "2026-10-19T19:22:37.161873+00:00"
+    }
+  ],
+  "installed_apks": [
+    {
+      "role": "driver",
+      "sha256": "45561d0e7a5937d2e2fea23a114d37bcd554afd1e02934adc940e71d8c58c218"
+    },
+    {
+      "role": "passenger",
+      "sha256": "039f8c710d0a02bb704994489b099c1b7e0750ec557cb34f9a34f0e726c296ea"
+    }
+  ],
+  "harness_sha256": "7d063aceb786640acc4e6b320249d50d7c978f3bbb370e7b496204290165bcea",
+  "clock_fixture": [
+    {
+      "role": "driver",
+      "host_minus_device_seconds_before": 0.66,
+      "host_minus_device_seconds_after": 0.99,
+      "method": "owned emulator cmd alarm set-time before trip only"
+    },
+    {
+      "role": "passenger",
+      "host_minus_device_seconds_before": 0.23,
+      "host_minus_device_seconds_after": 0.64,
+      "method": "owned emulator cmd alarm set-time before trip only"
+    }
+  ],
+  "ride_id": "98a253df-de13-4029-9daa-e538a520997d",
+  "failure_type": "RuntimeError",
+  "finished_utc": "2026-10-19T19:23:20.608094+00:00"
+}

@@ -1,0 +1,79 @@
+{
+  "recorded_utc": "2026-10-25T16:18:27.917908+00:00",
+  "project_id": "9f841575-c4f3-4a4d-bb83-2e6ff92e436e",
+  "environment_id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+  "checks": {
+    "runtime_credentials_consistent_between_services": true,
+    "migration_password_matches_established_runtime_configuration": true,
+    "document_ingestion_disabled_in_both_services": true,
+    "current_database_tls_modes": {
+      "api": "disable",
+      "worker": "disable"
+    }
+  },
+  "services": {
+    "api": {
+      "activeDeployments": [
+        {
+          "createdAt": "2026-10-22T23:51:54.528Z",
+          "id": "8b03ad50-ba24-4d38-88b3-dc5321cd77cd",
+          "status": "SUCCESS"
+        }
+      ],
+      "environmentId": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+      "healthcheckPath": "/ready",
+      "latestDeployment": {
+        "createdAt": "2026-10-22T23:51:54.528Z",
+        "id": "8b03ad50-ba24-4d38-88b3-dc5321cd77cd",
+        "status": "SUCCESS"
+      },
+      "preDeployCommand": [
+        "python -m taximobile_api.operations.railway_entrypoint migrate"
+      ],
+      "rootDirectory": null,
+      "serviceId": "758fa7d5-f8b8-4730-a00f-438e28184e35",
+      "startCommand": "python -m taximobile_api.operations.railway_entrypoint api"
+    },
+    "db": {
+      "activeDeployments": [
+        {
+          "createdAt": "2026-10-22T23:47:14.472Z",
+          "id": "d8645fc6-04d2-4ffc-b42d-c93709ede85a",
+          "status": "SUCCESS"
+        }
+      ],
+      "environmentId": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+      "healthcheckPath": null,
+      "latestDeployment": {
+        "createdAt": "2026-10-22T23:47:14.472Z",
+        "id": "d8645fc6-04d2-4ffc-b42d-c93709ede85a",
+        "status": "SUCCESS"
+      },
+      "preDeployCommand": null,
+      "rootDirectory": null,
+      "serviceId": "41ccd6b2-41e2-4886-8d96-cc56f62aaab7",
+      "startCommand": "docker-entrypoint.sh postgres -c shared_buffers=32MB -c work_mem=2MB -c max_wal_size=32MB -c min_wal_size=32MB -c checkpoint_timeout=30s -c wal_compression=on -c log_min_messages=warning"
+    },
+    "worker": {
+      "activeDeployments": [
+        {
+          "createdAt": "2026-10-22T23:49:57.498Z",
+          "id": "0bc39434-5d26-4e7b-8645-350526e638dd",
+          "status": "SUCCESS"
+        }
+      ],
+      "environmentId": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+      "healthcheckPath": "/ready",
+      "latestDeployment": {
+        "createdAt": "2026-10-22T23:49:57.498Z",
+        "id": "0bc39434-5d26-4e7b-8645-350526e638dd",
+        "status": "SUCCESS"
+      },
+      "preDeployCommand": null,
+      "rootDirectory": null,
+      "serviceId": "eb42d0ba-feae-4f7a-9c86-48f4d38006d0",
+      "startCommand": "python -m taximobile_api.operations.railway_entrypoint worker"
+    }
+  },
+  "settings_credentials_or_deployments_changed": false
+}

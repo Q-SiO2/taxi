@@ -1,0 +1,34 @@
+{
+  "verified_utc": "2026-10-21T12:16:54.001392+00:00",
+  "candidate": "candidate-native-v18.json",
+  "passed": true,
+  "runs": [
+    {
+      "run": "first",
+      "ride_id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+      "http_record": "v18-native-first-http.json",
+      "sha256": "0b7b54aff118685996311c9c9e581c354eee4ab48a2e29a3f6a4bc37990b3c6a",
+      "consequential_successful_commands_once": 8,
+      "auth_refreshes": []
+    },
+    {
+      "run": "second",
+      "ride_id": "93df2c70-fd2b-4e97-8df3-eee368699bea",
+      "http_record": "v18-native-second-http.json",
+      "sha256": "b13743e5c9bd6710b214ed5616a124429e216147190ae9da9901adac48460f7a",
+      "consequential_successful_commands_once": 8,
+      "auth_refreshes": [
+        {
+          "utc": "2026-10-21T11:37:18.035837557Z",
+          "status": 200
+        },
+        {
+          "utc": "2026-10-21T11:37:18.876097815Z",
+          "status": 200
+        }
+      ]
+    }
+  ],
+  "supplements": "v18-native-integrated-verification.json",
+  "qualification": "Original log-read failure is preserved in the earlier point-in-time integrated verification. After Railway API restoration, both historical windows are retrieved successfully. Counts independently match the eight one-time native domain inputs; advisory/auth/location calls are separate. No trace source IP, credentials or user-agent data retained. Refreshes do not prove the quoted form itself crossed expiry. Builds still paused."
+}

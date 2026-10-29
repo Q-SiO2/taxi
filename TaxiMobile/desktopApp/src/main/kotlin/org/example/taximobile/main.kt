@@ -8,6 +8,6 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         title = "TaxiMobile",
     ) {
-        App()
+        App(stylePreferences = org.example.taximobile.feature.ui.theme.rememberTaxiStylePreferences())
     }
 }

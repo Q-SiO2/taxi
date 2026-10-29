@@ -1,0 +1,40 @@
+{
+  "candidate": "candidate-native-v15.json",
+  "passed": true,
+  "scope": "Two exact-v15 synthetic native lifecycle/cash passes; same-process post-trip map rebooking; controlled emulator radio interruption without business input",
+  "accepted_records": [
+    {
+      "path": "v15-native-first-retry.json",
+      "sha256": "5e6397b266a041a4ea761d3f7bc540ffff8414248f7e5288c4d21b57ee554cfb"
+    },
+    {
+      "path": "v15-native-second-bounded2.json",
+      "sha256": "118d0674c3640c1ecc2a20293cf58c1d93852f6e19832f32c14156e7ebf4b561"
+    },
+    {
+      "path": "v15-same-instance-rebooking.json",
+      "sha256": "a4abaa0c48bbaf5c1f766c21277fc5a65b546d3f279b66d8210ac6a1dcff31ce"
+    },
+    {
+      "path": "v15-native-controlled-reconnect.json",
+      "sha256": "4a9ab6c60d7e1eb0db8946511023fc5112477c423e45c4e1d60382acc8d61670"
+    }
+  ],
+  "failed_attempts": [
+    "v15-native-first.json",
+    "v15-native-second.json",
+    "v15-native-second-retry.json",
+    "v15-native-second-final.json"
+  ],
+  "qualification": "Failures remain failures. The two named later journeys each confirm every lifecycle/cash command exactly once. Hardware/field/Arabic narration/all-page accessibility remain separate.",
+  "harnesses": [
+    {
+      "path": ".tools/alpha-delivery/step-native-v15.py",
+      "sha256": "78d5e049092bf13370916b2b494866e6ca64520d36c1beb648c5a1d7ba9c2153"
+    },
+    {
+      "path": ".tools/alpha-delivery/rehearse-v15-bounded.py",
+      "sha256": "918c0d70321c820d17c4ab2814f0e4878325d9337a2f3759580f41059417757c"
+    }
+  ]
+}

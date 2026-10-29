@@ -1,0 +1,37 @@
+{
+  "recorded_utc": "2026-10-23T16:43:49.921854+00:00",
+  "commit": "7d757a69a17fa126caad33c3eb7f4d510c8cf981",
+  "tree": "f62c0397faddbd521558a24dc37c8e87a7c64551",
+  "parent": "45c491a4615d466c74c4bb0ca46fd6d55488ad7f",
+  "changed_files": 17,
+  "original_head_preserved": true,
+  "original_index_preserved": true,
+  "candidate_clean": true,
+  "publication": "PUSHED_FEATURE_BRANCH_ONLY",
+  "remote_validation": "QUEUED_OR_IN_PROGRESS_NOT_ACCEPTED",
+  "launch_accepted": false,
+  "pull_request": "https://github.com/Q-SiO2/taxi/pull/74",
+  "observed_utc": "2026-10-23T16:44:49.000043+00:00",
+  "runs": [
+    {
+      "id": 39989234575,
+      "head_sha": "7d757a69a17fa126caad33c3eb7f4d510c8cf981",
+      "head_branch": "codex/real-world-r2-baseline",
+      "event": "pull_request",
+      "status": "in_progress",
+      "conclusion": null,
+      "html_url": "https://github.com/Q-SiO2/taxi/actions/runs/39989234575",
+      "run_number": 218
+    },
+    {
+      "id": 39989226056,
+      "head_sha": "7d757a69a17fa126caad33c3eb7f4d510c8cf981",
+      "head_branch": "codex/real-world-r2-baseline",
+      "event": "push",
+      "status": "in_progress",
+      "conclusion": null,
+      "html_url": "https://github.com/Q-SiO2/taxi/actions/runs/39989226056",
+      "run_number": 217
+    }
+  ]
+}

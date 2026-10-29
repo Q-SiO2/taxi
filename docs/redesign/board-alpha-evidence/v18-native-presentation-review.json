@@ -1,0 +1,170 @@
+{
+  "candidate": "candidate-native-v18.json",
+  "verified_utc": "2026-10-21T12:13:30.701801+00:00",
+  "passed": true,
+  "records": [
+    {
+      "path": "v18-native-style-verification.json",
+      "sha256": "df6388276a4391f1d2e99ed80f5f41f8d02a5f976129521cda21b7c265d68d4d"
+    },
+    {
+      "path": "v18-native-history-support-verification.json",
+      "sha256": "4303a7f946210ffd95ad4f1d52e53d3b1da0a7e8e4fcdcd6497fcbbfff305ccf"
+    },
+    {
+      "path": "v18-native-integrated-verification.json",
+      "sha256": "33d14b1922943a28b286945032e943678a875013ba204d4231d0faa17af5e21a"
+    },
+    {
+      "path": "v18-native-passenger-fr-core-review.json",
+      "sha256": "8505e0dd405e9a0f65d2964694ad3d73f0419efca18df469de13a52b1ba0aeeb"
+    },
+    {
+      "path": "v18-native-passenger-en-core-review.json",
+      "sha256": "6c4efa8b27f19ae7d5e4baedc85ec4662fca339ec3e6c7cfe2439a58987cd5f9"
+    },
+    {
+      "path": "v18-native-driver-fr-core-review.json",
+      "sha256": "f68460d9707af3e9167a29bc9a13bdcba0a9fb6353df87419960aff38cb33d9e"
+    },
+    {
+      "path": "v18-native-driver-en-core-review.json",
+      "sha256": "995ea3437bd9a2d516068a0f2d168580afde94b1bf0cb53cf19073ce8b057e82"
+    },
+    {
+      "path": "v18-native-passenger-welcome-review-r3.json",
+      "sha256": "63699aae96417ed77cd9b44f6fe985201ae77b16c8a3d4434bfbb8d32dc62ccf"
+    },
+    {
+      "path": "v18-native-driver-welcome-review-r3.json",
+      "sha256": "283492fa027b3fd4f1d63bfe2416275e7524aa571d6aa287f5c8616399687bc1"
+    }
+  ],
+  "welcome_artifacts": [
+    {
+      "path": "v18-native-passenger-welcome-r3-folded-streets.png",
+      "sha256": "5ee161189d76f57210589265c8272d1cbb70409de2d4f2f4ad151a614686d7bb",
+      "bytes": 105736
+    },
+    {
+      "path": "v18-native-passenger-welcome-r3-folded-streets.mp4",
+      "sha256": "6d1f230b331ca361f1dce398fd0b49e273d7c757764e4aca2cb0932cb2b6ec2a",
+      "bytes": 176744
+    },
+    {
+      "path": "v18-native-passenger-welcome-r3-street-press.png",
+      "sha256": "262cabe1ef047a7cb2b77b6fafb4e829fb875f427fc7fd757a542260b2bfd7fa",
+      "bytes": 49365
+    },
+    {
+      "path": "v18-native-passenger-welcome-r3-street-press.mp4",
+      "sha256": "064bb4ae400efe6654e73cbc539ea3bf28061b06d4723705cc196a88d15c6157",
+      "bytes": 179971
+    },
+    {
+      "path": "v18-native-passenger-welcome-r3-glazed-machine.png",
+      "sha256": "c0b5df571475319b9e37e37b1760f35405984a6964c815539ab6ea5bf0a0dadc",
+      "bytes": 135427
+    },
+    {
+      "path": "v18-native-passenger-welcome-r3-glazed-machine.mp4",
+      "sha256": "000c1bea05463aedeadc7f4532ce8db284c117e60eb1c2bc10cb4f8418dd6894",
+      "bytes": 257598
+    },
+    {
+      "path": "v18-native-passenger-welcome-r3-notepad.png",
+      "sha256": "cfbb02cc6e1fbd64a7a62a97671036be6391195ca7806f31a3068f3e5e7b025c",
+      "bytes": 44692
+    },
+    {
+      "path": "v18-native-passenger-welcome-r3-notepad.mp4",
+      "sha256": "20ba6482caf3cbda96e9543f59c0605f202ddb95066f442066988148bba64f63",
+      "bytes": 157013
+    },
+    {
+      "path": "v18-native-driver-welcome-r3-folded-streets.png",
+      "sha256": "caaaa42f14b64f470009d1fde653414cff75ddb30695aa0437d53e6af396e0e8",
+      "bytes": 97100
+    },
+    {
+      "path": "v18-native-driver-welcome-r3-street-press.png",
+      "sha256": "9e9b26f283f529f20b1e6f0aedc5542a337041a2d490a8845bf321e581390bf8",
+      "bytes": 47230
+    },
+    {
+      "path": "v18-native-driver-welcome-r3-glazed-machine.png",
+      "sha256": "d70e29b7e7b4e85a916625271d4b7e13a10698522ef049cbb7cad5c09fccc1cf",
+      "bytes": 127436
+    },
+    {
+      "path": "v18-native-driver-welcome-r3-notepad.png",
+      "sha256": "b554e5850376b6d492c612a12cfb1551d36ee01b277c6abcb264f9f02221c7f7",
+      "bytes": 42787
+    }
+  ],
+  "final_runtime": [
+    {
+      "role": "passenger",
+      "serial": "emulator-5554",
+      "apk_sha256": "007ac960ff0c147a77859bddbed3c80f25c6ff3601c51bd282f1c26ffc8d9681",
+      "font_scale": "1.0",
+      "configuration": "config: mcc310-mnc260-en-rUS,fr-rFR,ar-rMA-ldltr-sw360dp-w360dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x720-v31",
+      "animator_duration_scale": "null",
+      "normal_existing_account_restored": true,
+      "style": "Folded Streets"
+    },
+    {
+      "role": "driver",
+      "serial": "emulator-5556",
+      "apk_sha256": "3be60dacd05a1bd98e871065977a1911b849914b38874e9b29878a2b14cb729d",
+      "font_scale": "1.0",
+      "configuration": "config: mcc310-mnc260-en-rUS-ldltr-sw360dp-w360dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x720-v35",
+      "animator_duration_scale": "0",
+      "normal_existing_account_restored": true,
+      "style": "Folded Streets"
+    }
+  ],
+  "frozen_inputs_unchanged": 412,
+  "style_source_checks": [
+    {
+      "path": ".tools/alpha-delivery/native-v18-build-inputs/test-results/jvmTest/TEST-org.example.taximobile.feature.ui.theme.TaxiColorContrastTest.xml",
+      "tests": "3",
+      "failures": 0,
+      "scope": "Includes Notepad grayscale and motion predicate checks: reduced OS motion and non-resumed lifecycle disable decoration; not native frame-cost acceptance"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v18-build-inputs/test-results/jvmTest/TEST-org.example.taximobile.feature.ui.theme.TaxiStylePreferencesTest.xml",
+      "tests": "4",
+      "failures": 0,
+      "scope": "Includes Notepad grayscale and motion predicate checks: reduced OS motion and non-resumed lifecycle disable decoration; not native frame-cost acceptance"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v18-build-inputs/test-results/testAndroidHostTest/TEST-org.example.taximobile.feature.ui.theme.TaxiColorContrastTest.xml",
+      "tests": "3",
+      "failures": 0,
+      "scope": "Includes Notepad grayscale and motion predicate checks: reduced OS motion and non-resumed lifecycle disable decoration; not native frame-cost acceptance"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v18-build-inputs/test-results/testAndroidHostTest/TEST-org.example.taximobile.feature.ui.theme.TaxiStylePreferencesTest.xml",
+      "tests": "4",
+      "failures": 0,
+      "scope": "Includes Notepad grayscale and motion predicate checks: reduced OS motion and non-resumed lifecycle disable decoration; not native frame-cost acceptance"
+    }
+  ],
+  "visual_review": {
+    "reviewed_utc": "2026-10-21T12:13:33.711129+00:00",
+    "welcome_views_inspected": 8,
+    "role_style_account_financial_checks": 8,
+    "native_languages": "Arabic full trip/style renders; French and English selected account/financial views",
+    "welcome_findings": "Role titles, concise body and both entry actions fit the 360dp emulator view. Three distinct abstract frames; Notepad grayscale rules, no city/taxi hero. No clipped welcome title/button found in these eight images.",
+    "raw_clips": 4,
+    "raw_clip_scope": "Six-second native screen recordings include HOME/resume and actual welcome. Not decoded/profiled here; provided for review, not a claim of measured animation timing or physical performance."
+  },
+  "qualifications": [
+    "Original history ADB timeouts retained; successful unique r2 records verified",
+    "Driver Notepad restore exceeded the first 55-second budget; continuation verifies existing late restore without retry/relogin",
+    "Generic welcome logout search timed out before logout amid accumulated synthetic verifier sessions; r2 own-session logout opened sign-in/security-message state; r3 normal signed-out restart captures welcome and normal login restores both accounts",
+    "No all-213-view, full accessibility/width/state, native reduced-motion runtime or physical acceptance inferred",
+    "Railway provider pause still holds proxy-only correction; live canonical applicant entry works"
+  ]
+}

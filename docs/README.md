@@ -1,12 +1,177 @@
 # TaxiMobile documentation
 
+> **Current R6/R9 source work — 28 October 2026:** [city-local input](launch/scheduled-local-input.md)
+> has a published authenticated clock-planning boundary with all eight jobs
+> passing in [CI 260](launch/scheduled-local-input-ci-terminal-20261028.json).
+> The later working source adds native city/date/time controls and explicit
+> repeated-hour choice; it is not yet candidate or deployment acceptance.
+
+> **Current source packet — 27 October 2026:** [scheduled review binding](launch/scheduled-review-binding.md)
+> prevents a retained estimate from confirming another time, city, point pair or
+> fixed-route direction. Its own [CI 258](launch/scheduled-review-binding-ci-terminal-20261027.json)
+> passes all eight required jobs; later input-boundary source remains separate.
+
+> **Current source repair — 27 October 2026:** [city-time packaging](launch/scheduled-city-time-packaging.md)
+> corrects [CI 254](launch/scheduled-city-time-ci-terminal-20261026.json)'s Wasm
+> size failure and Android desugared-library marker rejection. The repaired
+> verifier passes 121 source/build-tool tests and re-inspects the existing APKs;
+> the corrected package and four Chrome boot scenarios now pass unchanged size
+> caps. Its own [CI 256](launch/scheduled-city-time-packaging-ci-terminal-20261027.json)
+> passes all eight required jobs; later scheduling review-binding work is separate.
+
+> **Current local source work — 26 October 2026:** [scheduled city-local time](launch/scheduled-city-time.md)
+> replaces raw UTC presentation in passenger/driver scheduled review and preserves
+> original command instants. The packaging successor's CI 256 now passes minified
+> Android, complete production web size/boot and native CI gates for that source.
+> The owner deferred physical Android verification; continue source work.
+
+> **Current CI repair — 26 October 2026:** [source-gate correction](launch/immediate-offer-source-gate.md)
+> addresses the mobile Python check that rejected the combined expiry guard in
+> CI 250. The focused successor passes 117 local source/build-tool tests and all
+> eight required jobs in [CI 252](launch/immediate-offer-source-gate-ci-terminal-20261026.json).
+> Calendar/timezone work remains separate.
+
+> **Current source work — 26 October 2026:** [immediate-offer review](launch/immediate-offer-review.md)
+> corrects callback-count timing and swallowed coroutine cancellation, with explicit
+> unavailable review and refresh. Local checks pass 225 JVM and 181 Android-host
+> cases, both role compilations and rendered review across all 12 language/style
+> combinations. Test sets overlap. [CI 252](launch/immediate-offer-source-gate-ci-terminal-20261026.json)
+> now accepts this unchanged app source through the focused verifier repair.
+
+> **Current source work — 26 October 2026:** [driver scheduled review](launch/scheduled-driver-review.md)
+> fixes the remaining driver refund fallback and expiry controls. Local verification
+> passes 179 JVM and 178 Android-host cases, both Android role compilations,
+> and rendered driver review across all 12 language/style combinations. These
+> test sets overlap; its own [CI 248](launch/scheduled-driver-review-ci-terminal-20261026.json)
+> passes all eight required jobs. The passenger predecessor passes
+> [CI 246](launch/scheduled-cancellation-review-ci-terminal-20261026.json) across
+> all eight required jobs and 1,482 backend cases for its own source.
+
+> **Accepted source predecessor — 26 October 2026:**
+> [scheduled cancellation review](launch/scheduled-cancellation-review.md) removes
+> the unknown-mode non-refundable fallback. Local checks pass: 90 affected backend,
+> 97 JVM and 88 Android-host cases, both Android role compilations and localized
+> rendering across all four styles. These test sets overlap. Its own
+> [CI 246](launch/scheduled-cancellation-review-ci-terminal-20261026.json) now
+> passes all eight required jobs; hosted and physical acceptance remain open.
+
+> **Current source packet — 26 October 2026:** [passenger scheduled pagination](launch/scheduled-pagination.md)
+> makes records beyond page one reachable with bounded reads, owner/race guards,
+> localized retry and current-row confirmation. Local evidence: 145 JVM,
+> 156 Android-host and five rendered cases, including all 12 language/style
+> variants. [CI 244](launch/scheduled-pagination-ci-terminal-20261026.json) now
+> passes all eight required jobs and 1,458 backend cases for this pagination source.
+> Predecessor
+> [CI 240](launch/journey-cancellation-ci-terminal-20261026.json) and
+> [CI 242](launch/scheduled-localization-ci-terminal-20261026.json) now pass all
+> eight jobs for their own sources. Hosting and physical acceptance remain open.
+
+> **Current source/hosting gate — 26 October 2026:** the
+> [runtime-preserving migrator](launch/runtime-preservation.md) passes
+> [CI 238](launch/runtime-preservation-ci-terminal-20261026.json), all eight
+> required jobs and 1,458 backend cases. A fresh local restore verifies 0054 with
+> restricted-runtime readiness. The [current Trial read](launch/staging-capacity-stop-20261026.json)
+> reports negative credit and `isTrialing=false`; prepared TLS/schema deployment
+> remains unapplied. Preserve both volumes, archives and Trial-only boundaries.
+
+> **Next source packet — 25 October 2026:** migration `20261025_0054` and the
+> [durable S3 workflow](launch/document-s3.md) now reserve hidden upload metadata,
+> enforce a final owner/version/lease transaction and reconcile interrupted/late
+> writes. API/worker configuration and shutdown ownership are wired in source;
+> [CI 236](launch/document-s3-ci-terminal-20261025.json) passes all eight required
+> jobs and 1,443 backend cases for source 9e94fda. A separately approved real
+> Railway probe passes with three synthetic objects/19 requests; its objects and
+> staging bucket are removed. Official scanner capacity/feeds, service key
+> custody, hosted migration/TLS/ingestion and physical rollout remain open.
+>
+> **Accepted source predecessor — 24 October 2026:** the
+> [protected document correction](launch/document-storage.md) passes all eight
+> required CI jobs and 1,342 backend tests, plus a real local ClamAV/custom-fixture
+> rehearsal. The owner-selected [private S3 successor](launch/document-s3.md)
+> transport checkpoint passed 1,115 local unit tests before the durable successor.
+> Hosted storage, feeds and key/retention acceptance remain open.
+
+> **Current packet — 24 October 2026:** all eight required CI jobs pass for source
+> [2919835](launch/database-tls-ci-terminal-20261024.json). The [staging upgrade packet](launch/staging-upgrade.md) records an encrypted
+> database backup, matching 81 public-table counts after isolated restore and a
+> successful local 0053 migration/readiness check, with explicit platform and
+> failure qualifications. [Verified database transport](launch/database-tls.md)
+> now passes 1,317 full backend CI tests, including eight real TLS checks, with
+> no failures/errors/skips. Android/web, unsigned iOS and dependency review pass.
+> Hosted schema remains 0052 and TLS is disabled;
+> protected document ingestion and matched rollout remain open.
+
+> **Current source packet — 23 October 2026:** the
+> [session/release correction](launch/session-recovery.md) addresses idle logout
+> and the actual member-register CI packaging failure. Local protocol, production
+> packaging and bounded Chrome boot now pass. The [dependency correction](launch/dependency-refresh.md)
+> addresses the next actual CI audit failure; its eight required CI jobs pass,
+> while hosted acceptance remains open.
+
+> **Source migration - 23 October 2026:** `20261023_0053` adds the explicit
+> operator membership policy for the Fès union launch. It is a source change;
+> [isolated migration/authority verification](launch/union-membership.md) is
+> recorded. The [staff-register extension](launch/member-register.md) adds scoped
+> audited operations UX and localized driver guidance; its runtime verification,
+> immutable CI and deliberate deployment remain separate acceptance steps.
+> The alpha's deployed schema/evidence retain their original identity.
+
+> **Active goal - 23 October 2026:** establish real-world deployment with full
+> documented functionality. Start with [the detailed execution plan](real-world-launch.md)
+> and [roadmap](roadmap.md): R0 reconciliation, production capability closure,
+> real device/provider/staff acceptance, authorized city pilot and public release.
+> Android, iOS and both web portals are included. Spending, operator/legal and
+> activation decisions retain their explicit gates. The alpha below is the
+> regression baseline, not real-world acceptance.
+
+> **Active delivery - 23 October 2026:** native v23 / live web v10 now pass the
+> scoped synthetic board path twice, at **16:22 / 11:07**, with disclosed
+> observer/setup qualifications. Both cash rides have eight successful business
+> requests exactly once; final driver state is offline and pending cash zero.
+> Folded Streets, Street Press, Glazed Machine and Notepad are implemented choices;
+> there is no separate color menu or taxi/city hero. The deployed web passes
+> 103 HTTP checks and selected actual four-style/EN/FR/AR timeline review.
+>
+> Start with [the current checkpoint](board-alpha.md), [the handoff](board-alpha-handoff.md)
+> and [presenter script](board-demo.md). [roadmap.md](roadmap.md) remains the plan
+> for **board alpha -> authorized pilot -> public release**. Railway recovery is
+> applied within Trial limits, with both volumes preserved. Owner visual review,
+> physical Android, iOS, broader accessibility/state coverage, field transport,
+> real money and later launch gates remain separate. The 213-view inventory is
+> not runtime acceptance of every view. Historical records keep their own identity.
+
+## Six core entry points
+
+| Read to | Start here | Detailed authority when needed |
+| --- | --- | --- |
+| Understand the project and status | This README | Dated [readiness.md](readiness.md); source inventory below. |
+| Implement product journeys | [product.md](product.md) | [design.md](design.md), [ui.md](ui.md), [extended_ui.md](extended_ui.md) and relevant domain. |
+| Understand system boundaries | [architecture.md](architecture.md) | [implementation.md](implementation.md), [api.md](api.md), [database.md](database.md), [security.md](security.md). |
+| Set up, build, test and hand off | [workflow.md](workflow.md) | Linked backend/client/infra setup guides, [testing.md](testing.md) and evidence catalogs. |
+| Deploy and verify staging | [deployment.md](deployment.md) | Railway preflight, resource/cost/secret controls, actual integration and safe shutdown. |
+| Choose and execute the next task | [roadmap.md](roadmap.md) | [union_demo.md](union_demo.md) scenarios; [gaps.md](gaps.md) real-world acceptance. |
+
+These entry points consolidate delivery navigation without deleting specialized
+API, legal/privacy, security, data or business contracts referenced by code and
+project instructions. The old numbered delivery plan is [historical](history/roadmap_before_alpha_20261012.md).
+Read relevant sections rather than every document; no separate audit or historical
+percentage overrides the active A/B/C sequence. Future consolidation must preserve
+contracts and update all links/instructions/validators before removing an authority.
+
 This directory is the product, architecture, security, and delivery authority for
 TaxiMobile. It describes both the intended system and the software currently in
 the repository. Those are not the same kind of statement.
 
 ## Current project standing
 
-**Source assessment date:** 2026-09-09. **Standing refreshed:** 2026-10-02.
+**Current delivery priority:** the essential alpha journeys and ten exit gates in
+[roadmap.md](roadmap.md). [union_demo.md](union_demo.md) retains the wider 20-journey
+board, including optional advanced demonstrations, and the rehearsal procedure.
+Report both separately; neither automated tests nor fixture screens accept a
+physical passenger/driver/browser journey or authorize live transport.
+
+**Historical source assessment:** 2026-09-09, refreshed 2026-10-02.
+Current alpha evidence and candidate identities are in [board-alpha.md](board-alpha.md).
 
 **Migration head:** `20260908_0052`
 
@@ -98,6 +263,7 @@ quality.
 | System boundaries and source of truth | [`architecture.md`](architecture.md) | Implemented architecture plus explicit provider/deployment boundaries. |
 | Concrete repository structure | [`implementation.md`](implementation.md) | Current technical baseline and verification claims. |
 | Delivery sequence | [`roadmap.md`](roadmap.md) | Source phases versus deployment acceptance. |
+| Railway staging and release operations | [`deployment.md`](deployment.md) | Minimal topology, actual provider/account preflight, hosted verification, cost and safe shutdown. |
 | Deployment gap register | [`gaps.md`](gaps.md) | Prioritized remediation and acceptance criteria. |
 | Testing and acceptance map | [`testing.md`](testing.md) | Promotion gates from static checks and an executable 20-scenario simulated-persona baseline through real-city rollout. |
 | Test execution control board | [`testing_execution_map.md`](testing_execution_map.md) | Entry/exit gates, executable evidence-index and T2 catalog rules, owners, stop rules and cohort progression from simulation to national replication. |
@@ -122,8 +288,9 @@ not normative and must be regenerated when the status summary materially changes
 
 ## Reading order for implementation work
 
-1. Read this file, [`gaps.md`](gaps.md), and [`testing.md`](testing.md) to
-   understand current standing and the required evidence path.
+1. Read this file and [`roadmap.md`](roadmap.md) for the current milestone,
+   next task and exit evidence. Use [`union_demo.md`](union_demo.md) for A journeys;
+   [`gaps.md`](gaps.md) and [`testing.md`](testing.md) for real-world release gates.
 2. Read [`roadmap.md`](roadmap.md) and [`implementation.md`](implementation.md)
    to confirm scope and delivery gates.
 3. Read [`architecture.md`](architecture.md) and the relevant domain document.

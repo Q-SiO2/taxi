@@ -1,5 +1,6 @@
 package org.example.taximobile.feature.ui.components
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,8 +26,10 @@ fun TaxiSegmentedControl(
     onSecondSelected: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     Row(
-        modifier = modifier.fillMaxWidth().clip(RoundedCornerShape(TaxiRadii.Md)).background(TaxiColors.Surface2).padding(4.dp),
+        modifier = modifier.fillMaxWidth().clip(RoundedCornerShape(taxiRadii.Md)).background(taxiColors.Surface2).padding(4.dp),
     ) {
         Segment(firstLabel, firstSelected, onFirstSelected, Modifier.weight(1f))
         Segment(secondLabel, !firstSelected, onSecondSelected, Modifier.weight(1f))
@@ -35,13 +38,15 @@ fun TaxiSegmentedControl(
 
 @Composable
 private fun Segment(label: String, selected: Boolean, onClick: () -> Unit, modifier: Modifier) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     TextButton(
         onClick = onClick,
-        modifier = modifier.clip(RoundedCornerShape(TaxiRadii.Sm)).background(if (selected) TaxiColors.Surface0 else Color.Transparent),
+        modifier = modifier.clip(RoundedCornerShape(taxiRadii.Sm)).background(if (selected) taxiColors.Surface0 else Color.Transparent),
     ) {
         Text(
             label,
-            color = if (selected) TaxiColors.Ink900 else TaxiColors.Ink500,
+            color = if (selected) taxiColors.Ink900 else taxiColors.Ink500,
             style = MaterialTheme.typography.labelLarge,
         )
     }

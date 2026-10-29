@@ -1,0 +1,119 @@
+{
+  "recorded_utc": "2026-10-27T13:24:35.507528+00:00",
+  "source_predecessor": "53d653176cca19e677abf91d5129b3a568dfaa19",
+  "source_sha256": {
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/scheduling/ScheduledEstimateReview.kt": "b22ab1ed02418a6d82eebbbeab55e119acd769afe9690561eac88fc88474f804",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/MobileAppCoordinator.kt": "1dac55b72aeeb83c7d88b707790ecff8bcbab5aba18fcbbbb15f082ecf6dc672",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt": "19e3ca28ab59c3a5692459ca377ba22c67a7b02e349fa2b5dccfaa5bc90cfbe8",
+    "TaxiMobile/shared/src/commonMain/composeResources/values/strings.xml": "396402ba72d7ef964758e14bbd7476b494d76bf5140e62698222ef972fcc15e6",
+    "TaxiMobile/shared/src/commonMain/composeResources/values-fr/strings.xml": "a921a9d56ee8ad36345f0238785f88929c77e5c1f7d644e1fd4b32cc58d73d10",
+    "TaxiMobile/shared/src/commonMain/composeResources/values-ar/strings.xml": "1fe175b3e5741cbd2abd1e9f8eea74b1afdd8734f5eeccc6e649c53a425dfdc0",
+    "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/scheduling/ScheduledBookingFixtures.kt": "de49ad0952d20a3b286a990d81dc6ea94b44d835c0872a9645407d2b348f9061",
+    "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/domain/scheduling/ScheduledEstimateReviewTest.kt": "1008a71024a0875304dd1860c773124d2fc138e4b6e059ea47009161373cc082",
+    "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/app/MobileAppCoordinatorTest.kt": "fba68bec15c2f23a4b0fa88be76776d7b998d88a8bbc898ee722c2ea65eca71e",
+    "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/ScheduledQuoteBindingUiTest.kt": "bb03ae179df02546140d6e4f3dd3cbf999536022960a1ec36ef18bda3e2439d2"
+  },
+  "platform": {
+    "jvm": {
+      "totals": {
+        "tests": 204,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suite_count": 17,
+      "archive": "scheduled-review-binding-jvm-regression-20261027.zip",
+      "sha256": "09c7c88d00d70f568654fe4bb557839e538c8ab0270dd1b7e33f11d6048720c9"
+    },
+    "android_host": {
+      "totals": {
+        "tests": 374,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suite_count": 68,
+      "archive": "scheduled-review-binding-android_host-regression-20261027.zip",
+      "sha256": "fd3e8898e6903e3e56f51dacf25c9f559c9b1925a65e92173274b4bac44c7217"
+    }
+  },
+  "platform_log_sha256": "3268e5accbfd8f1716a4c684e71dde94fc817c665ee6dab219d586c7d891ff08",
+  "source_tool_suite": {
+    "tests": 121,
+    "failures": 0,
+    "errors": 0,
+    "log_sha256": "8c78d393b400319c82d986d5e9dbad654a6b4dc2cff195e34c9c7f85f55adca9"
+  },
+  "catalog_entries_per_language": 1295,
+  "rendered_warning": {
+    "languages": [
+      "en",
+      "fr",
+      "ar"
+    ],
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "font_scale": 2,
+    "viewport_dp": [
+      360,
+      800
+    ],
+    "capture_sha256": {
+      "folded_streets-ar-large.png": "cc5fa627d5d24f59cf49f7f7d7a2bcabe2641934a50278c9870871acf7e4aea4",
+      "folded_streets-en-large.png": "4caf23852baa6bd70c8711f6de4d2c8fab019c123eb4b144cf0ae58e62ea4386",
+      "folded_streets-fr-large.png": "0f5f22c7556bc9c81c740fbf6c44281f871779c746783ed21be6f728b0c7dd1e",
+      "glazed_machine-ar-large.png": "35deda78f097818be1bf574f4911be1f5f8b7a53ac0a59e081da7b17683e7ff1",
+      "glazed_machine-en-large.png": "8c598d6f3433932695eee062ca9842ddce50eae63bbdbcf43f48a8128d01ffb4",
+      "glazed_machine-fr-large.png": "da488b0015310c183ef481f5e2b2769eda46de7a83c9454998bca464f8c59111",
+      "notepad-ar-large.png": "0410e5fc7a286d2cd42d0fe2d30ed4d60e306bbd850154f08293d0a2ebac97f0",
+      "notepad-en-large.png": "85cd13f17745506e7a7507d1c97a60e11390cfcaa379ebef02cecc96c297fc59",
+      "notepad-fr-large.png": "0acb7e556a50bbb299f3c74f80cc89b3bbb1c66d45f335ffc4e6fecf3af63fcb",
+      "street_press-ar-large.png": "df7b5db4547faea46502de390021683d84f570413ee6d915349f06c8a8b1a7d3",
+      "street_press-en-large.png": "c87d594c42aaf0b4942778a908b291b415da3cef9545c2a6ddb958168fee517a",
+      "street_press-fr-large.png": "710bfba080c5405dd5fb081596356a6f5be9568b5023bfdfdde5bbef6b31091b"
+    },
+    "visually_inspected": [
+      "folded_streets-ar-large.png",
+      "notepad-fr-large.png"
+    ],
+    "physical_or_linguistic_accepted": false
+  },
+  "failed_observations": {
+    "baseline": {
+      "totals": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "archive_sha256": "a19e56eab456822e74cd0e4bf5ff1130015323aee213d2ba2ced88a5f78aef83",
+      "log_sha256": "8032065abcc6f48625e0404139f0aa194cba1ae01ff268832ec45abc0d3ee088"
+    },
+    "baseline-r2": {
+      "totals": {
+        "tests": 3,
+        "failures": 3,
+        "errors": 0,
+        "skipped": 0
+      },
+      "archive_sha256": "030d703beeac3e43acee6c0321c825854d8a56b3f561856b084436988cf90db3",
+      "log_sha256": "e389a50488a2cc3ae28c791ed737418f2408c89ec01a6f994f96c66eb0a6ff7c"
+    },
+    "first_baseline_non_unit_tests_not_discovered": true,
+    "initial_platform_invocation_wrong_project_name": {
+      "tests_or_compilation_run": false,
+      "log_sha256": "7ea13f6ca25d423443b694ad41ffe7c1a0876ce95de6c73404a2a9d53c4cdfc4"
+    }
+  },
+  "request_equivalence": "same instant; exact coordinates ignoring address normalization; immutable fixed direction; requested city when supplied",
+  "backend_economics_and_original_command_timestamp_preserved": true,
+  "root_head_and_index_preserved": true,
+  "overlapping_test_sets_must_not_be_summed": true,
+  "current_minified_android_ios_browser_and_web_package_accepted": false,
+  "immutable_successor_ci_accepted": false,
+  "physical_signing_store_hosted_provider_operational_pilot_or_public_accepted": false
+}

@@ -1,0 +1,1280 @@
+[
+  {
+    "id": "S00",
+    "name": "Session restore",
+    "wave": "UX-2",
+    "spec": "pages/S00.md"
+  },
+  {
+    "id": "S01",
+    "name": "Compatibility gate",
+    "wave": "UX-2",
+    "spec": "pages/S01.md"
+  },
+  {
+    "id": "S02",
+    "name": "Welcome",
+    "wave": "UX-2",
+    "spec": "pages/S02.md"
+  },
+  {
+    "id": "S03",
+    "name": "Sign in",
+    "wave": "UX-2",
+    "spec": "pages/S03.md"
+  },
+  {
+    "id": "S04",
+    "name": "Create account",
+    "wave": "UX-2",
+    "spec": "pages/S04.md"
+  },
+  {
+    "id": "S05",
+    "name": "Account-created acknowledgement",
+    "wave": "UX-2",
+    "spec": "pages/S05.md"
+  },
+  {
+    "id": "S06",
+    "name": "Recovery",
+    "wave": "UX-2",
+    "spec": "pages/S06.md"
+  },
+  {
+    "id": "S07",
+    "name": "Recovery acknowledgement",
+    "wave": "UX-2",
+    "spec": "pages/S07.md"
+  },
+  {
+    "id": "S08",
+    "name": "Session expired / revoked",
+    "wave": "UX-2",
+    "spec": "pages/S08.md"
+  },
+  {
+    "id": "S09",
+    "name": "Connection interruption",
+    "wave": "UX-2",
+    "spec": "pages/S09.md"
+  },
+  {
+    "id": "S10",
+    "name": "Location rationale",
+    "wave": "UX-2",
+    "spec": "pages/S10.md"
+  },
+  {
+    "id": "S11",
+    "name": "Notification rationale",
+    "wave": "UX-2",
+    "spec": "pages/S11.md"
+  },
+  {
+    "id": "S12",
+    "name": "Language / appearance",
+    "wave": "UX-5",
+    "spec": "pages/S12.md"
+  },
+  {
+    "id": "S13",
+    "name": "Sign-out confirmation",
+    "wave": "UX-2",
+    "spec": "pages/S13.md"
+  },
+  {
+    "id": "S14",
+    "name": "Account security",
+    "wave": "UX-5",
+    "spec": "pages/S14.md"
+  },
+  {
+    "id": "S15",
+    "name": "Password change",
+    "wave": "UX-5",
+    "spec": "pages/S15.md"
+  },
+  {
+    "id": "S16",
+    "name": "Active sessions",
+    "wave": "UX-5",
+    "spec": "pages/S16.md"
+  },
+  {
+    "id": "S17",
+    "name": "Session revocation review",
+    "wave": "UX-5",
+    "spec": "pages/S17.md"
+  },
+  {
+    "id": "S18",
+    "name": "Recovery-code generation",
+    "wave": "UX-5",
+    "spec": "pages/S18.md"
+  },
+  {
+    "id": "S19",
+    "name": "One-time recovery-code custody",
+    "wave": "UX-5",
+    "spec": "pages/S19.md"
+  },
+  {
+    "id": "R00",
+    "name": "Ride home",
+    "wave": "UX-2",
+    "spec": "pages/R00.md"
+  },
+  {
+    "id": "R01",
+    "name": "Destination map",
+    "wave": "UX-2",
+    "spec": "pages/R01.md"
+  },
+  {
+    "id": "R02",
+    "name": "Pickup map",
+    "wave": "UX-2",
+    "spec": "pages/R02.md"
+  },
+  {
+    "id": "R03",
+    "name": "Point confirmation / fallback",
+    "wave": "UX-2",
+    "spec": "pages/R03.md"
+  },
+  {
+    "id": "R04",
+    "name": "Optional place lookup",
+    "wave": "B provider-search acceptance",
+    "spec": "pages/R04.md"
+  },
+  {
+    "id": "R05",
+    "name": "Ride review",
+    "wave": "UX-2",
+    "spec": "pages/R05.md"
+  },
+  {
+    "id": "R06",
+    "name": "Fare detail",
+    "wave": "UX-2",
+    "spec": "pages/R06.md"
+  },
+  {
+    "id": "R07",
+    "name": "Payment method",
+    "wave": "UX-2",
+    "spec": "pages/R07.md"
+  },
+  {
+    "id": "R08",
+    "name": "Request pending",
+    "wave": "UX-2",
+    "spec": "pages/R08.md"
+  },
+  {
+    "id": "R09",
+    "name": "Matching",
+    "wave": "UX-2",
+    "spec": "pages/R09.md"
+  },
+  {
+    "id": "R10",
+    "name": "Unmatched",
+    "wave": "UX-2",
+    "spec": "pages/R10.md"
+  },
+  {
+    "id": "R11",
+    "name": "Assigned",
+    "wave": "UX-3",
+    "spec": "pages/R11.md"
+  },
+  {
+    "id": "R12",
+    "name": "Driver approaching",
+    "wave": "UX-3",
+    "spec": "pages/R12.md"
+  },
+  {
+    "id": "R13",
+    "name": "Driver arrived",
+    "wave": "UX-3",
+    "spec": "pages/R13.md"
+  },
+  {
+    "id": "R14",
+    "name": "In ride",
+    "wave": "UX-3",
+    "spec": "pages/R14.md"
+  },
+  {
+    "id": "R15",
+    "name": "Cancellation review",
+    "wave": "UX-3",
+    "spec": "pages/R15.md"
+  },
+  {
+    "id": "R16",
+    "name": "Cancelled / unavailable journey",
+    "wave": "UX-3",
+    "spec": "pages/R16.md"
+  },
+  {
+    "id": "R17",
+    "name": "Completed / cash pending",
+    "wave": "UX-3",
+    "spec": "pages/R17.md"
+  },
+  {
+    "id": "R18",
+    "name": "Receipt",
+    "wave": "UX-3",
+    "spec": "pages/R18.md"
+  },
+  {
+    "id": "R19",
+    "name": "Manual-transfer instructions",
+    "wave": "UX-8",
+    "spec": "pages/R19.md"
+  },
+  {
+    "id": "R20",
+    "name": "Transfer processing / refund detail",
+    "wave": "UX-8",
+    "spec": "pages/R20.md"
+  },
+  {
+    "id": "R21",
+    "name": "Rating",
+    "wave": "UX-3",
+    "spec": "pages/R21.md"
+  },
+  {
+    "id": "R22",
+    "name": "Trip list",
+    "wave": "UX-3",
+    "spec": "pages/R22.md"
+  },
+  {
+    "id": "R23",
+    "name": "Trip detail",
+    "wave": "UX-3",
+    "spec": "pages/R23.md"
+  },
+  {
+    "id": "R24",
+    "name": "Fixed-route directory",
+    "wave": "UX-8",
+    "spec": "pages/R24.md"
+  },
+  {
+    "id": "R25",
+    "name": "Fixed-route direction",
+    "wave": "UX-8",
+    "spec": "pages/R25.md"
+  },
+  {
+    "id": "R26",
+    "name": "Schedule selection",
+    "wave": "UX-8",
+    "spec": "pages/R26.md"
+  },
+  {
+    "id": "R27",
+    "name": "Schedule review",
+    "wave": "UX-8",
+    "spec": "pages/R27.md"
+  },
+  {
+    "id": "R28",
+    "name": "Upcoming booking list",
+    "wave": "UX-8",
+    "spec": "pages/R28.md"
+  },
+  {
+    "id": "R29",
+    "name": "Booking detail / cancellation",
+    "wave": "UX-8",
+    "spec": "pages/R29.md"
+  },
+  {
+    "id": "R30",
+    "name": "Account",
+    "wave": "UX-5",
+    "spec": "pages/R30.md"
+  },
+  {
+    "id": "R31",
+    "name": "Profile edit",
+    "wave": "UX-5",
+    "spec": "pages/R31.md"
+  },
+  {
+    "id": "R32",
+    "name": "Inbox",
+    "wave": "UX-5",
+    "spec": "pages/R32.md"
+  },
+  {
+    "id": "R33",
+    "name": "Help hub",
+    "wave": "UX-5",
+    "spec": "pages/R33.md"
+  },
+  {
+    "id": "R34",
+    "name": "Support case creation",
+    "wave": "UX-5",
+    "spec": "pages/R34.md"
+  },
+  {
+    "id": "R35",
+    "name": "Own support case / timeline",
+    "wave": "UX-5",
+    "spec": "pages/R35.md"
+  },
+  {
+    "id": "R36",
+    "name": "Safety during trip",
+    "wave": "UX-3",
+    "spec": "pages/R36.md"
+  },
+  {
+    "id": "R37",
+    "name": "Assigned coordination",
+    "wave": "UX-3",
+    "spec": "pages/R37.md"
+  },
+  {
+    "id": "R38",
+    "name": "Recent destination chooser",
+    "wave": "UX-2",
+    "spec": "pages/R38.md"
+  },
+  {
+    "id": "R39",
+    "name": "Own safety reports",
+    "wave": "UX-5",
+    "spec": "pages/R39.md"
+  },
+  {
+    "id": "R40",
+    "name": "Safety report creation",
+    "wave": "UX-5",
+    "spec": "pages/R40.md"
+  },
+  {
+    "id": "R41",
+    "name": "Service-city selector",
+    "wave": "UX-2",
+    "spec": "pages/R41.md"
+  },
+  {
+    "id": "R42",
+    "name": "Development coordinate fallback",
+    "wave": "UX-2",
+    "spec": "pages/R42.md"
+  },
+  {
+    "id": "D00",
+    "name": "Onboarding overview",
+    "wave": "UX-5",
+    "spec": "pages/D00.md"
+  },
+  {
+    "id": "D01",
+    "name": "City / application selection",
+    "wave": "UX-5",
+    "spec": "pages/D01.md"
+  },
+  {
+    "id": "D02",
+    "name": "Identity / credentials",
+    "wave": "UX-5",
+    "spec": "pages/D02.md"
+  },
+  {
+    "id": "D03",
+    "name": "Document requirements",
+    "wave": "UX-5",
+    "spec": "pages/D03.md"
+  },
+  {
+    "id": "D04",
+    "name": "Vehicle application",
+    "wave": "UX-5",
+    "spec": "pages/D04.md"
+  },
+  {
+    "id": "D05",
+    "name": "Application review / submit",
+    "wave": "UX-5",
+    "spec": "pages/D05.md"
+  },
+  {
+    "id": "D06",
+    "name": "Application status",
+    "wave": "UX-5",
+    "spec": "pages/D06.md"
+  },
+  {
+    "id": "D07",
+    "name": "Eligibility restriction",
+    "wave": "UX-5",
+    "spec": "pages/D07.md"
+  },
+  {
+    "id": "D10",
+    "name": "Offline work home",
+    "wave": "UX-4",
+    "spec": "pages/D10.md"
+  },
+  {
+    "id": "D11",
+    "name": "Location / network diagnostic",
+    "wave": "UX-4",
+    "spec": "pages/D11.md"
+  },
+  {
+    "id": "D12",
+    "name": "Online waiting",
+    "wave": "UX-4",
+    "spec": "pages/D12.md"
+  },
+  {
+    "id": "D13",
+    "name": "Incoming immediate offer",
+    "wave": "UX-4",
+    "spec": "pages/D13.md"
+  },
+  {
+    "id": "D14",
+    "name": "Fixed-route / scheduled offer",
+    "wave": "UX-8",
+    "spec": "pages/D14.md"
+  },
+  {
+    "id": "D15",
+    "name": "Offer expired / lost / uncertain",
+    "wave": "UX-4",
+    "spec": "pages/D15.md"
+  },
+  {
+    "id": "D16",
+    "name": "Assigned / navigate to pickup",
+    "wave": "UX-4",
+    "spec": "pages/D16.md"
+  },
+  {
+    "id": "D17",
+    "name": "At pickup",
+    "wave": "UX-4",
+    "spec": "pages/D17.md"
+  },
+  {
+    "id": "D18",
+    "name": "In trip",
+    "wave": "UX-4",
+    "spec": "pages/D18.md"
+  },
+  {
+    "id": "D19",
+    "name": "Completion review",
+    "wave": "UX-4",
+    "spec": "pages/D19.md"
+  },
+  {
+    "id": "D20",
+    "name": "Cash confirmation",
+    "wave": "UX-4",
+    "spec": "pages/D20.md"
+  },
+  {
+    "id": "D21",
+    "name": "Pending cash queue",
+    "wave": "UX-4",
+    "spec": "pages/D21.md"
+  },
+  {
+    "id": "D22",
+    "name": "Cash review / outcome",
+    "wave": "UX-4",
+    "spec": "pages/D22.md"
+  },
+  {
+    "id": "D23",
+    "name": "Earnings",
+    "wave": "UX-4",
+    "spec": "pages/D23.md"
+  },
+  {
+    "id": "D24",
+    "name": "Earning / trip detail",
+    "wave": "UX-4",
+    "spec": "pages/D24.md"
+  },
+  {
+    "id": "D25",
+    "name": "Work history",
+    "wave": "UX-4",
+    "spec": "pages/D25.md"
+  },
+  {
+    "id": "D26",
+    "name": "Upcoming commitments",
+    "wave": "UX-8",
+    "spec": "pages/D26.md"
+  },
+  {
+    "id": "D27",
+    "name": "Commitment detail / handoff",
+    "wave": "UX-8",
+    "spec": "pages/D27.md"
+  },
+  {
+    "id": "D28",
+    "name": "Driver account",
+    "wave": "UX-5",
+    "spec": "pages/D28.md"
+  },
+  {
+    "id": "D29",
+    "name": "Vehicles",
+    "wave": "UX-5",
+    "spec": "pages/D29.md"
+  },
+  {
+    "id": "D30",
+    "name": "Vehicle registration / detail",
+    "wave": "UX-5",
+    "spec": "pages/D30.md"
+  },
+  {
+    "id": "D31",
+    "name": "Driver inbox",
+    "wave": "UX-5",
+    "spec": "pages/D31.md"
+  },
+  {
+    "id": "D32",
+    "name": "Driver Help / own case",
+    "wave": "UX-5",
+    "spec": "pages/D32.md"
+  },
+  {
+    "id": "D33",
+    "name": "Driver safety / coordination",
+    "wave": "UX-5",
+    "spec": "pages/D33.md"
+  },
+  {
+    "id": "D34",
+    "name": "Scheduled-offer preferences",
+    "wave": "UX-8",
+    "spec": "pages/D34.md"
+  },
+  {
+    "id": "D35",
+    "name": "Cooperative membership",
+    "wave": "UX-5",
+    "spec": "pages/D35.md"
+  },
+  {
+    "id": "D36",
+    "name": "Professional credentials",
+    "wave": "UX-5",
+    "spec": "pages/D36.md"
+  },
+  {
+    "id": "D37",
+    "name": "Vehicle deactivation review",
+    "wave": "UX-5",
+    "spec": "pages/D37.md"
+  },
+  {
+    "id": "D38",
+    "name": "Online city/service choice",
+    "wave": "UX-4",
+    "spec": "pages/D38.md"
+  },
+  {
+    "id": "D39",
+    "name": "Driver safety report history",
+    "wave": "UX-5",
+    "spec": "pages/D39.md"
+  },
+  {
+    "id": "D40",
+    "name": "Driver safety report creation",
+    "wave": "UX-5",
+    "spec": "pages/D40.md"
+  },
+  {
+    "id": "D41",
+    "name": "Immediate fixed-route offer",
+    "wave": "UX-4",
+    "spec": "pages/D41.md"
+  },
+  {
+    "id": "L00",
+    "name": "Auth-method chooser / OTP phone entry",
+    "wave": "Deferred B/C capability design",
+    "spec": "pages/L00.md"
+  },
+  {
+    "id": "L01",
+    "name": "OTP verification / resend",
+    "wave": "Deferred B/C capability design",
+    "spec": "pages/L01.md"
+  },
+  {
+    "id": "L02",
+    "name": "Saved Home/Work / saved-place editor",
+    "wave": "Deferred B/C capability design",
+    "spec": "pages/L02.md"
+  },
+  {
+    "id": "L03",
+    "name": "Service-category chooser",
+    "wave": "Deferred B/C capability design",
+    "spec": "pages/L03.md"
+  },
+  {
+    "id": "L04",
+    "name": "Card checkout / wallet / payout",
+    "wave": "Deferred B/C capability design",
+    "spec": "pages/L04.md"
+  },
+  {
+    "id": "L05",
+    "name": "Continuous tracking / live trip sharing",
+    "wave": "Deferred B/C capability design",
+    "spec": "pages/L05.md"
+  },
+  {
+    "id": "L06",
+    "name": "Contact verification / account export-delete",
+    "wave": "Deferred B/C capability design",
+    "spec": "pages/L06.md"
+  },
+  {
+    "id": "L07",
+    "name": "General messaging / masked calls / emergency integration",
+    "wave": "Deferred B/C capability design",
+    "spec": "pages/L07.md"
+  },
+  {
+    "id": "L08",
+    "name": "Cooperative governance/voting",
+    "wave": "Deferred B/C capability design",
+    "spec": "pages/L08.md"
+  },
+  {
+    "id": "A00",
+    "name": "Welcome",
+    "wave": "UX-5",
+    "spec": "pages/A00.md"
+  },
+  {
+    "id": "A01",
+    "name": "Sign in",
+    "wave": "UX-5",
+    "spec": "pages/A01.md"
+  },
+  {
+    "id": "A02",
+    "name": "Registration",
+    "wave": "UX-5",
+    "spec": "pages/A02.md"
+  },
+  {
+    "id": "A03",
+    "name": "City/application list",
+    "wave": "UX-5",
+    "spec": "pages/A03.md"
+  },
+  {
+    "id": "A04",
+    "name": "Application overview",
+    "wave": "UX-5",
+    "spec": "pages/A04.md"
+  },
+  {
+    "id": "A05",
+    "name": "Identity/credential step",
+    "wave": "UX-5",
+    "spec": "pages/A05.md"
+  },
+  {
+    "id": "A06",
+    "name": "Evidence/document step",
+    "wave": "UX-5",
+    "spec": "pages/A06.md"
+  },
+  {
+    "id": "A07",
+    "name": "Vehicle step",
+    "wave": "UX-5",
+    "spec": "pages/A07.md"
+  },
+  {
+    "id": "A08",
+    "name": "Review/submit",
+    "wave": "UX-5",
+    "spec": "pages/A08.md"
+  },
+  {
+    "id": "A09",
+    "name": "Status/timeline",
+    "wave": "UX-5",
+    "spec": "pages/A09.md"
+  },
+  {
+    "id": "A10",
+    "name": "More information/replacement",
+    "wave": "UX-5",
+    "spec": "pages/A10.md"
+  },
+  {
+    "id": "A11",
+    "name": "Withdrawal review",
+    "wave": "UX-5",
+    "spec": "pages/A11.md"
+  },
+  {
+    "id": "A12",
+    "name": "Account/language/sign out",
+    "wave": "UX-5",
+    "spec": "pages/A12.md"
+  },
+  {
+    "id": "O00",
+    "name": "Sign in",
+    "wave": "UX-6",
+    "spec": "pages/O00.md"
+  },
+  {
+    "id": "O01",
+    "name": "MFA verification",
+    "wave": "UX-6",
+    "spec": "pages/O01.md"
+  },
+  {
+    "id": "O02",
+    "name": "Step-up review",
+    "wave": "UX-6",
+    "spec": "pages/O02.md"
+  },
+  {
+    "id": "O03",
+    "name": "Scope picker",
+    "wave": "UX-6",
+    "spec": "pages/O03.md"
+  },
+  {
+    "id": "O04",
+    "name": "Access/session gate",
+    "wave": "UX-6",
+    "spec": "pages/O04.md"
+  },
+  {
+    "id": "O05",
+    "name": "Rollout overview",
+    "wave": "UX-6",
+    "spec": "pages/O05.md"
+  },
+  {
+    "id": "O06",
+    "name": "Cities",
+    "wave": "UX-6",
+    "spec": "pages/O06.md"
+  },
+  {
+    "id": "O07",
+    "name": "City creation",
+    "wave": "UX-6",
+    "spec": "pages/O07.md"
+  },
+  {
+    "id": "O08",
+    "name": "Service-area versions",
+    "wave": "UX-6",
+    "spec": "pages/O08.md"
+  },
+  {
+    "id": "O09",
+    "name": "Service-area review",
+    "wave": "UX-6",
+    "spec": "pages/O09.md"
+  },
+  {
+    "id": "O10",
+    "name": "Configuration assembly",
+    "wave": "UX-6",
+    "spec": "pages/O10.md"
+  },
+  {
+    "id": "O11",
+    "name": "Configuration review/activation",
+    "wave": "UX-6",
+    "spec": "pages/O11.md"
+  },
+  {
+    "id": "O12",
+    "name": "Readiness evidence",
+    "wave": "UX-6",
+    "spec": "pages/O12.md"
+  },
+  {
+    "id": "O13",
+    "name": "City lifecycle review",
+    "wave": "UX-6",
+    "spec": "pages/O13.md"
+  },
+  {
+    "id": "O14",
+    "name": "Operators",
+    "wave": "UX-6",
+    "spec": "pages/O14.md"
+  },
+  {
+    "id": "O15",
+    "name": "Operator creation/edit",
+    "wave": "UX-6",
+    "spec": "pages/O15.md"
+  },
+  {
+    "id": "O16",
+    "name": "Operator status/assignment review",
+    "wave": "UX-6",
+    "spec": "pages/O16.md"
+  },
+  {
+    "id": "O17",
+    "name": "Tariffs",
+    "wave": "UX-8",
+    "spec": "pages/O17.md"
+  },
+  {
+    "id": "O18",
+    "name": "Tariff editor/review",
+    "wave": "UX-8",
+    "spec": "pages/O18.md"
+  },
+  {
+    "id": "O19",
+    "name": "Operator fees",
+    "wave": "UX-8",
+    "spec": "pages/O19.md"
+  },
+  {
+    "id": "O20",
+    "name": "Fee editor/review",
+    "wave": "UX-8",
+    "spec": "pages/O20.md"
+  },
+  {
+    "id": "O21",
+    "name": "Scheduling policy",
+    "wave": "UX-8",
+    "spec": "pages/O21.md"
+  },
+  {
+    "id": "O22",
+    "name": "Scheduling editor/review",
+    "wave": "UX-8",
+    "spec": "pages/O22.md"
+  },
+  {
+    "id": "O23",
+    "name": "Fixed-route catalogue",
+    "wave": "UX-8",
+    "spec": "pages/O23.md"
+  },
+  {
+    "id": "O24",
+    "name": "Route identity editor",
+    "wave": "UX-8",
+    "spec": "pages/O24.md"
+  },
+  {
+    "id": "O25",
+    "name": "Route version/direction/stop editor",
+    "wave": "UX-8",
+    "spec": "pages/O25.md"
+  },
+  {
+    "id": "O26",
+    "name": "Route publication/replacement review",
+    "wave": "UX-8",
+    "spec": "pages/O26.md"
+  },
+  {
+    "id": "O27",
+    "name": "Staff access",
+    "wave": "UX-8",
+    "spec": "pages/O27.md"
+  },
+  {
+    "id": "O28",
+    "name": "Grant request",
+    "wave": "UX-8",
+    "spec": "pages/O28.md"
+  },
+  {
+    "id": "O29",
+    "name": "Revoke request",
+    "wave": "UX-8",
+    "spec": "pages/O29.md"
+  },
+  {
+    "id": "O30",
+    "name": "Independent grant decision",
+    "wave": "UX-8",
+    "spec": "pages/O30.md"
+  },
+  {
+    "id": "O31",
+    "name": "Recruitment queue",
+    "wave": "UX-6",
+    "spec": "pages/O31.md"
+  },
+  {
+    "id": "O32",
+    "name": "Requirement versions",
+    "wave": "UX-8",
+    "spec": "pages/O32.md"
+  },
+  {
+    "id": "O33",
+    "name": "Requirement editor/review",
+    "wave": "UX-8",
+    "spec": "pages/O33.md"
+  },
+  {
+    "id": "O34",
+    "name": "Application review",
+    "wave": "UX-6",
+    "spec": "pages/O34.md"
+  },
+  {
+    "id": "O35",
+    "name": "Driver decision review",
+    "wave": "UX-6",
+    "spec": "pages/O35.md"
+  },
+  {
+    "id": "O36",
+    "name": "Protected-document retrieval",
+    "wave": "UX-6",
+    "spec": "pages/O36.md"
+  },
+  {
+    "id": "O37",
+    "name": "Payment overview",
+    "wave": "UX-6",
+    "spec": "pages/O37.md"
+  },
+  {
+    "id": "O38",
+    "name": "Recipient list/create",
+    "wave": "UX-8",
+    "spec": "pages/O38.md"
+  },
+  {
+    "id": "O39",
+    "name": "Capability list/create",
+    "wave": "UX-8",
+    "spec": "pages/O39.md"
+  },
+  {
+    "id": "O40",
+    "name": "Transfer queue/detail",
+    "wave": "UX-6",
+    "spec": "pages/O40.md"
+  },
+  {
+    "id": "O41",
+    "name": "Transfer decision review",
+    "wave": "UX-6",
+    "spec": "pages/O41.md"
+  },
+  {
+    "id": "O42",
+    "name": "Refund recorder/review",
+    "wave": "UX-8",
+    "spec": "pages/O42.md"
+  },
+  {
+    "id": "O43",
+    "name": "Refund ledger/detail",
+    "wave": "UX-8",
+    "spec": "pages/O43.md"
+  },
+  {
+    "id": "O44",
+    "name": "Scheduled exceptions",
+    "wave": "UX-8",
+    "spec": "pages/O44.md"
+  },
+  {
+    "id": "O45",
+    "name": "Intelligence overview",
+    "wave": "UX-8",
+    "spec": "pages/O45.md"
+  },
+  {
+    "id": "O46",
+    "name": "Aggregate report detail",
+    "wave": "UX-8",
+    "spec": "pages/O46.md"
+  },
+  {
+    "id": "O47",
+    "name": "Support/safety queues",
+    "wave": "UX-6",
+    "spec": "pages/O47.md"
+  },
+  {
+    "id": "O48",
+    "name": "Case detail/timeline",
+    "wave": "UX-6",
+    "spec": "pages/O48.md"
+  },
+  {
+    "id": "O49",
+    "name": "Support triage/transition",
+    "wave": "UX-8",
+    "spec": "pages/O49.md"
+  },
+  {
+    "id": "O50",
+    "name": "Safety handoff/transition",
+    "wave": "UX-8",
+    "spec": "pages/O50.md"
+  },
+  {
+    "id": "O51",
+    "name": "Overdue alert acknowledgement",
+    "wave": "UX-8",
+    "spec": "pages/O51.md"
+  },
+  {
+    "id": "O52",
+    "name": "Retention/legal hold",
+    "wave": "UX-8",
+    "spec": "pages/O52.md"
+  },
+  {
+    "id": "O53",
+    "name": "Account security",
+    "wave": "UX-8",
+    "spec": "pages/O53.md"
+  },
+  {
+    "id": "O54",
+    "name": "Account-security command review",
+    "wave": "UX-8",
+    "spec": "pages/O54.md"
+  },
+  {
+    "id": "O55",
+    "name": "Incident queue/create",
+    "wave": "UX-8",
+    "spec": "pages/O55.md"
+  },
+  {
+    "id": "O56",
+    "name": "Incident detail/responsibility",
+    "wave": "UX-8",
+    "spec": "pages/O56.md"
+  },
+  {
+    "id": "O57",
+    "name": "Incident timeline/event",
+    "wave": "UX-8",
+    "spec": "pages/O57.md"
+  },
+  {
+    "id": "O58",
+    "name": "Incident transition/recovery",
+    "wave": "UX-8",
+    "spec": "pages/O58.md"
+  },
+  {
+    "id": "O59",
+    "name": "Postmortem",
+    "wave": "UX-8",
+    "spec": "pages/O59.md"
+  },
+  {
+    "id": "O60",
+    "name": "Audit",
+    "wave": "UX-6",
+    "spec": "pages/O60.md"
+  },
+  {
+    "id": "O61",
+    "name": "Restricted/empty/error detail",
+    "wave": "UX-6",
+    "spec": "pages/O61.md"
+  },
+  {
+    "id": "O62",
+    "name": "City driver authorization detail",
+    "wave": "UX-6",
+    "spec": "pages/O62.md"
+  },
+  {
+    "id": "O63",
+    "name": "City authorization suspension",
+    "wave": "UX-6",
+    "spec": "pages/O63.md"
+  },
+  {
+    "id": "O64",
+    "name": "City authorization revocation",
+    "wave": "UX-6",
+    "spec": "pages/O64.md"
+  },
+  {
+    "id": "O65",
+    "name": "City authorization reinstatement",
+    "wave": "UX-6",
+    "spec": "pages/O65.md"
+  },
+  {
+    "id": "O66",
+    "name": "City-service assignment creation",
+    "wave": "UX-6",
+    "spec": "pages/O66.md"
+  },
+  {
+    "id": "O67",
+    "name": "Service-area boundary editor",
+    "wave": "UX-6",
+    "spec": "pages/O67.md"
+  },
+  {
+    "id": "O68",
+    "name": "Recipient lifecycle review",
+    "wave": "UX-8",
+    "spec": "pages/O68.md"
+  },
+  {
+    "id": "O69",
+    "name": "Payment-capability lifecycle review",
+    "wave": "UX-8",
+    "spec": "pages/O69.md"
+  },
+  {
+    "id": "O70",
+    "name": "Operations MFA recovery-code mode",
+    "wave": "UX-6",
+    "spec": "pages/O70.md"
+  },
+  {
+    "id": "O71",
+    "name": "Safety case detail",
+    "wave": "UX-6",
+    "spec": "pages/O71.md"
+  },
+  {
+    "id": "O72",
+    "name": "Retention review detail",
+    "wave": "UX-8",
+    "spec": "pages/O72.md"
+  },
+  {
+    "id": "O73",
+    "name": "Legal-hold placement review",
+    "wave": "UX-8",
+    "spec": "pages/O73.md"
+  },
+  {
+    "id": "O74",
+    "name": "Legal-hold release review",
+    "wave": "UX-8",
+    "spec": "pages/O74.md"
+  },
+  {
+    "id": "O75",
+    "name": "Overdue alert detail",
+    "wave": "UX-6",
+    "spec": "pages/O75.md"
+  },
+  {
+    "id": "O76",
+    "name": "Recipient creation",
+    "wave": "UX-8",
+    "spec": "pages/O76.md"
+  },
+  {
+    "id": "O77",
+    "name": "Payment-capability creation",
+    "wave": "UX-8",
+    "spec": "pages/O77.md"
+  },
+  {
+    "id": "O78",
+    "name": "Requirement-version lifecycle review",
+    "wave": "UX-8",
+    "spec": "pages/O78.md"
+  },
+  {
+    "id": "O79",
+    "name": "Tariff lifecycle review",
+    "wave": "UX-8",
+    "spec": "pages/O79.md"
+  },
+  {
+    "id": "O80",
+    "name": "Fee-policy lifecycle review",
+    "wave": "UX-8",
+    "spec": "pages/O80.md"
+  },
+  {
+    "id": "O81",
+    "name": "Scheduling-policy lifecycle review",
+    "wave": "UX-8",
+    "spec": "pages/O81.md"
+  },
+  {
+    "id": "O82",
+    "name": "Route replacement review",
+    "wave": "UX-8",
+    "spec": "pages/O82.md"
+  },
+  {
+    "id": "O83",
+    "name": "Route retirement review",
+    "wave": "UX-8",
+    "spec": "pages/O83.md"
+  },
+  {
+    "id": "O84",
+    "name": "Support triage",
+    "wave": "UX-6",
+    "spec": "pages/O84.md"
+  },
+  {
+    "id": "O85",
+    "name": "Safety transition review",
+    "wave": "UX-6",
+    "spec": "pages/O85.md"
+  },
+  {
+    "id": "O86",
+    "name": "Selected city detail",
+    "wave": "UX-6",
+    "spec": "pages/O86.md"
+  },
+  {
+    "id": "O87",
+    "name": "Readiness decision review",
+    "wave": "UX-6",
+    "spec": "pages/O87.md"
+  }
+]

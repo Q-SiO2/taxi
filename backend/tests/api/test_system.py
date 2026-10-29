@@ -5,6 +5,7 @@ import pytest
 
 from taximobile_api.core.config import Settings
 from taximobile_api.core.client_compatibility import ClientSurface
+from taximobile_api.db.transport import DatabaseTLS
 from taximobile_api.main import create_app
 
 
@@ -179,9 +180,14 @@ def test_hosted_readiness_tracks_live_listener_loss_and_recovery(monkeypatch, en
         is_ready = False
 
     listener = Listener()
-    monkeypatch.setattr("taximobile_api.main.PostgresLiveEventListener", lambda *_: listener)
+    settings = replace(Settings.from_environment(), environment=environment, process_role="api",
+                       database_tls=DatabaseTLS("verify-full"))
+    def listener_factory(_url, _hub, *, tls):
+        assert tls is settings.database_tls
+        return listener
+    monkeypatch.setattr("taximobile_api.main.PostgresLiveEventListener", listener_factory)
     app = create_app(
-        settings=replace(Settings.from_environment(), environment=environment, process_role="api"),
+        settings=settings,
         session_factory=ReadySessionFactory(),
     )
     client = TestClient(app)
@@ -206,7 +212,12 @@ def test_hosted_readiness_rechecks_listener_after_database_probe(monkeypatch, en
         is_ready = True
 
     listener = Listener()
-    monkeypatch.setattr("taximobile_api.main.PostgresLiveEventListener", lambda *_: listener)
+    settings = replace(Settings.from_environment(), environment=environment, process_role="api",
+                       database_tls=DatabaseTLS("verify-full"))
+    def listener_factory(_url, _hub, *, tls):
+        assert tls is settings.database_tls
+        return listener
+    monkeypatch.setattr("taximobile_api.main.PostgresLiveEventListener", listener_factory)
 
     class LosingSession(ReadySession):
         async def execute(self, _statement):
@@ -217,7 +228,7 @@ def test_hosted_readiness_rechecks_listener_after_database_probe(monkeypatch, en
             return LosingSession()
 
     app = create_app(
-        settings=replace(Settings.from_environment(), environment=environment, process_role="api"),
+        settings=settings,
         session_factory=lambda: LosingContext(),
     )
     assert TestClient(app).get("/ready").status_code == 503

@@ -1,5 +1,6 @@
 package org.example.taximobile.feature.passenger
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,6 +47,7 @@ internal fun PlaceDiscoverySection(
     onSearch: (String, String) -> Unit,
     onSelectResult: (PlaceResult) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     val eligibleCities = cities.filter { it.bookingAvailable }
     val activeCityId = selectedCityId?.takeIf { id -> eligibleCities.any { it.id == id } }
         ?: eligibleCities.firstOrNull()?.id
@@ -87,17 +89,17 @@ internal fun PlaceDiscoverySection(
     Text(
         stringResource(Res.string.place_search_privacy_help),
         style = MaterialTheme.typography.bodySmall,
-        color = TaxiColors.Ink500,
+        color = taxiColors.Ink500,
     )
     if (eligibleCities.isEmpty()) {
         Text(
             stringResource(Res.string.place_search_no_service_city),
-            color = TaxiColors.Ink700,
+            color = taxiColors.Ink700,
         )
         Text(
             stringResource(Res.string.place_search_map_fallback),
             style = MaterialTheme.typography.bodySmall,
-            color = TaxiColors.Ink500,
+            color = taxiColors.Ink500,
         )
         return
     }
@@ -137,7 +139,7 @@ internal fun PlaceDiscoverySection(
         if (search.items.isEmpty()) {
             Text(
                 stringResource(Res.string.place_search_empty),
-                color = TaxiColors.Ink700,
+                color = taxiColors.Ink700,
             )
         }
         search.items.forEach { result ->
@@ -161,7 +163,7 @@ internal fun PlaceDiscoverySection(
                         Text(placeKindLabel(result.kind), style = MaterialTheme.typography.labelSmall)
                     }
                     result.secondaryText?.let {
-                        Text(it, style = MaterialTheme.typography.bodySmall, color = TaxiColors.Ink500)
+                        Text(it, style = MaterialTheme.typography.bodySmall, color = taxiColors.Ink500)
                     }
                     if (!result.pickupServiceable) {
                         StatusPill(
@@ -179,13 +181,13 @@ internal fun PlaceDiscoverySection(
                 search.attribution.url,
             ),
             style = MaterialTheme.typography.labelSmall,
-            color = TaxiColors.Ink500,
+            color = taxiColors.Ink500,
         )
     }
     Text(
         stringResource(Res.string.place_search_map_fallback),
         style = MaterialTheme.typography.bodySmall,
-        color = TaxiColors.Ink500,
+        color = taxiColors.Ink500,
     )
 }
 

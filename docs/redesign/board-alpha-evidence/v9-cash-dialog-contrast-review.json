@@ -1,0 +1,39 @@
+{
+  "reviewed_utc": "2026-10-17T09:33:15.206834+00:00",
+  "candidate": "candidate-native-v9.json",
+  "presentation_accepted": false,
+  "business_trip_report": "v9-native-first.json",
+  "capture": {
+    "path": "v9-first-cash-dialog.png",
+    "sha256": "9ba63cbebdefbbf72e69e31fd7435b9953dfd424a00ef4ccaf9890e2edb61aba"
+  },
+  "observed": [
+    "Actual dialog shows 35.00 MAD and ride/payment date 2026-10-17",
+    "Dark confirmation label on Folded Streets blue action background",
+    "Shared ConfirmDialog overrides content color with Navy950 and omits the selected style button shape"
+  ],
+  "source_color_contrast": {
+    "folded_streets": {
+      "foreground": "191A23",
+      "background": "263AD4",
+      "ratio": 2.174,
+      "required_normal_text": 4.5
+    },
+    "notepad_prediction_not_runtime_acceptance": {
+      "foreground": "181818",
+      "background": "202020",
+      "ratio": 1.09
+    }
+  },
+  "next_fix": [
+    "Use the theme onPrimary/onError content roles for the corresponding action background",
+    "Apply selected TaxiTheme corner radius to confirm and dismiss controls",
+    "Keep the exact fare/date review and explicit confirmation command",
+    "Verify all four style action contrasts and actual critical dialog renders before final freeze"
+  ],
+  "limitations": [
+    "The passed trip and server settlement are unaffected",
+    "Notepad dialog action prediction is source evidence, not a new native render",
+    "Current in-flight surface v10 build does not include this additional fix"
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "recorded_utc": "2026-10-26 16:47:31 UTC",
+  "source_head": "e38ae7b59da64b73966a7e794b30382df572502f",
+  "candidate_tree": "4392f303363d39e37ec9f537ae0d66fdc50f5c52",
+  "run_id": 40356220628,
+  "run_number": 250,
+  "status": "completed",
+  "conclusion": "failure",
+  "required_jobs": {
+    "gradle-dependency-submission": {
+      "id": 121689292471,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "mobile": {
+      "id": 121689292732,
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    "gradle-wrapper-integrity": {
+      "id": 121689292942,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "backend": {
+      "id": 121689292945,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "web": {
+      "id": 121689293215,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "ios-shared": {
+      "id": 121689293276,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "documentation-and-provenance": {
+      "id": 121689293414,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "dependency-review": {
+      "id": 121691513187,
+      "status": "completed",
+      "conclusion": "success"
+    }
+  },
+  "failed_job_id": 121689292732,
+  "failed_step": "python3 -m unittest discover -s scripts/tests -p 'test_*.py'",
+  "source_gate_failure": "validate_mobile_recovery required the old separate if (current == null) spelling; the combined current == null || current.expired branch was rejected.",
+  "observed_python_suite": {
+    "tests": 114,
+    "failures": 3,
+    "errors": 1
+  },
+  "android_shared_tests": "passed",
+  "android_debug_assembly": "skipped after failure",
+  "android_minified_products": "skipped after failure",
+  "backend_artifact_binding_verified": false,
+  "source_gate_correction_required": true,
+  "physical_hosted_provider_operational_pilot_or_public_accepted": false
+}

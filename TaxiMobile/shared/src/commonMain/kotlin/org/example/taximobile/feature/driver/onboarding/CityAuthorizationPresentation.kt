@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import taximobile.shared.generated.resources.*
+import org.example.taximobile.feature.ui.text.ltrIsolate
 
 /** Present the server's recorded status; presence of a record never means approval. */
 internal fun cityAuthorizationStatusResource(status: String): StringResource = when (status) {
@@ -20,6 +21,6 @@ internal fun cityAuthorizationStatusResource(status: String): StringResource = w
 @Composable
 fun CityAuthorizationSummary(status: String, validUntil: String?) {
     Text(stringResource(cityAuthorizationStatusResource(status)), style = MaterialTheme.typography.titleMedium)
-    validUntil?.let { Text(stringResource(Res.string.city_authorization_valid_until, it)) }
+    validUntil?.let { Text(stringResource(Res.string.city_authorization_valid_until, ltrIsolate(it))) }
     Text(stringResource(Res.string.city_authorization_eligibility_notice), style = MaterialTheme.typography.bodySmall)
 }

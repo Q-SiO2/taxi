@@ -1,0 +1,130 @@
+{
+  "candidate": "candidate-native-v12.json",
+  "run": "second",
+  "started_utc": "2026-10-19T19:43:04.187814+00:00",
+  "fidelity": "two Android emulators, synthetic GPS/accounts/cash; native writes and server reads",
+  "emulators": [
+    {
+      "role": "driver",
+      "serial": "emulator-5556",
+      "api_level": 35,
+      "avd": "taximobile-board-api35-driver"
+    },
+    {
+      "role": "passenger",
+      "serial": "emulator-5554",
+      "api_level": 31,
+      "avd": "taximobile-board-aosp31-passenger"
+    }
+  ],
+  "passed": false,
+  "steps": [
+    {
+      "name": "Native on-demand availability visible",
+      "utc": "2026-10-19T19:43:39.005913+00:00"
+    },
+    {
+      "name": "Server on-demand availability confirmed",
+      "utc": "2026-10-19T19:43:48.697712+00:00"
+    },
+    {
+      "name": "Native server fare review visible before request",
+      "utc": "2026-10-19T19:44:09.363015+00:00"
+    },
+    {
+      "name": "Native booking confirmed",
+      "utc": "2026-10-19T19:44:13.470206+00:00"
+    },
+    {
+      "name": "Private acceptance confirmed",
+      "utc": "2026-10-19T19:45:03.278486+00:00"
+    },
+    {
+      "name": "Native DRIVER_EN_ROUTE",
+      "utc": "2026-10-19T19:45:37.779557+00:00"
+    },
+    {
+      "name": "Native DRIVER_ARRIVED",
+      "utc": "2026-10-19T19:46:09.355148+00:00"
+    },
+    {
+      "name": "Native IN_PROGRESS",
+      "utc": "2026-10-19T19:46:33.438055+00:00"
+    }
+  ],
+  "installed_apks": [
+    {
+      "role": "driver",
+      "sha256": "45561d0e7a5937d2e2fea23a114d37bcd554afd1e02934adc940e71d8c58c218"
+    },
+    {
+      "role": "passenger",
+      "sha256": "039f8c710d0a02bb704994489b099c1b7e0750ec557cb34f9a34f0e726c296ea"
+    }
+  ],
+  "harness_sha256": "5017e2961130e8caa144e578dc646daa04c6024f44b0e4949c31ab07134bb29e",
+  "clock_fixture": [
+    {
+      "role": "driver",
+      "host_minus_device_seconds_before": 0.3,
+      "host_minus_device_seconds_after": 0.6,
+      "method": "owned emulator cmd alarm set-time before trip only"
+    },
+    {
+      "role": "passenger",
+      "host_minus_device_seconds_before": 0.71,
+      "host_minus_device_seconds_after": 0.9,
+      "method": "owned emulator cmd alarm set-time before trip only"
+    }
+  ],
+  "ride_id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+  "native_transition_intents": [
+    {
+      "action": "start_heading_pickup",
+      "utc": "2026-10-19T19:45:07.579929+00:00",
+      "bounds": "Bounds(left=204, top=920, right=517, bottom=962)"
+    },
+    {
+      "action": "mark_arrived",
+      "utc": "2026-10-19T19:45:41.029368+00:00",
+      "bounds": "Bounds(left=279, top=1005, right=442, bottom=1047)"
+    },
+    {
+      "action": "start_ride",
+      "utc": "2026-10-19T19:46:12.450324+00:00",
+      "bounds": "Bounds(left=304, top=997, right=416, bottom=1039)"
+    }
+  ],
+  "failure_type": "SmokeFailure",
+  "screenshots": [
+    {
+      "path": "v12-second-20261019T194302Z-fare-review.png",
+      "sha256": "fb31d1587f4893512d92d228a2c401aad3491383f3008bfc8c31d1858a099f84"
+    },
+    {
+      "path": "v12-second-20261019T194302Z-private-offer.png",
+      "sha256": "f679b470f4389e677bafab194ae8b25c27edba7a0fea73b2308426059ea27a8b"
+    },
+    {
+      "path": "v12-second-20261019T194302Z-accepted.png",
+      "sha256": "397bcb66a552d74297be1d018a14914458bcbff6e4cb208e0db1db0132d510bc"
+    },
+    {
+      "path": "v12-second-20261019T194302Z-before-start_heading_pickup.png",
+      "sha256": "397bcb66a552d74297be1d018a14914458bcbff6e4cb208e0db1db0132d510bc"
+    },
+    {
+      "path": "v12-second-20261019T194302Z-before-mark_arrived.png",
+      "sha256": "19b9a1cd512996d6ef8624bbbe0d2ffa3a2d56dc946c23497103313bf5ef190b"
+    },
+    {
+      "path": "v12-second-20261019T194302Z-before-start_ride.png",
+      "sha256": "8b2689b76b03fd3eea13a9ca5c7f729181901bc540b5d8d84da099bc8a71d4f1"
+    },
+    {
+      "path": "v12-second-20261019T194302Z-in-progress.png",
+      "sha256": "c5f63e5e356649e2cf7f97bbbd4f70054b35112950f2a18edfaab84c9c8969ca"
+    }
+  ],
+  "finished_utc": "2026-10-19T19:48:00.603737+00:00"
+}

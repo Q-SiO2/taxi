@@ -1,0 +1,119 @@
+{
+  "date": "2026-10-15",
+  "selectedStyles": [
+    "Folded Streets",
+    "Street Press",
+    "Glazed Machine",
+    "Notepad"
+  ],
+  "styles": 4,
+  "pagesWithAllStyles": 213,
+  "componentSpecimens": 40,
+  "notepadTokensGrayscale": "PASS",
+  "notepadDecorativeMotionDisabled": "PASS",
+  "preferenceSelectionContract": "PASS",
+  "sourceAndSpecCoverage": "PASS",
+  "scriptSyntax": "PASS",
+  "localLinks": "PASS",
+  "reviewOnlyNoApi": "PASS",
+  "contrastPairs": [
+    {
+      "style": "fold",
+      "pair": "body",
+      "ratio": 16.98,
+      "minimum": 4.5
+    },
+    {
+      "style": "fold",
+      "pair": "supporting",
+      "ratio": 7.58,
+      "minimum": 4.5
+    },
+    {
+      "style": "fold",
+      "pair": "action",
+      "ratio": 7.96,
+      "minimum": 4.5
+    },
+    {
+      "style": "fold",
+      "pair": "control",
+      "ratio": 5.64,
+      "minimum": 3
+    },
+    {
+      "style": "print",
+      "pair": "body",
+      "ratio": 16.35,
+      "minimum": 4.5
+    },
+    {
+      "style": "print",
+      "pair": "supporting",
+      "ratio": 8.24,
+      "minimum": 4.5
+    },
+    {
+      "style": "print",
+      "pair": "action",
+      "ratio": 17.31,
+      "minimum": 4.5
+    },
+    {
+      "style": "print",
+      "pair": "control",
+      "ratio": 6.32,
+      "minimum": 3
+    },
+    {
+      "style": "tactile",
+      "pair": "body",
+      "ratio": 16.99,
+      "minimum": 4.5
+    },
+    {
+      "style": "tactile",
+      "pair": "supporting",
+      "ratio": 7.25,
+      "minimum": 4.5
+    },
+    {
+      "style": "tactile",
+      "pair": "action",
+      "ratio": 11.25,
+      "minimum": 4.5
+    },
+    {
+      "style": "tactile",
+      "pair": "control",
+      "ratio": 5.78,
+      "minimum": 3
+    },
+    {
+      "style": "notepad",
+      "pair": "body",
+      "ratio": 17.76,
+      "minimum": 4.5
+    },
+    {
+      "style": "notepad",
+      "pair": "supporting",
+      "ratio": 8.06,
+      "minimum": 4.5
+    },
+    {
+      "style": "notepad",
+      "pair": "action",
+      "ratio": 16.29,
+      "minimum": 4.5
+    },
+    {
+      "style": "notepad",
+      "pair": "control",
+      "ratio": 4.74,
+      "minimum": 3
+    }
+  ],
+  "directionSelectedByOwner": true,
+  "nativeImplementationVerified": false
+}

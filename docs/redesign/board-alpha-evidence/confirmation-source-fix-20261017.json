@@ -1,0 +1,46 @@
+{
+  "verified_utc": "2026-10-17T09:47:55.743973+00:00",
+  "scope": "post-v10 source correction and focused JVM proof; not in any APK or deployed web candidate",
+  "checks": [
+    "Confirm and destructive action labels use the corresponding theme onPrimary/onError role",
+    "Confirm, dismiss and dialog shapes use the selected style radii",
+    "Exact fare/date review and command callbacks preserved",
+    "Concise cash pending/confirmation copy in EN/FR/AR removes implementation jargon",
+    "3 focused JVM color/contrast tests pass with zero failures/errors/skips",
+    "730 EN/FR/AR string keys validate",
+    "Focused whitespace and refreshed source-atlas checks pass"
+  ],
+  "tests": [
+    "confirmation_action_roles_are_readable_in_every_selected_style[jvm]",
+    "notepad_material_dialogs_and_elevated_surfaces_stay_grayscale_and_readable[jvm]",
+    "default_controls_and_primary_actions_use_the_selected_folded_style[jvm]"
+  ],
+  "test_xml_sha256": "e8bb362669ba62d477001202467eb0425cabe010e23153529e21b8046ceb0c57",
+  "sources": [
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/ConfirmDialog.kt",
+      "sha256": "cd7b97c35dd36af9cc64f3b8ef0d341f287c6ae79c4e2172e992376edef5e0dd"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/ui/theme/TaxiColorContrastTest.kt",
+      "sha256": "fbe9d7f49346284cddaf0b137d739d3a7c2629dcad72492d62b4fccefeb4b17b"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/values/strings.xml",
+      "sha256": "0cfc11a1cbca083b185a25f741b767cc68b174c78a35f91b7e86030dac93dcc8"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/values-fr/strings.xml",
+      "sha256": "e6e26941e1faba08646570e37a85db69bb5c30e200cc1f1f8f222f1f8cb14f89"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/values-ar/strings.xml",
+      "sha256": "af6bd8ec84d0eb9d3e49327f9c49aedf1d48e64d311e14b3dfa6747bd9051cee"
+    }
+  ],
+  "limitations": [
+    "No new native APK built for this correction yet",
+    "Actual corrected four-style cash dialog and final native repeats remain required",
+    "Archived native v10 and deployed web v6 stay immutable"
+  ]
+}

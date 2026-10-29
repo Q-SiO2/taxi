@@ -1,5 +1,6 @@
 package org.example.taximobile.feature.maps
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,6 +18,8 @@ import org.maplibre.compose.expressions.dsl.const
 import org.maplibre.compose.layers.CircleLayer
 import org.maplibre.compose.layers.LineLayer
 import org.maplibre.compose.map.MaplibreMap
+import org.maplibre.compose.map.MapOptions
+import org.maplibre.compose.map.OrnamentOptions
 import org.maplibre.compose.sources.GeoJsonData
 import org.maplibre.compose.sources.rememberGeoJsonSource
 import org.maplibre.compose.style.BaseStyle
@@ -37,6 +40,8 @@ actual fun MapLibreTripMap(
     onCoordinateSelected: (Coordinates) -> Unit,
     modifier: Modifier,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val selectCoordinate = rememberMapCoordinateSelection(onCoordinateSelected)
     val initialTarget = driverLocation ?: pickup ?: destination ?: DefaultTaxiMobileMapCenter
     val cameraState = rememberCameraState(
         firstPosition = CameraPosition(
@@ -81,6 +86,7 @@ actual fun MapLibreTripMap(
             BaseStyle.Uri(requireNotNull(styleUrl))
         },
         cameraState = cameraState,
+        options = MapOptions(ornamentOptions = OrnamentOptions(isScaleBarEnabled = false)),
         onMapLoadFailed = {
             if (!usingFallbackStyle) usingFallbackStyle = true
             onMapAvailabilityChanged(false)
@@ -89,7 +95,7 @@ actual fun MapLibreTripMap(
             if (!usingFallbackStyle) onMapAvailabilityChanged(true)
         },
         onMapClick = { position, _ ->
-            onCoordinateSelected(Coordinates(position.latitude, position.longitude))
+            selectCoordinate(Coordinates(position.latitude, position.longitude))
             ClickResult.Consume
         },
     ) {
@@ -101,37 +107,37 @@ actual fun MapLibreTripMap(
         LineLayer(
             id = "taximobile-route-halo",
             source = routeSource,
-            color = const(TaxiColors.Surface0),
+            color = const(taxiColors.Surface0),
             width = const(8.dp),
         )
         LineLayer(
             id = "taximobile-route",
             source = routeSource,
-            color = const(TaxiColors.Navy900),
+            color = const(taxiColors.Navy900),
             width = const(5.dp),
         )
         CircleLayer(
             id = "taximobile-pickup",
             source = pickupSource,
-            color = const(TaxiColors.Accent500),
-            radius = const(7.dp),
-            strokeColor = const(TaxiColors.Surface0),
+            color = const(if (TaxiTheme.style == org.example.taximobile.feature.ui.theme.TaxiStyle.Notepad) taxiColors.surface else taxiColors.Accent500),
+            radius = const(9.dp),
+            strokeColor = const(taxiColors.ink),
             strokeWidth = const(2.dp),
         )
         CircleLayer(
             id = "taximobile-destination",
             source = destinationSource,
-            color = const(TaxiColors.Navy900),
+            color = const(taxiColors.Navy900),
             radius = const(7.dp),
-            strokeColor = const(TaxiColors.Surface0),
+            strokeColor = const(taxiColors.Surface0),
             strokeWidth = const(2.dp),
         )
         CircleLayer(
             id = "taximobile-last-known-driver",
             source = driverLocationSource,
-            color = const(TaxiColors.Navy900),
+            color = const(taxiColors.Navy900),
             radius = const(9.dp),
-            strokeColor = const(TaxiColors.Accent500),
+            strokeColor = const(taxiColors.Accent500),
             strokeWidth = const(3.dp),
         )
     }

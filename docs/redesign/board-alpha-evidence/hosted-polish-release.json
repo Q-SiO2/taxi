@@ -1,0 +1,53 @@
+{
+  "utc": "2026-10-16T17:57:12.952801+00:00",
+  "web_deployment": "53c3708b-fd08-4e92-8fc3-32de472c43a2",
+  "checks": [
+    {
+      "path": "/health",
+      "status": 200
+    },
+    {
+      "path": "/release-manifest.json",
+      "status": 404
+    },
+    {
+      "path": "/webApp.js.map",
+      "status": 404
+    },
+    {
+      "path": "/api/v1/client-compatibility",
+      "status": 200,
+      "compatibility": "SUPPORTED"
+    },
+    {
+      "path": "/api/v1/rides",
+      "anonymous": 401
+    },
+    {
+      "asset": "20fc3322237d041040f4.wasm",
+      "sha256_match": true,
+      "bytes": 6869759
+    },
+    {
+      "asset": "6e23e5428398b92da386.wasm",
+      "sha256_match": true,
+      "bytes": 8652729
+    },
+    {
+      "asset": "compatibility.js",
+      "sha256_match": true,
+      "bytes": 4748
+    },
+    {
+      "asset": "index.html",
+      "sha256_match": true,
+      "bytes": 964
+    },
+    {
+      "asset": "webApp.js",
+      "sha256_match": true,
+      "bytes": 1214
+    }
+  ],
+  "passed": true
+}

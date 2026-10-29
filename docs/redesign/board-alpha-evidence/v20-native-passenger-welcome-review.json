@@ -1,0 +1,55 @@
+{
+  "candidate": "candidate-native-v20.json",
+  "role": "passenger",
+  "started_utc": "2026-10-22T10:40:11.323667+00:00",
+  "passed": true,
+  "checks": [
+    {
+      "style": "Folded Streets",
+      "named_option_selected": true,
+      "screenshot": {
+        "path": "v20-native-passenger-welcome-folded-streets.png",
+        "sha256": "e6ef61514f785b601158d7a1abcb926a2778a3c8348dde20f1e9d582b4529e62"
+      }
+    },
+    {
+      "style": "Street Press",
+      "named_option_selected": true,
+      "screenshot": {
+        "path": "v20-native-passenger-welcome-street-press.png",
+        "sha256": "cc646bf9cb7727ef7cc74138bfd1952ae5c003b97dd6af0718856f4cb60e3e59"
+      }
+    },
+    {
+      "style": "Glazed Machine",
+      "named_option_selected": true,
+      "screenshot": {
+        "path": "v20-native-passenger-welcome-glazed-machine.png",
+        "sha256": "cf8816379cd137840fbec4847772cacad99edf7261b85a4388eb55834d368f6d"
+      }
+    },
+    {
+      "style": "Notepad",
+      "named_option_selected": true,
+      "screenshot": {
+        "path": "v20-native-passenger-welcome-notepad.png",
+        "sha256": "d07440eb325cc1a2b896f3034077320ad1a482e49094e04b18f7122e9f86bbeb"
+      }
+    }
+  ],
+  "scope": "Actual English passenger welcome art/style options on frozen v20, explicit current-session logout then normal existing-account sign-in. Not token-expiry recovery, motion profiling or all-page acceptance.",
+  "logout_ready": {
+    "path": "v20-native-passenger-welcome-logout-ready.png",
+    "sha256": "e801ea082869f68ebebe07ccf12b217e76397c1d7c358833c413c9c323e8decb"
+  },
+  "logout_intent_utc": "2026-10-22T10:41:01.781261+00:00",
+  "logout_tapped_once": true,
+  "logout_signed_out_visible": true,
+  "logout_result": {
+    "path": "v20-native-passenger-welcome-signed-out.png",
+    "sha256": "fd024d6c7cd5c9ace9962b76d252284ea55bb77ac3f3115140e112135b026176"
+  },
+  "normal_existing_account_restored": true,
+  "final_style": "Folded Streets",
+  "finished_utc": "2026-10-22T10:42:32.842429+00:00"
+}

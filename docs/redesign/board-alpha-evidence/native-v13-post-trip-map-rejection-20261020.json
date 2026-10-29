@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-20T09:19:25.022243+00:00",
+  "candidate": "candidate-native-v13.json",
+  "passed": false,
+  "installed_apks": [
+    {
+      "role": "driver",
+      "installed_sha256": "f3ca278a3b52c60bbf4d17b33c86c4b0cb4a3ac6b81bede07311957d017ce3d8"
+    },
+    {
+      "role": "passenger",
+      "installed_sha256": "9c2f0e5751292b1182fd879e520ca706e9623e25ed1eaf4a203fa99cd5477f34"
+    }
+  ],
+  "observed": "After old-trip completion in the same passenger map instance, native taps and an explicit short hold do not select destination. No quote or booking created.",
+  "same_apk_restart_diagnostic": "v13-map-idle-restart-diagnostic-20261020.json",
+  "diagnostic_result": "After ordinary idle process restart, the same APK accepts a map destination and enables Review fare; server ride list unchanged. This is diagnostic recovery, not acceptance of post-trip rebooking.",
+  "source_finding": "Pinned MapLibre Compose0.14 retains callbacks object using camera/style-related keys, captures initial onMapClick as a field. Passenger callback captures hasActiveRide from its original composition.",
+  "dependency": {
+    "path": ".tools/gradle-home/caches/modules-2/files-2.1/org.maplibre.compose/maplibre-compose-android/0.14.0/2f238b94ae9364afa4611b1ce207ec04e2667611/maplibre-compose.aar",
+    "sha256": "1da513a6b84768b25ad67cc7d0ca1d0eb3684dba39d9790009fd50625a78a9b8"
+  },
+  "bytecode_evidence": [
+    {
+      "path": ".tools/alpha-delivery/maplibre-014-bytecode/map.txt",
+      "sha256": "9a253dd79ca758a8cff22155274c3850e15f77d49f7b766b8a8353fd5bf9e18f"
+    },
+    {
+      "path": ".tools/alpha-delivery/maplibre-014-bytecode/callbacks.txt",
+      "sha256": "d6de210971bea8313bc8eda8b3f9e2e909c5232ccbade4abad325764c55af609"
+    }
+  ],
+  "repair": "A stable shared callback adapter must dispatch to the latest Compose callback. Keep the current active-trip selection guard in both directions; wire native Android/iOS map boundaries. No dependency upgrade or business contract changes.",
+  "limitations": [
+    "V13 has no completed fresh full rehearsal",
+    "UI injection confirmed fields in the partial stepper record acknowledge input delivery only; screenshots contradict successful destination selection",
+    "Native replacement and post-trip same-instance rebooking acceptance remain pending",
+    "iOS runtime/build unverified on Windows"
+  ]
+}

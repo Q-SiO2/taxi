@@ -1,0 +1,67 @@
+{
+  "source": "Railway API proxy request logs",
+  "candidate": "candidate-native-v16.json",
+  "deployment_id": "e5e108a0-e5dd-4553-93fd-292026c98b63",
+  "scope": "Exactly eight native lifecycle/availability/cash POST requests; read-like estimate/routing and location observations excluded; source IPs and credentials excluded",
+  "rows": [
+    {
+      "timestamp": "2026-10-20T19:49:56.233263834Z",
+      "method": "POST",
+      "path": "/api/v1/drivers/me/availability/online",
+      "httpStatus": 200,
+      "totalDuration": 35
+    },
+    {
+      "timestamp": "2026-10-20T19:50:04.028787127Z",
+      "method": "POST",
+      "path": "/api/v1/rides",
+      "httpStatus": 201,
+      "totalDuration": 86
+    },
+    {
+      "timestamp": "2026-10-20T19:50:21.408384133Z",
+      "method": "POST",
+      "path": "/api/v1/ride-offers/f4f6ca49-0e25-4577-8802-e65f800f3127/accept",
+      "httpStatus": 200,
+      "totalDuration": 62
+    },
+    {
+      "timestamp": "2026-10-20T19:50:31.313711660Z",
+      "method": "POST",
+      "path": "/api/v1/rides/733abbcf-5d1b-4ff2-b7f3-3563052cbd25/en-route",
+      "httpStatus": 200,
+      "totalDuration": 48
+    },
+    {
+      "timestamp": "2026-10-20T19:50:55.352071260Z",
+      "method": "POST",
+      "path": "/api/v1/rides/733abbcf-5d1b-4ff2-b7f3-3563052cbd25/arrived",
+      "httpStatus": 200,
+      "totalDuration": 24
+    },
+    {
+      "timestamp": "2026-10-20T19:51:17.228183380Z",
+      "method": "POST",
+      "path": "/api/v1/rides/733abbcf-5d1b-4ff2-b7f3-3563052cbd25/start",
+      "httpStatus": 200,
+      "totalDuration": 56
+    },
+    {
+      "timestamp": "2026-10-20T19:51:54.802759625Z",
+      "method": "POST",
+      "path": "/api/v1/rides/733abbcf-5d1b-4ff2-b7f3-3563052cbd25/complete",
+      "httpStatus": 200,
+      "totalDuration": 40
+    },
+    {
+      "timestamp": "2026-10-20T19:52:13.802587220Z",
+      "method": "POST",
+      "path": "/api/v1/rides/733abbcf-5d1b-4ff2-b7f3-3563052cbd25/payments/cash/settle",
+      "httpStatus": 200,
+      "totalDuration": 25
+    }
+  ],
+  "passed": true,
+  "run": "v16-native-first.json",
+  "each_observed_once": true
+}

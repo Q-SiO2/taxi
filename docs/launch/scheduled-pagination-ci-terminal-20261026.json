@@ -1,0 +1,74 @@
+{
+  "recorded_utc": "2026-10-26 10:02:53 UTC",
+  "source_head": "1f8bfb9d7e6162a267b8c2387fe08d28ee213f36",
+  "tested_merge_commit": "f4ef150f06d487f3caa497db52e2a2f4a5d6377a",
+  "tree": "44c8fa17de1c87913959c703639b8efe4a522a5c",
+  "run_id": 40300968726,
+  "run_number": 244,
+  "status": "completed",
+  "conclusion": "success",
+  "required_jobs": {
+    "gradle-wrapper-integrity": {
+      "id": 121498465929,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "web": {
+      "id": 121498466284,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "gradle-dependency-submission": {
+      "id": 121498466312,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "ios-shared": {
+      "id": 121498466329,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "documentation-and-provenance": {
+      "id": 121498466359,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "backend": {
+      "id": 121498466378,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "mobile": {
+      "id": 121498466401,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "dependency-review": {
+      "id": 121499558921,
+      "status": "completed",
+      "conclusion": "success"
+    }
+  },
+  "image_publisher": "skipped; draft PR",
+  "full_backend_suite": {
+    "tests": 1458,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "tls_cases": 8,
+  "tls_baseline_restored": true,
+  "backend_junit_sha256": "234e4e3733dc110eeb4ac4497b6d73511b8001cbb9e91470ed97062dad7a00ca",
+  "test_artifact": {
+    "id": 12641415166,
+    "zip_sha256": "bf55efb0a9442ae89f77193b065d85fc7f7cbb471c3655d7d29bb579dff7199a"
+  },
+  "provenance_artifact": {
+    "id": 12640144843,
+    "zip_sha256": "da40562fa4b02936b3d83daf6e63a50954b026b63d36bda43316606e10f2852d"
+  },
+  "same_tree_verified": true,
+  "platform_scope": "Android/shared/minified and web/browser verification; iOS shared compile and both unsigned Release simulator app builds. No physical, signing or store acceptance.",
+  "later_cancellation_review_source_not_accepted_by_this_run": true,
+  "hosted_rendered_linguistic_physical_or_public_accepted": false
+}

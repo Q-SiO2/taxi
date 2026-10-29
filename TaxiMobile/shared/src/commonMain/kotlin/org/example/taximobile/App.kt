@@ -38,6 +38,7 @@ fun App(
     connectionIssue: UiMessage? = null,
     mapStyleUrl: String? = null,
     showManualCoordinateEntry: Boolean = true,
+    placeSearchEnabled: Boolean = true,
     onLogin: (identifier: String, password: String) -> Unit = { _, _ -> },
     onRegister: (displayName: String, email: String?, phoneNumber: String?, password: String) -> Unit = { _, _, _, _ -> },
     onRecoverAccount: (identifier: String, recoveryCode: String, newPassword: String) -> Unit = { _, _, _ -> },
@@ -50,8 +51,9 @@ fun App(
     onRefresh: () -> Unit = {},
     onLogout: () -> Unit = {},
     onRequestCurrentLocation: ((org.example.taximobile.domain.rides.Coordinates?) -> Unit) -> Unit = { result -> result(null) },
+    onRequestDriverObservation: ((org.example.taximobile.domain.drivers.DriverLocationObservation?) -> Unit) -> Unit = { result -> result(null) },
     onSetDriverOnline: (Boolean, String?, String?) -> Unit = { _, _, _ -> },
-    onUpdateDriverLocation: (org.example.taximobile.domain.rides.Coordinates) -> Unit = {},
+    onUpdateDriverLocation: (org.example.taximobile.domain.drivers.DriverLocationObservation) -> Unit = {},
     onRegisterDriverVehicle: (org.example.taximobile.domain.drivers.VehicleRegistration) -> Unit = {},
     onSelectDriverVehicle: (String) -> Unit = {},
     onDeactivateDriverVehicle: (String) -> Unit = {},
@@ -62,11 +64,13 @@ fun App(
     onLoadFixedRoutes: (String) -> Unit = {},
     onEstimateFixedRoute: (String) -> Unit = {},
     onRequestFixedRoute: (String, org.example.taximobile.domain.rides.RidePaymentMethod) -> Unit = { _, _ -> },
-    onEstimateScheduledPointToPoint: (String, String?, org.example.taximobile.domain.rides.Coordinates, org.example.taximobile.domain.rides.Coordinates) -> Unit = { _, _, _, _ -> },
-    onEstimateScheduledFixedRoute: (String, String) -> Unit = { _, _ -> },
+    onResolveScheduledLocalTime: (String, String, String, String, String) -> Unit = { _, _, _, _, _ -> },
+    onEstimateScheduledPointToPoint: (String, String?, org.example.taximobile.domain.rides.Coordinates, org.example.taximobile.domain.rides.Coordinates, String) -> Unit = { _, _, _, _, _ -> },
+    onEstimateScheduledFixedRoute: (String, String, String) -> Unit = { _, _, _ -> },
     onSchedulePointToPoint: (String, String?, org.example.taximobile.domain.rides.Coordinates, org.example.taximobile.domain.rides.Coordinates, String?, org.example.taximobile.domain.scheduling.ScheduledBookingEstimate) -> Unit = { _, _, _, _, _, _ -> },
     onScheduleFixedRoute: (String, String, String?, org.example.taximobile.domain.scheduling.ScheduledBookingEstimate) -> Unit = { _, _, _, _ -> },
     onCancelScheduledBooking: (String) -> Unit = {},
+    onLoadPassengerScheduledBookings: (Int) -> Unit = {},
     onSubmitManualTransfer: (String, String?) -> Unit = { _, _ -> },
     onCancelRide: (String) -> Unit = {},
     onSendRideCoordination: (String, org.example.taximobile.domain.rides.RideCoordinationCode) -> Unit = { _, _ -> },
@@ -83,6 +87,7 @@ fun App(
     onCancelDriverRide: (String, String) -> Unit = { _, _ -> },
     onCompleteDriverRide: (String, org.example.taximobile.domain.rides.Coordinates) -> Unit = { _, _ -> },
     onSettleDriverCash: (String) -> Unit = {},
+    onLoadPendingCashPayments: (Int) -> Unit = {},
     onApplyToDrive: (String) -> Unit = {},
     onSubmitDriverVerification: () -> Unit = {},
     onCreateDriverCityApplication: (String, String) -> Unit = { _, _ -> },
@@ -103,13 +108,15 @@ fun App(
     onDeleteDriverApplicationDocument: (String, String, Int, String) -> Unit = { _, _, _, _ -> },
     onRegisterApplicantVehicle: (String, org.example.taximobile.domain.drivers.VehicleRegistration) -> Unit = { _, _ -> },
     onMarkNotificationRead: (String) -> Unit = {},
+    stylePreferences: org.example.taximobile.feature.ui.theme.TaxiStylePreferences? = null,
 ) {
     val layoutDirection = if (Locale.current.language in RTL_LANGUAGES) {
         LayoutDirection.Rtl
     } else {
         LayoutDirection.Ltr
     }
-    CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
+    CompositionLocalProvider(LocalLayoutDirection provides layoutDirection,
+        org.example.taximobile.feature.ui.theme.LocalTaxiStylePreferences provides stylePreferences) {
         TaxiTheme {
             Surface(modifier = Modifier.fillMaxSize()) {
                 Box(Modifier.fillMaxSize()) {
@@ -120,6 +127,7 @@ fun App(
                         completedAction = completedAction,
                         mapStyleUrl = mapStyleUrl,
                         showManualCoordinateEntry = showManualCoordinateEntry,
+                        placeSearchEnabled = placeSearchEnabled,
                         onLogin = onLogin,
                         onRegister = onRegister,
                         onRecoverAccount = onRecoverAccount,
@@ -132,6 +140,7 @@ fun App(
                         onRefresh = onRefresh,
                         onLogout = onLogout,
                         onRequestCurrentLocation = onRequestCurrentLocation,
+                        onRequestDriverObservation = onRequestDriverObservation,
                         onSetDriverOnline = onSetDriverOnline,
                         onUpdateDriverLocation = onUpdateDriverLocation,
                         onRegisterDriverVehicle = onRegisterDriverVehicle,
@@ -144,11 +153,13 @@ fun App(
                         onLoadFixedRoutes = onLoadFixedRoutes,
                         onEstimateFixedRoute = onEstimateFixedRoute,
                         onRequestFixedRoute = onRequestFixedRoute,
+                        onResolveScheduledLocalTime = onResolveScheduledLocalTime,
                         onEstimateScheduledPointToPoint = onEstimateScheduledPointToPoint,
                         onEstimateScheduledFixedRoute = onEstimateScheduledFixedRoute,
                         onSchedulePointToPoint = onSchedulePointToPoint,
                         onScheduleFixedRoute = onScheduleFixedRoute,
                         onCancelScheduledBooking = onCancelScheduledBooking,
+                        onLoadPassengerScheduledBookings = onLoadPassengerScheduledBookings,
                         onSubmitManualTransfer = onSubmitManualTransfer,
                         onCancelRide = onCancelRide,
                         onSendRideCoordination = onSendRideCoordination,
@@ -165,6 +176,7 @@ fun App(
                         onCancelDriverRide = onCancelDriverRide,
                         onCompleteDriverRide = onCompleteDriverRide,
                         onSettleDriverCash = onSettleDriverCash,
+                        onLoadPendingCashPayments = onLoadPendingCashPayments,
                         onApplyToDrive = onApplyToDrive,
                         onSubmitDriverVerification = onSubmitDriverVerification,
                         onCreateDriverCityApplication = onCreateDriverCityApplication,

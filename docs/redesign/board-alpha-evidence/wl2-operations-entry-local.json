@@ -1,0 +1,28 @@
+{
+  "verified_utc": "2026-10-17T00:36:10.084690+00:00",
+  "passed": true,
+  "scope": "unauthenticated local operations entry only",
+  "local_distribution_manifest": "wl2-local-browser.json",
+  "aggregate_sha256": "231929cea35ce504cdeb7fd881b2fc43cb562d855527098c53a09e25dd68e06e",
+  "checks": [
+    "Actual EN FR AR operations entry labels",
+    "Arabic RTL with Latin email kept left to right",
+    "Four actual styles and their shared abstract frame",
+    "Unsent identifier retained across language and style changes",
+    "No auth or domain POST attempted"
+  ],
+  "captures": [
+    "wl2-operations-en-notepad.png",
+    "wl2-operations-fr-notepad.png",
+    "wl2-operations-ar-notepad-draft.png",
+    "wl2-operations-ar-glazed-draft.png",
+    "wl2-operations-ar-street-press-draft.png",
+    "wl2-operations-ar-folded-draft.png"
+  ],
+  "limitations": [
+    "No password submitted and no authenticated or MFA result",
+    "Local development JS only; staging remains web v4",
+    "No screen-reader or narrow operations layout acceptance",
+    "Shared preview log includes an earlier denied protected GET during native v8 diagnosis"
+  ]
+}

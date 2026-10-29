@@ -4,6 +4,8 @@ import org.example.taximobile.domain.rides.Coordinates
 import org.example.taximobile.domain.rides.FareEconomics
 import org.example.taximobile.domain.rides.FixedRouteRideSummary
 import org.example.taximobile.domain.rides.RideServiceType
+import kotlin.time.TimeMark
+import kotlin.time.TimeSource
 
 data class DriverRideOffer(
     val id: String,
@@ -21,6 +23,8 @@ data class DriverRideOffer(
     val economics: FareEconomics? = null,
     val serviceType: RideServiceType = RideServiceType.ON_DEMAND,
     val fixedRoute: FixedRouteRideSummary? = null,
+    /** Advisory elapsed-time anchor, captured before the authorized list request. */
+    val readStartedAt: TimeMark = TimeSource.Monotonic.markNow(),
 )
 
 /** Driver offers are backend-issued and expire independently of client state. */

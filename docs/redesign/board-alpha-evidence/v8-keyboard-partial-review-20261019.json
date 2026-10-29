@@ -1,0 +1,20 @@
+{
+  "observed_utc": "2026-10-19T20:02:28.088Z",
+  "deployment": "ceee310c-e957-49ad-945d-b9f2d292eb61",
+  "scope": "Unauthenticated Arabic Street Press login; empty fields, no credentials or domain commands",
+  "observations": [
+    "AX exposes style/language buttons and labelled email/password controls",
+    "Tab reaches visibly focused login inputs",
+    "Escape after AX semantic activation alone did not dismiss the language dialog",
+    "After an actual coordinate click on the rendered dialog title established canvas focus, Escape dismissed it"
+  ],
+  "limitations": [
+    "Not a complete keyboard, reverse-focus, focus-return or screen-reader acceptance",
+    "AX semantic activation does not establish the same browser/canvas focus as an actual pointer click in this harness",
+    "Protected payment page earlier lacked locator-exposed buttons; unresolved broader accessibility review"
+  ],
+  "screenshots": [
+    "v8-ar-login-keyboard-password-focus-20261019.jpg",
+    "v8-ar-language-escape-after-canvas-focus-20261019.jpg"
+  ]
+}

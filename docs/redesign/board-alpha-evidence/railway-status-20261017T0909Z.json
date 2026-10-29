@@ -1,0 +1,191 @@
+{
+  "verified_utc": "2026-10-17T09:09:00Z",
+  "method": "Railway connector read-only environment status and one-hour PostGIS metrics",
+  "environment": {
+    "environment": {
+      "id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+      "name": "staging"
+    },
+    "services": [
+      {
+        "serviceId": "2d8ab069-2310-46ff-afe0-8fd4f42a5bd1",
+        "serviceName": "alpha-web",
+        "state": "online",
+        "statusText": "Online",
+        "activeDeployments": [
+          {
+            "id": "62985a05-46c3-4b74-8bcd-d101f003e18b",
+            "status": "SUCCESS",
+            "createdAt": "2026-10-17T01:00:42.655Z",
+            "statusUpdatedAt": "2026-10-17T01:01:13.072Z"
+          }
+        ],
+        "replicaStatus": {
+          "running": 1,
+          "crashed": 0,
+          "total": 1
+        },
+        "cronJob": null,
+        "issues": {
+          "warningCount": 0,
+          "criticalCount": 0
+        },
+        "recentFailures": 0,
+        "recentFailedDeployments": [],
+        "hasIssues": false,
+        "isCronJob": false,
+        "hasVolume": false
+      },
+      {
+        "serviceId": "758fa7d5-f8b8-4730-a00f-438e28184e35",
+        "serviceName": "alpha-api",
+        "state": "online",
+        "statusText": "Online",
+        "activeDeployments": [
+          {
+            "id": "5f233980-bf46-468e-8a94-104e20eef451",
+            "status": "SUCCESS",
+            "createdAt": "2026-10-15T15:31:16.809Z",
+            "statusUpdatedAt": "2026-10-15T15:34:02.109Z"
+          }
+        ],
+        "replicaStatus": {
+          "running": 1,
+          "crashed": 0,
+          "total": 1
+        },
+        "cronJob": null,
+        "issues": {
+          "warningCount": 0,
+          "criticalCount": 0
+        },
+        "recentFailures": 0,
+        "recentFailedDeployments": [],
+        "hasIssues": false,
+        "isCronJob": false,
+        "hasVolume": false
+      },
+      {
+        "serviceId": "41ccd6b2-41e2-4886-8d96-cc56f62aaab7",
+        "serviceName": "alpha-postgis",
+        "state": "online",
+        "statusText": "Online",
+        "activeDeployments": [
+          {
+            "id": "10348a72-65f4-4b80-8474-e8a950ccd282",
+            "status": "SUCCESS",
+            "createdAt": "2026-10-15T11:39:00.931Z",
+            "statusUpdatedAt": "2026-10-15T11:39:14.627Z"
+          }
+        ],
+        "replicaStatus": {
+          "running": 1,
+          "crashed": 0,
+          "total": 1
+        },
+        "cronJob": null,
+        "issues": {
+          "warningCount": 0,
+          "criticalCount": 0
+        },
+        "recentFailures": 0,
+        "recentFailedDeployments": [],
+        "hasIssues": false,
+        "isCronJob": false,
+        "hasVolume": true
+      },
+      {
+        "serviceId": "568723a2-e456-4130-825a-077c5cae9f81",
+        "serviceName": "alpha-routing",
+        "state": "online",
+        "statusText": "Online",
+        "activeDeployments": [
+          {
+            "id": "dec657d1-e507-421d-9bc2-15f0250385b7",
+            "status": "SUCCESS",
+            "createdAt": "2026-10-12T17:25:06.150Z",
+            "statusUpdatedAt": "2026-10-12T17:30:35.551Z"
+          }
+        ],
+        "replicaStatus": {
+          "running": 1,
+          "crashed": 0,
+          "total": 1
+        },
+        "cronJob": null,
+        "issues": {
+          "warningCount": 0,
+          "criticalCount": 0
+        },
+        "recentFailures": 0,
+        "recentFailedDeployments": [],
+        "hasIssues": false,
+        "isCronJob": false,
+        "hasVolume": false
+      },
+      {
+        "serviceId": "eb42d0ba-feae-4f7a-9c86-48f4d38006d0",
+        "serviceName": "alpha-worker",
+        "state": "online",
+        "statusText": "Online",
+        "activeDeployments": [
+          {
+            "id": "8ca5a361-9b66-4d7a-8041-c9a5754bbe47",
+            "status": "SUCCESS",
+            "createdAt": "2026-10-12T17:22:09.505Z",
+            "statusUpdatedAt": "2026-10-12T17:27:38.043Z"
+          }
+        ],
+        "replicaStatus": {
+          "running": 1,
+          "crashed": 0,
+          "total": 1
+        },
+        "cronJob": null,
+        "issues": {
+          "warningCount": 0,
+          "criticalCount": 0
+        },
+        "recentFailures": 0,
+        "recentFailedDeployments": [],
+        "hasIssues": false,
+        "isCronJob": false,
+        "hasVolume": false
+      }
+    ],
+    "pendingWork": [],
+    "summary": {
+      "totalServices": 5,
+      "servicesWithIssues": 0,
+      "totalFailures": 0
+    }
+  },
+  "postgis_metrics": {
+    "service": {
+      "id": "41ccd6b2-41e2-4886-8d96-cc56f62aaab7",
+      "name": "alpha-postgis"
+    },
+    "environment": {
+      "id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+      "name": "staging"
+    },
+    "metrics": [
+      {
+        "measurement": "DISK_USAGE_GB",
+        "current": 0.223199232,
+        "average": 0.232976585442623,
+        "min": 0.22089728,
+        "max": 0.240607232,
+        "sampleCount": 61
+      },
+      {
+        "measurement": "MEMORY_USAGE_GB",
+        "current": 0.336211968,
+        "average": 0.2635825353442623,
+        "min": 0.213684224,
+        "max": 0.336211968,
+        "sampleCount": 61
+      }
+    ]
+  }
+}

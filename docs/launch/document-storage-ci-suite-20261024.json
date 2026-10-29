@@ -1,0 +1,30 @@
+{
+  "observed_utc": "2026-10-24T18:40:54.192469+00:00",
+  "commit": "1e30102c5e6d0c863e02c37bcf48cb5f4488a8ad",
+  "run_id": 40119576061,
+  "run_number": 234,
+  "job_id": 120947967033,
+  "artifact_id": 12570996094,
+  "artifact_sha256": "e77676175e8486797b4618a9d0d330826c477fc196948297633b38aaba076ce4",
+  "fixture_report": {
+    "recorded_utc": "2026-10-24T18:13:09.127149+00:00",
+    "passed": true,
+    "scope": "Disposable CI PostgreSQL identity/transport probes inside the full backend suite; no hosted or phase acceptance",
+    "hosted_accepted": false,
+    "phase": "SUITE_PASSED",
+    "full_suite": {
+      "tests": 1342,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tls_cases": 8,
+    "tls_passed": true,
+    "junit_sha256": "22fa35f05cb36d9130a0f2fff51d144b04843076902960bc56a9e6c194e812e2",
+    "certificate_sha256": "057d6c8abef202b0d6e85bec0c8ebc9c893dc43378207bd2aecca4acbf8fbf35",
+    "baseline_restored": true
+  },
+  "scope": "Complete unfiltered backend CI for scanner/filesystem correction, including native PostGIS3.4 lifecycle variants. Newly approved root-only S3 work is not included.",
+  "source_ci_terminal_accepted": false,
+  "hosted_accepted": false
+}

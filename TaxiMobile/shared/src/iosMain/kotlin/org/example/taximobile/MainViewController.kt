@@ -68,6 +68,7 @@ fun MainViewController(
     fun submitAction(
         key: AppAction,
         recoverFailure: Boolean = true,
+        onFinished: () -> Unit = {},
         action: suspend () -> AppUiState,
     ) {
         if (!actionGate.tryStart(key)) return
@@ -91,6 +92,7 @@ fun MainViewController(
             } finally {
                 actionGate.finish(key)
                 pendingAction = actionGate.current
+                onFinished()
             }
         }
     }
@@ -139,8 +141,17 @@ fun MainViewController(
                             connectionIssue = foregroundDriverLocationUnavailableMessage()
                         )
                     } else {
-                        submitAction(AppAction(AppActionKind.UPDATE_DRIVER_LOCATION)) {
-                            dependencies.appCoordinator.updateDriverLocation(location)
+                        submitAction(
+                            AppAction(AppActionKind.UPDATE_DRIVER_LOCATION),
+                            onFinished = {
+                                foregroundDriverLocationPolicy.recordSubmissionFinished(
+                                    kotlin.time.Clock.System.now().toEpochMilliseconds()
+                                )
+                            },
+                        ) {
+                            dependencies.appCoordinator.updateDriverLocation(location) {
+                                presentation.state as? AppUiState.DriverReady
+                            }
                         }
                     }
                 }
@@ -201,6 +212,7 @@ fun MainViewController(
         }
     }
     App(
+        stylePreferences = org.example.taximobile.feature.ui.theme.rememberTaxiStylePreferences(),
         appRole = appRole,
         state = presentation.state,
         pendingAction = pendingAction,
@@ -268,6 +280,25 @@ fun MainViewController(
             }
         },
         onRequestCurrentLocation = currentLocationRequester::request,
+        onRequestDriverObservation = { onResult ->
+            val driverState = presentation.state as? AppUiState.DriverReady
+            if (driverState == null) {
+                onResult(null)
+            } else {
+                val request = foregroundDriverLocationResultGuard.capture(driverState)
+                currentLocationRequester.requestObservation { observation ->
+                    onResult(
+                        observation.takeIf {
+                            foregroundDriverLocationResultGuard.canApply(
+                                request, presentation.state, appInForeground,
+                                connectivityStatus != ConnectivityStatus.UNAVAILABLE,
+                                pendingAction != null, allowOfflineStaging = true,
+                            )
+                        },
+                    )
+                }
+            }
+        },
         onSetDriverOnline = { online, cityId, serviceType -> submitAction(AppAction(AppActionKind.SET_DRIVER_AVAILABILITY)) {
             dependencies.appCoordinator.changeDriverAvailability(
                 online = online,
@@ -275,7 +306,9 @@ fun MainViewController(
                 serviceType = serviceType ?: "ON_DEMAND",
             )
         } },
-        onUpdateDriverLocation = { location -> submitAction(AppAction(AppActionKind.UPDATE_DRIVER_LOCATION)) { dependencies.appCoordinator.updateDriverLocation(location) } },
+        onUpdateDriverLocation = { location -> submitAction(AppAction(AppActionKind.UPDATE_DRIVER_LOCATION)) {
+            dependencies.appCoordinator.updateDriverLocation(location) { presentation.state as? AppUiState.DriverReady }
+        } },
         onRegisterDriverVehicle = { vehicle -> submitAction(AppAction(AppActionKind.REGISTER_DRIVER_VEHICLE)) { dependencies.appCoordinator.registerDriverVehicle(vehicle) } },
         onSelectDriverVehicle = { vehicleId -> submitAction(AppAction(AppActionKind.SELECT_DRIVER_VEHICLE, vehicleId)) { dependencies.appCoordinator.selectDriverVehicle(vehicleId) } },
         onDeactivateDriverVehicle = { vehicleId -> submitAction(AppAction(AppActionKind.DEACTIVATE_DRIVER_VEHICLE, vehicleId)) { dependencies.appCoordinator.deactivateDriverVehicle(vehicleId) } },
@@ -296,11 +329,13 @@ fun MainViewController(
         onLoadFixedRoutes = { cityId -> submitAction(AppAction(AppActionKind.LOAD_FIXED_ROUTES, cityId)) { dependencies.appCoordinator.loadFixedRoutes(cityId) } },
         onEstimateFixedRoute = { directionId -> submitAction(AppAction(AppActionKind.ESTIMATE_FIXED_ROUTE, directionId)) { dependencies.appCoordinator.estimateFixedRoute(directionId) } },
         onRequestFixedRoute = { directionId, paymentMethod -> submitAction(AppAction(AppActionKind.REQUEST_FIXED_ROUTE, directionId)) { dependencies.appCoordinator.requestFixedRoute(directionId, paymentMethod) } },
-        onEstimateScheduledPointToPoint = { scheduledFor, cityId, pickup, destination -> submitAction(AppAction(AppActionKind.ESTIMATE_SCHEDULED_BOOKING)) { dependencies.appCoordinator.estimateScheduledPointToPoint(scheduledFor, cityId, pickup, destination) } },
-        onEstimateScheduledFixedRoute = { scheduledFor, directionId -> submitAction(AppAction(AppActionKind.ESTIMATE_SCHEDULED_BOOKING, directionId)) { dependencies.appCoordinator.estimateScheduledFixedRoute(scheduledFor, directionId) } },
+        onResolveScheduledLocalTime = { cityId, timezone, date, time, readId -> submitAction(AppAction(AppActionKind.ESTIMATE_SCHEDULED_BOOKING)) { dependencies.appCoordinator.resolveScheduledLocalTime(cityId, timezone, date, time, readId) } },
+        onEstimateScheduledPointToPoint = { scheduledFor, cityId, pickup, destination, readId -> submitAction(AppAction(AppActionKind.ESTIMATE_SCHEDULED_BOOKING)) { dependencies.appCoordinator.estimateScheduledPointToPoint(scheduledFor, cityId, pickup, destination, readId) } },
+        onEstimateScheduledFixedRoute = { scheduledFor, directionId, readId -> submitAction(AppAction(AppActionKind.ESTIMATE_SCHEDULED_BOOKING, directionId)) { dependencies.appCoordinator.estimateScheduledFixedRoute(scheduledFor, directionId, readId) } },
         onSchedulePointToPoint = { scheduledFor, cityId, pickup, destination, note, estimate -> submitAction(AppAction(AppActionKind.CREATE_SCHEDULED_BOOKING)) { dependencies.appCoordinator.schedulePointToPoint(scheduledFor, cityId, pickup, destination, note, estimate) } },
         onScheduleFixedRoute = { scheduledFor, directionId, note, estimate -> submitAction(AppAction(AppActionKind.CREATE_SCHEDULED_BOOKING)) { dependencies.appCoordinator.scheduleFixedRoute(scheduledFor, directionId, note, estimate) } },
         onCancelScheduledBooking = { bookingId -> submitAction(AppAction(AppActionKind.CANCEL_SCHEDULED_BOOKING, bookingId)) { dependencies.appCoordinator.cancelScheduledBooking(bookingId) } },
+        onLoadPassengerScheduledBookings = { page -> submitAction(AppAction(AppActionKind.LOAD_PASSENGER_SCHEDULED_BOOKINGS, page.toString())) { dependencies.appCoordinator.loadPassengerScheduledBookings(page) } },
         onSubmitManualTransfer = { rideId, payerReference -> submitAction(AppAction(AppActionKind.SUBMIT_MANUAL_TRANSFER, rideId)) { dependencies.appCoordinator.submitManualTransfer(rideId, payerReference) } },
         onCancelRide = { rideId -> submitAction(AppAction(AppActionKind.CANCEL_RIDE, rideId)) { dependencies.appCoordinator.cancelRide(rideId) } },
         onSendRideCoordination = { rideId, code -> submitAction(AppAction(AppActionKind.SEND_RIDE_COORDINATION, "$rideId:${code.name}")) { dependencies.appCoordinator.sendRideCoordinationMessage(rideId, code) } },
@@ -322,6 +357,7 @@ fun MainViewController(
         onCancelDriverRide = { rideId, reason -> submitAction(AppAction(AppActionKind.CANCEL_DRIVER_RIDE, rideId)) { dependencies.appCoordinator.cancelDriverRide(rideId, reason) } },
         onCompleteDriverRide = { rideId, location -> submitAction(AppAction(AppActionKind.COMPLETE_DRIVER_RIDE, rideId)) { dependencies.appCoordinator.completeDriverRide(rideId, location) } },
         onSettleDriverCash = { rideId -> submitAction(AppAction(AppActionKind.SETTLE_DRIVER_CASH, rideId)) { dependencies.appCoordinator.settleDriverCash(rideId) } },
+        onLoadPendingCashPayments = { page -> submitAction(AppAction(AppActionKind.LOAD_PENDING_CASH_PAYMENTS, page.toString())) { dependencies.appCoordinator.loadDriverPendingCashPayments(page) } },
         onApplyToDrive = { displayName -> submitAction(AppAction(AppActionKind.APPLY_TO_DRIVE)) { dependencies.appCoordinator.applyToDrive(displayName) } },
         onSubmitDriverVerification = { submitAction(AppAction(AppActionKind.SUBMIT_DRIVER_VERIFICATION)) { dependencies.appCoordinator.submitDriverVerification() } },
         onCreateDriverCityApplication = { cityId, displayName -> submitAction(AppAction(AppActionKind.CREATE_DRIVER_CITY_APPLICATION, cityId)) { dependencies.appCoordinator.createDriverCityApplication(cityId, displayName) } },

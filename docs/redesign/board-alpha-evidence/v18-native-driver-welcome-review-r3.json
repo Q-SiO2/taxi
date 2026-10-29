@@ -1,0 +1,49 @@
+{
+  "candidate": "candidate-native-v18.json",
+  "role": "driver",
+  "started_utc": "2026-10-21T12:04:47.910637+00:00",
+  "passed": true,
+  "checks": [
+    {
+      "style": "Folded Streets",
+      "named_option_selected": true,
+      "screenshot": {
+        "path": "v18-native-driver-welcome-r3-folded-streets.png",
+        "sha256": "caaaa42f14b64f470009d1fde653414cff75ddb30695aa0437d53e6af396e0e8",
+        "bytes": 97100
+      }
+    },
+    {
+      "style": "Street Press",
+      "named_option_selected": true,
+      "screenshot": {
+        "path": "v18-native-driver-welcome-r3-street-press.png",
+        "sha256": "9e9b26f283f529f20b1e6f0aedc5542a337041a2d490a8845bf321e581390bf8",
+        "bytes": 47230
+      }
+    },
+    {
+      "style": "Glazed Machine",
+      "named_option_selected": true,
+      "screenshot": {
+        "path": "v18-native-driver-welcome-r3-glazed-machine.png",
+        "sha256": "d70e29b7e7b4e85a916625271d4b7e13a10698522ef049cbb7cad5c09fccc1cf",
+        "bytes": 127436
+      }
+    },
+    {
+      "style": "Notepad",
+      "named_option_selected": true,
+      "screenshot": {
+        "path": "v18-native-driver-welcome-r3-notepad.png",
+        "sha256": "b554e5850376b6d492c612a12cfb1551d36ee01b277c6abcb264f9f02221c7f7",
+        "bytes": 42787
+      }
+    }
+  ],
+  "scope": "Actual EN welcome artwork/style options and normal existing-account re-entry; recordings are raw emulator observations, not physical performance acceptance",
+  "entry_method": "Normal signed-out process restart after prior own-session revocation displayed the sign-in/security message; no data wipe or repeated revocation",
+  "normal_existing_account_restored": true,
+  "final_style": "Folded Streets",
+  "finished_utc": "2026-10-21T12:07:50.527061+00:00"
+}

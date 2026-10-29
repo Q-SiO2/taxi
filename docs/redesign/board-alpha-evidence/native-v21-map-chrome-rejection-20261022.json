@@ -1,0 +1,18 @@
+{
+  "candidate": "candidate-native-v21.json",
+  "state": "Presentation acceptance withheld",
+  "observations": [
+    "Actual four-style passenger fare screenshots show the floating map shortcut stack crossing Inbox when the sheet is expanded.",
+    "Source inspection shows the same raw-snap positioning in the driver layout and a mismatch with font-promoted sheet geometry.",
+    "Four actual JVM composition checks reproduce the defect before correction; earlier fresh-activity quote and language checks retain their passed scope."
+  ],
+  "screenshots": [
+    "v21-quote-style-r5-folded-streets-fare.png",
+    "v21-quote-style-r5-street-press-fare.png",
+    "v21-quote-style-r5-glazed-machine-fare.png",
+    "v21-quote-style-r5-notepad-fare.png"
+  ],
+  "source_red": "map-chrome-red-20261022.json",
+  "correction": "Use the actual font-promoted sheet snap for shortcut position and hide the floating stack when less than 240 dp remains above the sheet. Restore it after collapse when space permits.",
+  "scope": "V21 quote recovery and selected EN/FR/AR observations pass. No full v21 trip or board repetition was started; no business command was replayed."
+}

@@ -1,5 +1,6 @@
 package org.example.taximobile.operations.ui
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,8 @@ import org.example.taximobile.operations.state.OperationsUiState
 
 @Composable
 internal fun AnalyticsScreen(state: OperationsUiState) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     val analytics = state.snapshot?.analytics
     if (analytics == null) {
         ScreenColumn {
@@ -79,12 +82,12 @@ internal fun AnalyticsScreen(state: OperationsUiState) {
                 Modifier.fillMaxWidth().padding(TaxiSpacing.Lg),
                 verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md),
             ) {
-                Text("Reporting contract", color = TaxiColors.Navy900, fontWeight = FontWeight.Bold)
+                Text("Reporting contract", color = taxiColors.Navy900, fontWeight = FontWeight.Bold)
                 Text(
                     "${analytics.facts.bucket.lowercase().replaceFirstChar { it.uppercase() }} buckets · " +
                         "${analytics.facts.retentionDays}-day retention · " +
                         "late events recomputed from source until retention · no participant-level export",
-                    color = TaxiColors.Ink700,
+                    color = taxiColors.Ink700,
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Row(
@@ -182,19 +185,19 @@ internal fun AnalyticsScreen(state: OperationsUiState) {
             .forEach { definition ->
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
-                    color = TaxiColors.Surface0,
-                    shape = RoundedCornerShape(TaxiRadii.Lg),
-                    border = BorderStroke(1.dp, TaxiColors.StrokeSubtle),
+                    color = taxiColors.Surface0,
+                    shape = RoundedCornerShape(taxiRadii.Lg),
+                    border = BorderStroke(1.dp, taxiColors.StrokeSubtle),
                 ) {
                     Column(
                         Modifier.padding(TaxiSpacing.Lg),
                         verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs),
                     ) {
-                        Text(definition.title, color = TaxiColors.Navy900, fontWeight = FontWeight.Bold)
-                        Text(definition.purpose, color = TaxiColors.Ink700, style = MaterialTheme.typography.bodyMedium)
+                        Text(definition.title, color = taxiColors.Navy900, fontWeight = FontWeight.Bold)
+                        Text(definition.purpose, color = taxiColors.Ink700, style = MaterialTheme.typography.bodyMedium)
                         Text(
                             "${definition.code} · ${definition.unit} · source: ${definition.source} · owner: ${definition.owner}",
-                            color = TaxiColors.Ink500,
+                            color = taxiColors.Ink500,
                             style = MaterialTheme.typography.bodySmall,
                         )
                     }

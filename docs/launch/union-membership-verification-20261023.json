@@ -1,0 +1,394 @@
+{
+  "recorded_utc": "2026-10-23T17:33:16.799154+00:00",
+  "evidence_level": "LOCAL_SOURCE_AND_SYNTHETIC_POSTGIS",
+  "source_context": "Original dirty checkout; explicit successor candidate required. Raw worktree digests below.",
+  "schema_head": "20261023_0053",
+  "membership_source": "Owner selected existing cooperative register for the union.",
+  "migration_roundtrip": "0053 upgrade -> 0052 downgrade -> 0053 re-upgrade PASS",
+  "postgres": {
+    "bind": "127.0.0.1",
+    "port": 55439,
+    "database": "taximobile_ci_union_20261023",
+    "owned_cluster_state": {
+      "path": ".tools/real-world-launch/membership-postgis-20261023/state.json",
+      "bytes": 731,
+      "sha256": "cbaadd6dc5524581871e55445d6c1b9f93287401f8aca1e3f958aea4ad756d8a"
+    }
+  },
+  "sources": [
+    {
+      "path": "backend/migrations/versions/20261023_0053_operator_membership_policy.py",
+      "bytes": 824,
+      "sha256": "bdd738ffa1b55423e5acdd95d5fdfb08a7b6ab251d55b7a01e38994fd69d4fe8"
+    },
+    {
+      "path": "backend/src/taximobile_api/domains/cooperatives/authority.py",
+      "bytes": 5213,
+      "sha256": "341e099f3678d8fc57cd59ab44f1f25ff779b0c3b3dc1e2f0d95adce6f312bb7"
+    },
+    {
+      "path": "backend/src/taximobile_api/domains/drivers/router.py",
+      "bytes": 23150,
+      "sha256": "352387d89b1c4e0e76e0eb677fb2ebf2f415a91f360f9e0052f31262f74e8dae"
+    },
+    {
+      "path": "backend/src/taximobile_api/domains/markets/models.py",
+      "bytes": 16819,
+      "sha256": "02e89864deb08ffffd465288464ebc4b6dd053d3099d01ebaffdb4ca03f54159"
+    },
+    {
+      "path": "backend/src/taximobile_api/domains/markets/schemas.py",
+      "bytes": 15848,
+      "sha256": "3df8f54a8d38e7147dc42f56769afc450da074f581d059da39dc85d4e0608b55"
+    },
+    {
+      "path": "backend/src/taximobile_api/domains/markets/operations_router.py",
+      "bytes": 33054,
+      "sha256": "e7c9337b478ae587682bcc04b3abd94e0c81a5f7f58059c1a8b745f454aabcd3"
+    },
+    {
+      "path": "backend/src/taximobile_api/domains/matching/service.py",
+      "bytes": 14047,
+      "sha256": "e198ce14651b7888f663052ab901a8f1276bd5013cc0caf8ee8636bae6fa007d"
+    },
+    {
+      "path": "backend/src/taximobile_api/domains/rides/service.py",
+      "bytes": 22139,
+      "sha256": "df98b0d0bca37fae890e19a5a956bb9df7200671ac40a2f6cf7045c8066bb6fb"
+    },
+    {
+      "path": "backend/src/taximobile_api/domains/scheduled_bookings/service.py",
+      "bytes": 51140,
+      "sha256": "194e9f9776a36e85e79b817403081c14b074492590dd068b63ac1e87167dd036"
+    },
+    {
+      "path": "backend/tests/unit/test_operator_membership_policy.py",
+      "bytes": 967,
+      "sha256": "54165e229aa93facea316057c3efead751bd63a1dba92ed6863b000f195a9225"
+    },
+    {
+      "path": "backend/tests/integration/test_operator_membership_authority.py",
+      "bytes": 22808,
+      "sha256": "f35e3e25e61b64d7a605a21b308cec6537e2f262a4b23110d62bdca6318c517c"
+    },
+    {
+      "path": "infra/scripts/generate_openapi_evidence.py",
+      "bytes": 9168,
+      "sha256": "08311a63ada5c047eb89f6c49a3e5dee574f024c23b218887c2e31b0f659ad02"
+    }
+  ],
+  "reports": [
+    {
+      "path": ".tools/real-world-launch/union-membership-tests-20261023-170611.xml",
+      "bytes": 1912,
+      "sha256": "b9031ca37974d6a924852028aacef0a29f6f94879c93ad8ea52648d6ebdad28a",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "skipped": 0
+    },
+    {
+      "path": ".tools/real-world-launch/union-membership-tests-20261023-170736.xml",
+      "bytes": 24313,
+      "sha256": "cb13e461cdd5f96ead938b0a52a1b7a7fe2fd6feacb1f20fcf2d0b526f12cf6c",
+      "tests": 15,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": ".tools/real-world-launch/union-membership-tests-20261023-170909.xml",
+      "bytes": 2271,
+      "sha256": "b7caa9031c6a27220770bc692a76a5bcb54939f6d80005fe73774aa215cc37e6",
+      "tests": 3,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": ".tools/real-world-launch/union-membership-tests-20261023-171105.xml",
+      "bytes": 1781,
+      "sha256": "c23e9cafa3d497a8fcf5d037f85c70f9ca941cee246810d81f9f81d0db19690c",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": ".tools/real-world-launch/union-membership-tests-20261023-172047.xml",
+      "bytes": 4533,
+      "sha256": "1af516b790616148f7abdcbd37614ffd8dc0351e6eba0478bc2d0399631f0a56",
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": ".tools/real-world-launch/union-membership-tests-20261023-172252.xml",
+      "bytes": 7339,
+      "sha256": "bde08b82d2ecc236e7f93b90d1fdaaa524c632aea86d4c8ddee77cc85b56d667",
+      "tests": 2,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": ".tools/real-world-launch/union-membership-tests-20261023-172648.xml",
+      "bytes": 2427,
+      "sha256": "4f917956da2d71f6afcf2bfb49abaf2c8a6771802ae751e7d88033b6905a8aa7",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": ".tools/real-world-launch/union-membership-tests-20261023-172841.xml",
+      "bytes": 4613,
+      "sha256": "dfd62648eda1b5d4bad23146191680e8d42e591c9b81950821afaf7193509dc8",
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": ".tools/real-world-launch/union-openapi-corrected-20261023.xml",
+      "bytes": 678,
+      "sha256": "4603708e764cd94e475b37e47f5a310e9b1b3cecf65cd96ae5cef3a8891fcc95",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": ".tools/real-world-launch/union-openapi-isolated-20261023.xml",
+      "bytes": 7868,
+      "sha256": "bb9d0f8e266a77634a90a9a08a4b3beead54293daf41d23c6d37454e156ad257",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": ".tools/real-world-launch/union-policy-all-unit-20261023.xml",
+      "bytes": 79930,
+      "sha256": "418e80584a4b9aa6f0dac6af23e5e610ec3da874b3122190c3c6d13579eac57f",
+      "tests": 503,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": ".tools/real-world-launch/union-policy-other-units-20261023.xml",
+      "bytes": 145273,
+      "sha256": "b1a09a8e856935393255dd466aeb2aa589b6399bb02df08c72aed257480cd01f",
+      "tests": 986,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "observations": [
+    {
+      "record": {
+        "path": ".tools/real-world-launch/union-membership-tests-20261023-170611.json",
+        "bytes": 537,
+        "sha256": "a87f14883bb5d07ba7e8d8e8b52621b1d8c5c67dbe796574feca4afa977269d5"
+      },
+      "exit_code": 2,
+      "selectors": [
+        "tests/unit/test_operator_membership_policy.py",
+        "tests/integration/test_operator_membership_authority.py"
+      ],
+      "finished_utc": "2026-10-23T17:06:21.504221+00:00"
+    },
+    {
+      "record": {
+        "path": ".tools/real-world-launch/union-membership-tests-20261023-170736.json",
+        "bytes": 537,
+        "sha256": "65bdb671e37428348850a8c3e146f9f90afc5b836257781817ca63b4581fa72a"
+      },
+      "exit_code": 1,
+      "selectors": [
+        "tests/unit/test_operator_membership_policy.py",
+        "tests/integration/test_operator_membership_authority.py"
+      ],
+      "finished_utc": "2026-10-23T17:08:59.761402+00:00"
+    },
+    {
+      "record": {
+        "path": ".tools/real-world-launch/union-membership-tests-20261023-170909.json",
+        "bytes": 1377,
+        "sha256": "ee3793349f0055c9f2d92522fefadfaed8b3ad557dcd365bed44a853cf213350"
+      },
+      "exit_code": 1,
+      "selectors": [
+        "tests/integration/test_operator_membership_authority.py::test_matching_excludes_nonmembers_for_both_immediate_service_types",
+        "tests/integration/test_operator_membership_authority.py::test_online_rejects_nonmember_then_accepts_verified_member_and_passengers_stay_open",
+        "tests/integration/test_operator_membership_authority.py::test_revocation_after_offering_rejects_acceptance_without_partial_assignment",
+        "tests/integration/test_operator_membership_authority.py::test_membership_withdrawal_serializes_with_actual_acceptance",
+        "tests/integration/test_operator_membership_authority.py::test_membership_withdrawal_preserves_accepted_trip_completion_and_payment",
+        "tests/integration/test_operator_membership_authority.py::test_scheduled_offer_discovery_and_commitment_recheck_membership",
+        "tests/integration/test_operator_membership_authority.py::test_scheduled_handoff_does_not_assign_a_member_withdrawn_after_commitment"
+      ],
+      "finished_utc": "2026-10-23T17:09:52.381845+00:00"
+    },
+    {
+      "record": {
+        "path": ".tools/real-world-launch/union-membership-tests-20261023-171105.json",
+        "bytes": 1520,
+        "sha256": "87615b2b4a83fd628f984ca732eaeb96d79c64b33db54ee84a8bdab285c48921"
+      },
+      "exit_code": 0,
+      "selectors": [
+        "tests/integration/test_operator_membership_authority.py::test_online_rejects_nonmember_then_accepts_verified_member_and_passengers_stay_open",
+        "tests/integration/test_operator_membership_authority.py::test_revocation_after_offering_rejects_acceptance_without_partial_assignment",
+        "tests/integration/test_operator_membership_authority.py::test_policy_enabled_after_offer_revalidates_nonmember_before_assignment",
+        "tests/integration/test_operator_membership_authority.py::test_membership_withdrawal_serializes_with_actual_acceptance",
+        "tests/integration/test_operator_membership_authority.py::test_membership_withdrawal_preserves_accepted_trip_completion_and_payment",
+        "tests/integration/test_operator_membership_authority.py::test_scheduled_offer_discovery_and_commitment_recheck_membership",
+        "tests/integration/test_operator_membership_authority.py::test_scheduled_handoff_does_not_assign_a_member_withdrawn_after_commitment",
+        "tests/integration/test_operator_membership_authority.py::test_database_constraint_requires_an_organization_for_closed_shop_policy"
+      ],
+      "finished_utc": "2026-10-23T17:12:46.712220+00:00"
+    },
+    {
+      "record": {
+        "path": ".tools/real-world-launch/union-membership-tests-20261023-172047.json",
+        "bytes": 537,
+        "sha256": "71b45f982ead108b01876f391077e085e15f509937993ce5bf62216770065dca"
+      },
+      "exit_code": 0,
+      "selectors": [
+        "tests/unit/test_operator_membership_policy.py",
+        "tests/integration/test_operator_membership_authority.py"
+      ],
+      "finished_utc": "2026-10-23T17:24:53.363335+00:00"
+    },
+    {
+      "record": {
+        "path": ".tools/real-world-launch/union-membership-tests-20261023-172252.json",
+        "bytes": 775,
+        "sha256": "996e8dade671223c840523ed72d15e1a7c1c2058519c0d29b056dc314c11ac26"
+      },
+      "exit_code": 1,
+      "selectors": [
+        "tests/integration/test_city_authorization_immediate.py",
+        "tests/integration/test_city_authorization_http.py",
+        "tests/integration/test_scheduled_acceptance_concurrency.py",
+        "tests/integration/test_scheduled_acceptance_http.py",
+        "tests/integration/test_scheduled_live_protection.py",
+        "tests/integration/test_mvp_lifecycle.py"
+      ],
+      "finished_utc": "2026-10-23T17:24:46.740367+00:00"
+    },
+    {
+      "record": {
+        "path": ".tools/real-world-launch/union-membership-tests-20261023-172648.json",
+        "bytes": 482,
+        "sha256": "6a288f1d6796da844055f532f3a1a02b95c313350e80d1d796e83ca0dc30a073"
+      },
+      "exit_code": 0,
+      "selectors": [
+        "tests/integration/test_city_authorization_immediate.py"
+      ],
+      "finished_utc": "2026-10-23T17:28:25.778477+00:00"
+    },
+    {
+      "record": {
+        "path": ".tools/real-world-launch/union-membership-tests-20261023-172841.json",
+        "bytes": 712,
+        "sha256": "d5aba97051e0b17b540b211f6af9f99adfade397bedb8e8e2af0fe03daca222a"
+      },
+      "exit_code": 0,
+      "selectors": [
+        "tests/integration/test_city_authorization_http.py",
+        "tests/integration/test_scheduled_acceptance_concurrency.py",
+        "tests/integration/test_scheduled_acceptance_http.py",
+        "tests/integration/test_scheduled_live_protection.py",
+        "tests/integration/test_mvp_lifecycle.py"
+      ],
+      "finished_utc": "2026-10-23T17:33:08.766152+00:00"
+    }
+  ],
+  "source_checks": {
+    "finished_utc": "2026-10-23T17:29:46.989506+00:00",
+    "results": [
+      {
+        "name": "docs",
+        "exit_code": 0,
+        "log": {
+          "path": ".tools/real-world-launch/union-source-docs-20261023.log",
+          "bytes": 132,
+          "sha256": "f6ea2398eab7aebf09d0e4b0f907919e56a05dc9dd12913a2a49bff8f84550f0"
+        }
+      },
+      {
+        "name": "mobile-api",
+        "exit_code": 0,
+        "log": {
+          "path": ".tools/real-world-launch/union-source-mobile-api-20261023.log",
+          "bytes": 101,
+          "sha256": "5a1d49760ca50404af36e34959e40718782fee4d95ffc796a768cdaf9ca934a0"
+        }
+      },
+      {
+        "name": "web-api",
+        "exit_code": 0,
+        "log": {
+          "path": ".tools/real-world-launch/union-source-web-api-20261023.log",
+          "bytes": 76,
+          "sha256": "33a037513144460a61a7062421405eba853408ee0b3bb72b91bd60a757ebcb5f"
+        }
+      },
+      {
+        "name": "credentials",
+        "exit_code": 0,
+        "log": {
+          "path": ".tools/real-world-launch/union-source-credentials-20261023.log",
+          "bytes": 112,
+          "sha256": "ec562be1f9b3c881f1e32d3aa314eefa6912c2c503d134556121e20f81327e3f"
+        }
+      },
+      {
+        "name": "compile",
+        "exit_code": 0,
+        "log": {
+          "path": ".tools/real-world-launch/union-source-compile-20261023.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "name": "whitespace",
+        "exit_code": 0,
+        "log": {
+          "path": ".tools/real-world-launch/union-source-whitespace-20261023.log",
+          "bytes": 883,
+          "sha256": "4301ad6717a2fc4cfd3a52bc9cbd2553f9fccba9bcfe9e91f12c2ca4f505045c"
+        }
+      }
+    ]
+  },
+  "openapi_timing": {
+    "path": ".tools/real-world-launch/union-openapi-timing-20261023.log",
+    "bytes": 218,
+    "sha256": "a47dec4922c079e5befe9e6b2b2caa456e029c09224ef71c53c4f80682a6b67b"
+  },
+  "accepted": {
+    "hosted_migration": false,
+    "real_members": false,
+    "staff_workflow": false,
+    "physical_device": false,
+    "full_ci": false,
+    "pilot": false,
+    "production": false
+  },
+  "limitations": [
+    "Failed observations remain historical; final passing reports do not rewrite them.",
+    "Initial collection/fixture/error-envelope test defects were corrected before the 25-case focused pass.",
+    "First broad units and isolated OpenAPI retry hit the original 45-second timeout; corrected finite 180-second export passed all three schema assertions.",
+    "First dispatch regression missed a five-second lock observation under concurrent load; the unchanged 12-case file passed separately, without weakening its observer.",
+    "Register maintenance, operations configuration UI, localized driver explanations and hosted rollback acceptance remain.",
+    "The older candidate 7d CI results cannot accept this implementation."
+  ]
+}

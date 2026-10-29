@@ -60,6 +60,7 @@ kotlin {
             implementation(libs.maplibre.compose)
         }
         commonMain.dependencies {
+            implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.coroutinesCore)
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
@@ -78,17 +79,26 @@ kotlin {
             implementation(libs.kotlin.test)
         }
         jvmTest.dependencies {
+            implementation(libs.ktor.client.mock)
             implementation("org.jetbrains.compose.ui:ui-test:1.11.1")
             implementation(compose.desktop.currentOs)
         }
         jsMain.dependencies {
+            implementation(npm("@js-joda/timezone", libs.versions.js.joda.timezone.get()))
             implementation(libs.wrappers.browser)
+        }
+        wasmJsMain.dependencies {
+            implementation(npm("@js-joda/timezone", libs.versions.js.joda.timezone.get()))
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
             implementation(libs.maplibre.compose)
         }
     }
+}
+
+compose.resources {
+    publicResClass = true
 }
 
 dependencies {

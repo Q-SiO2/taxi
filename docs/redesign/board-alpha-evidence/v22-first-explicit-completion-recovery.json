@@ -1,0 +1,14 @@
+{
+  "candidate": "candidate-native-v22.json",
+  "started_utc": "2026-10-22T16:45:07.926097+00:00",
+  "passed": false,
+  "ride_id": "73c4d766-9c7a-4e80-a589-805eb3b8cff2",
+  "original_failed_run": "v22-native-first.json",
+  "scope": "Deliberate recovery of stranded synthetic trip, not a clean/timed rehearsal. Earlier complete touch had no provider request and current GET remains IN_PROGRESS. Exactly one new native 80ms touch; no HTTP business command or automatic retry.",
+  "before_status": "IN_PROGRESS",
+  "provider_no_completion_through_utc": "2026-10-22T16:45:08.221089+00:00",
+  "provider_rows": 82,
+  "failure_type": "RuntimeError",
+  "failure_detail": "Fresh actual completion control not visible",
+  "finished_utc": "2026-10-22T16:46:21.202433+00:00"
+}

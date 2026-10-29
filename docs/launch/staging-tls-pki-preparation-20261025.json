@@ -1,0 +1,16 @@
+{
+  "prepared_utc": "2026-10-25T16:17:27.189908+00:00",
+  "status": "LOCAL_PREPARATION_ONLY",
+  "server_hostname": "alpha-postgis.railway.internal",
+  "issuer": "CN=TaxiMobile staging database CA 20261025",
+  "ca_sha256": "99b681391658310b251e6fe5b310988e0673faaa588ba8f1910d527784d49329",
+  "server_sha256": "47301749c45b666bf58b437a0199364965dd68d8058830df660d6eb7f0ee0dc1",
+  "server_expires_utc": "2026-11-24T16:17:27+00:00",
+  "ca_expires_utc": "2027-10-25T16:17:27+00:00",
+  "rsa_bits": 3072,
+  "distinct_from_localhost_ci_identity": true,
+  "private_material": "DPAPI CurrentUser only; inherited operator and SYSTEM ACL; no plaintext key file",
+  "private_keys_distributed_to_app_services": false,
+  "server_or_consumer_configuration_changed": false,
+  "production_custody_or_expiry_monitoring_accepted": false
+}

@@ -1,0 +1,81 @@
+{
+  "recorded_utc": "2026-10-27 13:00:00 UTC",
+  "source_head": "53d653176cca19e677abf91d5129b3a568dfaa19",
+  "tested_merge_commit": "cfeed49912c7f19139c3aeec0ddc6f1d7b6c1fa4",
+  "tree": "ec86a8b6fcc3f972c454765cac9a6b40884f6d10",
+  "run_id": 40505351875,
+  "run_number": 256,
+  "status": "completed",
+  "conclusion": "success",
+  "required_jobs": {
+    "mobile": {
+      "id": 122193136223,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "documentation-and-provenance": {
+      "id": 122193136378,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "backend": {
+      "id": 122193136492,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "gradle-dependency-submission": {
+      "id": 122193136541,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "gradle-wrapper-integrity": {
+      "id": 122193136554,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "web": {
+      "id": 122193136623,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "ios-shared": {
+      "id": 122193136641,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "dependency-review": {
+      "id": 122194363804,
+      "status": "completed",
+      "conclusion": "success"
+    }
+  },
+  "image_publisher": "skipped; PR source",
+  "full_backend_suite": {
+    "tests": 1482,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "tls_cases": 8,
+  "tls_baseline_restored": true,
+  "backend_junit_sha256": "0daf3257817db72b071b97f4a2d34746cd74aa0c2499b2e0a25dbe7e8c5429d4",
+  "test_artifact": {
+    "id": 12735201666,
+    "zip_sha256": "0c3642434e51096a139918c45794c4789807789e3fca4776d394d4771f4e9f12"
+  },
+  "provenance_artifact": {
+    "id": 12735067589,
+    "zip_sha256": "c6150eee61dad7ecb48e4b31f20aef64867d5d1a490322449ac7f9ec3c262d14"
+  },
+  "web_boot_artifact": {
+    "id": 12735461322,
+    "zip_sha256": "6ce2802f15725647bd9c147d1e72de6db13ead40e6cd1307a4dc4ba73bfc54d6",
+    "scenarios_passed": 4,
+    "covered_catalog_cases": [],
+    "phase_accepted": false
+  },
+  "same_tree_verified": true,
+  "platform_scope": "Android shared/debug/minified products and artifact identity, JS/Wasm browser and production package/Chrome boot, iOS shared compilation and both unsigned Release simulator products.",
+  "later_scheduled_review_binding_source_not_accepted_by_this_run": true,
+  "physical_signing_store_hosted_provider_operational_pilot_or_public_accepted": false
+}

@@ -1,5 +1,47 @@
 # TaxiMobile — Real-World Deployment Gap Audit
 
+## R3/R8 document recovery source — 25 October 2026
+
+Migration `20261025_0054` and the [durable upload workflow](launch/document-s3.md)
+add hidden leases, final authoritative version checks and bounded repeated orphan
+recovery. Source API/worker S3 configuration passes CI 236: all eight required
+jobs and 1,443 backend cases. A separately approved real S3 probe passes with
+three synthetic objects/19 requests and cleanup. Official scanner capacity/feeds,
+service credentials/key recovery, hosted migration/rollback and participant
+acceptance remain open; the probe does not close those gates.
+This source work does not close GAP-003/007/019 or any pilot/public release gate.
+
+## Membership source packet — 23 October 2026
+
+The owner selected the existing member register for the Fès union's closed-shop
+driver cohort. R5/R8 source migration `20261023_0053` adds the explicit per-operator
+admission policy. Actual membership verification, grant-safe staff operation,
+configuration UX and rollout acceptance remain required. Local SQL/concurrency
+results belong to [the membership checkpoint](launch/union-membership.md).
+This packet does not close GAP-004/005/019 or create legal/operator acceptance.
+
+## Current execution checkpoint — 23 October 2026
+
+The [real-world launch goal](real-world-launch.md) is active. Its
+[R0 baseline](launch/r0-baseline.md) and [R1 decision packet](launch/r1-decisions.md)
+classify the work below without closing its gates. Fresh local checks passed:
+983 backend unit tests; mobile contracts covering 84 HTTP calls plus one
+WebSocket; operations-web contracts covering 112 HTTP calls; CI-definition and
+source credential hygiene. The generated current source inventory contains 245
+HTTP operations, 52 migrations and nine administrative roles. These are dirty-tree
+local results, not immutable CI or real-world acceptance. Older dated counts and
+provider observations below remain historical evidence for their own candidates.
+
+## Milestone routing — 12 October 2026
+
+[roadmap.md](roadmap.md) owns the active A→B→C delivery order. This register
+continues to own real-world acceptance criteria, not the alpha's daily task queue.
+Use its B/C work-package mapping to carry every GAP-001–037 forward without
+requiring production acceptance before a clearly bounded synthetic A. Alpha work
+may supply reusable evidence but cannot relabel any P0/P1 gate closed.
+Legal/operator/privacy feasibility starts during A; all applicable live-pilot
+requirements and explicit authorization still precede real transport or money.
+
 ## 1. Audit status
 
 **Audit date:** 2026-09-09
@@ -663,7 +705,12 @@ credential or approval, and accepts neither T5 nor deployment.
 **Current gap:** the source now adopts a foreground-only pilot model. After an
 approved driver explicitly stages a fresh coordinate and goes online, Android
 and iOS schedule already-authorized one-shot observations every 15 seconds while
-available/offered and every 10 seconds during an active ride. Sampling is
+available/offered and every 10 seconds during an active ride, with a minimum
+idle interval after the automatic submission/readback/reconciliation finishes.
+This source refinement follows a two-emulator rehearsal where slow automatic
+work left ride controls disabled in five of six UI observations. New policy
+tests cover slow work, state-specific intervals, disarming and backoff; actual
+candidate-device verification of this refinement is still required. Sampling is
 disarmed when offline, paused, disconnected, or backgrounded; it never opens a
 permission prompt automatically, requests background permission, persists a
 client trail, or changes dispatch authority. An unavailable platform observation
@@ -679,6 +726,27 @@ area. This runs after professional/city authorization and before assignment.
 Failure invokes fallback/unfulfilled; the initial fallback excludes the failed
 committed driver. Normal matching also rejects excessively future-dated data.
 Source enforcement is not field acceptance or proof of actual pickup readiness.
+
+**Union rehearsal location update (2026-10-11):** immediate-offer acceptance now
+rechecks the latest location under the established ride → offer → driver lock
+order, including freshness, future skew and active service-area membership.
+The isolated PostGIS offer/location regression pack passed **90 tests** on 11
+October 2026 (`.tools/demo/offer-location-focused-20261011-183842.xml`),
+including the previously invalid future-point and area-status fixtures. This is
+source/integration evidence, not device or hosted acceptance. The native/shared
+driver source now preserves Android monotonic or iOS acquisition time and
+horizontal accuracy, rejects stale/future/imprecise observations before send,
+and removes editable coordinates as a driver dispatch input. Focused shared
+unit tests and Android builds passed on 11 October. **Still open:** iOS compile
+and device validation, real Android stale-cache/revoked-permission/background
+and lock-screen rehearsal, weak-network behavior, continuity while another
+navigation app is foregrounded, and hosted end-to-end dispatch acceptance.
+
+On 12 October, the exact API-35 driver APK submitted a fresh emulator observation
+through the repaired path. The backend stored the native observation with 5.0 m
+accuracy and a 2.466-second acquisition-to-record delay, and the UI presented
+`Location submitted`. This accepts the bounded Android emulator happy path only;
+it does not close the device and interruption cases above.
 
 Fourteen migrated lifecycle variants now include fresh direct handoff, no supply,
 professional-ineligibility fallback and nine location/availability/scope failure
@@ -800,6 +868,20 @@ Provider selection, multilingual geographic quality, privacy, saved places and
 physical usability remain open; this is source hardening, not GAP-008 acceptance.
 
 ### GAP-009 — Accept FCM/APNs and user-visible notification delivery
+
+**Union lifecycle source correction (2026-10-04):** en-route, arrival, start,
+completion and first cash settlement now write a generic passenger-owned inbox
+entry and `ride.updated` outbox hint in the same business transaction. The
+worker reloads the current assigned ride and addresses its passenger, never an
+event-supplied recipient; no historical status, coordinates or financial values
+are sent. Completed rides remain reloadable for cash receipt updates. Cash
+replay creates neither another hint nor another inbox row. English/French/Arabic
+catalogs and the mobile push allowlist include this generic update. Seventeen
+targeted backend cases and the wider 908-test unit run passed; a newly committed
+start appeared on both owned Android emulators after the API was reloaded.
+Arrival before this correction required foreground REST catch-up. Completion,
+cash update, installed-candidate push, OS delivery and full UD-08/UD-18 acceptance
+remain open; do not infer them from this single foreground transition.
 
 **Current gap:** adapters, token ownership, retry/dead-letter state, live refresh,
 and client receive boundaries exist. No development/staging/production Firebase
@@ -927,6 +1009,48 @@ token rotation/revocation proof; localized payload screenshots; dead-letter aler
 and replay drill; measured delivery latency and loss against an approved SLO.
 
 ### GAP-010 — Accept cash and manual-transfer operations with real money
+
+**Original software blocker from the 2026-10-05 synthetic native rehearsal:** cash
+completion committed successfully and the passenger's native Account receipt
+showed `PENDING`, but the driver's confirmation control disappeared after state
+refresh. `completeDriverRide` temporarily copies `pendingCashRideId` into the
+completion projection; `driverReadyWithOffers` reconstructs state without it.
+The existing driver-history response has no payment method/status to recover
+this work, and passenger receipts are not a driver read contract. Do not infer
+pending cash from earnings absence, default a missing payment method to cash,
+persist a success-looking local flag, auto-settle or reissue completion. Provide
+an assigned-driver-scoped server read of actual completed/pending cash work,
+including enough immutable fare/ride context to prevent confirming the wrong
+ride. Pending work must remain reachable beyond the latest history page and
+survive refresh, reconnect, restart and access-token renewal; settled and
+manual-transfer rides must never appear as pending cash. Cover mixed history,
+multiple pending rides, participant isolation and settlement replay, then resume
+the same retained pending demo payment through native driver confirmation.
+
+**Locally verified software correction — 2026-10-08:** the payments router now exposes an
+assigned-driver-only, oldest-first paginated pending-cash queue separate from
+recent history. Shared state reloads it during normal restoration and settlement,
+uses explicit unavailable/reload presentation, and renders selected ride,
+amount/currency and date before driver confirmation. The completion-only flag
+has been removed. New queue reads and cash commands preserve coroutine
+cancellation rather than retrying cancellation. Read-only refresh preserves the
+selected page, clamps a depleted last page, and never stores payment authority
+locally. The full migrated backend run passed **1,133 tests** with zero failures,
+errors or skips; **316 JVM** and **267 Android-host** tests and both role debug
+APK assemblies passed. Local T3 metadata verified migration `20260908_0052`,
+zero residual clone databases, revoked temporary clone authority and matching
+81-table backup/restore. This is not hosted or production acceptance.
+
+The exact retained pending payment was recovered and explicitly confirmed through
+the current native driver UI on the owned Android emulator. Inspecting/dismissing
+its contextual dialog made no financial change. Confirmation changed pending
+cash to completed, removed only that queue item and added exactly one **35.00
+MAD** earning, preserving the **35.00 MAD** fare and zero operator fee. A driver
+restart reopened the remaining queue and the target earning. The older unrelated
+pending fixture was deliberately not settled. No business command was issued
+through an observer, and no ride was rebooked or recompleted. Candidate identity,
+passenger receipt and physical-phone progress belong in `union_demo.md`; the
+full UD-11 replay/recovery journey and real-money acceptance remain separate.
 
 **Current gap:** the backend records cash and manually reviewed external transfer
 claims, but no verified real recipient, bank/M-Wallet terms, transfer fee/limit,
@@ -1075,13 +1199,19 @@ operations and applicant entry surfaces, found and fixed a nested-scroll
 infinite-height exception on the narrow applicant layout, and then passed the
 applicant route at 390 px and 1280 px without horizontal overflow or new runtime
 warnings/errors. The production compatibility output is still large: the current
-fallback JavaScript is 6,104,171 bytes (about 5.82 MiB), the application Wasm is
+9 September fallback JavaScript was 6,104,171 bytes (about 5.82 MiB), the application Wasm was
 6,818,646 bytes, and the Skiko Wasm runtime is 8,652,729 bytes before transfer
-compression. The JavaScript ceiling was reviewed at 6,250,000 bytes, leaving
+compression. The JavaScript ceiling was then reviewed at 6,250,000 bytes, leaving
 2.39% headroom over the measured candidate rather than weakening the gate
 broadly. The Wasm and total-release ceilings remain unchanged. These ceilings
 prevent silent growth; measured startup on target networks and further
 optimization remain acceptance work.
+
+17 October: the required board language/entry/recovery packet measures 6,467,000
+bytes of JS, compared with deployed v4's 6,245,606 (+3.54%). The reviewed JS limit
+is now 6,550,000 bytes, with 1.28% headroom; per-Wasm and total-release caps remain
+9,000,000 and 35,000,000 bytes. This is a bounded feature-size review, not evidence
+of target-network startup performance or hosted acceptance of the new packet.
 
 The packaged compatibility release now also has a bounded real-browser boot
 collector wired into CI. It serves only a loopback test origin, verifies exact

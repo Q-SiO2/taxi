@@ -1,6 +1,7 @@
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
 
 import pytest
 
@@ -108,3 +109,71 @@ def test_documented_placeholders_do_not_trigger_high_confidence_rules(tmp_path: 
 
 def test_committed_workspace_passes_the_source_credential_gate() -> None:
     validator.validate_workspace(WORKSPACE_ROOT)
+
+
+def git(root: Path, *arguments: str) -> None:
+    subprocess.run(
+        ["git", "-C", str(root), *arguments],
+        check=True,
+        capture_output=True,
+        timeout=15,
+    )
+
+
+def test_nested_source_archive_does_not_inherit_parent_git_inventory(tmp_path: Path) -> None:
+    git(tmp_path, "init", "--quiet")
+    source_file(tmp_path, ".gitignore", "archive/\n")
+    archive = tmp_path / "archive"
+    source_file(
+        archive, "backend/settings.py", 'KEY = "' + "-----BEGIN " + 'PRIVATE KEY-----"'
+    )
+
+    paths, tracked = validator.discover_source_files(archive)
+
+    assert not tracked
+    assert paths == [archive / "backend/settings.py"]
+    with pytest.raises(ValueError, match="private-key-material"):
+        validator.validate_workspace(archive)
+
+
+def test_candidate_mode_scans_untracked_source_but_never_reads_ignored_secrets(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    git(tmp_path, "init", "--quiet")
+    source_file(tmp_path, ".gitignore", "infra/.env\nbackend/build/\n")
+    source_file(tmp_path, "backend/tracked.py", "SAFE = True\n")
+    git(tmp_path, "add", "--", ".gitignore", "backend/tracked.py")
+    marker = "-----BEGIN " + "PRIVATE KEY-----"
+    untracked = source_file(tmp_path, "backend/new.py", f'KEY = "{marker}"')
+    ignored = source_file(tmp_path, "infra/.env", f'KEY = "{marker}"')
+    generated = source_file(tmp_path, "backend/build/generated.py", f'KEY = "{marker}"')
+    original_text = validator._text
+
+    def guarded_text(path: Path) -> str | None:
+        assert path not in {ignored, generated}, "local-only material must not be read"
+        return original_text(path)
+
+    monkeypatch.setattr(validator, "_text", guarded_text)
+    validator.validate_workspace(tmp_path)
+    paths, tracked = validator.discover_source_files(tmp_path, include_untracked=True)
+    assert tracked and untracked in paths
+    assert ignored not in paths and generated not in paths
+    with pytest.raises(ValueError, match="backend[/\\\\]new.py.*private-key-material"):
+        validator.validate_workspace(tmp_path, include_untracked=True)
+
+
+def test_candidate_mode_applies_forbidden_filename_rule_before_reading(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    git(tmp_path, "init", "--quiet")
+    path = source_file(tmp_path, "TaxiMobile/release.p12", "synthetic-signing-fixture")
+
+    def forbidden_read(_: Path) -> str:
+        pytest.fail("forbidden candidate files must be rejected without reading their contents")
+
+    monkeypatch.setattr(validator, "_text", forbidden_read)
+    paths, tracked = validator.discover_source_files(tmp_path, include_untracked=True)
+    assert paths == [path]
+    assert validator.scan_files(tmp_path, paths, tracked=tracked) == [
+        validator.Finding(Path("TaxiMobile/release.p12"), "forbidden-credential-file")
+    ]

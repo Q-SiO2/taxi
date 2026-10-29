@@ -1,0 +1,55 @@
+{
+  "recorded_utc": "2026-10-26T09:45:07+00:00",
+  "source_head": "1f8bfb9d7e6162a267b8c2387fe08d28ee213f36",
+  "candidate_tree": "44c8fa17de1c87913959c703639b8efe4a522a5c",
+  "run_id": 40300968726,
+  "run_number": 244,
+  "status": "in_progress",
+  "conclusion": null,
+  "required_jobs": {
+    "gradle-wrapper-integrity": {
+      "id": 121498465929,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "web": {
+      "id": 121498466284,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "gradle-dependency-submission": {
+      "id": 121498466312,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "ios-shared": {
+      "id": 121498466329,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "documentation-and-provenance": {
+      "id": 121498466359,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "backend": {
+      "id": 121498466378,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "mobile": {
+      "id": 121498466401,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "dependency-review": {
+      "id": 121499558921,
+      "status": "completed",
+      "conclusion": "success"
+    }
+  },
+  "all_required_jobs_accepted": false,
+  "ci_tested_merge_tree_equality_verified": false,
+  "predecessor_ci_not_reused_for_this_source": true,
+  "hosted_physical_field_or_public_accepted": false
+}

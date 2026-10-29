@@ -1,0 +1,96 @@
+{
+  "verified_utc": "2026-10-22T10:07:25.684605+00:00",
+  "passed": true,
+  "totals": {
+    "tests": 117,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "classes": [
+    {
+      "name": "org.example.taximobile.feature.app.MobileAppCoordinatorTest",
+      "tests": 55,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.example.taximobile.feature.app.QuoteSessionRecoveryTest",
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.example.taximobile.feature.auth.AuthenticatedReadRecoveryTest",
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.example.taximobile.feature.auth.AuthenticationSessionCancellationTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.example.taximobile.feature.auth.AuthenticationSessionLifetimeTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.example.taximobile.feature.auth.AuthenticationSessionStorageTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.example.taximobile.feature.auth.AuthenticationStateTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.example.taximobile.feature.auth.RegistrationInputTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "archive": ".tools/alpha-delivery/session-cancellation-green-20261022",
+  "sources": [
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/auth/AuthenticationSessionCoordinator.kt",
+      "sha256": "b2109a2ec27de856d2315625ea3fa6e115605622408e0cefe157370bfb620c0e"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/auth/AuthenticationSessionCancellationTest.kt",
+      "sha256": "d50364d73f4efe68b63b3a737fb75223a430bc7adf37ee82cede258c615ac309"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/kotlin/org/example/taximobile/AndroidAppDependencies.kt",
+      "sha256": "2aefc31ade81f78b5b0f7da856566644ca2ce2daf1ae1bc51d3ea9c0bda5633d"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/kotlin/org/example/taximobile/MainActivity.kt",
+      "sha256": "245dab29426594d33e79e8600d3beb63f0d05bc14c74e6b12f4d663bbde60bc0"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/kotlin/org/example/taximobile/TaxiMobileFirebaseMessagingService.kt",
+      "sha256": "b019eb80cac737dcc2ac24fc22c957d1a70fce21686b9bbd970087bd4f8afff2"
+    }
+  ],
+  "red_records": [
+    "session-cancellation-red-20261021.json",
+    "session-cancellation-cleanup-red-20261022.json"
+  ],
+  "scope": "Six meaningful cancellation/deadline/failed-save regressions plus existing auth/quote/coordinator cases. Android process-owned factory source is included for provenance, but JVM checks do not compile or accept Android app entry points. Full replacement build/native runtime required."
+}

@@ -1,0 +1,92 @@
+{
+  "recorded_utc": "2026-10-24T18:42:15.312413+00:00",
+  "scope": "Approved S3 source transport/config/envelope phase; API factory, durable upload journal and worker reconciliation not yet implemented or activated",
+  "reports": {
+    "focused": {
+      "tests": 87,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "junit_sha256": "a96c45914d62dbd5e111637fc2dbe37c40431b0d6bd6af7a91950f922d12580d"
+    },
+    "all_unit": {
+      "tests": 1115,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "junit_sha256": "01ad6ae899a516ba22911696d3ae8a7539544e383218e62ef1005e58dce6b640"
+    },
+    "retained_retry_failure": {
+      "tests": 3,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0,
+      "junit_sha256": "3590c875c28b321d2e1a8aa69fb8b7be673f48d6ba588a475ca1aac4199e7696"
+    },
+    "retained_config_observer_failure": {
+      "tests": 84,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "junit_sha256": "c47cac5a6b5d6a5da32eed678b4aa5f5a20a0881c6ab4bbc538f43d2cd2fb4b5"
+    }
+  },
+  "audits": {
+    "runtime": {
+      "packages": 48,
+      "findings": 0,
+      "report_sha256": "adece5e4096ed242b630db6f32b4e2f20bb02d441454e4ea7f19d1efd6b5977c"
+    },
+    "dev": {
+      "packages": 74,
+      "findings": 0,
+      "report_sha256": "ebdbceea11135ad5e9b225dfdb101b8f6bb97aa989063b9effe742a0f42fa208"
+    }
+  },
+  "source_sha256": {
+    "backend/src/taximobile_api/integrations/document_storage_config.py": "1bf3b4334420eb8689c1b6a16dad1541eea098ed16d448a34884271ca7a1d545",
+    "backend/src/taximobile_api/integrations/s3_driver_documents.py": "b8724e67e4c0eef915d43000f951db1a825cd4d70d4ee9f28d022e40c001fab3",
+    "backend/src/taximobile_api/integrations/driver_documents.py": "9c9e49f4de966136d56a3796db1e092038c294c2d0a5153ab41a6ba85a8d6afb",
+    "backend/tests/unit/test_document_storage_config.py": "6770256e41af74094ee879a4c3a421abef309e28c96bec34074e751376bbafdd",
+    "backend/tests/unit/test_s3_driver_documents.py": "bbe388420548433ba3ce3086ea41b685c46376bffc06efb2a3606713a2c70ada",
+    "backend/pyproject.toml": "032fa5b71749270a1bf67a86ca1726d8b5355e419cb057d978e43712d43132d6",
+    "backend/requirements.lock": "ecc65e0dabc61ea1a5b31c474737a5e8d7e19510fe648ad7517efeb3a15b5bea",
+    "backend/requirements-dev.lock": "8895d90c0994e832b0f404fa7d302f4a2bac4644538305ecdd9fbabefff927fd",
+    "backend/requirements-linux.lock": "80fc171715d925f47ec94c7b58b37c2c589a890b78ca681480178b2690ac4baa"
+  },
+  "previous_package_pins_preserved": true,
+  "new_packages": [
+    "boto3",
+    "botocore",
+    "jmespath",
+    "python-dateutil",
+    "s3transfer",
+    "six"
+  ],
+  "linux_lock_unchanged": true,
+  "published_or_fresh_ci_accepted": false,
+  "actual_s3_provider_accepted": false,
+  "hosting_bucket_credentials_or_real_documents_changed": false,
+  "checks": [
+    {
+      "name": "compile",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "docs",
+      "exit_code": 0,
+      "log_sha256": "f6ea2398eab7aebf09d0e4b0f907919e56a05dc9dd12913a2a49bff8f84550f0"
+    },
+    {
+      "name": "credentials",
+      "exit_code": 0,
+      "log_sha256": "ec562be1f9b3c881f1e32d3aa314eefa6912c2c503d134556121e20f81327e3f"
+    },
+    {
+      "name": "ci-security",
+      "exit_code": 0,
+      "log_sha256": "25537fc036d76a1eebcaa1531d91842d592a58cd0dac89b597ebc2f708465cfe"
+    }
+  ]
+}

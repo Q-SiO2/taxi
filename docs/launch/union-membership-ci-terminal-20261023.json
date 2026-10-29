@@ -1,0 +1,65 @@
+{
+  "recorded_utc": "2026-10-23T18:38:13Z",
+  "commit": "d499adb668426a0b9a37a15fa1da126f62ce9c13",
+  "run_id": 39997072905,
+  "url": "https://github.com/Q-SiO2/taxi/actions/runs/39997072905",
+  "scope": "Parent admission candidate only; does not include staff-register or native guidance successor.",
+  "jobs": [
+    {
+      "id": 120563260041,
+      "name": "mobile",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120563260392,
+      "name": "documentation-and-provenance",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120563260398,
+      "name": "ios-shared",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120563260423,
+      "name": "gradle-wrapper-integrity",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120563260561,
+      "name": "dependency-review",
+      "status": "completed",
+      "conclusion": "cancelled"
+    },
+    {
+      "id": 120563260717,
+      "name": "backend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120563260805,
+      "name": "web",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120563262010,
+      "name": "gradle-dependency-submission",
+      "status": "completed",
+      "conclusion": "skipped"
+    },
+    {
+      "id": 120575444160,
+      "name": "publish-backend-image",
+      "status": "completed",
+      "conclusion": "skipped"
+    }
+  ],
+  "complete_dependency_review": false,
+  "release_accepted": false
+}

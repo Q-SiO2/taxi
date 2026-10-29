@@ -1,0 +1,82 @@
+{
+  "started_utc": "2026-10-22T11:37:27.662008+00:00",
+  "target": "fr",
+  "passed": true,
+  "method": "Visible Android Languages rows and handle drag; no hidden locale/settings write, app-data wipe or host language change",
+  "observations": [
+    {
+      "visible_order": [
+        "en",
+        "ar",
+        "fr"
+      ],
+      "rows": [
+        {
+          "language": "en",
+          "bounds": [
+            48,
+            406,
+            592,
+            550
+          ]
+        },
+        {
+          "language": "ar",
+          "bounds": [
+            48,
+            550,
+            592,
+            694
+          ]
+        },
+        {
+          "language": "fr",
+          "bounds": [
+            48,
+            694,
+            592,
+            838
+          ]
+        }
+      ]
+    },
+    {
+      "visible_order": [
+        "fr",
+        "en",
+        "ar"
+      ],
+      "rows": [
+        {
+          "language": "fr",
+          "bounds": [
+            48,
+            406,
+            592,
+            550
+          ]
+        },
+        {
+          "language": "en",
+          "bounds": [
+            48,
+            550,
+            592,
+            694
+          ]
+        },
+        {
+          "language": "ar",
+          "bounds": [
+            48,
+            694,
+            592,
+            838
+          ]
+        }
+      ]
+    }
+  ],
+  "configuration": "config: mcc310-mnc260-fr-rFR,en-rUS,ar-rMA-ldltr-sw360dp-w360dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x720-v31",
+  "finished_utc": "2026-10-22T11:37:34.756292+00:00"
+}

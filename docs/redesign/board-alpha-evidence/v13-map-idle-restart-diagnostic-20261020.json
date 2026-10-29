@@ -1,0 +1,176 @@
+{
+  "started_utc": "2026-10-20T09:17:34.102509+00:00",
+  "candidate": "candidate-native-v13.json",
+  "passed_within_scope": true,
+  "scope": "Same APK, native idle restart/map selection diagnostic; no booking or backend write workaround",
+  "rides_before": [
+    {
+      "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "98a253df-de13-4029-9daa-e538a520997d",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "e531e392-6f5b-4962-9964-3967a4afc418",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "082f8b85-6598-423d-aac5-cf31eec3f30a",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "e734ed2c-a37c-424b-9d84-b31e6811cd09",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "65f3d974-1cb3-4c43-9486-80cd1007c256",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "03756c30-f453-4d09-ae50-c3fa8f3782a4",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "59576371-85a9-4732-a100-12f7295f0c0a",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "e1b2bf66-0887-4429-a798-e272cc4ebf1a",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "d8a67153-d7e5-4d96-8df0-be6ddb329d37",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "e8948a59-659f-4d70-b756-eaafd9cc1fa1",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "ee13caaa-3461-418d-b0b4-f32eab7dd516",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "a0ba8798-8536-4420-bde2-12aa9111b817",
+      "status": "COMPLETED"
+    }
+  ],
+  "review_fare_enabled": true,
+  "ui_after": [
+    "Showing a Map created with MapLibre. Scroll by dragging two fingers. Zoom by pinching two fingers.",
+    "Attribution icon. Activate to show attribution dialog.",
+    "الحساب",
+    "الحساب",
+    "السلامة",
+    "صندوق الوارد 20",
+    "9+",
+    "إعادة توسيط الأماكن المحددة",
+    "⌖",
+    "استخدام موقعي الحالي كنقطة انطلاق",
+    "◎",
+    "الوجهات الأخيرة",
+    "⁦33.57622694836367, -7.591409325413366⁩",
+    "⁦33.5755514615401, -7.591061857381959⁩",
+    "⁦33.57555146155971, -7.591061857422886⁩",
+    "مراجعة الأجرة"
+  ],
+  "rides_after": [
+    {
+      "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "98a253df-de13-4029-9daa-e538a520997d",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "e531e392-6f5b-4962-9964-3967a4afc418",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "082f8b85-6598-423d-aac5-cf31eec3f30a",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "e734ed2c-a37c-424b-9d84-b31e6811cd09",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "65f3d974-1cb3-4c43-9486-80cd1007c256",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "03756c30-f453-4d09-ae50-c3fa8f3782a4",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "59576371-85a9-4732-a100-12f7295f0c0a",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "e1b2bf66-0887-4429-a798-e272cc4ebf1a",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "d8a67153-d7e5-4d96-8df0-be6ddb329d37",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "e8948a59-659f-4d70-b756-eaafd9cc1fa1",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "ee13caaa-3461-418d-b0b4-f32eab7dd516",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "a0ba8798-8536-4420-bde2-12aa9111b817",
+      "status": "COMPLETED"
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "v13-map-idle-restart-before-20261020.png",
+      "sha256": "e95318c6c7b3494820d6d2c2c113878587ff9304d11879ee95e95a6400e631b4"
+    },
+    {
+      "path": "v13-map-idle-restart-selected-20261020.png",
+      "sha256": "4f1c9dbf02ca2d31a2612f10e0cea12456681f50a536fd17690904ca1e69ff87"
+    }
+  ],
+  "finished_utc": "2026-10-20T09:18:14.453285+00:00"
+}

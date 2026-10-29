@@ -1,0 +1,20 @@
+{
+  "candidate": "candidate-native-v20.json",
+  "role": "passenger",
+  "locale": "fr",
+  "started_utc": "2026-10-22T10:32:11.161037+00:00",
+  "passed": true,
+  "scope": "Actual idle authenticated account and populated receipt/earnings; no booking or settlement inputs",
+  "screenshots": [
+    {
+      "path": "v20-native-passenger-fr-account.png",
+      "sha256": "0895abe751e6fb1f2c87a5c52d4f91d719f6ab0938080d797fbdd05751ffe394"
+    },
+    {
+      "path": "v20-native-passenger-fr-financial.png",
+      "sha256": "0895abe751e6fb1f2c87a5c52d4f91d719f6ab0938080d797fbdd05751ffe394"
+    }
+  ],
+  "configuration": "config: mcc310-mnc260-fr-rFR,en-rUS,ar-rMA-ldltr-sw360dp-w360dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x720-v31",
+  "finished_utc": "2026-10-22T10:32:32.257267+00:00"
+}

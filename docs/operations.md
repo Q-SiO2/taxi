@@ -1,5 +1,93 @@
 # TaxiMobile — National Operations and City Rollout Specification
 
+## First-city operating target — 23 October 2026
+
+The owner selected **Fès** with **Fès Taxi Union** as the generic working operator name. Drivers must
+be verified union members; passengers may register normally. Keep operator/staff
+authority, verified driver eligibility and membership as separate backend facts.
+The owner specifies autonomous taxis within their unions, with no separate union
+transport permit to secure for this project. Use that operating model and the
+existing cooperative register; do not invent a registered union identifier,
+permit, new operator type or membership authority. Driver, vehicle and city/service
+checks remain separate from the platform's operator/member administration.
+
+The [R1 packet](launch/r1-decisions.md) retains applicable launch-compliance records, roster verification,
+service boundary, tariffs, support, budget and pilot acceptance dependencies.
+Casablanca staging remains synthetic alpha evidence. The owner confirmed an
+Android phone and Google Play accounts; actual device/signing/release acceptance
+and iOS resources remain separate work.
+
+The owner selected the existing cooperative member register for union membership.
+An operator may enable `requires_active_membership` only with a linked register;
+the existing scoped operator-management authority and MFA-protected update/audit
+path own this policy. Fès must enable it before launch. Keep the legal identity
+decision separate from the internal register mapping. Policy configuration does
+not approve members or expand staff permissions.
+
+### Operator member-register administration
+
+The linked register's driver-membership maintenance uses the existing
+`manage_operators` permission, currently held by scoped platform administrators.
+Operator administrators, driver reviewers, analysts and ordinary members do not
+inherit it. This initial workflow changes neither role templates nor live grants.
+Every write requires recent operations MFA, a bounded review reason, transactional
+audit and `Idempotency-Key`. Replays recheck current operator scope before returning
+any saved result. Listing is paginated and scoped before rows and counts.
+
+Enrollment selects a registered driver by ID whose city application is associated
+with an assignment of this operator. It does not approve that application or the
+driver's license. No global account/email search is exposed. Existing linked
+register entries remain maintainable independently of current driving eligibility.
+Responses contain register/driver IDs, membership number, status and effective
+dates, without contact details or documents. Membership numbers are excluded from
+audit changes. Reasons must avoid identity documents or other unnecessary personal
+data. Named union roster verification remains an operational prerequisite.
+
+Updates require the last observed `updated_at`; a stale version returns `409`.
+Operator/register and member row locks serialize maintenance with admission.
+Status/date changes never revoke account sessions, cancel an accepted ride or
+change driver/vehicle/city approval. Effective end dates deny new work at the
+boundary even when membership status is ACTIVE. Historic entries are retained;
+there is no destructive delete or automatic privilege/driver-role grant.
+
+## Board alpha execution authorized — 15 October 2026
+
+The owner now directs the earliest functional board alpha, authorizes application
+implementation and TaxiMobile Railway staging changes/deployment, and requires
+French, Arabic and English with concise copy. This supersedes the earlier
+planning-only stop. The selected four-style contract remains in force; no further
+palette approval is needed. Follow [the active board alpha checkpoint](board-alpha.md)
+for execution and evidence. Native, integrated staging, device and release
+acceptance must still be demonstrated.
+
+## Selected style system — recorded 15 October 2026
+
+The owner selected Folded Streets, Street Press, Glazed Machine and Notepad as
+four complete local presentation choices. The independent color-theme menu and
+main city/taxi illustration are withdrawn. [style-options.md](redesign/style-options.md)
+now owns the shared preference, exact treatments and ST-0–ST-4 engineering packets;
+[delivery.md](redesign/delivery.md) maps them into the UX waves. Earlier statements
+that no style has been selected are historical. No further palette vote is needed.
+
+Use the existing semantic components/theme boundary. Notepad retains main tasks,
+icons and explicit state/recovery in grayscale, with decorative motion disabled.
+Keep all backend authorization, scope, review, MFA, privacy and financial contracts.
+This selection is distinct from native/device, deployment and release acceptance.
+The next scoped engineering step is source/candidate reconciliation and ST-1/ST-2;
+no app implementation or acceptance is claimed by the documentation previews.
+
+
+## Visual replacement proposal — latest 12 October 2026
+
+The owner has rejected current UI/UX and requested a full redesign plan with free
+visual exploration followed by confirmation before implementation. The old
+navy/mustard visual clauses below describe the previous identity. Review
+[redesign/web-pages.md](redesign/web-pages.md) and
+[redesign/delivery.md](redesign/delivery.md); no replacement is approved yet.
+Operational scope, independent review, MFA, evidence, privacy and financial
+authority remain unchanged. UX-0 will reconcile only visual prescriptions after
+approval. The complete page plan does not make all console polish an alpha gate.
+
 ## Current standing — 2026-09-07
 
 Phases 12 through 19 are implemented in source, including versioned payment
@@ -675,6 +763,13 @@ City scheduling policy defines:
 * Passenger/driver cancellation cutoffs, scheduling-surcharge refund rules,
   no-show handling, and support ownership.
 * City timezone for user presentation; authoritative timestamps remain UTC.
+* City-local scheduling planning reads the pinned packaged IANA rules and returns
+  their version. A rule-data update needs reviewed dependency hashes, transition
+  regressions and restarted application instances; never silently inherit an OS
+  database. Unavailable rules block clock planning explicitly without inventing
+  options or acquiring booking availability. Existing explicit-instant pricing,
+  lead-time and eligibility checks remain authoritative. See
+  [the input boundary](launch/scheduled-local-input.md).
 
 “Scheduled” means the backend accepted a future request, not that a driver is
 guaranteed. The passenger sees distinct states for request received, driver

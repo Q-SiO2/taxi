@@ -1,0 +1,81 @@
+{
+  "candidate": "candidate-native-v20.json",
+  "role": "passenger",
+  "label": "initial",
+  "started_utc": "2026-10-22T10:23:00.520287+00:00",
+  "passed": true,
+  "observations": [
+    {
+      "stage": "before",
+      "utc": "2026-10-22T10:23:03.733315+00:00",
+      "pid": "1884",
+      "main_activity_history_count": 1,
+      "history_indices": [
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-passenger-activity-initial-before.png",
+      "sha256": "f2507e4af87a5ce1604efd32b2ca5d6a6cb71fb093ebdd50b3fc345b3e7057a5"
+    },
+    {
+      "stage": "entry-1",
+      "utc": "2026-10-22T10:23:12.614187+00:00",
+      "pid": "1884",
+      "main_activity_history_count": 2,
+      "history_indices": [
+        1,
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-passenger-activity-initial-entry-1.png",
+      "sha256": "d31c13dcb42db607d5169584506d6091f2bd93edcd21eafe926c758fe51721b1"
+    },
+    {
+      "stage": "entry-2",
+      "utc": "2026-10-22T10:23:21.475611+00:00",
+      "pid": "1884",
+      "main_activity_history_count": 3,
+      "history_indices": [
+        2,
+        1,
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-passenger-activity-initial-entry-2.png",
+      "sha256": "d31c13dcb42db607d5169584506d6091f2bd93edcd21eafe926c758fe51721b1"
+    },
+    {
+      "stage": "entry-3",
+      "utc": "2026-10-22T10:23:31.138547+00:00",
+      "pid": "1884",
+      "main_activity_history_count": 4,
+      "history_indices": [
+        3,
+        2,
+        1,
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-passenger-activity-initial-entry-3.png",
+      "sha256": "59847e911d5b4fb36fd049e594dbb892e9c85f41c21bcea15dc866db5dad2fd8"
+    },
+    {
+      "stage": "foreground",
+      "utc": "2026-10-22T10:23:42.032132+00:00",
+      "pid": "1884",
+      "main_activity_history_count": 5,
+      "history_indices": [
+        4,
+        3,
+        2,
+        1,
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-passenger-activity-initial-foreground.png",
+      "sha256": "59847e911d5b4fb36fd049e594dbb892e9c85f41c21bcea15dc866db5dad2fd8"
+    }
+  ],
+  "scope": "Standard am start MainActivity, existing app data/session retained. No login, business command, token read or family attribution.",
+  "finished_utc": "2026-10-22T10:23:42.186207+00:00"
+}

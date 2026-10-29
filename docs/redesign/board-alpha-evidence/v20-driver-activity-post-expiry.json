@@ -1,0 +1,81 @@
+{
+  "candidate": "candidate-native-v20.json",
+  "role": "driver",
+  "label": "post-expiry",
+  "started_utc": "2026-10-22T10:49:23.036733+00:00",
+  "passed": true,
+  "observations": [
+    {
+      "stage": "before",
+      "utc": "2026-10-22T10:49:25.400194+00:00",
+      "pid": "7155",
+      "main_activity_history_count": 1,
+      "history_indices": [
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-driver-activity-post-expiry-before.png",
+      "sha256": "c4c5e13bc81737f74be90570380812a74faa29560d444950a2a8b38ad7e914a8"
+    },
+    {
+      "stage": "entry-1",
+      "utc": "2026-10-22T10:49:33.306382+00:00",
+      "pid": "7155",
+      "main_activity_history_count": 2,
+      "history_indices": [
+        1,
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-driver-activity-post-expiry-entry-1.png",
+      "sha256": "8f6b7f98931734173609b601c01478c0b52968570f3f7468d01f82983f88015d"
+    },
+    {
+      "stage": "entry-2",
+      "utc": "2026-10-22T10:49:41.150373+00:00",
+      "pid": "7155",
+      "main_activity_history_count": 3,
+      "history_indices": [
+        2,
+        1,
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-driver-activity-post-expiry-entry-2.png",
+      "sha256": "4ccaed239af22d1c4427e236aed8cae0981eefa0042fc80efb3590fa3ec5a8a0"
+    },
+    {
+      "stage": "entry-3",
+      "utc": "2026-10-22T10:49:48.920802+00:00",
+      "pid": "7155",
+      "main_activity_history_count": 4,
+      "history_indices": [
+        3,
+        2,
+        1,
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-driver-activity-post-expiry-entry-3.png",
+      "sha256": "427c15e3163f21dadcf0430b1d4032489527d5fc9d0d30bf6795dc39f89415b0"
+    },
+    {
+      "stage": "foreground",
+      "utc": "2026-10-22T10:49:58.832855+00:00",
+      "pid": "7155",
+      "main_activity_history_count": 5,
+      "history_indices": [
+        4,
+        3,
+        2,
+        1,
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-driver-activity-post-expiry-foreground.png",
+      "sha256": "ce5a62ad289f3a0b4fdb7cae5555867ffc38b99765fb2fab932d24a66afa9800"
+    }
+  ],
+  "scope": "Standard MAIN/LAUNCHER activity entries, existing app data/session retained. Prior plain-entry driver attempt remained authenticated but OS reused one activity; that attempt is retained, not multiple-entry acceptance. No login, business command, token read or family attribution.",
+  "finished_utc": "2026-10-22T10:49:58.878856+00:00"
+}

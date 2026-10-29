@@ -1,0 +1,82 @@
+{
+  "verified_utc": "2026-10-17T14:29:27.633725+00:00",
+  "passed": true,
+  "scope": "actual hosted entry/MFA recovery, corrected Notepad material surface and authenticated selected-city retention only",
+  "candidate": "candidate-web-v6.json",
+  "deployment": "72a8722f-c230-4de3-9126-cd9d72ec1d29",
+  "checks": [
+    "Notepad language dialog is grayscale instead of lavender",
+    "Deliberately invalid test code produces explicit French MFA failure",
+    "At compact height, scrolling exposes retry and cancel; cancel returns to sign-in",
+    "Fresh French and English password/authenticator sign-in passed",
+    "At desktop width, explicit Casablanca selection remains through English to French to Arabic in one authenticated session",
+    "Arabic shell and scope apply RTL while session remains authenticated"
+  ],
+  "captures": [
+    {
+      "path": "wl2-hosted-v6-notepad-dialog.png",
+      "sha256": "cb4f706586cdca0797f2d22b03254056a0ff255586baee5803272ba0f5bbc8c1",
+      "width": 665,
+      "height": 524,
+      "mime_type": "image/jpeg"
+    },
+    {
+      "path": "wl2-hosted-v6-mfa-error-recovery.png",
+      "sha256": "ec383f1aa8ab105fc50cc571f763f89be2911dd082a0111e09aedef3267b3688",
+      "width": 665,
+      "height": 524,
+      "mime_type": "image/jpeg"
+    },
+    {
+      "path": "wl2-hosted-v6-mfa-cancelled.png",
+      "sha256": "380ce6b06775232c26198e2a0689d055dafad785c2d6d9deddff34435f24c9a4",
+      "width": 665,
+      "height": 524,
+      "mime_type": "image/jpeg"
+    },
+    {
+      "path": "wl2-hosted-v6-fr-authenticated.png",
+      "sha256": "1acf32cb1337e7a945f0ac10cece9c215862a40c8dc26b2404d1de3c8a6fbb79",
+      "width": 665,
+      "height": 524,
+      "mime_type": "image/jpeg"
+    },
+    {
+      "path": "wl2-hosted-v6-en-authenticated.png",
+      "sha256": "4779b36456542eaa19440ac53c9414579a87db4d3a46039545b7448f4668322e",
+      "width": 1280,
+      "height": 720,
+      "mime_type": "image/jpeg"
+    },
+    {
+      "path": "wl2-hosted-v6-en-casablanca.png",
+      "sha256": "34d27f52a64753c26b63cfb8c7ae0ad953bef8ef5dde412c68d480bf32e9eb1f",
+      "width": 1280,
+      "height": 720,
+      "mime_type": "image/jpeg"
+    },
+    {
+      "path": "wl2-hosted-v6-fr-casablanca.png",
+      "sha256": "8e288137ea7836965502d98e028a50cb47e786e885218f28960999dabc97c431",
+      "width": 1280,
+      "height": 720,
+      "mime_type": "image/jpeg"
+    },
+    {
+      "path": "wl2-hosted-v6-ar-casablanca-desktop.png",
+      "sha256": "80ac3d905f24b7e59139463f9fe5ecb46a1897e588cfd2906c78ed05cecbc9b6",
+      "width": 1280,
+      "height": 720,
+      "mime_type": "image/jpeg"
+    }
+  ],
+  "limitations": [
+    "No recovery code used; captures store no password, seed, session token or valid OTP",
+    "No protected domain mutation performed",
+    "Rollout body remains English and ratios visibly reorder in RTL; WL-4 must translate and isolate counts",
+    "Desktop MFA card exceeds intended maximum width; post-v6 modifier-order source correction awaits a new build/render",
+    "Keyboard, screen-reader, large-text, OS-motion and complete responsive acceptance remain open",
+    "Capture filenames retain png suffix but browser returned JPEG bytes; mime and dimensions are read from actual headers",
+    "Synthetic cohort only; not board, pilot or public acceptance"
+  ]
+}

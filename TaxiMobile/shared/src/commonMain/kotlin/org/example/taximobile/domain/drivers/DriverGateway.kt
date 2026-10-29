@@ -70,5 +70,5 @@ interface DriverGateway {
     suspend fun registerVehicle(vehicle: VehicleRegistration): DriverVehicle
     suspend fun selectActiveVehicle(vehicleId: String): DriverAvailability
     suspend fun deactivateVehicle(vehicleId: String): DriverVehicle
-    suspend fun updateLocation(location: Coordinates, observedAt: String)
+    suspend fun updateLocation(location: Coordinates, observedAt: String, accuracyMeters: Double)
 }

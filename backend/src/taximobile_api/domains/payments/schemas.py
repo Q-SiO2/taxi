@@ -1,6 +1,7 @@
 from decimal import Decimal
 from datetime import datetime
 from uuid import UUID
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -169,6 +170,26 @@ class OperationsManualTransferResponse(BaseModel):
 
 class OperationsManualTransferListResponse(BaseModel):
     items: list[OperationsManualTransferResponse]
+    page: int
+    limit: int
+    total: int
+
+
+class PendingCashPaymentResponse(BaseModel):
+    """Driver-owned work, not a passenger receipt or payment confirmation."""
+
+    payment_id: UUID
+    ride_id: UUID
+    amount: Decimal
+    currency: str
+    created_at: datetime
+    completed_at: datetime | None
+    method: Literal["CASH"] = "CASH"
+    status: Literal["PENDING"] = "PENDING"
+
+
+class PendingCashPaymentListResponse(BaseModel):
+    items: list[PendingCashPaymentResponse]
     page: int
     limit: int
     total: int

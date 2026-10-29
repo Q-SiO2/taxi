@@ -1,0 +1,10 @@
+{
+  "started_utc": "2026-10-17T08:42:47.482826+00:00",
+  "candidate": "candidate-native-v9.json",
+  "role": "passenger",
+  "api_level": 31,
+  "passed": true,
+  "method": "actual native sign-in UI; existing synthetic account",
+  "installed_sha256": "255fe68cd7eaed0ba41996130d11f08d6f03e5aec09baa35bff591521766bbc0",
+  "finished_utc": "2026-10-17T08:43:36.371923+00:00"
+}

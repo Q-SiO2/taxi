@@ -1,0 +1,67 @@
+{
+  "verified_utc": "2026-10-21T18:08:58.800Z",
+  "candidate": "candidate-native-v19.json",
+  "native_record": "v19-native-first.json",
+  "passed": true,
+  "interval": {
+    "start": "2026-10-21T18:03:59Z",
+    "end": "2026-10-21T18:07:40Z"
+  },
+  "api_deployment": "e5e108a0-e5dd-4553-93fd-292026c98b63",
+  "consequential_post_count": 8,
+  "each_consequential_path_once": true,
+  "domain_requests": [
+    {
+      "method": "POST",
+      "path": "/api/v1/drivers/me/availability/online",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T18:05:05.571623084Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides",
+      "httpStatus": 201,
+      "timestamp": "2026-10-21T18:05:11.316718633Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/ride-offers/61333134-5452-4f9e-883a-b55d1661c5b5/accept",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T18:05:25.256261939Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/8145b32e-4549-4183-bce5-60d3936a4de4/en-route",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T18:05:47.055275150Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/8145b32e-4549-4183-bce5-60d3936a4de4/arrived",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T18:06:07.719801604Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/8145b32e-4549-4183-bce5-60d3936a4de4/start",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T18:06:24.315232517Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/8145b32e-4549-4183-bce5-60d3936a4de4/complete",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T18:07:03.445507670Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/rides/8145b32e-4549-4183-bce5-60d3936a4de4/payments/cash/settle",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T18:07:23.210232701Z"
+    }
+  ],
+  "other_post_count": 28,
+  "auth_refreshes": [],
+  "privacy": "Only method/path/status/timestamp for synthetic domain commands retained; no IP, user-agent, credentials, auth session identifiers or raw request bodies.",
+  "scope": "Exact native rehearsal interval, independent Railway HTTP corroboration. Quote/route/location/auth POSTs are separate from eight business commands."
+}

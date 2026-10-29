@@ -19,18 +19,18 @@ import org.example.taximobile.feature.ui.theme.TaxiSpacing
 class TaxiDesignTokensTest {
     @Test
     fun palette_matches_the_approved_ui_contract() {
-        assertEquals(Color(0xFF071426), TaxiColors.Navy950)
-        assertEquals(Color(0xFF0B1F3A), TaxiColors.Navy900)
-        assertEquals(Color(0xFFD6A800), TaxiColors.Accent500)
-        assertEquals(Color(0xFF14804A), TaxiColors.Success600)
-        assertEquals(Color(0xFFB7791F), TaxiColors.Warning600)
-        assertEquals(Color(0xFFC53030), TaxiColors.Danger600)
-        assertEquals(Color(0xFFF6F8FB), TaxiColors.Surface1)
+        assertEquals(Color(0xFF191A23), TaxiColors.Navy950)
+        assertEquals(Color(0xFF191A23), TaxiColors.Navy900)
+        assertEquals(Color(0xFF263AD4), TaxiColors.Accent500)
+        assertEquals(Color(0xFF12653D), TaxiColors.Success600)
+        assertEquals(Color(0xFF785000), TaxiColors.Warning600)
+        assertEquals(Color(0xFFAF2525), TaxiColors.Danger600)
+        assertEquals(Color(0xFFF7EFD9), TaxiColors.Surface1)
     }
 
     @Test
     fun primary_button_pair_exceeds_wcag_aa_normal_text_contrast() {
-        assertTrue(contrastRatio(TaxiColors.Navy950, TaxiColors.Accent500) >= 4.5)
+        assertTrue(contrastRatio(Color.White, TaxiColors.Accent500) >= 4.5)
     }
 
     @Test

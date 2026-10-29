@@ -1,0 +1,8 @@
+{
+  "prepared_utc": "2026-10-22T23:35:44.628953+00:00",
+  "state": "Prepared only; no DB/config mutation",
+  "existing_credentials": 4,
+  "same_seed_roundtrip_verified_privately": true,
+  "rollback_ciphertexts_protected": true,
+  "scope": "Existing encrypted records only, four new nonces/ciphertexts; never export plaintext TOTP seeds. Preserve IDs/users, replay counters, creation/enrollment timestamps, recovery codes and grants. Windows current-user DPAPI protects both old and prepared ciphertext snapshots in ignored workspace storage."
+}

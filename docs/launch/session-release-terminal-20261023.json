@@ -1,0 +1,139 @@
+{
+  "recorded_utc": "2026-10-23T23:40:58.083680+00:00",
+  "source_code_commit": "aeff4a25d1d07ab8f6762fad9826af90cfb5708d",
+  "scope": "Same retained production build, packaged once and exercised by existing bounded Chrome collector. Not a hosted or T4 full-matrix acceptance.",
+  "production_distribution": {
+    "status": "PASSED",
+    "duration": "21m21s",
+    "terminal_log": {
+      "path": ".tools/real-world-launch/logout-web-production-r3-20261023.log",
+      "bytes": 61048,
+      "sha256": "0d40d502a6cc795c53203bbbd3301764ff43a8f1cbeb2d2f96156f2c51e97ac1"
+    },
+    "compilation_inputs_rechecked": 371
+  },
+  "package": {
+    "manifest": {
+      "path": ".tools/real-world-launch/session-web-release-20261023/release-manifest.json",
+      "bytes": 21068,
+      "sha256": "a1207cacd45ba0c164bf2940338d22089a0f555b2decc7b26572e32341ca249e"
+    },
+    "files_rehashed": 93,
+    "summary": {
+      "client_build": "1",
+      "client_version": "1.0.0",
+      "excluded_source_map_count": 3,
+      "source_bytes_excluding_maps": 29834826,
+      "source_file_count": 93,
+      "wasm_aliases": {
+        "skiko.wasm": "6e23e5428398b92da386.wasm"
+      }
+    },
+    "budgets": {
+      "javascript": {
+        "originJsWebApp.js": 7000000,
+        "originWasmWebApp.js": 700000
+      },
+      "maximum_release_bytes_excluding_maps": 35000000,
+      "maximum_wasm_bytes": 9000000
+    },
+    "runtime_assets": [
+      {
+        "bytes": 8652729,
+        "path": "6e23e5428398b92da386.wasm",
+        "sha256": "46caff5f783599bd1c5d3e5e87959d7cb5102c515aac671c9280664368e71dab"
+      },
+      {
+        "bytes": 7626289,
+        "path": "933d0798342a1e8385bb.wasm",
+        "sha256": "fcd3220f3be3a5cbca6c761ebd156393933c9a8dfad0fa0f1116e46edaced932"
+      },
+      {
+        "bytes": 6935862,
+        "path": "originJsWebApp.js",
+        "sha256": "27103dc3db272e21d891ed467fc759a46530bec764eb8795f83d12261ec299bf"
+      },
+      {
+        "bytes": 543417,
+        "path": "originWasmWebApp.js",
+        "sha256": "d7234684009481bb9bae215c0aff0b10b966e850093dd9ffb79cefc6c5b22e15"
+      }
+    ]
+  },
+  "partial_release_boot": {
+    "report": {
+      "path": ".tools/real-world-launch/session-release-boot-20261023.json",
+      "bytes": 9943,
+      "sha256": "62a7e27dfc57eaf6740504bdc67c5352bc9e0129fed4ad7ea0732788403abc1f"
+    },
+    "status": "EXECUTED",
+    "smoke_passed": true,
+    "browser_results": [
+      {
+        "family": "CHROME",
+        "version": "155.0.8059.85",
+        "scenarios": [
+          {
+            "id": "SUPPORTED_APPLICANT",
+            "observations": {
+              "application_loader_requested": true,
+              "application_remained_blocked": false,
+              "browser_process_completed": true,
+              "client_identity_headers_match": true,
+              "compatibility_request_observed": true,
+              "exactly_one_runtime_branch_requested": true,
+              "screenshot_retained": true
+            }
+          },
+          {
+            "id": "SUPPORTED_OPERATIONS",
+            "observations": {
+              "application_loader_requested": true,
+              "application_remained_blocked": false,
+              "browser_process_completed": true,
+              "client_identity_headers_match": true,
+              "compatibility_request_observed": true,
+              "exactly_one_runtime_branch_requested": true,
+              "screenshot_retained": true
+            }
+          },
+          {
+            "id": "UPGRADE_REQUIRED",
+            "observations": {
+              "application_loader_requested": false,
+              "application_remained_blocked": true,
+              "browser_process_completed": true,
+              "client_identity_headers_match": true,
+              "compatibility_request_observed": true,
+              "exactly_one_runtime_branch_requested": false,
+              "screenshot_retained": true
+            }
+          },
+          {
+            "id": "PREFLIGHT_FAILURE",
+            "observations": {
+              "application_loader_requested": false,
+              "application_remained_blocked": true,
+              "browser_process_completed": true,
+              "client_identity_headers_match": true,
+              "compatibility_request_observed": true,
+              "exactly_one_runtime_branch_requested": false,
+              "screenshot_retained": true
+            }
+          }
+        ]
+      }
+    ],
+    "full_browser_matrix_accepted": false,
+    "catalog_case_accepted": false,
+    "phase_accepted": false
+  },
+  "retained_failures": [
+    "Parent e73 package size failure",
+    "Initial cancelled build",
+    "Combined development/production Gradle output conflict"
+  ],
+  "deployment_accepted": false,
+  "field_accepted": false,
+  "public_launch_accepted": false
+}

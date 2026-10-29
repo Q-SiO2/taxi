@@ -1,0 +1,31 @@
+{
+  "verified_utc": "2026-10-19T20:16:41.911383+00:00",
+  "candidate": "candidate-native-v13.json",
+  "passed_within_scope": true,
+  "scope": "Actual Android explicit lookup preempts a registered automatic GPS lookup, then receives a fresh native coordinate. Preserved old-v12 trip subsequently completed/cash-confirmed by native UI; never a full fresh v13 rehearsal.",
+  "automatic_registration": "84E2F093",
+  "explicit_registration": "EFF7C851",
+  "automatic_events": [
+    "10-19 21:11:07.616: gps provider +registration 10209/ma.taximobile.driver/84E2F093 -> Request[@+1s0ms HIGH_ACCURACY, duration=+15s0ms, minUpdateInterval=0, WorkSource{10209 ma.taximobile.driver}]",
+    "10-19 21:11:09.775: gps provider -registration 10209/ma.taximobile.driver/84E2F093"
+  ],
+  "explicit_events": [
+    "10-19 21:11:09.780: gps provider +registration 10209/ma.taximobile.driver/EFF7C851 -> Request[@+1s0ms HIGH_ACCURACY, duration=+15s0ms, minUpdateInterval=0, WorkSource{10209 ma.taximobile.driver}]",
+    "10-19 21:11:13.745: gps provider delivered location[1] to 10209/ma.taximobile.driver/EFF7C851",
+    "10-19 21:11:13.750: gps provider -registration 10209/ma.taximobile.driver/EFF7C851"
+  ],
+  "clock_qualification": "Android trace uses device local time. Only relative event order is asserted, not a precise UTC/device-clock offset.",
+  "lookup_record": "v13-native-preserved-arabic-trip-recovery-second.json",
+  "completion_retry": "v13-arabic-explicit-completion-retry.json",
+  "api_trace": "v13-preserved-arabic-completion-http.json",
+  "cash_finish": "v13-native-preserved-arabic-cash-finish.json",
+  "cash_fare": "35.00",
+  "driver_offline_verified": true,
+  "limitations": [
+    "First recovery blocked before lookup by system boot ANR",
+    "Second recovery acquired the fix but its automated Complete tap did not produce a proxy request; later explicit native click succeeded",
+    "Exact cause of missed automated tap uninstrumented; preserve failed record",
+    "No direct positive ride/payment API or DB write used",
+    "Two new full v13 rehearsals still required"
+  ]
+}

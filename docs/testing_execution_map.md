@@ -2,6 +2,11 @@
 
 ## 1. How to use this map
 
+For the current union demonstration priority, use the complete core-function
+board and D1–D3 rehearsal sequence in [union_demo.md](union_demo.md). That internal
+synthetic-data preparation does not replace, renumber or accept any T0–T10 gate
+below and does not authorize real-user service.
+
 This is the operational control board for taking TaxiMobile from repository
 verification to a deployable city service. The detailed scenario contracts remain
 in [`testing.md`](testing.md), workload mechanics in
@@ -555,6 +560,15 @@ and recognizes only the two backend-confirmed journeys. This starts
 `ANDROID_DEVICE_REPORT`; it does not satisfy the supported matrix, iOS/browser,
 accessibility/RTL, degraded-network/lifecycle or crash-symbolication records and
 cannot mark T4 accepted.
+
+Schema-2 registration reports explicitly distinguish `PHYSICAL` from `EMULATOR`
+and bind every ADB action to the initially selected authorized transport. The
+Python harness accepts `--serial` for an explicit selection; an emulator requires
+`--allow-emulator` and produces `T4_ANDROID_REGISTRATION_SIMULATION` with no
+supported physical-device evidence kinds. Unknown fidelity fails closed. A
+physical-phone report still covers only registration and the authenticated role
+gate; it does not accept a whole T4 case or union-demo row. Existing app data must
+not be cleared without the launcher's separate explicit confirmation.
 
 The machine-readable T4 catalog freezes 56 laboratory cases, exactly eight for
 each of the seven required evidence kinds. It cross-checks source platform

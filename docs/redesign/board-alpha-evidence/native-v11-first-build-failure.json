@@ -1,0 +1,569 @@
+{
+  "recorded_utc": "2026-10-19T11:36:29.988368+00:00",
+  "accepted": false,
+  "build_inputs": "native-v11-build-inputs.json",
+  "archive": ".tools/alpha-delivery/native-v11-first-failure",
+  "tests": {
+    "jvmTest": {
+      "tests": 353,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "testAndroidHostTest": {
+      "tests": 291,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "test_results": [
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.core.network.ApiConfigurationTest.xml",
+      "sha256": "d559cdb505aa418d3779adbdcc6555c0620aeec1f4453a59bf4fc99966bb1dad"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.core.network.IdempotencyKeyTest.xml",
+      "sha256": "cc6935b3cf75a95ccb7f32e449d675318f4a105c492042b896f56bed341f3d5e"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.data.auth.KtorAuthenticationCancellationTest.xml",
+      "sha256": "34d0f316f7fa283ceee0f6de78c0fa03c0e1910173b56a83d8d7b9ff9ca7010d"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.data.auth.SecureTokenStoreTest.xml",
+      "sha256": "47b99ad3e01d160d4676dae23733a01f4b80772ed0db798be7b0849622043204"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.data.cooperatives.CooperativeMembershipDecodingTest.xml",
+      "sha256": "de99f421bdedca257801bdf0cc3c5c43f03afcf383086d0d6c4e1cd356abe0b5"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.data.drivers.DriverCredentialDecodingTest.xml",
+      "sha256": "6b74c60f1745fd3001372175ee4402ebbf46f95f3cfd331eeb400b11bc810173"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.data.drivers.DriverEarningsDecodingTest.xml",
+      "sha256": "c098a1955031656939d9b25bc720d085d3bc5e0423c8da37c8c3f9ec13aa3f86"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.data.drivers.DriverOfferEconomicsDecodingTest.xml",
+      "sha256": "70b718fb715ae3dc314863ce7c14ce7eddb5c292b4e984baf20c39ec067d0fe5"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.data.drivers.KtorDriverRecruitmentRequestTest.xml",
+      "sha256": "3a24d5c930bd4b800cdf3768a9bd6a05b98ba554b0c5fe68068d4b174da6e21f"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.data.drivers.PendingCashPaymentsTest.xml",
+      "sha256": "2acae60367e49a9f04a0a4392abb77bbf4136718405f87c24c52fb525afc50ff"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.data.network.TaxiMobileHttpClientTest.xml",
+      "sha256": "ca0041b3bf579990f07e404931b405d5531db01015bb87cf222c72a59c24c7e3"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.data.places.PlaceLanguageTest.xml",
+      "sha256": "fe8e931a2bb87a642d8a12ebafcb0aa3bfac4413be4c53ed48cf8cfb400165dc"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.data.realtime.KtorLiveEventGatewayTest.xml",
+      "sha256": "9d019bbc5669b0190733a1b32fd72b21dd9fda01a3a49be52dec7fe693a5fe5c"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.data.rides.FixedRouteCatalogDecodingTest.xml",
+      "sha256": "fc36fed731622afadb31a0d4484e5845dc1826e46c2c91d4e3c89070386fd08b"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.data.rides.RideCoordinationDecodingTest.xml",
+      "sha256": "e0afa8713ed1aac16d0bef69709b42b4f20b4dec12112c589a9daa644095ebe3"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.data.rides.RideHistoryDecodingTest.xml",
+      "sha256": "01350998ef8351685108668bdcbd2d18c7cbc8908bca9a5ea4e8494e2dbf1005"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.data.rides.RideReceiptDecodingTest.xml",
+      "sha256": "1a60d1b53d6bde659a63052cdeb6f846ce0c3125e947bb2933dd342d8d26129a"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.data.routing.RoutingLanguageTest.xml",
+      "sha256": "2b54eb497c3c740467720f1ace39b67bee34493e415ae2364753dfd56177b820"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.data.safety.SafetyReportDecodingTest.xml",
+      "sha256": "a9199aaab2ce0c7823c33147225e1cd2ec78bd1b5ee755bcb663263de4608c46"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.data.scheduling.ScheduledBookingDecodingTest.xml",
+      "sha256": "98fef074e8a563363d4660c61a40aecda718623bbddc85a5ab56c9f513f0e031"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.domain.drivers.DriverEarningsTest.xml",
+      "sha256": "bbdd794db166d82ceec2bf63f537bbd704d66af06039f90ef598a8bb70ab5eb4"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.domain.drivers.DriverLocationObservationTest.xml",
+      "sha256": "b5f36c305edbef0dbe8817a5aff852f755ebc6ee1982903fcb58530a86a746d3"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.domain.rides.FareEstimateTest.xml",
+      "sha256": "1fc213af06454ba553e65042b8212b4c7e4659905498523a62696d5be2f52b2c"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.domain.rides.FinalRideFareTest.xml",
+      "sha256": "dc38dfa4b8811d23ecfbf2be0d6db6928654883ffab7f2aa3e64e7855aa4bffb"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.domain.rides.RideRatingTest.xml",
+      "sha256": "c53e977ee7b497499eab449c9c3f5e7094f3c002fd7e039415024cbac060fff8"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.app.AppActionTest.xml",
+      "sha256": "8124f133bf06e93fea1f9f7f169dd99397f327b32adbca38f1a3d36af654656b"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.app.AppUiStateTest.xml",
+      "sha256": "a1f9824d3be6ccd6a2e247cc9405d225350ba51ed3fa9f18df06179ded9cc14a"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.app.ClientCompatibilityCoordinatorTest.xml",
+      "sha256": "c61ca9f058e9fc78bbddf42c215f6cbcd4308bb1fca931daf771485f668f791d"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.app.CriticalStateUiTest.xml",
+      "sha256": "ac4db1caae8628577e0c385f9bdb29f288d3e884fe5be0d2277d848c96f7d94c"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.app.DriverCompletionLocationUiTest.xml",
+      "sha256": "c2892bcd40afdbec5c2f48ab49b85dab861502e444c44817752cfa05bb8076cf"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.app.DriverOnboardingInsetsUiTest.xml",
+      "sha256": "1767bc0ce834c22789e234d5ec6a15dabfe1946d1fb68933db0cadf1f45b4851"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.app.GatePageInsetsUiTest.xml",
+      "sha256": "14532fe37e1dda93d373f36ac74b2b6a7bf88b85fe6cdee3abbdc686adbd9882"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.app.MapSheetInsetsUiTest.xml",
+      "sha256": "ced9866993c85adda071a3863571c1c55a121d949bf6bf76955bfe665773184d"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.app.MapToolbarInsetsUiTest.xml",
+      "sha256": "2bdb08681bda8058db9b5a184a6b5daeebd15359577f5449ab3fdef2012387b2"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.app.MobileAppCoordinatorTest.xml",
+      "sha256": "dc8720fd8f75fc6ea490e8d43bd45787669d554e381e602727ce9de6d250b9ac"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.app.NotificationPresentationTest.xml",
+      "sha256": "b4d8875795f4431d4aae6e834cbc0f9f68dc8939b471a55e89c0aa18f41ec2fe"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.app.PassengerIdlePeekUiTest.xml",
+      "sha256": "b31c907090715c9371337cea8b53d4082e6df810cb95f5108de3bdd5a7434db3"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.app.PendingCashRecoveryUiTest.xml",
+      "sha256": "ff0c5a6df016475cc4fa12adf2b734fe9552dca331e50672b87661b33b7331de"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.app.QuoteSessionRecoveryTest.xml",
+      "sha256": "e8ff23cb65cd0479a4a3edba6978c83e9a95f848041d168ad2982d51a0e9b281"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.app.RidePresentationMappingTest.xml",
+      "sha256": "dce34102fb87ac6c2e64d15a93a66187a0bdc2e4d7f04ad7434fedd240b119a1"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.app.StyleLanguageRenderTest.xml",
+      "sha256": "eeb47c9bb27b60cdfdfca9fb8cdca7e97b194c203c11013c1ff58b75b0bfce34"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.app.StyleSwitchUiTest.xml",
+      "sha256": "365c3eb14f23ff4002a7a2199e416aa1564241093ef3f30c729600c9e324878f"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.app.SupportCategoryTest.xml",
+      "sha256": "6abc706a9a966b48d528776f3340cf6ea2cd7307645139411d01f5f8f42c2ae7"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.auth.AuthenticatedReadRecoveryTest.xml",
+      "sha256": "7aa8511c256100347d3b73101b99a7b9504fab2a66c343de3e4b1c4d11e55fbe"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.auth.AuthenticationSessionLifetimeTest.xml",
+      "sha256": "188407d4dedee8008946106b7a647c143e7ee697522428b67f2e034f1166e099"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.auth.AuthenticationSessionStorageTest.xml",
+      "sha256": "53bf1535c0e3b63098d72125f51c65630fd148bd3a8cf4d654f053c7026f74ad"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.auth.AuthenticationStateTest.xml",
+      "sha256": "03ab7bb4804321b093c00b549075aa3b2a0cd7018899eb2b8975c18151ff574c"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.auth.RegistrationInputTest.xml",
+      "sha256": "fea4769b6ef12c78e0b52b7e7b29daed3fe14e25d3ecb2bbb4c76cbbb01584db"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.connectivity.ConnectivityTest.xml",
+      "sha256": "2bd6a18053d0097aabc02fe6568268d8031a529a6d693d544c2cbb71d390ec45"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.driver.OfferCountdownTest.xml",
+      "sha256": "e4b8ee956815a743ca96544375eab0abd88c24cd763219f87a4d59bfb76a75c0"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.driver.onboarding.CityAuthorizationPresentationTest.xml",
+      "sha256": "e4a3edefcf3bf4546a0e6a8f3ec0f0fdc89630c959bb616892067a3a3576d144"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.location.ForegroundDriverLocationPolicyTest.xml",
+      "sha256": "03c7a2e3712503bd1a92885cf07bd19fa4f3b506dde46b204499c26cd07d5722"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.location.ForegroundDriverLocationResultGuardTest.xml",
+      "sha256": "98712c66d79c261e7213506ac0b155f9b2249316769b8108741f2c1c9a8013af"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.location.NativeFixFreshnessTest.xml",
+      "sha256": "ce85f3860a4c52f0f3d63d9afcdc40e09674244cda47786b694a2a79c928a5e0"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.location.OneShotLocationGateTest.xml",
+      "sha256": "4ac29562fa1f9a48ca61f84f1dfa3648fdb9a887ebb1941d8926c245854de35a"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.maps.MapCameraFocusTest.xml",
+      "sha256": "dcbe527b4bdb8faf75320a4f7538d48faa540d22cb72e92c7cf78d67c5fde291"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.maps.MapStyleFallbackTest.xml",
+      "sha256": "f6b527b18d3861084e7b8214338a0fd70dfaab251fdf6256cedb685f2ed45fd3"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.notifications.PushRefreshHintRelayTest.xml",
+      "sha256": "1492b1370de0ff4efe818e5eb2a4ef766a804ceb873b72a047b62838289c06b4"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.notifications.PushRegistrationRelayTest.xml",
+      "sha256": "13b45acd4aac7f43bb29e471de60e0dacb0be6551be3d9ad12db28e24795e737"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.passenger.PassengerReverseSelectionTest.xml",
+      "sha256": "aa97cc3cb2e9a3a7ece376b291d0addcc62dab4029292e43580f6977661d1498"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.passenger.PlaceDiscoveryFreshnessUiTest.xml",
+      "sha256": "6862af8c05a83d0c82808ebc6601b2b109fcc3b40b5fc8b26e4096799bef3f76"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.passenger.RecentDestinationsTest.xml",
+      "sha256": "7316dbdf3e13e13072a00495d3370fa6172a54018fcedece308a7c712884d4d9"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.realtime.LiveUpdateSubscriptionTest.xml",
+      "sha256": "9ab61736c4c3dee1f03c498e39421c6798983592b49c0504e7e78743ed01ac6e"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.rides.RideCoordinationSectionUiTest.xml",
+      "sha256": "76068ff7762b381ea0caab9f395fe62c1db8328de97b83ef4b39038e77dcfbd0"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.ui.components.FarePresentationUiTest.xml",
+      "sha256": "a8b2b6b61dc7d86ef8d81fc771af345a47f34eb713e491f73d7c29f777133581"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.ui.components.OptionalArtworkTest.xml",
+      "sha256": "8f054064ddbddf12202d563379c90b6d4a3b27640c90aa27db11f75bf3ca4708"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.ui.components.SpecializedFieldsTest.xml",
+      "sha256": "d6f6bc5ba3aa5faa7e4c5d5a29ce82ac268a187e9ade48e60502cdf9f563a694"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.ui.components.TaxiArtworkUiTest.xml",
+      "sha256": "10b295a0ba38bc4c78ee7c0086921e7ded624a7aa98a3ab54932ff995eb3abad"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.ui.components.TaxiSheetUiTest.xml",
+      "sha256": "ba7aad1ede2a2dbb1fbb6ed7f822f7d714428341997184b71c68257c7f998f09"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.ui.TaxiDesignTokensTest.xml",
+      "sha256": "5743381d83f446dbb54f38f64ff10b911c3cda905a1ec8e35a6f5db7ba6b4949"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.ui.text.BidiTextTest.xml",
+      "sha256": "7f3922d1834bc8d61256d75880b526f339ad3caffca4870b0e70f66f40c83489"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.ui.text.TaxiLanguagePreferencesTest.xml",
+      "sha256": "81a43f9b0eed95f7774d6bd59413bc9857fa58857826a44d87a9a9110bd04101"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.ui.theme.TaxiColorContrastTest.xml",
+      "sha256": "0178dde2b55b4eacf95e1c12494105fb6a28b2325d62ceada926191aabaf7614"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.feature.ui.theme.TaxiStylePreferencesTest.xml",
+      "sha256": "ccb37eb3a980260d4a56fa5ce8bc42955ee8ea64252ce77d0fbab17a9b5997ca"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.SharedCommonTest.xml",
+      "sha256": "4e2ad388b017b1eb58942f2dd979b851c01ba2bc49caf5f35bd24bbb6bad2fce"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/jvmTest/TEST-org.example.taximobile.SharedLogicDesktopTest.xml",
+      "sha256": "1c5614d18588a91e8b41920489d2be0834d15cd9e735a6430979e2db6f62e41a"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.core.network.ApiConfigurationTest.xml",
+      "sha256": "abe01fe723252a02aa9b0d01789c37875053a90591e2b270437cdf33cc43b3d1"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.core.network.IdempotencyKeyTest.xml",
+      "sha256": "f1322d681e95dfeaf129b5c2336712232b8c1c292b27f7922d56c3e2aea2539a"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.data.auth.AndroidSecureTokenStoreTest.xml",
+      "sha256": "978b8d40209031f7c579f7c28d1706be673a25f0e85f2d8f036d1b507eca0c20"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.data.auth.KtorAuthenticationCancellationTest.xml",
+      "sha256": "e06441ef0317927efa0b69ad8119054a40e4ca04cda4dec2f52c5fdd6dfd6236"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.data.auth.SecureTokenStoreTest.xml",
+      "sha256": "52ad154f57f56e4cf6bb491a531fadcb68788dd3d7db691c60832fce7e3d85b2"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.data.cooperatives.CooperativeMembershipDecodingTest.xml",
+      "sha256": "456320425efa07202ec5b3bfa1875a75000efd9a55d9d5cfc766ee520fb043dd"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.data.drivers.DriverCredentialDecodingTest.xml",
+      "sha256": "6c07dd6028edf3288a1a9837863ae861f0a1ca7a6ac404e43eb2cf509c64fa0d"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.data.drivers.DriverEarningsDecodingTest.xml",
+      "sha256": "2a6695488b15916bdd6dc3a99410facd72d9b629a05a7541bdbcabc691274a6a"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.data.drivers.DriverOfferEconomicsDecodingTest.xml",
+      "sha256": "c3c05d27a53ad9422efcad07501ac0734ba67e9dbe67355ffb0fcc185a7fc5c8"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.data.drivers.PendingCashPaymentsTest.xml",
+      "sha256": "2a1e16f9e6daeb8a76565f4b8c1d391d6dfd35ab45f1afc2e080150c50adadee"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.data.network.TaxiMobileHttpClientTest.xml",
+      "sha256": "9924a9fa8a261cce6587754daa22cbbca4f7b2823dddcfa1a8d0e3ed41df3b83"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.data.places.PlaceLanguageTest.xml",
+      "sha256": "49bb639c738fa981aecf5caa67cfa6c5f860204c002bc713f1f7148313657584"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.data.realtime.KtorLiveEventGatewayTest.xml",
+      "sha256": "956d0b056f1e7cf532193e44171e6437a9c13e670b28a39fba18e060d3ebd2c5"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.data.rides.FixedRouteCatalogDecodingTest.xml",
+      "sha256": "0fc982c998b5144c65f23a611e238e60d5654246c86f1efd2372bd890ceaf39c"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.data.rides.RideCoordinationDecodingTest.xml",
+      "sha256": "b4203c72de3b97ec6f8b3581ff703000a595d6ebfdbd3d21fe6f1c3b289d911c"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.data.rides.RideHistoryDecodingTest.xml",
+      "sha256": "9114f4fcd238f64de2a7955c80aec13bf7c39e402ffc9e71910428c59ff21832"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.data.rides.RideReceiptDecodingTest.xml",
+      "sha256": "03850453d77a3a509511ee01141702a723184c04d4509ae59bc3d28e79002218"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.data.routing.RoutingLanguageTest.xml",
+      "sha256": "852321b5038e931dcdca29029a1e91e0564770a30abefd9b528b6c83ba304e9f"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.data.safety.SafetyReportDecodingTest.xml",
+      "sha256": "7991fcff552d2cf7d258ab8cf391a60d5ad35b60f1943842c68658dd79c02ce2"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.data.scheduling.ScheduledBookingDecodingTest.xml",
+      "sha256": "65ec7bc41fb941bc43c518cb39ad48710e41a46e5c0e2b1c6a40879e67f4e90a"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.domain.drivers.DriverEarningsTest.xml",
+      "sha256": "d9b90ce66da7c45d44558bc8fcbb64f575b7b732ebc78b05c0cf1ba1cfb8ded0"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.domain.drivers.DriverLocationObservationTest.xml",
+      "sha256": "15f4569030bf893908f1a2e1b63b16e31a62d49a4a61223c98a2824f75a14a80"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.domain.rides.FareEstimateTest.xml",
+      "sha256": "7ec7ccd1fc6369119645fcfd24caef93973553ef9f2d4216033126bce5b650e0"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.domain.rides.FinalRideFareTest.xml",
+      "sha256": "df05378fa9970fc631f5c578e29bfa49fd415cc8ea1640fdfb2014b326feaef6"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.domain.rides.RideRatingTest.xml",
+      "sha256": "f2f4b1647baa1b4d41bc1d1bcc9ac97187c142e447d6710dfea5a8acfb467fb4"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.app.AppActionTest.xml",
+      "sha256": "0ca1b7617aeb4310028c35b1be376d4d7f53e1aad401485af887fcb315f8842d"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.app.AppUiStateTest.xml",
+      "sha256": "6d4f450768d5d3b6f599504b9993f9f6171336742dab1802cfc1b2b6787c97a9"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.app.ClientCompatibilityCoordinatorTest.xml",
+      "sha256": "23b13632acbc91ec5508c474f6ba56da01023014f9eaa4fcc3e637195cc99286"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.app.MobileAppCoordinatorTest.xml",
+      "sha256": "8ea1a2cdafac02f32ec560e2ba1f886cf6f85fb234cf1d7edb722fec75a5dbe5"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.app.NotificationPresentationTest.xml",
+      "sha256": "29e6653ccc4ec332b009f464b94a3dec886b47ac6998012a85f348fc420db986"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.app.QuoteSessionRecoveryTest.xml",
+      "sha256": "f72aee9e0d0251264245b9020a11a956b272109787aaf31dee81ea721b00b11a"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.app.RidePresentationMappingTest.xml",
+      "sha256": "cb4100dd137443dfa70bd9577513d3d96210f75c33a26b7c96f32e471c470b70"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.app.SupportCategoryTest.xml",
+      "sha256": "30fc55e8b874cdf3112bb30299ec6a302a302cc0d7093bce904e703dc0da7b9f"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.auth.AuthenticatedReadRecoveryTest.xml",
+      "sha256": "81dede69dfd516e3ab74ed35a1371efb40ea045b2ca3e8de570b2d529b9b254c"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.auth.AuthenticationSessionLifetimeTest.xml",
+      "sha256": "b2eaa735c4a416962e32ffc4e459580584fb41ccaec9545cba74c20d39f5870f"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.auth.AuthenticationSessionStorageTest.xml",
+      "sha256": "0beb49193210629a2f114a026b9cc9eac8d1ac6b84a882be94e8157f0e694c60"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.auth.AuthenticationStateTest.xml",
+      "sha256": "7cfccae47a4aecd41defd39b0279efecb97d77bcd81413cd6883ce0f9d31cf47"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.auth.RegistrationInputTest.xml",
+      "sha256": "3ce1baf5abe58a538429866d5ea34a93798ecbb68363333bdbbc9adb984f5561"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.connectivity.ConnectivityTest.xml",
+      "sha256": "cc3214f50dcd9a4cfd7038021bbac392078152833d47bf13ca0209498b8de32b"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.driver.OfferCountdownTest.xml",
+      "sha256": "974b27b9add9ced420462af74eb88135c6c3f74d03a930104897b4427cff91bd"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.driver.onboarding.CityAuthorizationPresentationTest.xml",
+      "sha256": "4180ac834cf9f64beaf4885954b2de2beab57f0093c8072958891ea72c306381"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.location.ForegroundDriverLocationPolicyTest.xml",
+      "sha256": "6d418c426ac62b1a07bb1ae57acc14bf753d75c306672dac3ddb8dd3cd246fc0"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.location.ForegroundDriverLocationResultGuardTest.xml",
+      "sha256": "3ec9f8dbb59bd1bb8e32aebcd5fcd86693ffc1dbb93ceac7b25f42078fc85f26"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.location.NativeFixFreshnessTest.xml",
+      "sha256": "281d6510a676cf2f87033f2ef7a07c1d73de9461f914235253fc62d1952323b1"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.location.OneShotLocationGateTest.xml",
+      "sha256": "1c5a917ae4aca0c56f40cfd04149d6e1e6f2cca7ef5a551d4cea9068c9ee5a5c"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.maps.MapCameraFocusTest.xml",
+      "sha256": "cf689fc8ca21b4d540b0021018f75c867c8f0ac9eeadf98f5d4aa3256737dc33"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.maps.MapStyleFallbackTest.xml",
+      "sha256": "c03e1aedbd164c94af74f1c7e2a9ccf864e454084c286a3d5d4ae54b0c649f59"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.notifications.PushRefreshHintRelayTest.xml",
+      "sha256": "ecbc5eb42b005accfb55b05610b1f5d7cdd276979c8d77667470b3b444da1974"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.notifications.PushRegistrationRelayTest.xml",
+      "sha256": "eea0fa471c2fb6b8a6a7f16aae3857f394fb10e783395584e974fbbd275f5e5e"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.passenger.PassengerReverseSelectionTest.xml",
+      "sha256": "37abea4cf7e57bb52b9ba54e6f2f6a4dbe81947ce00a040e06849416873c8d3e"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.passenger.RecentDestinationsTest.xml",
+      "sha256": "bdff3a7d575f591c8c36e8c2035092d301c9261725d216455278747071afa9af"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.realtime.LiveUpdateSubscriptionTest.xml",
+      "sha256": "b503a75984bde05b16c03fce24f0b3be6b6023d1c8019f3f48ad76d49d54f40b"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.ui.components.SpecializedFieldsTest.xml",
+      "sha256": "c5152de443309803d361f7985026cf12490ec3e200f5a75e20724c0694401fae"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.ui.TaxiDesignTokensTest.xml",
+      "sha256": "0aaee6a711ef7fb773d0a69faa59edd18bdf13a4d3129636c8e83a96775b7f68"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.ui.text.BidiTextTest.xml",
+      "sha256": "f03ec9e897c580787d151942d311a85c3a715920845701c9613836f611e4e309"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.ui.text.TaxiLanguagePreferencesTest.xml",
+      "sha256": "6a751750d514d010d90e616754d64db76dd4a917893f9f0fbbbcd59d154a6e89"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.ui.theme.TaxiColorContrastTest.xml",
+      "sha256": "99993611c55d4f4bedbe11da42eb19d4bdb2f7afca2b6a2554155ae383806f56"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.feature.ui.theme.TaxiStylePreferencesTest.xml",
+      "sha256": "6e2a719d9614518f7ff41044f96a35676ceced9cc09739a0e6e45cd841379542"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.SharedCommonTest.xml",
+      "sha256": "a99d87acfd379e7cbd6a0570c7f68ed9405875650dbdcd7fc2185994057bdc60"
+    },
+    {
+      "path": ".tools/alpha-delivery/native-v11-first-failure/testAndroidHostTest/TEST-org.example.taximobile.SharedLogicAndroidHostTest.xml",
+      "sha256": "a674aac95be35a22f0e6ab64f9fdfe1c4b0da251b189f38b61582ac1f8c98f51"
+    }
+  ],
+  "failure": "pending_cash_receipt_is_not_presented_as_paid expected the superseded long English cash-pending sentence; current resource says Waiting for the driver to confirm cash received.",
+  "next": "Update only the stale test assertion, preserve no-Paid check, and run the full native build/tests against separately captured retry inputs. No application source change.",
+  "log_sha256": "838860e27a401809cd4e9a48a79ff008702e8e8475dbb713c30d8621ea232ed3"
+}

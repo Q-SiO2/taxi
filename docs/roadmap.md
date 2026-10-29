@@ -1,747 +1,409 @@
-# TaxiMobile — Roadmap
+# TaxiMobile — Alpha, Pilot and Public Release Roadmap
 
-## Purpose
+## Current packet — 29 October 2026
 
-Define the intended development order and prevent the coding agent from implementing future features prematurely.
+The [development lock security repair](launch/msgpack-dev-lock-repair.md)
+follows CI 262's backend audit failure on `msgpack 1.2.1`. Its successor pins
+the reported fixed version with verified distribution hashes. Treat CI 262 as
+failed backend evidence; a new Linux CI audit and complete required-job run
+must pass before source acceptance.
 
-The roadmap is directional rather than a rigid schedule.
+The [city-local input boundary](launch/scheduled-local-input.md) adds a bounded
+authenticated planning read backed by pinned packaged rules, plus shared typed
+response/context and session-owner fences. It resolves skipped/repeated hours
+without choosing a booking. Its published boundary passed all eight jobs in
+[CI 260](launch/scheduled-local-input-ci-terminal-20261028.json). The subsequent
+working source implements native city/date/time controls and explicit overlap
+choice; verify that source and its platform packages separately. Existing
+estimate/create contracts and the full R0-R12 goal remain unchanged.
 
-Use [workflow.md](workflow.md) to execute a scoped task and promote evidence
-through the existing test phases. [readiness.md](readiness.md) measures weighted
-engineering implementation separately from deployment gate closure; phase counts
-must not be used as a completion percentage.
+The R6/R9 [scheduled review binding](launch/scheduled-review-binding.md) follows
+confirmed stale-review confirmation and command-boundary failures. Bind the
+returned estimate to the requested instant and point/city or fixed direction;
+preserve backend economics and explicit recovery. Its own
+[CI 258](launch/scheduled-review-binding-ci-terminal-20261027.json) now passes all
+eight required jobs. Later input-boundary source requires its own evidence.
 
-## Current standing — 2026-09-09
+The [city-time packaging repair](launch/scheduled-city-time-packaging.md) follows
+[CI 254](launch/scheduled-city-time-ci-terminal-20261026.json)'s two failures.
+Preserve the Wasm 700 KB / fallback JS 7 MB caps; keep application mapping checks
+while recognizing the pinned, separate desugared-library compiler cohort.
+The corrected local package and four Chrome boot scenarios pass unchanged caps;
+its own [CI 256](launch/scheduled-city-time-packaging-ci-terminal-20261027.json)
+passes all eight required jobs. Later review-binding work needs its own checks.
 
-This roadmap distinguishes repository delivery from real-world acceptance.
-Phases 1–10 and 12–19 are **implemented in source**. Phase 11 has substantial
-source hardening, but its production outcome cannot be complete until a real
-environment and city pilot satisfy the open evidence in [`gaps.md`](gaps.md).
+The [city-local time packet](launch/scheduled-city-time.md) implements the existing
+city-time presentation rule across shared scheduled review, with explicit invalid
+data and unchanged server instants. Its packaging successor passes minified Android,
+production web size/boot and native CI gates for that source in CI 256.
+The scheduling input still needs a friendly city-local picker. Physical testing
+remains deferred by the owner; hosting remains stopped at the recorded Trial gate.
 
-| Phase | Repository standing | Deployment standing |
+The [focused source-gate repair](launch/immediate-offer-source-gate.md) follows
+CI 250's mobile Python failure. Its 117-test local suite and all eight required
+jobs in [CI 252](launch/immediate-offer-source-gate-ci-terminal-20261026.json) pass,
+including Android packaging/minification skipped by that failed run.
+The city-time implementation remains a separate verification packet.
+
+The [immediate-offer correction](launch/immediate-offer-review.md) follows the
+confirmed callback-count countdown and swallowed cancellation failures. Its
+affected local shared/rendered/Android checks and the verifier successor's CI 252 pass.
+The driver's scheduled-review CI
+accepts only its own predecessor source; timing/background and field gates remain.
+
+The [driver scheduled-offer correction](launch/scheduled-driver-review.md) follows
+the remaining driver financial-review and expiry defects. Affected local shared,
+rendered and Android checks and its own [CI 248](launch/scheduled-driver-review-ci-terminal-20261026.json)
+pass. These results remain distinct from the passenger predecessor's
+[CI 246](launch/scheduled-cancellation-review-ci-terminal-20261026.json), which
+passes all eight required jobs and 1,482 backend cases for source `b1be457`.
+
+The [scheduled cancellation review correction](launch/scheduled-cancellation-review.md)
+addresses the next confirmed R6/R9 gap: unknown refund modes must not become
+claimed non-refundable terms. Its own CI 246 now passes; those source results do
+not accept the later driver correction. Existing
+pagination [CI 244](launch/scheduled-pagination-ci-terminal-20261026.json) passes
+all eight required jobs and 1,458 backend cases for its own source. No
+financial-policy or hosting change.
+
+[CI 238](launch/runtime-preservation-ci-terminal-20261026.json) accepts source
+314fcee across all eight required jobs and 1,458 backend tests. The
+[Trial capacity stop](launch/staging-capacity-stop-20261026.json) prevents the
+prepared hosted TLS/migration apply: current credit is negative and `isTrialing`
+is false. Preserve the existing resources and protected rollback material; no
+purchase, upgrade or credential/MFA replay. Continue independent source work.
+
+R5/R6 [ride/scheduled gateway cancellation](launch/journey-cancellation.md) now
+propagates caller cancellation before network normalization or command retries.
+The failing predecessor is retained; ten focused, 109 affected JVM and 128
+Android-host cases pass. Fresh successor CI remains required. This does not change
+backend booking policy, pricing, physical lifecycle or the hosting capacity gate.
+
+R6/R9 [scheduled-state labels](launch/scheduled-localization.md) now use EN/FR/AR
+resources for booking, commitment and financial outcomes, with conservative
+unknown labels. Catalog validation and shared JVM/Android compilation pass;
+fresh native/rendered/linguistic/device acceptance remains open. The separate
+[pagination packet](launch/scheduled-pagination.md) now adds explicit bounded
+navigation with session/stale-response guards, honest retry and cancellation
+confirmation refresh. Local checks pass 145 affected JVM, 156 Android-host and
+five rendered UI cases, including 12 language/style variants. Fresh successor
+native CI and actual hosted/device/field acceptance remain open.
+
+R3/R8 [durable document source](launch/document-s3.md) adds migration
+`20261025_0054`, hidden upload leases, final version-checked activation and bounded
+repeated orphan recovery under the upload key lock. Source API/worker selection,
+secret redaction and client ownership pass [CI 236](launch/document-s3-ci-terminal-20261025.json):
+all eight required jobs and 1,443 backend cases, with no failures/errors/skips.
+A separately approved [real S3 probe](launch/document-s3-provider-probe-20261025.json)
+passes with three synthetic objects/19 requests and cleanup. Hosted ingestion
+remains disabled; official scanner capacity/feeds, service credentials/key
+recovery, compatible rollback and capacity/retention acceptance still gate
+deployment. Actual Trial limits are insufficient for the reviewed full scanner.
+
+The next hosted technical gate is matched API/worker rollout with verified
+database TLS and schema 0054. The [runtime-preserving migrator](launch/runtime-preservation.md)
+now rejects mismatched established credentials before Alembic; local unit and
+real SCRAM checks, its own full CI and a qualified local 0054 restore/upgrade now
+pass. Hosting capacity and refreshed guarded staging prerequisites still precede
+application. No public promotion follows from this staging work.
+
+R3/R8 [document pipeline recovery](launch/document-storage.md) now fixes verified
+scanner protocol/write failures, with 1,060 unit, two HTTP/PostGIS and real local
+ClamAV/custom-fixture checks passing. All eight CI jobs now pass for source
+1e30102, including 1,342 backend cases and native PostGIS 3.4 lifecycle tests.
+The owner selected a [private encrypted S3 successor](launch/document-s3.md);
+transport/configuration checkpoint passed 1,115 local unit tests. The successor
+does not inherit its source CI or actual hosted storage/scanner/key acceptance.
+No unapproved spending, bucket, credential or real-document change.
+
+R3 [staging preparation](launch/staging-upgrade.md) now has exact-source CI,
+encrypted snapshot backup and qualified local restore/0053 migration evidence.
+The [TLS source packet](launch/database-tls.md) passes unit/infrastructure and
+real local PostgreSQL trust/rejection checks. Successor CI 232 passes all 1,317
+backend tests including its disposable TLS fixture, plus image/security checks.
+[All eight required jobs pass](launch/database-tls-ci-terminal-20261024.json),
+including iOS. Actual hosted verification remains required before upgrade acceptance.
+The last confirmed hosted observation (25 October) used schema 0052, a non-TLS
+private database connection and disabled driver-document ingestion. Close transport/storage/rollout work with
+actual evidence while retaining the full R0–R12 scope and R1 decisions. Preserve
+the membership policy through rollback; a pre-policy build cannot serve a union
+operator with the requirement enabled.
+
+## Current source packet — 23 October 2026
+
+[The session/release successor](launch/session-recovery.md) addresses the actual
+expired-access logout rejection and raw-JS packaging failure from member-register
+CI run 224. The explicit scope review sets fallback JS to 7 MB; loader, Wasm and
+total caps remain fixed. Local production packaging and partial Chrome boot now
+pass. [The dependency correction](launch/dependency-refresh.md) addresses the
+next actual CI audit failure. Preserve the one-refresh protocol, existing member
+register and staged deployment boundaries. Source, local runtime and fresh
+immutable CI remain distinct acceptance steps.
+
+R5/R8 implements explicit closed-shop driver admission using the existing
+register selected for the Fès union. Source migration `20261023_0053` introduces
+the per-operator policy; default false preserves open-participation operators.
+[The membership checkpoint](launch/union-membership.md) records local SQL,
+assignment and concurrency verification. [The staff-register extension](launch/member-register.md)
+adds scoped audited web administration, policy review and localized driver
+guidance. Finish its runtime/candidate verification, fresh immutable CI and
+controlled rollout before capability acceptance.
+
+## Active objective - full real-world deployment, 23 October 2026
+
+The owner now requests a new detailed goal for real-world deployment with full
+functionality. [The execution plan](real-world-launch.md) sequences R0-R12 across
+the existing B/C packages and GAP/T acceptance authorities. It includes Android,
+iOS, web, all documented launch capabilities, a controlled city pilot and guarded
+public release. Existing explicit product deferrals remain; no silent reduction
+to the demonstrated on-demand flow is allowed.
+
+**Current task: R2/R8/R9 session and release correction**, following the retained
+[R0 reconciliation](launch/r0-baseline.md), [R1 decisions](launch/r1-decisions.md)
+and [R2 candidate/CI work](launch/r2-ci.md). Finish the reviewed membership
+candidate, actual client workflow and controlled deployment evidence.
+The completed synthetic alpha remains the regression/fallback baseline. Its
+earlier urgency and provider-paused packets below do not define the new queue.
+Trial-only spending and preserved-volume constraints remain until explicitly
+changed; real participant/transport/money/public activation still requires the
+applicable owner/operator and safety/legal acceptance.
+
+## Board alpha execution authorized — 15 October 2026
+
+The owner now directs the earliest functional board alpha, authorizes application
+implementation and TaxiMobile Railway staging changes/deployment, and requires
+French, Arabic and English with concise copy. This supersedes the earlier
+planning-only stop. The selected four-style contract remains in force; no further
+palette approval is needed. Follow [the active board alpha checkpoint](board-alpha.md)
+for execution and evidence. Native, integrated staging, device and release
+acceptance must still be demonstrated.
+
+### Retained board-alpha execution checkpoint - 23 October
+
+**Implemented presentation path -> owner board review -> bounded pilot gates.**
+[The current checkpoint](board-alpha.md) and [handoff](board-alpha-handoff.md)
+now identify native v23, live web v10 and the recovered exact Railway pair.
+[Integrated verification](redesign/board-alpha-evidence/release-v23-r2-integrated-verification.json)
+passes two synthetic cash journeys and seven presentation beats, at **16:22 / 11:07**.
+Each ride has eight successful business requests exactly once. Same-process
+rebooking, quote resume, radio recovery and normal staff MFA/applicant reads pass.
+First-run observer/continuation/session-expiry and bookkeeping qualifications are
+retained; these are not clean uninterrupted recordings or seven-minute guarantees.
+
+All 389 JVM / 311 Android-host checks and 75 fresh checks per JS/Wasm target pass
+for their frozen builds. [103 hosted checks](redesign/board-alpha-evidence/hosted-web-v10-20261023.json)
+verify all 93 assets and the HTTPS applicant redirect. [Actual hosted review](redesign/board-alpha-evidence/web-v10-hosted-visual-review-20261023.json)
+verifies the corrected circles, all four Arabic styles, French/English Notepad
+and live style continuity. Native selected widths/material/Arabic/large-text
+observations retain their stated scope. No all-213-view acceptance is inferred.
+
+The next bounded work is owner review of this exact demonstrated candidate,
+correction of concrete rejected defects, then the device/field, provider, safety,
+operational and legal evidence required by Milestones B/C below. Preserve the
+working core and four-style contract; do not add another theme or speculative
+feature while preparing the presentation. Physical Android is explicitly deferred.
+
+Credential/MFA recovery and Trial rollout are applied and independently verified.
+All five exact service heads remain healthy with one active deployment each.
+The existing Trial plan and both volumes are preserved; no expired staff role
+was renewed. Do not repeat the completed cutover. Source/image qualifications
+and rollback boundaries remain in [the recovery packet](redesign/staging-recovery.md).
+Pilot/public/real-money gates and owner release decisions remain open.
+
+### Retained execution checkpoint — 21 October
+
+The current packet is **reproduce and correct native credential lifecycle /
+entry-point recovery → replacement freeze/full checks → actual recovery, core and
+presentation verification**. A later v19 driver presentation review exposes an
+actual session-expired state after background/foreground; preserve the rejection
+in [the current checkpoint](board-alpha.md). The earlier sheet correction, build
+and two core repetitions pass within their scope and do not override that failure. Resumed native
+review exposes a real v18 grabber failure: the scroll container takes the drag.
+The bounded shared fix now passes focused header/body/tap/accessibility/font and
+existing inset/idle tests. The exact full v19 build passes 377 JVM / 305 Android-host
+checks; actual header/body gestures and four fare/style continuity checks pass.
+Two full seven-beat replacement repetitions pass at 8:17 and 8:22, with
+same-process rebooking, completed cash, bounded recovery and eight once-only
+business commands independently corroborated for each. Current presentation
+verification remains in progress. Do not count v18 evidence
+as replacement acceptance.
+The provider-paused proxy repair remains the independent hosted step.
+V18 passes two full Arabic cash trips, same-process rebooking, quoted-form
+foreground recovery, history/support and a controlled 14-second interruption.
+Its selected four-style, EN/FR/AR and 1.3× text reviews pass; driver Notepad restore
+is qualified by an initial 55-second observation timeout. Timed board repetitions
+are 6:54 and 9:37, with intervening read-only QA/reset disclosed.
+The v18 display correction retains full identifiers/points for backend operations,
+passes both strengthened history UI regressions and is frozen with 372 fresh
+JVM / 305 Android-host tests. Verify the exact replacement APKs rather than
+transferring earlier runtime acceptance by assumption.
+
+The prepared nginx-only applicant redirect fix remains the next hosted packet
+when Railway resumes builds. Preserve the trial and both volumes; use canonical
+`/apply/` while waiting. [board-alpha.md](board-alpha.md) owns the concise current
+evidence; its dated archive retains the rejected v16 quote and earlier attempts.
+
+The [dated roadmap archive](history/roadmap-checkpoints-20261021.md) preserves
+older execution checkpoints and rejected attempts. They do not define new work.
+
+## Current standing - 23 October 2026
+
+The deployed staging schema remains at migration `20260908_0052`; this task makes
+no schema change. Synthetic board-alpha evidence does not authorize live city
+transport or public launch. The new real-world goal is governed by the execution
+plan above. The alpha baseline and its exact evidence remain in
+[board-alpha.md](board-alpha.md).
+
+## Selected visual direction
+
+The owner approved **Folded Streets, Street Press, Glazed Machine and Notepad**
+as four complete user-selectable styles. The independent five-color theme menu
+is withdrawn. Gradients/collage/grain are treatments inside the expressive styles,
+not additional choices. Notepad is grayscale ruled utility, retaining meaningful
+icons and main workflows while disabling decorative motion.
+
+[The selected four-style contract](redesign/style-options.md),
+[current preview](redesign/abstract-lab.html), [visual system](redesign/visual-system.md)
+and [all-page coverage](redesign/style-coverage.md) supersede earlier identity,
+palette, shape and motion prescriptions below. The dated rejection/research and
+pending-style-selection notes are historical. No further palette confirmation is
+needed. Native implementation/device evidence, complete delivery-plan execution,
+hosted rehearsal and release gates remain separate; this records design selection.
+Backend authority, privacy, accessibility and state/command rules remain in force.
+
+
+## Delivery contract and scope
+
+| Milestone | Required outcome | Release boundary |
 | --- | --- | --- |
-| 1–7 Foundation through payments | Implemented and locally exercised through end-to-end PostGIS lifecycles. | Real accounts, recipient/cash controls, hosted environment, and operational ownership open. |
-| 8 Maps and navigation | MapLibre, normalized place search/reverse lookup, and Valhalla/GraphHopper contracts implemented. | Production tiles/style, routing graph, geocoding provider/data/license and multilingual quality acceptance, narration, and device navigation open. |
-| 9–10 Passenger and driver experience | Shared role-specific product surfaces, foreground-only online driver-location heartbeat, and closed-code assigned-ride coordination implemented. | User research, accessibility, signed-device, battery/dispatch location acceptance, coordination delivery/usability, privacy/store review, and physical-device acceptance open. |
-| 11 Production hardening | CI, rate limits, secure release guards, six-surface client compatibility enforcement and preflight UI, monitoring endpoints, backup scripts, Compose blueprint, and failure recovery implemented in source. | Approved support/deprecation policy, signed old/current client drill, security review, capacity, HA, managed backups, alerting/on-call, incident drills, and production promotion open. |
-| 12–19 National control plane through payment operations | Migrations, APIs, web/mobile surfaces, and focused integration coverage implemented in source. | No city bundle has real legal/provider/operational evidence or measured pilot outcomes. |
-
-No phase status authorizes a public launch. The prioritized release blockers and
-acceptance criteria live in [`gaps.md`](gaps.md).
-
----
-
-# Phase 1 — Foundation
-
-Goal: establish a working project architecture.
-
-```text
-Project structure
-Shared Kotlin code
-Android application
-iOS application
-Backend
-Database
-Authentication
-API foundation
-```
-
-At the end of this phase, the applications should be able to communicate with the backend.
-
----
-
-# Phase 2 — Accounts
-
-Implement:
-
-* Passenger registration
-* Passenger login
-* Driver registration
-* Driver login
-* Authentication
-* Basic profiles
-* Roles and permissions
-
----
-
-# Phase 3 — Driver System
-
-Implement:
-
-* Driver profile
-* Vehicle information
-* Driver verification status
-* Online/offline state
-* Driver location
-* Driver availability
-
----
-
-# Phase 4 — Basic Rides
-
-Implement:
-
-* Pickup selection
-* Destination selection
-* Ride creation
-* Ride states
-* Driver assignment
-* Driver acceptance
-* Ride cancellation
-* Ride completion
-
----
-
-# Phase 5 — Matching
-
-Implement the initial matching system defined in `matching.md`.
-
-Start with a simple, deterministic implementation.
-
-Do not prematurely implement sophisticated machine-learning-based dispatch.
-
----
-
-# Phase 6 — Pricing
-
-Implement:
-
-* Tariff configuration
-* Fare estimation
-* Fare calculation
-* Fare breakdown
-* Final fare
-* Adjustments
-
-Follow `pricing.md`.
-
----
-
-# Phase 7 — Payments
-
-Implement:
-
-* Cash payment recording
-* Payment states
-* Payment abstraction
-* External bank/M-Wallet transfer with backend reference and manual
-  reconciliation
-* Refund/adjustment support
-
----
-
-# Phase 8 — Maps and Navigation
-
-Implement:
-
-* Map display
-* Location selection
-* Driver location
-* Route display
-* Pickup navigation
-* Destination navigation
-
-The specific map provider should remain replaceable.
-
----
-
-# Phase 9 — Passenger Experience
-
-Improve:
-
-* Ride tracking
-* Driver information
-* Notifications
-* Ride history
-* Receipts
-* Ratings
-* Basic support/dispute flows
-* Ride-bound safety reporting distinct from support
-* Participant-safe case acknowledgements and status history
-* Closed-code coordination with the assigned driver during active ride states
-
----
-
-# Phase 10 — Driver Experience
-
-Improve:
-
-* Ride offer interface
-* Driver navigation
-* Earnings information
-* Ride history
-* Availability controls
-* Driver notifications
-* Closed-code coordination with the assigned passenger during active ride states
-
----
-
-# Phase 11 — Production Hardening
-
-Before public deployment:
-
-* Security review
-* Performance testing
-* Crash/error monitoring
-* Database backups
-* API rate limiting
-* Abuse protection
-* Payment testing
-* Offline/network failure handling
-* Automated testing
-* Deployment infrastructure
-
----
-
-# Phase 12 — National Control-Plane Foundation
-
-Goal: introduce city scope without breaking the proven single-city lifecycle.
-
-**Status: foundation and production authentication protocol delivered.**
-Migrations `20260824_0033`, `20260824_0034`, and `20260830_0043`, the scoped
-operations API, compatibility backfill, Compose web console, encrypted TOTP and
-single-use recovery, recent-MFA step-up, secure refresh cookie, CSRF rotation,
-and guarded factor replacement are implemented and covered by migrated PostGIS
-integration tests. Hosted release still requires the deployed web CSP, named
-access/recovery reviewers, enrolled operator accounts, and incident/access-review
-evidence; source delivery alone does not authorize privileged production use.
-
-Implement in bounded migrations/slices:
-
-* Market, operator, city, service-area, and city-lifecycle records.
-* Versioned coherent city configuration bundles.
-* Scoped administrative grants and operations authentication boundary.
-* Dedicated operations API namespace.
-* `webApp` operations shell with market/operator/city scope presentation.
-* Cross-city negative authorization, pagination-count, and audit tests.
-* Compatibility migration for existing rides, tariff, cooperative, and bootstrap
-  administrator data; no historical rewrite.
-
-Delivered Phase 12 console modules are rollout; city/operator creation;
-operator status; exact-scope assignment creation/retirement; service-area
-creation/review; compatible coherent-configuration assembly/review/activation;
-city lifecycle/readiness; typed-confirmed scoped grant create/revoke and expiry
-review; and scoped audit visibility. Independent grant approval and automated
-recertification remain deployment work rather than a Phase 12 source claim.
-The editor accepts WGS84 point rows instead of raw geometry/configuration JSON,
-shows missing authoritative dependencies, and reloads backend state after every
-accepted command. Driver recruitment and the public applicant portal are delivered in
-Phase 13, pricing policy editors in Phase 14, and published fixed routes in Phase
-15. Scheduling and broader analytics remain in their later phases rather than
-appearing as non-functional navigation.
-
-Do not activate a second city until every high-volume ride, matching, driver,
-pricing, payment, and worker query has an explicit city ownership rule.
-
----
-
-# Phase 13 — City Driver Recruitment and Review
-
-**Status: application, review, and protected document lifecycle delivered
-(2026-08-31).** Migrations `20260824_0035` and `20260831_0045`, public/applicant and scoped operations APIs, the driver-mobile
-onboarding flow, separate public web portal, permission-gated review console,
-city/service online enforcement, matching eligibility, and suppression-aware
-onboarding aggregates are implemented and tested. Protected PDF/JPEG/PNG upload,
-replacement, deletion, encrypted private-volume storage, ClamAV scanning,
-retention erasure, recent-MFA/no-store reviewer retrieval, access audit, Android
-and iOS native selection, and JavaScript portal selection are implemented. The capability still
-fails closed when its root, independent encryption key, or private scanner is not
-configured. JavaScript and Kotlin/Wasm use bounded browser file APIs, but both
-still require browser acceptance testing; no client substitutes a free-text file
-reference or claims an upload succeeded.
-
-Implement:
-
-* Public recruiting-city catalog.
-* Driver city application draft/edit/evidence/submit/withdraw/status flows from
-  mobile and web through one API.
-* Versioned city requirement sets and protected document-storage boundary.
-* Scoped reviewer queues, decisions, reasons, and audit.
-* City authorizations and one-city-at-a-time online enforcement.
-* Vehicle/credential/service eligibility per city where policy requires it.
-* Onboarding funnel aggregates without document or identity leakage.
-
----
-
-# Phase 14 — City Pricing and Operator Economics
-
-**Status: city pricing and operator economics delivered (2026-08-27).**
-Migration `20260824_0036`, scoped operations APIs and web editors, immutable
-ride financial snapshots, exact quote/offer/receipt/earning components, and
-passenger/driver presentation are implemented and tested. The scheduling-policy
-foundation delivered here is expanded and consumed by the separate Phase 16
-scheduled-booking lifecycle.
-
-Implement:
-
-* City/operator/service-scoped tariff versions.
-* Draft, review, activation, replacement, and rollback-compatible history.
-* Operator service fee modes: percentage of documented transport fare or flat
-  per completed booking.
-* Funding mode: transparent driver settlement deduction or passenger surcharge.
-* Explicit zero-fee policy.
-* Scheduling surcharge policy foundation.
-* Quote, offer, receipt, earning, operator-allocation, and reconciliation
-  components with exact-money tests.
-
-No city rate can go live without an audited complete policy and no mobile/web
-client calculates a fee.
-
----
-
-# Phase 15 — Published Fixed Routes
-
-**Status: published fixed routes delivered (2026-08-29).** Migration
-`20260827_0037`, direction-scoped flat fares, scoped operations lifecycle APIs
-and editor, public supply-private catalog, passenger immediate booking, and
-driver fixed-route authorization/offers/history are implemented. Clean
-migration upgrade, Phase 15 downgrade/re-upgrade, same-city multi-fare PostGIS
-integration, shared/mobile UI tests, and operations-web contract compilation are
-the delivery evidence. Phase 16 now consumes published directions for scheduled
-fixed-route bookings without changing the supply-private catalog.
-
-Implement:
-
-* City route/version/direction/stop/geometry model.
-* Separate outbound/inbound direction publication.
-* One flat complete-direction fare in the first release.
-* Public route catalog visible independently of live supply.
-* Passenger direction detail and immediate fixed-route request.
-* Driver fixed-route eligibility, informed offers, and normal accept/decline.
-* Operations route editor, review, publication, retirement, and audit.
-* Explicit proof that no catalog/API exposes online drivers or counts.
-
-Segment fares, seat pooling, and intercity route regulation remain out of scope.
-
----
-
-# Phase 16 — Scheduled Bookings
-
-**Status: scheduled bookings delivered (2026-08-29).** Migration
-`20260829_0038`, non-mutating review estimates with version-checked confirmation,
-immutable booking economics/policy snapshots, passenger cancellation, city-scoped
-driver opt-in/offers/commitments, overlap protection, lease-safe opening/handoff,
-eligibility revalidation, normal-matching fallback, explicit unfulfilled state,
-scoped operations exception inspection, localized mobile surfaces, demo data,
-and focused PostGIS lifecycle tests are implemented. Recurring bookings remain
-out of scope.
-
-Implement:
-
-* Separate scheduled-booking lifecycle and immutable quote/policy snapshots.
-* City lead time, horizon, offer, commitment, handoff, conflict, cancellation,
-  surcharge, and refund policies.
-* Passenger schedule/review/upcoming/cancel states with honest guarantee copy.
-* Driver scheduled offers and upcoming commitments with non-punitive decline.
-* City-scoped scheduled-offer opt-in independent of immediate online status.
-* Transaction-safe overlap checks and one live ride per handoff.
-* Revalidation/fallback matching and explicit unfulfilled outcome.
-* Immediate and fixed-route scheduling only where the city enables them.
-
-Recurring bookings are not part of this phase.
-
----
-
-# Phase 17 — Operations Data and Rollout Intelligence
-
-**Status: delivered in the repository on 2026-08-29.** Migration
-`20260829_0039`, the analytics refresh worker, scoped aggregate-only API, and
-operations-web rollout-intelligence module implement this phase. Production
-acceptance still requires the Phase 18 pilot evidence and monitoring review.
-
-Implement:
-
-* Typed operational domain events with approved city/operator/service/policy
-  dimensions.
-* Aggregate demand, supply, fulfillment, fixed-route, scheduling, onboarding,
-  financial, and fairness facts.
-* Coarse geographic/time buckets and small-cell suppression.
-* Scoped aggregate-only analyst APIs and operations dashboards.
-* Metric definitions, retention, late-event behavior, data-quality tests, and
-  reconciliation to source-of-truth records.
-* No arbitrary analytics payload, participant trail, document, support text,
-  or payment credential collection.
-
-PostgreSQL aggregate views/fact tables come first. A warehouse or stream system
-requires measured need.
-
----
-
-# Phase 18 — Repeatable City Pilot and National Expansion
-
-**Status: delivered in the repository on 2026-08-29.** The obsolete Phase 12
-second-city block has been replaced by backend-authoritative staged readiness,
-audited operations-web evidence controls, public-activation protection, safe
-configuration replacement rules, emergency pause/resume, post-launch closeout,
-and a migrated two-city integration proof. Real legal approval, provider
-coverage, driver recruitment, pilot observations, and production monitoring
-remain deployment evidence for each city; repository tests cannot fabricate
-those decisions.
-
-For each city:
-
-1. Complete legal/operational review and assign accountable operator/staff.
-2. Configure service area, requirements, tariffs/fees, matching, payments,
-   fixed routes, scheduling, localization, support, safety, and retention.
-3. Run synthetic and isolated pilot data; verify maps/routing/provider coverage.
-4. Recruit/review a bounded driver cohort.
-5. Enter `PILOT`, measure agreed service and fairness gates, and resolve issues.
-6. Activate publicly only through the audited readiness bundle.
-7. Monitor, preserve an emergency city-pause path, and conduct a post-launch
-   review before starting the next city.
-
-The ten configuration and operations gates are required before `PILOT`.
-For initial launch, `PILOT_SERVICE_AND_FAIRNESS` can pass only on the active
-bundle while the city is actually in `PILOT`, and is additionally required
-before `ACTIVE`. An approved replacement in an already `ACTIVE` or `PAUSED` city
-requires a new decision and evidence that the measured outcome remains
-representative under the proposed bundle; evidence is never copied.
-`POST_LAUNCH_REVIEW` is a separately visible closeout decision that can pass
-only after the city has reached `ACTIVE`; it cannot be falsely used as a
-pre-launch gate. An operating city's replacement configuration must independently
-pass the readiness stage appropriate to the city's current lifecycle before it
-can become active.
-
-There is one application and schema, not a fork per city.
-
----
-
-# Phase 19 — Versioned Payment Operations
-
-**Status: delivered in the repository on 2026-08-31.** Migration
-`20260831_0044`, scoped backend APIs, the protected operations payment module,
-and clean migrated integration tests implement this phase. Production acceptance
-still requires a verified real recipient, controlled external transfer,
-statement reconciliation, named duty ownership, MFA enrollment/recovery, and
-city-specific legal and commercial approval.
-
-Delivered behavior:
-
-* Immutable-after-verification recipient accounts scoped to city and operator.
-* Versioned cash/manual-transfer capabilities scoped to city, operator, and
-  service type with review, approval, activation, and replacement history.
-* Exact capability linkage in coherent city-configuration services; non-legacy
-  activation, estimates, and ride creation fail closed without it.
-* Immutable ride/payment capability and recipient provenance plus non-null
-  city/operator provenance on payments and refunds.
-* Separate configuration and reconciliation permissions, grant-constrained SQL
-  pagination, idempotent transfer decisions/refunds, recent-MFA controls, and
-  append-oriented audit evidence.
-* A protected web console for recipient/capability lifecycle, transfer queue,
-  and refund ledger without exposing financial credentials to mobile clients.
-* A legacy-city-only environment fallback; no new city/operator may use
-  deployment-wide recipient configuration.
-
-CMI/card processing remains deferred. Cash remains mandatory and a controlled
-external bank/M-Wallet transfer remains the only current electronic method.
-
----
-
-# Future Features
-
-These are explicitly not MVP requirements:
-
-* Taxi-stand queues
-* Advanced dispatch zones
-* Cooperative governance features
-* Advanced fraud detection
-* Demand forecasting
-* Institutional/corporate accounts
-* Multiple countries
-* Advanced payment providers
-* Physical taxi-meter integration
-* Advanced analytics
-* Recurring scheduled bookings
-* Fixed-route segment pricing and pooled-seat inventory
-* Multi-operator revenue sharing on one ride
-* Intercity regulatory workflows
-
-Future features should not be implemented merely because the architecture can support them.
-
-Multiple Moroccan cities, the operations web platform, city driver applications,
-fixed-route catalogs, single scheduled bookings, transparent percentage-or-flat
-operator fees, and privacy-bounded rollout aggregates are approved expansion
-phases above. They remain post-hardening scope and are not claims about current
-implementation.
-
----
-
-# Development Rule
-
-At any point, prioritize:
-
-```text
-Working core functionality
-        ↓
-Correctness
-        ↓
-Security
-        ↓
-Testing
-        ↓
-Performance
-        ↓
-Additional features
-```
-
-Do not sacrifice the core ride system to build optional features.
-
-## Required implementation sequence
-
-Each phase is complete only when its documented behavior, migrations, focused tests, and API contract are present. A later phase must not be started merely because it is technically possible: it depends on the earlier source of truth being stable. The concrete repository and deployment work for each phase is defined in `implementation.md`.
-
-The implementation sequence is:
-
-```text
-foundation → accounts → drivers → rides → matching → pricing → payments
-          → maps → passenger experience → driver experience → hardening
-          → national control plane → city recruitment → city economics
-          → fixed routes → scheduling → rollout data → repeatable city pilots
-          → versioned payment operations
-```
-
-## Current implementation gates
-
-The repository has delivered the provider-independent MVP foundation: secure
-accounts and sessions, driver eligibility and vehicles, authoritative rides and
-versioned fairness-aware matching with sequential decline/expiry handling,
-seeded aggregate-only matching simulation,
-fixed-tariff fares, cash/manual-transfer settlement, append-only operator-funded
-refunds, receipts, ratings, support,
-notification history, shared passenger/driver applications, migrations, local
-Compose infrastructure, shared production abuse limits, and CI build/test coverage. The CI backend gate now
-includes a migrated PostGIS end-to-end cash ride from registration through
-settlement and earnings. This statement is not a
-release certification; every deployment still needs the gates below.
-
-CI independently validates the committed Gradle wrapper JAR against Gradle's
-trusted checksums, while the wrapper pins the Gradle distribution itself by
-SHA-256. This protects the build entry point without pretending that dependency
-updates are safe to deploy without review.
-Pull requests now reject newly introduced high/critical dependency findings, and
-trusted pushes submit the Gradle action's resolved dependency graph rather than a
-hand-maintained catalog. The backend build emits an SPDX JSON SBOM from the built
-image, records its digest in source-candidate evidence, and blocks on high or
-critical OS/library findings. All actions use immutable commit SHAs and a local
-validator protects the blocking/provenance settings. These controls need a clean
-remote candidate run and do not yet cover every mobile/web artifact or replace
-independent security review.
-The backend CI and portable backend test entry points also run a source credential
-hygiene gate. CI scans Git-tracked files and rejects provider configuration,
-signing containers, private keys, service-account documents, and high-confidence
-live token formats without echoing credential values; local ignored environment
-files and generated runtime directories are not read by the no-Git fallback.
-Those same entry points extract the actual handwritten mobile and operations-web
-Ktor operations and compare every method/path with FastAPI OpenAPI, plus the
-registered mobile live-event WebSocket. Unknown call structures, arbitrary route
-variables, unreviewed dynamic segments, and operations calls outside the single
-exactly-once `/api/v1` builder fail closed, preventing a new gateway from silently
-escaping route-drift coverage. Payload schemas and authorization behavior remain
-focused-test gates.
-
-Android CI also compiles both minified release flavors with fatal lint and checks
-that the resulting passenger and driver APKs have distinct expected application
-IDs and explicit version metadata. Real promotion remains gated on protected
-signing material, environment-specific Firebase files, production HTTPS API/map
-configuration, secure retention of R8 mappings, and physical-device acceptance;
-the CI artifacts are intentionally unsigned and non-distributable.
-
-Physical Android account acceptance now has a guarded repeatable runner that
-requires backend/database readiness, one authorized device, ADB reverse, and an
-explicit confirmation before clearing only the selected debug app. It submits
-the real localized registration form with synthetic local credentials, logs in,
-and waits for the backend-authorized product-role gate without persisting a UI
-dump or printing credentials. Its parser and safety contract run in CI; execution
-on the supported device matrix remains release evidence rather than a source-only
-claim.
-
-iOS CI applies an equivalent Release compiler gate to both schemes: explicit
-HTTPS configuration and numeric versions are always validated, while narrowly
-named switches allow only unsigned/providerless simulator verification. Public
-archives still require target-matching ignored Firebase plists, production APNs
-entitlements, Apple signing/team configuration, and physical-device acceptance.
-
-The cooperative has selected MapLibre for mobile map rendering, a self-hosted
-Valhalla service by default for routing and turn-by-turn instructions, external
-bank/M-Wallet transfer as the launch electronic-payment path, and Firebase Cloud
-Messaging (FCM) for background push. The approved GraphHopper replacement is
-implemented behind the same route contract, and cash remains a first-class
-payment method. CMI/card processing is explicitly deferred until well after the
-functional launch flow. These selections do not remove the operational proof
-required before release:
-
-The mobile presentation layer now includes exact-parity English, French, and
-Arabic catalogs, Arabic RTL layout, localized known notification events, and
-debug-only editable raw passenger coordinates. Route requests carry a closed
-language value; the Valhalla adapter supplies French or English narration. The
-pinned Valhalla catalog lacks Arabic narration, so Arabic spoken guidance remains
-part of the route-provider acceptance gate instead of silently falling back as a
-completed localized feature.
-
-| Requirement | Gate before implementation | Required proof |
+| **A — Union-ready technical alpha** | Polished passenger/driver apps; real backend booking, private offer, assignment, arrival/start/completion and truthful cash records; representative operations console; verified Railway staging; tested physical Android behavior; repeatable synthetic demonstration and disclosures. | Synthetic accounts, documents, trips and money only. Live hardware observations need explicit consent, minimization and protected access. No commercial transport or public recruitment. |
+| **B — Authorized real-world pilot** | Approved city/operator/transport, licensed-driver onboarding, tariff/payment and privacy decisions; accepted providers, tracking, support, secure documents and controlled field testing. | Explicit owner/operator authorization and applicable launch gates before real transport, identity documents or money. |
+| **C — Public production release** | Accepted pilot outcomes, target-platform and public distribution approvals, independent security/operations reviews, backups/restore, localization/accessibility, monitoring and sustainable operating economics. | Public activation is a separate decision; subsequent city expansion requires its own evidence. |
+
+Keep FastAPI/PostGIS, shared Kotlin/Compose, native platform services and existing
+operations/applicant web. Retain tested domain logic and contracts; refactor
+screens/coordinators where it improves the essential journey. No wholesale
+framework migration, microservices, nationwide rollout, card/CMI integration or
+optional feature expansion on A's critical path. Fixed routes, scheduling, manual
+transfers and advanced administration remain specified and implemented where
+present; demonstrate them only with their own evidence. Core navigation must
+still make history, support and account recovery usable.
+
+## Timing and work limits
+
+The active goal is now full real-world deployment. Use evidence gates and bounded
+engineering slices rather than an invented launch date. The current alpha is a
+working baseline; do not repeat already accepted synthetic paths without a new
+change, failure or identified acceptance need. [R0-R12](real-world-launch.md)
+defines the execution order; existing B/C criteria remain normative below.
+
+| Order | Next useful increment | Exit evidence |
 | --- | --- | --- |
-| Map display, place selection, routes, and navigation | MapLibre rendering, normalized Valhalla and GraphHopper adapters, a closed deployment selector, one-shot foreground mobile permission flows, privacy-bounded post-assignment last-known driver visibility, and an opt-in pinned local Valhalla Morocco graph build are implemented. Select one production engine, a MapLibre style/tile source, and approve routing-data refresh, retention, attribution, and artifact-promotion policy. Geocoding and continuous background tracking remain separate optional adapters/capabilities. | Existing provider normalization/configuration and assigned-location authorization/lifecycle tests plus a successful pinned Morocco graph build for the selected engine, tile/style acceptance, narration acceptance in required languages, and Android/iOS device tests. |
-| Electronic payments | Cash plus the provider-independent manual bank/M-Wallet transfer claim, verified recipient accounts, versioned city/operator/service capabilities, exact active-bundle linkage, immutable settlement provenance, scoped reconciliation, and protected operations UI are implemented. The deployment-wide recipient is now a legacy-city-only compatibility fallback. Before enabling a pilot, verify the real recipient, transfer limits/fees, statement reference fidelity, scoped reviewers, support ownership, reconciliation cadence, MFA recovery, and cash fallback. CMI/card remains deferred. | Existing unit/API/web/mobile tests and clean migrated payment/national lifecycle tests plus a controlled external transfer located by exact reference/amount/currency, idempotent verify/reject evidence, earning reconciliation, operator runbook exercise, and unresolved-claim alert/ownership proof. |
-| Refunds and fare adjustments | Append-only confirmed refunds are implemented for completed payments with a closed reason taxonomy, cash/external-transfer evidence, payment locking, cumulative over-refund protection, idempotent audited administrator commands, passenger-safe receipt totals, and an explicit launch allocation of zero driver recovery/full operator funding. Before pilot use, assign approval/reconciliation staff and exercise the controlled case, cash-handover/outbound-statement, and passenger-communication runbook. Post-ride increases and driver recovery remain prohibited until a later versioned policy exists. | Existing service/schema/OpenAPI/mobile and migrated two-party lifecycle tests plus a controlled real refund reconciled by exact payment/amount/currency/evidence reference, duplicate/over-refund rejection evidence, daily refund-list/audit reconciliation, and operator ownership proof. |
-| Background push and multi-instance delivery | The PostgreSQL cross-instance hint transport, FID-based Android/iOS registration, authorized FCM HTTP v1 `fid` targeting with legacy-token migration support, invalid-registration revocation, bounded retry, persistent dead-letter state, reviewed replay procedure, and allowlisted Android/iOS receive-to-authoritative-refresh path are implemented. FCM and Crashlytics are no-cost Spark-plan products; do not add metered Firebase databases, functions, storage, hosting, phone auth, or Analytics. Create separate development/staging/production Firebase projects, configure Android and APNs credentials, and define credential rotation. | Existing transport/adapter/ownership/revocation/receive tests plus migrated PostGIS fanout and Android/iOS device validation with environment credentials. |
-| Passenger-driver coordination | Six role-specific closed signals, active-assignment authorization, required idempotency, rate/cap controls, durable recipient notification, generic live/push refresh, latest-message ride detail, and shared localized UI are implemented. Free text, direct phone exposure, and calling are intentionally absent. Approve retention/erasure, support/abuse handling, emergency limitations, and whether this minimal channel meets launch needs. | Existing policy/API/outbox/mobile and fresh-PostGIS lifecycle tests plus physical-device delivery, accessibility/localization, weak-network/provider-failure traces, staff rehearsal, closed-road pickup metrics, and signed pilot thresholds. |
-| Safety/support triage | Separate participant support and safety records, immutable city scope, controlled lifecycles, city-scoped operations queues and mutations, active scoped assignee checks, append-only notes, minimal support-to-safety handoff, durable overdue paging, pager acknowledgement, fixed-field audit, mobile/operations status surfaces, response targets, versioned retention projections, city-scoped legal holds, and verified personal-data minimization are implemented. The operations console exposes hold/release controls and immutable erasure evidence. Before a live pilot, name the duty and legal-review rosters, enroll MFA factors, exercise recovery and the case runbook, prove real pager routing, and approve backup-expiry/restore policy. | Focused service/schema/OpenAPI/web/mobile tests and expanded lifecycle/national-control-plane/MFA integrations pass against migrated PostGIS at `20260831_0044`, including secure-cookie/CSRF rotation, held support data, released-hold processing, safety-case minimization, and payment provenance. Deployment evidence still requires a controlled support acknowledgement, urgent safety page/drill, escalation, legal-hold review, factor-recovery drill, audit-redaction review, backup-expiry/restore exercise, and shift handoff without exposing internal text. |
+| R0 | Reconcile full feature/platform source and acceptance coverage. | Capability/GAP/T matrix, actual evidence identities and ranked gaps. |
+| R1/R2 | Prepare first-city/budget/provider decisions and reproducible source/release baseline. | Reviewable owner decision packet and immutable validated artifacts. |
+| R3-R10 | Complete production capability, provider, device and operational acceptance. | Required complete journeys, negative/recovery cases and accepted target-environment evidence. |
+| R11/R12 | Authorized bounded field pilot, then guarded public release. | Actual pilot outcomes, go/no-go decisions, distribution, monitoring and handover. |
 
-The integration gate remains required even for provider-independent work. CI is
-configured to apply the migration chain against isolated PostGIS, render offline
-SQL, run tests, and build the backend image; that workflow must pass. A release
-environment must additionally run the migration and readiness checks against its
-own documented database. The checksum-pinned workspace-local Windows
-PostgreSQL/PostGIS test runtime has applied through migration `20260908_0052`; the
-backend suites include complete registration-to-payment/refund, support/safety,
-legal-hold, and case-retention lifecycles. This is local evidence, not release
-certification.
-The selected Valhalla or
-GraphHopper deployment still requires a separate routing-data build and route
-acceptance gate; generated migration SQL and mocked provider tests do not replace
-that proof. The repository now supplies a guarded fixed-scenario acceptance
-command that checks three Morocco routes, geometry and maneuver integrity, route
-plausibility, and English/French/Arabic narration through the selected real
-adapter without logging route data. It requires exact confirmation for non-local
-hosts and intentionally fails the pinned Valhalla catalog's English fallback for
-Arabic. Mutually exclusive local Compose profiles now provision either pinned
-Valhalla 3.8.3 or a non-root GraphHopper image built from the checksum-verified
-official 11.0 JAR. GraphHopper verifies a dated Morocco extract by SHA-256 and
-names its graph cache by that digest before the guarded launcher can run full
-acceptance. An actual successful graph/catalog run and mobile navigation matrix
-remain deployment evidence.
+Physical-device access, signing/Mac/iOS resources, licensed operator/cohort,
+approved providers and sustainable hosting budget remain inputs to arrange,
+not facts supplied by this goal. Continue independent engineering while preparing
+those decisions; do not claim or activate real transport prematurely.
 
-Production-hardening tooling now includes a bounded asynchronous GET-only
-performance smoke command with p95 and error-rate budgets. Its localhost run is a
-harness check, not capacity evidence; release still requires agreed workload and
-latency targets exercised against isolated staging with production-like PostGIS,
-routing data, and provider configuration.
+## Retained alpha backlog
 
-Offline/network failure handling now includes native Android and iOS connectivity
-observers, a tested shared unavailable-to-available transition policy, retention
-of the last authenticated backend-confirmed screen under a localized sticky
-warning, and exactly one authoritative restore after reconnect. Initial failures
-without usable state retain the dedicated retry screen. Connectivity is never
-treated as command acknowledgement, and failed ride, driver availability, cash,
-or electronic-payment commands are not replayed automatically. Every authenticated
-Android/iOS action now crosses a tested shared boundary that executes it once and,
-on an uncertain/rejected result, performs one read-only authoritative restore
-while retaining the original operation error. Both roots now synchronously gate
-authenticated UI actions before coroutine launch; exact initiating controls show
-loading, competing backend actions are disabled, and tested `finally` release
-prevents a failure from wedging the UI. Android and shared
-host compilation cover the implementation on Windows; macOS CI and physical
-Android/iOS network-loss testing remain release evidence.
-The same source gate now covers foreground recovery: only a real
-background-to-foreground transition with an authenticated session restores state;
-initial/repeated lifecycle callbacks do not duplicate startup and never replay a
-failed command.
-The mobile source gate also locks one-shot location admission: Android and iOS
-ignore repeated current-location taps without cancelling the first callback, and
-shared Compose exposes disabled/loading semantics until the platform result.
-Driver offer timing now fails closed for malformed/non-positive server envelopes:
-Accept is disabled and one authoritative refresh is requested instead of using
-device wall time or presenting the offer as safely actionable.
-Backend-confirmed action feedback now uses a sequenced common event: cash and
-rating render the specified 320 ms success check, while confirmed support and
-vehicle creation reset their drafts. Error and uncertain outcomes emit no success
-and retain editable input.
-Account creation feedback follows the same authority boundary: confirmed
-registration is a polite success announcement with identifier prefill and password
-clearing, while rejected registration remains an assertive error and retains the
-editable account form.
 
-Mobile crash/error monitoring now uses Firebase Crashlytics in the same separated
-Firebase environments already required for FCM, without Firebase Analytics.
-Debug and providerless verification collection is disabled; distributable
-releases require an explicit collection switch and matching Android R8/iOS dSYM
-upload wiring. A portable source gate rejects identity/custom-business telemetry
-and missing role integration. Release remains gated on approved processor,
-retention, access, incident-response, and privacy policy plus controlled,
-symbolicated staging crashes for passenger and driver on both platforms.
+Statuses below are deliberately conservative: **ready** means work may start;
+**partial** means code/evidence exists but exit checks remain; **blocked** requires
+a recorded dependency. Responsibility functions are not assigned staff names.
+Before closing a task, record the candidate, exact checks, artifacts, limitations
+and any required product/operator decision in its checkpoint. Tasks may overlap only across independent
+dependencies; a green source test never accepts a device or hosted requirement.
 
-Authenticated monitoring now includes privacy-bounded aggregate outbox gauges
-for pending, dead-lettered, and locked events, oldest pending age, and snapshot
-availability. Database failures omit potentially misleading count values while
-leaving process telemetry scrapeable. The deployment verifier requires the
-outbox snapshot, and the migrated PostGIS suite exercises the aggregate query;
-production alert routing and response ownership remain deployment-policy gates.
-Matching and outbox loops also expose fixed-name iteration, processed-item, and
-last-success telemetry. Bounded JSON failure logs omit exception messages, and
-the committed alert set detects retries, five-minute worker stalls, and a missing
-standalone worker scrape target.
+| ID / responsibility | Work and current status | Depends on | Observable exit criteria |
+| --- | --- | --- | --- |
+| **A-01 Engineering: baseline** | **Baseline established; acceptance remains scoped.** Frozen native/web input and artifact manifests, fresh role builds/tests and verified staging exist. Preserve the dirty checkout and classify remaining checks through the current checkpoint. | None | Relevant backend/API, fresh isolated PostGIS, shared JVM, Android role builds and web checks run; failures classified with paths; candidate commit or working-tree patch/artifact hashes retained. No hidden skips or assertion weakening. |
+| **A-02 Product/UI: design reference** | **Partial; shared foundation implemented.** Folded Streets, Street Press, Glazed Machine and grayscale Notepad are actual persisted options. Independent color themes and the main hero are withdrawn. ST-1 has source, tests, Android persistence and twelve actual FR/AR/EN welcome renders. ST-2/ST-3 per-view/state and ST-4 owner/device acceptance remain open. | None; source inventory from A-01 informs implementation | Owner-reviewed rendered references for passenger idle/quote/assigned/completed and driver offline/offer/active/cash; loading/error/empty/offline/disabled states specified. Contrast, touch targets, safe areas and RTL criteria in [ui.md](ui.md) met. Approval applies to visual direction, not test completion. |
+| **A-03 Mobile: passenger vertical slice** | **Partial.** Welcome/auth/recovery→map/place selection→pickup→quote→request→matching/assignment→trip→receipt/history/support. | A-01, A-02 | Actual APIs drive the complete journey; one primary next action; no technical clutter; no-supply/cancel/stale quote/uncertain command recovery tested. Repeated taps do not duplicate booking. Actual renders retained. |
+| **A-04 Mobile/backend: driver vertical slice** | **Partial.** Onboarding/eligibility→availability→private offer→accept/decline→pickup/arrival/start→completion→pending cash/earnings/restrictions. | A-01, A-02; integrate with A-03 | Driver understands next action, GPS/network readiness and unresolved payment. Ineligible driver cannot dispatch; acceptance and assigned status agree on both clients; restart recovers active work and cash queue. Actual renders retained. |
+| **A-05 Native/backend: GPS and continuity** | **Partial.** Verify the provenance fixes and acceptance-time guard; evaluate the foreground policy. | A-01; pair with A-04 | Stale/delayed/future/invalid/inaccurate/interrupted fixes rejected by meaningful regression tests; physical foreground/background, navigation switch, lock, call, weak network, GPS failure, permission revocation and reconnect observed. Decide alpha foreground constraints explicitly; any required bounded background change must document OS permissions, privacy, battery and platform tests first. |
+| **A-06 Backend/mobile: lifecycle and failure recovery** | **Partial.** Reconcile commands, REST catch-up, WebSocket hints, matching/outbox and cash authority. | A-03, A-04, A-05 | One winner/assignment; cancellation and no-supply correct; dropped/duplicated events, disconnect, timeout, duplicate actions and service restart converge to backend state. Completion creates pending cash; only authorized driver confirms; receipt/earnings agree and replay never doubles accounting. |
+| **A-07 Web/operations: representative console** | **Partial; web v8 representative journeys evidenced.** Normal MFA/city scope, matched applicant correction/resubmission, public/internal support separation and selected booking/payment reads pass within their records. Broader operations and visual acceptance remain scoped. | A-01, A-02; A-06 supplies trip data | Browser uses synthetic reviewed records; city scope and permissions enforced; pending/rejected application stays ineligible; representative case and cash record visible. No claim of staffed emergency response. Protect documents and preserve maker/reviewer controls. |
+| **A-08 Infrastructure: Railway preparation** | **Ready within trial limits.** Existing five-service staging topology, protected inputs and resource exposure inspected. Owner declined a paid upgrade and applied the approved preserved-volume swap. Plan expiry and the next cost review remain operational constraints. | A-01 for packaging; independent of final UI | [deployment.md](deployment.md) preflight completed with actual project/environment references, cost ceiling, shutdown owner and provider modes. Existing unrelated resources untouched. Paid provisioning needs explicit approval. |
+| **A-09 Infrastructure/full stack: hosted integration** | **Partial; hosted integration evidenced.** Five services online; fresh migrations/runtime privileges, matching, routing, web proxy, operations MFA, native v18 two-trip cash/recovery and web v8 integration pass. The prepared redirect and broader acceptance remain open. | A-08; A-06/A-07 for end-to-end acceptance | Migrations, role readiness, worker heartbeats/outbox, auth/authorization, REST and real-time, routing/maps where shown, restart and mobile-to-hosted cash lifecycle verified. Retain actual requests/results; deployment success alone is insufficient. Record all services, costs and teardown steps. |
+| **A-10 Product/QA: Android and visual acceptance** | **Partial.** Verify actual candidate on physical Android and representative emulator layouts. | A-03–A-07; final hosted repeat after A-09 | Core states at 320/360/430 dp, portrait/keyboard/insets, FR/AR RTL and EN sanity, 1.3×/1.6× text; readable contrast, 48 dp targets and assistive action labels. Physical-device GPS/network and complete role journey tested. Screenshot approval and defect closure recorded; APK hash and build/config identity retained. |
+| **A-11 QA/operations: repeatable presentation** | **Scoped v22 rehearsal passes.** Two exact-candidate repetitions at 10:47 / 7:29 include native cash, same-process rebooking, normal browser reset and independently observed radio recovery. Warm setup and the initial failed attempt/recovery remain qualified. Broader gate scope remains below. | A-09, A-10 | Two consecutive runs on one candidate, one app/service restart and network-loss exercise; no central step needs manual DB edits. Approved synthetic reset mechanism preserves unrelated data. Fallback is a labeled recording or verified local scenario, never fabricated hosted success. |
+| **A-12 Product/engineering: alpha handoff** | **Candidate handoff delivered.** Exact artifacts, secure setup, rehearsal/visual evidence, disclosures and B/C backlog are linked. Provider-paused redirect repair and applicable presentation acceptance remain. | A-11 | Reproducible demo setup, secure account retrieval, exact artifacts/screenshots, test successes/failures, staging service/cost/shutdown record, simulated-provider list and incomplete capability disclosure reviewed. Applicable evidence and the owner's presentation decision precede a union-ready acceptance claim. |
 
-The same authenticated surface now exposes a five-second-bounded security-
-incident deadline snapshot using only fixed SEV1-SEV4 buckets. Reviewed rules
-alert on snapshot loss, open SEV1/SEV2 incidents, severity-split containment
-breaches and overdue postmortems; immutable dashboard panels show open and
-deadline state without incident or scope identifiers. Real receiver delivery,
-acknowledgement, escalation timing and staffed drills remain release gates.
+**Next implementation packet:** R2 candidate review and immutable remote CI in
+[real-world-launch.md](real-world-launch.md). The [R2 local checkpoint](launch/r2-candidate.md)
+preserves an isolated source commit and two verified release-preparation fixes;
+local source identity does not close R2. The [R0 baseline](launch/r0-baseline.md)
+maps current source/navigation and all 37 GAPs; the
+[R1 decision agenda](launch/r1-decisions.md) is prepared. Preserve the current
+alpha and unrelated dirty work; run candidate-bound checks and repair evidenced
+failures. Historical alpha statuses above do not reopen completed
+proxy/recovery work or accept production gates.
+Use [workflow.md](workflow.md) for commands and [union_demo.md](union_demo.md)
+for scenario details. Every unfinished major requirement has an ID here or a
+GAP below; avoid another independent TODO list.
 
-Security incidents now also have four closed responsibility types with one
-active exact-market-authorized assignee per type and append-visible reassignment
-history. The protected web workspace can review and assign those roles using an
-approved roster/shift reference. This is source coordination, not a production
-duty roster: T5 must prove alert delivery, T6 must prove named role handoff and
-containment/communications/postmortem ownership, and no real-user phase may start
-without both accepted.
+## Alpha exit checklist and evidence
 
-The administrative security workflow now supports audited account-wide session
-revocation, suspension, and suspension recovery. Suspension atomically revokes
-server sessions and push registrations, blocks existing access tokens, refresh,
-and login, and never restores old credentials on reactivation. Administrative
-self-suspension and restoration of deactivated accounts are refused. Broader
-scoped role management remains policy-gated. Support/safety reads, mutations,
-assignee validation, and overdue alerts now enforce active city-scoped grants;
-the old `/admin` family remains compatibility-only.
-Administrators can now review the resulting append-oriented audit trail through
-a bounded, exact-filtered read endpoint; ordinary users have no audit-log access
-and the API exposes no audit mutation path.
+The [current ten-gate index](board-alpha-handoff.md#current-ten-gate-acceptance-index)
+now records each AG gate, related tasks, available evidence and remaining scope.
+Linked exact-candidate records carry UTC time, commands/scenarios,
+environment/device/locale, results and artifacts. Preserve those identities and
+close engineering checks from evidence; keep product, operator and release
+decisions with their actual owners. There is no new blanket approval step for
+already authorized implementation or verification. Store
+credentials outside Git and keep real personal identifiers out of screenshots.
+The [historical archive](history/roadmap-checkpoints-20261021.md) preserves the
+12 October baseline. The current handoff index supersedes its OPEN rows. Do not
+average test/device status or reuse historical engineering percentages as release
+readiness.
+The wider 20-row UD board remains separately reported without changing its
+denominator. Optional advanced UD functions do not delay A when omitted and
+disclosed, but any function shown needs its own full journey evidence.
 
-Login hardening now removes the dominant missing-account timing shortcut by
-performing one Argon2 verification for active, suspended, and absent identifiers.
-Successful authentication opportunistically upgrades older valid Argon2
-parameters. Access JWTs are closed to TaxiMobile's issuer, mobile audience,
-access type, and complete identity/lifecycle claims before the existing
-server-side session and account-status checks run.
+## B/C launch backlog and parallel feasibility
 
-The request-audit path now avoids framework response buffering and duplicate raw
-Uvicorn access events. Direct ASGI performance at concurrency 20 and Windows
-loopback performance at concurrency 10 pass the repository's 500 ms p95 budget
-with no errors. Twenty-connection Windows loopback measurements remain above
-budget even though direct application measurements pass; staging on the Linux
-release image must establish the real concurrency and latency envelope before
-release rather than weakening the budget to fit one development host.
+The full normative acceptance criteria remain in [gaps.md](gaps.md),
+[testing.md](testing.md) and the domain documents. A's synthetic staging evidence
+may support them; it never automatically closes a production GAP or T phase.
 
-The workspace-contained database path previously completed a guarded
-backup/restore drill at migration `20260813_0029`. The restored database matched
-that head, PostGIS version, and selected aggregate counts and accepted the
-application role plus a no-op migration. The reusable verifier covers users,
-rides, payments, driver credentials, cooperatives, and memberships, but the
-current migration head is `20260908_0052`. A current-head production-like restore,
-encrypted managed-provider backup retention, and a staging restore therefore
-remain release gates.
+| Work package / responsibility | Existing GAP IDs | Dependencies and acceptance boundary |
+| --- | --- | --- |
+| **B-01 Owner/operator/legal: city feasibility** | 004, 017, 032 | Start during A: choose one bounded city/operator, document transport/operator authority, insurance, tariff/payment policy, privacy/data location and success/stop thresholds with qualified reviewers. Written approval precedes real operations; Railway choice is not Moroccan compliance evidence. |
+| **B-02 Release/infrastructure: pilot environment** | 001–003, 015, 018 | Reproducible immutable candidate, production-appropriate hosting/PostGIS, managed backups and tested restore, monitoring/paging, capacity and rollback. Reuse accepted A evidence where applicable; fund/provision only approved scope. |
+| **B-03 Operations/security: staff and licensed cohort** | 005, 011, 012, 016, 022, 029, 031 | B-01/B-02: enroll reviewed licensed drivers and scoped staff; protected documents, dual control, support/safety roster, independent security review and incident drills. Synthetic approvals cannot substitute. |
+| **B-04 Native/providers: service reliability** | 006–009, 023, 026, 028 | Approved maps/geocoding/routing/data licensing, multilingual quality, field-accepted location policy and communication, verified FCM/APNs or explicit event fallback. Demonstrate required background/lock/navigation behavior before operating under it. |
+| **B-05 Payments/privacy/mobile: participant protection** | 010, 013, 020, 021, 024, 025, 027, 030 | Approved tariffs/cash/manual-transfer controls, settlement responsibilities, contact/recovery/account deletion/export, retention and fraud controls; signed pilot distribution, relevant accessibility/localization and device checks. Scope touching these P1 requirements must satisfy them before pilot. |
+| **B-06 Operator/QA: controlled pilot** | 019, 032 | B-01–B-05 plus all applicable P0 acceptance: bounded licensed cohort, real support, approved entry/stop/rollback criteria, observed outcomes and explicit owner/operator authorization. Unaccepted gate means no live pilot. |
+| **C-01 Release/QA: public distribution and experience** | 013, 014, 020–028, 030, 033, 036 | Accepted B outcomes; complete target-platform including iOS, store approvals, hosted browser E2E/security, full accessibility/FR/AR localization and account lifecycle; all applicable P1 gaps closed. |
+| **C-02 Operations/security: sustainable public service** | 002, 003, 011, 015–018, 024, 027, 029, 031, 032 | Production backups/restore, security/operations review, reliable providers, support/on-call, incident handling, measured SLOs and viable actual costs/revenue/settlement; explicit public launch decision. |
+| **C-03 Engineering/operator: maintainability and expansion** | 033–037 | CI, contract drift, release/support policy, analytics/data governance, multi-city/operator isolation and measured capacity. Per-city approval and learned pilot outcomes before expansion; national scale is outside A. |
 
-The repository also contains a hardened provider-neutral production Compose
-template, guarded non-secret input validation, an explicit one-shot migration
-service, non-mutating deployment verification, and forward-only rollback guidance.
-It runs the public API and the matching/outbox/credential/scheduling/analytics/case-alert/case-retention/driver-document-retention processor supervisor as
-separate closed process roles from the same immutable image. API and worker have
-independent loopback operations surfaces; deployment verification requires API
-identity/readiness and positive heartbeats from all eight fixed worker loops. PostgreSQL
-fans minimized hints across horizontally scaled API replicas. A real registry, TLS proxy, managed PostGIS restore drill, secret store,
-monitoring collector, and staging/production rollout remain deployment evidence,
-not facts that source files alone can prove.
+## Requirement coverage and checkpoint reporting
 
-Both long-running production containers now report Compose health from their
-readiness boundary. The API requires PostgreSQL; the worker also requires its
-supervisor and one successful iteration from matching, outbox, credential,
-scheduling, analytics, case alerts, case retention, and driver-document retention. CI rejects replacement with liveness-only probes and also checks the
-manifest's loopback ingress, process roles, least-privilege environments, and
-container hardening before Docker Compose rendering.
+| Brief section | Implementation location |
+| --- | --- |
+| 1–3 Mission, alpha, retained technology | A/B/C contract, A-01; [product.md](product.md), [architecture.md](architecture.md). |
+| 4 UI/UX overhaul and visual verification | A-02–A-04/A-07/A-10; [design.md](design.md), [ui.md](ui.md). |
+| 5 GPS, continuity, lifecycle, failing tests/accounts/providers | A-01/A-05/A-06/A-09; B-04/B-05 and existing GAP criteria. |
+| 6 Railway, costs, security, actual verification | A-08/A-09; [deployment.md](deployment.md). |
+| 7 Coherent documentation | [README.md](README.md) six-entry reading guide, preserved domain references and historical roadmap. |
+| 8 Alpha→pilot→public sequencing | This roadmap; B-01 runs alongside A. |
+| 9 Presentation | A-11/A-12; [union_demo.md](union_demo.md). |
+| 10 Execute/verify/continue | [workflow.md](workflow.md); first next task above. |
+| 11 Alpha definition of done | AG-01–AG-10; no planned task counts as accepted. |
+| 12 Reporting and handoff | Checkpoint format below; A-12. |
 
-The public API and private worker operations surface also apply a shared pure-ASGI
-response-security boundary: responses are non-cacheable and carry MIME,
-referrer, and frame protections, with HSTS limited to production HTTPS. Optional
-browser CORS is exact-HTTPS-origin only and permits the documented `DELETE` and
-`Idempotency-Key` contract without allowing arbitrary origins.
+At each useful checkpoint report: task IDs and files changed; exact candidate;
+checks passed/failed/not run and artifact paths; accepted A gates and remaining
+B/C gaps; Railway resources changed/left running and cost exposure; blockers
+with owner/action needed; next highest-priority unblocked task. Continue the next
+authorized slice rather than stopping at a plan or one component. Ordinary
+implementation does not need repeated approval; hardware, credentials, paid
+services, destructive operations and major product/legal decisions need the
+specific missing input. A documentation-only session reports documentation
+validation and the next software task, without claiming application progress.

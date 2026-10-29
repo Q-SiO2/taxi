@@ -1,5 +1,123 @@
 # TaxiMobile — Testing and Deployment Acceptance Map
 
+## Passenger scheduled pagination — 26 October 2026
+
+The [source packet](launch/scheduled-pagination.md) and
+[verification record](launch/scheduled-pagination-verification-20261026.json)
+cover explicit page two beyond twenty records, metadata/duplicate failures,
+bounded empty-page repair, current-page cancellation/readback, session recovery,
+logout and late-response races. Five rendered cases cover navigation/confirmation,
+unavailable reads, stale dialogs, pending accessible controls and all 12
+language/style variants. Final local selections pass 145 JVM and 156 Android-host
+tests; Android role entrypoints compile. Fresh successor native CI and actual
+hosted/device/field acceptance remain separate. Predecessor CI 240/242 is terminal
+green for its own sources, not for this later implementation.
+
+## Ride and scheduled-booking cancellation — 26 October 2026
+
+The [gateway correction](launch/journey-cancellation.md) adds ten common Ktor
+pipeline cases for caller cancellation in reads, first command attempts and the
+bounded second attempt. Assert propagation without a network-error substitution
+or further request, plus unchanged URL/method/key/body for an ordinary transport
+retry. The predecessor reproduces nine failures; the corrected focused JVM run
+passes ten, and the affected data/coordinator selection passes 109 JVM and 128
+Android-host cases. The [verification record](launch/journey-cancellation-verification-20261026.json)
+binds their source scopes; exact successor native CI remains required.
+Physical lifecycle, process-death and hosted acceptance remain open. This source
+work does not reopen the [Trial hosting gate](launch/staging-capacity-stop-20261026.json).
+
+## Active board alpha execution — 15 October 2026
+
+The owner has authorized implementation, Railway staging deployment and renewed
+emulator rehearsal. This supersedes the historical stop below. The fresh
+[board checkpoint](board-alpha.md) separates the green component/build evidence,
+two hosted REST lifecycles and one integrated native trip from outstanding final
+candidate, web localization, accessibility and physical-device acceptance.
+The owner selected emulator continuation; physical-device gates remain open.
+
+For fresh-location emulator rehearsal, compare both device clocks with the host
+and a server timestamp before booking. On the two owned API35 emulators, heavy
+VM load caused roughly 57 seconds of lag. Correct the emulator fixture before
+the trip using `adb -s <explicit-emulator> shell cmd alarm set-time <epoch-ms>`
+and verify alignment; record before/after offset. Do not adjust clocks during an
+active trip, rewrite native acquisition timestamps or relax backend freshness.
+The upload-history window (300 seconds) and dispatch window (30 seconds) differ,
+so a successful upload alone does not prove current matching eligibility.
+This instruction is for the named synthetic emulators; physical-device clock
+handling and readiness remain separate acceptance work.
+
+### Board APK configuration gate
+
+Build arguments and a handwritten manifest do not prove an APK's endpoint or
+feature flags. Before installation or presentation, inspect both actual APKs
+with the installed Android SDK `apkanalyzer` through
+`TaxiMobile/scripts/validate_board_apks.py`. Require the staging HTTPS API,
+approved map style, place search off, manual coordinate entry off, and each
+role's correct application ID. Reject missing/unreadable/mismatched constants.
+Archive the APK hashes, configuration result and exact source inputs together.
+Do not silently relabel an older candidate.
+
+From `TaxiMobile/`, the board build uses explicit properties:
+
+```powershell
+./gradlew.bat :androidApp:assemblePassengerDebug :androidApp:assembleDriverDebug -PtaximobileDebugApiBaseUrl=https://alpha-api-staging.up.railway.app -PtaximobileDebugMapStyleUrl=https://tiles.openfreemap.org/styles/positron -PtaximobileDebugPlaceSearchEnabled=false -PtaximobileDebugManualCoordinateEntry=false --max-workers=2
+../backend/.venv/Scripts/python.exe scripts/validate_board_apks.py --passenger-apk androidApp/build/outputs/apk/passenger/debug/androidApp-passenger-debug.apk --driver-apk androidApp/build/outputs/apk/driver/debug/androidApp-driver-debug.apk
+```
+
+Use `--sdk-root` if Android SDK command-line tools are outside the configured
+SDK or the standard Windows SDK location. This gate does not replace relevant
+native tests, installation-hash verification, actual journeys or hosted checks.
+The [17 October audit](redesign/board-alpha-evidence/native-configuration-audit-20261017.json)
+rejects v8's actual local-API/place-search configuration. V6/v7 pass that audit;
+v9 is rebuilt and independently verified. Preserve v8's incorrect original
+manifest and the corrective audit so it cannot be mistaken for accepted evidence.
+
+## Historical owner-directed rehearsal stop — 12 October 2026
+
+The owner rejected the current UI/UX and stopped the test. The
+[replacement plan](redesign/README.md) and [visual acceptance sequence](redesign/delivery.md)
+await confirmation before application redesign or renewed rehearsal. Local
+rehearsal API/routing were stopped; an already running Android build completed,
+but no redesign APK was installed. An already submitted corrected web upload
+returned HTTP 524 and was not accepted/retried after the stop. Existing cloud
+resources and evidence are preserved. Planning-board renders, font-load checks
+and static contrast pairs establish no native, hosted or release acceptance.
+
+## Alpha presentation verification — 12 October 2026
+
+**Hosted foundation verification:** the new Railway entrypoint plus existing
+configuration/Render adapter regression pack passed **113 tests**, zero failures,
+errors or skips (`.tools/alpha-delivery/railway-regressions.xml`); seven local
+launcher tests passed. Exact-host HTTP probes proved the emulator alias succeeds
+and an unrelated Host is rejected. Actual hosted pre-deploy checks prove PostGIS
+3.4, migration `20260908_0052`, 81 tables, constrained runtime privileges and the
+analytics refresh; API/worker readiness now passes. TLS health/compatibility and
+unauthorized request checks and both staging-targeted Android debug assemblies
+passed; passenger emulator startup is captured. These are component/integration
+checks, not accepted T phases, complete UD rows, provider delivery or alpha gates.
+
+The ten AG gates in [roadmap.md](roadmap.md) are the synthetic technical-alpha
+checklist; A-01–A-12 define dependencies and expected artifacts. They complement
+the full T0–T10 real-world promotion contract below and cannot accept a T phase
+or close a production GAP by themselves. A requires meaningful relevant automated
+tests, fresh candidate PostGIS correctness, actual role APKs/browser behavior,
+physical Android/location/network evidence, reviewed FR/AR renders, verified
+Railway full-stack behavior and a twice-run seven-beat rehearsal with fallback.
+Record exact candidate, environment and tests omitted; never weaken assertions
+or equate simulated-provider success with deployed-provider proof. iOS native/
+device and public distribution limitations remain visible for B/C.
+
+**Local execution update — 12 October 2026:** the full isolated PostGIS backend
+regression passed **1,159 tests**, with four warnings and no failures; T3 migration
+metadata, zero residual test clones, system evidence and the 81-table
+backup/restore check passed at migration `20260908_0052`. The report set is under
+`.tools/demo/full-backend-20261012-final/` (ignored local evidence). Shared Kotlin
+JVM tests passed **324/324**, Android-host tests **272/272**, and
+`infra/scripts/validate_docs.py` passed. These checks do not verify a hosted
+service, external providers or release readiness. The current passenger emulator
+rehearsal remains blocked at client-compatibility verification after correcting
+its debug API address; details and evidence limits are in [union_demo.md](union_demo.md).
+
 ## 1. Purpose
 
 This document defines how TaxiMobile progresses from source code and simulated
@@ -521,6 +639,14 @@ created by the existing API fixture, then injects an adversarial old live offer
 while the driver is available. It proves defense against that overlap, not an
 ordinary end-to-end dispatch journey. The driver lock is observed before release,
 both command transactions commit, and fresh reads confirm one active assignment.
+For the scheduled-first race, the fixture now places handoff near the current
+server clock and aligns the fresh location observation to that same instant. It
+moves the scheduled booking and its commitment protection window together,
+preserving the configured lead and duration. This corrects the fixture's prior
+four-hour-future observation, which the production freshness guard correctly
+rejected during an immediate-offer race. Production clock and location authority
+remain unchanged. The mixed-origin two-order pack passed in the full **1,159-test**
+run on 12 October 2026.
 
 #### Account-suspension assignment authority pack
 

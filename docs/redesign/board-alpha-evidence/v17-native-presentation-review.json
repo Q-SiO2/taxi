@@ -1,0 +1,59 @@
+{
+  "verified_utc": "2026-10-21T10:11:42.040757+00:00",
+  "candidate": "candidate-native-v17.json",
+  "passed": true,
+  "scope": "Selected account/receipt/earnings views on owned emulators, four styles and normal Notepad restart/1.3x text; current EN/FR/AR core views, no all-page acceptance",
+  "styles": "v17-native-account-style-review-r2.json",
+  "style_checks": 8,
+  "restart_checks": 2,
+  "large_text_checks": 2,
+  "localized_core": [
+    {
+      "record": "v17-native-passenger-en-core-review.json",
+      "sha256": "39375cfeb2df92619fdaa33121a34effe1c138978cbe70e0f01e5de3b04f543e",
+      "role": "passenger",
+      "locale": "en",
+      "configuration": "config: mcc310-mnc260-en-rUS,fr-rFR,ar-rMA-ldltr-sw360dp-w360dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x720-v31"
+    },
+    {
+      "record": "v17-native-passenger-fr-core-review.json",
+      "sha256": "07eea943bf695729cbac36cbf21f07b6696d342694bbc51359a7c7a24a1922d3",
+      "role": "passenger",
+      "locale": "fr",
+      "configuration": "config: mcc310-mnc260-fr-rFR,en-rUS,ar-rMA-ldltr-sw360dp-w360dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x720-v31"
+    },
+    {
+      "record": "v17-native-passenger-ar-core-review.json",
+      "sha256": "c99be35b13bf18307f91dff516be2ff5c74697965d408679bbf1582045f52d60",
+      "role": "passenger",
+      "locale": "ar",
+      "configuration": "config: mcc310-mnc260-ar-rMA,fr-rFR,en-rUS-ldrtl-sw360dp-w360dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x720-v31"
+    },
+    {
+      "record": "v17-native-driver-en-core-review.json",
+      "sha256": "28534afda636ba863695075a98764c1fd3bd660027b440598a6514dfc2fc524a",
+      "role": "driver",
+      "locale": "en",
+      "configuration": "config: mcc310-mnc260-en-rUS-ldltr-sw360dp-w360dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x720-v35"
+    },
+    {
+      "record": "v17-native-driver-fr-core-review.json",
+      "sha256": "73346ef52e62e9eb514637fbbf13c7380f16822b90d385dd07d8799dbdeee370",
+      "role": "driver",
+      "locale": "fr",
+      "configuration": "config: mcc310-mnc260-en-rUS-ldltr-sw360dp-w360dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x720-v35"
+    },
+    {
+      "record": "v17-native-driver-ar-core-review.json",
+      "sha256": "bea1d555d1891da9f5d265adf1d2f06e40a74574382577c382ace4a8d1ac03f6",
+      "role": "driver",
+      "locale": "ar",
+      "configuration": "config: mcc310-mnc260-en-rUS-ldltr-sw360dp-w360dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x720-v35"
+    }
+  ],
+  "visual_findings": [
+    "Selected history still exposes full UUID and long coordinate fallback; bounded v18 display correction required",
+    "No complete TalkBack, physical, native frame-cost or full style x locale x state claim"
+  ],
+  "original_harness_failure": "v17-native-account-style-review.json"
+}

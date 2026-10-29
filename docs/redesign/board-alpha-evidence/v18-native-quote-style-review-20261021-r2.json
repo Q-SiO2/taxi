@@ -1,0 +1,106 @@
+{
+  "candidate": "candidate-native-v18.json",
+  "started_utc": "2026-10-21T17:25:59.119910+00:00",
+  "passed": false,
+  "checks": [],
+  "scope": "Actual API31 passenger map-selected advisory quote and four style choices. UI labels/fare/control readiness and owner-scoped ride-list stability; not a hidden-coordinate or active-trip assertion.",
+  "apk_sha256": "007ac960ff0c147a77859bddbed3c80f25c6ff3601c51bd282f1c26ffc8d9681",
+  "before": [
+    {
+      "id": "93df2c70-fd2b-4e97-8df3-eee368699bea",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "d8daeaaa-fbe9-4614-af7e-45b896d30ecb",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "733abbcf-5d1b-4ff2-b7f3-3563052cbd25",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "cb951af4-f5ae-4d05-8a06-a28b49797f33",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "c55e696d-2bae-4640-8801-f50d2c20a42b",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "b7aac6ac-cc87-494d-aa95-842c21fc6759",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "98a253df-de13-4029-9daa-e538a520997d",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "e531e392-6f5b-4962-9964-3967a4afc418",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "082f8b85-6598-423d-aac5-cf31eec3f30a",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "e734ed2c-a37c-424b-9d84-b31e6811cd09",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "65f3d974-1cb3-4c43-9486-80cd1007c256",
+      "status": "UNMATCHED"
+    },
+    {
+      "id": "03756c30-f453-4d09-ae50-c3fa8f3782a4",
+      "status": "UNMATCHED"
+    }
+  ],
+  "pid_before": "2283",
+  "continuation_of": "v18-native-quote-style-review-20261021.json",
+  "scope_note": "Continue the already selected destination after the first unscrolled label observation failed; no second map tap or pickup lookup",
+  "existing_destination_selection": {
+    "path": "v18-quote-style-r2-existing-destination-selection.png",
+    "sha256": "595b936343efc1cdba3b2bd55be24e5b49b063122f925db661398f33f27f7394"
+  },
+  "initial_quote": {
+    "path": "v18-quote-style-r2-initial-quote.png",
+    "sha256": "9ed60bf25609faacd50fe922a03292b602303d15b833ed2c780dda2019f55504"
+  },
+  "failure_type": "RuntimeError",
+  "failure_detail": "Visible native quote resource not reached: pickup_selected_on_map",
+  "final_style": "Folded Streets",
+  "verifier_own_session_logout_status": 200,
+  "finished_utc": "2026-10-21T17:28:50.469370+00:00"
+}

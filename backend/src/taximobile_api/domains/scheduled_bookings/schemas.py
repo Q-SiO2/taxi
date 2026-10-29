@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
 from uuid import UUID
 
@@ -12,6 +12,31 @@ from taximobile_api.domains.rides.schemas import Coordinate
 
 class StrictModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
+
+
+class ScheduledLocalTimeRequest(StrictModel):
+    local_date: str = Field(pattern=r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$", min_length=10, max_length=10)
+    local_time: str = Field(pattern=r"^([01][0-9]|2[0-3]):[0-5][0-9]$", min_length=5, max_length=5)
+
+    @model_validator(mode="after")
+    def valid_clock(self):
+        date.fromisoformat(self.local_date)
+        return self
+
+
+class ScheduledLocalTimeOption(BaseModel):
+    scheduled_for: datetime
+    utc_offset_seconds: int = Field(ge=-64800, le=64800)
+
+
+class ScheduledLocalTimeResponse(BaseModel):
+    city_id: UUID
+    city_timezone: str
+    local_date: str
+    local_time: str
+    booking_available: bool
+    rules_version: str
+    options: list[ScheduledLocalTimeOption] = Field(max_length=2)
 
 
 class ScheduledBookingCreateRequest(StrictModel):

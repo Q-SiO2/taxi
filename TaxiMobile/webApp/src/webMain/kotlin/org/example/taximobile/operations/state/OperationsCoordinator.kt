@@ -1,5 +1,13 @@
 package org.example.taximobile.operations.state
 
+import org.example.taximobile.feature.ui.text.UiMessage
+import org.example.taximobile.operations.model.OperatorMembershipPage
+import org.example.taximobile.operations.model.OperatorMembershipRecord
+import org.example.taximobile.operations.model.OperatorMembershipCreateRequest
+import org.example.taximobile.operations.model.OperatorMembershipUpdateRequest
+import org.example.taximobile.operations.model.OperatorMembershipPolicyRequest
+import org.example.taximobile.feature.ui.text.ltrIsolate
+import taximobile.shared.generated.resources.*
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -11,6 +19,7 @@ import kotlin.random.Random
 import kotlin.time.Clock
 import org.example.taximobile.operations.data.OperationsApiException
 import org.example.taximobile.operations.data.OperationsGateway
+import org.example.taximobile.operations.data.withOperationsAccessRefresh
 import org.example.taximobile.operations.model.AccountSecurityAction
 import org.example.taximobile.operations.model.AccountSecurityActionRequest
 import org.example.taximobile.operations.model.AdministrativeGrantCreateRequest
@@ -130,7 +139,11 @@ enum class OperationsSessionPhase {
 data class OperationsMessage(
     val title: String,
     val detail: String,
-)
+    val localizedTitle: UiMessage? = null,
+    val localizedDetail: UiMessage? = null,
+) {
+    constructor(title: UiMessage, detail: UiMessage) : this("", "", title, detail)
+}
 
 data class OperationsUiState(
     val apiBaseUrl: String,
@@ -145,6 +158,8 @@ data class OperationsUiState(
     val destination: OperationsDestination = OperationsDestination.ROLLOUT,
     val scope: OperationsScope = OperationsScope(),
     val snapshot: OperationsSnapshot? = null,
+    val operatorMemberships: OperatorMembershipPage? = null,
+    val membershipCompletedKey: String? = null,
     val selectedDriverApplication: OperationsDriverApplicationDetail? = null,
     val selectedSupportCase: org.example.taximobile.operations.model.SupportCaseDetail? = null,
     val selectedSafetyCase: org.example.taximobile.operations.model.SafetyCaseDetail? = null,
@@ -186,8 +201,8 @@ class OperationsCoordinator(
             mutate {
                 it.copy(
                     error = OperationsMessage(
-                        title = "Check your credentials",
-                        detail = "Enter an email or phone identifier and a password of at least 8 characters.",
+                        title = UiMessage(Res.string.web_check_details),
+                        detail = UiMessage(Res.string.web_operations_credentials_invalid),
                     )
                 )
             }
@@ -245,8 +260,8 @@ class OperationsCoordinator(
             mutate {
                 it.copy(
                     error = OperationsMessage(
-                        "Check the verification code",
-                        "Enter a six-digit authenticator code or one complete recovery code.",
+                        UiMessage(Res.string.web_check_details),
+                        UiMessage(Res.string.web_mfa_code_invalid),
                     )
                 )
             }
@@ -332,8 +347,8 @@ class OperationsCoordinator(
                         showMfaStepUp = false,
                         mutationLabel = null,
                         notice = OperationsMessage(
-                            "Sensitive actions unlocked",
-                            "MFA was reverified. Step-up authorization is valid for ten minutes.",
+                            UiMessage(Res.string.web_mfa_verified),
+                            UiMessage(Res.string.web_step_up_confirmed),
                         ),
                     )
                 }
@@ -420,7 +435,7 @@ class OperationsCoordinator(
         val current = mutableState.value
         val selected = current.selectedSupportCase
         if (current.session?.hasPermission(MANAGE_SUPPORT_CASES) != true || selected == null) {
-            fail("Support case required", "Select a support case inside your granted city scope.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_case_choose_support))
             return
         }
         if (
@@ -429,8 +444,8 @@ class OperationsCoordinator(
             command.internalNote.trim().length !in 3..1000
         ) {
             fail(
-                "Triage details required",
-                "Choose a priority and provide separate participant and internal messages of 3 to 1,000 characters.",
+                UiMessage(Res.string.web_check_details),
+                UiMessage(Res.string.web_case_triage_invalid),
             )
             return
         }
@@ -451,8 +466,8 @@ class OperationsCoordinator(
                 it.copy(
                     selectedSupportCase = updated,
                     notice = OperationsMessage(
-                        "Support case claimed",
-                        "The participant acknowledgement was recorded and the case is ${updated.status}.",
+                        UiMessage(Res.string.web_case_claimed),
+                        UiMessage(Res.string.web_case_claimed_help),
                     ),
                 )
             }
@@ -463,7 +478,7 @@ class OperationsCoordinator(
         val current = mutableState.value
         val selected = current.selectedSupportCase
         if (current.session?.hasPermission(MANAGE_SUPPORT_CASES) != true || selected == null) {
-            fail("Support case required", "Select a support case inside your granted city scope.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_case_choose_support))
             return
         }
         val terminal = command.targetStatus in setOf("RESOLVED", "CLOSED")
@@ -475,8 +490,8 @@ class OperationsCoordinator(
             (!terminal && command.resolutionCode != null)
         ) {
             fail(
-                "Support transition incomplete",
-                "Use a documented next status, a controlled resolution code when required, and participant-safe/internal messages.",
+                UiMessage(Res.string.web_check_details),
+                UiMessage(Res.string.web_case_transition_invalid),
             )
             return
         }
@@ -496,7 +511,7 @@ class OperationsCoordinator(
             mutate {
                 it.copy(
                     selectedSupportCase = updated,
-                    notice = OperationsMessage("Support case updated", "The case is now ${updated.status}."),
+                    notice = OperationsMessage(UiMessage(Res.string.web_case_updated), UiMessage(Res.string.web_case_updated_help)),
                 )
             }
         }
@@ -510,13 +525,13 @@ class OperationsCoordinator(
             "DISCRIMINATION", "VEHICLE_SAFETY", "OTHER_SAFETY",
         )
         if (current.session?.hasPermission(MANAGE_SUPPORT_CASES) != true || selected == null) {
-            fail("Support case required", "Select a ride-linked support case inside your granted city scope.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_case_choose_linked_support))
             return
         }
         if (selected.rideId == null || command.category !in categories || command.internalNote.trim().length !in 3..1000) {
             fail(
-                "Safety handoff incomplete",
-                "A ride-linked case, controlled safety category, and internal handoff note are required.",
+                UiMessage(Res.string.web_check_details),
+                UiMessage(Res.string.web_case_handoff_invalid),
             )
             return
         }
@@ -531,8 +546,8 @@ class OperationsCoordinator(
             }
             reloadNow(mutableState.value.scope, initial = false)
             notice(
-                "Safety handoff created",
-                "Restricted safety report ${receipt.safetyReportId.take(8)} is ${receipt.status}. Safety details require a safety grant.",
+                UiMessage(Res.string.web_case_handoff_recorded),
+                UiMessage(Res.string.web_case_handoff_recorded_help, listOf(ltrIsolate(receipt.safetyReportId.take(8)))),
             )
         }
     }
@@ -541,7 +556,7 @@ class OperationsCoordinator(
         val current = mutableState.value
         val selected = current.selectedSafetyCase
         if (current.session?.hasPermission(MANAGE_SAFETY_CASES) != true || selected == null) {
-            fail("Safety case required", "Select a safety case inside your granted city scope.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_case_choose_safety))
             return
         }
         val terminal = command.targetStatus in setOf("RESOLVED", "CLOSED")
@@ -553,8 +568,8 @@ class OperationsCoordinator(
             (!terminal && command.resolutionCode != null)
         ) {
             fail(
-                "Safety transition incomplete",
-                "Use a documented next status, participant-safe message, internal note, and controlled resolution code when required.",
+                UiMessage(Res.string.web_check_details),
+                UiMessage(Res.string.web_case_safety_invalid),
             )
             return
         }
@@ -574,7 +589,7 @@ class OperationsCoordinator(
             mutate {
                 it.copy(
                     selectedSafetyCase = updated,
-                    notice = OperationsMessage("Safety case updated", "The case is now ${updated.status}."),
+                    notice = OperationsMessage(UiMessage(Res.string.web_case_updated), UiMessage(Res.string.web_case_updated_help)),
                 )
             }
         }
@@ -585,11 +600,11 @@ class OperationsCoordinator(
         val permission = if (alert.caseType == "SUPPORT") MANAGE_SUPPORT_CASES else MANAGE_SAFETY_CASES
         val visible = current.snapshot?.caseOperations?.alerts?.items?.any { it.id == alert.id } == true
         if (current.session?.hasPermission(permission) != true || !visible) {
-            fail("Overdue alert required", "Select an alert inside your granted queue and city scope.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_case_choose_alert))
             return
         }
         if (reason.trim().length !in 3..240) {
-            fail("Acknowledgement reason required", "Enter a bounded reason between 3 and 240 characters.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_case_ack_invalid))
             return
         }
         launchMutation("Acknowledging overdue ${alert.caseType.lowercase()} alert") {
@@ -602,7 +617,7 @@ class OperationsCoordinator(
                 )
             }
             reloadNow(mutableState.value.scope, initial = false)
-            notice("Pager acknowledged", "Repeat paging stopped; case ownership and response remain required.")
+            notice(UiMessage(Res.string.web_case_alert_acknowledged), UiMessage(Res.string.web_case_alert_acknowledged_help))
         }
     }
 
@@ -615,7 +630,7 @@ class OperationsCoordinator(
         }
         val reference = command.authorityReference.trim()
         if (current.session?.hasPermission(MANAGE_CASE_RETENTION) != true || !selectedMatches) {
-            fail("Retention authority required", "Select an authorized case with platform retention permission.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_case_retention_access))
             return
         }
         if (
@@ -627,13 +642,13 @@ class OperationsCoordinator(
             command.reviewDueAt.trim().length !in 20..40
         ) {
             fail(
-                "Legal hold details required",
-                "Choose a controlled reason, a non-secret authority reference, and a timezone-aware review timestamp.",
+                UiMessage(Res.string.web_check_details),
+                UiMessage(Res.string.web_case_hold_invalid),
             )
             return
         }
         launchMutation("Placing ${command.caseKind.lowercase()} legal hold") {
-            val hold = withAccessToken {
+            withAccessToken {
                 gateway.caseOperations.placeLegalHold(
                     it,
                     buildCaseIdempotencyKey("case-hold", command.caseId),
@@ -645,8 +660,8 @@ class OperationsCoordinator(
             }
             reloadNow(mutableState.value.scope, initial = false)
             notice(
-                "Legal hold active",
-                "${hold.reasonCode.replace('_', ' ')} preserves ${hold.caseKind.lowercase()} ${hold.caseId.take(8)} until controlled release.",
+                UiMessage(Res.string.web_case_hold_active),
+                UiMessage(Res.string.web_case_hold_active_help),
             )
         }
     }
@@ -656,11 +671,11 @@ class OperationsCoordinator(
         val visible = current.snapshot?.caseOperations?.legalHolds?.items
             ?.any { it.id == hold.id && it.status == "ACTIVE" } == true
         if (current.session?.hasPermission(MANAGE_CASE_RETENTION) != true || !visible) {
-            fail("Active legal hold required", "Select an active hold inside your authorized city scope.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_case_choose_hold))
             return
         }
         if (reasonCode !in setOf("OBLIGATION_ENDED", "REQUEST_WITHDRAWN", "SUPERSEDED", "PLACED_IN_ERROR")) {
-            fail("Release reason required", "Choose a controlled legal-hold release reason.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_case_release_invalid))
             return
         }
         launchMutation("Releasing legal hold ${hold.id.take(8)}") {
@@ -674,8 +689,8 @@ class OperationsCoordinator(
             }
             reloadNow(mutableState.value.scope, initial = false)
             notice(
-                "Legal hold released",
-                "The hold was released. Any already-due case remains queued for the next retention worker pass.",
+                UiMessage(Res.string.web_case_hold_released),
+                UiMessage(Res.string.web_case_hold_released_help),
             )
         }
     }
@@ -867,6 +882,70 @@ class OperationsCoordinator(
                 initial = false,
             )
             notice("Operator created", "${created.name} is ${created.status}; review and activate it before assignment.")
+        }
+    }
+
+    private fun membershipOperator(): OperatorRecord? {
+        val current = mutableState.value
+        val operator = current.snapshot?.operators?.items?.firstOrNull { it.id == current.scope.operatorId }
+        if (current.session?.hasPermission(MANAGE_OPERATORS) != true || operator?.cooperativeId == null) {
+            fail(UiMessage(Res.string.web_members_title), UiMessage(Res.string.web_members_scope))
+            return null
+        }
+        return operator
+    }
+
+    fun loadOperatorMemberships(page: Int = 1) {
+        val operator = membershipOperator() ?: return
+        if (page < 1) return
+        launchMutation("Loading member register") {
+            val result = withAccessToken { gateway.controlPlane.memberships(it, operator.id, page) }
+            mutate { it.copy(operatorMemberships = result) }
+        }
+    }
+
+    fun enrollOperatorMember(request: OperatorMembershipCreateRequest, key: String) {
+        val operator = membershipOperator() ?: return
+        launchMutation("Recording membership") {
+            runMembershipCommand(operator.id, 1, key) {
+                withAccessToken { gateway.controlPlane.enrollMember(it, operator.id, key, request) }
+            }
+        }
+    }
+
+    fun updateOperatorMember(member: OperatorMembershipRecord, request: OperatorMembershipUpdateRequest, key: String) {
+        val operator = membershipOperator() ?: return
+        val page = mutableState.value.operatorMemberships
+        if (page?.operatorId != operator.id || page.items.none { it.id == member.id && it.updatedAt == member.updatedAt }) return
+        launchMutation("Updating membership") {
+            runMembershipCommand(operator.id, page.page, key) {
+                withAccessToken { gateway.controlPlane.updateMember(it, operator.id, member.id, key, request) }
+            }
+        }
+    }
+
+    private suspend fun runMembershipCommand(operatorId: String, page: Int, key: String, command: suspend () -> Unit) {
+        try {
+            command()
+        } catch (error: OperationsApiException) {
+            if (error.statusCode == 409) {
+                val latest = withAccessToken { gateway.controlPlane.memberships(it, operatorId, page) }
+                mutate { it.copy(operatorMemberships = latest) }
+            }
+            throw error
+        }
+        mutate { it.copy(membershipCompletedKey = key) }
+        notice(UiMessage(Res.string.web_members_saved), UiMessage(Res.string.web_members_saved_help))
+        val result = withAccessToken { gateway.controlPlane.memberships(it, operatorId, page) }
+        mutate { it.copy(operatorMemberships = result) }
+    }
+
+    fun updateOperatorMembershipPolicy(required: Boolean) {
+        val operator = membershipOperator() ?: return
+        launchMutation("Updating membership policy") {
+            withAccessToken { gateway.controlPlane.updateMembershipPolicy(it, operator.id, OperatorMembershipPolicyRequest(required)) }
+            reloadNow(mutableState.value.scope, initial = false)
+            notice(UiMessage(Res.string.web_members_saved), UiMessage(Res.string.web_members_policy_help))
         }
     }
 
@@ -1116,17 +1195,17 @@ class OperationsCoordinator(
         val current = mutableState.value
         val cityId = current.scope.cityId
         if (current.session?.hasPermission(MANAGE_DRIVER_REQUIREMENTS) != true || cityId == null) {
-            fail("City requirement scope required", "Select an authorized city with requirement-management permission.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_req_scope_help))
             return
         }
         if (request.items.isEmpty()) {
-            fail("Requirement item required", "A version must contain at least one explicit requirement item.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_req_item_required_help))
             return
         }
         launchMutation("Creating driver requirement version ${request.version}") {
             val created = withAccessToken { gateway.createDriverRequirementVersion(it, cityId, request) }
             reloadNow(mutableState.value.scope, initial = false)
-            notice("Requirement draft created", "${created.version} is DRAFT at backend version ${created.optimisticVersion}.")
+            notice(UiMessage(Res.string.web_req_created_notice), UiMessage(Res.string.web_req_confirmed_notice, listOf(ltrIsolate(created.version), created.optimisticVersion)))
         }
     }
 
@@ -1136,13 +1215,13 @@ class OperationsCoordinator(
     ) {
         val current = mutableState.value
         if (current.session?.hasPermission(MANAGE_DRIVER_REQUIREMENTS) != true || version.cityId != current.scope.cityId) {
-            fail("Not authorized", "The selected requirement version is outside the active authorized city.")
+            fail(UiMessage(Res.string.web_error_title), UiMessage(Res.string.web_scope_denied))
             return
         }
         launchMutation("Updating driver requirement version ${version.version}") {
             val updated = withAccessToken { gateway.updateDriverRequirementVersion(it, version.id, request) }
             reloadNow(mutableState.value.scope, initial = false)
-            notice("Requirement draft saved", "The backend confirmed optimistic version ${updated.optimisticVersion}.")
+            notice(UiMessage(Res.string.web_req_saved_notice), UiMessage(Res.string.web_req_confirmed_notice, listOf(ltrIsolate(updated.version), updated.optimisticVersion)))
         }
     }
 
@@ -1153,15 +1232,15 @@ class OperationsCoordinator(
     ) {
         val current = mutableState.value
         if (current.session?.hasPermission(MANAGE_DRIVER_REQUIREMENTS) != true || version.cityId != current.scope.cityId) {
-            fail("Not authorized", "The selected requirement version is outside the active authorized city.")
+            fail(UiMessage(Res.string.web_error_title), UiMessage(Res.string.web_scope_denied))
             return
         }
         if (reason.trim().length !in 3..240) {
-            fail("Review reason required", "Enter a reason between 3 and 240 characters.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_req_reason_help))
             return
         }
         if (targetStatus !in setOf("IN_REVIEW", "ACTIVE")) {
-            fail("Unsupported transition", "Refresh the version and choose a documented transition.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_req_transition_help))
             return
         }
         launchMutation("Moving requirement version ${version.version} to $targetStatus") {
@@ -1169,7 +1248,7 @@ class OperationsCoordinator(
                 gateway.transitionDriverRequirementVersion(it, version, targetStatus, reason)
             }
             reloadNow(mutableState.value.scope, initial = false)
-            notice("Requirement status updated", "${updated.version} is now ${updated.status}.")
+            notice(UiMessage(Res.string.web_req_updated_notice), UiMessage(Res.string.web_req_confirmed_notice, listOf(ltrIsolate(updated.version), updated.optimisticVersion)))
         }
     }
 
@@ -1210,58 +1289,58 @@ class OperationsCoordinator(
     fun createPaymentRecipient(request: PaymentRecipientCreateRequest) {
         val cityId = paymentMutationScope(MANAGE_PAYMENT_CAPABILITIES, request.operatorId) ?: return
         launchMutation("Creating payment recipient ${request.label}") {
-            val created = withAccessToken {
+            withAccessToken {
                 gateway.paymentOperations.createRecipient(it, cityId, request)
             }
             reloadNow(mutableState.value.scope, initial = false)
-            notice("Recipient draft created", "${created.label} must be independently verified before use.")
+            notice(UiMessage(Res.string.web_pay_recipient_created), UiMessage(Res.string.web_pay_recipient_created_help))
         }
     }
 
     fun transitionPaymentRecipient(record: PaymentRecipientRecord, target: String, reason: String) {
         if (!paymentRecordInScope(MANAGE_PAYMENT_CAPABILITIES, record.cityId, record.operatorId)) return
         if (target !in setOf("verify", "retire") || reason.trim().length !in 3..240) {
-            fail("Valid reason required", "Choose verify or retire and enter an audited reason between 3 and 240 characters.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_pay_transition_help))
             return
         }
         launchMutation("${target.replaceFirstChar { it.uppercase() }} payment recipient ${record.label}") {
-            val updated = withAccessToken {
+            withAccessToken {
                 gateway.paymentOperations.transitionRecipient(it, record, target, reason.trim())
             }
             reloadNow(mutableState.value.scope, initial = false)
-            notice("Recipient status updated", "${updated.label} is now ${updated.status}.")
+            notice(UiMessage(Res.string.web_pay_recipient_updated), UiMessage(Res.string.web_pay_record_confirmed))
         }
     }
 
     fun createPaymentCapability(request: PaymentCapabilityCreateRequest) {
         val cityId = paymentMutationScope(MANAGE_PAYMENT_CAPABILITIES, request.operatorId) ?: return
         launchMutation("Creating payment capability ${request.version}") {
-            val created = withAccessToken {
+            withAccessToken {
                 gateway.paymentOperations.createCapability(it, cityId, request)
             }
             reloadNow(mutableState.value.scope, initial = false)
-            notice("Payment capability draft created", "${created.version} is DRAFT and not passenger-visible.")
+            notice(UiMessage(Res.string.web_pay_methods_created), UiMessage(Res.string.web_pay_methods_created_help))
         }
     }
 
     fun transitionPaymentCapability(record: PaymentCapabilityRecord, target: String, reason: String) {
         if (!paymentRecordInScope(MANAGE_PAYMENT_CAPABILITIES, record.cityId, record.operatorId)) return
         if (target !in setOf("submit", "approve", "activate") || reason.trim().length !in 3..240) {
-            fail("Valid review command required", "Choose the next documented transition and enter a reason between 3 and 240 characters.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_pay_transition_help))
             return
         }
         launchMutation("Moving payment capability ${record.version} through $target") {
-            val updated = withAccessToken {
+            withAccessToken {
                 gateway.paymentOperations.transitionCapability(it, record, target, reason.trim())
             }
             reloadNow(mutableState.value.scope, initial = false)
-            notice("Payment capability updated", "${updated.version} is now ${updated.status}.")
+            notice(UiMessage(Res.string.web_pay_methods_updated), UiMessage(Res.string.web_pay_record_confirmed))
         }
     }
 
     fun verifyManualTransfer(paymentId: String, settlementReference: String) {
         if (!reconciliationRecordVisible(paymentId) || settlementReference.trim().length !in 3..120) {
-            fail("Settlement evidence required", "Select a visible claim and enter its independent statement reference.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_pay_settlement_help))
             return
         }
         launchMutation("Verifying manual transfer") {
@@ -1271,13 +1350,13 @@ class OperationsCoordinator(
                 )
             }
             reloadNow(mutableState.value.scope, initial = false)
-            notice("Transfer reconciled", "The backend completed payment and created the driver earning atomically.")
+            notice(UiMessage(Res.string.web_pay_reconciled), UiMessage(Res.string.web_pay_reconciled_help))
         }
     }
 
     fun rejectManualTransfer(paymentId: String, reason: String) {
         if (!reconciliationRecordVisible(paymentId) || reason.trim().length !in 3..500) {
-            fail("Rejection reason required", "Select a visible claim and enter a bounded correction reason.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_pay_reject_help))
             return
         }
         launchMutation("Rejecting manual transfer claim") {
@@ -1287,13 +1366,13 @@ class OperationsCoordinator(
                 )
             }
             reloadNow(mutableState.value.scope, initial = false)
-            notice("Claim rejected", "The payment returned to PENDING; no earning was created.")
+            notice(UiMessage(Res.string.web_pay_claim_rejected), UiMessage(Res.string.web_pay_claim_rejected_help))
         }
     }
 
     fun recordPaymentRefund(paymentId: String, request: PaymentRefundCreateRequest) {
         if (mutableState.value.session?.hasPermission(RECONCILE_PAYMENTS) != true || paymentId.isBlank()) {
-            fail("Not authorized", "Payment reconciliation permission and a payment ID are required.")
+            fail(UiMessage(Res.string.web_error_title), UiMessage(Res.string.web_pay_refund_access_help))
             return
         }
         launchMutation("Recording confirmed refund") {
@@ -1303,7 +1382,10 @@ class OperationsCoordinator(
                 )
             }
             reloadNow(mutableState.value.scope, initial = false)
-            notice("Refund recorded", "${recorded.amount} ${recorded.currency} was appended; the original payment remains auditable.")
+            notice(
+                UiMessage(Res.string.web_pay_refund_recorded),
+                UiMessage(Res.string.web_pay_refund_recorded_help, listOf(ltrIsolate("${recorded.amount} ${recorded.currency}"))),
+            )
         }
     }
 
@@ -1467,11 +1549,11 @@ class OperationsCoordinator(
             current.session?.hasPermission(REVIEW_DRIVER_APPLICATIONS) != true ||
             selected?.id != applicationId
         ) {
-            fail("Application review required", "Select the application inside your granted city scope before reading a document.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_recruit_select_review_help))
             return
         }
         if (!browserProtectedDocumentDownloadAvailable) {
-            fail("Browser download unavailable", "Use a supported browser build for protected document retrieval.")
+            fail(UiMessage(Res.string.web_error_title), UiMessage(Res.string.web_recruit_download_unavailable))
             return
         }
         launchMutation("Retrieving protected document") {
@@ -1482,8 +1564,8 @@ class OperationsCoordinator(
             mutate {
                 it.copy(
                     notice = OperationsMessage(
-                        "Protected document downloaded",
-                        "The copy is for this review task only. Do not upload it to notes, analytics, or shared storage.",
+                        UiMessage(Res.string.web_recruit_downloaded_notice),
+                        UiMessage(Res.string.web_recruit_downloaded_help),
                     ),
                 )
             }
@@ -1494,15 +1576,15 @@ class OperationsCoordinator(
         val current = mutableState.value
         val selected = current.selectedDriverApplication?.application
         if (current.session?.hasPermission(REVIEW_DRIVER_APPLICATIONS) != true || selected == null) {
-            fail("Application review required", "Select an application inside your granted city scope.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_recruit_select_review_help))
             return
         }
         if (request.expectedVersion != selected.optimisticVersion) {
-            fail("Application version changed", "Refresh the application before recording a decision.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_recruit_refresh_review_help))
             return
         }
         if (request.reasonCode.length !in 3..64 || request.applicantSafeMessage.trim().length !in 3..500) {
-            fail("Decision details required", "Choose a reason and enter an applicant-safe message of 3 to 500 characters.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_recruit_decision_help_invalid))
             return
         }
         val idempotencyKey = buildReviewIdempotencyKey(selected.id)
@@ -1515,8 +1597,8 @@ class OperationsCoordinator(
                 it.copy(
                     selectedDriverApplication = detail,
                     notice = OperationsMessage(
-                        "Driver application updated",
-                        "${detail.applicantDisplayName} is now ${detail.application.status} at backend version ${detail.application.optimisticVersion}.",
+                        UiMessage(Res.string.web_recruit_updated_notice),
+                        UiMessage(Res.string.web_app_version_confirmed, listOf(detail.application.optimisticVersion)),
                     ),
                 )
             }
@@ -1539,7 +1621,7 @@ class OperationsCoordinator(
             action !in cityAuthorizationActions(authorization.status) || reasonCode !in action.reasons ||
             confirmation.trim() != authorization.id
         ) {
-            fail("Review the city authorization", "Refresh the application, choose a valid reason, and confirm the exact authorization ID.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_auth_review_help))
             return
         }
         val key = buildReviewIdempotencyKey(application.id)
@@ -1551,8 +1633,8 @@ class OperationsCoordinator(
             reloadNow(mutableState.value.scope, initial = false)
             mutate { it.copy(
                 selectedDriverApplication = detail,
-                notice = OperationsMessage("City authorization updated",
-                    "${detail.application.cityCode}: ${detail.application.authorization?.status}. Existing ride history is preserved."),
+                notice = OperationsMessage(UiMessage(Res.string.web_auth_updated_notice),
+                    UiMessage(Res.string.web_auth_updated_help, listOf(ltrIsolate(detail.application.cityCode)))),
             ) }
         }
     }
@@ -1892,13 +1974,13 @@ class OperationsCoordinator(
             var logoutError: OperationsMessage? = null
             if (accessToken != null) {
                 try {
-                    gateway.logout(accessToken)
+                    withAccessToken { gateway.logout(it) }
                 } catch (cancelled: CancellationException) {
                     throw cancelled
                 } catch (_: Throwable) {
                     logoutError = OperationsMessage(
-                        "Local session cleared",
-                        "The server-side logout could not be confirmed. Do not reuse this browser session; the short operations access token will expire.",
+                        UiMessage(Res.string.web_logout_local_title),
+                        UiMessage(Res.string.web_logout_unconfirmed),
                     )
                 }
             }
@@ -1951,8 +2033,8 @@ class OperationsCoordinator(
                     isRefreshing = false,
                     showMfaStepUp = true,
                     error = OperationsMessage(
-                        "Reverify before continuing",
-                        "Enter a current authenticator or recovery code. The original command was not executed; confirm it again after verification.",
+                        UiMessage(Res.string.web_step_up_title),
+                        UiMessage(Res.string.web_step_up_help),
                     ),
                 )
             }
@@ -1968,6 +2050,10 @@ class OperationsCoordinator(
     }
 
     private fun fail(title: String, detail: String) = mutate {
+        it.copy(mutationLabel = null, error = OperationsMessage(title, detail), notice = null)
+    }
+
+    private fun fail(title: UiMessage, detail: UiMessage) = mutate {
         it.copy(mutationLabel = null, error = OperationsMessage(title, detail), notice = null)
     }
 
@@ -1994,7 +2080,7 @@ class OperationsCoordinator(
             current.session?.hasPermission(permission) != true || cityId == null ||
             current.scope.operatorId == null || current.scope.operatorId != operatorId
         ) {
-            fail("Payment scope required", "Select one authorized city and operator with the required payment permission.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_pay_scope_required_help))
             return null
         }
         return cityId
@@ -2003,7 +2089,7 @@ class OperationsCoordinator(
     private fun paymentRecordInScope(permission: String, cityId: String, operatorId: String): Boolean {
         val selectedCity = paymentMutationScope(permission, operatorId) ?: return false
         if (cityId != selectedCity) {
-            fail("Outside active scope", "Refresh and select the city that owns this payment record.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_pay_outside_scope_help))
             return false
         }
         return true
@@ -2082,6 +2168,10 @@ class OperationsCoordinator(
         it.copy(mutationLabel = null, notice = OperationsMessage(title, detail), error = null)
     }
 
+    private fun notice(title: UiMessage, detail: UiMessage) = mutate {
+        it.copy(mutationLabel = null, notice = OperationsMessage(title, detail), error = null)
+    }
+
     private fun reload(requestedScope: OperationsScope) {
         reloadJob?.cancel()
         reloadJob = scope.launch {
@@ -2143,15 +2233,10 @@ class OperationsCoordinator(
     private suspend fun <T> withAccessToken(block: suspend (String) -> T): T {
         val active = tokens
             ?: throw OperationsApiException(401, "The operations session is no longer available.")
-        return try {
-            block(active.accessToken)
-        } catch (error: OperationsApiException) {
-            if (error.statusCode != 401) throw error
-            val refreshed = gateway.refresh(active.refreshToken, active.csrfToken)
+        return withOperationsAccessRefresh(active, gateway::refresh, { refreshed ->
             tokens = refreshed
             mutate { it.copy(authenticationStrength = refreshed.authenticationStrength) }
-            block(refreshed.accessToken)
-        }
+        }, block)
     }
 
     private fun expireSession() {
@@ -2203,24 +2288,23 @@ private fun buildSecurityIncidentIdempotencyKey(operation: String, resourceId: S
 private fun buildGrantIdempotencyKey(operation: String, resourceId: String): String =
     "grant-$operation-${resourceId.take(12)}-${Clock.System.now().toEpochMilliseconds()}-${Random.nextInt(100000, 999999)}"
 
-private fun Throwable.toMessage(signIn: Boolean = false): OperationsMessage = when (this) {
-    is OperationsApiException -> when (statusCode) {
-        401 -> OperationsMessage(
-            if (signIn) "Sign-in failed" else "Session rejected",
-            message,
-        )
-        403 -> OperationsMessage("Outside granted scope", message)
-        404 -> OperationsMessage("Resource not available", message)
-        409 -> OperationsMessage(
-            "State changed",
-            "$message The current backend state has been reloaded; review it before trying a new command.",
-        )
-        429 -> OperationsMessage("Too many attempts", message)
-        503 -> OperationsMessage("Operations access unavailable", message)
-        else -> OperationsMessage("Operations request failed", message)
+internal fun Throwable.toMessage(signIn: Boolean = false): OperationsMessage {
+    val status = (this as? OperationsApiException)?.statusCode
+    val title = when {
+        status == 401 && signIn -> Res.string.web_auth_rejected_title
+        status == 401 -> Res.string.web_session_title
+        else -> Res.string.web_error_title
     }
-    else -> OperationsMessage(
-        "Cannot reach the operations API",
-        "Check that the backend is running at the displayed API URL and that its exact CORS origin allows this web app.",
-    )
+    val detail = when (status) {
+        401 -> if (signIn) Res.string.web_auth_rejected_detail else Res.string.web_session_detail
+        403 -> Res.string.web_scope_denied
+        404 -> Res.string.web_record_unavailable
+        409 -> Res.string.web_record_changed
+        422 -> Res.string.web_invalid_request
+        429 -> Res.string.web_rate_limited
+        503 -> Res.string.web_service_unavailable
+        null -> Res.string.web_connection_unavailable
+        else -> Res.string.web_request_unconfirmed
+    }
+    return OperationsMessage(UiMessage(title), UiMessage(detail))
 }

@@ -1,0 +1,10 @@
+{
+  "observed_utc": "2026-10-22T23:42:59.134470+00:00",
+  "deployment_id": "10348a72-65f4-4b80-8474-e8a950ccd282",
+  "filter": "FATAL OR PANIC OR \"password authentication failed\"",
+  "requested_window": "24h",
+  "matches": 0,
+  "limit": 1000,
+  "truncated": false,
+  "scope": "Focused provider log query resolves the earlier1000-record general DB sample limit for these specific patterns only. Raw rows protected by DPAPI; not a full forensic clearance."
+}

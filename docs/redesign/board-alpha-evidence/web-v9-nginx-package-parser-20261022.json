@@ -1,0 +1,17 @@
+{
+  "verified_utc": "2026-10-22T18:09:56.302459+00:00",
+  "project_id": "9f841575-c4f3-4a4d-bb83-2e6ff92e436e",
+  "environment_id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+  "service_id": "2d8ab069-2310-46ff-afe0-8fd4f42a5bd1",
+  "source": ".tools/alpha-delivery/web-board-presentation-v9/nginx.conf",
+  "source_sha256": "267ed405c218f33ac1284b44cca305e64751002cc27f551bad1745568ae63b85",
+  "normalized_test_input_sha256": "267ed405c218f33ac1284b44cca305e64751002cc27f551bad1745568ae63b85",
+  "nginx_version": "nginx version: nginx/1.28.3",
+  "return_code": 0,
+  "syntax_ok": true,
+  "configuration_test_successful": true,
+  "passed": true,
+  "test_only_override": "PID directive points to a generated writable temporary file; original candidate PID directive and all other production source unchanged",
+  "scope": "Exact prepared web v9 package nginx configuration including validated binary alias parsed by nginx -t on the existing authorized staging web container. CRLF normalized by Python text read; resolver substitution matches existing startup logic. Only generated /tmp source/resolver/PID test files written then removed. Earlier parser syntax passed but full test was denied access to the existing live PID; no permission change attempted. No reload, signal, live config/static asset change, service restart, deployment, permission or volume operation.",
+  "limitations": "Parser acceptance with an explicitly isolated test PID only; production PID/filesystem permissions remain a container rollout check. Web v9 optimized assets, container packaging, actual rollout and hosted/browser checks remain separate."
+}

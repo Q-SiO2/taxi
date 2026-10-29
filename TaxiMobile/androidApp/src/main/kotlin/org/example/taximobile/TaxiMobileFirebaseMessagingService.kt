@@ -15,7 +15,7 @@ class TaxiMobileFirebaseMessagingService : FirebaseMessagingService() {
         val role = AppRole.valueOf(BuildConfig.APP_ROLE)
         AndroidPushRegistration.submit(
             registrationId = installationId,
-            coordinator = AndroidAppDependencies(applicationContext, role).appCoordinator,
+            coordinator = AndroidAppDependencies.forApplication(applicationContext, role).appCoordinator,
         )
     }
 

@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-20T09:24:59.033892+00:00",
+  "tests": {
+    "tests": 2,
+    "failures": 2,
+    "errors": 0,
+    "skipped": 0
+  },
+  "scope": "Identity callback adapter reproduces original native binding semantics; retained provider listener sees obsolete active-trip Boolean in both directions",
+  "sources": [
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/maps/MapLibreTripMap.kt",
+      "sha256": "b6fe52acd4627fec682444efdfa69a394759c9c8080b284327393bf92ec6cd4b"
+    },
+    {
+      "path": "TaxiMobile/shared/src/androidMain/kotlin/org/example/taximobile/feature/maps/MapLibreTripMap.android.kt",
+      "sha256": "7ff986f2d6dabe3131887c75ec5a402b24454990e901fbc7f76fc92eb9f7c7de"
+    },
+    {
+      "path": "TaxiMobile/shared/src/iosMain/kotlin/org/example/taximobile/feature/maps/MapLibreTripMap.ios.kt",
+      "sha256": "7ff986f2d6dabe3131887c75ec5a402b24454990e901fbc7f76fc92eb9f7c7de"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/maps/MapCoordinateCallbackUiTest.kt",
+      "sha256": "822df886293bc3e9c9a67e4fab223a31c11b1441fa2ad3a9fd51233f96b38a8d"
+    }
+  ],
+  "report": ".tools/alpha-delivery/map-callback-red-20261020/TEST-org.example.taximobile.feature.maps.MapCoordinateCallbackUiTest.xml",
+  "log": ".tools/alpha-delivery/map-callback-red-20261020.log",
+  "native_failure": "native-v13-post-trip-map-rejection-20261020.json",
+  "limitations": [
+    "JVM Compose boundary test models pinned library retaining its first listener",
+    "Replacement Android same-instance rebooking and iOS runtime acceptance remain separate"
+  ]
+}

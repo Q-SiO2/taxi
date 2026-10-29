@@ -1,0 +1,30 @@
+{
+  "verified_utc": "2026-10-18T19:21:55.481288+00:00",
+  "scope": "Owned synthetic editable application; negative backend contract probe plus local request-schema validation",
+  "web_candidate": "candidate-web-v7.json",
+  "account": "Omar Empty State synthetic cohort",
+  "application_id": "0de83ae6-2f00-4dbd-8f23-34b491e5698e",
+  "city_code": "casablanca",
+  "requirement_version": "legacy-compatibility-v1",
+  "before": {
+    "status": "NOT_STARTED",
+    "revision": 1,
+    "complete": true
+  },
+  "rejected_payload": {
+    "expected_version": 1
+  },
+  "negative_patch_http": 422,
+  "after": {
+    "status": "NOT_STARTED",
+    "revision": 1,
+    "complete": true
+  },
+  "local_schema_accepts_explicit_empty_arrays": true,
+  "gateway_source_finding": "Empty answers/evidence lists become null and are omitted, so the request contains no supplied changes. Backend removal semantics remain explicit IDs.",
+  "limitations": [
+    "The save failed in v7; do not mark the editable flow passed",
+    "The corrected payload was validated locally, not submitted directly to the hosted API",
+    "Keep this draft for the replacement UI save/submit rehearsal; no approval or withdrawal occurred"
+  ]
+}

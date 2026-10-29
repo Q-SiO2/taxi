@@ -1,0 +1,75 @@
+{
+  "observed_utc": "2026-10-24T18:42:13.968Z",
+  "commit": "1e30102c5e6d0c863e02c37bcf48cb5f4488a8ad",
+  "tree": "bc27caa1f7455f7b781059251838a2984c5b2768",
+  "run_id": 40119576061,
+  "run_number": 234,
+  "url": "https://github.com/Q-SiO2/taxi/actions/runs/40119576061",
+  "required_jobs_passed": 8,
+  "required_jobs_failed": 0,
+  "jobs": [
+    {
+      "id": 120947966903,
+      "name": "gradle-wrapper-integrity",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120947966988,
+      "name": "web",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120947967009,
+      "name": "documentation-and-provenance",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120947967033,
+      "name": "backend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120947967046,
+      "name": "mobile",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120947967061,
+      "name": "ios-shared",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120947967070,
+      "name": "gradle-dependency-submission",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120948578269,
+      "name": "dependency-review",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120952375614,
+      "name": "publish-backend-image",
+      "status": "completed",
+      "conclusion": "skipped"
+    }
+  ],
+  "source_ci_passed": true,
+  "full_backend_tests": 1342,
+  "backend_failures_errors_skips": 0,
+  "tls_cases": 8,
+  "scope": "Published scanner/filesystem correction including native PostGIS3.4 HTTP lifecycle tests; all required source CI. Newly approved S3 root work is not part of this commit.",
+  "hosted_upgrade_accepted": false,
+  "hosted_document_storage_accepted": false,
+  "signed_or_physical_release_accepted": false,
+  "public_launch_accepted": false
+}

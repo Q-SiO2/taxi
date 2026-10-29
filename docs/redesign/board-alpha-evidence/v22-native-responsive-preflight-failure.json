@@ -1,0 +1,8 @@
+{
+  "recorded_utc": "2026-10-22T17:21:47.966878+00:00",
+  "candidate": "candidate-native-v22.json",
+  "passed": false,
+  "state": "Host httpx getaddrinfo11002 during verifier login before try block, UI or settings changes",
+  "log_sha256": "2f62dd30b1a0748a08d60bd58e78d8e7f31b3e0f45859b9d791ff26a0df1e5a7",
+  "continuation": "Subsequent read-only Windows DNS lookup resolves API/web; both driver radio settings remain1. Preserve this failure and use separately named r2 observer. No business request or app source change."
+}

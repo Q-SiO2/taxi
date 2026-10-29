@@ -1,5 +1,6 @@
 package org.example.taximobile.operations.ui
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -153,12 +154,14 @@ internal fun FixedRoutesScreen(state: OperationsUiState, coordinator: Operations
 
 @Composable
 private fun RouteScopeBanner(city: String, operator: String, assignmentReady: Boolean) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     Surface(
-        color = if (assignmentReady) TaxiColors.Info100 else TaxiColors.Warning100,
-        shape = RoundedCornerShape(TaxiRadii.Md),
+        color = if (assignmentReady) taxiColors.Info100 else taxiColors.Warning100,
+        shape = RoundedCornerShape(taxiRadii.Md),
         border = BorderStroke(
             1.dp,
-            (if (assignmentReady) TaxiColors.Info600 else TaxiColors.Warning600).copy(alpha = 0.25f),
+            (if (assignmentReady) taxiColors.Info600 else taxiColors.Warning600).copy(alpha = 0.25f),
         ),
     ) {
         Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Md)) {
@@ -166,7 +169,7 @@ private fun RouteScopeBanner(city: String, operator: String, assignmentReady: Bo
             Text(
                 if (assignmentReady) "Active fixed-route assignment visible; publication still revalidates its effective period."
                 else "No active fixed-route assignment is visible. The backend will reject route drafting or publication.",
-                color = if (assignmentReady) TaxiColors.Info600 else TaxiColors.Warning600,
+                color = if (assignmentReady) taxiColors.Info600 else taxiColors.Warning600,
                 style = MaterialTheme.typography.bodySmall,
             )
         }
@@ -181,20 +184,22 @@ private fun FixedRouteCard(
     onTransition: (FixedRouteVersionRecord, String) -> Unit,
     onRetire: () -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     DataCard {
         Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Lg), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md)) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Column {
                     Text(route.code, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                    Text("Stable route identity · ${route.versions.size} visible version(s)", color = TaxiColors.Ink500)
+                    Text("Stable route identity · ${route.versions.size} visible version(s)", color = taxiColors.Ink500)
                 }
                 StatusBadge(route.status)
             }
             route.versions.forEach { version ->
                 Surface(
-                    color = TaxiColors.Surface2,
-                    shape = RoundedCornerShape(TaxiRadii.Md),
-                    border = BorderStroke(1.dp, TaxiColors.StrokeSubtle),
+                    color = taxiColors.Surface2,
+                    shape = RoundedCornerShape(taxiRadii.Md),
+                    border = BorderStroke(1.dp, taxiColors.StrokeSubtle),
                 ) {
                     Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Md), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
@@ -212,19 +217,19 @@ private fun FixedRouteCard(
                             }
                             Text(
                                 "${direction.directionCode.replace('_', ' ')} · ${direction.startLocationName.preferred()} → ${direction.finishLocationName.preferred()} · $fareLabel",
-                                color = if (direction.flatFare == null) TaxiColors.Warning600 else TaxiColors.Ink700,
+                                color = if (direction.flatFare == null) taxiColors.Warning600 else taxiColors.Ink700,
                             )
                             GeometryPreview(direction.geometry.coordinates)
                             Text("${direction.stops.size} ordered stop(s) · booking ${if (direction.immediateBookingEnabled) "enabled" else "not enabled by active config"}", style = MaterialTheme.typography.bodySmall)
                         }
                         Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
                             fixedRouteTargetFor(version.status)?.let { target ->
-                                Button(onClick = { onTransition(version, target) }, enabled = !locked) {
+                                Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onTransition(version, target) }, enabled = !locked) {
                                     Text(if (target == "PUBLISHED") "Review publication" else "Submit for review")
                                 }
                             }
                             if (version.status in setOf("IN_REVIEW", "PUBLISHED")) {
-                                OutlinedButton(onClick = { onTransition(version, "RETIRED") }, enabled = !locked) { Text("Retire version") }
+                                OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onTransition(version, "RETIRED") }, enabled = !locked) { Text("Retire version") }
                             }
                         }
                     }
@@ -232,8 +237,8 @@ private fun FixedRouteCard(
             }
             if (route.status == "ACTIVE") {
                 Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
-                    Button(onClick = onNewVersion, enabled = !locked) { Text("New content version") }
-                    OutlinedButton(onClick = onRetire, enabled = !locked) { Text("Retire route") }
+                    Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = onNewVersion, enabled = !locked) { Text("New content version") }
+                    OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = onRetire, enabled = !locked) { Text("Retire route") }
                 }
             }
         }
@@ -242,12 +247,14 @@ private fun FixedRouteCard(
 
 @Composable
 private fun GeometryPreview(points: List<List<Double>>) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     val valid = points.mapNotNull { point ->
         if (point.size == 2) point[0] to point[1] else null
     }
     Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
         Canvas(
-            Modifier.fillMaxWidth().height(120.dp).background(Color(0xFFF3F4F6), RoundedCornerShape(TaxiRadii.Sm)),
+            Modifier.fillMaxWidth().height(120.dp).background(Color(0xFFF3F4F6), RoundedCornerShape(taxiRadii.Sm)),
         ) {
             if (valid.size < 2) return@Canvas
             val minX = valid.minOf { it.first }
@@ -260,12 +267,12 @@ private fun GeometryPreview(points: List<List<Double>>) {
             )
             valid.zipWithNext().forEach { (a, b) ->
                 drawLine(Color.White, offset(a), offset(b), strokeWidth = 9f)
-                drawLine(TaxiColors.Navy900, offset(a), offset(b), strokeWidth = 5f)
+                drawLine(taxiColors.Navy900, offset(a), offset(b), strokeWidth = 5f)
             }
-            drawCircle(TaxiColors.Accent500, 8f, offset(valid.first()))
-            drawCircle(TaxiColors.Navy900, 8f, offset(valid.last()))
+            drawCircle(taxiColors.Accent500, 8f, offset(valid.first()))
+            drawCircle(taxiColors.Navy900, 8f, offset(valid.last()))
         }
-        Text("Neutral geometry preview · authoritative containment is validated by PostGIS", color = TaxiColors.Ink500, style = MaterialTheme.typography.labelSmall)
+        Text("Neutral geometry preview · authoritative containment is validated by PostGIS", color = taxiColors.Ink500, style = MaterialTheme.typography.labelSmall)
     }
 }
 
@@ -278,14 +285,15 @@ private fun RouteIdentityEditor(
     onSave: (FixedRouteCreateRequest) -> Unit,
     onClose: () -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     var code by remember(operatorId) { mutableStateOf("") }
     DataCard {
         Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Lg), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md)) {
             Text("Create stable route identity", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
             OutlinedTextField(code, { code = it.uppercase().take(64) }, Modifier.fillMaxWidth(), label = { Text("Route code") }, enabled = !locked)
-            Text(if (validRouteCode(code)) "Ready for backend validation." else "Use uppercase letters, numbers, underscore, or dash.", color = if (validRouteCode(code)) TaxiColors.Success600 else TaxiColors.Warning600)
+            Text(if (validRouteCode(code)) "Ready for backend validation." else "Use uppercase letters, numbers, underscore, or dash.", color = if (validRouteCode(code)) taxiColors.Success600 else taxiColors.Warning600)
             Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
-                Button(onClick = { onSave(FixedRouteCreateRequest(operatorId, code.trim())) }, enabled = validRouteCode(code) && !locked) { Text("Create identity") }
+                Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onSave(FixedRouteCreateRequest(operatorId, code.trim())) }, enabled = validRouteCode(code) && !locked) { Text("Create identity") }
                 TextButton(onClick = onClose, enabled = !locked) { Text("Close") }
             }
         }
@@ -388,6 +396,7 @@ private fun RouteVersionEditor(
     onSave: (FixedRouteVersionCreateRequest) -> Unit,
     onClose: () -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     var draft by remember(route.id) { mutableStateOf(RouteVersionDraft()) }
     DataCard {
         Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Lg), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md)) {
@@ -442,7 +451,7 @@ private fun RouteVersionEditor(
                 } else {
                     "Only unbound draft/in-review fares appear here. Activation is separate and requires this one-to-one link."
                 },
-                color = TaxiColors.Ink500,
+                color = taxiColors.Ink500,
                 style = MaterialTheme.typography.bodySmall,
             )
             OutlinedTextField(
@@ -454,9 +463,9 @@ private fun RouteVersionEditor(
                 enabled = !locked,
             )
             val validation = draft.validation()
-            Text(validation ?: "Ready for backend PostGIS and scope validation.", color = if (validation == null) TaxiColors.Success600 else TaxiColors.Warning600)
+            Text(validation ?: "Ready for backend PostGIS and scope validation.", color = if (validation == null) taxiColors.Success600 else taxiColors.Warning600)
             Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
-                Button(onClick = { draft.toRequest()?.let(onSave) }, enabled = validation == null && !locked) { Text("Create draft version") }
+                Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { draft.toRequest()?.let(onSave) }, enabled = validation == null && !locked) { Text("Create draft version") }
                 TextButton(onClick = onClose, enabled = !locked) { Text("Close") }
             }
         }
@@ -509,7 +518,7 @@ private fun RouteCommandDialog(
                 OutlinedTextField(reason, { reason = it.take(240) }, Modifier.fillMaxWidth(), label = { Text("Audited reason") }, enabled = !busy)
             }
         },
-        confirmButton = { Button(onClick = { onConfirm(reason) }, enabled = reason.trim().length in 3..240 && !busy) { Text("Confirm") } },
+        confirmButton = { Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onConfirm(reason) }, enabled = reason.trim().length in 3..240 && !busy) { Text("Confirm") } },
         dismissButton = { TextButton(onClick = onDismiss, enabled = !busy) { Text("Cancel") } },
     )
 }

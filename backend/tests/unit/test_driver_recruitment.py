@@ -8,6 +8,7 @@ from taximobile_api.domains.driver_applications.schemas import (
     ApplicationAnswerInput,
     ApplicationDecisionRequest,
     CityApplicationCreateRequest,
+    CityApplicationUpdateRequest,
     RequirementItemInput,
 )
 from taximobile_api.integrations.driver_documents import (
@@ -79,6 +80,28 @@ def test_application_creation_cannot_smuggle_status_or_authority() -> None:
             display_name="Applicant",
             status="APPROVED",
         )
+
+
+def test_profile_only_save_requires_explicit_empty_patch_not_omitted_changes() -> None:
+    with pytest.raises(ValidationError, match="At least one application change"):
+        CityApplicationUpdateRequest(expected_version=1)
+
+    patch = CityApplicationUpdateRequest(expected_version=1, answers=[], evidence=[])
+    assert patch.answers == []
+    assert patch.evidence == []
+    assert patch.remove_answer_item_ids == []
+    assert patch.remove_evidence_item_ids == []
+    assert patch.expected_version == 1
+
+
+def test_application_patch_removals_remain_explicit_and_cannot_grant_authority() -> None:
+    item_id = uuid4()
+    patch = CityApplicationUpdateRequest(expected_version=2, remove_evidence_item_ids=[item_id])
+    assert patch.evidence is None
+    assert patch.remove_evidence_item_ids == [item_id]
+
+    with pytest.raises(ValidationError, match="Extra inputs are not permitted"):
+        CityApplicationUpdateRequest(expected_version=2, answers=[], status="APPROVED")
 
 
 def test_approval_requires_services_and_other_decisions_reject_authorization_fields() -> None:

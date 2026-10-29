@@ -1,5 +1,22 @@
 # TaxiMobile — API Specification
 
+## Closed-shop operator policy — source contract, 23 October 2026
+
+Operator create/update/read payloads expose `requires_active_membership` (default
+false). Enabling it requires the operator's linked cooperative/member register.
+Updates retain existing scoped `MANAGE_OPERATORS`, recent MFA and audit authority;
+they do not enroll members. Closed-shop new-work failures return the existing 409
+domain-conflict response with `Active membership with this operator is required.`
+Availability, immediate/fixed-route matching/acceptance and scheduled commitment /
+handoff recheck server membership. Passenger registration, already accepted trip
+progress, safety/support and financial-history access are not membership-gated.
+
+Native driver availability and offer/scheduled admission failures translate only
+the exact documented 409 membership rejection from the standard error envelope
+into EN/FR/AR union-review guidance. Other error bodies retain safe generic
+messages; arbitrary server text is never displayed. This affects feedback only,
+not client eligibility or authentication state.
+
 ## 1. Purpose
 
 This document defines the HTTP API used by TaxiMobile clients and backend services.
@@ -1212,6 +1229,51 @@ The backend should calculate and finalize the fare.
 
 The client must not be trusted to submit the final fare.
 
+## GET /drivers/me/payments/cash/pending
+
+An authenticated driver's read-only cash work queue, independent of paginated
+ride history. The server resolves the driver from the authenticated user; no
+driver identifier or scope is accepted from the client. Only rides assigned to
+that driver, already `COMPLETED`, with an actual `CASH`/`PENDING` payment appear.
+Other drivers' payments, manual transfers and settled/disputed/cancelled payments
+are excluded. A passenger without a driver profile receives 404; missing or
+invalid authentication receives 401.
+
+Query parameters follow existing conventions: `page` starts at 1; `limit`
+defaults to 20 and is bounded to 1–100. Results are ordered oldest payment first,
+then payment UUID for deterministic ties. An out-of-range page has empty `items`
+and the current scoped `total`. Concurrent settlement can move page boundaries;
+reload page one after a successful settlement.
+
+```json
+{
+  "items": [{
+    "payment_id": "b041282b-b91c-466a-8adf-8355214415d1",
+    "ride_id": "31441ec9-b6ca-4967-8e6d-3078c4ea8c69",
+    "amount": "35.00",
+    "currency": "MAD",
+    "created_at": "2026-10-05T12:00:00Z",
+    "completed_at": "2026-10-05T12:00:00Z",
+    "method": "CASH",
+    "status": "PENDING"
+  }],
+  "page": 1,
+  "limit": 20,
+  "total": 1
+}
+```
+
+`completed_at` may be null for legacy data; `created_at` is always the server
+payment creation time. Amount/currency are the recorded payment facts, not
+client calculations. The response contains no passenger identity, coordinates,
+document, transfer destination or external payment reference. Loading this list
+does not settle money, create earnings, or confer authority on a stale client.
+The existing settlement command rechecks current ownership, ride/payment state
+and idempotency under locks. Mobile confirmation must show the selected ride
+reference, recorded amount/currency and date. Unavailable reads show an explicit
+reload action; never manufacture a pending cash flag from completion/history or
+from absence of earnings.
+
 ## POST /rides/{ride_id}/payments/cash/settle
 
 The assigned driver confirms settlement of a pending cash payment after the ride has completed. The backend verifies driver ownership, completed ride state, payment method, and pending payment status before recording settlement.
@@ -1632,6 +1694,39 @@ Query parameters may include:
 
 ## GET /cooperative/membership
 
+### Scoped operations member register
+
+`GET /operations/operators/{operator_id}/memberships` returns `items`, `page`,
+`limit`, `total`, `operator_id`, `cooperative_id` and `cooperative_status`.
+Page starts at one; limit is 1–100. All rows and counts require the existing
+`manage_operators` permission for that exact operator. Missing/out-of-scope
+operators and entries are hidden as `404`; operators without a linked register
+return `409`. There is no unrestricted member/user search.
+
+`POST /operations/operators/{operator_id}/memberships` enrolls a driver using
+`driver_id`, `status` (PENDING or ACTIVE), optional `membership_number`,
+`joined_at`, `ended_at`, and a review `reason` of 3–240 characters. The driver
+must have a city application associated with an assignment of this operator.
+This is a register decision, independent of license/city application approval.
+An existing entry or duplicate register membership number returns `409`.
+
+`PATCH /operations/operators/{operator_id}/memberships/{membership_id}` supplies
+the complete editable record (`status`, `membership_number`, `joined_at`,
+`ended_at`), `expected_updated_at`, and `reason`. Status is PENDING, ACTIVE,
+SUSPENDED or ENDED. Date values must include an offset; an end before a join
+returns `422`. A stale expected timestamp returns `409` without partial changes.
+Writes require recent MFA and `Idempotency-Key` and return the canonical record
+including `id`, `driver_id`, `status`, dates, number and `updated_at`.
+An identical authorized replay returns the saved response once, without another
+audit. Reusing a key with different input returns `409`; scope and MFA are
+revalidated before replay. Audit and member updates commit together.
+
+This workflow does not delete membership history, modify account/driver roles,
+cancel accepted trips or establish the union's legal authority. No contact data,
+license image or membership number is copied into its audit change payload.
+
+### Authenticated member read
+
 Returns the authenticated user's current non-ended cooperative membership. The
 membership is looked up independently of driver approval and account roles. A
 caller without a current membership receives `404`. If inconsistent data would
@@ -1772,6 +1867,7 @@ as delivered or forwarded as an arbitrary provider payload.
 | --- | --- | --- | --- | --- | --- |
 | `ride.offer.created` | `RIDE_OFFER_AVAILABLE` | live + push | 5 min and exact offer expiry | immediate; no quiet hours | driver offer reload |
 | `ride.accepted` | `DRIVER_ASSIGNED` | live + push | 15 min | immediate; no quiet hours | passenger active-ride reload plus inbox |
+| `ride.updated` | `RIDE_UPDATED` | live + push | 2 hr | immediate; no quiet hours | passenger ride/receipt reload plus generic inbox entry |
 | `ride.cancelled` | `RIDE_CANCELLED` | live + push | 2 hr | immediate; no quiet hours | participant ride reload |
 | `ride.matching.failed` | `RIDE_UNMATCHED` | live + push | 15 min | immediate; no quiet hours | passenger ride reload plus inbox |
 | `ride.coordination.message` | `RIDE_COORDINATION_MESSAGE` | live + push | 5 min | immediate; no quiet hours | active-ride reload plus inbox |
@@ -1782,6 +1878,15 @@ as delivered or forwarded as an arbitrary provider payload.
 | `scheduled.unfulfilled` | `SCHEDULED_UNFULFILLED` | push | 24 hr | immediate; no quiet hours | passenger booking reload plus inbox |
 | `driver.credential.expiring` | `DRIVER_CREDENTIAL_EXPIRING` | push | 7 days | informational; quiet hours allowed | driver credential reload plus inbox |
 | `driver.credential.expired` | `DRIVER_CREDENTIAL_EXPIRED` | push | 7 days | informational; quiet hours allowed | driver credential reload plus inbox |
+
+En-route, arrival, start, completion and the first cash-settlement transition
+persist `ride.updated` and a generic passenger-owned inbox row in the same
+transaction as the source command. Its payload is only `ride_id`; it contains
+no coordinates, fare, payment status or recipient identity. The worker reloads
+the current assigned ride and addresses its current passenger owner, ignoring
+event-supplied recipient fields. Delayed hints reload the latest state rather
+than replaying the earlier transition. Cash settlement replay does not create
+another update/inbox row. These hints do not prove OS push delivery.
 
 The worker checks event age before opening business-data or provider boundaries,
 then reloads current source records and state. Scheduled offers additionally
@@ -2490,7 +2595,12 @@ The transactional-outbox processor emits
 `RIDE_OFFER_AVAILABLE` to the selected driver and `DRIVER_ASSIGNED` to the
 passenger only after the corresponding database transaction commits and the
 worker reloads the relevant records. Driver/passenger cancellation similarly
-enqueues `RIDE_CANCELLED` in the business transaction. In staging and production,
+enqueues `RIDE_CANCELLED` in the business transaction. En-route, arrival, start,
+completion and the first cash settlement enqueue `RIDE_UPDATED`; the worker
+reloads the current assigned ride and addresses only its passenger. Delayed
+hints carry no historical state, coordinates or payment authority: the client
+reloads the authorized current ride/receipt. A cash replay emits no new hint or
+inbox row. In staging and production,
 a private PostgreSQL notification carries only version, authorized user ID, ride
 ID, and allowlisted event type to every API process; it is validated before the
 named user's local sockets receive it. Socket input never executes commands. On
@@ -2926,6 +3036,33 @@ GET  /scheduled-bookings/{booking_id}
 POST /scheduled-bookings/{booking_id}/cancel
 ```
 
+The city-local input uses an authenticated, non-mutating planning read:
+`POST /cities/{city_id}/scheduled-time-options`, with exactly `local_date`
+(`YYYY-MM-DD`) and `local_time` (`HH:mm`, 24-hour, minute precision). City
+visibility is identical to the public city catalog; a hidden/missing city is
+`404`. The response echoes city ID, configured `city_timezone`, both input
+strings, current `booking_available`, the pinned IANA `rules_version`, and an
+`options` array of zero, one or two `{scheduled_for, utc_offset_seconds}` values,
+ordered by UTC instant. Zero means the local clock time does not exist; two
+requires an explicit passenger offset choice. One may be selected automatically.
+Malformed/out-of-range clock input is `422`; unavailable/unknown configured rules
+is a sanitized `503`. Successful responses use `Cache-Control: no-store`. This read creates
+no booking, quote, reservation, idempotency record or pricing/eligibility approval.
+Paused cities can resolve clock times with `booking_available=false`.
+
+The resolver reads the hash-pinned `tzdata` package, independently of OS timezone
+files, and checks both folds by round-tripping through UTC. It never shifts a
+gap or chooses one overlap by default. The client fences context/owner changes,
+offers explicit retry, and treats a hosted `404`/`405` capability absence as
+unavailable. Existing explicit-instant estimate/create contracts remain unchanged.
+
+The passenger collection accepts `page` (starting at 1), `limit` (1–100, default
+20), and optional `status`. Responses retain `items`, `page`, `limit`, and `total`,
+ordered by scheduled time descending and ID. The mobile client uses explicit
+20-row pages; navigation never sends a booking command. The
+[pagination packet](launch/scheduled-pagination.md) records metadata validation,
+session-owned navigation, bounded empty-page recovery and acceptance limits.
+
 Estimate and creation include either validated point-to-point locations or one
 published direction version plus `scheduled_for`. Estimate is authenticated and
 non-mutating; it returns the resolved endpoints, timezone, exact economics, and
@@ -3001,6 +3138,13 @@ defined by that requirement version while the application is editable; it cannot
 set status, reviewer fields, roles, or authorization. Submit validates a complete
 snapshot and is idempotent. Withdraw is applicant-owned, idempotent, allowed only
 before approval, and never deletes the audit/retention record.
+PATCH distinguishes omitted changes from explicit empty answer/evidence arrays.
+A profile-only draft save supplies `answers: []` and `evidence: []` alongside
+`expected_version`; a version-only request is invalid. These arrays apply item
+patches rather than replacing the saved collections. Only explicit
+`remove_answer_item_ids` / `remove_evidence_item_ids` delete existing items.
+The server checks the expected version and returns the authoritative new version;
+a conflict is not a successful save and must not be retried automatically.
 Document upload is a bounded authenticated `multipart/form-data` request through
 the backend's protected storage adapter; it enforces declared and detected media
 type, byte limit, hash, malware-scan quarantine, ownership, requirement-item
@@ -3504,6 +3648,13 @@ may create a fixed-route fare against an existing unpriced draft direction.
 Fare activation requires the reciprocal one-to-one link; route submission
 requires a linked fare; route publication requires that fare to be active for
 the full route period. These checks are backend-owned and optimistic-versioned.
+
+The scoped fixed-route list and fare-option reads do not require a currently
+active fixed-route assignment. An on-demand-only operator can return empty lists,
+and historical routes remain readable after assignment retirement. The exact
+city/operator permission conjunction and shared market are still checked before
+data is returned. Drafting and publishing retain their active-assignment checks;
+read access cannot grant service authority.
 
 Operations authentication issues a dedicated administrative audience and never
 accepts a normal mobile bearer token as sufficient. `auth.md` and `security.md`

@@ -1,0 +1,10 @@
+{
+  "recorded_utc": "2026-10-24T18:19:52.365788+00:00",
+  "decision": "A_PRIVATE_ENCRYPTED_S3_RAILWAY",
+  "authority": "Direct owner answer: Private encrypted S3 adapter on Railway (recommended)",
+  "scope": "Source implementation behind existing ProtectedDriverDocumentStore; filesystem portability retained",
+  "purchase_bucket_creation_new_credentials_or_real_documents_authorized": false,
+  "Trial_only_and_preserved_volumes_unchanged": true,
+  "functional_scope_unchanged": true,
+  "schema_api_and_backend_authority": "Preserve unless deliberate documented recovery changes are required; no client authorization or public object URLs"
+}

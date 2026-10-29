@@ -1,0 +1,154 @@
+{
+  "candidate": "candidate-native-v12.json",
+  "run": "first",
+  "started_utc": "2026-10-19T19:33:03.757601+00:00",
+  "fidelity": "two Android emulators, synthetic GPS/accounts/cash; native writes and server reads",
+  "emulators": [
+    {
+      "role": "driver",
+      "serial": "emulator-5556",
+      "api_level": 35,
+      "avd": "taximobile-board-api35-driver"
+    },
+    {
+      "role": "passenger",
+      "serial": "emulator-5554",
+      "api_level": 31,
+      "avd": "taximobile-board-aosp31-passenger"
+    }
+  ],
+  "passed": true,
+  "steps": [
+    {
+      "name": "Native on-demand availability visible",
+      "utc": "2026-10-19T19:33:49.822688+00:00"
+    },
+    {
+      "name": "Server on-demand availability confirmed",
+      "utc": "2026-10-19T19:33:53.850534+00:00"
+    },
+    {
+      "name": "Native server fare review visible before request",
+      "utc": "2026-10-19T19:34:15.313703+00:00"
+    },
+    {
+      "name": "Native booking confirmed",
+      "utc": "2026-10-19T19:34:19.028572+00:00"
+    },
+    {
+      "name": "Private acceptance confirmed",
+      "utc": "2026-10-19T19:35:14.836821+00:00"
+    },
+    {
+      "name": "Native DRIVER_EN_ROUTE",
+      "utc": "2026-10-19T19:35:43.036944+00:00"
+    },
+    {
+      "name": "Native DRIVER_ARRIVED",
+      "utc": "2026-10-19T19:36:31.613019+00:00"
+    },
+    {
+      "name": "Native IN_PROGRESS",
+      "utc": "2026-10-19T19:37:36.806443+00:00"
+    },
+    {
+      "name": "Native completion confirmed",
+      "utc": "2026-10-19T19:37:44.148665+00:00"
+    },
+    {
+      "name": "Passenger pending cash visible",
+      "utc": "2026-10-19T19:37:51.590358+00:00"
+    },
+    {
+      "name": "Passenger confirmed cash visible",
+      "utc": "2026-10-19T19:38:14.645796+00:00"
+    }
+  ],
+  "installed_apks": [
+    {
+      "role": "driver",
+      "sha256": "45561d0e7a5937d2e2fea23a114d37bcd554afd1e02934adc940e71d8c58c218"
+    },
+    {
+      "role": "passenger",
+      "sha256": "039f8c710d0a02bb704994489b099c1b7e0750ec557cb34f9a34f0e726c296ea"
+    }
+  ],
+  "harness_sha256": "5017e2961130e8caa144e578dc646daa04c6024f44b0e4949c31ab07134bb29e",
+  "clock_fixture": [
+    {
+      "role": "driver",
+      "host_minus_device_seconds_before": 0.89,
+      "host_minus_device_seconds_after": 0.21,
+      "method": "owned emulator cmd alarm set-time before trip only"
+    },
+    {
+      "role": "passenger",
+      "host_minus_device_seconds_before": 0.34,
+      "host_minus_device_seconds_after": 0.62,
+      "method": "owned emulator cmd alarm set-time before trip only"
+    }
+  ],
+  "ride_id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+  "native_transition_intents": [
+    {
+      "action": "start_heading_pickup",
+      "utc": "2026-10-19T19:35:18.525526+00:00",
+      "bounds": "Bounds(left=173, top=978, right=548, bottom=1018)"
+    },
+    {
+      "action": "mark_arrived",
+      "utc": "2026-10-19T19:36:07.155655+00:00",
+      "bounds": "Bounds(left=247, top=1045, right=473, bottom=1085)"
+    },
+    {
+      "action": "start_ride",
+      "utc": "2026-10-19T19:37:07.788146+00:00",
+      "bounds": "Bounds(left=235, top=1005, right=486, bottom=1045)"
+    }
+  ],
+  "fare": "35.00",
+  "screenshots": [
+    {
+      "path": "v12-first-20261019T193301Z-fare-review.png",
+      "sha256": "b75bceeb9ade6f3c67883ac16b1f1704228b934f73f9825e5ff1e97232a96b76"
+    },
+    {
+      "path": "v12-first-20261019T193301Z-private-offer.png",
+      "sha256": "64bb4398f0b57f7244edba1efc1c99edeb47ea10851efa30773c07fc198281a8"
+    },
+    {
+      "path": "v12-first-20261019T193301Z-accepted.png",
+      "sha256": "5782514ddf8c67fd98037d3d5ae59fa392066bb91f336f8439792ac8420d2af8"
+    },
+    {
+      "path": "v12-first-20261019T193301Z-before-start_heading_pickup.png",
+      "sha256": "5782514ddf8c67fd98037d3d5ae59fa392066bb91f336f8439792ac8420d2af8"
+    },
+    {
+      "path": "v12-first-20261019T193301Z-before-mark_arrived.png",
+      "sha256": "c001811ecf7c3756f740e2f6e11f22a311a28a4efcee871c066fbd60384a64de"
+    },
+    {
+      "path": "v12-first-20261019T193301Z-before-start_ride.png",
+      "sha256": "99dacaf68bdfc09b0767c581fb69fac8556a3f6a418d75a74bb9c21a8f9d577a"
+    },
+    {
+      "path": "v12-first-20261019T193301Z-in-progress.png",
+      "sha256": "f2f53f34c906d342a36bb23135151877cdfe7f66154dff286b634f0e0ff64110"
+    },
+    {
+      "path": "v12-first-20261019T193301Z-cash-pending.png",
+      "sha256": "b2a8bc1cf84ae3a1eadbbaa450daa1d177f028df8e1f1205e3989b5308309468"
+    },
+    {
+      "path": "v12-first-20261019T193301Z-cash-dialog.png",
+      "sha256": "0876ac28e7061b6dde49debdcae76e513e2851d6ba57be353e1aea367827b94e"
+    },
+    {
+      "path": "v12-first-20261019T193301Z-cash-completed.png",
+      "sha256": "4bae67db1e30c406aeb55659739135f083b3a09f628e5967d6b1c733fdb6acdc"
+    }
+  ],
+  "finished_utc": "2026-10-19T19:38:14.647394+00:00"
+}

@@ -89,11 +89,13 @@ def test_connected_socket_fails_closed_without_an_incoming_hint(failure):
 def test_connected_socket_expiry_uses_verified_jwt_deadline_not_idle_poll_period():
     app, _ = fixture_app()
     app.state.event_hub._session_options["check_seconds"] = 60
-    now = datetime.now(UTC)
-    token = jwt.encode({"sub": str(uuid4()), "sid": str(uuid4()), "type": "access",
-                        "iat": now, "exp": now + timedelta(seconds=2),
-                        "iss": JWT_ISSUER, "aud": JWT_AUDIENCE}, "a" * 32, algorithm=JWT_ALGORITHM)
     with TestClient(app) as client:
+        # Startup is outside the live token's two-second deadline. The test
+        # must exercise an admitted socket, not expired-token admission.
+        now = datetime.now(UTC)
+        token = jwt.encode({"sub": str(uuid4()), "sid": str(uuid4()), "type": "access",
+                            "iat": now, "exp": now + timedelta(seconds=2),
+                            "iss": JWT_ISSUER, "aud": JWT_AUDIENCE}, "a" * 32, algorithm=JWT_ALGORITHM)
         with client.websocket_connect("/api/v1/events", headers=headers(token)) as socket:
             async def await_closed():
                 owner = next(iter(app.state.event_hub._owned))

@@ -1,0 +1,114 @@
+{
+  "verified_utc": "2026-10-22T17:12:14.032662+00:00",
+  "candidate": "candidate-native-v22.json",
+  "passed": true,
+  "records": [
+    {
+      "record": "v22-native-first-r2.json",
+      "record_sha256": "67e0eb8094151d5594763200fc6111ee5469d866233646e41eabc0fc8062ad89",
+      "ride_id": "ef70b9f0-a77d-41b6-923c-7a622a6e1dd6",
+      "phase": "COMPLETED",
+      "payment": {
+        "method": "CASH",
+        "status": "COMPLETED"
+      },
+      "fare": {
+        "amount": "35.00",
+        "currency": "MAD",
+        "pricing_rule_version": "ux-demo-9f3f781b",
+        "components": [
+          {
+            "code": "TRANSPORT_FARE",
+            "label": "Transport fare",
+            "amount": "35.00"
+          }
+        ],
+        "economics": {
+          "transport_fare": "35.00",
+          "scheduling_surcharge": "0.00",
+          "operator_service_fee": "0.00",
+          "passenger_total": "35.00",
+          "expected_driver_net": "35.00",
+          "operator_allocation": "0.00",
+          "operator_fee_policy_version": "legacy-zero-fee-v1",
+          "operator_fee_calculation_mode": "FLAT_PER_COMPLETED_BOOKING",
+          "operator_fee_funding_mode": "DRIVER_SETTLEMENT_DEDUCTION"
+        }
+      },
+      "each_native_business_command_confirmed_once": true,
+      "http_record": "v22-native-first-r2-http.json",
+      "independent_provider_trace_verified": true
+    },
+    {
+      "record": "v22-native-second.json",
+      "record_sha256": "0c2cc1f386c5e98417c604646f8d08bebf5649dad8f8d6b2e623d036fc8d5624",
+      "ride_id": "e8e23f90-4329-4381-9391-2dcccfd0b027",
+      "phase": "COMPLETED",
+      "payment": {
+        "method": "CASH",
+        "status": "COMPLETED"
+      },
+      "fare": {
+        "amount": "35.00",
+        "currency": "MAD",
+        "pricing_rule_version": "ux-demo-9f3f781b",
+        "components": [
+          {
+            "code": "TRANSPORT_FARE",
+            "label": "Transport fare",
+            "amount": "35.00"
+          }
+        ],
+        "economics": {
+          "transport_fare": "35.00",
+          "scheduling_surcharge": "0.00",
+          "operator_service_fee": "0.00",
+          "passenger_total": "35.00",
+          "expected_driver_net": "35.00",
+          "operator_allocation": "0.00",
+          "operator_fee_policy_version": "legacy-zero-fee-v1",
+          "operator_fee_calculation_mode": "FLAT_PER_COMPLETED_BOOKING",
+          "operator_fee_funding_mode": "DRIVER_SETTLEMENT_DEDUCTION"
+        }
+      },
+      "each_native_business_command_confirmed_once": true,
+      "http_record": "v22-native-second-http.json",
+      "independent_provider_trace_verified": true
+    }
+  ],
+  "availability": {
+    "status": "OFFLINE",
+    "vehicle_id": "d491cb54-7ec1-4b6e-a6f9-1f1a8fd93792",
+    "city_id": "10000000-0000-4000-8000-000000000003",
+    "service_type": "ON_DEMAND"
+  },
+  "pending_cash_count": 0,
+  "rebooking": {
+    "candidate": "candidate-native-v22.json",
+    "pid": "1838",
+    "first_complete_run": "v22-native-first-r2.json",
+    "passed": true,
+    "pid_after_first-r2_trip": "1838",
+    "second_complete_run": "v22-native-second.json",
+    "pid_after_second_trip": "1838"
+  },
+  "timed_board_runs": [
+    {
+      "record": "v22-board-first-r2.json",
+      "elapsed_seconds": 647.114,
+      "started_utc": "2026-10-22T16:51:53.170391+00:00",
+      "finished_utc": "2026-10-22T17:02:40.284Z"
+    },
+    {
+      "record": "v22-board-second.json",
+      "elapsed_seconds": 449.362,
+      "started_utc": "2026-10-22T17:04:17.102912+00:00",
+      "finished_utc": "2026-10-22T17:11:46.464Z"
+    }
+  ],
+  "between_rehearsals_seconds": 96.818912,
+  "source_inputs_unchanged": 414,
+  "scope": "Exact frozen API31 passenger/API35 driver, English native journeys and Arabic hosted staff/applicant. Synthetic GPS/accounts/cash only. Second run includes actual passenger arrival/in-progress rendering and controlled 14-second driver radio interruption. All business commands originate once from native UI; no HTTP business replay.",
+  "provider_trace_boundary": "Independent exact-window Railway CLI HTTP traces corroborate eight successful business requests each once. Fresh authorized GET readbacks match. Provider secret recovery/Trial proxy rollout remain separate.",
+  "qualification": "Normal browser logout, fresh readback and identity preparation between timed runs are disclosed. No uninterrupted recording, seven-minute guarantee, physical Android, all-page/style/language cross-product, full TalkBack, iOS or production acceptance."
+}

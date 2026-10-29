@@ -1,5 +1,6 @@
 package org.example.taximobile.feature.ui.components
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,6 +40,8 @@ fun TaxiTextField(
     imeAction: ImeAction = ImeAction.Next,
     leadingContent: (@Composable () -> Unit)? = null,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     var passwordVisible by remember { mutableStateOf(false) }
     OutlinedTextField(
         value = value,
@@ -61,12 +64,12 @@ fun TaxiTextField(
         },
         leadingIcon = leadingContent,
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
-        shape = RoundedCornerShape(TaxiRadii.Md),
+        shape = RoundedCornerShape(taxiRadii.Md),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = TaxiColors.Navy900,
-            unfocusedBorderColor = TaxiColors.StrokeSubtle,
-            errorBorderColor = TaxiColors.Danger600,
-            errorSupportingTextColor = TaxiColors.Danger600,
+            focusedBorderColor = taxiColors.Navy900,
+            unfocusedBorderColor = taxiColors.StrokeSubtle,
+            errorBorderColor = taxiColors.Danger600,
+            errorSupportingTextColor = taxiColors.Danger600,
         ),
         singleLine = true,
     )

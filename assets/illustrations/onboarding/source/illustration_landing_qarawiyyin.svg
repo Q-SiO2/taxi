@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="620" viewBox="0 0 960 620" fill="none">
+  <title>Taxi before Al-Qarawiyyin-inspired architecture</title>
+  <desc>Original code-authored outline illustration: a foreground taxi, square crenellated minaret, pitched courtyard pavilion roof and horseshoe arcades, on navy. Decorative composition, not a street or navigation map.</desc>
+  <defs>
+    <g id="courtyard_arch" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M0 67V35C-7 22 0 4 17 0C34 4 41 22 34 35V67"/>
+      <path d="M-7 67V35C-12 17-1-7 17-10C35-7 46 17 41 35V67" opacity=".45"/>
+    </g>
+    <g id="roof_tiles" stroke-linecap="round">
+      <path d="M0 0L-24 38M13 0L-9 38M26 0L6 38M39 0L21 38M52 0L36 38M65 0L51 38M78 0L66 38M91 0L81 38M104 0L96 38M117 0L111 38"/>
+    </g>
+    <g id="wheel" stroke-linecap="round" stroke-linejoin="round">
+      <circle r="37" fill="#0B1F3A" stroke="#FFFFFF" stroke-width="4"/>
+      <circle r="24" stroke="#FFFFFF" stroke-width="2.5"/>
+      <circle r="7" stroke="#D6A800" stroke-width="2.5"/>
+      <path d="M0-23V-10M0 10V23M-23 0H-10M10 0H23M-16-16L-7-7M7 7L16 16M-16 16L-7 7M7-7L16-16" stroke="#FFFFFF" stroke-width="2"/>
+    </g>
+  </defs>
+
+  <!-- Deliberately solid navy: this is the owner's welcome-art direction,
+       not a transparent stock scene or a second application theme. -->
+  <rect width="960" height="620" rx="28" fill="#0B1F3A"/>
+  <rect x="24" y="24" width="912" height="572" rx="20" stroke="#FFFFFF" stroke-opacity=".12" stroke-width="1.5"/>
+
+  <!-- A restrained geometric frame gives the drawing room to breathe. -->
+  <g stroke="#D6A800" stroke-width="2" stroke-linecap="round" opacity=".75">
+    <path d="M68 94V68H94M866 68H892V94M68 526V552H94M866 552H892V526"/>
+  </g>
+
+  <!-- Architectural reference: the actual Qarawiyyin tower is a plain
+       square shaft with paired upper windows and a crenellated crown,
+       not a bulbous dome, Ottoman tower, or the Koutoubia's lantern. -->
+  <g stroke="#E6ECF3" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M649 343V132H733V343" fill="#0B1F3A"/>
+    <path d="M649 132H733V119H727L722 110L716 119H709L703 110L697 119H690L684 110L678 119H671L665 110L659 119H649Z" fill="#0B1F3A"/>
+    <path d="M650 143H732M655 149H727" opacity=".55"/>
+    <path d="M672 180V167C672 155 683 155 683 167V180ZM698 180V167C698 155 709 155 709 167V180Z"/>
+    <path d="M676 219V230M703 270V283" stroke-width="2" opacity=".7"/>
+    <path d="M655 324H727" opacity=".35"/>
+  </g>
+  <g stroke="#D6A800" stroke-width="2" stroke-linecap="round">
+    <path d="M691 110V81"/>
+    <circle cx="691" cy="79" r="3" fill="#D6A800"/>
+    <path d="M694 91V102" opacity=".65"/>
+  </g>
+
+  <!-- Pitched roofs and courtyard arcades, simplified rather than traced
+       from a copyrighted photograph. Background line weight stays lighter
+       than the taxi's outline, even at a 350px display width. -->
+  <g stroke="#E6ECF3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M104 336L135 311H350L378 336H627L648 311H754L781 336H859V441H104Z" fill="#0B1F3A"/>
+    <path d="M109 346H851M109 357H851" opacity=".55"/>
+    <path d="M139 312L122 335M163 312L149 335M188 312L177 335M213 312L204 335M238 312L231 335M263 312L258 335M288 312L285 335M313 312L312 335M338 312L339 335" opacity=".42" stroke-width="1.5"/>
+    <path d="M665 312L651 335M687 312L676 335M709 312L701 335M731 312L726 335M753 312L751 335" opacity=".42" stroke-width="1.5"/>
+    <use href="#courtyard_arch" x="133" y="381"/>
+    <use href="#courtyard_arch" x="197" y="381"/>
+    <use href="#courtyard_arch" x="261" y="381"/>
+    <use href="#courtyard_arch" x="325" y="381"/>
+    <use href="#courtyard_arch" x="389" y="381"/>
+    <use href="#courtyard_arch" x="453" y="381"/>
+    <use href="#courtyard_arch" x="517" y="381"/>
+    <use href="#courtyard_arch" x="581" y="381"/>
+    <use href="#courtyard_arch" x="645" y="381"/>
+    <use href="#courtyard_arch" x="709" y="381"/>
+    <use href="#courtyard_arch" x="773" y="381"/>
+    <path d="M104 449H860" opacity=".5"/>
+  </g>
+
+  <!-- Courtyard pavilion: broad hipped roof, deep timber cornice and
+       horseshoe opening are the other recognisable Qarawiyyin cues. -->
+  <g stroke="#FFFFFF" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M150 294L251 239L352 294L337 309H165Z" fill="#0B1F3A"/>
+    <path d="M166 294H337M174 301H329" opacity=".65"/>
+    <path d="M251 240V294M251 240L210 294M251 240L292 294M251 240L184 294M251 240L318 294" opacity=".6" stroke-width="1.7"/>
+    <path d="M166 309H337V324H166ZM182 324V435M321 324V435" fill="#0B1F3A"/>
+    <path d="M173 312V321M184 312V321M195 312V321M206 312V321M217 312V321M228 312V321M239 312V321M250 312V321M261 312V321M272 312V321M283 312V321M294 312V321M305 312V321M316 312V321M327 312V321" stroke-width="1.5" opacity=".6"/>
+    <path d="M198 426V378C186 361 203 335 251 329C299 335 316 361 304 378V426" fill="#0B1F3A"/>
+    <path d="M209 417V378C198 364 214 345 251 340C288 345 304 364 293 378V417" opacity=".45" stroke-width="1.6"/>
+    <path d="M185 433H318M179 439H324"/>
+  </g>
+  <g stroke="#D6A800" stroke-width="2" stroke-linecap="round">
+    <path d="M251 238V229"/>
+    <circle cx="251" cy="225" r="3" fill="#D6A800"/>
+    <path d="M151 294L251 239L351 294"/>
+  </g>
+
+  <!-- Grounding strokes are decorative, never simulated routing geometry. -->
+  <g stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" opacity=".23">
+    <path d="M110 468H177M788 468H852M130 486H169M808 486H844M170 538H820"/>
+  </g>
+
+  <!-- Foreground sedan: two genuine axles, a coherent side/front
+       perspective, separate panes, understated detail, no maker's logo. -->
+  <g stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M198 447L213 405Q219 394 241 389L333 374L383 313Q401 291 427 290L543 288Q570 289 588 309L641 358L710 374Q745 382 758 410L779 462Q785 480 770 491L690 503L365 513L226 507Q207 505 203 484Z" fill="#0B1F3A"/>
+    <path d="M214 405L331 390L640 374L747 398" stroke-width="2" opacity=".7"/>
+    <path d="M333 374L641 358L665 369" stroke-width="2.5"/>
+    <path d="M351 369L398 315Q402 310 411 309L455 307L456 366Z" fill="#163A63" stroke-width="2.7"/>
+    <path d="M469 307L541 305Q550 306 557 314L601 359L473 365Z" fill="#163A63" stroke-width="2.7"/>
+    <path d="M559 308L577 318L623 359L607 360Z" fill="#163A63" stroke-width="2.3"/>
+    <path d="M347 389L344 440M478 383L488 468M611 377L623 430" stroke-width="2" opacity=".65"/>
+    <path d="M363 397L384 396M501 391L523 390" stroke-width="3"/>
+    <path d="M611 365L639 360Q647 359 649 367L646 374L624 378Z" fill="#0B1F3A" stroke-width="2.5"/>
+    <path d="M662 387L674 460L773 458" stroke-width="2.5"/>
+    <path d="M713 399L748 413L754 429L718 419Z" fill="#163A63" stroke-width="2.5"/>
+    <path d="M681 422L700 425L705 436L684 433Z" stroke-width="2.2"/>
+    <path d="M710 447L760 457M715 452L756 461" stroke-width="1.8" opacity=".65"/>
+    <path d="M685 477L761 474M224 478L279 481M371 482L591 472" stroke-width="2.5"/>
+    <path d="M282 509Q277 463 322 460Q367 460 371 508M601 504Q597 454 642 451Q685 449 692 498" stroke-width="3"/>
+    <path d="M375 328L389 313M490 321L513 343" stroke-width="1.6" opacity=".45"/>
+  </g>
+  <g stroke="#D6A800" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M444 287L450 266Q451 263 456 263H492Q497 263 498 267L503 286Z" fill="#0B1F3A" stroke-width="3"/>
+    <path d="M455 272H464M472 272H481M489 272H493" stroke-width="3.5"/>
+    <path d="M222 415L241 411L238 425L216 429" stroke-width="3"/>
+    <path d="M247 435L330 425M380 420L581 406" stroke-width="2.5"/>
+  </g>
+  <use href="#wheel" x="324" y="503"/>
+  <use href="#wheel" x="647" y="494"/>
+  <path d="M250 558H710" stroke="#D6A800" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+</svg>

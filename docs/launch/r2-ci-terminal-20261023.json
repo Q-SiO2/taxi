@@ -1,0 +1,70 @@
+{
+  "observed_utc": "2026-10-23 17:26:46 UTC",
+  "commit": "7d757a69a17fa126caad33c3eb7f4d510c8cf981",
+  "run_id": 39989234575,
+  "event": "pull_request",
+  "url": "https://github.com/Q-SiO2/taxi/actions/runs/39989234575",
+  "jobs": [
+    {
+      "id": 120536376512,
+      "name": "ios-shared",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120536376816,
+      "name": "documentation-and-provenance",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120536376915,
+      "name": "web",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120536376946,
+      "name": "gradle-wrapper-integrity",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120536376948,
+      "name": "dependency-review",
+      "status": "completed",
+      "conclusion": "cancelled"
+    },
+    {
+      "id": 120536376954,
+      "name": "backend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120536376996,
+      "name": "mobile",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120536377954,
+      "name": "gradle-dependency-submission",
+      "status": "completed",
+      "conclusion": "skipped"
+    },
+    {
+      "id": 120549062395,
+      "name": "publish-backend-image",
+      "status": "completed",
+      "conclusion": "skipped"
+    }
+  ],
+  "scope": "Historical candidate 7d; membership implementation is outside this candidate.",
+  "release_accepted": false,
+  "limitations": [
+    "Dependency review cancelled with incomplete comparison; do not bypass.",
+    "Unsigned simulator builds are not physical iOS or distribution acceptance.",
+    "Staging images unchanged."
+  ]
+}

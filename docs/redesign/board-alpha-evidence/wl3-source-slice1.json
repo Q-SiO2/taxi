@@ -1,0 +1,126 @@
+{
+  "verified_utc": "2026-10-17T14:43:44.629448+00:00",
+  "scope": "partial WL-3 source slice plus post-v6 desktop entry bounds; no new release bundle or hosted acceptance",
+  "checks": [
+    "JS and Wasm source compilation succeeded",
+    "67 browser tests passed, zero failures/errors/skips",
+    "755 EN/FR/AR resource keys validate",
+    "Recruitment entry and privacy-preserving funnel use localized resources",
+    "Existing shared application-status mapping reused; wire values unchanged",
+    "City display uses current language; visible numeric counts use bidi isolation",
+    "Null/suppressed counts remain unavailable, never reconstructed as zero",
+    "Source atlas still verifies 213 views / 261 declarations / 58 files"
+  ],
+  "build_duration": "4m46s",
+  "tests": {
+    "tests": 67,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "raw_test_archive": ".tools/alpha-delivery/wl3-slice1-test-results",
+  "raw_test_hashes": [
+    {
+      "path": "TEST-org.example.taximobile.applicant.state.ApplicantPortalCoordinatorTest.xml",
+      "sha256": "bb0c9bc5d682cb2ddfbc9fc441dc447454da1c1c5467fc04f63e41e106249b84"
+    },
+    {
+      "path": "TEST-org.example.taximobile.application.WebFailurePresentationTest.xml",
+      "sha256": "8fc5e46fdccc1d0679473470e770aca6ef8d6b6cf292e056cb1da4508ed42e7b"
+    },
+    {
+      "path": "TEST-org.example.taximobile.application.WebSurfaceTest.xml",
+      "sha256": "c1d9e3ba9ac2701cb410b1cc6be9bfa907b6eec28d32f553de53177a22ea8fdb"
+    },
+    {
+      "path": "TEST-org.example.taximobile.operations.data.OperationsApiEndpointsTest.xml",
+      "sha256": "c6199101c15ee0139e76891b1f1beeec347f159832f35367348d9a66d5d641fd"
+    },
+    {
+      "path": "TEST-org.example.taximobile.operations.model.AccountSecurityModelsTest.xml",
+      "sha256": "5bdeaf738dc0595143fdaa00fbb5f6fadcb5d88f070919c1d8bd9d136bac44f8"
+    },
+    {
+      "path": "TEST-org.example.taximobile.operations.model.AnalyticsModelsTest.xml",
+      "sha256": "42cf28d26fd6ed51778efe1d2cc4e05d9dcb4ffcaaa4e1db352055d82eb2fb89"
+    },
+    {
+      "path": "TEST-org.example.taximobile.operations.model.CaseOperationsModelsTest.xml",
+      "sha256": "b4b2e8fae67822ef0cfe9c808d706c7f57fe5a9609d6186d772ce8e1bd25452e"
+    },
+    {
+      "path": "TEST-org.example.taximobile.operations.model.CityAuthorizationModelsTest.xml",
+      "sha256": "55b6ef6ee73a2eecb384afefe86254973a892958c3879d3da13b885d978fb569"
+    },
+    {
+      "path": "TEST-org.example.taximobile.operations.model.ControlPlaneModelsTest.xml",
+      "sha256": "5d1d720a5cc9ad9d83797b22e0aab9ac43b2d494b8cca9216c8091a4118e18b3"
+    },
+    {
+      "path": "TEST-org.example.taximobile.operations.model.DriverRecruitmentModelsTest.xml",
+      "sha256": "e3fe897d25dd5e8cb28b73706525cd2dd37236de8dd8ff66a7ccc961b338f1a0"
+    },
+    {
+      "path": "TEST-org.example.taximobile.operations.model.FixedRouteModelsTest.xml",
+      "sha256": "4e462d06658c6c4415d0beedcb423e6e4cee744fc4e9820dbcb179729cf8f56e"
+    },
+    {
+      "path": "TEST-org.example.taximobile.operations.model.OperationsModelsTest.xml",
+      "sha256": "7dcae31d159760aded05811499cc83cff0a31d4aef9b2cb4de6be7e971a5b52b"
+    },
+    {
+      "path": "TEST-org.example.taximobile.operations.model.PaymentOperationsModelsTest.xml",
+      "sha256": "1a2ac883398b763affa71006e7ac18a91f022226c4f1d1c7fa64c793a1cb3e4c"
+    },
+    {
+      "path": "TEST-org.example.taximobile.operations.model.PricingEconomicsModelsTest.xml",
+      "sha256": "6628ed704f43d843158f51d89c05e417a0ccc52a8fa7ece572ad232b797b04aa"
+    },
+    {
+      "path": "TEST-org.example.taximobile.operations.model.SecurityIncidentModelsTest.xml",
+      "sha256": "033d006f62349e47da6d10afb30af18a47c200cbd848fc5641845392a51568a1"
+    },
+    {
+      "path": "TEST-org.example.taximobile.operations.model.StaffAccessModelsTest.xml",
+      "sha256": "a783e4c9a50c5e53ad992f63ce2018f1ff4b98b972c0ba1edee20e16102b73e7"
+    },
+    {
+      "path": "TEST-org.example.taximobile.operations.ui.DriverRecruitmentScreenTest.xml",
+      "sha256": "f3579fa1d7da045f8dd39ef9aea1e0f88aca352105862dec1f8abc7ef43948cf"
+    },
+    {
+      "path": "TEST-org.example.taximobile.operations.ui.OperationsComponentsTest.xml",
+      "sha256": "ad977cebcec991eb97efd354f49a81e4b209a1707c42ef93f9742ded1e487f7a"
+    }
+  ],
+  "source_hashes": [
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/DriverRecruitmentScreen.kt",
+      "sha256": "b9e34508a9e1f50ca73a885302bcffc827960581795e322d5c9231a42ae98e4d"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsApp.kt",
+      "sha256": "336a7351e12a5d4d2ae12fd581330a633bf36c30207e22263bec34107094bf75"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/values/strings.xml",
+      "sha256": "ab06746214e09ea33b2509cc31d9f441fe90ee66167abb34a1c15f2dbac95cdb"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/values-fr/strings.xml",
+      "sha256": "7a251cfd0e971deb9b80571b4f8663da4ee6574fcc5c631ef56f68d4538d3311"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/values-ar/strings.xml",
+      "sha256": "612eb74136bd0fed5b95a39aacadac9c500f97284a1a9dc4a043879a42ef5ae2"
+    }
+  ],
+  "live_baseline_capture": "wl3-v6-ar-recruitment-before.png",
+  "limitations": [
+    "Requirement administration/editor/review and applicant protected screens remain untranslated",
+    "New source has no optimized package or actual new UI renders yet",
+    "Web v6 remains deployed; the baseline screenshot is not the new translated source",
+    "Desktop width correction compiled but still needs an actual bounded-card render",
+    "Complete a coherent localization packet before the next optimized build/deployment"
+  ]
+}

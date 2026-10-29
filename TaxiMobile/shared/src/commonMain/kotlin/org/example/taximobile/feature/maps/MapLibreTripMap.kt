@@ -1,8 +1,20 @@
 package org.example.taximobile.feature.maps
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import org.example.taximobile.domain.rides.Coordinates
+
+/** Boundary for native map libraries that retain their first event listener. */
+@Composable
+internal fun rememberMapCoordinateSelection(
+    onCoordinateSelected: (Coordinates) -> Unit,
+): (Coordinates) -> Unit {
+    val currentSelection by rememberUpdatedState(onCoordinateSelected)
+    return remember { { coordinate: Coordinates -> currentSelection(coordinate) } }
+}
 
 /** Platform MapLibre surface; shared state decides what a tap means. */
 @Composable

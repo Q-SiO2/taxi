@@ -1,0 +1,230 @@
+{
+  "candidate": "candidate-native-v23.json",
+  "started_utc": "2026-10-22T18:30:50.591424+00:00",
+  "passed": false,
+  "observations": [
+    {
+      "role": "passenger",
+      "label": "normal-roomy",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,1152][720,1504]"
+      ],
+      "recenter_bounds": [
+        "Bounds(left=584, top=888, right=688, bottom=992)"
+      ],
+      "inbox_bounds": [
+        "Bounds(left=525, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v23-map-chrome-passenger-normal-roomy.png",
+        "sha256": "d95b6c83c81ceb49933f966a4ef51a8940f1f2c62adc3b95eee6a6c2497ffc18"
+      }
+    },
+    {
+      "role": "passenger",
+      "label": "normal-expanded",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,352][720,1504]"
+      ],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=525, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v23-map-chrome-passenger-normal-expanded.png",
+        "sha256": "1a5e09e0df499247c054e4214df3bbdd09d9e3e5f273f92cd34ad81fdc73f25e"
+      }
+    },
+    {
+      "role": "passenger",
+      "label": "normal-inbox-open",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,352][720,1504]"
+      ],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=525, top=72, right=688, bottom=168)",
+        "Bounds(left=48, top=544, right=173, bottom=606)"
+      ],
+      "screenshot": {
+        "path": "v23-map-chrome-passenger-normal-inbox-open.png",
+        "sha256": "dc19d1af98f2af81ad5cb889d27fa3ef1d9049d3680240ddd7e48091073ece44"
+      }
+    },
+    {
+      "role": "passenger",
+      "label": "normal-collapse-restored",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,1152][720,1504]"
+      ],
+      "recenter_bounds": [
+        "Bounds(left=584, top=888, right=688, bottom=992)"
+      ],
+      "inbox_bounds": [
+        "Bounds(left=525, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v23-map-chrome-passenger-normal-collapse-restored.png",
+        "sha256": "620bd40136aa1fc087fef1ff9d784645943ddd1fc9377c4aab7e6fcbedc19b04"
+      }
+    },
+    {
+      "role": "passenger",
+      "label": "large-text-promoted",
+      "font_scale": "1.6",
+      "viewport": [],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=506, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v23-map-chrome-passenger-large-text-promoted.png",
+        "sha256": "334d45ae547daac5bead8e4cb1d2c87bf11decda851bd65fa13d72da25d455b5"
+      }
+    },
+    {
+      "role": "passenger",
+      "label": "large-text-inbox-open",
+      "font_scale": "1.6",
+      "viewport": [
+        "[0,352][720,1504]"
+      ],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=506, top=72, right=688, bottom=168)",
+        "Bounds(left=48, top=546, right=203, bottom=623)"
+      ],
+      "screenshot": {
+        "path": "v23-map-chrome-passenger-large-text-inbox-open.png",
+        "sha256": "e75714158d9a7971b2e5672e1cbd788d4dd13a6afa0301d2e9ec51ebe2649d4e"
+      }
+    },
+    {
+      "role": "driver",
+      "label": "normal-roomy",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,832][720,1552]"
+      ],
+      "recenter_bounds": [
+        "Bounds(left=584, top=568, right=688, bottom=672)"
+      ],
+      "inbox_bounds": [
+        "Bounds(left=526, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v23-map-chrome-r2-driver-normal-roomy.png",
+        "sha256": "dfa8bedc77b573c04f1ff7e0b97922e6f66e4c2ee5fd9ed9bf492bb5591a6bc8"
+      }
+    },
+    {
+      "role": "driver",
+      "label": "normal-expanded",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,352][720,1552]"
+      ],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=526, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v23-map-chrome-r2-driver-normal-expanded.png",
+        "sha256": "552695bc12ce5e4877902fec8625e3ae057e37e96cf450b7519c1148a00bb960"
+      }
+    },
+    {
+      "role": "driver",
+      "label": "normal-inbox-open",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,352][720,1552]"
+      ],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=526, top=72, right=688, bottom=168)",
+        "Bounds(left=48, top=544, right=173, bottom=606)"
+      ],
+      "screenshot": {
+        "path": "v23-map-chrome-r2-driver-normal-inbox-open.png",
+        "sha256": "b909135b98d5006c6a4abca5d35ce499cc22bf3adf9292f7c50d81030a6f8eb9"
+      }
+    },
+    {
+      "role": "driver",
+      "label": "normal-collapse-restored",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,1152][720,1552]"
+      ],
+      "recenter_bounds": [
+        "Bounds(left=584, top=888, right=688, bottom=992)"
+      ],
+      "inbox_bounds": [
+        "Bounds(left=526, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v23-map-chrome-r2-driver-normal-collapse-restored.png",
+        "sha256": "a9a1a501cee29deb6c6e9d70ba606ed2b86c2c20dfd306437c9cf810a975de3b"
+      }
+    },
+    {
+      "role": "driver",
+      "label": "large-text-promoted",
+      "font_scale": "1.6",
+      "viewport": [
+        "[0,352][720,1552]"
+      ],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=507, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v23-map-chrome-r2-driver-large-text-promoted.png",
+        "sha256": "26daa4badf38e8a364ed54f7164099b68e558a6a06ee0dbf4e995f95219fe65f"
+      }
+    },
+    {
+      "role": "driver",
+      "label": "large-text-inbox-open",
+      "font_scale": "1.6",
+      "viewport": [
+        "[0,352][720,1552]"
+      ],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=507, top=72, right=688, bottom=168)",
+        "Bounds(left=48, top=546, right=203, bottom=623)"
+      ],
+      "screenshot": {
+        "path": "v23-map-chrome-r2-driver-large-text-inbox-open.png",
+        "sha256": "83ba3894e3a56b33dc9b2bc3c5d46402f9a9cbf40a84126a893e342d1282d02c"
+      }
+    },
+    {
+      "role": "driver",
+      "label": "failure-diagnostic",
+      "font_scale": "1.0",
+      "viewport": [],
+      "recenter_bounds": [],
+      "inbox_bounds": [],
+      "screenshot": {
+        "path": "v23-map-chrome-r2-driver-failure-diagnostic.png",
+        "sha256": "f14f2c90fc6b9ff7918e3f32bd28531823cc423556f04dea12e6cc4f4b4017de"
+      }
+    }
+  ],
+  "scope": "Actual API31 passenger/API35 driver, normal/1.6 system text, expanded sheet, visible Inbox navigation and restored map actions. No business input or physical-device acceptance.",
+  "retained_passenger_observations": {
+    "record": "v23-native-map-chrome-verification-20261022.json",
+    "sha256": "957c1eafb5f05861d600d760d3fb99f2c4a4055f7c8fd08a92efa62edbdd723b",
+    "qualification": "Six passenger checks passed. Driver observer began on account instead of main home and timed out before input; current main home observed independently. New driver continuation only; prior failure preserved."
+  },
+  "failure_type": "RuntimeError",
+  "failure_detail": "Actual native chrome control not reached: driver_home",
+  "finished_utc": "2026-10-22T18:33:28.153891+00:00"
+}

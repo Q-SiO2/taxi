@@ -1,5 +1,7 @@
 package org.example.taximobile.applicant.state
 
+import org.example.taximobile.feature.ui.text.UiMessage
+import taximobile.shared.generated.resources.*
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +31,14 @@ enum class ApplicantSessionPhase { SIGNED_OUT, SIGNING_IN, SIGNED_IN }
 
 enum class ApplicantAuthMode { SIGN_IN, CREATE_ACCOUNT }
 
-data class ApplicantPortalMessage(val title: String, val detail: String)
+data class ApplicantPortalMessage(
+    val title: String,
+    val detail: String,
+    val localizedTitle: UiMessage? = null,
+    val localizedDetail: UiMessage? = null,
+) {
+    constructor(title: UiMessage, detail: UiMessage) : this("", "", title, detail)
+}
 
 data class ApplicantPortalState(
     val apiBaseUrl: String,
@@ -37,11 +46,12 @@ data class ApplicantPortalState(
     val authMode: ApplicantAuthMode = ApplicantAuthMode.SIGN_IN,
     val account: CurrentAccount? = null,
     val recruitingCities: List<RecruitingCity> = emptyList(),
+    val catalogUnavailable: Boolean = false,
     val applications: List<DriverCityApplicationSummary> = emptyList(),
     val selectedApplication: DriverCityApplication? = null,
     val vehicles: List<DriverVehicle> = emptyList(),
     val credentials: List<DriverCredential> = emptyList(),
-    val busyLabel: String? = null,
+    val busyLabel: UiMessage? = null,
     val error: ApplicantPortalMessage? = null,
     val notice: ApplicantPortalMessage? = null,
 ) {
@@ -90,7 +100,7 @@ class ApplicantPortalCoordinator(
     fun login(identifier: String, password: String) {
         val validation = validateApplicantLogin(identifier, password)
         if (validation != null) {
-            fail("Check your sign-in details", validation)
+            fail(UiMessage(Res.string.web_check_details), validation)
             return
         }
         if (mutableState.value.interactionLocked) return
@@ -98,7 +108,7 @@ class ApplicantPortalCoordinator(
             mutate {
                 it.copy(
                     sessionPhase = ApplicantSessionPhase.SIGNING_IN,
-                    busyLabel = "Signing in",
+                    busyLabel = UiMessage(Res.string.web_app_busy_sign_in),
                     error = null,
                     notice = null,
                 )
@@ -107,15 +117,14 @@ class ApplicantPortalCoordinator(
                 when (val result = authentication.login(identifier.trim(), password, "Applicant web portal")) {
                     is AuthenticationState.Authenticated -> loadSignedIn(result.account)
                     is AuthenticationState.Failure -> signOutWithError(
-                        "Sign-in failed",
-                        "The credentials were rejected or the service could not be reached. Check them and try again.",
+                        UiMessage(Res.string.web_auth_rejected_title), result.message,
                     )
-                    else -> signOutWithError("Sign-in failed", "The account session could not be established.")
+                    else -> signOutWithError(UiMessage(Res.string.web_auth_rejected_title), UiMessage(Res.string.web_request_unconfirmed))
                 }
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (error: Throwable) {
-                handleFailure("Sign-in failed", error)
+                handleFailure(error)
             }
         }
     }
@@ -128,14 +137,14 @@ class ApplicantPortalCoordinator(
     ) {
         val validation = validateApplicantRegistration(displayName, email, phoneNumber, password)
         if (validation != null) {
-            fail("Check the account details", validation)
+            fail(UiMessage(Res.string.web_check_details), validation)
             return
         }
         if (mutableState.value.interactionLocked) return
         scope.launch {
-            mutate { it.copy(busyLabel = "Creating account", error = null, notice = null) }
+            mutate { it.copy(busyLabel = UiMessage(Res.string.web_app_busy_create), error = null, notice = null) }
             try {
-                when (
+                when (val result =
                     authentication.register(
                         displayName = displayName.trim(),
                         email = email.trim().ifBlank { null },
@@ -148,36 +157,33 @@ class ApplicantPortalCoordinator(
                             authMode = ApplicantAuthMode.SIGN_IN,
                             busyLabel = null,
                             notice = ApplicantPortalMessage(
-                                "Account created",
-                                "Sign in with the email address or phone number you just registered.",
+                                UiMessage(Res.string.web_account_created_title),
+                                UiMessage(Res.string.web_account_created_detail),
                             ),
                         )
                     }
-                    is AuthenticationState.Failure -> fail(
-                        "Account not created",
-                        "The account details were rejected or the service could not be reached. Review them and try again.",
-                    )
-                    else -> fail("Account not created", "The registration response was not recognized.")
+                    is AuthenticationState.Failure -> fail(UiMessage(Res.string.web_error_title), result.message)
+                    else -> fail(UiMessage(Res.string.web_error_title), UiMessage(Res.string.web_request_unconfirmed))
                 }
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (error: Throwable) {
-                handleFailure("Account not created", error)
+                handleFailure(error)
             }
         }
     }
 
     fun refresh() {
         val account = mutableState.value.account
-        if (account == null) refreshCatalog() else launchBusy("Refreshing applications") { loadSignedIn(account) }
+        if (account == null) refreshCatalog() else launchBusy(UiMessage(Res.string.web_app_busy_refresh)) { loadSignedIn(account) }
     }
 
-    fun selectApplication(applicationId: String) = launchBusy("Loading application") {
+    fun selectApplication(applicationId: String) = launchBusy(UiMessage(Res.string.web_app_busy_load)) {
         val application = recruitment.application(applicationId)
         reloadOwnedData(selected = application)
     }
 
-    fun createApplication(cityId: String) = launchBusy("Starting city application") {
+    fun createApplication(cityId: String) = launchBusy(UiMessage(Res.string.web_app_busy_start)) {
         val account = requireNotNull(mutableState.value.account)
         val application = recruitment.createApplication(cityId, account.displayName)
         reloadOwnedData(selected = application)
@@ -190,7 +196,7 @@ class ApplicantPortalCoordinator(
         evidence: List<DriverApplicationEvidenceDraft>,
         removeAnswerItemIds: List<String>,
         removeEvidenceItemIds: List<String>,
-    ) = launchBusy("Saving application") {
+    ) = launchBusy(UiMessage(Res.string.web_app_busy_save)) {
         val application = recruitment.updateApplication(
             applicationId = applicationId,
             expectedVersion = expectedVersion,
@@ -202,30 +208,30 @@ class ApplicantPortalCoordinator(
         reloadOwnedData(
             selected = application,
             notice = ApplicantPortalMessage(
-                "Draft saved",
-                "The backend confirmed application version ${application.optimisticVersion}.",
+                UiMessage(Res.string.web_app_saved_title),
+                UiMessage(Res.string.web_app_version_confirmed, listOf(application.optimisticVersion)),
             ),
         )
     }
 
-    fun submitApplication(applicationId: String) = launchBusy("Submitting for review") {
+    fun submitApplication(applicationId: String) = launchBusy(UiMessage(Res.string.web_app_busy_submit)) {
         val application = recruitment.submitApplication(applicationId)
         reloadOwnedData(
             selected = application,
             notice = ApplicantPortalMessage(
-                "Application submitted",
-                "${application.cityName.english} will review this city-scoped application.",
+                UiMessage(Res.string.web_app_submitted_title),
+                UiMessage(Res.string.web_app_submitted_detail),
             ),
         )
     }
 
-    fun withdrawApplication(applicationId: String) = launchBusy("Withdrawing application") {
+    fun withdrawApplication(applicationId: String) = launchBusy(UiMessage(Res.string.web_app_busy_withdraw)) {
         val application = recruitment.withdrawApplication(applicationId)
         reloadOwnedData(
             selected = application,
             notice = ApplicantPortalMessage(
-                "Application withdrawn",
-                "The record remains available. Your account and retained evidence were not deleted.",
+                UiMessage(Res.string.web_app_withdrawn_title),
+                UiMessage(Res.string.web_app_withdrawn_detail),
             ),
         )
     }
@@ -234,9 +240,9 @@ class ApplicantPortalCoordinator(
         applicationId: String,
         requirementItemId: String,
         expectedVersion: Int,
-    ) = launchBusy("Choosing protected document") {
+    ) = launchBusy(UiMessage(Res.string.web_app_busy_choose)) {
         val selected = pickBrowserDriverDocument() ?: return@launchBusy
-        mutate { it.copy(busyLabel = "Scanning and saving document") }
+        mutate { it.copy(busyLabel = UiMessage(Res.string.web_app_busy_scan)) }
         val application = recruitment.uploadDocument(
             applicationId,
             requirementItemId,
@@ -246,9 +252,8 @@ class ApplicantPortalCoordinator(
         reloadOwnedData(
             selected = application,
             notice = ApplicantPortalMessage(
-                "Document saved",
-                "The backend scanned the file and confirmed application version " +
-                    "${application.optimisticVersion}.",
+                UiMessage(Res.string.web_app_document_saved),
+                UiMessage(Res.string.web_app_version_confirmed, listOf(application.optimisticVersion)),
             ),
         )
     }
@@ -257,7 +262,7 @@ class ApplicantPortalCoordinator(
         applicationId: String,
         documentId: String,
         expectedVersion: Int,
-    ) = launchBusy("Deleting protected document") {
+    ) = launchBusy(UiMessage(Res.string.web_app_busy_delete)) {
         val application = recruitment.deleteDocument(
             applicationId,
             documentId,
@@ -266,13 +271,13 @@ class ApplicantPortalCoordinator(
         reloadOwnedData(
             selected = application,
             notice = ApplicantPortalMessage(
-                "Document deleted",
-                "The evidence was removed and the backend updated application completeness.",
+                UiMessage(Res.string.web_app_document_deleted),
+                UiMessage(Res.string.web_app_document_deleted_detail),
             ),
         )
     }
 
-    fun registerVehicle(vehicle: VehicleRegistration) = launchBusy("Registering vehicle") {
+    fun registerVehicle(vehicle: VehicleRegistration) = launchBusy(UiMessage(Res.string.web_app_busy_vehicle)) {
         driver.registerVehicle(vehicle)
         reloadOwnedData(selected = mutableState.value.selectedApplication)
     }
@@ -286,7 +291,7 @@ class ApplicantPortalCoordinator(
                 ApplicantPortalState(
                     apiBaseUrl = it.apiBaseUrl,
                     recruitingCities = cities,
-                    notice = ApplicantPortalMessage("Signed out", "The in-memory browser session was cleared."),
+                    notice = ApplicantPortalMessage(UiMessage(Res.string.web_app_signed_out), UiMessage(Res.string.web_app_signed_out_detail)),
                 )
             }
         }
@@ -300,11 +305,11 @@ class ApplicantPortalCoordinator(
         scope.launch {
             try {
                 val cities = recruitment.recruitingCities()
-                mutate { it.copy(recruitingCities = cities, error = null) }
+                mutate { it.copy(recruitingCities = cities, catalogUnavailable = false, error = null) }
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (error: Throwable) {
-                handleFailure("Recruiting cities unavailable", error, keepSession = true)
+                handleFailure(error, publicCatalog = true)
             }
         }
     }
@@ -314,7 +319,7 @@ class ApplicantPortalCoordinator(
             it.copy(
                 sessionPhase = ApplicantSessionPhase.SIGNED_IN,
                 account = account,
-                busyLabel = "Loading your applications",
+                busyLabel = UiMessage(Res.string.web_app_busy_applications),
                 error = null,
             )
         }
@@ -328,15 +333,18 @@ class ApplicantPortalCoordinator(
         val cities = recruitment.recruitingCities()
         val applications = recruitment.applications()
         val selectedId = selected?.id ?: mutableState.value.selectedApplication?.id
-        val resolvedSelection = selected
-            ?: applications.firstOrNull { it.id == selectedId }?.let { recruitment.application(it.id) }
-            ?: applications.firstOrNull()?.let { recruitment.application(it.id) }
+            ?: applications.firstOrNull()?.id
+        // Keep the selection, not its cached authority. A reviewer or vehicle
+        // change may have advanced this record since the last rendered detail
+        // (or even since an applicant command returned). Refresh the detail too.
+        val resolvedSelection = selectedId?.let { recruitment.application(it) }
         val vehicles = if (applications.isEmpty()) emptyList() else driver.vehicles()
         val credentials = if (applications.isEmpty()) emptyList() else driver.credentials()
         mutate {
             it.copy(
                 sessionPhase = ApplicantSessionPhase.SIGNED_IN,
                 recruitingCities = cities,
+                catalogUnavailable = false,
                 applications = applications,
                 selectedApplication = resolvedSelection,
                 vehicles = vehicles,
@@ -348,7 +356,7 @@ class ApplicantPortalCoordinator(
         }
     }
 
-    private fun launchBusy(label: String, command: suspend () -> Unit) {
+    private fun launchBusy(label: UiMessage, command: suspend () -> Unit) {
         val current = mutableState.value
         if (current.sessionPhase != ApplicantSessionPhase.SIGNED_IN || current.interactionLocked) return
         scope.launch {
@@ -358,31 +366,29 @@ class ApplicantPortalCoordinator(
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (error: Throwable) {
-                handleFailure("Application action failed", error)
+                handleFailure(error)
             }
         }
     }
 
-    private suspend fun handleFailure(title: String, error: Throwable, keepSession: Boolean = false) {
-        when (error) {
-            is AuthenticationRejectedException -> {
-                authentication.logout()
-                signOutWithError(
-                    "Session expired",
-                    "Sign in again before accessing an application.",
-                )
-            }
-            is AuthenticationNetworkException -> fail(title, "The API could not be reached. Check the connection and try again.")
-            is ApiRequestException -> fail(title, applicantApiError(error.statusCode))
-            else -> if (keepSession) {
-                fail(title, "The public catalog could not be loaded. Try again shortly.")
-            } else {
-                fail(title, "The request could not be completed. Refresh the record before trying again.")
+    private suspend fun handleFailure(error: Throwable, publicCatalog: Boolean = false) {
+        // A generic 503 does not establish whether protected storage failed or
+        // whether an upload was accepted. Preserve that uncertainty explicitly.
+        if (error is AuthenticationRejectedException) {
+            authentication.logout()
+            signOutWithError(UiMessage(Res.string.web_session_title), UiMessage(Res.string.web_session_detail))
+        } else {
+            val message = applicantFailureMessage(error, publicCatalog = publicCatalog)
+            mutate {
+                it.copy(busyLabel = null,
+                    catalogUnavailable = if (publicCatalog) true else it.catalogUnavailable,
+                    sessionPhase = if (it.account == null) ApplicantSessionPhase.SIGNED_OUT else it.sessionPhase,
+                    error = message)
             }
         }
     }
 
-    private fun signOutWithError(title: String, detail: String) = mutate {
+    private fun signOutWithError(title: UiMessage, detail: UiMessage) = mutate {
         ApplicantPortalState(
             apiBaseUrl = it.apiBaseUrl,
             recruitingCities = it.recruitingCities,
@@ -390,7 +396,7 @@ class ApplicantPortalCoordinator(
         )
     }
 
-    private fun fail(title: String, detail: String) = mutate {
+    private fun fail(title: UiMessage, detail: UiMessage) = mutate {
         it.copy(busyLabel = null, sessionPhase = if (it.account == null) ApplicantSessionPhase.SIGNED_OUT else it.sessionPhase,
             error = ApplicantPortalMessage(title, detail))
     }
@@ -400,10 +406,10 @@ class ApplicantPortalCoordinator(
     }
 }
 
-fun validateApplicantLogin(identifier: String, password: String): String? = when {
-    identifier.trim().length < 3 -> "Enter the email address or phone number registered to the account."
-    password.isEmpty() -> "Enter your password."
-    password.length > 256 -> "The password is too long."
+fun validateApplicantLogin(identifier: String, password: String): UiMessage? = when {
+    identifier.trim().length < 3 -> UiMessage(Res.string.web_identifier_required)
+    password.isEmpty() -> UiMessage(Res.string.web_password_required)
+    password.length > 256 -> UiMessage(Res.string.web_password_too_long)
     else -> null
 }
 
@@ -412,21 +418,30 @@ fun validateApplicantRegistration(
     email: String,
     phoneNumber: String,
     password: String,
-): String? = when {
-    displayName.isBlank() || displayName.trim().length > 120 -> "Enter a full name of up to 120 characters."
-    email.isBlank() && phoneNumber.isBlank() -> "Provide an email address or Moroccan phone number."
-    email.isNotBlank() && ('@' !in email || email.length > 320) -> "Enter a valid email address."
-    phoneNumber.length > 32 -> "The phone number is too long."
-    password.length !in 12..256 -> "Use a password between 12 and 256 characters."
+): UiMessage? = when {
+    displayName.isBlank() || displayName.trim().length > 120 -> UiMessage(Res.string.web_name_invalid)
+    email.isBlank() && phoneNumber.isBlank() -> UiMessage(Res.string.web_contact_required)
+    email.isNotBlank() && ('@' !in email || email.length > 320) -> UiMessage(Res.string.web_email_invalid)
+    phoneNumber.length > 32 -> UiMessage(Res.string.web_phone_too_long)
+    password.length !in 12..256 -> UiMessage(Res.string.web_password_registration_invalid)
     else -> null
 }
 
-private fun applicantApiError(statusCode: Int): String = when (statusCode) {
-    401 -> "The browser session expired. Sign in again."
-    404 -> "This record is unavailable or does not belong to the signed-in account."
-    409 -> "The record changed or this action is no longer allowed. Refresh before trying again."
-    422 -> "Some required information is missing or invalid. Review the highlighted requirements."
-    429 -> "Too many requests were made. Wait briefly before trying again."
-    503 -> "Protected document storage is unavailable. No file was accepted."
-    else -> "The API rejected this request (HTTP $statusCode)."
+internal fun applicantFailureMessage(error: Throwable, publicCatalog: Boolean): ApplicantPortalMessage {
+    val detail = when {
+        error is AuthenticationNetworkException -> Res.string.web_connection_unavailable
+        error is ApiRequestException -> when (error.statusCode) {
+            401 -> Res.string.web_session_detail
+            403 -> Res.string.web_scope_denied
+            404 -> Res.string.web_record_unavailable
+            409 -> Res.string.web_record_changed
+            422 -> Res.string.web_invalid_request
+            429 -> Res.string.web_rate_limited
+            503 -> if (publicCatalog) Res.string.web_catalog_unavailable else Res.string.web_service_unavailable
+            else -> Res.string.web_request_unconfirmed
+        }
+        publicCatalog -> Res.string.web_catalog_unavailable
+        else -> Res.string.web_request_unconfirmed
+    }
+    return ApplicantPortalMessage(UiMessage(Res.string.web_error_title), UiMessage(detail))
 }

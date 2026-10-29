@@ -1,0 +1,101 @@
+{
+  "verified_utc": "2026-10-17T00:08:16.626436+00:00",
+  "method": "Installed Android SDK apkanalyzer dex code on each immutable archived APK",
+  "rows": [
+    {
+      "version": "v6",
+      "role": "passenger",
+      "sha256": "a3b9d514d9bdb8d79424c31cbf680e719787291503bd04b1f606ed83464a0e35",
+      "actual_configuration": {
+        "api": "https://alpha-api-staging.up.railway.app",
+        "map_style": "https://tiles.openfreemap.org/styles/positron",
+        "place_search": false,
+        "manual_coordinate_entry": false,
+        "application_id": "ma.taximobile.passenger",
+        "role": "PASSENGER",
+        "client_version": "1.0.0"
+      },
+      "configuration_gate_passed": true
+    },
+    {
+      "version": "v6",
+      "role": "driver",
+      "sha256": "113a7b27026fb6d9126d3fe44c2058aaaf9295ff3deeab5f10356f2644620474",
+      "actual_configuration": {
+        "api": "https://alpha-api-staging.up.railway.app",
+        "map_style": "https://tiles.openfreemap.org/styles/positron",
+        "place_search": false,
+        "manual_coordinate_entry": false,
+        "application_id": "ma.taximobile.driver",
+        "role": "DRIVER",
+        "client_version": "1.0.0"
+      },
+      "configuration_gate_passed": true
+    },
+    {
+      "version": "v7",
+      "role": "passenger",
+      "sha256": "f9a9b17b4f509865ef153528e4dbf18eb5ed432a57d76d52909567316d033c55",
+      "actual_configuration": {
+        "api": "https://alpha-api-staging.up.railway.app",
+        "map_style": "https://tiles.openfreemap.org/styles/positron",
+        "place_search": false,
+        "manual_coordinate_entry": false,
+        "application_id": "ma.taximobile.passenger",
+        "role": "PASSENGER",
+        "client_version": "1.0.0"
+      },
+      "configuration_gate_passed": true
+    },
+    {
+      "version": "v7",
+      "role": "driver",
+      "sha256": "f4fb2187301c52f421ff1d40bac95eb5bf77db141316a821474c07eab6984bc0",
+      "actual_configuration": {
+        "api": "https://alpha-api-staging.up.railway.app",
+        "map_style": "https://tiles.openfreemap.org/styles/positron",
+        "place_search": false,
+        "manual_coordinate_entry": false,
+        "application_id": "ma.taximobile.driver",
+        "role": "DRIVER",
+        "client_version": "1.0.0"
+      },
+      "configuration_gate_passed": true
+    },
+    {
+      "version": "v8",
+      "role": "passenger",
+      "sha256": "10ac7ca6424aff131bb5d20b90d832ea3ff5e0742c285c6ccad62d5587ef1e33",
+      "actual_configuration": {
+        "api": "http://10.0.2.2:8000",
+        "map_style": "https://tiles.openfreemap.org/styles/positron",
+        "place_search": true,
+        "manual_coordinate_entry": false,
+        "application_id": "ma.taximobile.passenger",
+        "role": "PASSENGER",
+        "client_version": "1.0.0"
+      },
+      "configuration_gate_passed": false
+    },
+    {
+      "version": "v8",
+      "role": "driver",
+      "sha256": "ed42f862f1dae38d292ba4d5974d21b576f4f8ca9c207bd9c9cfabf27ab92f5d",
+      "actual_configuration": {
+        "api": "http://10.0.2.2:8000",
+        "map_style": "https://tiles.openfreemap.org/styles/positron",
+        "place_search": true,
+        "manual_coordinate_entry": false,
+        "application_id": "ma.taximobile.driver",
+        "role": "DRIVER",
+        "client_version": "1.0.0"
+      },
+      "configuration_gate_passed": false
+    }
+  ],
+  "rejected_candidate": "candidate-native-v8.json",
+  "reason": "V8 uses the local emulator API and enables place search; its original manifest incorrectly hard-coded staging/map-only configuration",
+  "consequence": "Do not present or rehearse v8 as a staging candidate. Preserve its APKs/source/manifest as rejected evidence.",
+  "v7_configuration": "Both archived v7 APKs pass the actual staging/map-only configuration gate; their runtime rehearsal is still unproven",
+  "replacement": "V9 rebuild with explicit staging/map-only flags and a fail-closed actual APK configuration check before candidate packaging"
+}

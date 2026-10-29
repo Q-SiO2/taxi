@@ -1,5 +1,6 @@
 package org.example.taximobile.feature.app
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -7,6 +8,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.LinearProgressIndicator
@@ -61,6 +65,7 @@ fun TaxiMobileScreen(
     completedAction: AppActionCompletion? = null,
     mapStyleUrl: String? = null,
     showManualCoordinateEntry: Boolean = true,
+    placeSearchEnabled: Boolean = true,
     onLogin: (String, String) -> Unit = { _, _ -> },
     onRegister: (String, String?, String?, String) -> Unit = { _, _, _, _ -> },
     onRecoverAccount: (String, String, String) -> Unit = { _, _, _ -> },
@@ -73,8 +78,9 @@ fun TaxiMobileScreen(
     onRefresh: () -> Unit = {},
     onLogout: () -> Unit = {},
     onRequestCurrentLocation: ((Coordinates?) -> Unit) -> Unit = { result -> result(null) },
+    onRequestDriverObservation: ((org.example.taximobile.domain.drivers.DriverLocationObservation?) -> Unit) -> Unit = { result -> result(null) },
     onSetDriverOnline: (Boolean, String?, String?) -> Unit = { _, _, _ -> },
-    onUpdateDriverLocation: (Coordinates) -> Unit = {},
+    onUpdateDriverLocation: (org.example.taximobile.domain.drivers.DriverLocationObservation) -> Unit = {},
     onRegisterDriverVehicle: (VehicleRegistration) -> Unit = {},
     onSelectDriverVehicle: (String) -> Unit = {},
     onDeactivateDriverVehicle: (String) -> Unit = {},
@@ -85,11 +91,13 @@ fun TaxiMobileScreen(
     onLoadFixedRoutes: (String) -> Unit = {},
     onEstimateFixedRoute: (String) -> Unit = {},
     onRequestFixedRoute: (String, RidePaymentMethod) -> Unit = { _, _ -> },
-    onEstimateScheduledPointToPoint: (String, String?, Coordinates, Coordinates) -> Unit = { _, _, _, _ -> },
-    onEstimateScheduledFixedRoute: (String, String) -> Unit = { _, _ -> },
+    onResolveScheduledLocalTime: (String, String, String, String, String) -> Unit = { _, _, _, _, _ -> },
+    onEstimateScheduledPointToPoint: (String, String?, Coordinates, Coordinates, String) -> Unit = { _, _, _, _, _ -> },
+    onEstimateScheduledFixedRoute: (String, String, String) -> Unit = { _, _, _ -> },
     onSchedulePointToPoint: (String, String?, Coordinates, Coordinates, String?, ScheduledBookingEstimate) -> Unit = { _, _, _, _, _, _ -> },
     onScheduleFixedRoute: (String, String, String?, ScheduledBookingEstimate) -> Unit = { _, _, _, _ -> },
     onCancelScheduledBooking: (String) -> Unit = {},
+    onLoadPassengerScheduledBookings: (Int) -> Unit = {},
     onSubmitManualTransfer: (String, String?) -> Unit = { _, _ -> },
     onCancelRide: (String) -> Unit = {},
     onSendRideCoordination: (String, org.example.taximobile.domain.rides.RideCoordinationCode) -> Unit = { _, _ -> },
@@ -106,6 +114,7 @@ fun TaxiMobileScreen(
     onCancelDriverRide: (String, String) -> Unit = { _, _ -> },
     onCompleteDriverRide: (String, Coordinates) -> Unit = { _, _ -> },
     onSettleDriverCash: (String) -> Unit = {},
+    onLoadPendingCashPayments: (Int) -> Unit = {},
     onApplyToDrive: (String) -> Unit = {},
     onSubmitDriverVerification: () -> Unit = {},
     onCreateDriverCityApplication: (String, String) -> Unit = { _, _ -> },
@@ -189,11 +198,13 @@ fun TaxiMobileScreen(
             onLoadFixedRoutes,
             onEstimateFixedRoute,
             onRequestFixedRoute,
+            onResolveScheduledLocalTime,
             onEstimateScheduledPointToPoint,
             onEstimateScheduledFixedRoute,
             onSchedulePointToPoint,
             onScheduleFixedRoute,
             onCancelScheduledBooking,
+            onLoadPassengerScheduledBookings,
             onSubmitManualTransfer,
             onCancelRide,
             onSendRideCoordination,
@@ -208,6 +219,7 @@ fun TaxiMobileScreen(
             onAcknowledgeRecoveryCodes,
             onRevokeAccountSession,
             onChangeAccountPassword,
+            placeSearchEnabled = placeSearchEnabled,
         )
         is AppUiState.DriverReady -> DriverHome(
             state,
@@ -215,7 +227,7 @@ fun TaxiMobileScreen(
             completedAction,
             mapStyleUrl,
             onLogout,
-            onRequestCurrentLocation,
+            onRequestDriverObservation,
             onSetDriverOnline,
             onUpdateDriverLocation,
             onRegisterDriverVehicle,
@@ -229,6 +241,7 @@ fun TaxiMobileScreen(
             onSendRideCoordination,
             onCompleteDriverRide,
             onSettleDriverCash,
+            onLoadPendingCashPayments,
             onCreateSupportTicket,
             onCreateSafetyReport,
             onMarkNotificationRead,
@@ -239,14 +252,24 @@ fun TaxiMobileScreen(
             onAcknowledgeRecoveryCodes,
             onRevokeAccountSession,
             onChangeAccountPassword,
+            showManualCoordinateEntry = showManualCoordinateEntry,
         )
     }
 }
 
 @Composable
-private fun GatePage(appRole: AppRole, content: @Composable () -> Unit) {
+internal fun GatePage(
+    appRole: AppRole,
+    safeInsets: WindowInsets = WindowInsets.safeDrawing,
+    content: @Composable () -> Unit,
+) {
+    val taxiColors = TaxiTheme.colors
     Column(
-        modifier = Modifier.fillMaxSize().background(TaxiColors.Surface1).verticalScroll(rememberScrollState()).padding(TaxiSpacing.Xl),
+        // Insets precede scrolling: content may scroll, but never under the
+        // status bar, cutout, gesture area or keyboard. Maps remain edge-to-edge.
+        modifier = Modifier.fillMaxSize().background(taxiColors.Surface1)
+            .windowInsetsPadding(safeInsets).verticalScroll(rememberScrollState())
+            .padding(TaxiSpacing.Xl),
         verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md),
     ) {
         Text(
@@ -256,14 +279,16 @@ private fun GatePage(appRole: AppRole, content: @Composable () -> Unit) {
             modifier = Modifier.semantics { heading() },
             style = MaterialTheme.typography.displaySmall,
         )
+        org.example.taximobile.feature.ui.components.TaxiStyleChooser()
         content()
     }
 }
 
 @Composable
 private fun SessionLoadingScreen(message: String) {
+    val taxiColors = TaxiTheme.colors
     Box(
-        modifier = Modifier.fillMaxSize().background(TaxiColors.Navy950).padding(TaxiSpacing.Xl),
+        modifier = Modifier.fillMaxSize().background(taxiColors.Navy950).padding(TaxiSpacing.Xl),
         contentAlignment = Alignment.Center,
     ) {
         Column(
@@ -272,8 +297,8 @@ private fun SessionLoadingScreen(message: String) {
             verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xl),
         ) {
             Text(stringResource(Res.string.app_name), color = Color.White, style = MaterialTheme.typography.displayMedium)
-            LinearProgressIndicator(Modifier.fillMaxWidth(), color = TaxiColors.Accent400, trackColor = TaxiColors.Navy800)
-            Text(message, color = TaxiColors.Navy200, style = MaterialTheme.typography.bodyMedium)
+            LinearProgressIndicator(Modifier.fillMaxWidth(), color = taxiColors.Accent400, trackColor = taxiColors.Navy800)
+            Text(message, color = taxiColors.Navy200, style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
@@ -495,10 +520,8 @@ private fun WelcomeContent(
     onCreateAccount: () -> Unit,
     onSignIn: () -> Unit,
 ) {
-    TaxiBrandArtwork(
-        contentDescriptionText = stringResource(Res.string.welcome_artwork_description),
-        modifier = Modifier.padding(vertical = TaxiSpacing.Md),
-    )
+    val taxiColors = TaxiTheme.colors
+    org.example.taximobile.feature.ui.components.TaxiEntryFrame(Modifier.padding(vertical = TaxiSpacing.Xs))
     Text(
         stringResource(
             if (appRole == AppRole.PASSENGER) Res.string.passenger_welcome_title
@@ -513,7 +536,7 @@ private fun WelcomeContent(
             else Res.string.driver_welcome_body,
         ),
         style = MaterialTheme.typography.bodyLarge,
-        color = TaxiColors.Ink500,
+        color = taxiColors.Ink500,
     )
     TaxiButton(stringResource(Res.string.create_account), onCreateAccount)
     TaxiButton(
@@ -575,8 +598,9 @@ private fun DriverApplicationPendingContent(
 
 @Composable
 private fun OfflineScreen(message: String, onRetry: () -> Unit) {
+    val taxiColors = TaxiTheme.colors
     Column(
-        modifier = Modifier.fillMaxSize().background(TaxiColors.Surface1).padding(TaxiSpacing.Xl),
+        modifier = Modifier.fillMaxSize().background(taxiColors.Surface1).padding(TaxiSpacing.Xl),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

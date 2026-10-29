@@ -13,10 +13,13 @@ import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.coroutines.CancellationException
+import kotlin.time.TimeSource
 import org.example.taximobile.core.network.ApiConfiguration
 import org.example.taximobile.data.auth.AuthenticationNetworkException
 import org.example.taximobile.data.auth.AuthenticationRejectedException
 import org.example.taximobile.data.network.ApiRequestException
+import org.example.taximobile.data.network.apiFailure
 import org.example.taximobile.data.rides.FareEconomicsResponse
 import org.example.taximobile.data.rides.FixedRouteRideSummaryResponse
 import org.example.taximobile.data.rides.toDomainEconomics
@@ -28,14 +31,16 @@ import org.example.taximobile.domain.rides.RideServiceType
 class KtorDriverOfferGateway(
     private val client: HttpClient,
     private val api: ApiConfiguration,
+    private val readClock: TimeSource = TimeSource.Monotonic,
     private val accessToken: suspend () -> String,
 ) : DriverOfferGateway {
     override suspend fun currentOffers(): List<DriverRideOffer> = request {
+        val started = readClock.markNow()
         val response = client.get(api.endpoint("drivers/me/ride-offers")) { authorize() }
         if (response.status == HttpStatusCode.Unauthorized) throw AuthenticationRejectedException()
         if (!response.status.isSuccess()) throw ApiRequestException(response.status.value, "The server could not load ride offers.")
         val payload = response.body<OfferListResponse>()
-        payload.offers.map { it.toDomain(payload.serverTime) }
+        payload.offers.map { it.toDomain(payload.serverTime).copy(readStartedAt = started) }
     }
 
     override suspend fun accept(offerId: String) = request {
@@ -54,13 +59,15 @@ class KtorDriverOfferGateway(
         header(HttpHeaders.Authorization, "Bearer ${accessToken()}")
     }
 
-    private fun io.ktor.client.statement.HttpResponse.throwForFailure() {
+    private suspend fun io.ktor.client.statement.HttpResponse.throwForFailure() {
         if (status == HttpStatusCode.Unauthorized) throw AuthenticationRejectedException()
-        if (!status.isSuccess()) throw ApiRequestException(status.value, "The server could not complete this offer action.")
+        if (!status.isSuccess()) throw apiFailure("The server could not complete this offer action.")
     }
 
     private suspend fun <T> request(block: suspend () -> T): T = try {
         block()
+    } catch (error: CancellationException) {
+        throw error
     } catch (error: AuthenticationRejectedException) {
         throw error
     } catch (error: ApiRequestException) {

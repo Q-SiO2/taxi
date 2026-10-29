@@ -1,0 +1,13 @@
+{
+  "observed_utc": "2026-10-20T09:30:41.199Z",
+  "project": "9f841575-c4f3-4a4d-bb83-2e6ff92e436e",
+  "environment": "staging",
+  "observed": "12 days or $2.26 left",
+  "screenshot": {
+    "path": "railway-trial-20261020.jpg",
+    "bytes": 46523,
+    "sha256": "1d12e54cfeae8ac4b85d046b5d05e797b0a250be43a66a08e23004e66199193b"
+  },
+  "scope": "Read-only allowance/architecture capture; five services Online; original volume remains unattached and active replacement visible; no account/resource mutation",
+  "limits": "Timestamped allowance, not a future spending/availability guarantee"
+}

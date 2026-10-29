@@ -208,7 +208,11 @@ data class LocalizedName(
     val fr: String,
     val ar: String,
 ) {
-    fun preferred(): String = en.ifBlank { fr.ifBlank { ar } }
+    fun preferred(language: String = "en"): String = when (language.replace('_', '-').substringBefore('-').lowercase()) {
+        "ar" -> ar.ifBlank { fr.ifBlank { en } }
+        "fr" -> fr.ifBlank { en.ifBlank { ar } }
+        else -> en.ifBlank { fr.ifBlank { ar } }
+    }
 }
 
 @Serializable
@@ -247,6 +251,7 @@ data class OperatorRecord(
     val id: String,
     @SerialName("market_id") val marketId: String,
     @SerialName("cooperative_id") val cooperativeId: String? = null,
+    @SerialName("requires_active_membership") val requiresActiveMembership: Boolean = false,
     val name: String,
     @SerialName("operator_type") val operatorType: String,
     val status: String,

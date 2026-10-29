@@ -13,6 +13,7 @@ import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.coroutines.CancellationException
 import org.example.taximobile.core.network.ApiConfiguration
 import org.example.taximobile.data.network.ApiRequestException
 import org.example.taximobile.domain.auth.AccountRole
@@ -75,6 +76,8 @@ class KtorAuthenticationGateway(
 
     private suspend fun <T> networkRequest(block: suspend () -> T): T = try {
         block()
+    } catch (error: CancellationException) {
+        throw error
     } catch (error: AuthenticationRejectedException) {
         throw error
     } catch (error: ApiRequestException) {

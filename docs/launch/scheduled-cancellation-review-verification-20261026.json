@@ -1,0 +1,150 @@
+{
+  "recorded_utc": "2026-10-26T10:04:08.241346+00:00",
+  "source_predecessor": "1f8bfb9d7e6162a267b8c2387fe08d28ee213f36",
+  "source_sha256": {
+    "backend/src/taximobile_api/domains/scheduled_bookings/router.py": "6e7a938d7d2837be68d652fabdf87f24d2b2a7840bb821ad16da1c4c0429c8a3",
+    "backend/tests/unit/test_scheduled_cancellation_terms.py": "adf22f1f24dc6b550d4b5bb6e59b4fff21657204ed801d5412e8fe2d55bf1582",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/scheduling/ScheduledBookingModels.kt": "a3356e2005732192c560ce18cfba405f360a0ad2c5021e612672365f1dbc7b88",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/scheduling/KtorScheduledBookingGateway.kt": "d5b93f4209962901c24b34c3ab9887ef261b24851dc84eb9a66cf4d402b13763",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/MobileAppCoordinator.kt": "ae8e6077c272f7a9e6d5c1b6b79b7c60c7ad52dc7bc11674c8284a37a342b18e",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt": "a66b28d6de157d263eeeb9d12d58597adb76a282c80d0df740544fdf5d60e3c9",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/ConfirmDialog.kt": "867387968d9d024af39f3de982c6ff2697fd9e6c85066b35974e3824b91918a7",
+    "TaxiMobile/shared/src/commonMain/composeResources/values/strings.xml": "3e46a2d50700dc1a953a3fcda29c776c8a5d54c04baf3aba47fb364bf3620c02",
+    "TaxiMobile/shared/src/commonMain/composeResources/values-fr/strings.xml": "e042d899d669737bc56b97e732b4d60207ca85d33fe9500ebda4cf36a7121b7b",
+    "TaxiMobile/shared/src/commonMain/composeResources/values-ar/strings.xml": "036282d9f6dd22bae698cd031ca90e37b0fccd787b9c2b284b62bd5c0028f25c",
+    "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/scheduling/ScheduledBookingFixtures.kt": "b9bf5472f7369e8aea73671690f9b5ce6f34f0dc772159cb88ea393fc5a3b9e1",
+    "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/app/QuoteSessionRecoveryTest.kt": "018b96b5e8e268649d37ef286988e87364038737704f7a92ac190bf29dea1ed1",
+    "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/app/MobileAppCoordinatorTest.kt": "6003d39f1966dc0d793c8fc6cc5f890ff79b76fe1acf123a58e0e5ce6dd77edb",
+    "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/domain/scheduling/ScheduledCancellationTermsTest.kt": "1cb9e769bfa316e1a6a0f5e828b78d5cfae61c6b3bb8014a8809abb274ff52f0",
+    "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/data/scheduling/ScheduledBookingDetailGatewayTest.kt": "120058fc5c02b30a5c3b415e64fdf9c24c7aea6426e2106c6788ea76e5e99c42",
+    "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/ScheduledBookingPaginationUiTest.kt": "67baf09dab8e9926a8bd8f2714df68410dac87fd272f06365baa25a0d1bf9cfd"
+  },
+  "scope": "Scheduled financial-terms review compatibility; backend retains actual cancellation/refund authority. No participant, provider, deployment or financial-policy change.",
+  "backend_baseline": {
+    "tests": 18,
+    "failures": 12,
+    "errors": 0,
+    "skipped": 0,
+    "junit_sha256": "3e65f09a2a18db9f3bcee748c575b280bcf769b25ec3bf7c249f2cc3692c648b"
+  },
+  "backend_affected": {
+    "totals": {
+      "tests": 90,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "suites": [
+      {
+        "suite": "pytest",
+        "tests": 90,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "junit_sha256": "c163368c85337af84138e0730d466fa163ee13ee36cfacace377b991a5a2d80f"
+  },
+  "platform": {
+    "jvm": {
+      "totals": {
+        "tests": 97,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suites": [
+        {
+          "suite": "org.example.taximobile.data.scheduling.ScheduledBookingDetailGatewayTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.domain.scheduling.ScheduledCancellationTermsTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.feature.app.MobileAppCoordinatorTest",
+          "tests": 68,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.feature.app.QuoteSessionRecoveryTest",
+          "tests": 19,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.feature.app.ScheduledBookingPaginationUiTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "archive": "scheduled-terms-final-jvm-r3-20261026.zip",
+      "zip_sha256": "ca23c95e1bc5585a8153008adbd6c1fa45d96e7f0624d3d825466b88c628f82f"
+    },
+    "android_host": {
+      "totals": {
+        "tests": 88,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suites": [
+        {
+          "suite": "org.example.taximobile.domain.scheduling.ScheduledCancellationTermsTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.feature.app.MobileAppCoordinatorTest",
+          "tests": 68,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "suite": "org.example.taximobile.feature.app.QuoteSessionRecoveryTest",
+          "tests": 19,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "archive": "scheduled-terms-final-android_host-r3-20261026.zip",
+      "zip_sha256": "856b48499508e268697acd783c7217766966ba8c8278a56386b2fc15accae34d"
+    }
+  },
+  "rendered_scope": "Six JVM UI tests include page navigation and unknown-terms disabled cancellation in all 12 EN/FR/AR x four-style combinations; not device or linguistic acceptance.",
+  "overlapping_test_sets_must_not_be_summed": true,
+  "both_android_role_kotlin_compilations": "passed",
+  "platform_log_sha256": "8e1afb6a0e5c56a50b4c12a9757493f37271a455ce514ffe3beb3f0f1058fed8",
+  "catalog_keys_per_language": 1286,
+  "mobile_contract_http_operations": 85,
+  "mobile_contract_websocket_operations": 1,
+  "failed_observations_retained": [
+    "scheduled-terms-backend-baseline-20261026.xml",
+    "scheduled-terms-jvm-r1-20261026.log",
+    "scheduled-terms-jvm-r2-20261026.zip"
+  ],
+  "failed_test_corrections": "Kotlin List supports only five destructuring components; request path assertion needed the existing /api/v1 prefix. No product regression was hidden.",
+  "existing_backend_python_unchanged": 456,
+  "existing_backend_python_changed": [
+    "backend/src/taximobile_api/domains/scheduled_bookings/router.py"
+  ],
+  "root_head_and_index_preserved": true,
+  "immutable_successor_ci_accepted": false,
+  "physical_hosted_provider_operational_pilot_or_public_accepted": false
+}

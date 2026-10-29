@@ -1,6 +1,8 @@
 package org.example.taximobile.domain.scheduling
 
 import org.example.taximobile.domain.rides.Coordinates
+import kotlin.time.TimeMark
+import kotlin.time.TimeSource
 
 /** Exact server amounts. Clients display these values and never recompute allocations. */
 data class ScheduledEconomics(
@@ -20,7 +22,13 @@ data class ScheduledCancellationTerms(
     val passengerCancelCutoffMinutes: Int,
     val surchargeRefundMode: String,
     val summary: String,
-)
+) {
+    /** Client compatibility for review only; the backend decides all refunds. */
+    val isSupportedForReview: Boolean
+        get() = passengerCancelCutoffMinutes in 0..10080 && surchargeRefundMode in setOf(
+            "ALWAYS_FULL", "FULL_BEFORE_CUTOFF", "NON_REFUNDABLE",
+        )
+}
 
 data class ScheduledBookingEstimate(
     val cityId: String,
@@ -69,6 +77,8 @@ data class ScheduledOffer(
     val economics: ScheduledEconomics,
     val cancellationTerms: ScheduledCancellationTerms,
     val serverTime: String,
+    /** Conservative elapsed-time anchor captured before the owned list request. */
+    val readStartedAt: TimeMark = TimeSource.Monotonic.markNow(),
 )
 
 data class ScheduledCommitment(
@@ -93,7 +103,10 @@ data class ScheduledOfferPreference(
 )
 
 interface ScheduledBookingGateway {
-    suspend fun passengerBookings(): List<ScheduledBooking>
+    /** Null explicitly means this gateway lacks clock-resolution capability. */
+    suspend fun localTimeOptions(cityId: String, cityTimezone: String, localDate: String, localTime: String): ScheduledLocalTimeOptions? = null
+    suspend fun passengerBookings(page: Int = 1): ScheduledBookingPage
+    suspend fun passengerBooking(bookingId: String): ScheduledBooking
     suspend fun estimatePointToPoint(
         scheduledFor: String,
         cityId: String?,

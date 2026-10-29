@@ -109,21 +109,24 @@ Purpose:
 - first visual identity moment
 
 Composition:
-- simplified city/map environment
-- one highlighted taxi
-- white dominant background
-- navy city/map geometry
-- mustard taxi/route highlight
+- Owner's updated direction: tall portrait approximately 9:16 for phones
+- deep navy background and delicate light-navy contour linework
+- one believable outlined taxi before Al-Qarawiyyin-inspired Moroccan architecture
+- sparse structural contours: square minaret, pitched pavilion roof, horseshoe arches
+- no dense roof tiles, foliage, wall hatching, interior seats or repeated micro-patterns
+- simplify wheel spokes/headlights and limit the pavilion to three arches
+- whole image fits without cropping; preserve existing localized controls and typography
+- generation is explicitly requested for this welcome image, superseding the earlier vector attempt
 
 Avoid:
 - generic photos
-- overly detailed city skyline
-- copyrighted city landmarks unless intentionally licensed
+- overly detailed skyline or decorative surface patterns
+- copying a third-party photograph or claiming institutional endorsement
 - low-contrast pastel look
 
 Preferred format:
-- SVG if flat vector
-- otherwise high-resolution PNG/WebP
+- selected generated PNG master and unchanged bundled PNG; prompt/provenance retained
+- preserve the non-crashing Canvas fallback; do not load SVG in shared Android UI
 
 B02. Location permission illustration
 Elements:

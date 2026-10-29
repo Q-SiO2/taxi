@@ -1,5 +1,163 @@
 # TaxiMobile — UI Plan
 
+## Board alpha execution authorized — 15 October 2026
+
+The owner now directs the earliest functional board alpha, authorizes application
+implementation and TaxiMobile Railway staging changes/deployment, and requires
+French, Arabic and English with concise copy. This supersedes the earlier
+planning-only stop. The selected four-style contract remains in force; no further
+palette approval is needed. Follow [the active board alpha checkpoint](board-alpha.md)
+for execution and evidence. Native, integrated staging, device and release
+acceptance must still be demonstrated.
+
+### Map shortcuts and expanded sheets
+
+Passenger and driver map shortcuts must leave the persistent toolbar, including
+Inbox, unobstructed. Show the floating shortcut stack only when at least 240 dp
+of map height remains above the sheet. Use the actual sheet state after system
+font scaling promotes it, both for visibility and positioning. This reserve
+allows the toolbar, safe top area, two shortcut targets and their spacing to
+coexist. Collapsing the sheet restores the shortcuts when space permits; body
+location and primary workflow controls remain available in the sheet.
+
+### Functional task material
+
+The selected styles apply beyond their entry artwork. Native sheets, the signed-in
+operations content shell and applicant dashboard share compact material painting:
+spectral/folded edges, print registration, tactile glazing and grayscale Notepad
+rules with a leading margin rail. Keep registration marks inside the existing
+12 dp gutter, mirror the leading edge in RTL and paint paper rules behind text
+and opaque controls. Do not move controls, add hero space, change hit targets,
+introduce decorative controllers or imply domain status through this treatment.
+Notepad stays static; existing entry motion keeps its independent OS/lifecycle
+contract. Actual new artifacts and renders must be verified before acceptance.
+
+### Web language presentation
+
+Operations and applicant web expose English, Français and العربية beside the
+style choice. Language is a persisted local presentation preference. Switching
+it preserves the authenticated session, selected scope and safe unsent drafts;
+it must not recreate coordinators, replay a command or discard consequence
+review. An unavailable store keeps a temporary choice and a visible retry path.
+An unavailable locale adapter keeps the applied language and reports failure.
+Arabic sets RTL layout while identifiers and money retain explicit bidi handling.
+Use the existing shared resource catalog; unchanged backend enums are translated
+only for display. Follow [the bounded localization packet](redesign/web-localization.md)
+and require actual critical-state evidence before calling the web demo trilingual.
+
+Operator member-register driver IDs use the existing outlined text field in
+read-only mode, with a localized label and explicit LTR text direction. Staff
+can select/copy the complete reference; it is not an editable enrollment claim.
+Reuse existing input/selection machinery rather than adding a standalone
+selection container to each record. The four material styles remain in force.
+
+## Selected visual direction — recorded 15 October 2026
+
+The owner approved **Folded Streets, Street Press, Glazed Machine and Notepad**
+as four complete user-selectable styles. The independent five-color theme menu
+is withdrawn. Gradients/collage/grain are treatments inside the expressive styles,
+not additional choices. Notepad is grayscale ruled utility, retaining meaningful
+icons and main workflows while disabling decorative motion.
+
+[The selected four-style contract](redesign/style-options.md),
+[current preview](redesign/abstract-lab.html), [visual system](redesign/visual-system.md)
+and [all-page coverage](redesign/style-coverage.md) supersede earlier identity,
+palette, shape and motion prescriptions below. The dated rejection/research and
+pending-style-selection notes are historical. No further palette confirmation is
+needed. Native implementation/device evidence, complete delivery-plan execution,
+hosted rehearsal and release gates remain separate; this records design selection.
+Backend authority, privacy, accessibility and state/command rules remain in force.
+
+
+## Latest owner correction — 14 October 2026
+
+The owner further directs the art-free identity toward elaborate abstract motion,
+moving color gradients and contrasted collage. Review the
+[abstract lab](redesign/abstract-lab.html) and
+[expression plan](redesign/abstract-expression.md).
+
+The owner subsequently said they love the new interface treatments without the
+main illustration. The current lab defaults to art-free UI and motion; large
+illustrations are an optional unselected archive.
+
+The owner rejected the graphical proposal, especially the incoherent city/taxi
+scene, and requested a unique, unusual, illustrative and animated identity.
+The existing five color directions are proposed themes, not distinct identities.
+Review [redesign/identity-reset.md](redesign/identity-reset.md) and the
+[new art-direction lab](redesign/identity-lab.html). Material, drawing, composition,
+typography and 2D/2.5D/3D motion exploration are reopened. Prior recommendations
+are unaccepted; structural every-page coverage remains useful. The identity goal
+is active, and application implementation still awaits the complete selected plan.
+
+
+## Owner-directed replacement proposal — latest 14 October 2026
+
+The 14 October request broadens illustration and motion exploration. Review the
+[expressive atelier](redesign/expressive-board.html) and
+[art/native-motion plan](redesign/expressive-motion.md). The restrained historical
+motion/asset prescriptions below must not prevent researching the requested
+graphical personality; implementation still waits for the selected plan.
+
+The current UI is unaccepted. The owner stopped rehearsal and granted freedom
+to explore any visual identity, without preference for gold/navy, but requires
+confirmation of the complete plan before execution. See the
+[proposal](redesign/README.md), [five-palette/three-type board](redesign/direction-board.html),
+[visual system](redesign/visual-system.md), [components](redesign/components.md)
+and [delivery approval record](redesign/delivery.md).
+The previous palette/font/chrome restrictions and direction-refinement approval
+below are historical inputs, not constraints on this exploration. No new identity
+is approved yet. Do not implement either further refinement or the proposed
+replacement before confirmation. Backend, security and accessibility rules stay
+in force. UX-0 will replace conflicting visual prescriptions coherently once
+the owner selects the identity/type/navigation.
+
+## Full alpha visual acceptance wave — 12 October 2026
+
+This extends the existing recovery slice into the whole passenger and driver
+experience. A-02 defines the reviewed visual reference; A-03/A-04 implement the
+complete journeys; A-07 handles representative operations; A-10 verifies them.
+Retain the effective navy/gold brand, licensed bundled fonts and shared components.
+Address hierarchy, navigation and oversized screen responsibilities as well as
+tokens; avoid a second design system. [roadmap.md](roadmap.md) owns task status.
+
+Capture actual welcome/auth/recovery, map/search/pickup/quote, matching/assigned/
+active/completed/history/support states; driver onboarding/restriction/offline/
+offer/arrival/start/active/completion/cash/earnings states; and the representative
+operations records. Include relevant loading/empty/error/offline/disabled states.
+Verify 320/360/430 dp, French and Arabic RTL plus English sanity, 1.3×/1.6× text,
+keyboard/insets and reachable primary actions. Body text requires 4.5:1 contrast,
+large text 3:1, 48 dp touch targets, status text beyond color, assistive labels and
+reduced-motion behavior. Gold ordinary text on white is prohibited.
+
+Retain before/after screenshots with candidate hash, device/viewport, locale,
+font scale, scenario and defects corrected. Owner review of the visual direction
+and actual-device acceptance remain explicit; source changes, JVM renders and
+APK compilation alone cannot establish physical-phone visual quality.
+
+## Alpha visual recovery — 11 October 2026
+
+The owner has authorized a full passenger/driver UX overhaul while retaining the
+recognizable navy/gold identity. The screen plans below are design targets, not
+claims of visual acceptance. For the first verified slice, map toolbars use one
+shared compact account/safety/inbox component with 48 dp actions and explicit
+accessibility labels. Secondary fixed-route/scheduling actions no longer compete
+with the idle destination heading. The idle peek shows one dominant place-search
+action and a persistent fixed-routes entry; selecting a map point or recent
+destination expands the sheet to the full form. Fare and cash primary views should communicate
+amount, payment state and the next action; backend tariff versions, UUIDs, raw UTC
+timestamps and routing maneuvers do not belong in the primary presentation.
+Backend records retain their full audit data. This is an alpha UI presentation
+rule, not authorization to discard financial or location provenance.
+
+The release gate remains actual rendered screenshots, French/Arabic/RTL and
+representative-device review, followed by task completion without developer
+coaching. Passing Compose tests or building an APK alone does not close it.
+
+Material's default primary token is navy on light surfaces so uncustomized
+TextButtons, focus indicators and links are readable. The product's explicit
+primary `TaxiButton` remains gold-filled with navy text. Gold is not used as
+ordinary text on white.
+
 ## Purpose
 
 Define the visual identity, interaction model, motion language, and screen-by-screen UI plan for the passenger and driver applications.
@@ -178,10 +336,13 @@ Bundle as Compose Multiplatform resources:
 
 Weights to ship: Sora 600/700; Manrope 400/500/600/700; IBM Plex Mono 500.
 
-Arabic, French, and English catalogs are implemented. Keep Manrope for Latin and
-the platform Arabic fallback until a separately licensed and device-validated
-Arabic companion is approved; changing typefaces must not alter the navy token
-set. Do not hard-code English-only layout widths that break RTL.
+Arabic, French, and English catalogs are implemented. Arabic locale uses the
+bundled OFL-licensed **Noto Sans Arabic** family across the Material type scale,
+with zero Latin-style tracking and taller line heights for Arabic shaping.
+Sora/Manrope remain the Latin display/body families. Actual Arabic/RTL renders
+at representative widths and large text remain an alpha acceptance gate; source
+font selection alone is not visual approval. Do not hard-code English-only
+layout widths that break RTL.
 
 ### Type scale
 
@@ -391,6 +552,10 @@ disabled until `finally` releases the one-at-a-time gate.
 Uber-like bottom sheet with:
 
 * Grabber (32×4, `ink.300`)
+* Its visible header has a 48 dp drag area. Header drags change snap; ordinary
+  body drags scroll content and taps continue to reach their original control.
+  Expose localized expand/collapse accessibility actions for reachable snaps;
+  never advertise collapsing below the current text-scale minimum.
 * Snap points: `peek` (~28% screen), `half` (~48%), `expanded` (~78%)
 * System text scale promotes the minimum reachable snap: `1.3×` promotes peek
   to half, and `1.6×` or greater promotes peek/half to expanded; explicit user
@@ -408,7 +573,7 @@ Examples: `Matching`, `Driver on the way`, `Arriving`, `In trip`, `Completed`, `
 ### 5. `FareBlock`
 
 * Large amount (`display.sm`)
-* Tariff version caption (`body.sm`, `ink.500`)
+* No internal tariff-version identifier in the primary fare hierarchy; retain it in the backend record
 * Optional breakdown rows from **backend components only**
 * Estimate vs final: label explicitly (`Estimated fare` vs `Final fare`)
 
@@ -428,8 +593,15 @@ Never show private contact, home address, or earnings to passengers.
 * Pickup neighborhood / distance / ETA from API
 * Locked estimated fare
 * Countdown bar mapped to offer expiry
+* Use server-relative timing with a retained monotonic request-start anchor;
+  delayed callbacks or reopening the card cannot restart the window.
 * Accept (primary) / Decline (secondary)
-* On expiry: card exits; list refreshes from API
+* On expiry/invalid timing: disable Accept, refresh once per retained offer ID,
+  and expose explicit retry. Remove the card when the owned list confirms it;
+  repeated invalid readback cannot cause an automatic refresh loop.
+* Unsupported service is unavailable review, never an inferred on-demand label.
+  Explicit confirmed Decline remains available. See the
+  [immediate-offer packet](launch/immediate-offer-review.md).
 
 ### 8. `MapFAB`
 
@@ -636,11 +808,13 @@ Uber-like composition:
    - Destination field (opens expanded place entry)
    - Persistent **Fixed routes** entry for the selected city; it remains useful
      when no taxi is online
+   - Keep the peek short enough that all visible content fits above system navigation
+4. Expanded place-entry sheet:
    - Up to three unique recent destinations derived from completed backend
      history summaries when available; selecting one still requires pickup and a
      fresh backend fare estimate
-4. FAB: current location (one-shot)
-5. Context clue: “Pickup defaults to your selected point”
+5. FAB: current location (one-shot)
+6. Context clue: “Pickup defaults to your selected point”
 
 ### F. Passenger — Place selection
 
@@ -667,7 +841,7 @@ Uber-like composition:
 * Sheet half
 * Route drawn after `POST /routing/route` success
 * FareBlock labeled **Estimated fare**
-* Tariff version caption
+* No internal tariff-version caption in the primary quote
 * Primary: **Request taxi**
 * Changing either point discards estimate and route immediately
 * A Now / Schedule choice appears only when enabled by the backend city catalog
@@ -794,6 +968,35 @@ existing confirmation patterns. Upcoming rows distinguish **Request received**,
 **Cancelled**, and **Unfulfilled**. “Scheduled” alone must never be styled as a
 driver guarantee.
 
+Pickup review, booking rows, cancellation confirmation, driver offers and
+commitment windows display the backend city timezone as `YYYY-MM-DD · HH:mm
+(UTC±HH:mm)` (or `UTC`), retaining nonzero seconds/fractions. Isolate the complete
+value for RTL; wrap headers at large text sizes. Repeated local hours retain the
+actual offset of each instant. Invalid named zones or instants show localized
+unavailable copy and a read refresh, without a device-time fallback. New booking
+confirmation and driver acceptance require interpretable pickup timing; existing
+known-policy cancellation remains available. Authoritative commands retain the
+original reviewed instant. See [city-local time](launch/scheduled-city-time.md).
+
+A retained estimate for another requested time, point pair, city or fixed-route
+direction cannot show its fare or confirmation as the current review. Show
+localized unavailable-review copy and keep explicit price/terms review available.
+After a matching response, show the ordinary review and confirmation. Compare
+instants rather than timestamp spellings; preserve the original command input.
+See [scheduled review binding](launch/scheduled-review-binding.md).
+
+The [city-local input packet](launch/scheduled-local-input.md) owns the next
+functional control integration: compact date/calendar and 24-hour time fields,
+visible city context, typed correction, explicit offset choices only for repeated
+hours and an actionable gap message. Reuse the existing styles, form controls and
+review patterns; Notepad remains static. The working native source now exposes
+these controls, including explicit city selection when multiple cities are
+available. A clock refresh remains reachable after selection and invalidates
+the old price review. The published backend/shared boundary has its own
+[CI 260](launch/scheduled-local-input-ci-terminal-20261028.json); the later
+native source still needs candidate-linked package and device acceptance. Do
+not style resolved clock options as a taxi guarantee.
+
 The driver receives a normal high-attention offer with scheduled timing and may
 accept or decline. Accepted commitments appear in a calm upcoming-work list;
 they do not replace the online HUD or active-ride CTA until dispatch handoff.
@@ -801,6 +1004,15 @@ Conflicts and expiry are backend responses, not client calendar arithmetic.
 The driver can enable/disable new scheduled offers with a separate city-scoped
 control; it never changes the green immediate Online pill and does not cancel
 existing commitments.
+
+Scheduled-offer review shares the passenger's explicit known refund-term copy;
+unsupported terms cannot enable Accept, while explicit Decline remains available.
+Its response countdown uses the server envelope and monotonic elapsed time from
+before the owned list request, retaining that anchor when the sheet reopens.
+Local zero or invalid timing disables acceptance and requests a bounded refresh;
+repeated invalid responses must not create a refresh loop. The coordinator reloads
+the selected owned offer before accepting and does not session-replay a rejected
+acceptance command. See the [driver review packet](launch/scheduled-driver-review.md).
 
 ### T. National Operations Web Console
 
@@ -927,6 +1139,21 @@ Forbidden:
   client catalog entry ships.
 * The localization validator requires exact key and format-placeholder parity
   and rejects newly embedded presentation literals in the covered UI surfaces.
+* Scheduled booking/commitment states and cancellation financial outcomes map to
+  local resource labels, with explicit unknown labels. Do not print raw enum
+  codes, turn a created live ride into a claim of travel starting, or turn a
+  pending refund into a completed one. The [source packet](launch/scheduled-localization.md)
+  records its catalog/compilation and pending acceptance boundaries.
+* Passenger scheduled bookings retain bounded backend page metadata and explicit
+  localized Previous/Next controls. Failed reads show retry without stale rows or
+  a false empty-list claim. Loading controls retain their accessible names; a page
+  replacement removes an obsolete cancellation confirmation. See the
+  [source and rendered checks](launch/scheduled-pagination.md).
+* Scheduled refund review uses explicit known modes and valid policy cutoffs.
+  Unsupported terms show localized unavailable copy and disable consequential
+  confirmation; raw server summaries cannot replace a financial review. The
+  coordinator also checks the current independently authorized booking before
+  cancelling. See the [review correction](launch/scheduled-cancellation-review.md).
 * Fare numerals remain Western digits unless product later decides otherwise; keep mono IDs LTR embeds in RTL layouts.
 * Do not bake English string lengths into fixed-width buttons; use min width + horizontal padding.
 
