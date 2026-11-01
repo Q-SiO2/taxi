@@ -419,6 +419,9 @@ private fun SignedOutContent(
         },
         tone = when {
             state.registrationCompleted -> StatusTone.Success
+            // Recovery acknowledges a request without confirming account existence.
+            // Password change also returns here after signing out every session.
+            state.recoveryCompleted -> StatusTone.Info
             state.message != null -> StatusTone.Danger
             else -> StatusTone.Info
         },

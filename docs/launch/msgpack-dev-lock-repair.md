@@ -17,7 +17,8 @@ The combined development/Linux audit cannot run on the Windows host because
 its existing `uvloop` Linux-only hash set does not cover the Windows source
 distribution chosen by pip; the CI Linux audit remains the acceptance check.
 
-Retain the failed CI run and its diagnostics. A subsequent immutable source
-commit needs a fresh CI run with every required job successful. This source
-repair does not advance physical-device, hosted, provider, pilot, or public
-release gates.
+Retain the failed CI run and its diagnostics. The [terminal record](scheduled-native-input-ci-terminal-20261101.json)
+shows CI 264 passed all eight required jobs for the repaired source tree,
+including the Linux development audit and 1,513 backend cases. A later source
+change needs its own CI. This repair does not advance physical-device, hosted,
+provider, pilot, or public release gates.

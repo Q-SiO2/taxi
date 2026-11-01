@@ -1,12 +1,22 @@
 # TaxiMobile — Alpha, Pilot and Public Release Roadmap
 
-## Current packet — 29 October 2026
+## Current packet — 1 November 2026
+
+The [signed-out account acknowledgement](launch/account-acknowledgement.md)
+corrects a rendered R9 recovery/password-change error announcement without
+changing authentication or conditional recovery semantics. Two regressions
+failed before the fix; the final 42-case UI class passes. The new source head
+requires its own immutable CI and later physical/assistive acceptance.
+
+The [native input CI terminal record](launch/scheduled-native-input-ci-terminal-20261101.json)
+retains CI 262's backend development-lock audit failure and CI 264's successful
+successor. All eight required jobs passed for the identical `d07f0d8` source
+tree. That source/CI evidence does not accept a physical device or deployment.
 
 The [development lock security repair](launch/msgpack-dev-lock-repair.md)
 follows CI 262's backend audit failure on `msgpack 1.2.1`. Its successor pins
-the reported fixed version with verified distribution hashes. Treat CI 262 as
-failed backend evidence; a new Linux CI audit and complete required-job run
-must pass before source acceptance.
+the reported fixed version with verified distribution hashes. CI 264's Linux
+audit and complete required-job run passed that exact predecessor source.
 
 The [city-local input boundary](launch/scheduled-local-input.md) adds a bounded
 authenticated planning read backed by pinned packaged rules, plus shared typed

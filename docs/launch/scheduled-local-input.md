@@ -110,14 +110,16 @@ commitment, event, idempotency and outbox counts remain unchanged. The separate
 owned test cluster is stopped after verification, with its data retained. The
 preserved database cluster and hosted resources are untouched.
 
-The published `d95de9e` source boundary now has [terminal CI 260 evidence](scheduled-local-input-ci-terminal-20261028.json):
+The published `d95de9e` source boundary has [terminal CI 260 evidence](scheduled-local-input-ci-terminal-20261028.json):
 all eight required jobs passed against the identical source tree, with 1,513
 backend tests, eight disposable TLS transport cases and four Chrome boot
 scenarios. The web scenarios cover compatibility and loader boot only; their
 T4 catalog and deployment acceptance fields remain false. Unsigned iOS
-simulator products are build evidence only. This run does not cover the
-subsequent, still-unpublished native date/time and city-selection changes in
-this packet; they require their own source and CI verification. Physical Android remains
+simulator products are build evidence only. The subsequent native date/time
+and city-selection changes, followed by the development-lock repair, passed
+all eight jobs in [CI 264](scheduled-native-input-ci-terminal-20261101.json)
+against the identical source tree. The later signed-out acknowledgement edit
+requires its own CI. Physical Android remains
 deferred; signing/store, iOS devices, low-end latency, linguistic/assistive,
 hosted/provider, operational, pilot and public acceptance remain separate.
 Preserve the Trial-only hosting stop, both volumes, rollback archives and

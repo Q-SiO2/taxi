@@ -814,6 +814,9 @@ previously saved offline code. The signed-out passenger and driver shells expose
 email/phone identifier, full recovery code, and new password fields in EN/FR/AR.
 Submit is shape-gated, secret fields are cleared after the generic accepted
 response, and the message never confirms account existence or code validity.
+The accepted response is an informational, polite announcement; failed requests
+remain assertive errors. A completed password change also returns to sign-in
+with a polite acknowledgement after the sessions are cleared.
 The recovery path must not be presented as email/phone verification. Passenger
 and driver account panels now expose password-reauthenticated code creation,
 one-time code display, session list/confirmed revocation, and password change.

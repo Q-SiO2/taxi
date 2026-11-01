@@ -1,0 +1,51 @@
+{
+  "recorded_utc": "2026-11-01",
+  "source_head": "d07f0d867615533d82f1e25e786f1aaddc2a38a2",
+  "tested_merge_commit": "3342236c5139649dcc7b03da1907427f8da6b6c1",
+  "identical_source_tree": "d37e05960c2a925ce18750c0166f5d2080296308",
+  "failed_predecessor": {
+    "source_head": "2ff36933cc16d7babfc92f658325e359b86f91fc",
+    "run_id": 40791030152,
+    "run_number": 262,
+    "status": "completed",
+    "conclusion": "failure",
+    "backend_job_id": 123176005627,
+    "failed_step": 8,
+    "finding": "msgpack 1.2.1 CVE-2026-114613; audit reported fix 1.2.3",
+    "backend_steps_after_audit": "skipped",
+    "other_eight_required_job_results": "seven success, backend failure"
+  },
+  "corrected_run": {
+    "run_id": 40791872087,
+    "run_number": 264,
+    "status": "completed",
+    "conclusion": "success",
+    "required_jobs": {
+      "backend": {"id": 123178803477, "conclusion": "success"},
+      "dependency-review": {"id": 123179869167, "conclusion": "success"},
+      "documentation-and-provenance": {"id": 123178803487, "conclusion": "success"},
+      "gradle-dependency-submission": {"id": 123178803213, "conclusion": "success"},
+      "gradle-wrapper-integrity": {"id": 123178803503, "conclusion": "success"},
+      "ios-shared": {"id": 123178803421, "conclusion": "success"},
+      "mobile": {"id": 123178803544, "conclusion": "success"},
+      "web": {"id": 123178803514, "conclusion": "success"}
+    },
+    "optional_publish_backend_image": "skipped",
+    "runtime_and_development_lock_audits": "success",
+    "backend_tests": 1513,
+    "backend_test_warnings": 6,
+    "web_boot_scenarios": 4,
+    "web_boot_catalog_cases": 0,
+    "phase_or_deployment_accepted": false,
+    "mobile_products": "passenger and driver minified unsigned/providerless verification APKs",
+    "ios_products": "unsigned passenger and driver Release simulator builds"
+  },
+  "artifacts": {
+    "web_boot": {"id": 12862670708, "sha256": "49c335b7042023496842f1b03756c5ab6d219ed7585f24b2d8da3db394dad124"},
+    "database_tls": {"id": 12862162653, "sha256": "fabd8f6aa98deb4ed855924eaa1ac3282fa62a778993cb1d370437afc16137de"},
+    "openapi": {"id": 12861589333, "sha256": "c4d76c641127dde1010824f753a9bfa6ceb041d4fa4dfff5404e1c452f35b48e"},
+    "backend_sbom": {"id": 12861554361, "sha256": "efcc0cfcd22c705b978b3184a922b9d48abb44cc4b04e770a0376dfc18ba3fff"}
+  },
+  "root_head_and_index_preserved": true,
+  "physical_hosted_provider_operational_pilot_or_public_accepted": false
+}

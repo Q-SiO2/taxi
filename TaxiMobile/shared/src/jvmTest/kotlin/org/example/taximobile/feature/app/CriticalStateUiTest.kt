@@ -66,6 +66,8 @@ import org.example.taximobile.feature.connectivity.ConnectivityStatus
 import org.example.taximobile.feature.ui.text.ltrIsolate
 import taximobile.shared.generated.resources.Res
 import taximobile.shared.generated.resources.message_account_created
+import taximobile.shared.generated.resources.message_account_recovery_accepted
+import taximobile.shared.generated.resources.message_password_changed
 import taximobile.shared.generated.resources.message_network_unavailable
 import taximobile.shared.generated.resources.message_registration_failed
 
@@ -272,6 +274,37 @@ class CriticalStateUiTest {
             SemanticsMatcher.expectValue(SemanticsProperties.LiveRegion, LiveRegionMode.Polite),
         )
         onNodeWithText("passenger@example.test").assertIsDisplayed()
+    }
+
+    @Test
+    fun accepted_recovery_is_a_private_polite_acknowledgement_not_an_error() = runComposeUiTest {
+        setContent {
+            App(state = AppUiState.SignedOut(
+                message = UiMessage(Res.string.message_account_recovery_accepted),
+                recoveryCompleted = true,
+            ))
+        }
+
+        onNodeWithText(
+            "If the account and recovery code were valid, the password was changed and every session was signed out. Try signing in with the new password.",
+        ).assert(SemanticsMatcher.expectValue(SemanticsProperties.LiveRegion, LiveRegionMode.Polite))
+        onNodeWithTag("auth-submit").assertIsDisplayed()
+        onAllNodesWithText("Recovery code").assertCountEquals(0)
+    }
+
+    @Test
+    fun completed_password_change_is_announced_politely_after_sign_out() = runComposeUiTest {
+        setContent {
+            App(state = AppUiState.SignedOut(
+                message = UiMessage(Res.string.message_password_changed),
+                recoveryCompleted = true,
+            ))
+        }
+
+        onNodeWithText(
+            "Password changed. Every session was signed out; sign in with the new password.",
+        ).assert(SemanticsMatcher.expectValue(SemanticsProperties.LiveRegion, LiveRegionMode.Polite))
+        onNodeWithTag("auth-submit").assertIsDisplayed()
     }
 
     @Test
