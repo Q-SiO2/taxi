@@ -2,6 +2,11 @@
 
 ## Current packet — 1 November 2026
 
+The [runtime lock advisory repair](launch/pyasn1-lock-repair.md) follows
+CI 274's backend audit failure on `pyasn1 0.6.4`. Both runtime and development
+locks now pin the reported fixed `0.6.5` with verified hashes. CI 274 remains
+failed evidence; the new exact source needs a fresh complete Linux CI run.
+
 The [signed-out account acknowledgement](launch/account-acknowledgement.md)
 corrects a rendered R9 recovery/password-change error announcement without
 changing authentication or conditional recovery semantics. Two regressions
