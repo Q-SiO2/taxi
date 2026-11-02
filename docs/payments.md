@@ -49,6 +49,9 @@ sends the selected method with `POST /rides`. Ride creation resolves the same
 authority again and snapshots the city, operator, capability, selected method
 and, for `MANUAL_TRANSFER`, verified recipient account and displayable
 destination. Later configuration changes must not alter those instructions.
+If the estimate omits `payment_methods` or contains no method supported by the
+client, the quote fails explicitly. The client must not invent a cash capability
+from an incomplete response.
 
 Ride completion creates exactly one pending payment using the snapshotted method.
 Completing the ride does not settle cash or prove that an external transfer moved.

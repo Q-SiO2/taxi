@@ -66,16 +66,7 @@ class KtorRideGateway(
             throw ApiRequestException(response.status.value, "The server could not estimate this ride.")
         }
         val body = response.body<RideEstimateResponse>()
-        val methods = body.paymentMethods.mapNotNull { value ->
-            when (value) {
-                RidePaymentMethod.CASH.name -> RidePaymentMethod.CASH
-                RidePaymentMethod.MANUAL_TRANSFER.name -> RidePaymentMethod.MANUAL_TRANSFER
-                else -> null
-            }
-        }
-        if (methods.isEmpty()) {
-            throw ApiRequestException(409, "The server did not offer a payment method supported by this app.")
-        }
+        val methods = body.supportedPaymentMethods()
         val economics = body.estimate.economics?.toDomainEconomics()
         if (economics != null && economics.passengerTotal != body.estimate.amount) {
             throw ApiRequestException(409, "The fare estimate does not reconcile with its economics snapshot.")
@@ -461,7 +452,7 @@ private data class LastKnownDriverLocationResponse(
 @Serializable
 private data class RideEstimateResponse(
     val estimate: FareEstimateResponse,
-    @SerialName("payment_methods") val paymentMethods: List<String> = listOf("CASH"),
+    @SerialName("payment_methods") val paymentMethods: List<String>? = null,
 )
 
 @Serializable
@@ -614,10 +605,7 @@ internal data class PublicFixedRouteStopResponse(
 }
 
 private fun RideEstimateResponse.toDomain(): FareEstimate {
-    val methods = paymentMethods.mapNotNull(String::toPaymentMethodOrNull)
-    if (methods.isEmpty()) {
-        throw ApiRequestException(409, "The server did not offer a payment method supported by this app.")
-    }
+    val methods = supportedPaymentMethods()
     val domainEconomics = estimate.economics?.toDomainEconomics()
     if (domainEconomics != null && domainEconomics.passengerTotal != estimate.amount) {
         throw ApiRequestException(409, "The fare estimate does not reconcile with its economics snapshot.")
@@ -631,6 +619,16 @@ private fun RideEstimateResponse.toDomain(): FareEstimate {
         serviceType = estimate.serviceType.toServiceType(),
         fixedRoute = estimate.fixedRoute?.toDomain(),
     )
+}
+
+private fun RideEstimateResponse.supportedPaymentMethods(): List<RidePaymentMethod> {
+    val offered = paymentMethods
+        ?: throw ApiRequestException(502, "The server did not supply ride payment capabilities.")
+    val methods = offered.mapNotNull(String::toPaymentMethodOrNull)
+    if (methods.isEmpty()) {
+        throw ApiRequestException(409, "The server did not offer a payment method supported by this app.")
+    }
+    return methods
 }
 
 @Serializable
