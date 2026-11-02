@@ -13,6 +13,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performScrollTo
@@ -42,6 +43,7 @@ import org.example.taximobile.domain.rides.AssignedDriver
 import org.example.taximobile.domain.rides.AssignedVehicle
 import org.example.taximobile.domain.rides.Coordinates
 import org.example.taximobile.domain.rides.FinalRideFare
+import org.example.taximobile.domain.rides.FareEstimate
 import org.example.taximobile.domain.rides.FixedRouteCatalog
 import org.example.taximobile.domain.rides.LastKnownDriverLocation
 import org.example.taximobile.domain.rides.LocalizedText
@@ -50,6 +52,8 @@ import org.example.taximobile.domain.rides.RideReceipt
 import org.example.taximobile.domain.rides.RideRefund
 import org.example.taximobile.domain.rides.RideRefundSummary
 import org.example.taximobile.domain.rides.RideRating
+import org.example.taximobile.domain.rides.RidePaymentMethod
+import org.example.taximobile.domain.rides.RideServiceType
 import org.example.taximobile.domain.rides.RideSummary
 import org.example.taximobile.domain.rides.RideStatus
 import org.example.taximobile.domain.rides.PublicRideCity
@@ -631,6 +635,68 @@ class CriticalStateUiTest {
         onNodeWithText("8.00 MAD · OUTBOUND").assertIsDisplayed()
         onNodeWithText("Review flat fare").assertIsEnabled().performClick()
         assertEquals("direction-1", estimatedDirection)
+    }
+
+    @Test
+    fun fixed_route_booking_uses_the_method_shown_by_the_latest_quote() = runComposeUiTest {
+        val city = PublicRideCity(
+            id = "city-1",
+            code = "RABAT",
+            name = LocalizedText("Rabat", "Rabat", "الرباط"),
+            timezone = "Africa/Casablanca",
+            lifecycleStatus = "ACTIVE",
+            bookingAvailable = true,
+        )
+        val direction = PublishedFixedRouteDirection(
+            id = "direction-1",
+            routeVersionId = "version-1",
+            routeCode = "RABAT_01",
+            routeName = LocalizedText("Station route", "Ligne de la gare", "خط المحطة"),
+            directionCode = "OUTBOUND",
+            startName = LocalizedText("Station", "Gare", "المحطة"),
+            finishName = LocalizedText("University", "Université", "الجامعة"),
+            start = Coordinates(34.02, -6.84),
+            finish = Coordinates(34.00, -6.80),
+            geometry = listOf(Coordinates(34.02, -6.84), Coordinates(34.00, -6.80)),
+            flatFare = "8.00",
+            currency = "MAD",
+            immediateBookingEnabled = true,
+            scheduledBookingEnabled = false,
+            stops = emptyList(),
+        )
+        val initialQuote = FareEstimate(
+            amount = "8.00",
+            currency = "MAD",
+            pricingRuleVersion = "rule-1",
+            paymentMethods = listOf(RidePaymentMethod.CASH, RidePaymentMethod.MANUAL_TRANSFER),
+            serviceType = RideServiceType.FIXED_ROUTE,
+        )
+        var passengerState by mutableStateOf(
+            AppUiState.PassengerReady(
+                serviceCities = listOf(city),
+                fixedRouteCatalog = FixedRouteCatalog(city, listOf(direction)),
+                selectedFixedRouteDirectionId = direction.id,
+                fareEstimate = initialQuote,
+            )
+        )
+        var bookedMethod: RidePaymentMethod? = null
+        setContent {
+            App(
+                state = passengerState,
+                showManualCoordinateEntry = false,
+                onRequestFixedRoute = { _, method -> bookedMethod = method },
+            )
+        }
+
+        onNodeWithText("Browse fixed routes").performClick()
+        onNodeWithText("Station → University").performClick()
+        onAllNodesWithText("Bank / M-Wallet transfer").onFirst().performClick()
+        runOnIdle { passengerState = passengerState.copy(fareEstimate = initialQuote.copy(paymentMethods = listOf(RidePaymentMethod.CASH))) }
+        onNodeWithText("Book this direction").assertIsEnabled().performClick()
+        assertEquals(RidePaymentMethod.CASH, bookedMethod)
+
+        runOnIdle { passengerState = passengerState.copy(fareEstimate = initialQuote.copy(paymentMethods = emptyList())) }
+        onNodeWithText("Book this direction").assertIsNotEnabled()
     }
 
     @Test

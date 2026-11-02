@@ -113,6 +113,11 @@ import taximobile.shared.generated.resources.*
 private enum class PassengerSheetPanel { Ride, FixedRoutes, Scheduled, Safety, Account, Inbox }
 internal enum class MapSelectionTarget { Pickup, Destination }
 
+private fun selectedOfferedPaymentMethod(
+    remembered: RidePaymentMethod,
+    offered: List<RidePaymentMethod>,
+): RidePaymentMethod? = remembered.takeIf { it in offered } ?: offered.firstOrNull()
+
 internal class PassengerTripFormState(reviewedInput: Pair<Coordinates, Coordinates>? = null) {
     var pickupLatitude by mutableStateOf("")
     var pickupLongitude by mutableStateOf("")
@@ -251,7 +256,9 @@ internal fun PassengerHome(
     }
 
     val trip = form.trip
-    val currentEstimate = state.fareEstimate?.takeIf { trip != null && form.estimatedTrip == trip }
+    val currentEstimate = state.fareEstimate?.takeIf {
+        it.serviceType == RideServiceType.ON_DEMAND && trip != null && form.estimatedTrip == trip
+    }
     val hasActiveRide = state.activeRide != null
     // Keep the compact retry content but give its result and primary action
     // enough room. Explicit expansion still opens the full selection form.
@@ -266,6 +273,12 @@ internal fun PassengerHome(
     val fixedEstimate = state.fareEstimate?.takeIf {
         it.serviceType == RideServiceType.FIXED_ROUTE &&
             state.selectedFixedRouteDirectionId == selectedFixedDirectionId
+    }
+    val pointPaymentMethod = currentEstimate?.paymentMethods?.let { methods ->
+        selectedOfferedPaymentMethod(form.selectedPaymentMethod, methods)
+    }
+    val fixedPaymentMethod = fixedEstimate?.paymentMethods?.let { methods ->
+        selectedOfferedPaymentMethod(form.selectedPaymentMethod, methods)
     }
     val mapPickup = when {
         hasActiveRide -> state.pickup
@@ -316,13 +329,6 @@ internal fun PassengerHome(
                     Res.string.address_lookup_completed
                 }
             )
-        }
-    }
-
-    LaunchedEffect(currentEstimate?.paymentMethods) {
-        val methods = currentEstimate?.paymentMethods.orEmpty()
-        if (methods.isNotEmpty() && form.selectedPaymentMethod !in methods) {
-            form.selectedPaymentMethod = methods.first()
         }
     }
 
@@ -433,6 +439,7 @@ internal fun PassengerHome(
                     placeSearchEnabled = placeSearchEnabled,
                     selectedPlaceCityId = activePlaceCityId,
                     currentEstimateAvailable = currentEstimate != null,
+                    selectedPaymentMethod = pointPaymentMethod,
                     onSelectPlaceCity = { selectedPlaceCityId = it },
                     onSearchPlaces = onSearchPlaces,
                     onSelectPlaceResult = { result ->
@@ -461,11 +468,9 @@ internal fun PassengerHome(
                     },
                     onRequestRide = {
                         val quotedTrip = requireNotNull(form.estimatedTrip) { "A quote must exist before requesting a ride." }
-                        onRequestRide(
-                            quotedTrip.first,
-                            quotedTrip.second,
-                            form.selectedPaymentMethod,
-                        )
+                        pointPaymentMethod?.let { method ->
+                            onRequestRide(quotedTrip.first, quotedTrip.second, method)
+                        }
                     },
                     onBrowseFixedRoutes = {
                         panel = PassengerSheetPanel.FixedRoutes
@@ -482,7 +487,7 @@ internal fun PassengerHome(
                     state = state,
                     pendingAction = pendingAction,
                     selectedDirectionId = selectedFixedDirectionId,
-                    selectedPaymentMethod = form.selectedPaymentMethod,
+                    selectedPaymentMethod = fixedPaymentMethod,
                     onBack = { panel = PassengerSheetPanel.Ride },
                     onSelectCity = {
                         selectedFixedDirectionId = null
@@ -495,7 +500,7 @@ internal fun PassengerHome(
                     onEstimate = onEstimateFixedRoute,
                     onPaymentMethod = { form.selectedPaymentMethod = it },
                     onRequest = { directionId ->
-                        onRequestFixedRoute(directionId, form.selectedPaymentMethod)
+                        fixedPaymentMethod?.let { method -> onRequestFixedRoute(directionId, method) }
                     },
                 )
                 PassengerSheetPanel.Scheduled -> PassengerScheduledSheet(
@@ -595,6 +600,7 @@ private fun PassengerRideSheet(
     selectedPlaceCityId: String?,
     placeSearchEnabled: Boolean,
     currentEstimateAvailable: Boolean,
+    selectedPaymentMethod: RidePaymentMethod?,
     onSelectPlaceCity: (String) -> Unit,
     onSearchPlaces: (String, String) -> Unit,
     onSelectPlaceResult: (PlaceResult) -> Unit,
@@ -831,7 +837,6 @@ private fun PassengerRideSheet(
         }
         Text(stringResource(Res.string.payment_method), style = MaterialTheme.typography.titleMedium)
         val methods = state.fareEstimate?.paymentMethods.orEmpty()
-            .ifEmpty { listOf(RidePaymentMethod.CASH) }
         methods.forEach { method ->
             PaymentMethodCard(
                 label = stringResource(
@@ -848,14 +853,14 @@ private fun PassengerRideSheet(
                         Res.string.manual_transfer_payment_detail
                     }
                 ),
-                selected = form.selectedPaymentMethod == method,
+                selected = selectedPaymentMethod == method,
                 onClick = { form.selectedPaymentMethod = method },
             )
         }
         TaxiButton(
             stringResource(Res.string.request_taxi),
             onRequestRide,
-            enabled = pendingAction == null,
+            enabled = pendingAction == null && selectedPaymentMethod != null,
             loading = pendingAction.isPending(AppActionKind.REQUEST_RIDE),
         )
     }
@@ -1116,7 +1121,7 @@ private fun PassengerFixedRoutesSheet(
     state: AppUiState.PassengerReady,
     pendingAction: AppAction?,
     selectedDirectionId: String?,
-    selectedPaymentMethod: RidePaymentMethod,
+    selectedPaymentMethod: RidePaymentMethod?,
     onBack: () -> Unit,
     onSelectCity: (String) -> Unit,
     onSelectDirection: (String) -> Unit,
@@ -1200,7 +1205,7 @@ private fun PassengerFixedRoutesSheet(
             TaxiButton(
                 stringResource(Res.string.fixed_routes_book_now),
                 { onRequest(direction.id) },
-                enabled = pendingAction == null,
+                enabled = pendingAction == null && selectedPaymentMethod != null,
                 loading = pendingAction.isPending(AppActionKind.REQUEST_FIXED_ROUTE, direction.id),
             )
         }

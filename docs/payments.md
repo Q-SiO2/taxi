@@ -52,6 +52,9 @@ destination. Later configuration changes must not alter those instructions.
 If the estimate omits `payment_methods` or contains no method supported by the
 client, the quote fails explicitly. The client must not invent a cash capability
 from an incomplete response.
+When a fresh point or fixed-route estimate changes the offered methods, the
+passenger selection and submitted method must resolve against that displayed
+estimate before the booking action is enabled. An empty offer cannot be booked.
 
 Ride completion creates exactly one pending payment using the snapshotted method.
 Completing the ride does not settle cash or prove that an external transfer moved.
