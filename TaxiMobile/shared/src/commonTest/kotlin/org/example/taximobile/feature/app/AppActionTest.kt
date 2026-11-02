@@ -33,6 +33,34 @@ class AppActionTest {
     }
 
     @Test
+    fun delayed_refresh_cannot_replace_a_newer_history_selection() {
+        val gate = AppActionGate()
+        val oldRefresh = gate.beginRead()
+        val selected = AppAction(AppActionKind.LOAD_PASSENGER_RIDE, "recent-trip")
+
+        assertTrue(gate.tryStart(selected))
+        assertFalse(gate.canApplyRead(oldRefresh))
+        val overlappingRefresh = gate.beginRead()
+        assertFalse(gate.canApplyRead(overlappingRefresh))
+        gate.finish(selected)
+        assertFalse(gate.canApplyRead(oldRefresh))
+        assertFalse(gate.canApplyRead(overlappingRefresh))
+        assertTrue(gate.canApplyRead(gate.beginRead()))
+    }
+
+    @Test
+    fun only_latest_passive_refresh_can_publish_and_auth_transition_invalidates_it() {
+        val gate = AppActionGate()
+        val slowRefresh = gate.beginRead()
+        val fastRefresh = gate.beginRead()
+        assertFalse(gate.canApplyRead(slowRefresh))
+        assertTrue(gate.canApplyRead(fastRefresh))
+
+        gate.invalidateReads()
+        assertFalse(gate.canApplyRead(fastRefresh))
+    }
+
+    @Test
     fun pending_match_includes_the_resource_identity() {
         val pending = AppAction(AppActionKind.MARK_NOTIFICATION_READ, "notification-1")
 

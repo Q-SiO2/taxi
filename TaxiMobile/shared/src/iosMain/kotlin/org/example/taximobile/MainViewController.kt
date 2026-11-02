@@ -96,6 +96,12 @@ fun MainViewController(
             }
         }
     }
+    suspend fun refreshPresentation() {
+        if (actionGate.current != null) return
+        val revision = actionGate.beginRead()
+        val restored = dependencies.appCoordinator.restore()
+        if (actionGate.canApplyRead(revision)) presentation = presentation.accept(restored)
+    }
     LifecycleEventEffect(Lifecycle.Event.ON_STOP) {
         foregroundDriverLocationResultGuard.invalidate()
         appInForeground = false
@@ -108,7 +114,7 @@ fun MainViewController(
             presentation.state.hasAuthenticatedSession()
         ) {
             scope.launch {
-                presentation = presentation.accept(dependencies.appCoordinator.restore())
+                refreshPresentation()
             }
         }
     }
@@ -169,21 +175,21 @@ fun MainViewController(
         onDispose { connectivityObserver.close() }
     }
     LaunchedEffect(dependencies) {
-        presentation = presentation.accept(dependencies.appCoordinator.restore())
+        refreshPresentation()
     }
     LaunchedEffect(connectivityObserver) {
         connectivityObserver.status.collect { observedStatus ->
             if (observedStatus != connectivityStatus) foregroundDriverLocationResultGuard.invalidate()
             connectivityStatus = observedStatus
             if (recoveryPolicy.shouldRefresh(observedStatus)) {
-                presentation = presentation.accept(dependencies.appCoordinator.restore())
+                refreshPresentation()
             }
         }
     }
     LaunchedEffect(dependencies) {
         PushRefreshSignals.hints.collect {
             if (presentation.state.hasAuthenticatedSession()) {
-                presentation = presentation.accept(dependencies.appCoordinator.restore())
+                refreshPresentation()
             }
         }
     }
@@ -200,9 +206,11 @@ fun MainViewController(
                         presentation.state, appInForeground, connectivityStatus, pendingAction,
                     )) return@listenForLiveUpdates
                 val owner = dependencies.appCoordinator.liveSessionLifetime.value
+                val revision = actionGate.beginRead()
                 val restored = dependencies.appCoordinator.restore()
                 currentCoroutineContext().ensureActive()
                 if (owner == dependencies.appCoordinator.liveSessionLifetime.value &&
+                    actionGate.canApplyRead(revision) &&
                     canListenForLiveUpdates(
                         presentation.state, appInForeground, connectivityStatus, pendingAction,
                     )) {
@@ -221,24 +229,33 @@ fun MainViewController(
         connectionIssue = presentation.connectionIssue,
         mapStyleUrl = mapStyleUrl,
         showManualCoordinateEntry = showManualCoordinateEntry,
-        onLogin = { identifier, password -> scope.launch {
-            presentation = AppStatePresentation(AppUiState.RestoringSession)
-            presentation = presentation.accept(
-                dependencies.appCoordinator.login(identifier, password, "iOS ${appRole.name.lowercase()} app"),
-            )
-        } },
-        onRegister = { displayName, email, phoneNumber, password -> scope.launch {
-            presentation = AppStatePresentation(AppUiState.RegisteringAccount)
-            presentation = presentation.accept(
-                dependencies.appCoordinator.register(displayName, email, phoneNumber, password),
-            )
-        } },
-        onRecoverAccount = { identifier, recoveryCode, newPassword -> scope.launch {
-            presentation = AppStatePresentation(AppUiState.RecoveringAccount)
-            presentation = presentation.accept(
-                dependencies.appCoordinator.recoverAccount(identifier, recoveryCode, newPassword),
-            )
-        } },
+        onLogin = { identifier, password ->
+            actionGate.invalidateReads()
+            scope.launch {
+                presentation = AppStatePresentation(AppUiState.RestoringSession)
+                presentation = presentation.accept(
+                    dependencies.appCoordinator.login(identifier, password, "iOS ${appRole.name.lowercase()} app"),
+                )
+            }
+        },
+        onRegister = { displayName, email, phoneNumber, password ->
+            actionGate.invalidateReads()
+            scope.launch {
+                presentation = AppStatePresentation(AppUiState.RegisteringAccount)
+                presentation = presentation.accept(
+                    dependencies.appCoordinator.register(displayName, email, phoneNumber, password),
+                )
+            }
+        },
+        onRecoverAccount = { identifier, recoveryCode, newPassword ->
+            actionGate.invalidateReads()
+            scope.launch {
+                presentation = AppStatePresentation(AppUiState.RecoveringAccount)
+                presentation = presentation.accept(
+                    dependencies.appCoordinator.recoverAccount(identifier, recoveryCode, newPassword),
+                )
+            }
+        },
         onLoadAccountSecurity = {
             submitAction(AppAction(AppActionKind.LOAD_ACCOUNT_SECURITY), recoverFailure = false) {
                 dependencies.appCoordinator.loadAccountSecurity()
@@ -265,10 +282,13 @@ fun MainViewController(
                 dependencies.appCoordinator.changeAccountPassword(currentPassword, newPassword)
             }
         },
-        onRetry = { scope.launch {
-            presentation = AppStatePresentation(AppUiState.RestoringSession)
-            presentation = presentation.accept(dependencies.appCoordinator.restore())
-        } },
+        onRetry = {
+            actionGate.invalidateReads()
+            scope.launch {
+                presentation = AppStatePresentation(AppUiState.RestoringSession)
+                presentation = presentation.accept(dependencies.appCoordinator.restore())
+            }
+        },
         onRefresh = {
             submitAction(AppAction(AppActionKind.REFRESH), recoverFailure = false) {
                 dependencies.appCoordinator.restore()

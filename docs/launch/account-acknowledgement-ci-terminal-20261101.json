@@ -1,0 +1,57 @@
+{
+  "recorded_utc": "2026-11-01T19:45:41Z",
+  "scope": "R2/R9 signed-out acknowledgement and runtime lock repair; source and CI evidence only",
+  "source_head": "4939124a970d393e62d74293d00bcee41df1e2a5",
+  "tested_merge_commit": "a68cb75db18153852ac3a468823e5fe55b1cdf47",
+  "identical_source_tree": "4f7f8847a17de40c77f2891234cf72a538513703",
+  "failed_predecessor": {
+    "source_head": "f5be5ffdf2b5dd66ea948787b73a43f84dadee34",
+    "run_id": 41340668670,
+    "run_number": 274,
+    "status": "completed",
+    "conclusion": "failure",
+    "backend_job_id": 124949775104,
+    "failed_step": 7,
+    "finding": "pyasn1 0.6.4 CVE-2026-119194/119195/119196/119197; reported fix 0.6.5",
+    "later_backend_steps": "skipped",
+    "other_required_jobs": "seven success"
+  },
+  "corrected_run": {
+    "run_id": 41341066514,
+    "run_number": 276,
+    "status": "completed",
+    "conclusion": "success",
+    "required_jobs": {
+      "backend": {"id": 124950985749, "conclusion": "success"},
+      "dependency-review": {"id": 124951733128, "conclusion": "success"},
+      "documentation-and-provenance": {"id": 124950985734, "conclusion": "success"},
+      "gradle-dependency-submission": {"id": 124950985738, "conclusion": "success"},
+      "gradle-wrapper-integrity": {"id": 124950985804, "conclusion": "success"},
+      "ios-shared": {"id": 124950985786, "conclusion": "success"},
+      "mobile": {"id": 124950985547, "conclusion": "success"},
+      "web": {"id": 124950985726, "conclusion": "success"}
+    },
+    "optional_publish_backend_image": "skipped",
+    "runtime_and_development_lock_audits": "success",
+    "backend_tests": 1513,
+    "backend_test_warnings": 6,
+    "web_boot_scenarios": 4,
+    "web_boot_catalog_cases": 0,
+    "phase_or_deployment_accepted": false,
+    "mobile_products": "unsigned/providerless passenger and driver verification APKs",
+    "ios_products": "unsigned/providerless passenger and driver Release simulator builds"
+  },
+  "artifacts": {
+    "openapi": {"id": 13098190441, "sha256": "f2b1c975752ee710ff7943a0757aac6e8ba196805fb1780b14d18fe79056857d"},
+    "web_boot": {"id": 13098105049, "sha256": "38ae6f76abe4b6a64d5167b31b80d58b3192b2f127d55012ee6716bf40485948"},
+    "database_tls": {"id": 13097204683, "sha256": "edada3e2994a53c35dde90f98fc7061923b9eab7ae47cd6dd3b69fd54ac2b0ee"},
+    "backend_sbom": {"id": 13097179851, "sha256": "52c8ffcff9bce97cca6ac4020c526bf2b3f852918cd352417450d35a162c79c4"}
+  },
+  "local_rendered_regression": {
+    "before_fix": "42 cases, two expected failures: accepted recovery and completed password change announced assertively",
+    "intermediate_selector": "two failures from ambiguous sign-in selector and changed welcome selector; corrected to auth-submit tag",
+    "after_fix": "42 cases, zero failures and zero errors"
+  },
+  "root_head_and_index_preserved": true,
+  "physical_hosted_provider_operational_pilot_or_public_accepted": false
+}

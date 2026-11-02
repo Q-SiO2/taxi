@@ -13,8 +13,10 @@ development locks to `0.6.5`. Both SHA256 distribution hashes come from the
 [official PyPI metadata](https://pypi.org/pypi/pyasn1/0.6.5/json); neither file
 is yanked. The pinned `pyasn1-modules 0.4.2` requires `pyasn1>=0.6.1,<0.7.0`.
 A hash-checked wheel download and both separate local lock audits pass with
-no known vulnerabilities. The unchanged supplemental Linux lock needs its
-combined hash-locked installation and audit in a fresh Linux CI run.
+no known vulnerabilities. The unchanged supplemental Linux lock and both
+updated locks passed their combined hash-locked installation and audits in
+[CI 276](account-acknowledgement-ci-terminal-20261101.json), with all eight
+required jobs successful for the exact successor source tree.
 
 No application source, schema, API contract or deployment configuration is
 changed by this lock repair. Physical, signed, provider, hosted, operator,

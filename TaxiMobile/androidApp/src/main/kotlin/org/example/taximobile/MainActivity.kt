@@ -117,6 +117,12 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+            suspend fun refreshPresentation() {
+                if (actionGate.current != null) return
+                val revision = actionGate.beginRead()
+                val restored = dependencies.appCoordinator.restore()
+                if (actionGate.canApplyRead(revision)) presentation = presentation.accept(restored)
+            }
             val documentLauncher = rememberLauncherForActivityResult(
                 ActivityResultContracts.OpenDocument(),
             ) { uri ->
@@ -155,7 +161,7 @@ class MainActivity : ComponentActivity() {
                     presentation.state.hasAuthenticatedSession()
                 ) {
                     scope.launch {
-                        presentation = presentation.accept(dependencies.appCoordinator.restore())
+                        refreshPresentation()
                     }
                 }
             }
@@ -210,21 +216,21 @@ class MainActivity : ComponentActivity() {
                 }
             }
             LaunchedEffect(dependencies) {
-                presentation = presentation.accept(dependencies.appCoordinator.restore())
+                refreshPresentation()
             }
             LaunchedEffect(connectivityObserver) {
                 connectivityObserver.status.collect { observedStatus ->
                     if (observedStatus != connectivityStatus) foregroundDriverLocationResultGuard.invalidate()
                     connectivityStatus = observedStatus
                     if (recoveryPolicy.shouldRefresh(observedStatus)) {
-                        presentation = presentation.accept(dependencies.appCoordinator.restore())
+                        refreshPresentation()
                     }
                 }
             }
             LaunchedEffect(dependencies) {
                 PushRefreshSignals.hints.collect {
                     if (presentation.state.hasAuthenticatedSession()) {
-                        presentation = presentation.accept(dependencies.appCoordinator.restore())
+                        refreshPresentation()
                     }
                 }
             }
@@ -246,9 +252,11 @@ class MainActivity : ComponentActivity() {
                                 presentation.state, appInForeground, connectivityStatus, pendingAction,
                             )) return@listenForLiveUpdates
                         val owner = dependencies.appCoordinator.liveSessionLifetime.value
+                        val revision = actionGate.beginRead()
                         val restored = dependencies.appCoordinator.restore()
                         currentCoroutineContext().ensureActive()
                         if (owner == dependencies.appCoordinator.liveSessionLifetime.value &&
+                            actionGate.canApplyRead(revision) &&
                             canListenForLiveUpdates(
                                 presentation.state, appInForeground, connectivityStatus, pendingAction,
                             )) {
@@ -269,6 +277,7 @@ class MainActivity : ComponentActivity() {
                 showManualCoordinateEntry = BuildConfig.SHOW_MANUAL_COORDINATE_ENTRY,
                 placeSearchEnabled = BuildConfig.PLACE_SEARCH_ENABLED,
                 onLogin = { identifier, password ->
+                    actionGate.invalidateReads()
                     scope.launch {
                         presentation = AppStatePresentation(AppUiState.RestoringSession)
                         presentation = presentation.accept(dependencies.appCoordinator.login(
@@ -279,6 +288,7 @@ class MainActivity : ComponentActivity() {
                     }
                 },
                 onRegister = { displayName, email, phoneNumber, password ->
+                    actionGate.invalidateReads()
                     scope.launch {
                         presentation = AppStatePresentation(AppUiState.RegisteringAccount)
                         presentation = presentation.accept(
@@ -287,6 +297,7 @@ class MainActivity : ComponentActivity() {
                     }
                 },
                 onRecoverAccount = { identifier, recoveryCode, newPassword ->
+                    actionGate.invalidateReads()
                     scope.launch {
                         presentation = AppStatePresentation(AppUiState.RecoveringAccount)
                         presentation = presentation.accept(
@@ -333,6 +344,7 @@ class MainActivity : ComponentActivity() {
                     }
                 },
                 onRetry = {
+                    actionGate.invalidateReads()
                     scope.launch {
                         presentation = AppStatePresentation(AppUiState.RestoringSession)
                         presentation = presentation.accept(dependencies.appCoordinator.restore())

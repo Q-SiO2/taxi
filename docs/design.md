@@ -373,6 +373,11 @@ replacement and a newly started primary ride clear the prior history intent;
 a late old-session read must not reinstall it. Denied or removed history yields
 an explicit error and forgets the inaccessible selection rather than presenting
 a cached receipt or silently substituting success.
+Passive foreground, push, reconnect and live-event refreshes also have a
+presentation revision. A refresh started before or during an explicit history
+selection must not paint after that selection completes; an older passive read
+must not replace a newer passive read. This guards navigation presentation only;
+the backend still authorizes every detail and receipt read.
 
 Ordinary passenger/driver history uses the same short eight-character reference
 as the recent-ride row. Full UUIDs remain internal API/resource identifiers.

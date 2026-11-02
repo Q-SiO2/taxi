@@ -19,6 +19,6 @@ retained in the local test report history.
 
 This is source/rendered-JVM evidence for S05/S07/S08/S15. Four-style, EN/FR/AR,
 device assistive-technology, background/secret lifecycle and signed-release
-acceptance remain separate R9/R10 gates. A fresh immutable CI run is required
-for the new source head. No authentication, account enumeration, API or backend
-authorization rule changes.
+acceptance remain separate R9/R10 gates. The [CI 276 terminal record](account-acknowledgement-ci-terminal-20261101.json)
+shows all eight required jobs passing for the exact successor source. No
+authentication, account enumeration, API or backend authorization rule changes.
