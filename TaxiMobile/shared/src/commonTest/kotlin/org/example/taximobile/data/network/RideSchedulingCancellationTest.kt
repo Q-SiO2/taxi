@@ -86,7 +86,7 @@ class RideSchedulingCancellationTest {
 
     @Test fun immediate_point_to_point_creation_propagates_second_attempt_cancellation() =
         fixture(firstTransportFailure = true) { rides, _, engine ->
-            assertFailsWith<CancellationException> { rides.requestRide(pickup, destination) }
+            assertFailsWith<CancellationException> { rides.requestRide(pickup, destination, RidePaymentMethod.CASH) }
             assertSameCommand(engine)
         }
 

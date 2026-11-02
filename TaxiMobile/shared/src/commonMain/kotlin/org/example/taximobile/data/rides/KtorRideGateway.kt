@@ -154,10 +154,6 @@ class KtorRideGateway(
         response.body<RideListResponse>().items.map { it.toSummary() }
     }
 
-    override suspend fun requestRide(pickup: Coordinates, destination: Coordinates): RideSummary {
-        return requestRide(pickup, destination, RidePaymentMethod.CASH)
-    }
-
     override suspend fun requestRide(
         pickup: Coordinates,
         destination: Coordinates,

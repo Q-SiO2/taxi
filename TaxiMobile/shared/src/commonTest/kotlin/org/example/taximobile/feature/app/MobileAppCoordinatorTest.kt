@@ -760,7 +760,7 @@ class MobileAppCoordinatorTest {
             routing = routing,
         )
 
-        val state = assertIs<AppUiState.PassengerReady>(coordinator.requestRide(pickup, destination))
+        val state = assertIs<AppUiState.PassengerReady>(coordinator.requestRide(pickup, destination, RidePaymentMethod.CASH))
 
         assertEquals(pickup to destination, rides.requestedTrip)
         assertEquals("ride", state.activeRideId)
@@ -1589,7 +1589,7 @@ private class PassengerHistoryDetailGateway : RideGateway {
     }
     override suspend fun estimateRide(pickup: Coordinates, destination: Coordinates): FareEstimate = error("Not used")
     override suspend fun finalFare(id: String): FinalRideFare = error("Not used")
-    override suspend fun requestRide(pickup: Coordinates, destination: Coordinates): RideSummary = error("Not used")
+    override suspend fun requestRide(pickup: Coordinates, destination: Coordinates, paymentMethod: RidePaymentMethod): RideSummary = error("Not used")
     override suspend fun cancelRide(id: String, reason: String): RideSummary = error("Not used")
     override suspend fun submitRating(id: String, score: Int, comment: String?): RideRating = error("Not used")
 }
@@ -1660,7 +1660,7 @@ private class ActiveRideGateway(private val pickup: Coordinates) : RideGateway {
     override suspend fun listRides(): List<RideSummary> = error("Not used")
     override suspend fun finalFare(id: String): FinalRideFare = error("Not used")
     override suspend fun receipt(id: String): RideReceipt = error("Not used")
-    override suspend fun requestRide(pickup: Coordinates, destination: Coordinates): RideSummary = error("Not used")
+    override suspend fun requestRide(pickup: Coordinates, destination: Coordinates, paymentMethod: RidePaymentMethod): RideSummary = error("Not used")
     override suspend fun cancelRide(id: String, reason: String): RideSummary = error("Not used")
     override suspend fun ratings(id: String): List<RideRating> = error("Not used")
     override suspend fun submitRating(id: String, score: Int, comment: String?): RideRating = error("Not used")
@@ -1709,7 +1709,7 @@ private class CancellingPassengerRideGateway : RideGateway {
     override suspend fun currentRide(id: String): RideSummary = error("Not used")
     override suspend fun finalFare(id: String): FinalRideFare = error("Not used")
     override suspend fun receipt(id: String): RideReceipt = error("Not used")
-    override suspend fun requestRide(pickup: Coordinates, destination: Coordinates): RideSummary = error("Not used")
+    override suspend fun requestRide(pickup: Coordinates, destination: Coordinates, paymentMethod: RidePaymentMethod): RideSummary = error("Not used")
     override suspend fun ratings(id: String): List<RideRating> = error("Not used")
     override suspend fun submitRating(id: String, score: Int, comment: String?): RideRating = error("Not used")
 }
@@ -1747,7 +1747,7 @@ private class CoordinatingPassengerRideGateway : RideGateway {
     override suspend fun estimateRide(pickup: Coordinates, destination: Coordinates): FareEstimate = error("Not used")
     override suspend fun finalFare(id: String): FinalRideFare = error("Not used")
     override suspend fun receipt(id: String): RideReceipt = error("Not used")
-    override suspend fun requestRide(pickup: Coordinates, destination: Coordinates): RideSummary = error("Not used")
+    override suspend fun requestRide(pickup: Coordinates, destination: Coordinates, paymentMethod: RidePaymentMethod): RideSummary = error("Not used")
     override suspend fun cancelRide(id: String, reason: String): RideSummary = error("Not used")
     override suspend fun ratings(id: String): List<RideRating> = emptyList()
     override suspend fun submitRating(id: String, score: Int, comment: String?): RideRating = error("Not used")
@@ -1759,10 +1759,6 @@ private class RequestedPassengerRideGateway(
 ) : RideGateway {
     var requestedTrip: Pair<Coordinates, Coordinates>? = null
     var requestedPaymentMethod: RidePaymentMethod? = null
-
-    override suspend fun requestRide(pickup: Coordinates, destination: Coordinates): RideSummary {
-        return requestRide(pickup, destination, RidePaymentMethod.CASH)
-    }
 
     override suspend fun requestRide(
         pickup: Coordinates,
@@ -1822,7 +1818,7 @@ private class ManualTransferPassengerGateway : RideGateway {
     override suspend fun estimateRide(pickup: Coordinates, destination: Coordinates): FareEstimate = error("Not used")
     override suspend fun currentRide(id: String): RideSummary = summary
     override suspend fun finalFare(id: String): FinalRideFare = error("Not used")
-    override suspend fun requestRide(pickup: Coordinates, destination: Coordinates): RideSummary = error("Not used")
+    override suspend fun requestRide(pickup: Coordinates, destination: Coordinates, paymentMethod: RidePaymentMethod): RideSummary = error("Not used")
     override suspend fun cancelRide(id: String, reason: String): RideSummary = error("Not used")
     override suspend fun submitRating(id: String, score: Int, comment: String?): RideRating = error("Not used")
 }

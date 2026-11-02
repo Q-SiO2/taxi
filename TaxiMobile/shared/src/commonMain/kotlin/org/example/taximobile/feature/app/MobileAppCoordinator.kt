@@ -815,9 +815,6 @@ class MobileAppCoordinator(
         }
     }
 
-    suspend fun requestRide(pickup: Coordinates, destination: Coordinates): AppUiState =
-        requestRide(pickup, destination, RidePaymentMethod.CASH)
-
     suspend fun requestRide(
         pickup: Coordinates,
         destination: Coordinates,

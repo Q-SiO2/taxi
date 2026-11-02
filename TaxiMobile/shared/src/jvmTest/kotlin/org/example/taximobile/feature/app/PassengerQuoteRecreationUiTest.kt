@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import org.example.taximobile.App
 import org.example.taximobile.domain.rides.Coordinates
 import org.example.taximobile.domain.rides.FareEstimate
+import org.example.taximobile.domain.rides.RidePaymentMethod
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -24,7 +25,7 @@ class PassengerQuoteRecreationUiTest {
     private val points = Coordinates(33.5731, -7.5898) to Coordinates(33.57561, -7.59063)
     private fun reviewed() = AppUiState.PassengerReady(
         reviewedPointQuoteInput = points,
-        fareEstimate = FareEstimate("35.00", "MAD", "server-v1"),
+        fareEstimate = FareEstimate("35.00", "MAD", "server-v1", listOf(RidePaymentMethod.CASH)),
     )
 
     @Test fun a_fresh_composition_recovers_reviewed_points_and_request_without_a_command() = runComposeUiTest {
@@ -53,7 +54,7 @@ class PassengerQuoteRecreationUiTest {
         mainClock.advanceTimeBy(1000)
         onNodeWithText("Request taxi").performScrollTo().assertIsEnabled()
         onNodeWithText("Destination latitude").performScrollTo().performTextReplacement("33.579")
-        runOnIdle { projection.value = reviewed().copy(fareEstimate = FareEstimate("38.00", "MAD", "server-v2")) }
+        runOnIdle { projection.value = reviewed().copy(fareEstimate = FareEstimate("38.00", "MAD", "server-v2", listOf(RidePaymentMethod.CASH))) }
         mainClock.advanceTimeBy(1000)
         onNodeWithText("Destination latitude").assertTextContains("33.579")
         onNodeWithText("Request taxi").assertDoesNotExist()

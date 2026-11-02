@@ -55,6 +55,9 @@ from an incomplete response.
 When a fresh point or fixed-route estimate changes the offered methods, the
 passenger selection and submitted method must resolve against that displayed
 estimate before the booking action is enabled. An empty offer cannot be booked.
+The shared fare model requires explicit backend-advertised methods, and the ride
+request gateway requires an explicit selected method; neither supplies a cash
+default to callers.
 
 Ride completion creates exactly one pending payment using the snapshotted method.
 Completing the ride does not settle cash or prove that an external transfer moved.

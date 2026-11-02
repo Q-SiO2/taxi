@@ -151,7 +151,7 @@ data class FareEstimate(
     val amount: String,
     val currency: String,
     val pricingRuleVersion: String,
-    val paymentMethods: List<RidePaymentMethod> = listOf(RidePaymentMethod.CASH),
+    val paymentMethods: List<RidePaymentMethod>,
     /** Null only when decoding a response from a pre-economics backend. */
     val economics: FareEconomics? = null,
     val serviceType: RideServiceType = RideServiceType.ON_DEMAND,
@@ -217,16 +217,11 @@ interface RideGateway {
     suspend fun currentRide(id: String): RideSummary
     suspend fun finalFare(id: String): FinalRideFare
     suspend fun receipt(id: String): RideReceipt
-    suspend fun requestRide(pickup: Coordinates, destination: Coordinates): RideSummary
     suspend fun requestRide(
         pickup: Coordinates,
         destination: Coordinates,
         paymentMethod: RidePaymentMethod,
-    ): RideSummary = if (paymentMethod == RidePaymentMethod.CASH) {
-        requestRide(pickup, destination)
-    } else {
-        error("This ride gateway does not support manual transfers.")
-    }
+    ): RideSummary
     suspend fun submitManualTransfer(id: String, payerReference: String?): RideReceipt =
         error("This ride gateway does not support manual transfers.")
     suspend fun cancelRide(id: String, reason: String): RideSummary

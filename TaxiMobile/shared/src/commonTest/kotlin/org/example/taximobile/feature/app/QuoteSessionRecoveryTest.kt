@@ -327,7 +327,7 @@ private class QuoteRides(private val store: QuoteStore, private val auth: QuoteA
         requireAccess()
         return history
     }
-    override suspend fun requestRide(pickup: Coordinates, destination: Coordinates): RideSummary = rejectedCommand()
+    override suspend fun requestRide(pickup: Coordinates, destination: Coordinates, paymentMethod: RidePaymentMethod): RideSummary = rejectedCommand()
     override suspend fun requestFixedRoute(directionVersionId: String, paymentMethod: RidePaymentMethod): RideSummary = rejectedCommand()
     override suspend fun submitManualTransfer(id: String, payerReference: String?): RideReceipt = rejectedCommand()
     override suspend fun currentRide(id: String): RideSummary = history.single { it.id == id }
