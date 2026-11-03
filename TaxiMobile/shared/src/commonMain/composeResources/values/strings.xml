@@ -1343,4 +1343,18 @@
     <string name="web_account_recorded">Account command recorded</string>
     <string name="web_account_recorded_help">%1$d sessions and %2$d push registrations revoked.</string>
     <string name="web_account_applying">Applying account security action</string>
+    <string name="web_staff_queue_empty_detail">Only pending requests appear here. Completed decisions remain in the backend audit record.</string>
+    <string name="web_staff_queue_stale_title">This page has changed</string>
+    <string name="web_staff_queue_stale_detail">Pending requests changed while you were reviewing. Retry this page or move to a previous page.</string>
+    <string name="web_staff_queue_page">Page %1$d · %2$d pending requests</string>
+    <string name="web_staff_queue_retry">Retry page</string>
+    <string name="web_staff_queue_previous">Previous</string>
+    <string name="web_staff_queue_next">Next</string>
+    <string name="web_staff_queue_error_title">Could not load staff requests</string>
+    <string name="web_staff_queue_error_detail">The current page was kept. Retry navigation after checking the connection. No grant command was sent.</string>
+    <string name="web_staff_grants_stale_title">This grant page has changed</string>
+    <string name="web_staff_grants_stale_detail">The active grant list changed. Retry this page or move to a previous page.</string>
+    <string name="web_staff_grants_page">Page %1$d · %2$d active grants</string>
+    <string name="web_staff_grants_error_title">Could not load active grants</string>
+    <string name="web_staff_grants_error_detail">The current page was kept. Retry navigation after checking the connection. No grant command was sent.</string>
 </resources>

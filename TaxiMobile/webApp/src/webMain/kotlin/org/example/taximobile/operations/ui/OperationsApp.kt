@@ -642,6 +642,8 @@ private fun OperationsWorkspace(
                         onCreateGrant = coordinator::createAdministrativeGrant,
                         onRevokeGrant = coordinator::revokeAdministrativeGrant,
                         onDecideRequest = coordinator::decideAdministrativeGrantRequest,
+                        onSelectRequestPage = coordinator::selectStaffRequestPage,
+                        onSelectGrantPage = coordinator::selectStaffGrantPage,
                     )
                     OperationsDestination.DRIVER_RECRUITMENT -> DriverRecruitmentScreen(state, coordinator)
                     OperationsDestination.PRICING_ECONOMICS -> PricingEconomicsScreen(state, coordinator)

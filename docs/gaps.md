@@ -1771,6 +1771,15 @@ may cancel; the target cannot decide; a distinct authorized administrator may
 approve or reject with an independent reason and expected version. Revocation is
 non-effective while pending.
 
+**Source progress (2026-11-03):** the staff console now pages through
+backend-filtered selected-market pending requests and active grants. The prior first-page-only
+view could hide older pending requests behind terminal records or make an older
+active grant unreachable for revocation review. The selected-market filter
+replaces ownership guesses from truncated city/operator summary pages. Read failures retain the last
+confirmed page; concurrent changes expose a stale-page retry/previous path.
+Page reads do not send grant commands. Browser tests and source review do not
+replace the hosted multi-administrator drill or staff-process approvals below.
+
 Migration `20260907_0049` stores pending/terminal state, maker, checker, target,
 scope, source/result grants, reasons, timestamps and optimistic version. Partial
 unique indexes prevent equivalent pending creates/revokes. The backend requires

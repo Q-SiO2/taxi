@@ -27,6 +27,7 @@ import org.example.taximobile.operations.model.AdministrativeGrantChangeRequestR
 import org.example.taximobile.operations.model.AdministrativeGrantDecisionRequest
 import org.example.taximobile.operations.model.AdministrativeGrantRecord
 import org.example.taximobile.operations.model.AdministrativeGrantRevocationRequest
+import org.example.taximobile.operations.model.StaffPageState
 import org.example.taximobile.operations.model.CityRecord
 import org.example.taximobile.operations.model.CityConfigurationRecord
 import org.example.taximobile.operations.model.CityConfigurationCreateRequest
@@ -195,6 +196,8 @@ class OperationsCoordinator(
 
     private var tokens: OperationsTokens? = null
     private var reloadJob: Job? = null
+    private var staffPageJob: Job? = null
+    private var staffReadVersion = 0L
 
     fun login(identifier: String, password: String) {
         if (identifier.isBlank() || password.length < 8) {
@@ -713,6 +716,108 @@ class OperationsCoordinator(
         reload(current.scope.copy(cityId = cityId))
     }
 
+    fun selectStaffRequestPage(requestedPage: Int) {
+        val current = mutableState.value
+        val page = current.snapshot?.grantRequests ?: return
+        val session = current.session ?: return
+        val marketId = current.scope.marketId ?: return
+        if (current.snapshot.staffMarketId != marketId) return
+        if (current.interactionLocked || !session.hasPermission(MANAGE_SCOPED_STAFF_GRANTS)) return
+        val navigation = StaffPageState(page.page, page.limit, page.total, page.items.size)
+        if (!navigation.allowsNavigation(requestedPage)) return
+
+        staffPageJob?.cancel()
+        val version = ++staffReadVersion
+        val ownerId = session.userId
+        val ownerScope = current.scope
+        mutate { it.copy(isRefreshing = true, error = null) }
+        staffPageJob = scope.launch {
+            try {
+                val result = withAccessToken { gateway.staffAccess.listPendingRequests(it, marketId, requestedPage) }
+                if (result.page != requestedPage || result.limit <= 0 || result.total < 0 ||
+                    result.items.any { it.status != "PENDING" }
+                ) {
+                    throw IllegalStateException("Invalid pending staff-request page")
+                }
+                if (version != staffReadVersion || mutableState.value.session?.userId != ownerId ||
+                    mutableState.value.scope != ownerScope
+                ) return@launch
+                mutate { it.copy(snapshot = it.snapshot?.copy(grantRequests = result), isRefreshing = false) }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (error: Throwable) {
+                if (version != staffReadVersion || mutableState.value.session?.userId != ownerId ||
+                    mutableState.value.scope != ownerScope
+                ) return@launch
+                diagnoseLocalFailure("staff request page", error)
+                if (error is OperationsApiException && error.statusCode == 401) {
+                    expireSession()
+                } else {
+                    mutate {
+                        it.copy(
+                            isRefreshing = false,
+                            error = OperationsMessage(
+                                UiMessage(Res.string.web_staff_queue_error_title),
+                                UiMessage(Res.string.web_staff_queue_error_detail),
+                            ),
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    fun selectStaffGrantPage(requestedPage: Int) {
+        val current = mutableState.value
+        val page = current.snapshot?.grants ?: return
+        val session = current.session ?: return
+        val marketId = current.scope.marketId ?: return
+        if (current.snapshot.staffMarketId != marketId) return
+        if (current.interactionLocked || !session.hasPermission(MANAGE_SCOPED_STAFF_GRANTS)) return
+        val navigation = StaffPageState(page.page, page.limit, page.total, page.items.size)
+        if (!navigation.allowsNavigation(requestedPage)) return
+
+        staffPageJob?.cancel()
+        val version = ++staffReadVersion
+        val ownerId = session.userId
+        val ownerScope = current.scope
+        mutate { it.copy(isRefreshing = true, error = null) }
+        staffPageJob = scope.launch {
+            try {
+                val result = withAccessToken { gateway.staffAccess.listActiveGrants(it, marketId, requestedPage) }
+                if (result.page != requestedPage || result.limit <= 0 || result.total < 0 ||
+                    result.items.any { it.revokedAt != null }
+                ) {
+                    throw IllegalStateException("Invalid active staff-grant page")
+                }
+                if (version != staffReadVersion || mutableState.value.session?.userId != ownerId ||
+                    mutableState.value.scope != ownerScope
+                ) return@launch
+                mutate { it.copy(snapshot = it.snapshot?.copy(grants = result), isRefreshing = false) }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (error: Throwable) {
+                if (version != staffReadVersion || mutableState.value.session?.userId != ownerId ||
+                    mutableState.value.scope != ownerScope
+                ) return@launch
+                diagnoseLocalFailure("staff grant page", error)
+                if (error is OperationsApiException && error.statusCode == 401) {
+                    expireSession()
+                } else {
+                    mutate {
+                        it.copy(
+                            isRefreshing = false,
+                            error = OperationsMessage(
+                                UiMessage(Res.string.web_staff_grants_error_title),
+                                UiMessage(Res.string.web_staff_grants_error_detail),
+                            ),
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     fun createAdministrativeGrant(request: AdministrativeGrantCreateRequest) {
         val current = mutableState.value
         val session = current.session
@@ -762,7 +867,7 @@ class OperationsCoordinator(
             fail("Self-revocation blocked", "A different authorized administrator must change your access.")
             return
         }
-        if (!grantBelongsToSelectedMarket(grant, current)) {
+        if (current.scope.marketId == null || current.snapshot.staffMarketId != current.scope.marketId) {
             fail("Grant outside selected market", "Select the market that owns this grant before revoking it.")
             return
         }
@@ -2135,23 +2240,6 @@ class OperationsCoordinator(
         return true
     }
 
-    private fun grantBelongsToSelectedMarket(
-        grant: AdministrativeGrantRecord,
-        current: OperationsUiState,
-    ): Boolean {
-        val marketId = current.scope.marketId ?: return false
-        return when {
-            grant.marketId != null -> grant.marketId == marketId
-            grant.operatorId != null -> current.snapshot?.operators?.items?.any {
-                it.id == grant.operatorId && it.marketId == marketId
-            } == true
-            grant.cityId != null -> current.snapshot?.cities?.items?.any {
-                it.id == grant.cityId && it.marketId == marketId
-            } == true
-            else -> false
-        }
-    }
-
     private fun validPolicyCommand(target: String, reason: String): Boolean {
         if (target !in setOf("IN_REVIEW", "ACTIVE")) {
             fail("Unsupported transition", "Refresh and choose the documented policy transition.")
@@ -2197,6 +2285,8 @@ class OperationsCoordinator(
     }
 
     private suspend fun reloadNow(requestedScope: OperationsScope, initial: Boolean) {
+        staffReadVersion++
+        staffPageJob?.cancel()
         val session = mutableState.value.session
             ?: throw OperationsApiException(401, "The operations session is no longer available.")
         mutate {

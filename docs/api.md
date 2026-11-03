@@ -3226,6 +3226,13 @@ POST            /operations/security-incidents/{incident_id}/transitions
 POST            /operations/security-incidents/{incident_id}/postmortem/complete
 ```
 
+The staff-grant and staff-request list reads accept an optional `market_id`
+filter. It is intersected with the caller's scoped visibility in SQL before
+counts and pagination; an unauthorized market cannot expand visibility. The
+grant list defaults to active records (`include_revoked=false`), and the console
+requests `status=PENDING` for its decision queue. Both reads support explicit
+`page` and `limit` within the documented bounded API limits.
+
 The two direct `/operations/administrative-grants` mutation methods exist only
 for explicit development/test fixture compatibility and return `409` in staging
 or production. Production staff changes use the request routes. Create snapshots

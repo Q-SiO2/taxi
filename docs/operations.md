@@ -408,9 +408,16 @@ Staff-grant creation and revocation use a dedicated console request queue. The
 browser accepts an exact approved user UUID, maps each closed role template to
 exactly one selected market/operator/city scope, displays the complete request,
 requires typed confirmation, and reloads authoritative state. Revocation remains
-non-effective while pending. Queue rows expose action, target, role, scope,
+non-effective while pending. Active-grant rows use explicit previous/next
+navigation over the backend-filtered selected-market active total, so older grants remain
+reachable for review and revocation. Queue rows expose action, target, role, scope,
 requester, reason and optimistic version; only the maker receives cancellation,
 the target cannot decide, and another administrator receives approve/reject.
+The console requests selected-market `PENDING` rows from the backend before pagination and
+provides explicit previous/next navigation for the scoped pending total. A
+concurrent decision can empty an older page; that state offers read-only retry
+or previous-page navigation without claiming the entire queue is empty or
+replaying a grant command. Completed decisions remain in backend audit records.
 
 Every write requires a fresh idempotency key and recent MFA. The backend locks the
 market, revalidates live market-admin authority and all reviewed state, and changes

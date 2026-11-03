@@ -1343,4 +1343,18 @@
     <string name="web_account_recorded">Commande de compte enregistrée</string>
     <string name="web_account_recorded_help">%1$d sessions et %2$d inscriptions aux notifications push révoquées.</string>
     <string name="web_account_applying">Application de l’action de sécurité du compte</string>
+    <string name="web_staff_queue_empty_detail">Seules les demandes en attente figurent ici. Les décisions terminées restent dans le journal d’audit du serveur.</string>
+    <string name="web_staff_queue_stale_title">Cette page a changé</string>
+    <string name="web_staff_queue_stale_detail">Les demandes en attente ont changé pendant votre examen. Réessayez cette page ou revenez à une page précédente.</string>
+    <string name="web_staff_queue_page">Page %1$d · %2$d demandes en attente</string>
+    <string name="web_staff_queue_retry">Réessayer la page</string>
+    <string name="web_staff_queue_previous">Précédent</string>
+    <string name="web_staff_queue_next">Suivant</string>
+    <string name="web_staff_queue_error_title">Chargement des demandes impossible</string>
+    <string name="web_staff_queue_error_detail">La page actuelle a été conservée. Vérifiez la connexion, puis réessayez la navigation. Aucune commande de droit d’accès n’a été envoyée.</string>
+    <string name="web_staff_grants_stale_title">Cette page de droits a changé</string>
+    <string name="web_staff_grants_stale_detail">La liste des droits actifs a changé. Réessayez cette page ou revenez à une page précédente.</string>
+    <string name="web_staff_grants_page">Page %1$d · %2$d droits actifs</string>
+    <string name="web_staff_grants_error_title">Chargement des droits actifs impossible</string>
+    <string name="web_staff_grants_error_detail">La page actuelle a été conservée. Vérifiez la connexion, puis réessayez la navigation. Aucune commande de droit d’accès n’a été envoyée.</string>
 </resources>

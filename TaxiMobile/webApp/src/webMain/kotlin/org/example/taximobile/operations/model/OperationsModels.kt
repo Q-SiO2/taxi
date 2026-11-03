@@ -654,6 +654,7 @@ data class OperationsSnapshot(
     val rollout: RolloutOverview,
     val grants: PagedResponse<AdministrativeGrantRecord>? = null,
     val grantRequests: PagedResponse<AdministrativeGrantChangeRequestRecord>? = null,
+    val staffMarketId: String? = null,
     val auditLogs: PagedResponse<AuditLogRecord>? = null,
     val serviceAreas: PagedResponse<ServiceAreaVersionRecord>? = null,
     val configurations: PagedResponse<CityConfigurationRecord>? = null,

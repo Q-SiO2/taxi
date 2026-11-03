@@ -1343,4 +1343,18 @@
     <string name="web_account_recorded">تم تسجيل أمر الحساب</string>
     <string name="web_account_recorded_help">أُلغيت %1$d جلسات و%2$d تسجيلات للإشعارات الفورية.</string>
     <string name="web_account_applying">جارٍ تطبيق إجراء أمان الحساب</string>
+    <string name="web_staff_queue_empty_detail">تظهر هنا الطلبات المعلقة فقط. تبقى القرارات المكتملة في سجل التدقيق على الخادم.</string>
+    <string name="web_staff_queue_stale_title">تغيّرت هذه الصفحة</string>
+    <string name="web_staff_queue_stale_detail">تغيّرت الطلبات المعلقة أثناء المراجعة. أعد تحميل هذه الصفحة أو انتقل إلى صفحة سابقة.</string>
+    <string name="web_staff_queue_page">الصفحة %1$d · %2$d طلبات معلقة</string>
+    <string name="web_staff_queue_retry">إعادة تحميل الصفحة</string>
+    <string name="web_staff_queue_previous">السابق</string>
+    <string name="web_staff_queue_next">التالي</string>
+    <string name="web_staff_queue_error_title">تعذر تحميل طلبات الموظفين</string>
+    <string name="web_staff_queue_error_detail">احتُفظ بالصفحة الحالية. تحقق من الاتصال ثم أعد محاولة التنقل. لم يُرسل أي أمر لتغيير الصلاحيات.</string>
+    <string name="web_staff_grants_stale_title">تغيّرت صفحة الصلاحيات هذه</string>
+    <string name="web_staff_grants_stale_detail">تغيّرت قائمة الصلاحيات النشطة. أعد تحميل هذه الصفحة أو انتقل إلى صفحة سابقة.</string>
+    <string name="web_staff_grants_page">الصفحة %1$d · %2$d صلاحيات نشطة</string>
+    <string name="web_staff_grants_error_title">تعذر تحميل الصلاحيات النشطة</string>
+    <string name="web_staff_grants_error_detail">احتُفظ بالصفحة الحالية. تحقق من الاتصال ثم أعد محاولة التنقل. لم يُرسل أي أمر لتغيير الصلاحيات.</string>
 </resources>

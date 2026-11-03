@@ -4,6 +4,7 @@ import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -34,11 +35,14 @@ import org.example.taximobile.operations.model.AdministrativeGrantCreateRequest
 import org.example.taximobile.operations.model.AdministrativeGrantChangeRequestRecord
 import org.example.taximobile.operations.model.AdministrativeGrantRecord
 import org.example.taximobile.operations.model.AdministrativeGrantScopeKind
+import org.example.taximobile.operations.model.StaffPageState
 import org.example.taximobile.operations.model.MANAGE_SCOPED_STAFF_GRANTS
 import org.example.taximobile.operations.model.administrativeGrantInputError
 import org.example.taximobile.operations.model.administrativeRoleTemplate
 import org.example.taximobile.operations.model.matchesSelectedScope
 import org.example.taximobile.operations.state.OperationsUiState
+import org.jetbrains.compose.resources.stringResource
+import taximobile.shared.generated.resources.*
 
 @Composable
 internal fun StaffAccessScreen(
@@ -46,10 +50,13 @@ internal fun StaffAccessScreen(
     onCreateGrant: (AdministrativeGrantCreateRequest) -> Unit,
     onRevokeGrant: (AdministrativeGrantRecord, String) -> Unit,
     onDecideRequest: (AdministrativeGrantChangeRequestRecord, String, String) -> Unit,
+    onSelectRequestPage: (Int) -> Unit,
+    onSelectGrantPage: (Int) -> Unit,
 ) {
     val taxiColors = TaxiTheme.colors
     val snapshot = state.snapshot ?: return
     val grants = snapshot.grants
+    val grantPage = grants?.let { StaffPageState(it.page, it.limit, it.total, it.items.size) }
     val mayManage = state.session?.hasPermission(MANAGE_SCOPED_STAFF_GRANTS) == true
     var showCreateDialog by remember { mutableStateOf(false) }
     var pendingRevocation by remember { mutableStateOf<AdministrativeGrantRecord?>(null) }
@@ -59,8 +66,7 @@ internal fun StaffAccessScreen(
     val cityNames = snapshot.cities.items.associate { it.id to it.localizedName.preferred() }
     val operatorNames = snapshot.operators.items.associate { it.id to it.name }
     val marketNames = snapshot.markets.items.associate { it.id to it.name }
-    val operatorMarkets = snapshot.operators.items.associate { it.id to it.marketId }
-    val cityMarkets = snapshot.cities.items.associate { it.id to it.marketId }
+    val isSelectedMarket = state.scope.marketId != null && snapshot.staffMarketId == state.scope.marketId
 
     ScreenColumn {
         SectionHeading(
@@ -86,9 +92,13 @@ internal fun StaffAccessScreen(
                 "Grant management not authorized",
                 "This destination is available only to a market-scoped platform administrator.",
             )
-            grants.items.isEmpty() -> EmptyState(
+            grantPage?.isCollectionEmpty == true -> EmptyState(
                 "No active grants",
                 "No active administrative grants were returned for this authorized market. Submit a request from an approved staff record.",
+            )
+            grantPage?.isPageStale == true -> EmptyState(
+                stringResource(Res.string.web_staff_grants_stale_title),
+                stringResource(Res.string.web_staff_grants_stale_detail),
             )
             else -> {
                 DataCard(tableMinWidth = 1220.dp) {
@@ -106,12 +116,6 @@ internal fun StaffAccessScreen(
                         )
                         grants.items.forEach { grant ->
                             val isCurrentUser = grant.userId.equals(state.session?.userId, ignoreCase = true)
-                            val isSelectedMarket = grantBelongsToMarket(
-                                grant = grant,
-                                marketId = state.scope.marketId,
-                                operatorMarkets = operatorMarkets,
-                                cityMarkets = cityMarkets,
-                            )
                             val scopeLabel = scopeLabelForGrant(grant, marketNames, operatorNames, cityNames)
                             TableRow {
                                 TableCell(shortId(grant.userId), 1.2f, supporting = if (isCurrentUser) "Current account" else null)
@@ -143,10 +147,29 @@ internal fun StaffAccessScreen(
                         }
                     }
                 }
-                PageLimitNote(grants.items.size, grants.total)
+            }
+        }
+        if (grants != null && grantPage != null && !grantPage.isCollectionEmpty) {
+            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
+                Text(stringResource(Res.string.web_staff_grants_page, grants.page, grants.total), style = MaterialTheme.typography.bodySmall)
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
+                    if (grantPage.isPageStale) {
+                        OutlinedButton(onClick = { onSelectGrantPage(grants.page) }, enabled = !state.interactionLocked) {
+                            Text(stringResource(Res.string.web_staff_queue_retry))
+                        }
+                    }
+                    OutlinedButton(onClick = { onSelectGrantPage(grants.page - 1) }, enabled = grantPage.canPrevious && !state.interactionLocked) {
+                        Text(stringResource(Res.string.web_staff_queue_previous))
+                    }
+                    OutlinedButton(onClick = { onSelectGrantPage(grants.page + 1) }, enabled = grantPage.canNext && !state.interactionLocked) {
+                        Text(stringResource(Res.string.web_staff_queue_next))
+                    }
+                }
             }
         }
         val requests = snapshot.grantRequests
+        val pending = requests?.items?.filter { it.status == "PENDING" }.orEmpty()
+        val requestPage = requests?.let { StaffPageState(it.page, it.limit, it.total, pending.size) }
         SectionHeading(
             title = "Grant change queue",
             supportingText = "Pending requests require a different authorized administrator.",
@@ -156,9 +179,13 @@ internal fun StaffAccessScreen(
                 "Request queue not authorized",
                 "The active operations grant does not expose staff-change requests.",
             )
-            requests.items.none { it.status == "PENDING" } -> EmptyState(
+            requestPage?.isCollectionEmpty == true -> EmptyState(
                 "No pending staff changes",
-                "Submitted, approved, rejected, and cancelled records remain available after refresh.",
+                stringResource(Res.string.web_staff_queue_empty_detail),
+            )
+            requestPage?.isPageStale == true -> EmptyState(
+                stringResource(Res.string.web_staff_queue_stale_title),
+                stringResource(Res.string.web_staff_queue_stale_detail),
             )
             else -> {
                 DataCard(tableMinWidth = 1180.dp) {
@@ -174,7 +201,7 @@ internal fun StaffAccessScreen(
                                 "Decision" to 1.8f,
                             )
                         )
-                        requests.items.filter { it.status == "PENDING" }.forEach { request ->
+                        pending.forEach { request ->
                             val currentUserId = state.session?.userId.orEmpty()
                             val isRequester = request.requesterUserId.equals(
                                 currentUserId,
@@ -243,7 +270,30 @@ internal fun StaffAccessScreen(
                         }
                     }
                 }
-                PageLimitNote(requests.items.size, requests.total)
+            }
+        }
+        if (requests != null && requestPage != null && !requestPage.isCollectionEmpty) {
+            Column(
+                Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs),
+            ) {
+                Text(
+                    stringResource(Res.string.web_staff_queue_page, requests.page, requests.total),
+                    style = MaterialTheme.typography.bodySmall,
+                )
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
+                    if (requestPage.isPageStale) {
+                        OutlinedButton(onClick = { onSelectRequestPage(requests.page) }, enabled = !state.interactionLocked) {
+                            Text(stringResource(Res.string.web_staff_queue_retry))
+                        }
+                    }
+                    OutlinedButton(onClick = { onSelectRequestPage(requests.page - 1) }, enabled = requestPage.canPrevious && !state.interactionLocked) {
+                        Text(stringResource(Res.string.web_staff_queue_previous))
+                    }
+                    OutlinedButton(onClick = { onSelectRequestPage(requests.page + 1) }, enabled = requestPage.canNext && !state.interactionLocked) {
+                        Text(stringResource(Res.string.web_staff_queue_next))
+                    }
+                }
             }
         }
     }
@@ -567,17 +617,4 @@ private fun selectedScopeLabel(state: OperationsUiState, kind: AdministrativeGra
             "City · ${snapshot?.cities?.items?.firstOrNull { it.id == id }?.localizedName?.preferred() ?: shortId(id)}"
         } ?: "No city selected"
     }
-}
-
-private fun grantBelongsToMarket(
-    grant: AdministrativeGrantRecord,
-    marketId: String?,
-    operatorMarkets: Map<String, String>,
-    cityMarkets: Map<String, String>,
-): Boolean = when {
-    marketId == null -> false
-    grant.marketId != null -> grant.marketId == marketId
-    grant.operatorId != null -> operatorMarkets[grant.operatorId] == marketId
-    grant.cityId != null -> cityMarkets[grant.cityId] == marketId
-    else -> false
 }
