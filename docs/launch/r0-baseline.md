@@ -58,7 +58,7 @@ Every GAP retains its authority and priority in [gaps.md](../gaps.md). No gate i
 | [GAP-017](../gaps.md) | P0 / R1/R8 | LEGAL_PRIVACY_DECISION | Obtain qualified transport/privacy/terms review and approved data map; do not fabricate legal acceptance. |
 | [GAP-018](../gaps.md) | P0 / R3/R10 | MEASURED_CAPACITY | Approve finite cohort/targets, measure capacity, failure/recovery and cost on authorized production-like resources. |
 | [GAP-019](../gaps.md) | P0 / R10/R11 | FIELD_ACCEPTANCE | Complete authorized whole-city rehearsals, rollback and actual participant pilot evidence after gates. |
-| [GAP-020](../gaps.md) | P1 / R5/R8 | MISSING_VERIFIED_CONTACT_WORKFLOW | Choose ownership verification/delivery/proofing and compromised-account recovery policy, then implement missing workflow and negatives. |
+| [GAP-020](../gaps.md) | P1 / R5/R8 | MISSING_VERIFIED_CONTACT_WORKFLOW | Both email and SMS selected; review [provider-neutral contract proposal](contact-verification-proposal.md), assign provider/account and budget owners, approve proofing/recovery policies, then implement and verify the workflow. |
 | [GAP-021](../gaps.md) | P1 / R8 | MISSING_RIGHTS_WORKFLOW | Agree data map, retention/hold rules, deadlines and proofing; implement export/correction/restriction/deletion safeguards and audited operator actions. |
 | [GAP-022](../gaps.md) | P1 / R8 | SCOPED_GRANTS_ACCEPTANCE | Verify implemented grant maker/checker and actual staff lifecycle; decide any additional sensitive-command dual control in owning policy. |
 | [GAP-023](../gaps.md) | P1 / R4/R8 | COORDINATION_ACCEPTANCE | Accept implemented private coordination and safe contact policy with field participants and fallback. |

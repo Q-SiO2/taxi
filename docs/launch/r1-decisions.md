@@ -47,7 +47,9 @@ financial policy or public activation.
   proofing/abuse/outage rules, or accept production delivery. Keep implementation
   provider-neutral until the account owner, budget ceiling, credentials custody,
   and delivery policies are approved. Do not treat an entered address or number
-  as verified before a valid challenge is redeemed.
+  as verified before a valid challenge is redeemed. See the
+  [GAP-020 contact verification proposal](contact-verification-proposal.md)
+  for a provider-neutral implementation contract and the decisions still needed.
 
 ## Proposed sequence
 
@@ -109,8 +111,9 @@ an approved budget is separate authorization.
 ## Independent next engineering work
 
 R2 can proceed with source-delta review and an isolated reproducible candidate.
-Continue bounded synthetic checks and repair observed failures. Prepare the
-GAP-020/021 contract proposals against current source and put the prepared
+Continue bounded synthetic checks and repair observed failures. Review the
+[GAP-020 contact verification proposal](contact-verification-proposal.md), prepare
+the GAP-021 contract proposal against current source and put the prepared
 [GAP-024 financial packet](operator-driver-settlement-decision.md) before the
 operator/finance authority. Do not implement speculative identity, retention or money
 schemas while those contracts are unresolved.
