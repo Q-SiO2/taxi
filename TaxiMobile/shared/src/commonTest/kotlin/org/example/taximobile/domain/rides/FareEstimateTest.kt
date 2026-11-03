@@ -7,7 +7,7 @@ import kotlin.test.assertNull
 class FareEstimateTest {
     @Test
     fun `estimate retains backend tariff identity`() {
-        val estimate = FareEstimate(amount = "35.00", currency = "MAD", pricingRuleVersion = "v1")
+        val estimate = FareEstimate(amount = "35.00", currency = "MAD", pricingRuleVersion = "v1", paymentMethods = listOf(RidePaymentMethod.CASH))
 
         assertEquals("35.00", estimate.amount)
         assertEquals("MAD", estimate.currency)

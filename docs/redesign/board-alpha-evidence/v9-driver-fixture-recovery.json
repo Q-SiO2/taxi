@@ -1,0 +1,18 @@
+{
+  "utc": "2026-10-17T00:17:29.372229+00:00",
+  "serial": "emulator-5556",
+  "adjustment": "Force-stop observed unused bundled guest apps for functional rehearsal; no disable, data clear, uninstall or permission change",
+  "packages": [
+    "com.google.android.googlequicksearchbox",
+    "com.google.android.apps.wellbeing",
+    "com.google.android.apps.photos",
+    "com.google.android.apps.messaging",
+    "com.google.android.tts",
+    "com.google.android.marvin.talkback"
+  ],
+  "play_services": "retained",
+  "limitations": [
+    "not an accessibility or OS push acceptance result",
+    "Android System UI ANR and initial connection-recovery screen observed before this adjustment"
+  ]
+}

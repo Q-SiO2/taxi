@@ -70,6 +70,8 @@ class WebSocketOutboxDelivery:
             await self._deliver_offer(event, policy.hint_type)
         elif event.topic == "ride.accepted":
             await self._deliver_acceptance(event, policy.hint_type)
+        elif event.topic == "ride.updated":
+            await self._deliver_ride_update(event, policy.hint_type)
         elif event.topic == "ride.cancelled":
             await self._deliver_cancellation(event, policy.hint_type)
         elif event.topic == "ride.matching.failed":
@@ -152,6 +154,20 @@ class WebSocketOutboxDelivery:
                 RideStatus.IN_PROGRESS,
             }:
                 return
+            await self._publish_refresh(ride.passenger_id, ride.id, hint_type, event)
+
+    async def _deliver_ride_update(self, event: ClaimedOutboxEvent, hint_type: str) -> None:
+        ride_id = UUID(str(event.payload["ride_id"]))
+        async with self._sessions() as session:
+            ride = await session.get(Ride, ride_id)
+            if ride is None or ride.driver_id is None or ride.status not in {
+                RideStatus.ACCEPTED, RideStatus.DRIVER_EN_ROUTE,
+                RideStatus.DRIVER_ARRIVED, RideStatus.IN_PROGRESS,
+                RideStatus.COMPLETED, RideStatus.CANCELLED,
+            }:
+                return
+            # Current durable ownership, never an event-supplied recipient.
+            # Completed receipts also need catch-up after cash settlement.
             await self._publish_refresh(ride.passenger_id, ride.id, hint_type, event)
 
     async def _deliver_cancellation(self, event: ClaimedOutboxEvent, hint_type: str) -> None:

@@ -1,0 +1,98 @@
+{
+  "verified_utc": "2026-10-22T10:01:20.563617+00:00",
+  "execution_date": "2026-10-21",
+  "passed": true,
+  "totals": {
+    "tests": 115,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "classes": [
+    {
+      "name": "org.example.taximobile.feature.app.MobileAppCoordinatorTest",
+      "tests": 55,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.example.taximobile.feature.app.QuoteSessionRecoveryTest",
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.example.taximobile.feature.auth.AuthenticatedReadRecoveryTest",
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.example.taximobile.feature.auth.AuthenticationSessionCancellationTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.example.taximobile.feature.auth.AuthenticationSessionLifetimeTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.example.taximobile.feature.auth.AuthenticationSessionStorageTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.example.taximobile.feature.auth.AuthenticationStateTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "org.example.taximobile.feature.auth.RegistrationInputTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "archive": ".tools/alpha-delivery/session-cancellation-green-20261021-initial",
+  "source_snapshot": [
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/auth/AuthenticationSessionCoordinator.kt",
+      "sha256": "2d0350aa9bfd43e8e95faec0c555f090252d6b47552f9bd617b28fc53d5e54a9",
+      "modified_before_result": true
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/auth/AuthenticationSessionCancellationTest.kt",
+      "sha256": "c278e614828300b761998e392086526e53c2321fb6622bf137adaaefaca3be8c",
+      "modified_before_result": true
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/kotlin/org/example/taximobile/AndroidAppDependencies.kt",
+      "sha256": "2aefc31ade81f78b5b0f7da856566644ca2ce2daf1ae1bc51d3ea9c0bda5633d",
+      "modified_before_result": true
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/kotlin/org/example/taximobile/MainActivity.kt",
+      "sha256": "245dab29426594d33e79e8600d3beb63f0d05bc14c74e6b12f4d663bbde60bc0",
+      "modified_before_result": true
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/kotlin/org/example/taximobile/TaxiMobileFirebaseMessagingService.kt",
+      "sha256": "b019eb80cac737dcc2ac24fc22c957d1a70fce21686b9bbd970087bd4f8afff2",
+      "modified_before_result": true
+    }
+  ],
+  "scope": "Four red cancellation cases now green plus existing authentication, quote and coordinator regression classes. Post-run source snapshot; not a full build/freeze or native Android dependency-owner acceptance."
+}

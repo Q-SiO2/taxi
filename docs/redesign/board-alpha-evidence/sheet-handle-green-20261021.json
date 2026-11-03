@@ -1,0 +1,76 @@
+{
+  "recorded_utc": "2026-10-21T17:46:35.126412+00:00",
+  "passed": true,
+  "counts": {
+    "tests": 12,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "sources": [
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiSheet.kt",
+      "sha256": "6c05956318b4d202b7b76bf5a307f18af2b2e9f84ad6d89f6b15bc0c151dbfe1"
+    },
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/ui/components/TaxiSheetUiTest.kt",
+      "sha256": "516eeb7c3cb22b8f0a1611a740a2b4fb37fe3c24eb60b684a408bb6c9500f362"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/values/strings.xml",
+      "sha256": "67cc2926dd418caad3946476ab42e467b62b0e1a8e6217f32a7dafd90d5f2e42"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/values-fr/strings.xml",
+      "sha256": "2ad1874e8d9c011cbac7339ac1ef7bc54156ab058ac102dbfdc1f2075847dcc1"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/composeResources/values-ar/strings.xml",
+      "sha256": "0f78e72f866e0b1664f5c7e7240a1a4206e28f182d0d27aff81e155c5ab92fb1"
+    }
+  ],
+  "test_results": [
+    {
+      "path": ".tools/alpha-delivery/sheet-handle-green-20261021/TEST-org.example.taximobile.feature.ui.components.TaxiSheetUiTest.xml",
+      "sha256": "81113d8394cdaae90997a3032722927265490305d465aa959adb1016bfe84ffe",
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "path": ".tools/alpha-delivery/sheet-handle-green-20261021/TEST-org.example.taximobile.feature.app.MapSheetInsetsUiTest.xml",
+      "sha256": "34405b3dc57ccd5665c769de1891bb04fa0519a8a682d5da3a314a2105845a77",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "path": ".tools/alpha-delivery/sheet-handle-green-20261021/TEST-org.example.taximobile.feature.app.PassengerIdlePeekUiTest.xml",
+      "sha256": "ca2c666ce4e49be293606f214f382c23572a167e490345a79bf483cf8c92a6dd",
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "native_red": "v18-native-sheet-handle-diagnostic-20261021.json",
+  "source_red": "sheet-handle-red-20261021.json",
+  "localization": {
+    "keys": 1220,
+    "languages": [
+      "en",
+      "fr",
+      "ar"
+    ],
+    "result": "PASS"
+  },
+  "scope": "Five new JVM UI regressions protect real header/body pointer arbitration, child taps, accessible snap actions and font minimum. Existing keyboard/navigation/idle reachability cases pass. No native replacement acceptance inferred."
+}

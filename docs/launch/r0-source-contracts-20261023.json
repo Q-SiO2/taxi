@@ -1,0 +1,2474 @@
+{
+  "api": {
+    "http_operation_count": 245,
+    "http_operations": [
+      {
+        "method": "GET",
+        "operation_id": "list_audit_logs_api_v1_admin_audit_logs_get",
+        "path": "/api/v1/admin/audit-logs",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "approve_driver_api_v1_admin_drivers__driver_id__approve_post",
+        "path": "/api/v1/admin/drivers/{driver_id}/approve",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_manual_transfers_api_v1_admin_payments_manual_transfers_get",
+        "path": "/api/v1/admin/payments/manual-transfers",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_payment_refunds_api_v1_admin_payments_refunds_get",
+        "path": "/api/v1/admin/payments/refunds",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "reject_manual_transfer_api_v1_admin_payments__payment_id__manual_transfer_reject_post",
+        "path": "/api/v1/admin/payments/{payment_id}/manual-transfer/reject",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "verify_manual_transfer_api_v1_admin_payments__payment_id__manual_transfer_verify_post",
+        "path": "/api/v1/admin/payments/{payment_id}/manual-transfer/verify",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_refund_api_v1_admin_payments__payment_id__refunds_post",
+        "path": "/api/v1/admin/payments/{payment_id}/refunds",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_pricing_rule_api_v1_admin_pricing_rules_post",
+        "path": "/api/v1/admin/pricing-rules",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "activate_pricing_rule_api_v1_admin_pricing_rules__pricing_rule_id__activate_post",
+        "path": "/api/v1/admin/pricing-rules/{pricing_rule_id}/activate",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_safety_reports_for_triage_api_v1_admin_safety_reports_get",
+        "path": "/api/v1/admin/safety/reports",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_safety_report_for_triage_api_v1_admin_safety_reports__report_id__get",
+        "path": "/api/v1/admin/safety/reports/{report_id}",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "transition_safety_case_api_v1_admin_safety_reports__report_id__transition_post",
+        "path": "/api/v1/admin/safety/reports/{report_id}/transition",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_support_tickets_for_triage_api_v1_admin_support_tickets_get",
+        "path": "/api/v1/admin/support/tickets",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_support_ticket_for_triage_api_v1_admin_support_tickets__ticket_id__get",
+        "path": "/api/v1/admin/support/tickets/{ticket_id}",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "escalate_support_ticket_to_safety_api_v1_admin_support_tickets__ticket_id__escalate_safety_post",
+        "path": "/api/v1/admin/support/tickets/{ticket_id}/escalate-safety",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "transition_ticket_api_v1_admin_support_tickets__ticket_id__transition_post",
+        "path": "/api/v1/admin/support/tickets/{ticket_id}/transition",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "triage_ticket_api_v1_admin_support_tickets__ticket_id__triage_post",
+        "path": "/api/v1/admin/support/tickets/{ticket_id}/triage",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "reactivate_user_api_v1_admin_users__user_id__reactivate_post",
+        "path": "/api/v1/admin/users/{user_id}/reactivate",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "revoke_user_sessions_api_v1_admin_users__user_id__sessions_revoke_post",
+        "path": "/api/v1/admin/users/{user_id}/sessions/revoke",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "suspend_user_api_v1_admin_users__user_id__suspend_post",
+        "path": "/api/v1/admin/users/{user_id}/suspend",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "verify_vehicle_api_v1_admin_vehicles__vehicle_id__verify_post",
+        "path": "/api/v1/admin/vehicles/{vehicle_id}/verify",
+        "tags": [
+          "administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "login_endpoint_api_v1_auth_login_post",
+        "path": "/api/v1/auth/login",
+        "tags": [
+          "auth"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "logout_api_v1_auth_logout_post",
+        "path": "/api/v1/auth/logout",
+        "tags": [
+          "auth"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "change_password_api_v1_auth_password_change_post",
+        "path": "/api/v1/auth/password/change",
+        "tags": [
+          "auth"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_recovery_codes_api_v1_auth_recovery_codes_post",
+        "path": "/api/v1/auth/recovery-codes",
+        "tags": [
+          "auth"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "reset_account_password_api_v1_auth_recovery_reset_post",
+        "path": "/api/v1/auth/recovery/reset",
+        "tags": [
+          "auth"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "refresh_api_v1_auth_refresh_post",
+        "path": "/api/v1/auth/refresh",
+        "tags": [
+          "auth"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "register_api_v1_auth_register_post",
+        "path": "/api/v1/auth/register",
+        "tags": [
+          "auth"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_account_sessions_api_v1_auth_sessions_get",
+        "path": "/api/v1/auth/sessions",
+        "tags": [
+          "auth"
+        ]
+      },
+      {
+        "method": "DELETE",
+        "operation_id": "revoke_account_session_api_v1_auth_sessions__session_id__delete",
+        "path": "/api/v1/auth/sessions/{session_id}",
+        "tags": [
+          "auth"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_public_cities_api_v1_cities_get",
+        "path": "/api/v1/cities",
+        "tags": [
+          "public-city-catalog"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_public_city_api_v1_cities__city_id__get",
+        "path": "/api/v1/cities/{city_id}",
+        "tags": [
+          "public-city-catalog"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_public_fixed_routes_api_v1_cities__city_id__fixed_routes_get",
+        "path": "/api/v1/cities/{city_id}/fixed-routes",
+        "tags": [
+          "public-city-catalog"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "client_compatibility_api_v1_client_compatibility_get",
+        "path": "/api/v1/client-compatibility",
+        "tags": [
+          "system"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "current_membership_api_v1_cooperative_membership_get",
+        "path": "/api/v1/cooperative/membership",
+        "tags": [
+          "cooperative"
+        ]
+      },
+      {
+        "method": "DELETE",
+        "operation_id": "revoke_device_api_v1_devices_delete",
+        "path": "/api/v1/devices",
+        "tags": [
+          "notifications"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "register_device_api_v1_devices_post",
+        "path": "/api/v1/devices",
+        "tags": [
+          "notifications"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "apply_api_v1_drivers_apply_post",
+        "path": "/api/v1/drivers/apply",
+        "tags": [
+          "drivers"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_driver_api_v1_drivers_me_get",
+        "path": "/api/v1/drivers/me",
+        "tags": [
+          "drivers"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "select_active_vehicle_api_v1_drivers_me_active_vehicle_post",
+        "path": "/api/v1/drivers/me/active-vehicle",
+        "tags": [
+          "drivers"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "availability_api_v1_drivers_me_availability_get",
+        "path": "/api/v1/drivers/me/availability",
+        "tags": [
+          "drivers"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "go_offline_api_v1_drivers_me_availability_offline_post",
+        "path": "/api/v1/drivers/me/availability/offline",
+        "tags": [
+          "drivers"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "go_online_api_v1_drivers_me_availability_online_post",
+        "path": "/api/v1/drivers/me/availability/online",
+        "tags": [
+          "drivers"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_my_city_applications_api_v1_drivers_me_city_applications_get",
+        "path": "/api/v1/drivers/me/city-applications",
+        "tags": [
+          "driver-city-applications"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_my_city_application_api_v1_drivers_me_city_applications_post",
+        "path": "/api/v1/drivers/me/city-applications",
+        "tags": [
+          "driver-city-applications"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_my_city_application_api_v1_drivers_me_city_applications__application_id__get",
+        "path": "/api/v1/drivers/me/city-applications/{application_id}",
+        "tags": [
+          "driver-city-applications"
+        ]
+      },
+      {
+        "method": "PATCH",
+        "operation_id": "update_my_city_application_api_v1_drivers_me_city_applications__application_id__patch",
+        "path": "/api/v1/drivers/me/city-applications/{application_id}",
+        "tags": [
+          "driver-city-applications"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "upload_city_application_document_api_v1_drivers_me_city_applications__application_id__documents_post",
+        "path": "/api/v1/drivers/me/city-applications/{application_id}/documents",
+        "tags": [
+          "driver-city-applications"
+        ]
+      },
+      {
+        "method": "DELETE",
+        "operation_id": "delete_city_application_document_api_v1_drivers_me_city_applications__application_id__documents__document_id__delete",
+        "path": "/api/v1/drivers/me/city-applications/{application_id}/documents/{document_id}",
+        "tags": [
+          "driver-city-applications"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "submit_my_city_application_api_v1_drivers_me_city_applications__application_id__submit_post",
+        "path": "/api/v1/drivers/me/city-applications/{application_id}/submit",
+        "tags": [
+          "driver-city-applications"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "withdraw_my_city_application_api_v1_drivers_me_city_applications__application_id__withdraw_post",
+        "path": "/api/v1/drivers/me/city-applications/{application_id}/withdraw",
+        "tags": [
+          "driver-city-applications"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_credentials_api_v1_drivers_me_credentials_get",
+        "path": "/api/v1/drivers/me/credentials",
+        "tags": [
+          "drivers"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "driver_earnings_api_v1_drivers_me_earnings_get",
+        "path": "/api/v1/drivers/me/earnings",
+        "tags": [
+          "payments"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "update_location_api_v1_drivers_me_location_post",
+        "path": "/api/v1/drivers/me/location",
+        "tags": [
+          "drivers"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "pending_driver_cash_payments_api_v1_drivers_me_payments_cash_pending_get",
+        "path": "/api/v1/drivers/me/payments/cash/pending",
+        "tags": [
+          "payments"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_offers_api_v1_drivers_me_ride_offers_get",
+        "path": "/api/v1/drivers/me/ride-offers",
+        "tags": [
+          "ride-offers"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "driver_ride_history_api_v1_drivers_me_rides_get",
+        "path": "/api/v1/drivers/me/rides",
+        "tags": [
+          "drivers"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_scheduled_commitments_api_v1_drivers_me_scheduled_commitments_get",
+        "path": "/api/v1/drivers/me/scheduled-commitments",
+        "tags": [
+          "scheduled-bookings"
+        ]
+      },
+      {
+        "method": "PATCH",
+        "operation_id": "update_offer_preference_api_v1_drivers_me_scheduled_offer_preference_patch",
+        "path": "/api/v1/drivers/me/scheduled-offer-preference",
+        "tags": [
+          "scheduled-bookings"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_offer_preferences_api_v1_drivers_me_scheduled_offer_preferences_get",
+        "path": "/api/v1/drivers/me/scheduled-offer-preferences",
+        "tags": [
+          "scheduled-bookings"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_scheduled_offers_api_v1_drivers_me_scheduled_offers_get",
+        "path": "/api/v1/drivers/me/scheduled-offers",
+        "tags": [
+          "scheduled-bookings"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_vehicles_api_v1_drivers_me_vehicles_get",
+        "path": "/api/v1/drivers/me/vehicles",
+        "tags": [
+          "drivers"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_vehicle_api_v1_drivers_me_vehicles_post",
+        "path": "/api/v1/drivers/me/vehicles",
+        "tags": [
+          "drivers"
+        ]
+      },
+      {
+        "method": "DELETE",
+        "operation_id": "deactivate_vehicle_api_v1_drivers_me_vehicles__vehicle_id__delete",
+        "path": "/api/v1/drivers/me/vehicles/{vehicle_id}",
+        "tags": [
+          "drivers"
+        ]
+      },
+      {
+        "method": "PATCH",
+        "operation_id": "update_vehicle_api_v1_drivers_me_vehicles__vehicle_id__patch",
+        "path": "/api/v1/drivers/me/vehicles/{vehicle_id}",
+        "tags": [
+          "drivers"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_verification_api_v1_drivers_me_verification_get",
+        "path": "/api/v1/drivers/me/verification",
+        "tags": [
+          "drivers"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "submit_driver_verification_api_v1_drivers_me_verification_post",
+        "path": "/api/v1/drivers/me/verification",
+        "tags": [
+          "drivers"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_recruiting_cities_api_v1_drivers_recruiting_cities_get",
+        "path": "/api/v1/drivers/recruiting-cities",
+        "tags": [
+          "driver-city-applications"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_recruiting_city_requirements_api_v1_drivers_recruiting_cities__city_id__requirements_get",
+        "path": "/api/v1/drivers/recruiting-cities/{city_id}/requirements",
+        "tags": [
+          "driver-city-applications"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_public_fixed_route_direction_api_v1_fixed_route_directions__direction_version_id__get",
+        "path": "/api/v1/fixed-route-directions/{direction_version_id}",
+        "tags": [
+          "public-city-catalog"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "current_user_api_v1_me_get",
+        "path": "/api/v1/me",
+        "tags": [
+          "auth"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "metadata_api_v1_meta_get",
+        "path": "/api/v1/meta",
+        "tags": [
+          "system"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_notifications_api_v1_notifications_get",
+        "path": "/api/v1/notifications",
+        "tags": [
+          "notifications"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "mark_notification_read_api_v1_notifications__notification_id__read_post",
+        "path": "/api/v1/notifications/{notification_id}/read",
+        "tags": [
+          "notifications"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_administrative_grant_requests_api_v1_operations_administrative_grant_requests_get",
+        "path": "/api/v1/operations/administrative-grant-requests",
+        "tags": [
+          "operations-administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_administrative_grant_request_api_v1_operations_administrative_grant_requests_create_post",
+        "path": "/api/v1/operations/administrative-grant-requests/create",
+        "tags": [
+          "operations-administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_administrative_grant_revocation_request_api_v1_operations_administrative_grant_requests_revoke_post",
+        "path": "/api/v1/operations/administrative-grant-requests/revoke",
+        "tags": [
+          "operations-administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "approve_administrative_grant_request_api_v1_operations_administrative_grant_requests__request_id__approve_post",
+        "path": "/api/v1/operations/administrative-grant-requests/{request_id}/approve",
+        "tags": [
+          "operations-administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "cancel_administrative_grant_request_api_v1_operations_administrative_grant_requests__request_id__cancel_post",
+        "path": "/api/v1/operations/administrative-grant-requests/{request_id}/cancel",
+        "tags": [
+          "operations-administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "reject_administrative_grant_request_api_v1_operations_administrative_grant_requests__request_id__reject_post",
+        "path": "/api/v1/operations/administrative-grant-requests/{request_id}/reject",
+        "tags": [
+          "operations-administration"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_administrative_grants_api_v1_operations_administrative_grants_get",
+        "path": "/api/v1/operations/administrative-grants",
+        "tags": [
+          "operations-administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_administrative_grant_api_v1_operations_administrative_grants_post",
+        "path": "/api/v1/operations/administrative-grants",
+        "tags": [
+          "operations-administration"
+        ]
+      },
+      {
+        "method": "DELETE",
+        "operation_id": "revoke_administrative_grant_api_v1_operations_administrative_grants__grant_id__delete",
+        "path": "/api/v1/operations/administrative-grants/{grant_id}",
+        "tags": [
+          "operations-administration"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "metric_definitions_api_v1_operations_analytics_definitions_get",
+        "path": "/api/v1/operations/analytics/definitions",
+        "tags": [
+          "operations-analytics"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "operational_facts_api_v1_operations_analytics_facts_get",
+        "path": "/api/v1/operations/analytics/facts",
+        "tags": [
+          "operations-analytics"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_operations_audit_logs_api_v1_operations_audit_logs_get",
+        "path": "/api/v1/operations/audit-logs",
+        "tags": [
+          "operations-administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "operations_login_api_v1_operations_auth_login_post",
+        "path": "/api/v1/operations/auth/login",
+        "tags": [
+          "operations-auth"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "operations_logout_api_v1_operations_auth_logout_post",
+        "path": "/api/v1/operations/auth/logout",
+        "tags": [
+          "operations-auth"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "step_up_operations_session_api_v1_operations_auth_mfa_step_up_post",
+        "path": "/api/v1/operations/auth/mfa/step-up",
+        "tags": [
+          "operations-auth"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "verify_operations_mfa_api_v1_operations_auth_mfa_verify_post",
+        "path": "/api/v1/operations/auth/mfa/verify",
+        "tags": [
+          "operations-auth"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "operations_refresh_api_v1_operations_auth_refresh_post",
+        "path": "/api/v1/operations/auth/refresh",
+        "tags": [
+          "operations-auth"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "operations_session_api_v1_operations_auth_session_get",
+        "path": "/api/v1/operations/auth/session",
+        "tags": [
+          "operations-auth"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_case_alerts_api_v1_operations_case_alerts_get",
+        "path": "/api/v1/operations/case-alerts",
+        "tags": [
+          "operations-case-alerts"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "acknowledge_case_alert_api_v1_operations_case_alerts__alert_id__acknowledge_post",
+        "path": "/api/v1/operations/case-alerts/{alert_id}/acknowledge",
+        "tags": [
+          "operations-case-alerts"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_retention_actions_api_v1_operations_case_retention_actions_get",
+        "path": "/api/v1/operations/case-retention/actions",
+        "tags": [
+          "operations-case-retention"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_legal_holds_api_v1_operations_case_retention_holds_get",
+        "path": "/api/v1/operations/case-retention/holds",
+        "tags": [
+          "operations-case-retention"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "place_legal_hold_api_v1_operations_case_retention_holds_post",
+        "path": "/api/v1/operations/case-retention/holds",
+        "tags": [
+          "operations-case-retention"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "release_legal_hold_api_v1_operations_case_retention_holds__hold_id__release_post",
+        "path": "/api/v1/operations/case-retention/holds/{hold_id}/release",
+        "tags": [
+          "operations-case-retention"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_cities_api_v1_operations_cities_get",
+        "path": "/api/v1/operations/cities",
+        "tags": [
+          "operations-control-plane"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_city_api_v1_operations_cities_post",
+        "path": "/api/v1/operations/cities",
+        "tags": [
+          "operations-control-plane"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_city_api_v1_operations_cities__city_id__get",
+        "path": "/api/v1/operations/cities/{city_id}",
+        "tags": [
+          "operations-control-plane"
+        ]
+      },
+      {
+        "method": "PATCH",
+        "operation_id": "update_city_api_v1_operations_cities__city_id__patch",
+        "path": "/api/v1/operations/cities/{city_id}",
+        "tags": [
+          "operations-control-plane"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_city_configurations_api_v1_operations_cities__city_id__configuration_versions_get",
+        "path": "/api/v1/operations/cities/{city_id}/configuration-versions",
+        "tags": [
+          "operations-city-configuration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_city_configuration_api_v1_operations_cities__city_id__configuration_versions_post",
+        "path": "/api/v1/operations/cities/{city_id}/configuration-versions",
+        "tags": [
+          "operations-city-configuration"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_driver_requirement_versions_api_v1_operations_cities__city_id__driver_requirement_versions_get",
+        "path": "/api/v1/operations/cities/{city_id}/driver-requirement-versions",
+        "tags": [
+          "operations-driver-applications"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_driver_requirement_version_api_v1_operations_cities__city_id__driver_requirement_versions_post",
+        "path": "/api/v1/operations/cities/{city_id}/driver-requirement-versions",
+        "tags": [
+          "operations-driver-applications"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_fixed_route_fare_options_api_v1_operations_cities__city_id__fixed_route_fare_options_get",
+        "path": "/api/v1/operations/cities/{city_id}/fixed-route-fare-options",
+        "tags": [
+          "operations-fixed-routes"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_fixed_routes_api_v1_operations_cities__city_id__fixed_routes_get",
+        "path": "/api/v1/operations/cities/{city_id}/fixed-routes",
+        "tags": [
+          "operations-fixed-routes"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_fixed_route_api_v1_operations_cities__city_id__fixed_routes_post",
+        "path": "/api/v1/operations/cities/{city_id}/fixed-routes",
+        "tags": [
+          "operations-fixed-routes"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "transition_city_lifecycle_api_v1_operations_cities__city_id__lifecycle_transitions_post",
+        "path": "/api/v1/operations/cities/{city_id}/lifecycle-transitions",
+        "tags": [
+          "operations-control-plane"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_city_onboarding_aggregates_api_v1_operations_cities__city_id__operational_aggregates_get",
+        "path": "/api/v1/operations/cities/{city_id}/operational-aggregates",
+        "tags": [
+          "operations-driver-applications"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_operator_fee_policies_api_v1_operations_cities__city_id__operator_fee_policies_get",
+        "path": "/api/v1/operations/cities/{city_id}/operator-fee-policies",
+        "tags": [
+          "operations-pricing"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_operator_fee_policy_api_v1_operations_cities__city_id__operator_fee_policies_post",
+        "path": "/api/v1/operations/cities/{city_id}/operator-fee-policies",
+        "tags": [
+          "operations-pricing"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_capabilities_api_v1_operations_cities__city_id__payment_capability_versions_get",
+        "path": "/api/v1/operations/cities/{city_id}/payment-capability-versions",
+        "tags": [
+          "operations-payments"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_capability_api_v1_operations_cities__city_id__payment_capability_versions_post",
+        "path": "/api/v1/operations/cities/{city_id}/payment-capability-versions",
+        "tags": [
+          "operations-payments"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_recipients_api_v1_operations_cities__city_id__payment_recipient_accounts_get",
+        "path": "/api/v1/operations/cities/{city_id}/payment-recipient-accounts",
+        "tags": [
+          "operations-payments"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_recipient_api_v1_operations_cities__city_id__payment_recipient_accounts_post",
+        "path": "/api/v1/operations/cities/{city_id}/payment-recipient-accounts",
+        "tags": [
+          "operations-payments"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_pricing_rules_api_v1_operations_cities__city_id__pricing_rules_get",
+        "path": "/api/v1/operations/cities/{city_id}/pricing-rules",
+        "tags": [
+          "operations-pricing"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_pricing_rule_api_v1_operations_cities__city_id__pricing_rules_post",
+        "path": "/api/v1/operations/cities/{city_id}/pricing-rules",
+        "tags": [
+          "operations-pricing"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_scheduling_policies_api_v1_operations_cities__city_id__scheduling_policies_get",
+        "path": "/api/v1/operations/cities/{city_id}/scheduling-policies",
+        "tags": [
+          "operations-pricing"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_scheduling_policy_api_v1_operations_cities__city_id__scheduling_policies_post",
+        "path": "/api/v1/operations/cities/{city_id}/scheduling-policies",
+        "tags": [
+          "operations-pricing"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_service_area_versions_api_v1_operations_cities__city_id__service_area_versions_get",
+        "path": "/api/v1/operations/cities/{city_id}/service-area-versions",
+        "tags": [
+          "operations-city-configuration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_service_area_version_api_v1_operations_cities__city_id__service_area_versions_post",
+        "path": "/api/v1/operations/cities/{city_id}/service-area-versions",
+        "tags": [
+          "operations-city-configuration"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_city_configuration_api_v1_operations_city_configuration_versions__version_id__get",
+        "path": "/api/v1/operations/city-configuration-versions/{version_id}",
+        "tags": [
+          "operations-city-configuration"
+        ]
+      },
+      {
+        "method": "PATCH",
+        "operation_id": "update_city_configuration_api_v1_operations_city_configuration_versions__version_id__patch",
+        "path": "/api/v1/operations/city-configuration-versions/{version_id}",
+        "tags": [
+          "operations-city-configuration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "activate_city_configuration_api_v1_operations_city_configuration_versions__version_id__activate_post",
+        "path": "/api/v1/operations/city-configuration-versions/{version_id}/activate",
+        "tags": [
+          "operations-city-configuration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "approve_city_configuration_api_v1_operations_city_configuration_versions__version_id__approve_post",
+        "path": "/api/v1/operations/city-configuration-versions/{version_id}/approve",
+        "tags": [
+          "operations-city-configuration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "decide_city_readiness_gate_api_v1_operations_city_configuration_versions__version_id__readiness_decisions_post",
+        "path": "/api/v1/operations/city-configuration-versions/{version_id}/readiness-decisions",
+        "tags": [
+          "operations-city-configuration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "submit_city_configuration_api_v1_operations_city_configuration_versions__version_id__submit_post",
+        "path": "/api/v1/operations/city-configuration-versions/{version_id}/submit",
+        "tags": [
+          "operations-city-configuration"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_driver_applications_api_v1_operations_driver_applications_get",
+        "path": "/api/v1/operations/driver-applications",
+        "tags": [
+          "operations-driver-applications"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_driver_application_api_v1_operations_driver_applications__application_id__get",
+        "path": "/api/v1/operations/driver-applications/{application_id}",
+        "tags": [
+          "operations-driver-applications"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "decide_driver_city_authorization_api_v1_operations_driver_applications__application_id__authorization_decisions_post",
+        "path": "/api/v1/operations/driver-applications/{application_id}/authorization/decisions",
+        "tags": [
+          "operations-driver-authorizations"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "decide_driver_application_api_v1_operations_driver_applications__application_id__decisions_post",
+        "path": "/api/v1/operations/driver-applications/{application_id}/decisions",
+        "tags": [
+          "operations-driver-applications"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "read_driver_application_document_api_v1_operations_driver_applications__application_id__documents__document_id__get",
+        "path": "/api/v1/operations/driver-applications/{application_id}/documents/{document_id}",
+        "tags": [
+          "operations-driver-applications"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "verify_driver_application_vehicle_api_v1_operations_driver_applications__application_id__vehicles__vehicle_id__verify_post",
+        "path": "/api/v1/operations/driver-applications/{application_id}/vehicles/{vehicle_id}/verify",
+        "tags": [
+          "operations-driver-applications"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_driver_requirement_version_api_v1_operations_driver_requirement_versions__version_id__get",
+        "path": "/api/v1/operations/driver-requirement-versions/{version_id}",
+        "tags": [
+          "operations-driver-applications"
+        ]
+      },
+      {
+        "method": "PATCH",
+        "operation_id": "update_driver_requirement_version_api_v1_operations_driver_requirement_versions__version_id__patch",
+        "path": "/api/v1/operations/driver-requirement-versions/{version_id}",
+        "tags": [
+          "operations-driver-applications"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "activate_driver_requirement_version_api_v1_operations_driver_requirement_versions__version_id__activate_post",
+        "path": "/api/v1/operations/driver-requirement-versions/{version_id}/activate",
+        "tags": [
+          "operations-driver-applications"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "submit_driver_requirement_version_api_v1_operations_driver_requirement_versions__version_id__submit_post",
+        "path": "/api/v1/operations/driver-requirement-versions/{version_id}/submit",
+        "tags": [
+          "operations-driver-applications"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_fixed_route_version_api_v1_operations_fixed_route_versions__version_id__get",
+        "path": "/api/v1/operations/fixed-route-versions/{version_id}",
+        "tags": [
+          "operations-fixed-routes"
+        ]
+      },
+      {
+        "method": "PATCH",
+        "operation_id": "update_fixed_route_version_api_v1_operations_fixed_route_versions__version_id__patch",
+        "path": "/api/v1/operations/fixed-route-versions/{version_id}",
+        "tags": [
+          "operations-fixed-routes"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "publish_fixed_route_version_api_v1_operations_fixed_route_versions__version_id__publish_post",
+        "path": "/api/v1/operations/fixed-route-versions/{version_id}/publish",
+        "tags": [
+          "operations-fixed-routes"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "retire_fixed_route_version_api_v1_operations_fixed_route_versions__version_id__retire_post",
+        "path": "/api/v1/operations/fixed-route-versions/{version_id}/retire",
+        "tags": [
+          "operations-fixed-routes"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "submit_fixed_route_version_api_v1_operations_fixed_route_versions__version_id__submit_post",
+        "path": "/api/v1/operations/fixed-route-versions/{version_id}/submit",
+        "tags": [
+          "operations-fixed-routes"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_fixed_route_api_v1_operations_fixed_routes__route_id__get",
+        "path": "/api/v1/operations/fixed-routes/{route_id}",
+        "tags": [
+          "operations-fixed-routes"
+        ]
+      },
+      {
+        "method": "PATCH",
+        "operation_id": "update_fixed_route_api_v1_operations_fixed_routes__route_id__patch",
+        "path": "/api/v1/operations/fixed-routes/{route_id}",
+        "tags": [
+          "operations-fixed-routes"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "retire_fixed_route_api_v1_operations_fixed_routes__route_id__retire_post",
+        "path": "/api/v1/operations/fixed-routes/{route_id}/retire",
+        "tags": [
+          "operations-fixed-routes"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_fixed_route_version_api_v1_operations_fixed_routes__route_id__versions_post",
+        "path": "/api/v1/operations/fixed-routes/{route_id}/versions",
+        "tags": [
+          "operations-fixed-routes"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_markets_api_v1_operations_markets_get",
+        "path": "/api/v1/operations/markets",
+        "tags": [
+          "operations-control-plane"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "reactivate_scoped_user_api_v1_operations_markets__market_id__users__user_id__reactivate_post",
+        "path": "/api/v1/operations/markets/{market_id}/users/{user_id}/reactivate",
+        "tags": [
+          "operations-administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "revoke_scoped_user_sessions_api_v1_operations_markets__market_id__users__user_id__sessions_revoke_post",
+        "path": "/api/v1/operations/markets/{market_id}/users/{user_id}/sessions/revoke",
+        "tags": [
+          "operations-administration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "suspend_scoped_user_api_v1_operations_markets__market_id__users__user_id__suspend_post",
+        "path": "/api/v1/operations/markets/{market_id}/users/{user_id}/suspend",
+        "tags": [
+          "operations-administration"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_operator_city_assignments_api_v1_operations_operator_city_assignments_get",
+        "path": "/api/v1/operations/operator-city-assignments",
+        "tags": [
+          "operations-control-plane"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_operator_city_assignment_api_v1_operations_operator_city_assignments_post",
+        "path": "/api/v1/operations/operator-city-assignments",
+        "tags": [
+          "operations-control-plane"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "retire_operator_city_assignment_api_v1_operations_operator_city_assignments__assignment_id__retire_post",
+        "path": "/api/v1/operations/operator-city-assignments/{assignment_id}/retire",
+        "tags": [
+          "operations-control-plane"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_operator_fee_policy_api_v1_operations_operator_fee_policies__version_id__get",
+        "path": "/api/v1/operations/operator-fee-policies/{version_id}",
+        "tags": [
+          "operations-pricing"
+        ]
+      },
+      {
+        "method": "PATCH",
+        "operation_id": "update_operator_fee_policy_api_v1_operations_operator_fee_policies__version_id__patch",
+        "path": "/api/v1/operations/operator-fee-policies/{version_id}",
+        "tags": [
+          "operations-pricing"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "activate_operator_fee_policy_api_v1_operations_operator_fee_policies__version_id__activate_post",
+        "path": "/api/v1/operations/operator-fee-policies/{version_id}/activate",
+        "tags": [
+          "operations-pricing"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "submit_operator_fee_policy_api_v1_operations_operator_fee_policies__version_id__submit_post",
+        "path": "/api/v1/operations/operator-fee-policies/{version_id}/submit",
+        "tags": [
+          "operations-pricing"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_operators_api_v1_operations_operators_get",
+        "path": "/api/v1/operations/operators",
+        "tags": [
+          "operations-control-plane"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_operator_api_v1_operations_operators_post",
+        "path": "/api/v1/operations/operators",
+        "tags": [
+          "operations-control-plane"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_operator_api_v1_operations_operators__operator_id__get",
+        "path": "/api/v1/operations/operators/{operator_id}",
+        "tags": [
+          "operations-control-plane"
+        ]
+      },
+      {
+        "method": "PATCH",
+        "operation_id": "update_operator_api_v1_operations_operators__operator_id__patch",
+        "path": "/api/v1/operations/operators/{operator_id}",
+        "tags": [
+          "operations-control-plane"
+        ]
+      },
+      {
+        "method": "PATCH",
+        "operation_id": "update_capability_api_v1_operations_payment_capability_versions__capability_id__patch",
+        "path": "/api/v1/operations/payment-capability-versions/{capability_id}",
+        "tags": [
+          "operations-payments"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "active_payment_capability_api_v1_operations_payment_capability_versions__capability_id__activate_post",
+        "path": "/api/v1/operations/payment-capability-versions/{capability_id}/activate",
+        "tags": [
+          "operations-payments"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "approved_payment_capability_api_v1_operations_payment_capability_versions__capability_id__approve_post",
+        "path": "/api/v1/operations/payment-capability-versions/{capability_id}/approve",
+        "tags": [
+          "operations-payments"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "in_review_payment_capability_api_v1_operations_payment_capability_versions__capability_id__submit_post",
+        "path": "/api/v1/operations/payment-capability-versions/{capability_id}/submit",
+        "tags": [
+          "operations-payments"
+        ]
+      },
+      {
+        "method": "PATCH",
+        "operation_id": "update_recipient_api_v1_operations_payment_recipient_accounts__account_id__patch",
+        "path": "/api/v1/operations/payment-recipient-accounts/{account_id}",
+        "tags": [
+          "operations-payments"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "retire_recipient_api_v1_operations_payment_recipient_accounts__account_id__retire_post",
+        "path": "/api/v1/operations/payment-recipient-accounts/{account_id}/retire",
+        "tags": [
+          "operations-payments"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "verify_recipient_api_v1_operations_payment_recipient_accounts__account_id__verify_post",
+        "path": "/api/v1/operations/payment-recipient-accounts/{account_id}/verify",
+        "tags": [
+          "operations-payments"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_manual_transfers_api_v1_operations_payments_manual_transfers_get",
+        "path": "/api/v1/operations/payments/manual-transfers",
+        "tags": [
+          "operations-payments"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_refunds_api_v1_operations_payments_refunds_get",
+        "path": "/api/v1/operations/payments/refunds",
+        "tags": [
+          "operations-payments"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "reject_manual_transfer_api_v1_operations_payments__payment_id__manual_transfer_reject_post",
+        "path": "/api/v1/operations/payments/{payment_id}/manual-transfer/reject",
+        "tags": [
+          "operations-payments"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "verify_manual_transfer_api_v1_operations_payments__payment_id__manual_transfer_verify_post",
+        "path": "/api/v1/operations/payments/{payment_id}/manual-transfer/verify",
+        "tags": [
+          "operations-payments"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "record_refund_api_v1_operations_payments__payment_id__refunds_post",
+        "path": "/api/v1/operations/payments/{payment_id}/refunds",
+        "tags": [
+          "operations-payments"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_pricing_rule_api_v1_operations_pricing_rules__version_id__get",
+        "path": "/api/v1/operations/pricing-rules/{version_id}",
+        "tags": [
+          "operations-pricing"
+        ]
+      },
+      {
+        "method": "PATCH",
+        "operation_id": "update_pricing_rule_api_v1_operations_pricing_rules__version_id__patch",
+        "path": "/api/v1/operations/pricing-rules/{version_id}",
+        "tags": [
+          "operations-pricing"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "activate_pricing_rule_api_v1_operations_pricing_rules__version_id__activate_post",
+        "path": "/api/v1/operations/pricing-rules/{version_id}/activate",
+        "tags": [
+          "operations-pricing"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "submit_pricing_rule_api_v1_operations_pricing_rules__version_id__submit_post",
+        "path": "/api/v1/operations/pricing-rules/{version_id}/submit",
+        "tags": [
+          "operations-pricing"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "rollout_overview_api_v1_operations_rollout_overview_get",
+        "path": "/api/v1/operations/rollout-overview",
+        "tags": [
+          "operations-control-plane"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_scoped_safety_reports_api_v1_operations_safety_reports_get",
+        "path": "/api/v1/operations/safety/reports",
+        "tags": [
+          "operations-safety"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_scoped_safety_report_api_v1_operations_safety_reports__report_id__get",
+        "path": "/api/v1/operations/safety/reports/{report_id}",
+        "tags": [
+          "operations-safety"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "transition_scoped_safety_report_api_v1_operations_safety_reports__report_id__transition_post",
+        "path": "/api/v1/operations/safety/reports/{report_id}/transition",
+        "tags": [
+          "operations-safety"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_scheduled_booking_exceptions_api_v1_operations_scheduled_bookings_get",
+        "path": "/api/v1/operations/scheduled-bookings",
+        "tags": [
+          "operations-scheduling"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_scheduled_booking_exception_api_v1_operations_scheduled_bookings__booking_id__get",
+        "path": "/api/v1/operations/scheduled-bookings/{booking_id}",
+        "tags": [
+          "operations-scheduling"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_scheduling_policy_api_v1_operations_scheduling_policies__version_id__get",
+        "path": "/api/v1/operations/scheduling-policies/{version_id}",
+        "tags": [
+          "operations-pricing"
+        ]
+      },
+      {
+        "method": "PATCH",
+        "operation_id": "update_scheduling_policy_api_v1_operations_scheduling_policies__version_id__patch",
+        "path": "/api/v1/operations/scheduling-policies/{version_id}",
+        "tags": [
+          "operations-pricing"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "activate_scheduling_policy_api_v1_operations_scheduling_policies__version_id__activate_post",
+        "path": "/api/v1/operations/scheduling-policies/{version_id}/activate",
+        "tags": [
+          "operations-pricing"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "submit_scheduling_policy_api_v1_operations_scheduling_policies__version_id__submit_post",
+        "path": "/api/v1/operations/scheduling-policies/{version_id}/submit",
+        "tags": [
+          "operations-pricing"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_security_incidents_api_v1_operations_security_incidents_get",
+        "path": "/api/v1/operations/security-incidents",
+        "tags": [
+          "operations-security-incidents"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_security_incident_api_v1_operations_security_incidents_post",
+        "path": "/api/v1/operations/security-incidents",
+        "tags": [
+          "operations-security-incidents"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_security_incident_api_v1_operations_security_incidents__incident_id__get",
+        "path": "/api/v1/operations/security-incidents/{incident_id}",
+        "tags": [
+          "operations-security-incidents"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "complete_security_incident_postmortem_api_v1_operations_security_incidents__incident_id__postmortem_complete_post",
+        "path": "/api/v1/operations/security-incidents/{incident_id}/postmortem/complete",
+        "tags": [
+          "operations-security-incidents"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_security_incident_responsibilities_api_v1_operations_security_incidents__incident_id__responsibilities_get",
+        "path": "/api/v1/operations/security-incidents/{incident_id}/responsibilities",
+        "tags": [
+          "operations-security-incidents"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "assign_security_incident_responsibility_api_v1_operations_security_incidents__incident_id__responsibilities__responsibility__assign_post",
+        "path": "/api/v1/operations/security-incidents/{incident_id}/responsibilities/{responsibility}/assign",
+        "tags": [
+          "operations-security-incidents"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_security_incident_timeline_api_v1_operations_security_incidents__incident_id__timeline_get",
+        "path": "/api/v1/operations/security-incidents/{incident_id}/timeline",
+        "tags": [
+          "operations-security-incidents"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "append_security_incident_timeline_api_v1_operations_security_incidents__incident_id__timeline_post",
+        "path": "/api/v1/operations/security-incidents/{incident_id}/timeline",
+        "tags": [
+          "operations-security-incidents"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "transition_security_incident_api_v1_operations_security_incidents__incident_id__transitions_post",
+        "path": "/api/v1/operations/security-incidents/{incident_id}/transitions",
+        "tags": [
+          "operations-security-incidents"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_service_area_version_api_v1_operations_service_area_versions__version_id__get",
+        "path": "/api/v1/operations/service-area-versions/{version_id}",
+        "tags": [
+          "operations-city-configuration"
+        ]
+      },
+      {
+        "method": "PATCH",
+        "operation_id": "update_service_area_version_api_v1_operations_service_area_versions__version_id__patch",
+        "path": "/api/v1/operations/service-area-versions/{version_id}",
+        "tags": [
+          "operations-city-configuration"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "transition_service_area_version_api_v1_operations_service_area_versions__version_id__transitions_post",
+        "path": "/api/v1/operations/service-area-versions/{version_id}/transitions",
+        "tags": [
+          "operations-city-configuration"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_scoped_support_tickets_api_v1_operations_support_tickets_get",
+        "path": "/api/v1/operations/support/tickets",
+        "tags": [
+          "operations-support"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_scoped_support_ticket_api_v1_operations_support_tickets__ticket_id__get",
+        "path": "/api/v1/operations/support/tickets/{ticket_id}",
+        "tags": [
+          "operations-support"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "escalate_scoped_support_ticket_to_safety_api_v1_operations_support_tickets__ticket_id__escalate_safety_post",
+        "path": "/api/v1/operations/support/tickets/{ticket_id}/escalate-safety",
+        "tags": [
+          "operations-support"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "transition_scoped_support_ticket_api_v1_operations_support_tickets__ticket_id__transition_post",
+        "path": "/api/v1/operations/support/tickets/{ticket_id}/transition",
+        "tags": [
+          "operations-support"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "triage_scoped_support_ticket_api_v1_operations_support_tickets__ticket_id__triage_post",
+        "path": "/api/v1/operations/support/tickets/{ticket_id}/triage",
+        "tags": [
+          "operations-support"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_passenger_profile_api_v1_passenger_profile_get",
+        "path": "/api/v1/passenger/profile",
+        "tags": [
+          "auth",
+          "passenger"
+        ]
+      },
+      {
+        "method": "PATCH",
+        "operation_id": "update_passenger_profile_api_v1_passenger_profile_patch",
+        "path": "/api/v1/passenger/profile",
+        "tags": [
+          "auth",
+          "passenger"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "reverse_place_api_v1_places_reverse_get",
+        "path": "/api/v1/places/reverse",
+        "tags": [
+          "places"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "search_places_api_v1_places_search_get",
+        "path": "/api/v1/places/search",
+        "tags": [
+          "places"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "accept_offer_api_v1_ride_offers__offer_id__accept_post",
+        "path": "/api/v1/ride-offers/{offer_id}/accept",
+        "tags": [
+          "ride-offers"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "decline_offer_endpoint_api_v1_ride_offers__offer_id__decline_post",
+        "path": "/api/v1/ride-offers/{offer_id}/decline",
+        "tags": [
+          "ride-offers"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_rides_api_v1_rides_get",
+        "path": "/api/v1/rides",
+        "tags": [
+          "rides"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "request_ride_api_v1_rides_post",
+        "path": "/api/v1/rides",
+        "tags": [
+          "rides"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "estimate_ride_api_v1_rides_estimate_post",
+        "path": "/api/v1/rides/estimate",
+        "tags": [
+          "rides"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_ride_api_v1_rides__ride_id__get",
+        "path": "/api/v1/rides/{ride_id}",
+        "tags": [
+          "rides"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "arrived_api_v1_rides__ride_id__arrived_post",
+        "path": "/api/v1/rides/{ride_id}/arrived",
+        "tags": [
+          "rides"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "cancel_ride_api_v1_rides__ride_id__cancel_post",
+        "path": "/api/v1/rides/{ride_id}/cancel",
+        "tags": [
+          "rides"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "complete_api_v1_rides__ride_id__complete_post",
+        "path": "/api/v1/rides/{ride_id}/complete",
+        "tags": [
+          "rides"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "cancel_driver_ride_api_v1_rides__ride_id__driver_cancel_post",
+        "path": "/api/v1/rides/{ride_id}/driver-cancel",
+        "tags": [
+          "rides"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "en_route_api_v1_rides__ride_id__en_route_post",
+        "path": "/api/v1/rides/{ride_id}/en-route",
+        "tags": [
+          "rides"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_ride_fare_api_v1_rides__ride_id__fare_get",
+        "path": "/api/v1/rides/{ride_id}/fare",
+        "tags": [
+          "rides"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "send_coordination_message_api_v1_rides__ride_id__messages_post",
+        "path": "/api/v1/rides/{ride_id}/messages",
+        "tags": [
+          "ride communications"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "settle_cash_api_v1_rides__ride_id__payments_cash_settle_post",
+        "path": "/api/v1/rides/{ride_id}/payments/cash/settle",
+        "tags": [
+          "payments"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "submit_manual_transfer_api_v1_rides__ride_id__payments_manual_transfer_submit_post",
+        "path": "/api/v1/rides/{ride_id}/payments/manual-transfer/submit",
+        "tags": [
+          "payments"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_rating_api_v1_rides__ride_id__rating_post",
+        "path": "/api/v1/rides/{ride_id}/rating",
+        "tags": [
+          "rides"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_ratings_api_v1_rides__ride_id__ratings_get",
+        "path": "/api/v1/rides/{ride_id}/ratings",
+        "tags": [
+          "rides"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_ride_receipt_api_v1_rides__ride_id__receipt_get",
+        "path": "/api/v1/rides/{ride_id}/receipt",
+        "tags": [
+          "rides"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "start_api_v1_rides__ride_id__start_post",
+        "path": "/api/v1/rides/{ride_id}/start",
+        "tags": [
+          "rides"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "calculate_route_api_v1_routing_route_post",
+        "path": "/api/v1/routing/route",
+        "tags": [
+          "routing"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_my_safety_reports_api_v1_safety_reports_get",
+        "path": "/api/v1/safety/reports",
+        "tags": [
+          "safety"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_safety_report_api_v1_safety_reports_post",
+        "path": "/api/v1/safety/reports",
+        "tags": [
+          "safety"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_my_safety_report_api_v1_safety_reports__report_id__get",
+        "path": "/api/v1/safety/reports/{report_id}",
+        "tags": [
+          "safety"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_bookings_api_v1_scheduled_bookings_get",
+        "path": "/api/v1/scheduled-bookings",
+        "tags": [
+          "scheduled-bookings"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_booking_api_v1_scheduled_bookings_post",
+        "path": "/api/v1/scheduled-bookings",
+        "tags": [
+          "scheduled-bookings"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "estimate_booking_api_v1_scheduled_bookings_estimate_post",
+        "path": "/api/v1/scheduled-bookings/estimate",
+        "tags": [
+          "scheduled-bookings"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_booking_api_v1_scheduled_bookings__booking_id__get",
+        "path": "/api/v1/scheduled-bookings/{booking_id}",
+        "tags": [
+          "scheduled-bookings"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "cancel_scheduled_booking_api_v1_scheduled_bookings__booking_id__cancel_post",
+        "path": "/api/v1/scheduled-bookings/{booking_id}/cancel",
+        "tags": [
+          "scheduled-bookings"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "accept_scheduled_offer_api_v1_scheduled_offers__offer_id__accept_post",
+        "path": "/api/v1/scheduled-offers/{offer_id}/accept",
+        "tags": [
+          "scheduled-bookings"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "decline_scheduled_offer_api_v1_scheduled_offers__offer_id__decline_post",
+        "path": "/api/v1/scheduled-offers/{offer_id}/decline",
+        "tags": [
+          "scheduled-bookings"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "list_tickets_api_v1_support_tickets_get",
+        "path": "/api/v1/support/tickets",
+        "tags": [
+          "support"
+        ]
+      },
+      {
+        "method": "POST",
+        "operation_id": "create_ticket_api_v1_support_tickets_post",
+        "path": "/api/v1/support/tickets",
+        "tags": [
+          "support"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "get_ticket_api_v1_support_tickets__ticket_id__get",
+        "path": "/api/v1/support/tickets/{ticket_id}",
+        "tags": [
+          "support"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "health_health_get",
+        "path": "/health",
+        "tags": [
+          "system"
+        ]
+      },
+      {
+        "method": "GET",
+        "operation_id": "ready_ready_get",
+        "path": "/ready",
+        "tags": [
+          "system"
+        ]
+      }
+    ],
+    "websocket_operation_count": 1,
+    "websocket_paths": [
+      "/api/v1/events"
+    ]
+  },
+  "deployment_accepted": false,
+  "evidence_level": "SOURCE_CONTRACT_INVENTORY",
+  "migrations": {
+    "count": 52,
+    "heads": [
+      "20260908_0052"
+    ],
+    "revisions": [
+      {
+        "down_revisions": [],
+        "path": "backend/migrations/versions/20260810_0001_enable_postgis.py",
+        "revision": "20260810_0001"
+      },
+      {
+        "down_revisions": [
+          "20260810_0001"
+        ],
+        "path": "backend/migrations/versions/20260810_0002_accounts.py",
+        "revision": "20260810_0002"
+      },
+      {
+        "down_revisions": [
+          "20260810_0002"
+        ],
+        "path": "backend/migrations/versions/20260810_0003_driver_foundation.py",
+        "revision": "20260810_0003"
+      },
+      {
+        "down_revisions": [
+          "20260810_0003"
+        ],
+        "path": "backend/migrations/versions/20260810_0004_driver_locations.py",
+        "revision": "20260810_0004"
+      },
+      {
+        "down_revisions": [
+          "20260810_0004"
+        ],
+        "path": "backend/migrations/versions/20260810_0005_rides.py",
+        "revision": "20260810_0005"
+      },
+      {
+        "down_revisions": [
+          "20260810_0005"
+        ],
+        "path": "backend/migrations/versions/20260810_0006_ride_offers.py",
+        "revision": "20260810_0006"
+      },
+      {
+        "down_revisions": [
+          "20260810_0006"
+        ],
+        "path": "backend/migrations/versions/20260810_0007_ride_en_route_timestamp.py",
+        "revision": "20260810_0007"
+      },
+      {
+        "down_revisions": [
+          "20260810_0007"
+        ],
+        "path": "backend/migrations/versions/20260810_0008_pricing.py",
+        "revision": "20260810_0008"
+      },
+      {
+        "down_revisions": [
+          "20260810_0008"
+        ],
+        "path": "backend/migrations/versions/20260810_0009_payments.py",
+        "revision": "20260810_0009"
+      },
+      {
+        "down_revisions": [
+          "20260810_0009"
+        ],
+        "path": "backend/migrations/versions/20260810_0010_ride_completion_point.py",
+        "revision": "20260810_0010"
+      },
+      {
+        "down_revisions": [
+          "20260810_0010"
+        ],
+        "path": "backend/migrations/versions/20260810_0011_audit_logs.py",
+        "revision": "20260810_0011"
+      },
+      {
+        "down_revisions": [
+          "20260810_0011"
+        ],
+        "path": "backend/migrations/versions/20260810_0012_ride_price_quotes.py",
+        "revision": "20260810_0012"
+      },
+      {
+        "down_revisions": [
+          "20260810_0012"
+        ],
+        "path": "backend/migrations/versions/20260810_0013_driver_earnings.py",
+        "revision": "20260810_0013"
+      },
+      {
+        "down_revisions": [
+          "20260810_0013"
+        ],
+        "path": "backend/migrations/versions/20260810_0014_outbox_events.py",
+        "revision": "20260810_0014"
+      },
+      {
+        "down_revisions": [
+          "20260810_0014"
+        ],
+        "path": "backend/migrations/versions/20260810_0015_ride_ratings.py",
+        "revision": "20260810_0015"
+      },
+      {
+        "down_revisions": [
+          "20260810_0015"
+        ],
+        "path": "backend/migrations/versions/20260810_0016_support_tickets.py",
+        "revision": "20260810_0016"
+      },
+      {
+        "down_revisions": [
+          "20260810_0016"
+        ],
+        "path": "backend/migrations/versions/20260810_0017_notifications.py",
+        "revision": "20260810_0017"
+      },
+      {
+        "down_revisions": [
+          "20260810_0017"
+        ],
+        "path": "backend/migrations/versions/20260810_0018_idempotency.py",
+        "revision": "20260810_0018"
+      },
+      {
+        "down_revisions": [
+          "20260810_0018"
+        ],
+        "path": "backend/migrations/versions/20260810_0019_ride_vehicle_snapshot.py",
+        "revision": "20260810_0019"
+      },
+      {
+        "down_revisions": [
+          "20260810_0019"
+        ],
+        "path": "backend/migrations/versions/20260810_0020_ride_assignment_snapshots.py",
+        "revision": "20260810_0020"
+      },
+      {
+        "down_revisions": [
+          "20260810_0020"
+        ],
+        "path": "backend/migrations/versions/20260811_0021_outbox_delivery_leases.py",
+        "revision": "20260811_0021"
+      },
+      {
+        "down_revisions": [
+          "20260811_0021"
+        ],
+        "path": "backend/migrations/versions/20260812_0022_refresh_token_reuse_detection.py",
+        "revision": "20260812_0022"
+      },
+      {
+        "down_revisions": [
+          "20260812_0022"
+        ],
+        "path": "backend/migrations/versions/20260812_0023_outbox_dead_letters.py",
+        "revision": "20260812_0023"
+      },
+      {
+        "down_revisions": [
+          "20260812_0023"
+        ],
+        "path": "backend/migrations/versions/20260812_0024_shared_rate_limits.py",
+        "revision": "20260812_0024"
+      },
+      {
+        "down_revisions": [
+          "20260812_0024"
+        ],
+        "path": "backend/migrations/versions/20260812_0025_device_token_ownership.py",
+        "revision": "20260812_0025"
+      },
+      {
+        "down_revisions": [
+          "20260812_0025"
+        ],
+        "path": "backend/migrations/versions/20260812_0026_fair_matching.py",
+        "revision": "20260812_0026"
+      },
+      {
+        "down_revisions": [
+          "20260812_0026"
+        ],
+        "path": "backend/migrations/versions/20260813_0027_cooperative_memberships.py",
+        "revision": "20260813_0027"
+      },
+      {
+        "down_revisions": [
+          "20260813_0027"
+        ],
+        "path": "backend/migrations/versions/20260813_0028_driver_credentials.py",
+        "revision": "20260813_0028"
+      },
+      {
+        "down_revisions": [
+          "20260813_0028"
+        ],
+        "path": "backend/migrations/versions/20260813_0029_credential_expiry_warning.py",
+        "revision": "20260813_0029"
+      },
+      {
+        "down_revisions": [
+          "20260813_0029"
+        ],
+        "path": "backend/migrations/versions/20260820_0030_manual_transfer_payments.py",
+        "revision": "20260820_0030"
+      },
+      {
+        "down_revisions": [
+          "20260820_0030"
+        ],
+        "path": "backend/migrations/versions/20260824_0031_payment_refunds.py",
+        "revision": "20260824_0031"
+      },
+      {
+        "down_revisions": [
+          "20260824_0031"
+        ],
+        "path": "backend/migrations/versions/20260824_0032_support_safety_triage.py",
+        "revision": "20260824_0032"
+      },
+      {
+        "down_revisions": [
+          "20260824_0032"
+        ],
+        "path": "backend/migrations/versions/20260824_0033_national_control_plane_foundation.py",
+        "revision": "20260824_0033"
+      },
+      {
+        "down_revisions": [
+          "20260824_0033"
+        ],
+        "path": "backend/migrations/versions/20260824_0034_scoped_operations_authority.py",
+        "revision": "20260824_0034"
+      },
+      {
+        "down_revisions": [
+          "20260824_0034"
+        ],
+        "path": "backend/migrations/versions/20260824_0035_city_driver_recruitment.py",
+        "revision": "20260824_0035"
+      },
+      {
+        "down_revisions": [
+          "20260824_0035"
+        ],
+        "path": "backend/migrations/versions/20260824_0036_city_pricing_economics.py",
+        "revision": "20260824_0036"
+      },
+      {
+        "down_revisions": [
+          "20260824_0036"
+        ],
+        "path": "backend/migrations/versions/20260827_0037_published_fixed_routes.py",
+        "revision": "20260827_0037"
+      },
+      {
+        "down_revisions": [
+          "20260827_0037"
+        ],
+        "path": "backend/migrations/versions/20260829_0038_scheduled_bookings.py",
+        "revision": "20260829_0038"
+      },
+      {
+        "down_revisions": [
+          "20260829_0038"
+        ],
+        "path": "backend/migrations/versions/20260829_0039_operational_analytics.py",
+        "revision": "20260829_0039"
+      },
+      {
+        "down_revisions": [
+          "20260829_0039"
+        ],
+        "path": "backend/migrations/versions/20260830_0040_support_safety_city_scope.py",
+        "revision": "20260830_0040"
+      },
+      {
+        "down_revisions": [
+          "20260830_0040"
+        ],
+        "path": "backend/migrations/versions/20260830_0041_case_alerts.py",
+        "revision": "20260830_0041"
+      },
+      {
+        "down_revisions": [
+          "20260830_0041"
+        ],
+        "path": "backend/migrations/versions/20260830_0042_case_legal_holds_retention.py",
+        "revision": "20260830_0042"
+      },
+      {
+        "down_revisions": [
+          "20260830_0042"
+        ],
+        "path": "backend/migrations/versions/20260830_0043_operations_mfa.py",
+        "revision": "20260830_0043"
+      },
+      {
+        "down_revisions": [
+          "20260830_0043"
+        ],
+        "path": "backend/migrations/versions/20260831_0044_versioned_payment_capabilities.py",
+        "revision": "20260831_0044"
+      },
+      {
+        "down_revisions": [
+          "20260831_0044"
+        ],
+        "path": "backend/migrations/versions/20260831_0045_driver_document_retention.py",
+        "revision": "20260831_0045"
+      },
+      {
+        "down_revisions": [
+          "20260831_0045"
+        ],
+        "path": "backend/migrations/versions/20260902_0046_account_recovery.py",
+        "revision": "20260902_0046"
+      },
+      {
+        "down_revisions": [
+          "20260902_0046"
+        ],
+        "path": "backend/migrations/versions/20260903_0047_ride_coordination_messages.py",
+        "revision": "20260903_0047"
+      },
+      {
+        "down_revisions": [
+          "20260903_0047"
+        ],
+        "path": "backend/migrations/versions/20260903_0048_one_active_ride_per_driver.py",
+        "revision": "20260903_0048"
+      },
+      {
+        "down_revisions": [
+          "20260903_0048"
+        ],
+        "path": "backend/migrations/versions/20260907_0049_staff_grant_dual_control.py",
+        "revision": "20260907_0049"
+      },
+      {
+        "down_revisions": [
+          "20260907_0049"
+        ],
+        "path": "backend/migrations/versions/20260907_0050_security_incident_operations.py",
+        "revision": "20260907_0050"
+      },
+      {
+        "down_revisions": [
+          "20260907_0050"
+        ],
+        "path": "backend/migrations/versions/20260907_0051_security_incident_postmortems.py",
+        "revision": "20260907_0051"
+      },
+      {
+        "down_revisions": [
+          "20260907_0051"
+        ],
+        "path": "backend/migrations/versions/20260908_0052_security_incident_responsibilities.py",
+        "revision": "20260908_0052"
+      }
+    ],
+    "roots": [
+      "20260810_0001"
+    ]
+  },
+  "permissions": {
+    "permission_count": 22,
+    "permissions": [
+      "manage_account_security",
+      "manage_case_retention",
+      "manage_city_configuration",
+      "manage_city_lifecycle",
+      "manage_city_tariffs",
+      "manage_driver_requirements",
+      "manage_fixed_routes",
+      "manage_operator_assignments",
+      "manage_operator_fee_policies",
+      "manage_operators",
+      "manage_payment_capabilities",
+      "manage_safety_cases",
+      "manage_scheduling_policy",
+      "manage_scoped_staff_grants",
+      "manage_security_incidents",
+      "manage_service_areas",
+      "manage_support_cases",
+      "reconcile_payments",
+      "review_driver_applications",
+      "view_control_plane",
+      "view_scoped_audit",
+      "view_scoped_operational_aggregates"
+    ],
+    "role_count": 9,
+    "roles": [
+      {
+        "permissions": [
+          "view_control_plane",
+          "view_scoped_operational_aggregates"
+        ],
+        "role": "ANALYST"
+      },
+      {
+        "permissions": [
+          "manage_city_configuration",
+          "manage_city_lifecycle",
+          "manage_driver_requirements",
+          "manage_fixed_routes",
+          "manage_payment_capabilities",
+          "manage_service_areas",
+          "view_control_plane",
+          "view_scoped_audit"
+        ],
+        "role": "CITY_MANAGER"
+      },
+      {
+        "permissions": [
+          "review_driver_applications",
+          "view_control_plane"
+        ],
+        "role": "DRIVER_REVIEWER"
+      },
+      {
+        "permissions": [
+          "manage_city_configuration",
+          "manage_fixed_routes",
+          "manage_payment_capabilities",
+          "view_control_plane",
+          "view_scoped_audit",
+          "view_scoped_operational_aggregates"
+        ],
+        "role": "OPERATOR_ADMIN"
+      },
+      {
+        "permissions": [
+          "reconcile_payments",
+          "view_control_plane"
+        ],
+        "role": "PAYMENT_RECONCILER"
+      },
+      {
+        "permissions": [
+          "manage_account_security",
+          "manage_case_retention",
+          "manage_city_configuration",
+          "manage_city_lifecycle",
+          "manage_city_tariffs",
+          "manage_driver_requirements",
+          "manage_fixed_routes",
+          "manage_operator_assignments",
+          "manage_operator_fee_policies",
+          "manage_operators",
+          "manage_payment_capabilities",
+          "manage_safety_cases",
+          "manage_scheduling_policy",
+          "manage_scoped_staff_grants",
+          "manage_security_incidents",
+          "manage_service_areas",
+          "manage_support_cases",
+          "reconcile_payments",
+          "review_driver_applications",
+          "view_control_plane",
+          "view_scoped_audit",
+          "view_scoped_operational_aggregates"
+        ],
+        "role": "PLATFORM_ADMIN"
+      },
+      {
+        "permissions": [
+          "manage_city_tariffs",
+          "manage_operator_fee_policies",
+          "manage_scheduling_policy",
+          "view_control_plane"
+        ],
+        "role": "PRICING_MANAGER"
+      },
+      {
+        "permissions": [
+          "manage_safety_cases",
+          "view_control_plane"
+        ],
+        "role": "SAFETY_RESPONDER"
+      },
+      {
+        "permissions": [
+          "manage_support_cases",
+          "view_control_plane"
+        ],
+        "role": "SUPPORT_AGENT"
+      }
+    ]
+  },
+  "schema_version": 1
+}

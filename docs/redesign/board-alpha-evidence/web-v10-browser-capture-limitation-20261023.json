@@ -1,0 +1,19 @@
+{
+  "observed_utc": "2026-10-23T10:34:54.467Z",
+  "web_candidate": "candidate-web-v10.json",
+  "deployment": "da158b10-2d82-468e-b1f1-cffba5c32ee4",
+  "passed": false,
+  "normal_applicant_login_observed": true,
+  "application": "Omar Empty State / Casablanca / Submitted / legacy-compatibility-v1 revision 7",
+  "arabic_timeline_labels_observed": true,
+  "style_options_observed": [
+    "Folded Streets",
+    "Street Press",
+    "Glazed Machine",
+    "Notepad"
+  ],
+  "notepad_selection_observed": true,
+  "limitation": "Browser screenshot API repeatedly returns Unable to capture screenshot, across hidden/visible tabs and fresh control runtime. After Notepad Done, AX tree has only empty containers. No browser error/warning logs returned. App defect versus browser rendering/control failure unresolved; do not accept visual switch or marker appearance.",
+  "current_accessibility_state": "Browser tab: 4, Title: \"TaxiMobile Driver Applications\", URL: \"https://alpha-web-staging.up.railway.app/apply/\".\n0 AXWebArea TaxiMobile Driver Applications, URL: alpha-web-staging.up.railway.app/apply/\n\t1 container\n\t\t2 container\n\nThe focused UI element is 0 AXWebArea TaxiMobile Driver Applications, URL: alpha-web-staging.up.railway.app/apply/",
+  "scope": "Normal synthetic applicant read and preference changes only; no edit, withdrawal, resubmission or staff decision."
+}

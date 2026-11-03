@@ -1,0 +1,72 @@
+{
+  "verified_utc": "2026-10-21T18:25:13.366582+00:00",
+  "candidate": "candidate-native-v19.json",
+  "passed": true,
+  "reviews": [
+    {
+      "record": "v19-native-passenger-between-trips-history-review-r2.json",
+      "sha256": "3b45214810829ab944110cff8e86c9b6ac40fe929e940a30c5388ccfd8e1e5a2",
+      "checks": [
+        {
+          "full_api_ride_id": "8145b32e-4549-4183-bce5-60d3936a4de4",
+          "visible_reference": "8145b32e",
+          "full_id_absent_from_user_text": true
+        },
+        {
+          "selected_ride_id": "8145b32e-4549-4183-bce5-60d3936a4de4",
+          "same_process_foreground_refresh": true,
+          "live_wait_seconds": 15,
+          "pid": "1879"
+        },
+        {
+          "history_ride_id": "8145b32e-4549-4183-bce5-60d3936a4de4",
+          "server_phase": "COMPLETED",
+          "server_payment": {
+            "method": "CASH",
+            "status": "COMPLETED"
+          },
+          "amount": "35.00"
+        },
+        {
+          "support_ticket_id": "e96bf80f-73d8-4959-a3b6-7c029c62519f",
+          "status": "IN_PROGRESS",
+          "latest_public_message_visible": true
+        },
+        {
+          "empty_support_send_disabled": true,
+          "ticket_create_sent": false
+        }
+      ],
+      "screenshot_hashes_match": true,
+      "business_state_unchanged": true
+    },
+    {
+      "record": "v19-native-driver-history-review-r3.json",
+      "sha256": "208c1ba18b415c49f7464809fd99b39618ba13a70dc6ce754c47bff5f174a800",
+      "checks": [
+        {
+          "full_api_ride_id": "8145b32e-4549-4183-bce5-60d3936a4de4",
+          "visible_reference": "8145b32e",
+          "full_id_absent_from_user_text": true
+        },
+        {
+          "selected_ride_id": "8145b32e-4549-4183-bce5-60d3936a4de4",
+          "same_process_foreground_refresh": true,
+          "live_wait_seconds": 15,
+          "pid": "2176"
+        },
+        {
+          "history_ride_id": "8145b32e-4549-4183-bce5-60d3936a4de4",
+          "server_phase": "COMPLETED",
+          "server_feedback": {
+            "items": []
+          },
+          "note": "No populated feedback rendering claimed if the owner-scoped response is empty"
+        }
+      ],
+      "screenshot_hashes_match": true,
+      "business_state_unchanged": true
+    }
+  ],
+  "qualification": "First driver65s forward search stopped at the vehicle section before history. Preserved v19-native-driver-history-review-r2.json and diagnostic screenshot; r3 continues that viewport without native restart/sign-in/business input and passes. Large synthetic earnings/account layout search is not a native fast-navigation claim. Passenger paid historical receipt/public support acknowledgement/empty Send disabled; driver owner-scoped feedback empty, no populated feedback claim."
+}

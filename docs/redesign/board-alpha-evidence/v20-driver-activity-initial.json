@@ -1,0 +1,73 @@
+{
+  "candidate": "candidate-native-v20.json",
+  "role": "driver",
+  "label": "initial",
+  "started_utc": "2026-10-22T10:26:21.812932+00:00",
+  "passed": false,
+  "observations": [
+    {
+      "stage": "before",
+      "utc": "2026-10-22T10:26:24.618266+00:00",
+      "pid": "4808",
+      "main_activity_history_count": 1,
+      "history_indices": [
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-driver-activity-initial-before.png",
+      "sha256": "b771409ea093770e311e98a1194cc66a7ca123e835f73d08fbf87106f8f1fe70"
+    },
+    {
+      "stage": "entry-1",
+      "utc": "2026-10-22T10:26:27.598422+00:00",
+      "pid": "4808",
+      "main_activity_history_count": 1,
+      "history_indices": [
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-driver-activity-initial-entry-1.png",
+      "sha256": "d78c030b3116b6ef4103b7ae47a4c554243277e85320820a03c4374eb194df3b"
+    },
+    {
+      "stage": "entry-2",
+      "utc": "2026-10-22T10:26:30.475846+00:00",
+      "pid": "4808",
+      "main_activity_history_count": 1,
+      "history_indices": [
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-driver-activity-initial-entry-2.png",
+      "sha256": "d78c030b3116b6ef4103b7ae47a4c554243277e85320820a03c4374eb194df3b"
+    },
+    {
+      "stage": "entry-3",
+      "utc": "2026-10-22T10:26:33.389434+00:00",
+      "pid": "4808",
+      "main_activity_history_count": 1,
+      "history_indices": [
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-driver-activity-initial-entry-3.png",
+      "sha256": "d78c030b3116b6ef4103b7ae47a4c554243277e85320820a03c4374eb194df3b"
+    },
+    {
+      "stage": "foreground",
+      "utc": "2026-10-22T10:26:39.106935+00:00",
+      "pid": "4808",
+      "main_activity_history_count": 1,
+      "history_indices": [
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-driver-activity-initial-foreground.png",
+      "sha256": "bdb8b63d7263ebb412e7ea43c21be7a235f416c68919ea0dc86eeaa7004972fc"
+    }
+  ],
+  "scope": "Standard am start MainActivity, existing app data/session retained. No login, business command, token read or family attribution.",
+  "failure_type": "AssertionError",
+  "failure_detail": "Must actually exercise multiple activity entries",
+  "finished_utc": "2026-10-22T10:26:39.221478+00:00"
+}

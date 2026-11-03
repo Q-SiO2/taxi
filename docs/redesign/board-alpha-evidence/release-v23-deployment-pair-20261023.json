@@ -1,0 +1,51 @@
+{
+  "recorded_utc": "2026-10-23T10:31:18.237010+00:00",
+  "native_candidate": "candidate-native-v23.json",
+  "web_candidate": "candidate-web-v10.json",
+  "web_deployment": "da158b10-2d82-468e-b1f1-cffba5c32ee4",
+  "api_deployment": "8b03ad50-ba24-4d38-88b3-dc5321cd77cd",
+  "worker_deployment": "0bc39434-5d26-4e7b-8645-350526e638dd",
+  "database_deployment": "d8645fc6-04d2-4ffc-b42d-c93709ede85a",
+  "routing_deployment": "dec657d1-e507-421d-9bc2-15f0250385b7",
+  "hosted_http_verification": "hosted-web-v10-20261023.json",
+  "native_artifacts": [
+    {
+      "role": "passenger",
+      "path": "TaxiMobile/androidApp/build/outputs/apk/passenger/debug/androidApp-passenger-debug.apk",
+      "archived_path": ".tools/alpha-delivery/native-v23/androidApp-passenger-debug.apk",
+      "bytes": 80582752,
+      "sha256": "d230aef6501397adc7628931a94ea7f67b6459277c573e694fb023641a7e8390",
+      "build_configuration": {
+        "api": "https://alpha-api-staging.up.railway.app",
+        "map_style": "https://tiles.openfreemap.org/styles/positron",
+        "place_search": false,
+        "manual_coordinate_entry": false,
+        "application_id": "ma.taximobile.passenger",
+        "role": "PASSENGER",
+        "client_version": "1.0.0"
+      }
+    },
+    {
+      "role": "driver",
+      "path": "TaxiMobile/androidApp/build/outputs/apk/driver/debug/androidApp-driver-debug.apk",
+      "archived_path": ".tools/alpha-delivery/native-v23/androidApp-driver-debug.apk",
+      "bytes": 80582748,
+      "sha256": "5574f9e20ef5ade1621f58683712b6eb78f556ca828c23d83689a084137657e3",
+      "build_configuration": {
+        "api": "https://alpha-api-staging.up.railway.app",
+        "map_style": "https://tiles.openfreemap.org/styles/positron",
+        "place_search": false,
+        "manual_coordinate_entry": false,
+        "application_id": "ma.taximobile.driver",
+        "role": "DRIVER",
+        "client_version": "1.0.0"
+      }
+    }
+  ],
+  "scope": "Stable deployed pair for final rehearsals. Identity only, not acceptance. Web v10 has one web-only applicant timeline source delta; unchanged native v23 APKs. Visual screenshot acceptance pending current browser capture failure.",
+  "evidence_sha256": {
+    "candidate-native-v23.json": "a02d98fbbe9e1d295fda81811d5785025b0ba021d5f15e8bba4bae852c9ad1b2",
+    "candidate-web-v10.json": "63104284acd55fd57bea816c23b48ade324210df3e9f033fe0856c71d07c8d9a",
+    "hosted-web-v10-20261023.json": "019a4cb8eefa084f5848c79c4a474fb7375f244d1613ec80771db8c98307ab33"
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "candidate": "candidate-native-v20.json",
+  "role": "driver",
+  "label": "launcher-r3",
+  "started_utc": "2026-10-22T10:28:56.610519+00:00",
+  "passed": true,
+  "observations": [
+    {
+      "stage": "before",
+      "utc": "2026-10-22T10:28:59.205917+00:00",
+      "pid": "4808",
+      "main_activity_history_count": 5,
+      "history_indices": [
+        4,
+        3,
+        2,
+        1,
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-driver-activity-launcher-r3-before.png",
+      "sha256": "984372c567e86d1b1a63208ea7987647c20ca410976d0928202058ced9023f9f"
+    },
+    {
+      "stage": "entry-1",
+      "utc": "2026-10-22T10:29:08.182336+00:00",
+      "pid": "4808",
+      "main_activity_history_count": 6,
+      "history_indices": [
+        5,
+        4,
+        3,
+        2,
+        1,
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-driver-activity-launcher-r3-entry-1.png",
+      "sha256": "d7cb1ff6fb84e6ce4a9c5f40487d18e1bbe6d76d097bb53788c9548b72f74ba0"
+    },
+    {
+      "stage": "entry-2",
+      "utc": "2026-10-22T10:29:18.263651+00:00",
+      "pid": "4808",
+      "main_activity_history_count": 7,
+      "history_indices": [
+        6,
+        5,
+        4,
+        3,
+        2,
+        1,
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-driver-activity-launcher-r3-entry-2.png",
+      "sha256": "586846600a3ae06a4e9db8c6504cfcafe74f8355b9773e780ddc8e3fb1e85548"
+    },
+    {
+      "stage": "entry-3",
+      "utc": "2026-10-22T10:29:27.746284+00:00",
+      "pid": "4808",
+      "main_activity_history_count": 8,
+      "history_indices": [
+        7,
+        6,
+        5,
+        4,
+        3,
+        2,
+        1,
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-driver-activity-launcher-r3-entry-3.png",
+      "sha256": "0a0716f93c52a479b22a5eefb04f12748e66036f308a8bc55aaf85b924e0e3e3"
+    },
+    {
+      "stage": "foreground",
+      "utc": "2026-10-22T10:29:39.130380+00:00",
+      "pid": "4808",
+      "main_activity_history_count": 9,
+      "history_indices": [
+        8,
+        7,
+        6,
+        5,
+        4,
+        3,
+        2,
+        1,
+        0
+      ],
+      "authenticated_surface_visible": true,
+      "screenshot": "v20-driver-activity-launcher-r3-foreground.png",
+      "sha256": "d04bec7cb410b8867fd1c0bed6ff0fec5e070e62d91f65a9f95931a8841f2297"
+    }
+  ],
+  "scope": "Standard MAIN/LAUNCHER activity entries, existing app data/session retained. Prior plain-entry driver attempt remained authenticated but OS reused one activity; that attempt is retained, not multiple-entry acceptance. No login, business command, token read or family attribution.",
+  "finished_utc": "2026-10-22T10:29:39.235823+00:00"
+}

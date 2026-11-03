@@ -1,0 +1,33 @@
+{
+  "observed_utc": "2026-10-23T11:14:21.993599+00:00",
+  "web_candidate": "candidate-web-v10.json",
+  "web_deployment": "da158b10-2d82-468e-b1f1-cffba5c32ee4",
+  "api_deployment": "8b03ad50-ba24-4d38-88b3-dc5321cd77cd",
+  "passed": true,
+  "normal_existing_staff_password_mfa": true,
+  "same_existing_authenticator": true,
+  "casablanca_scope_applied": true,
+  "application_read": "Omar Empty State / Submitted / revision 7 / submission 2",
+  "staff_normal_logout_to_anonymous_without_warning": true,
+  "applicant_normal_logout_notice_confirmed": true,
+  "no_new_grants_review_decisions_or_application_commands": true,
+  "screenshots": [
+    {
+      "path": "web-v10-staff-mfa-overview.png",
+      "sha256": "950de0735c1316935e292e30b35fbfa67ca965f453130fc73c24bd5dca8a60f9"
+    },
+    {
+      "path": "web-v10-staff-application-read.png",
+      "sha256": "def94c836f40c0c5eae7ff8b393d4921dff3afaad054a4619420dd8c544ea339"
+    },
+    {
+      "path": "web-v10-staff-normal-logout.png",
+      "sha256": "78aeeaa8b1337e585fa36e714f5bc49d8cd96e9d1bf5e6018c9fdb8623e26094"
+    },
+    {
+      "path": "web-v10-applicant-normal-logout.png",
+      "sha256": "30163a527405b6c96a3d4ecd91f48992a5b92e35dfb9415f42abe03da48b466a"
+    }
+  ],
+  "scope": "One normal synthetic baseline staff MFA/read/logout and normal applicant logout on exact web v10/recovered API. No expired role renewed, no full accessibility or production acceptance."
+}

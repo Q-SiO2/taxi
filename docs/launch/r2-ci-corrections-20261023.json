@@ -1,0 +1,96 @@
+{
+  "recorded_utc": "2026-10-23T16:42:08.949884+00:00",
+  "initial_candidate": "45c491a4615d466c74c4bb0ca46fd6d55488ad7f",
+  "pull_request": "https://github.com/Q-SiO2/taxi/pull/74",
+  "initial_push_run": 39985812254,
+  "initial_pr_run": 39985925635,
+  "infra_suite": {
+    "started_utc": "2026-10-23T16:27:01.917515+00:00",
+    "finished_utc": "2026-10-23T16:28:02.116102+00:00",
+    "exit_code": 0,
+    "log": "r2-infra-suite-correction-20261023.log"
+  },
+  "infra_tests": 270,
+  "routing_tests": 11,
+  "no_site_packages_import": "PASS",
+  "final_audits": [
+    {
+      "lock": "requirements.lock",
+      "sha256": "430ee25c69c5b6abdde7e328d30fc2c1225cc6f8e07a1969c10c8030f2bdadec",
+      "exit_code": 0,
+      "log": "r2-final-audit-requirements.lock.log",
+      "finished_utc": "2026-10-23T16:30:44.769860+00:00"
+    },
+    {
+      "lock": "requirements-dev.lock",
+      "sha256": "7a73ba4ffa29316fbe14983ff6b35589ecad538207b65919f42f66348ba60b23",
+      "exit_code": 0,
+      "log": "r2-final-audit-requirements-dev.lock.log",
+      "finished_utc": "2026-10-23T16:31:47.879594+00:00"
+    }
+  ],
+  "regeneration": [
+    {
+      "name": "requirements.lock",
+      "exit_code": 0,
+      "package_changes": {
+        "certifi": [
+          "2026.7.22",
+          "2026.10.19"
+        ]
+      },
+      "arguments": [
+        "--generate-hashes",
+        "--reuse-hashes",
+        "--strip-extras",
+        "--allow-unsafe",
+        "--upgrade-package",
+        "certifi==2026.10.19",
+        "--output-file",
+        "requirements.lock",
+        "pyproject.toml"
+      ],
+      "generated_utc": "2026-10-23T16:28:16.539210+00:00"
+    },
+    {
+      "name": "requirements-dev.lock",
+      "exit_code": 0,
+      "package_changes": {
+        "certifi": [
+          "2026.7.22",
+          "2026.10.19"
+        ]
+      },
+      "arguments": [
+        "--generate-hashes",
+        "--reuse-hashes",
+        "--strip-extras",
+        "--allow-unsafe",
+        "--upgrade-package",
+        "certifi==2026.10.19",
+        "--constraint",
+        "requirements.lock",
+        "--extra",
+        "dev",
+        "--output-file",
+        "requirements-dev.lock",
+        "pyproject.toml"
+      ],
+      "generated_utc": "2026-10-23T16:28:39.867114+00:00"
+    }
+  ],
+  "tls": {
+    "verified_utc": "2026-10-23T16:30:23.944507+00:00",
+    "version": "2026.10.19",
+    "https_target": "https://pypi.org/pypi/certifi/2026.10.19/json",
+    "status": 200,
+    "explicit_ssl_context": true,
+    "pypi_artifact_hashes_match_lock": true,
+    "artifact_count": 2,
+    "scope": "Local backend environment only. Does not establish all provider TLS behavior or staging/production upgrade."
+  },
+  "ios_fix": "Explicit Foundation extension import; successor Mac CI verification pending.",
+  "dependency_review": "Initial head snapshot missing despite successful push submission; comparison timed out; not accepted.",
+  "deployment_accepted": false,
+  "staging_dependency_upgrade_applied": false
+}

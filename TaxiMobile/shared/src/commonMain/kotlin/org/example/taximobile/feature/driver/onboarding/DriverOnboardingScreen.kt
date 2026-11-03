@@ -1,15 +1,19 @@
 package org.example.taximobile.feature.driver.onboarding
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -79,12 +83,17 @@ fun DriverOnboardingScreen(
     onUploadDocument: (String, String, Int, String) -> Unit,
     onDeleteDocument: (String, String, Int, String) -> Unit,
     onRegisterVehicle: (displayName: String, VehicleRegistration) -> Unit,
+    safeInsets: WindowInsets = WindowInsets.safeDrawing,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     val language = Locale.current.language
     Column(
-        Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(TaxiSpacing.Lg),
+        Modifier.fillMaxSize().windowInsetsPadding(safeInsets)
+            .verticalScroll(rememberScrollState()).padding(TaxiSpacing.Lg),
         verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Lg),
     ) {
+        org.example.taximobile.feature.ui.components.TaxiStyleChooser()
         Row(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -94,13 +103,13 @@ fun DriverOnboardingScreen(
                 Text(
                     stringResource(Res.string.driver_onboarding_title),
                     style = MaterialTheme.typography.headlineSmall,
-                    color = TaxiColors.Navy900,
+                    color = taxiColors.Navy900,
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
                     state.displayName,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TaxiColors.Ink500,
+                    color = taxiColors.Ink500,
                 )
             }
             TaxiButton(
@@ -113,14 +122,14 @@ fun DriverOnboardingScreen(
 
         state.message?.let { message ->
             Surface(
-                color = TaxiColors.Danger100,
-                shape = RoundedCornerShape(TaxiRadii.Md),
-                border = BorderStroke(1.dp, TaxiColors.Danger600.copy(alpha = 0.25f)),
+                color = taxiColors.Danger100,
+                shape = RoundedCornerShape(taxiRadii.Md),
+                border = BorderStroke(1.dp, taxiColors.Danger600.copy(alpha = 0.25f)),
             ) {
                 Text(
                     message.resolve(),
                     Modifier.fillMaxWidth().padding(TaxiSpacing.Md),
-                    color = TaxiColors.Danger600,
+                    color = taxiColors.Danger600,
                 )
             }
         }
@@ -130,7 +139,7 @@ fun DriverOnboardingScreen(
             Text(
                 stringResource(Res.string.driver_onboarding_workflow),
                 style = MaterialTheme.typography.bodyMedium,
-                color = TaxiColors.Ink500,
+                color = taxiColors.Ink500,
             )
         }
 
@@ -161,16 +170,16 @@ fun DriverOnboardingScreen(
                     }
                     Text(
                         stringResource(Res.string.requirement_version_value, application.requirementVersion),
-                        color = TaxiColors.Ink500,
+                        color = taxiColors.Ink500,
                         style = MaterialTheme.typography.bodySmall,
                     )
                     application.latestApplicantMessage?.let {
-                        Text(it, color = TaxiColors.Navy700, style = MaterialTheme.typography.bodyMedium)
+                        Text(it, color = taxiColors.Navy700, style = MaterialTheme.typography.bodyMedium)
                     }
                     if (!selected) {
                         Text(
                             stringResource(Res.string.continue_application),
-                            color = TaxiColors.Navy700,
+                            color = taxiColors.Navy700,
                             style = MaterialTheme.typography.labelLarge,
                         )
                     }
@@ -222,13 +231,14 @@ private fun RecruitingCities(
     onCreateApplication: (String, String) -> Unit,
     onSelectApplication: (String, String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     Text(
         stringResource(Res.string.recruiting_cities),
         style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.Bold,
     )
     if (state.recruitingCities.isEmpty()) {
-        TaxiCard { Text(stringResource(Res.string.no_recruiting_cities), color = TaxiColors.Ink500) }
+        TaxiCard { Text(stringResource(Res.string.no_recruiting_cities), color = taxiColors.Ink500) }
         return
     }
     state.recruitingCities.forEach { city ->
@@ -243,7 +253,7 @@ private fun RecruitingCities(
             )
             Text(
                 stringResource(Res.string.requirement_version_value, city.requirementVersion),
-                color = TaxiColors.Ink500,
+                color = taxiColors.Ink500,
                 style = MaterialTheme.typography.bodySmall,
             )
             TaxiButton(
@@ -293,6 +303,8 @@ private fun ApplicationDetail(
     onDeleteDocument: (String, String, Int, String) -> Unit,
     onRegisterVehicle: (String, VehicleRegistration) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     val draftKey = "${application.id}:${application.optimisticVersion}"
     val textValues = remember(draftKey) {
         mutableStateMapOf<String, String>().apply {
@@ -321,11 +333,11 @@ private fun ApplicationDetail(
     }
     var confirmWithdrawal by remember(application.id) { mutableStateOf(false) }
 
-    HorizontalDivider(color = TaxiColors.StrokeSubtle)
+    HorizontalDivider(color = taxiColors.StrokeSubtle)
     Text(
         application.cityName.forLanguage(language),
         style = MaterialTheme.typography.headlineSmall,
-        color = TaxiColors.Navy900,
+        color = taxiColors.Navy900,
         fontWeight = FontWeight.Bold,
     )
     StatusPill(
@@ -337,7 +349,7 @@ private fun ApplicationDetail(
             Res.string.city_scoped_approval_notice,
             application.cityName.forLanguage(language),
         ),
-        color = TaxiColors.Navy700,
+        color = taxiColors.Navy700,
         style = MaterialTheme.typography.bodyMedium,
     )
 
@@ -360,7 +372,7 @@ private fun ApplicationDetail(
             if (!authorization.scheduledOffersEnabled) {
                 Text(
                     stringResource(Res.string.authorization_scheduled_disabled),
-                    color = TaxiColors.Ink500,
+                    color = taxiColors.Ink500,
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
@@ -379,7 +391,7 @@ private fun ApplicationDetail(
             Text(
                 stringResource(Res.string.identity_details_help),
                 style = MaterialTheme.typography.bodySmall,
-                color = TaxiColors.Ink500,
+                color = taxiColors.Ink500,
             )
         }
     }
@@ -519,8 +531,8 @@ private fun ApplicationDetail(
             loading = pendingAction.isPending(AppActionKind.SAVE_DRIVER_CITY_APPLICATION, application.id),
         )
         Surface(
-            color = if (application.complete) TaxiColors.Success100 else TaxiColors.Warning100,
-            shape = RoundedCornerShape(TaxiRadii.Md),
+            color = if (application.complete) taxiColors.Success100 else taxiColors.Warning100,
+            shape = RoundedCornerShape(taxiRadii.Md),
         ) {
             Text(
                 stringResource(
@@ -528,7 +540,7 @@ private fun ApplicationDetail(
                     else Res.string.application_incomplete,
                 ),
                 Modifier.fillMaxWidth().padding(TaxiSpacing.Md),
-                color = if (application.complete) TaxiColors.Success600 else TaxiColors.Warning600,
+                color = if (application.complete) taxiColors.Success600 else taxiColors.Warning600,
             )
         }
         TaxiButton(
@@ -585,6 +597,7 @@ private fun RequirementEditor(
     onVehicle: (String) -> Unit,
     onCredential: (String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     TaxiCard(selected = missing) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(
@@ -605,12 +618,12 @@ private fun RequirementEditor(
         Text(
             requirement.description.forLanguage(language),
             style = MaterialTheme.typography.bodyMedium,
-            color = TaxiColors.Ink500,
+            color = taxiColors.Ink500,
         )
         when (requirement.evidenceType) {
             DriverRequirementEvidenceType.PROFILE -> Text(
                 stringResource(Res.string.profile_evidence_confirmed),
-                color = TaxiColors.Success600,
+                color = taxiColors.Success600,
                 style = MaterialTheme.typography.bodyMedium,
             )
             DriverRequirementEvidenceType.BOOLEAN -> Row(verticalAlignment = Alignment.CenterVertically) {
@@ -698,16 +711,18 @@ private fun EvidenceChoices(
     enabled: Boolean,
     onSelect: (String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     Text(title, style = MaterialTheme.typography.labelLarge)
     if (choices.isEmpty()) {
-        Text(stringResource(Res.string.no_eligible_evidence), color = TaxiColors.Warning600)
+        Text(stringResource(Res.string.no_eligible_evidence), color = taxiColors.Warning600)
     } else {
         choices.forEach { (id, label) ->
             Surface(
                 modifier = Modifier.fillMaxWidth().clickable(enabled = enabled) { onSelect(id) },
-                color = if (id == selectedId) TaxiColors.Accent100 else TaxiColors.Surface1,
-                shape = RoundedCornerShape(TaxiRadii.Md),
-                border = BorderStroke(1.dp, if (id == selectedId) TaxiColors.Accent500 else TaxiColors.StrokeSubtle),
+                color = if (id == selectedId) taxiColors.Accent100 else taxiColors.Surface1,
+                shape = RoundedCornerShape(taxiRadii.Md),
+                border = BorderStroke(1.dp, if (id == selectedId) taxiColors.Accent500 else taxiColors.StrokeSubtle),
             ) {
                 Text(label, Modifier.padding(TaxiSpacing.Sm), style = MaterialTheme.typography.bodyMedium)
             }
@@ -721,6 +736,7 @@ private fun ApplicantVehicleForm(
     loading: Boolean,
     onRegister: (String, VehicleRegistration) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     var make by remember { mutableStateOf("") }
     var model by remember { mutableStateOf("") }
     var year by remember { mutableStateOf("") }
@@ -756,7 +772,7 @@ private fun ApplicantVehicleForm(
         Text(
             stringResource(Res.string.city_controls_vehicle_eligibility),
             style = MaterialTheme.typography.bodySmall,
-            color = TaxiColors.Ink500,
+            color = taxiColors.Ink500,
         )
         TaxiButton(
             stringResource(Res.string.register_vehicle),
@@ -784,6 +800,7 @@ private fun ApplicantVehicleForm(
 
 @Composable
 private fun ApplicationTimeline(status: String) {
+    val taxiColors = TaxiTheme.colors
     val steps = listOf(
         "SUBMITTED" to Res.string.verification_submitted,
         "UNDER_REVIEW" to Res.string.verification_under_review,
@@ -795,16 +812,16 @@ private fun ApplicationTimeline(status: String) {
         Text(stringResource(Res.string.application_timeline), style = MaterialTheme.typography.titleSmall)
         steps.forEach { (code, label) ->
             Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
-                Text(if (code == status) "●" else "○", color = if (code == status) TaxiColors.Accent600 else TaxiColors.Ink300)
+                Text(if (code == status) "●" else "○", color = if (code == status) taxiColors.Accent600 else taxiColors.Ink300)
                 Text(
                     stringResource(label),
-                    color = if (code == status) TaxiColors.Navy900 else TaxiColors.Ink500,
+                    color = if (code == status) taxiColors.Navy900 else taxiColors.Ink500,
                     fontWeight = if (code == status) FontWeight.Bold else FontWeight.Normal,
                 )
             }
         }
         if (status == "WITHDRAWN") {
-            Text("● ${stringResource(Res.string.withdraw_application)}", color = TaxiColors.Danger600)
+            Text("● ${stringResource(Res.string.withdraw_application)}", color = taxiColors.Danger600)
         }
     }
 }

@@ -1,0 +1,23 @@
+{
+  "verified_utc": "2026-10-23T00:08:07.938Z",
+  "passed": true,
+  "api_deployment_id": "8b03ad50-ba24-4d38-88b3-dc5321cd77cd",
+  "web_candidate": "candidate-web-v8.json",
+  "normal_password_and_existing_totp_succeeded": true,
+  "protected_city_overview_loaded": true,
+  "normal_ui_logout_returned_to_signin_without_error": true,
+  "no_reenrollment_or_grant_change": true,
+  "screenshots": [
+    {
+      "path": "railway-recovered-staff-mfa-overview-20261023.png",
+      "sha256": "c75772522804c3559015f0229827e9afe6399b95906c42b2c2e33a7559654830",
+      "utc": "2026-10-23T00:07:09.495Z"
+    },
+    {
+      "path": "railway-recovered-staff-logout-20261023.png",
+      "sha256": "5a4f09357f037107d7e3ea970d29b9509d4d787edf7ac5b2b8c7a93b4f39606c",
+      "utc": "2026-10-23T00:08:07.938Z"
+    }
+  ],
+  "scope": "Actual normal HTTPS hosted staff sign-in/MFA/protected read/logout after credential recovery. Existing authenticator seed preserved. No new review/application action or corrected web10 acceptance inferred."
+}

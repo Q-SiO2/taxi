@@ -1,0 +1,9 @@
+{
+  "candidate": "candidate-native-v18.json",
+  "role": "driver",
+  "started_utc": "2026-10-21T11:57:29.434388+00:00",
+  "passed": false,
+  "checks": [],
+  "scope": "Actual EN welcome artwork/style options and normal existing-account re-entry; recordings are raw emulator observations, not physical performance acceptance",
+  "finished_utc": "2026-10-21T11:59:04.508220+00:00"
+}

@@ -5,6 +5,7 @@ from datetime import UTC, datetime, timedelta
 
 from geoalchemy2.elements import WKTElement
 from sqlalchemy import select, text
+from sqlalchemy.dialects.postgresql.ranges import Range
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from taximobile_api.domains.drivers.models import AvailabilityStatus, DriverLocation, DriverProfile
@@ -74,10 +75,27 @@ async def prove_mixed_assignment(settings, booking_id, *, immediate_first):
             booking = await session.get(ScheduledBooking, booking_id)
             commitment = await session.get(ScheduledBookingCommitment, booking.current_commitment_id)
             driver_id = commitment.driver_id
-            now = booking.scheduled_for
+            # Exercise both lock orderings at one coherent decision boundary.
+            # Immediate acceptance happens just before the protected window;
+            # scheduled handoff evaluates at its lower bound. Keeping that
+            # boundary close to wall time lets the production acceptance path
+            # retain its server clock while both commands share one fresh GPS
+            # observation. The old fixture mixed wall time with a handoff four
+            # hours in the future, which became invalid once acceptance began
+            # enforcing observation freshness.
+            original_window = commitment.protected_window
+            handoff_at = datetime.now(UTC) + timedelta(seconds=30)
+            handoff_lead = booking.scheduled_for - original_window.lower
+            window_duration = original_window.upper - original_window.lower
+            booking.scheduled_for = handoff_at + handoff_lead
+            commitment.protected_window = Range(
+                handoff_at,
+                handoff_at + window_duration,
+                bounds="[)",
+            )
             location = await session.scalar(select(DriverLocation).where(DriverLocation.driver_id == driver_id)
                 .order_by(DriverLocation.observed_at.desc(), DriverLocation.id.desc()).limit(1))
-            location.observed_at = now
+            location.observed_at = handoff_at
             pickup, destination = await booking_coordinates(session, booking)
             immediate = Ride(city_id=booking.city_id, operator_id=booking.operator_id,
                 service_type=booking.service_type, fixed_route_direction_id=booking.fixed_route_direction_id,
@@ -116,7 +134,7 @@ async def prove_mixed_assignment(settings, booking_id, *, immediate_first):
                 except RideOfferUnavailable:
                     return "conflict", None
             result = await handoff_booking(session, await session.get(ScheduledBooking, booking_id),
-                now=now, matching_settings=settings)
+                now=handoff_at, matching_settings=settings)
             return ("assigned", result.id) if isinstance(result, Ride) else ("booking", result.status.value)
 
         async def first(session):

@@ -48,6 +48,7 @@ enum class AppActionKind {
     ESTIMATE_SCHEDULED_BOOKING,
     CREATE_SCHEDULED_BOOKING,
     CANCEL_SCHEDULED_BOOKING,
+    LOAD_PASSENGER_SCHEDULED_BOOKINGS,
     SET_SCHEDULED_OFFER_PREFERENCE,
     RESPOND_TO_SCHEDULED_OFFER,
     SUBMIT_MANUAL_TRANSFER,
@@ -64,6 +65,7 @@ enum class AppActionKind {
     CANCEL_DRIVER_RIDE,
     COMPLETE_DRIVER_RIDE,
     SETTLE_DRIVER_CASH,
+    LOAD_PENDING_CASH_PAYMENTS,
     MARK_NOTIFICATION_READ,
 }
 
@@ -73,18 +75,30 @@ enum class AppActionKind {
  * is suspended, even before Compose has rendered the loading state.
  */
 class AppActionGate {
+    private var readRevision = 0L
     var current: AppAction? = null
         private set
 
     fun tryStart(action: AppAction): Boolean {
         if (current != null) return false
+        invalidateReads()
         current = action
         return true
     }
 
     fun finish(action: AppAction) {
-        if (current == action) current = null
+        if (current == action) {
+            current = null
+            invalidateReads()
+        }
     }
+
+    /** A late passive refresh cannot replace a newer read or explicit action. */
+    fun beginRead(): Long = ++readRevision
+
+    fun canApplyRead(revision: Long): Boolean = current == null && revision == readRevision
+
+    fun invalidateReads() { readRevision++ }
 }
 
 fun AppAction?.isPending(kind: AppActionKind, resourceId: String? = null): Boolean =

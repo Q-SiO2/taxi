@@ -1,5 +1,7 @@
 package org.example.taximobile.application
 
+import org.example.taximobile.feature.ui.text.UiMessage
+import taximobile.shared.generated.resources.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import org.example.taximobile.applicant.state.validateApplicantLogin
@@ -17,14 +19,14 @@ class WebSurfaceTest {
     @Test
     fun `registration validation matches backend minimum boundaries`() {
         assertEquals(
-            "Provide an email address or Moroccan phone number.",
+            UiMessage(Res.string.web_contact_required),
             validateApplicantRegistration("Applicant", "", "", "long-password"),
         )
         assertEquals(
-            "Use a password between 12 and 256 characters.",
+            UiMessage(Res.string.web_password_registration_invalid),
             validateApplicantRegistration("Applicant", "driver@example.test", "", "short"),
         )
         assertEquals(null, validateApplicantRegistration("Applicant", "driver@example.test", "", "long-password"))
-        assertEquals("Enter your password.", validateApplicantLogin("driver@example.test", ""))
+        assertEquals(UiMessage(Res.string.web_password_required), validateApplicantLogin("driver@example.test", ""))
     }
 }

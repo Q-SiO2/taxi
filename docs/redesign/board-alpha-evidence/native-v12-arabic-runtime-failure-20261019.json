@@ -1,0 +1,14 @@
+{
+  "recorded_utc": "2026-10-19T19:53:34.718378+00:00",
+  "candidate": "candidate-native-v12.json",
+  "passed": false,
+  "first_french_run": "v12-native-first.json",
+  "arabic_run": "v12-native-second.json",
+  "explicit_lookup_retry": "v12-native-second-ar-trip-continuation.json",
+  "ride_id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+  "server_status": "IN_PROGRESS",
+  "observed": "Arabic native completion lookup unavailable; Complete ride disabled. One explicit lookup retry also fails. No completion/cash command submitted.",
+  "source_finding": "Automatic sampling and explicit lookup share AndroidCurrentLocationRequester.OneShotLocationGate. A user lookup returns null if automatic sampling holds the slot, while DriverHome only knows its own explicit busy flag. This proves an ownership gap; exact cause of each runtime failure remains uninstrumented.",
+  "repair_scope": "Android root gives first explicit driver lookup priority using existing OneShotLocationGate, suppresses preempted automatic cancellation warning, and defers automatic sampling until the explicit callback. Keep freshness/session/context guards. JVM UI retry coverage added. Replacement build/runtime acceptance pending.",
+  "recovery_rule": "Keep this same server ride; only recover through replacement native UI after installed APK verification; no direct completion/payment or DB reset."
+}

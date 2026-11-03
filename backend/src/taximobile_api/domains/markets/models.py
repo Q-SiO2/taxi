@@ -130,6 +130,12 @@ class Market(Base):
 
 class Operator(Base):
     __tablename__ = "operators"
+    __table_args__ = (
+        CheckConstraint(
+            "NOT requires_active_membership OR cooperative_id IS NOT NULL",
+            name="operator_membership_requires_register",
+        ),
+    )
 
     id: Mapped[UUID] = mapped_column(PostgreSQLUUID(as_uuid=True), primary_key=True, default=uuid4)
     market_id: Mapped[UUID] = mapped_column(
@@ -142,6 +148,9 @@ class Operator(Base):
         unique=True,
     )
     name: Mapped[str] = mapped_column(String(200), nullable=False)
+    requires_active_membership: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=False, server_default="false"
+    )
     operator_type: Mapped[OperatorType] = mapped_column(
         bounded_enum(OperatorType, "operator_type", 24), nullable=False
     )

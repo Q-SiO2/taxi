@@ -1,0 +1,826 @@
+{
+  "recorded_utc": "2026-10-19T20:00:16.881415+00:00",
+  "compiled": true,
+  "candidate_frozen": false,
+  "build_log": ".tools/alpha-delivery/board-native-v13-first-build.log",
+  "reason": "Freshness assertion rejected cached test suite timestamps older than the v13 captured input manifest. Source and APK build succeeded; full fresh test acceptance not established.",
+  "reports": [
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.core.network.ApiConfigurationTest",
+      "timestamp": "2026-10-19T19:57:25.011Z",
+      "tests": 2
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.core.network.IdempotencyKeyTest",
+      "timestamp": "2026-10-19T19:57:25.211Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.data.auth.KtorAuthenticationCancellationTest",
+      "timestamp": "2026-10-19T19:57:25.255Z",
+      "tests": 2
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.data.auth.SecureTokenStoreTest",
+      "timestamp": "2026-10-19T19:57:26.960Z",
+      "tests": 3
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.data.cooperatives.CooperativeMembershipDecodingTest",
+      "timestamp": "2026-10-19T19:57:26.986Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.data.drivers.DriverCredentialDecodingTest",
+      "timestamp": "2026-10-19T19:57:27.074Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.data.drivers.DriverEarningsDecodingTest",
+      "timestamp": "2026-10-19T19:57:27.130Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.data.drivers.DriverOfferEconomicsDecodingTest",
+      "timestamp": "2026-10-19T19:57:27.228Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.data.drivers.KtorDriverRecruitmentRequestTest",
+      "timestamp": "2026-10-19T19:57:27.426Z",
+      "tests": 3
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.data.drivers.PendingCashPaymentsTest",
+      "timestamp": "2026-10-19T19:57:27.967Z",
+      "tests": 7
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.data.network.TaxiMobileHttpClientTest",
+      "timestamp": "2026-10-19T19:57:28.152Z",
+      "tests": 2
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.data.places.PlaceLanguageTest",
+      "timestamp": "2026-10-19T19:57:28.162Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.data.realtime.KtorLiveEventGatewayTest",
+      "timestamp": "2026-10-19T19:57:28.175Z",
+      "tests": 5
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.data.rides.FixedRouteCatalogDecodingTest",
+      "timestamp": "2026-10-19T19:57:28.578Z",
+      "tests": 2
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.data.rides.RideCoordinationDecodingTest",
+      "timestamp": "2026-10-19T19:57:28.762Z",
+      "tests": 2
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.data.rides.RideHistoryDecodingTest",
+      "timestamp": "2026-10-19T19:57:28.790Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.data.rides.RideReceiptDecodingTest",
+      "timestamp": "2026-10-19T19:57:28.811Z",
+      "tests": 2
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.data.routing.RoutingLanguageTest",
+      "timestamp": "2026-10-19T19:57:28.924Z",
+      "tests": 2
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.data.safety.SafetyReportDecodingTest",
+      "timestamp": "2026-10-19T19:57:28.941Z",
+      "tests": 2
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.data.scheduling.ScheduledBookingDecodingTest",
+      "timestamp": "2026-10-19T19:57:28.982Z",
+      "tests": 3
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.domain.drivers.DriverEarningsTest",
+      "timestamp": "2026-10-19T19:57:29.172Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.domain.drivers.DriverLocationObservationTest",
+      "timestamp": "2026-10-19T19:57:29.180Z",
+      "tests": 3
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.domain.rides.FareEstimateTest",
+      "timestamp": "2026-10-19T19:57:29.202Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.domain.rides.FinalRideFareTest",
+      "timestamp": "2026-10-19T19:57:29.225Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.domain.rides.RideRatingTest",
+      "timestamp": "2026-10-19T19:57:29.234Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.app.AppActionTest",
+      "timestamp": "2026-10-19T19:57:29.241Z",
+      "tests": 3
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.app.AppUiStateTest",
+      "timestamp": "2026-10-19T19:57:29.261Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.app.ClientCompatibilityCoordinatorTest",
+      "timestamp": "2026-10-19T19:57:29.425Z",
+      "tests": 3
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.app.CriticalStateUiTest",
+      "timestamp": "2026-10-19T19:57:29.682Z",
+      "tests": 40
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.app.DriverCompletionLocationUiTest",
+      "timestamp": "2026-10-19T19:58:45.147Z",
+      "tests": 4
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.app.DriverOnboardingInsetsUiTest",
+      "timestamp": "2026-10-19T19:58:49.105Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.app.GatePageInsetsUiTest",
+      "timestamp": "2026-10-19T19:58:49.291Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.app.MapSheetInsetsUiTest",
+      "timestamp": "2026-10-19T19:58:49.323Z",
+      "tests": 2
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.app.MapToolbarInsetsUiTest",
+      "timestamp": "2026-10-19T19:58:51.272Z",
+      "tests": 3
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.app.MobileAppCoordinatorTest",
+      "timestamp": "2026-10-19T19:58:51.623Z",
+      "tests": 49
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.app.NotificationPresentationTest",
+      "timestamp": "2026-10-19T19:58:52.440Z",
+      "tests": 7
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.app.PassengerIdlePeekUiTest",
+      "timestamp": "2026-10-19T19:58:52.448Z",
+      "tests": 4
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.app.PendingCashRecoveryUiTest",
+      "timestamp": "2026-10-19T19:58:59.037Z",
+      "tests": 5
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.app.QuoteSessionRecoveryTest",
+      "timestamp": "2026-10-19T19:59:03.910Z",
+      "tests": 11
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.app.RidePresentationMappingTest",
+      "timestamp": "2026-10-19T19:59:04.082Z",
+      "tests": 4
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.app.StyleLanguageRenderTest",
+      "timestamp": "2026-10-19T19:59:04.098Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.app.StyleSwitchUiTest",
+      "timestamp": "2026-10-19T19:59:11.620Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.app.SupportCategoryTest",
+      "timestamp": "2026-10-19T19:59:17.473Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.auth.AuthenticatedReadRecoveryTest",
+      "timestamp": "2026-10-19T19:59:17.488Z",
+      "tests": 19
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.auth.AuthenticationSessionLifetimeTest",
+      "timestamp": "2026-10-19T19:59:18.038Z",
+      "tests": 8
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.auth.AuthenticationSessionStorageTest",
+      "timestamp": "2026-10-19T19:59:18.154Z",
+      "tests": 4
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.auth.AuthenticationStateTest",
+      "timestamp": "2026-10-19T19:59:18.211Z",
+      "tests": 3
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.auth.RegistrationInputTest",
+      "timestamp": "2026-10-19T19:59:18.293Z",
+      "tests": 3
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.connectivity.ConnectivityTest",
+      "timestamp": "2026-10-19T19:59:18.303Z",
+      "tests": 15
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.driver.OfferCountdownTest",
+      "timestamp": "2026-10-19T19:59:18.503Z",
+      "tests": 3
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.driver.onboarding.CityAuthorizationPresentationTest",
+      "timestamp": "2026-10-19T19:59:18.516Z",
+      "tests": 2
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.location.ForegroundDriverLocationPolicyTest",
+      "timestamp": "2026-10-19T19:59:18.538Z",
+      "tests": 8
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.location.ForegroundDriverLocationResultGuardTest",
+      "timestamp": "2026-10-19T19:59:18.572Z",
+      "tests": 8
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.location.NativeFixFreshnessTest",
+      "timestamp": "2026-10-19T19:59:18.799Z",
+      "tests": 4
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.location.OneShotLocationGateTest",
+      "timestamp": "2026-10-19T19:59:18.827Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.maps.MapCameraFocusTest",
+      "timestamp": "2026-10-19T19:59:18.837Z",
+      "tests": 6
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.maps.MapStyleFallbackTest",
+      "timestamp": "2026-10-19T19:59:18.878Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.notifications.PushRefreshHintRelayTest",
+      "timestamp": "2026-10-19T19:59:18.885Z",
+      "tests": 7
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.notifications.PushRegistrationRelayTest",
+      "timestamp": "2026-10-19T19:59:18.986Z",
+      "tests": 3
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.passenger.PassengerReverseSelectionTest",
+      "timestamp": "2026-10-19T19:59:19.091Z",
+      "tests": 4
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.passenger.PlaceDiscoveryFreshnessUiTest",
+      "timestamp": "2026-10-19T19:59:19.127Z",
+      "tests": 3
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.passenger.RecentDestinationsTest",
+      "timestamp": "2026-10-19T19:59:20.233Z",
+      "tests": 2
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.realtime.LiveUpdateSubscriptionTest",
+      "timestamp": "2026-10-19T19:59:20.248Z",
+      "tests": 18
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.rides.RideCoordinationSectionUiTest",
+      "timestamp": "2026-10-19T19:59:20.854Z",
+      "tests": 4
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.ui.components.FarePresentationUiTest",
+      "timestamp": "2026-10-19T19:59:21.464Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.ui.components.OptionalArtworkTest",
+      "timestamp": "2026-10-19T19:59:21.506Z",
+      "tests": 9
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.ui.components.SpecializedFieldsTest",
+      "timestamp": "2026-10-19T19:59:21.750Z",
+      "tests": 2
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.ui.components.TaxiArtworkUiTest",
+      "timestamp": "2026-10-19T19:59:21.790Z",
+      "tests": 4
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.ui.components.TaxiSheetUiTest",
+      "timestamp": "2026-10-19T19:59:22.260Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.ui.TaxiDesignTokensTest",
+      "timestamp": "2026-10-19T19:59:21.434Z",
+      "tests": 6
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.ui.text.BidiTextTest",
+      "timestamp": "2026-10-19T19:59:22.501Z",
+      "tests": 2
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.ui.text.TaxiLanguagePreferencesTest",
+      "timestamp": "2026-10-19T19:59:22.509Z",
+      "tests": 4
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.ui.theme.TaxiColorContrastTest",
+      "timestamp": "2026-10-19T19:59:22.566Z",
+      "tests": 3
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.feature.ui.theme.TaxiStylePreferencesTest",
+      "timestamp": "2026-10-19T19:59:22.574Z",
+      "tests": 4
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.SharedCommonTest",
+      "timestamp": "2026-10-19T19:57:24.934Z",
+      "tests": 1
+    },
+    {
+      "task": "jvmTest",
+      "suite": "org.example.taximobile.SharedLogicDesktopTest",
+      "timestamp": "2026-10-19T19:57:25.004Z",
+      "tests": 1
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.core.network.ApiConfigurationTest",
+      "timestamp": "2026-10-19T18:57:16.811Z",
+      "tests": 2
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.core.network.IdempotencyKeyTest",
+      "timestamp": "2026-10-19T18:57:16.887Z",
+      "tests": 1
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.data.auth.AndroidSecureTokenStoreTest",
+      "timestamp": "2026-10-19T18:57:16.905Z",
+      "tests": 22
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.data.auth.KtorAuthenticationCancellationTest",
+      "timestamp": "2026-10-19T18:57:17.209Z",
+      "tests": 2
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.data.auth.SecureTokenStoreTest",
+      "timestamp": "2026-10-19T18:57:17.518Z",
+      "tests": 3
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.data.cooperatives.CooperativeMembershipDecodingTest",
+      "timestamp": "2026-10-19T18:57:17.522Z",
+      "tests": 1
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.data.drivers.DriverCredentialDecodingTest",
+      "timestamp": "2026-10-19T18:57:17.549Z",
+      "tests": 1
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.data.drivers.DriverEarningsDecodingTest",
+      "timestamp": "2026-10-19T18:57:17.560Z",
+      "tests": 1
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.data.drivers.DriverOfferEconomicsDecodingTest",
+      "timestamp": "2026-10-19T18:57:17.587Z",
+      "tests": 1
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.data.drivers.PendingCashPaymentsTest",
+      "timestamp": "2026-10-19T18:57:17.615Z",
+      "tests": 7
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.data.network.TaxiMobileHttpClientTest",
+      "timestamp": "2026-10-19T18:57:17.688Z",
+      "tests": 2
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.data.places.PlaceLanguageTest",
+      "timestamp": "2026-10-19T18:57:17.695Z",
+      "tests": 1
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.data.realtime.KtorLiveEventGatewayTest",
+      "timestamp": "2026-10-19T18:57:17.699Z",
+      "tests": 5
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.data.rides.FixedRouteCatalogDecodingTest",
+      "timestamp": "2026-10-19T18:57:17.809Z",
+      "tests": 2
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.data.rides.RideCoordinationDecodingTest",
+      "timestamp": "2026-10-19T18:57:17.840Z",
+      "tests": 2
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.data.rides.RideHistoryDecodingTest",
+      "timestamp": "2026-10-19T18:57:17.849Z",
+      "tests": 1
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.data.rides.RideReceiptDecodingTest",
+      "timestamp": "2026-10-19T18:57:17.854Z",
+      "tests": 2
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.data.routing.RoutingLanguageTest",
+      "timestamp": "2026-10-19T18:57:17.873Z",
+      "tests": 2
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.data.safety.SafetyReportDecodingTest",
+      "timestamp": "2026-10-19T18:57:17.879Z",
+      "tests": 2
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.data.scheduling.ScheduledBookingDecodingTest",
+      "timestamp": "2026-10-19T18:57:17.892Z",
+      "tests": 3
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.domain.drivers.DriverEarningsTest",
+      "timestamp": "2026-10-19T18:57:17.941Z",
+      "tests": 1
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.domain.drivers.DriverLocationObservationTest",
+      "timestamp": "2026-10-19T18:57:17.945Z",
+      "tests": 3
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.domain.rides.FareEstimateTest",
+      "timestamp": "2026-10-19T18:57:17.950Z",
+      "tests": 1
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.domain.rides.FinalRideFareTest",
+      "timestamp": "2026-10-19T18:57:17.956Z",
+      "tests": 1
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.domain.rides.RideRatingTest",
+      "timestamp": "2026-10-19T18:57:17.960Z",
+      "tests": 1
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.app.AppActionTest",
+      "timestamp": "2026-10-19T18:57:17.966Z",
+      "tests": 3
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.app.AppUiStateTest",
+      "timestamp": "2026-10-19T18:57:17.972Z",
+      "tests": 1
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.app.ClientCompatibilityCoordinatorTest",
+      "timestamp": "2026-10-19T18:57:18.011Z",
+      "tests": 3
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.app.MobileAppCoordinatorTest",
+      "timestamp": "2026-10-19T18:57:18.078Z",
+      "tests": 49
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.app.NotificationPresentationTest",
+      "timestamp": "2026-10-19T18:57:18.298Z",
+      "tests": 7
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.app.QuoteSessionRecoveryTest",
+      "timestamp": "2026-10-19T18:57:18.331Z",
+      "tests": 11
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.app.RidePresentationMappingTest",
+      "timestamp": "2026-10-19T18:57:18.377Z",
+      "tests": 4
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.app.SupportCategoryTest",
+      "timestamp": "2026-10-19T18:57:18.428Z",
+      "tests": 1
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.auth.AuthenticatedReadRecoveryTest",
+      "timestamp": "2026-10-19T18:57:18.434Z",
+      "tests": 19
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.auth.AuthenticationSessionLifetimeTest",
+      "timestamp": "2026-10-19T18:57:18.589Z",
+      "tests": 8
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.auth.AuthenticationSessionStorageTest",
+      "timestamp": "2026-10-19T18:57:18.647Z",
+      "tests": 4
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.auth.AuthenticationStateTest",
+      "timestamp": "2026-10-19T18:57:18.660Z",
+      "tests": 3
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.auth.RegistrationInputTest",
+      "timestamp": "2026-10-19T18:57:18.666Z",
+      "tests": 3
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.connectivity.ConnectivityTest",
+      "timestamp": "2026-10-19T18:57:18.672Z",
+      "tests": 15
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.driver.OfferCountdownTest",
+      "timestamp": "2026-10-19T18:57:18.721Z",
+      "tests": 3
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.driver.onboarding.CityAuthorizationPresentationTest",
+      "timestamp": "2026-10-19T18:57:18.739Z",
+      "tests": 2
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.location.ForegroundDriverLocationPolicyTest",
+      "timestamp": "2026-10-19T18:57:18.763Z",
+      "tests": 8
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.location.ForegroundDriverLocationResultGuardTest",
+      "timestamp": "2026-10-19T18:57:18.775Z",
+      "tests": 8
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.location.NativeFixFreshnessTest",
+      "timestamp": "2026-10-19T18:57:18.823Z",
+      "tests": 4
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.location.OneShotLocationGateTest",
+      "timestamp": "2026-10-19T18:57:18.828Z",
+      "tests": 1
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.maps.MapCameraFocusTest",
+      "timestamp": "2026-10-19T18:57:18.831Z",
+      "tests": 6
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.maps.MapStyleFallbackTest",
+      "timestamp": "2026-10-19T18:57:18.836Z",
+      "tests": 1
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.notifications.PushRefreshHintRelayTest",
+      "timestamp": "2026-10-19T18:57:18.844Z",
+      "tests": 7
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.notifications.PushRegistrationRelayTest",
+      "timestamp": "2026-10-19T18:57:18.880Z",
+      "tests": 3
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.passenger.PassengerReverseSelectionTest",
+      "timestamp": "2026-10-19T18:57:18.906Z",
+      "tests": 4
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.passenger.RecentDestinationsTest",
+      "timestamp": "2026-10-19T18:57:18.975Z",
+      "tests": 2
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.realtime.LiveUpdateSubscriptionTest",
+      "timestamp": "2026-10-19T18:57:19.001Z",
+      "tests": 18
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.ui.components.SpecializedFieldsTest",
+      "timestamp": "2026-10-19T18:57:19.474Z",
+      "tests": 2
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.ui.TaxiDesignTokensTest",
+      "timestamp": "2026-10-19T18:57:19.408Z",
+      "tests": 6
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.ui.text.BidiTextTest",
+      "timestamp": "2026-10-19T18:57:19.481Z",
+      "tests": 2
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.ui.text.TaxiLanguagePreferencesTest",
+      "timestamp": "2026-10-19T18:57:19.487Z",
+      "tests": 4
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.ui.theme.TaxiColorContrastTest",
+      "timestamp": "2026-10-19T18:57:19.496Z",
+      "tests": 3
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.feature.ui.theme.TaxiStylePreferencesTest",
+      "timestamp": "2026-10-19T18:57:19.523Z",
+      "tests": 4
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.SharedCommonTest",
+      "timestamp": "2026-10-19T18:57:16.775Z",
+      "tests": 1
+    },
+    {
+      "task": "testAndroidHostTest",
+      "suite": "org.example.taximobile.SharedLogicAndroidHostTest",
+      "timestamp": "2026-10-19T18:57:16.807Z",
+      "tests": 1
+    }
+  ],
+  "corrective_action": "Re-execute clean JVM/Android-host tests with --no-build-cache, same frozen source/configuration; preserve this failed verification."
+}

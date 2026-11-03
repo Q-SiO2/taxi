@@ -277,12 +277,16 @@ class KtorOperationsGateway(
         val assignmentPage = assignments.await()
         val rolloutOverview = rollout.await()
         val detailCityId = scope.cityId ?: cityPage.items.firstOrNull()?.id
+        val staffMarketId = scope.marketId?.takeIf { id -> marketPage.items.any { it.id == id } }
+            ?: marketPage.items.firstOrNull()?.id
 
         // Permission-sensitive and city-detail reads form a second bounded
         // batch after the five control-plane summary requests complete.
         val grants = if (session.hasPermission(MANAGE_SCOPED_STAFF_GRANTS)) async {
             client.get(endpoints.url("operations/administrative-grants")) {
                 authorize(accessToken)
+                staffMarketId?.let { parameter("market_id", it) }
+                parameter("include_revoked", false)
                 parameter("page", 1)
                 parameter("limit", 100)
             }.decode<PagedResponse<AdministrativeGrantRecord>>()
@@ -290,6 +294,8 @@ class KtorOperationsGateway(
         val grantRequests = if (session.hasPermission(MANAGE_SCOPED_STAFF_GRANTS)) async {
             client.get(endpoints.url("operations/administrative-grant-requests")) {
                 authorize(accessToken)
+                staffMarketId?.let { parameter("market_id", it) }
+                parameter("status", "PENDING")
                 parameter("page", 1)
                 parameter("limit", 100)
             }.decode<PagedResponse<AdministrativeGrantChangeRequestRecord>>()
@@ -445,6 +451,7 @@ class KtorOperationsGateway(
             rollout = rolloutOverview,
             grants = grantPage,
             grantRequests = grantRequestPage,
+            staffMarketId = staffMarketId,
             auditLogs = auditPage,
             serviceAreas = serviceAreaPage,
             configurations = configurationPage,

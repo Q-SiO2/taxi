@@ -1,5 +1,18 @@
 # TaxiMobile — System Architecture
 
+## Alpha delivery direction — 12 October 2026
+
+Preserve FastAPI's modular monolith, PostgreSQL/PostGIS, shared Kotlin/Compose,
+native platform boundaries and existing operations/applicant web. UI recovery
+authorizes focused internal screen/state/navigation refactoring, not a wholesale
+React Native/React migration or microservices. Keep backend authority for identity,
+eligibility, matching, price and money; hints always trigger authorized reloads.
+Railway is the default initial hosted integration environment. The exact minimal
+API/worker/database/web topology, cost preflight and verification procedure are in
+[deployment.md](deployment.md). Conventional Linux/VPS descriptions below remain
+portability references, not a competing initial provider choice. No region,
+PostGIS feature or live-data compliance is assumed without verification.
+
 ## 1. Purpose
 
 This document defines the technical architecture of TaxiMobile.

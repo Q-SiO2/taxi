@@ -1,0 +1,53 @@
+{
+  "recorded_utc": "2026-10-25T15:43:58.351753+00:00",
+  "source_head": "9e94fda14f8b18e26e26cebf3f8faad80bbdf96a",
+  "scope": "Actual Railway Amsterdam private bucket, local synthetic object-provider protocol only",
+  "owner_approval": "Approve the bounded synthetic probe",
+  "approval_record": "document-s3-provider-probe-approval-20261025.json",
+  "temporary_bucket_id": "7335b47c-431a-490a-9191-5e1b52db8db6",
+  "environment_id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+  "region": "ams",
+  "provider_endpoint": "https://t3.storageapi.dev",
+  "addressing_style": "virtual",
+  "passed": true,
+  "checks": {
+    "encrypted_roundtrip": true,
+    "conditional_overwrite_rejected": true,
+    "bounded_continuation_listing": true,
+    "ciphertext_only_local_restore_and_wrong_key": true,
+    "simulated_ack_loss_after_real_commit_readback": true
+  },
+  "objects_prepared": 3,
+  "s3_calls": {
+    "list_objects_v2": 4,
+    "put_object": 4,
+    "get_object": 8,
+    "delete_object": 3
+  },
+  "total_s3_calls": 19,
+  "max_approved_s3_calls": 32,
+  "ciphertext_bytes_below": 4096,
+  "report_sha256": "ddcb036ed1941ec561598144ed0a82c3a0186f1dc327c7e7615d4b1c8f788197",
+  "tool_sha256": "c3282171f4e3ec79cefde5cd82d5f5b856d17b1cb6c662d722462b2bbb3d169a",
+  "offline_probe_tests": 9,
+  "credentials_or_encryption_key_persisted": false,
+  "credentials_distributed_to_services": false,
+  "object_cleanup_confirmed": true,
+  "new_staging_bucket_delete_committed": true,
+  "live_staging_bucket_inventory_after": [],
+  "project_registration_metadata_retained": true,
+  "postcheck_sha256": "e281c03790fcf52ac39a8d182085ae9a6bdb8ba0f8a7895edb2b60dc79cf0faf",
+  "existing_service_ids_unchanged": true,
+  "preserved_volume_ids_confirmed": [
+    "8ed86e48-25f5-4fa6-8feb-2f930ba8b547",
+    "b9097b45-80a9-4964-9844-c247b08d1db5"
+  ],
+  "pending_environment_patches": 0,
+  "paid_subscription_purchase": false,
+  "reserved_existing_trial_credit_usd": 0.02,
+  "incremental_storage_charge_measured": false,
+  "actual_application_ingestion_or_official_scanner_feed_accepted": false,
+  "participant_data_or_app_migration_tls_changes_performed": false,
+  "full_launch_gates_closed": false,
+  "retained_observer_correction": "Project.buckets retains registration metadata after an environment-scoped deletion; active Railway bucket list is empty. No delete was replayed to clean up this observer mismatch."
+}

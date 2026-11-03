@@ -1,8 +1,10 @@
 package org.example.taximobile.operations.ui
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -33,11 +35,14 @@ import org.example.taximobile.operations.model.AdministrativeGrantCreateRequest
 import org.example.taximobile.operations.model.AdministrativeGrantChangeRequestRecord
 import org.example.taximobile.operations.model.AdministrativeGrantRecord
 import org.example.taximobile.operations.model.AdministrativeGrantScopeKind
+import org.example.taximobile.operations.model.StaffPageState
 import org.example.taximobile.operations.model.MANAGE_SCOPED_STAFF_GRANTS
 import org.example.taximobile.operations.model.administrativeGrantInputError
 import org.example.taximobile.operations.model.administrativeRoleTemplate
 import org.example.taximobile.operations.model.matchesSelectedScope
 import org.example.taximobile.operations.state.OperationsUiState
+import org.jetbrains.compose.resources.stringResource
+import taximobile.shared.generated.resources.*
 
 @Composable
 internal fun StaffAccessScreen(
@@ -45,9 +50,13 @@ internal fun StaffAccessScreen(
     onCreateGrant: (AdministrativeGrantCreateRequest) -> Unit,
     onRevokeGrant: (AdministrativeGrantRecord, String) -> Unit,
     onDecideRequest: (AdministrativeGrantChangeRequestRecord, String, String) -> Unit,
+    onSelectRequestPage: (Int) -> Unit,
+    onSelectGrantPage: (Int) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     val snapshot = state.snapshot ?: return
     val grants = snapshot.grants
+    val grantPage = grants?.let { StaffPageState(it.page, it.limit, it.total, it.items.size) }
     val mayManage = state.session?.hasPermission(MANAGE_SCOPED_STAFF_GRANTS) == true
     var showCreateDialog by remember { mutableStateOf(false) }
     var pendingRevocation by remember { mutableStateOf<AdministrativeGrantRecord?>(null) }
@@ -57,15 +66,15 @@ internal fun StaffAccessScreen(
     val cityNames = snapshot.cities.items.associate { it.id to it.localizedName.preferred() }
     val operatorNames = snapshot.operators.items.associate { it.id to it.name }
     val marketNames = snapshot.markets.items.associate { it.id to it.name }
-    val operatorMarkets = snapshot.operators.items.associate { it.id to it.marketId }
-    val cityMarkets = snapshot.cities.items.associate { it.id to it.marketId }
+    val isSelectedMarket = state.scope.marketId != null && snapshot.staffMarketId == state.scope.marketId
 
     ScreenColumn {
         SectionHeading(
             title = "Scoped staff access",
-            supportingText = "Request, independently approve, and audit scoped authority.",
+            supportingText = "Recent MFA and independent approval are required.",
             action = {
                 Button(
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                     onClick = { showCreateDialog = true },
                     enabled = mayManage && grants != null && state.scope.marketId != null && !state.interactionLocked,
                 ) {
@@ -73,19 +82,18 @@ internal fun StaffAccessScreen(
                 }
             },
         )
-        Text(
-            "Every change requires recent operations MFA and a durable maker-checker request. The requester, target, and approving administrator must be distinct; a revocation does not take effect while it is pending.",
-            color = TaxiColors.Ink700,
-            style = MaterialTheme.typography.bodySmall,
-        )
         when {
             grants == null -> EmptyState(
                 "Grant management not authorized",
                 "This destination is available only to a market-scoped platform administrator.",
             )
-            grants.items.isEmpty() -> EmptyState(
+            grantPage?.isCollectionEmpty == true -> EmptyState(
                 "No active grants",
                 "No active administrative grants were returned for this authorized market. Submit a request from an approved staff record.",
+            )
+            grantPage?.isPageStale == true -> EmptyState(
+                stringResource(Res.string.web_staff_grants_stale_title),
+                stringResource(Res.string.web_staff_grants_stale_detail),
             )
             else -> {
                 DataCard(tableMinWidth = 1220.dp) {
@@ -103,12 +111,6 @@ internal fun StaffAccessScreen(
                         )
                         grants.items.forEach { grant ->
                             val isCurrentUser = grant.userId.equals(state.session?.userId, ignoreCase = true)
-                            val isSelectedMarket = grantBelongsToMarket(
-                                grant = grant,
-                                marketId = state.scope.marketId,
-                                operatorMarkets = operatorMarkets,
-                                cityMarkets = cityMarkets,
-                            )
                             val scopeLabel = scopeLabelForGrant(grant, marketNames, operatorNames, cityNames)
                             TableRow {
                                 TableCell(shortId(grant.userId), 1.2f, supporting = if (isCurrentUser) "Current account" else null)
@@ -123,6 +125,7 @@ internal fun StaffAccessScreen(
                                 TableCell(grant.grantReason, 1.8f)
                                 Box(Modifier.weight(1.0f)) {
                                     OutlinedButton(
+                                        shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                                         onClick = { pendingRevocation = grant },
                                         enabled = !isCurrentUser && isSelectedMarket && !state.interactionLocked,
                                     ) {
@@ -139,10 +142,19 @@ internal fun StaffAccessScreen(
                         }
                     }
                 }
-                PageLimitNote(grants.items.size, grants.total)
             }
         }
+        if (grants != null && grantPage != null && !grantPage.isCollectionEmpty) {
+            StaffPageControls(
+                grantPage,
+                stringResource(Res.string.web_staff_grants_page, grants.page, grants.total),
+                state.interactionLocked,
+                onSelectGrantPage,
+            )
+        }
         val requests = snapshot.grantRequests
+        val pending = requests?.items?.filter { it.status == "PENDING" }.orEmpty()
+        val requestPage = requests?.let { StaffPageState(it.page, it.limit, it.total, pending.size) }
         SectionHeading(
             title = "Grant change queue",
             supportingText = "Pending requests require a different authorized administrator.",
@@ -152,9 +164,13 @@ internal fun StaffAccessScreen(
                 "Request queue not authorized",
                 "The active operations grant does not expose staff-change requests.",
             )
-            requests.items.none { it.status == "PENDING" } -> EmptyState(
+            requestPage?.isCollectionEmpty == true -> EmptyState(
                 "No pending staff changes",
-                "Submitted, approved, rejected, and cancelled records remain available after refresh.",
+                stringResource(Res.string.web_staff_queue_empty_detail),
+            )
+            requestPage?.isPageStale == true -> EmptyState(
+                stringResource(Res.string.web_staff_queue_stale_title),
+                stringResource(Res.string.web_staff_queue_stale_detail),
             )
             else -> {
                 DataCard(tableMinWidth = 1180.dp) {
@@ -170,7 +186,7 @@ internal fun StaffAccessScreen(
                                 "Decision" to 1.8f,
                             )
                         )
-                        requests.items.filter { it.status == "PENDING" }.forEach { request ->
+                        pending.forEach { request ->
                             val currentUserId = state.session?.userId.orEmpty()
                             val isRequester = request.requesterUserId.equals(
                                 currentUserId,
@@ -210,22 +226,25 @@ internal fun StaffAccessScreen(
                                 Box(Modifier.weight(1.8f)) {
                                     when {
                                         isRequester -> OutlinedButton(
+                                            shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                                             onClick = { pendingDecision = request to "cancel" },
                                             enabled = !state.interactionLocked,
                                         ) { Text("Cancel request") }
                                         isTarget -> Text(
                                             "Target cannot decide",
-                                            color = TaxiColors.Ink500,
+                                            color = taxiColors.Ink500,
                                             style = MaterialTheme.typography.bodySmall,
                                         )
                                         else -> Row(
                                             horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs),
                                         ) {
                                             Button(
+                                                shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                                                 onClick = { pendingDecision = request to "approve" },
                                                 enabled = !state.interactionLocked,
                                             ) { Text("Approve") }
                                             OutlinedButton(
+                                                shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                                                 onClick = { pendingDecision = request to "reject" },
                                                 enabled = !state.interactionLocked,
                                             ) { Text("Reject") }
@@ -236,8 +255,15 @@ internal fun StaffAccessScreen(
                         }
                     }
                 }
-                PageLimitNote(requests.items.size, requests.total)
             }
+        }
+        if (requests != null && requestPage != null && !requestPage.isCollectionEmpty) {
+            StaffPageControls(
+                requestPage,
+                stringResource(Res.string.web_staff_queue_page, requests.page, requests.total),
+                state.interactionLocked,
+                onSelectRequestPage,
+            )
         }
     }
 
@@ -278,11 +304,37 @@ internal fun StaffAccessScreen(
 }
 
 @Composable
+private fun StaffPageControls(
+    page: StaffPageState,
+    label: String,
+    busy: Boolean,
+    onSelect: (Int) -> Unit,
+) {
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
+        Text(label, style = MaterialTheme.typography.bodySmall)
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
+            if (page.isPageStale) {
+                OutlinedButton(onClick = { onSelect(page.page) }, enabled = !busy) {
+                    Text(stringResource(Res.string.web_staff_queue_retry))
+                }
+            }
+            OutlinedButton(onClick = { onSelect(page.page - 1) }, enabled = page.canPrevious && !busy) {
+                Text(stringResource(Res.string.web_staff_queue_previous))
+            }
+            OutlinedButton(onClick = { onSelect(page.page + 1) }, enabled = page.canNext && !busy) {
+                Text(stringResource(Res.string.web_staff_queue_next))
+            }
+        }
+    }
+}
+
+@Composable
 private fun CreateAdministrativeGrantDialog(
     state: OperationsUiState,
     onDismiss: () -> Unit,
     onConfirm: (AdministrativeGrantCreateRequest) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     var userId by remember { mutableStateOf("") }
     var roleTemplate by remember { mutableStateOf("CITY_MANAGER") }
     var expiresAt by remember { mutableStateOf("") }
@@ -315,17 +367,11 @@ private fun CreateAdministrativeGrantDialog(
                 Modifier.fillMaxWidth().heightIn(max = 580.dp).verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md),
             ) {
-                Text(
-                    "Use the exact UUID of an existing active user. The backend records a pending snapshot and rechecks the user, scope, permission, duplicate state, and MFA again at approval.",
-                    color = TaxiColors.Ink700,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
                 OutlinedTextField(
                     value = userId,
                     onValueChange = { userId = it.take(36) },
                     label = { Text("Target user UUID") },
                     placeholder = { Text("00000000-0000-4000-8000-000000000000") },
-                    supportingText = { Text("Copy from the approved staff onboarding record; names and email are intentionally not accepted here.") },
                     singleLine = true,
                     enabled = !busy,
                     modifier = Modifier.fillMaxWidth(),
@@ -339,58 +385,35 @@ private fun CreateAdministrativeGrantDialog(
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
-                    Text("${role.scopeKind.displayName.uppercase()} SCOPE", color = TaxiColors.Ink500, style = MaterialTheme.typography.labelSmall)
-                    Text(scopeLabel, color = TaxiColors.Navy900, fontWeight = FontWeight.Bold)
-                    Text(
-                        "Change the scope selectors in the page header before opening this review if this is not the intended authority boundary.",
-                        color = TaxiColors.Ink500,
-                        style = MaterialTheme.typography.bodySmall,
-                    )
+                    Text("${role.scopeKind.displayName.uppercase()} SCOPE", color = taxiColors.Ink500, style = MaterialTheme.typography.labelSmall)
+                    Text(scopeLabel, color = taxiColors.Navy900, fontWeight = FontWeight.Bold)
                 }
                 OutlinedTextField(
                     value = expiresAt,
                     onValueChange = { expiresAt = it.take(40) },
                     label = { Text("Expires at · optional") },
                     placeholder = { Text("2026-12-31T23:59:59Z") },
-                    supportingText = { Text("Prefer bounded access. Blank grants require manual recertification and later revocation.") },
                     singleLine = true,
                     enabled = !busy,
                     modifier = Modifier.fillMaxWidth(),
                 )
-                OutlinedTextField(
-                    value = reason,
-                    onValueChange = { reason = it.take(240) },
-                    label = { Text("Audit reason") },
-                    supportingText = { Text("3–240 characters; cite the approved access record without entering secrets or personal data.") },
-                    minLines = 2,
-                    enabled = !busy,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Text(
-                    "Review: ${role.displayName} for ${userId.ifBlank { "target user" }} in $scopeLabel.",
-                    color = TaxiColors.Navy900,
-                    fontWeight = FontWeight.Bold,
-                )
-                OutlinedTextField(
-                    value = confirmation,
-                    onValueChange = { confirmation = it.uppercase().take(5) },
-                    label = { Text("Type GRANT to confirm") },
-                    singleLine = true,
-                    enabled = !busy,
-                    modifier = Modifier.fillMaxWidth(),
+                StaffReasonConfirmationFields(
+                    reason = reason,
+                    onReasonChange = { reason = it },
+                    confirmation = confirmation,
+                    onConfirmationChange = { confirmation = it },
+                    phrase = "GRANT",
+                    reasonLabel = "Audit reason",
+                    reasonHint = "3–240 characters; cite the approved access record without entering secrets or personal data.",
+                    busy = busy,
                 )
                 inputError?.let {
-                    Text(it, color = TaxiColors.Danger600, style = MaterialTheme.typography.bodySmall)
+                    Text(it, color = taxiColors.Danger600, style = MaterialTheme.typography.bodySmall)
                 }
-                Text(
-                    "No authority changes now. A different platform administrator must review and approve this request. A failed command is not automatically replayed after MFA step-up.",
-                    color = TaxiColors.Ink700,
-                    style = MaterialTheme.typography.bodySmall,
-                )
             }
         },
         confirmButton = {
-            Button(onClick = { onConfirm(request) }, enabled = !busy && valid) {
+            Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onConfirm(request) }, enabled = !busy && valid) {
                 Text(if (busy) "Waiting for backend…" else "Submit request")
             }
         },
@@ -406,43 +429,23 @@ private fun RevokeAdministrativeGrantDialog(
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit,
 ) {
-    var reason by remember(grant.id) { mutableStateOf("") }
-    var confirmation by remember(grant.id) { mutableStateOf("") }
-    val valid = reason.trim().length in 3..240 && confirmation.trim() == "REVOKE"
-    AlertDialog(
-        onDismissRequest = { if (!busy) onDismiss() },
-        title = { Text("Request staff revocation") },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md)) {
-                Text(
-                    "Request revocation of ${grant.roleTemplate.replace('_', ' ')} for ${shortId(grant.userId)} in $scopeLabel. Access remains active until a different administrator approves the request.",
-                    color = TaxiColors.Ink700,
-                )
-                OutlinedTextField(
-                    value = reason,
-                    onValueChange = { reason = it.take(240) },
-                    label = { Text("Audit reason") },
-                    supportingText = { Text("3–240 characters; reference the approved offboarding or access-review record.") },
-                    minLines = 2,
-                    enabled = !busy,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                OutlinedTextField(
-                    value = confirmation,
-                    onValueChange = { confirmation = it.uppercase().take(6) },
-                    label = { Text("Type REVOKE to confirm") },
-                    singleLine = true,
-                    enabled = !busy,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
+    StaffReviewDialog(
+        key = grant.id,
+        title = "Request staff revocation",
+        phrase = "REVOKE",
+        reasonLabel = "Audit reason",
+        reasonHint = "3–240 characters; reference the approved offboarding or access-review record.",
+        submitLabel = "Submit revocation",
+        dismissLabel = "Cancel",
+        busy = busy,
+        onDismiss = onDismiss,
+        onConfirm = onConfirm,
+        description = {
+            Text(
+                "Request revocation of ${grant.roleTemplate.replace('_', ' ')} for ${shortId(grant.userId)} in $scopeLabel. Access remains active until a different administrator approves the request.",
+                color = TaxiTheme.colors.Ink700,
+            )
         },
-        confirmButton = {
-            Button(onClick = { onConfirm(reason.trim()) }, enabled = !busy && valid) {
-                Text(if (busy) "Waiting for backend…" else "Submit revocation")
-            }
-        },
-        dismissButton = { TextButton(onClick = onDismiss, enabled = !busy) { Text("Cancel") } },
     )
 }
 
@@ -454,67 +457,128 @@ private fun AdministrativeGrantDecisionDialog(
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit,
 ) {
-    var reason by remember(request.id, decision) { mutableStateOf("") }
-    var confirmation by remember(request.id, decision) { mutableStateOf("") }
     val phrase = decision.uppercase()
+    StaffReviewDialog(
+        key = "${request.id}:$decision",
+        title = "${decision.replaceFirstChar { it.uppercase() }} staff request",
+        phrase = phrase,
+        reasonLabel = "Independent decision reason",
+        reasonHint = "3–240 characters; cite reviewed evidence without personal data.",
+        submitLabel = phrase,
+        dismissLabel = "Back",
+        busy = busy,
+        onDismiss = onDismiss,
+        onConfirm = onConfirm,
+        description = {
+            Text(
+                "Request ${shortId(request.id)} asks to ${request.action.lowercase()} " +
+                    "${request.roleTemplate.replace('_', ' ')} for " +
+                    "${shortId(request.targetUserId)}. You are deciding version " +
+                    "${request.optimisticVersion}; the backend will reject stale state.",
+                color = TaxiTheme.colors.Ink700,
+            )
+            Text(
+                "Requester: ${shortId(request.requesterUserId)} · original reason: " + request.reason,
+                color = TaxiTheme.colors.Ink500,
+                style = MaterialTheme.typography.bodySmall,
+            )
+        },
+    )
+}
+
+@Composable
+private fun StaffReviewDialog(
+    key: String,
+    title: String,
+    phrase: String,
+    reasonLabel: String,
+    reasonHint: String,
+    submitLabel: String,
+    dismissLabel: String,
+    busy: Boolean,
+    onDismiss: () -> Unit,
+    onConfirm: (String) -> Unit,
+    description: @Composable () -> Unit,
+) {
+    val taxiColors = TaxiTheme.colors
+    var reason by remember(key) { mutableStateOf("") }
+    var confirmation by remember(key) { mutableStateOf("") }
     val valid = reason.trim().length in 3..240 && confirmation.trim() == phrase
     AlertDialog(
         onDismissRequest = { if (!busy) onDismiss() },
-        title = { Text("${decision.replaceFirstChar { it.uppercase() }} staff request") },
+        title = { Text(title) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md)) {
-                Text(
-                    "Request ${shortId(request.id)} asks to ${request.action.lowercase()} " +
-                        "${request.roleTemplate.replace('_', ' ')} for " +
-                        "${shortId(request.targetUserId)}. You are deciding version " +
-                        "${request.optimisticVersion}; the backend will reject stale state.",
-                    color = TaxiColors.Ink700,
-                )
-                Text(
-                    "Requester: ${shortId(request.requesterUserId)} · original reason: " +
-                        request.reason,
-                    color = TaxiColors.Ink500,
-                    style = MaterialTheme.typography.bodySmall,
-                )
-                OutlinedTextField(
-                    value = reason,
-                    onValueChange = { reason = it.take(240) },
-                    label = { Text("Independent decision reason") },
-                    supportingText = {
-                        Text("3–240 characters; cite reviewed evidence without personal data.")
-                    },
-                    minLines = 2,
-                    enabled = !busy,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                OutlinedTextField(
-                    value = confirmation,
-                    onValueChange = { confirmation = it.uppercase().take(phrase.length) },
-                    label = { Text("Type $phrase to confirm") },
-                    singleLine = true,
-                    enabled = !busy,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Text(
-                    "Approval revalidates current account, scope, live authority, duplicates, " +
-                        "expiry, and platform-admin continuity in one transaction.",
-                    color = TaxiColors.Ink500,
-                    style = MaterialTheme.typography.bodySmall,
+                description()
+                StaffReasonConfirmationFields(
+                    reason = reason,
+                    onReasonChange = { reason = it },
+                    confirmation = confirmation,
+                    onConfirmationChange = { confirmation = it },
+                    phrase = phrase,
+                    reasonLabel = reasonLabel,
+                    reasonHint = reasonHint,
+                    busy = busy,
                 )
             }
         },
         confirmButton = {
             Button(
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                 onClick = { onConfirm(reason.trim()) },
                 enabled = !busy && valid,
             ) {
-                Text(if (busy) "Waiting for backend…" else phrase)
+                Text(if (busy) "Waiting for backend…" else submitLabel)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss, enabled = !busy) { Text("Back") }
+            TextButton(onClick = onDismiss, enabled = !busy) { Text(dismissLabel) }
         },
     )
+}
+
+@Composable
+private fun StaffReasonConfirmationFields(
+    reason: String,
+    onReasonChange: (String) -> Unit,
+    confirmation: String,
+    onConfirmationChange: (String) -> Unit,
+    phrase: String,
+    reasonLabel: String,
+    reasonHint: String,
+    busy: Boolean,
+) {
+    OutlinedTextField(
+        value = reason,
+        onValueChange = { onReasonChange(it.take(240)) },
+        label = { Text(reasonLabel) },
+        supportingText = { Text(reasonHint) },
+        minLines = 2,
+        enabled = !busy,
+        modifier = Modifier.fillMaxWidth(),
+    )
+    OutlinedTextField(
+        value = confirmation,
+        onValueChange = { onConfirmationChange(it.uppercase().take(phrase.length)) },
+        label = { Text("Type $phrase to confirm") },
+        singleLine = true,
+        enabled = !busy,
+        modifier = Modifier.fillMaxWidth(),
+    )
+}
+
+private fun staffScopeLabel(
+    cityId: String?,
+    operatorId: String?,
+    marketId: String?,
+    marketNames: Map<String, String>,
+    operatorNames: Map<String, String>,
+    cityNames: Map<String, String>,
+): String = when {
+    cityId != null -> "City · ${cityNames[cityId] ?: shortId(cityId)}"
+    operatorId != null -> "Operator · ${operatorNames[operatorId] ?: shortId(operatorId)}"
+    marketId != null -> "Market · ${marketNames[marketId] ?: shortId(marketId)}"
+    else -> "Invalid scope"
 }
 
 private fun scopeLabelForGrant(
@@ -522,26 +586,14 @@ private fun scopeLabelForGrant(
     marketNames: Map<String, String>,
     operatorNames: Map<String, String>,
     cityNames: Map<String, String>,
-): String = when {
-    grant.cityId != null -> "City · ${cityNames[grant.cityId] ?: shortId(grant.cityId)}"
-    grant.operatorId != null -> "Operator · ${operatorNames[grant.operatorId] ?: shortId(grant.operatorId)}"
-    grant.marketId != null -> "Market · ${marketNames[grant.marketId] ?: shortId(grant.marketId)}"
-    else -> "Invalid scope"
-}
+): String = staffScopeLabel(grant.cityId, grant.operatorId, grant.marketId, marketNames, operatorNames, cityNames)
 
 private fun scopeLabelForRequest(
     request: AdministrativeGrantChangeRequestRecord,
     marketNames: Map<String, String>,
     operatorNames: Map<String, String>,
     cityNames: Map<String, String>,
-): String = when {
-    request.cityId != null -> "City · ${cityNames[request.cityId] ?: shortId(request.cityId)}"
-    request.operatorId != null ->
-        "Operator · ${operatorNames[request.operatorId] ?: shortId(request.operatorId)}"
-    request.marketId != null ->
-        "Market · ${marketNames[request.marketId] ?: shortId(request.marketId)}"
-    else -> "Invalid scope"
-}
+): String = staffScopeLabel(request.cityId, request.operatorId, request.marketId, marketNames, operatorNames, cityNames)
 
 private fun selectedScopeLabel(state: OperationsUiState, kind: AdministrativeGrantScopeKind): String {
     val snapshot = state.snapshot
@@ -556,17 +608,4 @@ private fun selectedScopeLabel(state: OperationsUiState, kind: AdministrativeGra
             "City · ${snapshot?.cities?.items?.firstOrNull { it.id == id }?.localizedName?.preferred() ?: shortId(id)}"
         } ?: "No city selected"
     }
-}
-
-private fun grantBelongsToMarket(
-    grant: AdministrativeGrantRecord,
-    marketId: String?,
-    operatorMarkets: Map<String, String>,
-    cityMarkets: Map<String, String>,
-): Boolean = when {
-    marketId == null -> false
-    grant.marketId != null -> grant.marketId == marketId
-    grant.operatorId != null -> operatorMarkets[grant.operatorId] == marketId
-    grant.cityId != null -> cityMarkets[grant.cityId] == marketId
-    else -> false
 }

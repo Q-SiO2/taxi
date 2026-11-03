@@ -1,0 +1,525 @@
+{
+  "verified_utc": "2026-10-23T10:16:22.691471+00:00",
+  "web_deployment": "da158b10-2d82-468e-b1f1-cffba5c32ee4",
+  "package_manifest_sha256": "be37bc97a881e2c5f736cb25f4f1ddbe8023def24bbf0e35c0c56305bf317475",
+  "scope": "Anonymous HTTP boundaries, applicant rewrite and every exact public asset; no authenticated journey inferred",
+  "passed": true,
+  "checks": [
+    {
+      "path": "/apply",
+      "status": 302,
+      "location": "/apply/",
+      "expected": "302 with relative /apply/ Location; retain browser HTTPS origin"
+    },
+    {
+      "path": "/health",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "path": "/release-manifest.json",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "path": "/webApp.js.map",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "path": "/api/v1/rides",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "path": "/api/v1/rides",
+      "client_headers": false,
+      "status": 426,
+      "expected": 426
+    },
+    {
+      "path": "/api/v1/client-compatibility",
+      "status": 200,
+      "compatibility": "SUPPORTED"
+    },
+    {
+      "path": "/apply/",
+      "status": 200,
+      "sha256_match": true
+    },
+    {
+      "path": "/apply/locale.js",
+      "status": 200,
+      "sha256_match": true
+    },
+    {
+      "asset": "2c39eb3a9335c646805d.wasm",
+      "bytes": 7494603,
+      "sha256_match": true
+    },
+    {
+      "asset": "6e23e5428398b92da386.wasm",
+      "bytes": 8652729,
+      "sha256_match": true
+    },
+    {
+      "asset": "731.js",
+      "bytes": 264,
+      "sha256_match": true
+    },
+    {
+      "asset": "compatibility.js",
+      "bytes": 4748,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/app_icon_background.svg",
+      "bytes": 115,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/app_icon_foreground.svg",
+      "bytes": 608,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/app_icon_monochrome.svg",
+      "bytes": 445,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/brand_logo_mark.svg",
+      "bytes": 726,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/brand_logo_mark_light.svg",
+      "bytes": 726,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/brand_logo_mark_runtime.png",
+      "bytes": 5267,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/brand_splash_logo.svg",
+      "bytes": 554,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/brand_wordmark_dark.svg",
+      "bytes": 769,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/brand_wordmark_light.svg",
+      "bytes": 769,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/compose-multiplatform.xml",
+      "bytes": 1741,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/icon_driver_arrived.svg",
+      "bytes": 511,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/icon_driver_arriving.svg",
+      "bytes": 538,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/icon_driver_matched.svg",
+      "bytes": 600,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/icon_emergency_call.svg",
+      "bytes": 349,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/icon_lost_item.svg",
+      "bytes": 414,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/icon_nav_account.svg",
+      "bytes": 245,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/icon_nav_earnings.svg",
+      "bytes": 329,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/icon_nav_home.svg",
+      "bytes": 239,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/icon_nav_online.svg",
+      "bytes": 445,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/icon_nav_saved.svg",
+      "bytes": 313,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/icon_nav_trips.svg",
+      "bytes": 332,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/icon_payment_bank_card.svg",
+      "bytes": 318,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/icon_payment_cash.svg",
+      "bytes": 353,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/icon_payment_receipt.svg",
+      "bytes": 327,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/icon_report_issue.svg",
+      "bytes": 321,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/icon_safety_shield.svg",
+      "bytes": 312,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/icon_share_trip.svg",
+      "bytes": 334,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/icon_support.svg",
+      "bytes": 326,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/illustration_driver_documents.svg",
+      "bytes": 1644,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/illustration_driver_onboarding.svg",
+      "bytes": 1914,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/illustration_driver_verification.svg",
+      "bytes": 2202,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/illustration_empty_earnings.svg",
+      "bytes": 862,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/illustration_empty_saved_places.svg",
+      "bytes": 1385,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/illustration_empty_trips.svg",
+      "bytes": 1448,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/illustration_landing.svg",
+      "bytes": 2367,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/illustration_landing_runtime.png",
+      "bytes": 1193100,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/illustration_location_permission.svg",
+      "bytes": 1485,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/illustration_notification_permission.svg",
+      "bytes": 2200,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/illustration_payment_failure.svg",
+      "bytes": 557,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/illustration_payment_success.svg",
+      "bytes": 577,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/illustration_trip_completed.svg",
+      "bytes": 913,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/map_marker_search_result.svg",
+      "bytes": 396,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/map_marker_selected_halo.svg",
+      "bytes": 296,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/map_marker_user.svg",
+      "bytes": 270,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/map_pin_destination.svg",
+      "bytes": 330,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/map_pin_home.svg",
+      "bytes": 314,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/map_pin_pickup.svg",
+      "bytes": 321,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/map_pin_work.svg",
+      "bytes": 367,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/route_decorative_curve.svg",
+      "bytes": 533,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/route_mini.svg",
+      "bytes": 630,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/route_progress_motif.svg",
+      "bytes": 480,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/vehicle_marker_large.svg",
+      "bytes": 881,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/vehicle_marker_standard.svg",
+      "bytes": 843,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/vehicle_render_large_512.png",
+      "bytes": 181012,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/vehicle_render_standard_512.png",
+      "bytes": 187476,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/vehicle_silhouette_large.svg",
+      "bytes": 1015,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/vehicle_silhouette_standard.svg",
+      "bytes": 1015,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/drawable/vehicle_silhouette_standard_runtime.png",
+      "bytes": 17999,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/files/font-licenses/ibm_plex_mono_ofl.txt",
+      "bytes": 4456,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/files/font-licenses/ibmplexsans_ofl.txt",
+      "bytes": 4456,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/files/font-licenses/ibmplexsansarabic_ofl.txt",
+      "bytes": 4456,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/files/font-licenses/manrope_ofl.txt",
+      "bytes": 4384,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/files/font-licenses/noto_sans_arabic_ofl.txt",
+      "bytes": 4382,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/files/font-licenses/plusjakartasans_ofl.txt",
+      "bytes": 4402,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/files/font-licenses/sora_ofl.txt",
+      "bytes": 4385,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/font/ibm_plex_mono_medium.ttf",
+      "bytes": 136704,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/font/ibmplexsans.ttf",
+      "bytes": 537244,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/font/ibmplexsansarabic.ttf",
+      "bytes": 235924,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/font/ibmplexsansarabic_500.ttf",
+      "bytes": 242100,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/font/ibmplexsansarabic_600.ttf",
+      "bytes": 244616,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/font/ibmplexsansarabic_700.ttf",
+      "bytes": 246992,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/font/manrope_variable.ttf",
+      "bytes": 165420,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/font/noto_sans_arabic_variable.ttf",
+      "bytes": 844676,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/font/plusjakartasans.ttf",
+      "bytes": 176288,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/font/sora_variable.ttf",
+      "bytes": 111400,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/values/strings.commonMain.cvr",
+      "bytes": 90195,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/values-ar/strings.commonMain.cvr",
+      "bytes": 119091,
+      "sha256_match": true
+    },
+    {
+      "asset": "composeResources/taximobile.shared.generated.resources/values-fr/strings.commonMain.cvr",
+      "bytes": 102723,
+      "sha256_match": true
+    },
+    {
+      "asset": "favicon.svg",
+      "bytes": 726,
+      "sha256_match": true
+    },
+    {
+      "asset": "index.html",
+      "bytes": 1028,
+      "sha256_match": true
+    },
+    {
+      "asset": "js-reexport-symbols.mjs",
+      "bytes": 122419,
+      "sha256_match": true
+    },
+    {
+      "asset": "locale.js",
+      "bytes": 1154,
+      "sha256_match": true
+    },
+    {
+      "asset": "originJsWebApp.js",
+      "bytes": 6833930,
+      "sha256_match": true
+    },
+    {
+      "asset": "originWasmWebApp.js",
+      "bytes": 543417,
+      "sha256_match": true
+    },
+    {
+      "asset": "skiko.mjs",
+      "bytes": 512939,
+      "sha256_match": true
+    },
+    {
+      "asset": "skikod8.mjs",
+      "bytes": 511255,
+      "sha256_match": true
+    },
+    {
+      "asset": "styles.css",
+      "bytes": 1146,
+      "sha256_match": true
+    },
+    {
+      "asset": "webApp.js",
+      "bytes": 1214,
+      "sha256_match": true
+    },
+    {
+      "asset": "webApp.js.LICENSE.txt",
+      "bytes": 1298,
+      "sha256_match": true
+    },
+    {
+      "security_headers": true
+    }
+  ],
+  "check_count": 103
+}

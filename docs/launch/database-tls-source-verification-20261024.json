@@ -1,0 +1,93 @@
+{
+  "recorded_utc": "2026-10-24T14:08:27.078659+00:00",
+  "scope": "Source/local verification only; no new full-backend CI or hosted acceptance",
+  "unit": {
+    "tests": 1036,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "report_sha256": "d32e5712bb860326459e156f96c5ce7bc7493d15b7e5a6197cf2a7fecf532990"
+  },
+  "infrastructure": {
+    "tests": 279,
+    "passed": true,
+    "log_sha256": "1670eff9301ebd8a0621b87aaba3508a8e1ba5a27250f93dcecb7d0749ef04bf"
+  },
+  "real_tls_record": "database-tls-local-verification-r5-20261024.json",
+  "failed_listener_observations": [
+    "database-tls-local-verification-r3-20261024.json",
+    "database-tls-local-verification-r4-20261024.json"
+  ],
+  "source_sha256": {
+    ".github/workflows/ci.yml": "d8fda34dddb1d34eff462b06e311a95aa89348affac6f6d327ada387ef1693d1",
+    "backend/src/taximobile_api/db/transport.py": "7f056fb0d47fef5dad6bf7b9e6230895ba6a9faaaf4e53153bc0ea8a7cc48702",
+    "backend/src/taximobile_api/db/session.py": "8e8639fae85c1f04ccaa36c42ac74c7c56c0159bd73ce65964fca0b54e8e5e6e",
+    "backend/src/taximobile_api/core/config.py": "3fb9fccb6ef6caea5088bd514bc4c04080a3d9e615a4a57cafe90c66d76799f7",
+    "backend/src/taximobile_api/core/live_events.py": "4f72bced3d74e5a62bb0f2e70414402dc05469c4a334233822801f3f80dce8c7",
+    "backend/src/taximobile_api/main.py": "7c0b799e2e411dd4b2fcf6038fd300955e8db5126dd1400dd52232f804d8094a",
+    "backend/src/taximobile_api/operations/ux_demo_seed.py": "e9b1d0011ff5b9efa823d48e94d536bd56f27487706e454dad320240c9d4b08c",
+    "backend/src/taximobile_api/operations/outbox_replay.py": "2b7fd14f451f852ebc5604ce87d89140976b24150c7e1283831f215586eea484",
+    "backend/src/taximobile_api/operations/railway_entrypoint.py": "b340046036e73a4ad051c43d8d97e17bd8268bb166c2918d57b7267f34401060",
+    "backend/migrations/env.py": "f5d67481beed517ac46c0f08978f99d1049f94e300633ff290ae8bdbe9fefe1f",
+    "backend/tests/unit/test_database_tls.py": "9db4dcc6dcf1e59833aed01d558081fcb5c429690ecf3e9269b5e5a897667189",
+    "backend/tests/unit/test_database_tls_ci_guard.py": "626b80469bf9cab09002693e3424e84ac9731aebb064e24dc9a8b6379c345374",
+    "backend/tests/unit/test_production_compose.py": "107d5899a1d24f4d2851cb787857c3c64f8d593709fd2b598c692f16caeda2e9",
+    "backend/tests/unit/test_railway_entrypoint.py": "6f9812029d4694149395fc102f3f8049d5ee8af208cf46f2c6b517e3bda68c9c",
+    "backend/tests/unit/test_live_events.py": "52586ddc693e198c9221dc6efd756757ce8b777f0949ba8c8134fd3ab7e7fe4a",
+    "backend/tests/integration/test_postgres_tls_transport.py": "7b1c72a99c71ca65abc2853ed4351e1a4345740348054668890ab8550fb97227",
+    "infra/.env.example": "117f4df7605909fdc2bcbe90e9e7964a5398ce33a08eb567096b2b225ddd032b",
+    "infra/deploy/compose.production.yaml": "18d1c8313703b1ead12f6c7038da626ffe6b21f2072e854d6a1bb0a201552bc0",
+    "infra/deploy/README.md": "f2426f4864eee3cf638ba68059b8d214dfa531ca1ee7f84c812eb8fa70d54186",
+    "infra/scripts/validate_production_compose.py": "e4ec567c0e89a2e7cdb9711b1795f984536adafc68c5879bda35457417695299",
+    "infra/scripts/run_database_tls_ci.py": "228158848308d7e706d4bd4651d6dc470a7c14ca3fe4b747323b2acc5a7d5979",
+    "infra/scripts/generate_release_evidence.py": "4b927f1eaa464ea5f441bb10d7a39ba2ee44ce1955ccfbeb6481ff28f6eb12bf",
+    "infra/scripts/validate_ci_security.py": "3b55f75a69112c7554ac1c7a069a942e01934aa17b145783016512017af86dbe",
+    "infra/scripts/tests/test_validate_ci_security.py": "6c80f1d066dc4ff236ce25d11450b02fe2bdcbb955e1139db7276168886e2bf5"
+  },
+  "checks": [
+    {
+      "name": "compile",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "docs",
+      "exit_code": 0,
+      "log_sha256": "f6ea2398eab7aebf09d0e4b0f907919e56a05dc9dd12913a2a49bff8f84550f0"
+    },
+    {
+      "name": "ci-security",
+      "exit_code": 0,
+      "log_sha256": "25537fc036d76a1eebcaa1531d91842d592a58cd0dac89b597ebc2f708465cfe"
+    },
+    {
+      "name": "production-compose",
+      "exit_code": 0,
+      "log_sha256": "5867dcbba9a4212289b3c9dcfb600d8bed77bf89342ce18e61fd43f505c7f243"
+    },
+    {
+      "name": "mobile-api",
+      "exit_code": 0,
+      "log_sha256": "5a1d49760ca50404af36e34959e40718782fee4d95ffc796a768cdaf9ca934a0"
+    },
+    {
+      "name": "web-api",
+      "exit_code": 0,
+      "log_sha256": "e631f107e93b281afdfb44b028b0d6b9873b5b342e82445fb0e4c0869e9200ea"
+    },
+    {
+      "name": "credentials",
+      "exit_code": 0,
+      "log_sha256": "ec562be1f9b3c881f1e32d3aa314eefa6912c2c503d134556121e20f81327e3f"
+    },
+    {
+      "name": "whitespace",
+      "exit_code": 0,
+      "log_sha256": "8e847ee7d6f69e006806ea33a37f9b9a0d0cb9339cfdda2d338cdd91d773cb3e"
+    }
+  ],
+  "fresh_ci_pending": true,
+  "ci_docker_runner_executed_locally": false,
+  "hosted_accepted": false,
+  "hosted_service_credentials_grants_or_volumes_changed": false
+}

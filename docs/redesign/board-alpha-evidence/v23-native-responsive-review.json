@@ -1,0 +1,1385 @@
+{
+  "candidate": "candidate-native-v23.json",
+  "started_utc": "2026-10-22T18:17:36.595684+00:00",
+  "passed": true,
+  "checks": [
+    {
+      "role": "passenger",
+      "width_dp": 320,
+      "style": "Folded Streets",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: mcc310-mnc260-en-rUS,ar-rMA,fr-rFR-ldltr-sw320dp-w320dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x640-v31",
+      "screenshots": [
+        {
+          "path": "v23-responsive-passenger-320-folded-streets-account.png",
+          "sha256": "a2901ed14496a4638548e2d8c1bed68b62c6dff247307b1078f8f21dede17264",
+          "pixel_size": [
+            640,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to ride",
+            "Account",
+            "Style \u00b7 Folded Streets",
+            "Profile",
+            "Salma UX Passenger",
+            "Display name",
+            "Save profile",
+            "Receipt",
+            "Final fare",
+            "35.00",
+            "MAD",
+            "Transport fare",
+            "35.00 MAD",
+            "\u2713",
+            "Cash \u00b7 Completed"
+          ]
+        },
+        {
+          "path": "v23-responsive-passenger-320-folded-streets-financial.png",
+          "sha256": "a2901ed14496a4638548e2d8c1bed68b62c6dff247307b1078f8f21dede17264",
+          "pixel_size": [
+            640,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to ride",
+            "Account",
+            "Style \u00b7 Folded Streets",
+            "Profile",
+            "Salma UX Passenger",
+            "Display name",
+            "Save profile",
+            "Receipt",
+            "Final fare",
+            "35.00",
+            "MAD",
+            "Transport fare",
+            "35.00 MAD",
+            "\u2713",
+            "Cash \u00b7 Completed"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "passenger",
+      "width_dp": 320,
+      "style": "Street Press",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: mcc310-mnc260-en-rUS,ar-rMA,fr-rFR-ldltr-sw320dp-w320dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x640-v31",
+      "screenshots": [
+        {
+          "path": "v23-responsive-passenger-320-street-press-account.png",
+          "sha256": "8119f76945b755e2f5f38d7b396b453ff7dae2e5ac3ead0db96618df1d27e20a",
+          "pixel_size": [
+            640,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to ride",
+            "Account",
+            "Style \u00b7 Street Press",
+            "Profile",
+            "Salma UX Passenger",
+            "Display name",
+            "Save profile",
+            "Receipt",
+            "Final fare",
+            "35.00",
+            "MAD",
+            "Transport fare",
+            "35.00 MAD",
+            "\u2713",
+            "Cash \u00b7 Completed"
+          ]
+        },
+        {
+          "path": "v23-responsive-passenger-320-street-press-financial.png",
+          "sha256": "8119f76945b755e2f5f38d7b396b453ff7dae2e5ac3ead0db96618df1d27e20a",
+          "pixel_size": [
+            640,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to ride",
+            "Account",
+            "Style \u00b7 Street Press",
+            "Profile",
+            "Salma UX Passenger",
+            "Display name",
+            "Save profile",
+            "Receipt",
+            "Final fare",
+            "35.00",
+            "MAD",
+            "Transport fare",
+            "35.00 MAD",
+            "\u2713",
+            "Cash \u00b7 Completed"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "passenger",
+      "width_dp": 320,
+      "style": "Glazed Machine",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: mcc310-mnc260-en-rUS,ar-rMA,fr-rFR-ldltr-sw320dp-w320dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x640-v31",
+      "screenshots": [
+        {
+          "path": "v23-responsive-passenger-320-glazed-machine-account.png",
+          "sha256": "cc68a75527e73fca3c1a148b7ec909d6206df242dff43126d25b8b394835c36d",
+          "pixel_size": [
+            640,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to ride",
+            "Account",
+            "Style \u00b7 Glazed Machine",
+            "Profile",
+            "Salma UX Passenger",
+            "Display name",
+            "Save profile",
+            "Receipt",
+            "Final fare",
+            "35.00",
+            "MAD",
+            "Transport fare",
+            "35.00 MAD",
+            "\u2713",
+            "Cash \u00b7 Completed",
+            "How was your completed ride?"
+          ]
+        },
+        {
+          "path": "v23-responsive-passenger-320-glazed-machine-financial.png",
+          "sha256": "cc68a75527e73fca3c1a148b7ec909d6206df242dff43126d25b8b394835c36d",
+          "pixel_size": [
+            640,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to ride",
+            "Account",
+            "Style \u00b7 Glazed Machine",
+            "Profile",
+            "Salma UX Passenger",
+            "Display name",
+            "Save profile",
+            "Receipt",
+            "Final fare",
+            "35.00",
+            "MAD",
+            "Transport fare",
+            "35.00 MAD",
+            "\u2713",
+            "Cash \u00b7 Completed",
+            "How was your completed ride?"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "passenger",
+      "width_dp": 320,
+      "style": "Notepad",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: mcc310-mnc260-en-rUS,ar-rMA,fr-rFR-ldltr-sw320dp-w320dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x640-v31",
+      "screenshots": [
+        {
+          "path": "v23-responsive-passenger-320-notepad-account.png",
+          "sha256": "77a02365e1a28b8358c3d75d43942accc188e75ba3ad4cb01b954ed36c72fc8c",
+          "pixel_size": [
+            640,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to ride",
+            "Account",
+            "Style \u00b7 Notepad",
+            "Profile",
+            "Salma UX Passenger",
+            "Display name",
+            "Save profile",
+            "Receipt",
+            "Final fare",
+            "35.00",
+            "MAD",
+            "Transport fare",
+            "35.00 MAD",
+            "\u2713",
+            "Cash \u00b7 Completed"
+          ]
+        },
+        {
+          "path": "v23-responsive-passenger-320-notepad-financial.png",
+          "sha256": "77a02365e1a28b8358c3d75d43942accc188e75ba3ad4cb01b954ed36c72fc8c",
+          "pixel_size": [
+            640,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to ride",
+            "Account",
+            "Style \u00b7 Notepad",
+            "Profile",
+            "Salma UX Passenger",
+            "Display name",
+            "Save profile",
+            "Receipt",
+            "Final fare",
+            "35.00",
+            "MAD",
+            "Transport fare",
+            "35.00 MAD",
+            "\u2713",
+            "Cash \u00b7 Completed"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "passenger",
+      "width_dp": 430,
+      "style": "Folded Streets",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: mcc310-mnc260-en-rUS,ar-rMA,fr-rFR-ldltr-sw430dp-w430dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x860-v31",
+      "screenshots": [
+        {
+          "path": "v23-responsive-passenger-430-folded-streets-account.png",
+          "sha256": "8528981d270103a67be956abae0ff7a4dc435b1382c6f26534b6fe3ba1049d31",
+          "pixel_size": [
+            860,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to ride",
+            "Account",
+            "Style \u00b7 Folded Streets",
+            "Profile",
+            "Salma UX Passenger",
+            "Display name",
+            "Save profile",
+            "Receipt",
+            "Final fare",
+            "35.00",
+            "MAD",
+            "Transport fare",
+            "35.00 MAD",
+            "\u2713",
+            "Cash \u00b7 Completed"
+          ]
+        },
+        {
+          "path": "v23-responsive-passenger-430-folded-streets-financial.png",
+          "sha256": "f26cfd0b032f319de24c331cb2e90b7e4fc396f75ae73323c0ba7bf0986c3bb4",
+          "pixel_size": [
+            860,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to ride",
+            "Account",
+            "Style \u00b7 Folded Streets",
+            "Profile",
+            "Salma UX Passenger",
+            "Display name",
+            "Save profile",
+            "Receipt",
+            "Final fare",
+            "35.00",
+            "MAD",
+            "Transport fare",
+            "35.00 MAD",
+            "\u2713",
+            "Cash \u00b7 Completed"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "passenger",
+      "width_dp": 430,
+      "style": "Street Press",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: mcc310-mnc260-en-rUS,ar-rMA,fr-rFR-ldltr-sw430dp-w430dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x860-v31",
+      "screenshots": [
+        {
+          "path": "v23-responsive-passenger-430-street-press-account.png",
+          "sha256": "050371245c0db001609ea3cfca98e1bb73aa4a5865396035aee0496396de7d17",
+          "pixel_size": [
+            860,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to ride",
+            "Account",
+            "Style \u00b7 Street Press",
+            "Profile",
+            "Salma UX Passenger",
+            "Display name",
+            "Save profile",
+            "Receipt",
+            "Final fare",
+            "35.00",
+            "MAD",
+            "Transport fare",
+            "35.00 MAD",
+            "\u2713",
+            "Cash \u00b7 Completed"
+          ]
+        },
+        {
+          "path": "v23-responsive-passenger-430-street-press-financial.png",
+          "sha256": "050371245c0db001609ea3cfca98e1bb73aa4a5865396035aee0496396de7d17",
+          "pixel_size": [
+            860,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to ride",
+            "Account",
+            "Style \u00b7 Street Press",
+            "Profile",
+            "Salma UX Passenger",
+            "Display name",
+            "Save profile",
+            "Receipt",
+            "Final fare",
+            "35.00",
+            "MAD",
+            "Transport fare",
+            "35.00 MAD",
+            "\u2713",
+            "Cash \u00b7 Completed"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "passenger",
+      "width_dp": 430,
+      "style": "Glazed Machine",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: mcc310-mnc260-en-rUS,ar-rMA,fr-rFR-ldltr-sw430dp-w430dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x860-v31",
+      "screenshots": [
+        {
+          "path": "v23-responsive-passenger-430-glazed-machine-account.png",
+          "sha256": "a3bbeca284488df991fc9b684fd2d3c2df7d5d4f4dca77398cbbc71e2aa523be",
+          "pixel_size": [
+            860,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to ride",
+            "Account",
+            "Style \u00b7 Glazed Machine",
+            "Profile",
+            "Salma UX Passenger",
+            "Display name",
+            "Save profile",
+            "Receipt",
+            "Final fare",
+            "35.00",
+            "MAD",
+            "Transport fare",
+            "35.00 MAD",
+            "\u2713",
+            "Cash \u00b7 Completed",
+            "How was your completed ride?"
+          ]
+        },
+        {
+          "path": "v23-responsive-passenger-430-glazed-machine-financial.png",
+          "sha256": "a3bbeca284488df991fc9b684fd2d3c2df7d5d4f4dca77398cbbc71e2aa523be",
+          "pixel_size": [
+            860,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to ride",
+            "Account",
+            "Style \u00b7 Glazed Machine",
+            "Profile",
+            "Salma UX Passenger",
+            "Display name",
+            "Save profile",
+            "Receipt",
+            "Final fare",
+            "35.00",
+            "MAD",
+            "Transport fare",
+            "35.00 MAD",
+            "\u2713",
+            "Cash \u00b7 Completed",
+            "How was your completed ride?"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "passenger",
+      "width_dp": 430,
+      "style": "Notepad",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: mcc310-mnc260-en-rUS,ar-rMA,fr-rFR-ldltr-sw430dp-w430dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x860-v31",
+      "screenshots": [
+        {
+          "path": "v23-responsive-passenger-430-notepad-account.png",
+          "sha256": "02d2a304217347d934d93c132ae60a3fbf85fd23bbef0f0a0997d37e7deaa11e",
+          "pixel_size": [
+            860,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to ride",
+            "Account",
+            "Style \u00b7 Notepad",
+            "Profile",
+            "Salma UX Passenger",
+            "Display name",
+            "Save profile",
+            "Receipt",
+            "Final fare",
+            "35.00",
+            "MAD",
+            "Transport fare",
+            "35.00 MAD",
+            "\u2713",
+            "Cash \u00b7 Completed"
+          ]
+        },
+        {
+          "path": "v23-responsive-passenger-430-notepad-financial.png",
+          "sha256": "e9c8c4b3c0209581dfa735a2f05d3e2890028c289c87462e91dfb5b813b9c299",
+          "pixel_size": [
+            860,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to ride",
+            "Account",
+            "Style \u00b7 Notepad",
+            "Profile",
+            "Salma UX Passenger",
+            "Display name",
+            "Save profile",
+            "Receipt",
+            "Final fare",
+            "35.00",
+            "MAD",
+            "Transport fare",
+            "35.00 MAD",
+            "\u2713",
+            "Cash \u00b7 Completed"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "driver",
+      "width_dp": 320,
+      "style": "Folded Streets",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: en-rUS-ldltr-sw320dp-w320dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x640-v35",
+      "screenshots": [
+        {
+          "path": "v23-responsive-driver-320-folded-streets-account.png",
+          "sha256": "68d516a2486225027d3706a50de1da8fc937049e57460a7fd5cbc778f5b72d9a",
+          "pixel_size": [
+            640,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to operations",
+            "Style \u00b7 Folded Streets",
+            "Driver account",
+            "Youssef UX Driver",
+            "Verification: Verified",
+            "Account status: Active",
+            "Earnings",
+            "Final fare",
+            "805.00",
+            "MAD",
+            "Transport fare",
+            "805.00 MAD",
+            "Scheduling surcharge",
+            "0.00 MAD",
+            "Operator service fee",
+            "0.00 MAD",
+            "Operator allocation",
+            "0.00 MAD",
+            "Gross",
+            "805.00 MAD",
+            "Fees",
+            "0.00 MAD",
+            "Adjustments",
+            "0.00 MAD"
+          ]
+        },
+        {
+          "path": "v23-responsive-driver-320-folded-streets-financial.png",
+          "sha256": "f22dd6d40570688942cc1aa892aa2d40147402d25d42d097e7e4f325a1d548ef",
+          "pixel_size": [
+            640,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to operations",
+            "Style \u00b7 Folded Streets",
+            "Driver account",
+            "Youssef UX Driver",
+            "Verification: Verified",
+            "Account status: Active",
+            "Earnings",
+            "Final fare",
+            "805.00",
+            "MAD",
+            "Transport fare",
+            "805.00 MAD",
+            "Scheduling surcharge",
+            "0.00 MAD",
+            "Operator service fee",
+            "0.00 MAD",
+            "Operator allocation",
+            "0.00 MAD",
+            "Gross",
+            "805.00 MAD",
+            "Fees",
+            "0.00 MAD",
+            "Adjustments",
+            "0.00 MAD"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "driver",
+      "width_dp": 320,
+      "style": "Street Press",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: en-rUS-ldltr-sw320dp-w320dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x640-v35",
+      "screenshots": [
+        {
+          "path": "v23-responsive-driver-320-street-press-account.png",
+          "sha256": "f2ea5141b154ba1544f1860413e0cb7b5fe90f4e9cd76ae550296ce29e405db9",
+          "pixel_size": [
+            640,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to operations",
+            "Style \u00b7 Street Press",
+            "Driver account",
+            "Youssef UX Driver",
+            "Verification: Verified",
+            "Account status: Active",
+            "Earnings",
+            "Final fare",
+            "805.00",
+            "MAD",
+            "Transport fare",
+            "805.00 MAD",
+            "Scheduling surcharge",
+            "0.00 MAD",
+            "Operator service fee",
+            "0.00 MAD",
+            "Operator allocation",
+            "0.00 MAD",
+            "Gross",
+            "805.00 MAD",
+            "Fees",
+            "0.00 MAD",
+            "Adjustments",
+            "0.00 MAD"
+          ]
+        },
+        {
+          "path": "v23-responsive-driver-320-street-press-financial.png",
+          "sha256": "f2ea5141b154ba1544f1860413e0cb7b5fe90f4e9cd76ae550296ce29e405db9",
+          "pixel_size": [
+            640,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to operations",
+            "Style \u00b7 Street Press",
+            "Driver account",
+            "Youssef UX Driver",
+            "Verification: Verified",
+            "Account status: Active",
+            "Earnings",
+            "Final fare",
+            "805.00",
+            "MAD",
+            "Transport fare",
+            "805.00 MAD",
+            "Scheduling surcharge",
+            "0.00 MAD",
+            "Operator service fee",
+            "0.00 MAD",
+            "Operator allocation",
+            "0.00 MAD",
+            "Gross",
+            "805.00 MAD",
+            "Fees",
+            "0.00 MAD",
+            "Adjustments",
+            "0.00 MAD"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "driver",
+      "width_dp": 320,
+      "style": "Glazed Machine",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: en-rUS-ldltr-sw320dp-w320dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x640-v35",
+      "screenshots": [
+        {
+          "path": "v23-responsive-driver-320-glazed-machine-account.png",
+          "sha256": "26174b01c22d9554edeff6c33f5d4c94e86cc7d846d6beacb4989d80f8d0def2",
+          "pixel_size": [
+            640,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to operations",
+            "Style \u00b7 Glazed Machine",
+            "Driver account",
+            "Youssef UX Driver",
+            "Verification: Verified",
+            "Account status: Active",
+            "Earnings",
+            "Final fare",
+            "805.00",
+            "MAD",
+            "Transport fare",
+            "805.00 MAD",
+            "Scheduling surcharge",
+            "0.00 MAD",
+            "Operator service fee",
+            "0.00 MAD",
+            "Operator allocation",
+            "0.00 MAD",
+            "Gross",
+            "805.00 MAD",
+            "Fees",
+            "0.00 MAD",
+            "Adjustments",
+            "0.00 MAD"
+          ]
+        },
+        {
+          "path": "v23-responsive-driver-320-glazed-machine-financial.png",
+          "sha256": "26174b01c22d9554edeff6c33f5d4c94e86cc7d846d6beacb4989d80f8d0def2",
+          "pixel_size": [
+            640,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to operations",
+            "Style \u00b7 Glazed Machine",
+            "Driver account",
+            "Youssef UX Driver",
+            "Verification: Verified",
+            "Account status: Active",
+            "Earnings",
+            "Final fare",
+            "805.00",
+            "MAD",
+            "Transport fare",
+            "805.00 MAD",
+            "Scheduling surcharge",
+            "0.00 MAD",
+            "Operator service fee",
+            "0.00 MAD",
+            "Operator allocation",
+            "0.00 MAD",
+            "Gross",
+            "805.00 MAD",
+            "Fees",
+            "0.00 MAD",
+            "Adjustments",
+            "0.00 MAD"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "driver",
+      "width_dp": 320,
+      "style": "Notepad",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: en-rUS-ldltr-sw320dp-w320dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x640-v35",
+      "screenshots": [
+        {
+          "path": "v23-responsive-driver-320-notepad-account.png",
+          "sha256": "3d9ff15aefa46d7644a01ad029d3cdd153aafcada3280342141c2214d9ac087f",
+          "pixel_size": [
+            640,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to operations",
+            "Style \u00b7 Notepad",
+            "Driver account",
+            "Youssef UX Driver",
+            "Verification: Verified",
+            "Account status: Active",
+            "Earnings",
+            "Final fare",
+            "805.00",
+            "MAD",
+            "Transport fare",
+            "805.00 MAD",
+            "Scheduling surcharge",
+            "0.00 MAD",
+            "Operator service fee",
+            "0.00 MAD",
+            "Operator allocation",
+            "0.00 MAD",
+            "Gross",
+            "805.00 MAD",
+            "Fees",
+            "0.00 MAD",
+            "Adjustments",
+            "0.00 MAD"
+          ]
+        },
+        {
+          "path": "v23-responsive-driver-320-notepad-financial.png",
+          "sha256": "3d9ff15aefa46d7644a01ad029d3cdd153aafcada3280342141c2214d9ac087f",
+          "pixel_size": [
+            640,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to operations",
+            "Style \u00b7 Notepad",
+            "Driver account",
+            "Youssef UX Driver",
+            "Verification: Verified",
+            "Account status: Active",
+            "Earnings",
+            "Final fare",
+            "805.00",
+            "MAD",
+            "Transport fare",
+            "805.00 MAD",
+            "Scheduling surcharge",
+            "0.00 MAD",
+            "Operator service fee",
+            "0.00 MAD",
+            "Operator allocation",
+            "0.00 MAD",
+            "Gross",
+            "805.00 MAD",
+            "Fees",
+            "0.00 MAD",
+            "Adjustments",
+            "0.00 MAD"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "driver",
+      "width_dp": 430,
+      "style": "Folded Streets",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: en-rUS-ldltr-sw430dp-w430dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x860-v35",
+      "screenshots": [
+        {
+          "path": "v23-responsive-driver-430-folded-streets-account.png",
+          "sha256": "16aa606e079587c69e4d5b4ecb7bcb3da30e5822441e808f22b925fe47b9490f",
+          "pixel_size": [
+            860,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to operations",
+            "Style \u00b7 Folded Streets",
+            "Driver account",
+            "Youssef UX Driver",
+            "Verification: Verified",
+            "Account status: Active",
+            "Earnings",
+            "Final fare",
+            "805.00",
+            "MAD",
+            "Transport fare",
+            "805.00 MAD",
+            "Scheduling surcharge",
+            "0.00 MAD",
+            "Operator service fee",
+            "0.00 MAD",
+            "Operator allocation",
+            "0.00 MAD",
+            "Gross",
+            "805.00 MAD",
+            "Fees",
+            "0.00 MAD",
+            "Adjustments",
+            "0.00 MAD"
+          ]
+        },
+        {
+          "path": "v23-responsive-driver-430-folded-streets-financial.png",
+          "sha256": "16aa606e079587c69e4d5b4ecb7bcb3da30e5822441e808f22b925fe47b9490f",
+          "pixel_size": [
+            860,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to operations",
+            "Style \u00b7 Folded Streets",
+            "Driver account",
+            "Youssef UX Driver",
+            "Verification: Verified",
+            "Account status: Active",
+            "Earnings",
+            "Final fare",
+            "805.00",
+            "MAD",
+            "Transport fare",
+            "805.00 MAD",
+            "Scheduling surcharge",
+            "0.00 MAD",
+            "Operator service fee",
+            "0.00 MAD",
+            "Operator allocation",
+            "0.00 MAD",
+            "Gross",
+            "805.00 MAD",
+            "Fees",
+            "0.00 MAD",
+            "Adjustments",
+            "0.00 MAD"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "driver",
+      "width_dp": 430,
+      "style": "Street Press",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: en-rUS-ldltr-sw430dp-w430dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x860-v35",
+      "screenshots": [
+        {
+          "path": "v23-responsive-driver-430-street-press-account.png",
+          "sha256": "e3b27da1c0afa07174776beef286bfc36d98b59e8470b59ae4d7e5fcea2cd2fe",
+          "pixel_size": [
+            860,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to operations",
+            "Style \u00b7 Street Press",
+            "Driver account",
+            "Youssef UX Driver",
+            "Verification: Verified",
+            "Account status: Active",
+            "Earnings",
+            "Final fare",
+            "805.00",
+            "MAD",
+            "Transport fare",
+            "805.00 MAD",
+            "Scheduling surcharge",
+            "0.00 MAD",
+            "Operator service fee",
+            "0.00 MAD",
+            "Operator allocation",
+            "0.00 MAD",
+            "Gross",
+            "805.00 MAD",
+            "Fees",
+            "0.00 MAD",
+            "Adjustments",
+            "0.00 MAD"
+          ]
+        },
+        {
+          "path": "v23-responsive-driver-430-street-press-financial.png",
+          "sha256": "e3b27da1c0afa07174776beef286bfc36d98b59e8470b59ae4d7e5fcea2cd2fe",
+          "pixel_size": [
+            860,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to operations",
+            "Style \u00b7 Street Press",
+            "Driver account",
+            "Youssef UX Driver",
+            "Verification: Verified",
+            "Account status: Active",
+            "Earnings",
+            "Final fare",
+            "805.00",
+            "MAD",
+            "Transport fare",
+            "805.00 MAD",
+            "Scheduling surcharge",
+            "0.00 MAD",
+            "Operator service fee",
+            "0.00 MAD",
+            "Operator allocation",
+            "0.00 MAD",
+            "Gross",
+            "805.00 MAD",
+            "Fees",
+            "0.00 MAD",
+            "Adjustments",
+            "0.00 MAD"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "driver",
+      "width_dp": 430,
+      "style": "Glazed Machine",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: en-rUS-ldltr-sw430dp-w430dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x860-v35",
+      "screenshots": [
+        {
+          "path": "v23-responsive-driver-430-glazed-machine-account.png",
+          "sha256": "90527088e2edffd061b4bb9ed9249e8781b794a96a59672e9c6baac66a900bd3",
+          "pixel_size": [
+            860,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to operations",
+            "Style \u00b7 Glazed Machine",
+            "Driver account",
+            "Youssef UX Driver",
+            "Verification: Verified",
+            "Account status: Active",
+            "Earnings",
+            "Final fare",
+            "805.00",
+            "MAD",
+            "Transport fare",
+            "805.00 MAD",
+            "Scheduling surcharge",
+            "0.00 MAD",
+            "Operator service fee",
+            "0.00 MAD",
+            "Operator allocation",
+            "0.00 MAD",
+            "Gross",
+            "805.00 MAD",
+            "Fees",
+            "0.00 MAD",
+            "Adjustments",
+            "0.00 MAD"
+          ]
+        },
+        {
+          "path": "v23-responsive-driver-430-glazed-machine-financial.png",
+          "sha256": "90527088e2edffd061b4bb9ed9249e8781b794a96a59672e9c6baac66a900bd3",
+          "pixel_size": [
+            860,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to operations",
+            "Style \u00b7 Glazed Machine",
+            "Driver account",
+            "Youssef UX Driver",
+            "Verification: Verified",
+            "Account status: Active",
+            "Earnings",
+            "Final fare",
+            "805.00",
+            "MAD",
+            "Transport fare",
+            "805.00 MAD",
+            "Scheduling surcharge",
+            "0.00 MAD",
+            "Operator service fee",
+            "0.00 MAD",
+            "Operator allocation",
+            "0.00 MAD",
+            "Gross",
+            "805.00 MAD",
+            "Fees",
+            "0.00 MAD",
+            "Adjustments",
+            "0.00 MAD"
+          ]
+        }
+      ]
+    },
+    {
+      "role": "driver",
+      "width_dp": 430,
+      "style": "Notepad",
+      "selected_label_verified": true,
+      "populated_money_and_currency_visible": true,
+      "configuration": "config: en-rUS-ldltr-sw430dp-w430dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x860-v35",
+      "screenshots": [
+        {
+          "path": "v23-responsive-driver-430-notepad-account.png",
+          "sha256": "e0f8acb03fa265b23e0bb92a504533c412cb96ee47eded376c7c86248d7396c4",
+          "pixel_size": [
+            860,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to operations",
+            "Style \u00b7 Notepad",
+            "Driver account",
+            "Youssef UX Driver",
+            "Verification: Verified",
+            "Account status: Active",
+            "Earnings",
+            "Final fare",
+            "805.00",
+            "MAD",
+            "Transport fare",
+            "805.00 MAD",
+            "Scheduling surcharge",
+            "0.00 MAD",
+            "Operator service fee",
+            "0.00 MAD",
+            "Operator allocation",
+            "0.00 MAD",
+            "Gross",
+            "805.00 MAD",
+            "Fees",
+            "0.00 MAD",
+            "Adjustments",
+            "0.00 MAD"
+          ]
+        },
+        {
+          "path": "v23-responsive-driver-430-notepad-financial.png",
+          "sha256": "e0f8acb03fa265b23e0bb92a504533c412cb96ee47eded376c7c86248d7396c4",
+          "pixel_size": [
+            860,
+            1600
+          ],
+          "visible_text": [
+            "Account",
+            "9+",
+            "Back to operations",
+            "Style \u00b7 Notepad",
+            "Driver account",
+            "Youssef UX Driver",
+            "Verification: Verified",
+            "Account status: Active",
+            "Earnings",
+            "Final fare",
+            "805.00",
+            "MAD",
+            "Transport fare",
+            "805.00 MAD",
+            "Scheduling surcharge",
+            "0.00 MAD",
+            "Operator service fee",
+            "0.00 MAD",
+            "Operator allocation",
+            "0.00 MAD",
+            "Gross",
+            "805.00 MAD",
+            "Fees",
+            "0.00 MAD",
+            "Adjustments",
+            "0.00 MAD"
+          ]
+        }
+      ]
+    }
+  ],
+  "fixtures": [
+    {
+      "role": "passenger",
+      "serial": "emulator-5554",
+      "avd": "taximobile-board-aosp31-passenger",
+      "original_size": "Physical size: 720x1600",
+      "original_density": "Physical density: 320",
+      "font_scale": "1.0",
+      "apk_sha256": "d230aef6501397adc7628931a94ea7f67b6459277c573e694fb023641a7e8390",
+      "restored": true
+    },
+    {
+      "role": "driver",
+      "serial": "emulator-5556",
+      "avd": "taximobile-board-api35-driver",
+      "original_size": "Physical size: 720x1600",
+      "original_density": "Physical density: 320",
+      "font_scale": "1.0",
+      "apk_sha256": "5574f9e20ef5ade1621f58683712b6eb78f556ca828c23d83689a084137657e3",
+      "restored": true
+    }
+  ],
+  "scope": "Actual English API31 passenger/API35 driver account/receipt/earnings at 320/430dp and four styles. Presentation settings only; no business commands. No claim of all views/states, RTL width cross-product, physical Android or full accessibility.",
+  "before": {
+    "rides": [
+      {
+        "id": "e8e23f90-4329-4381-9391-2dcccfd0b027",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "ef70b9f0-a77d-41b6-923c-7a622a6e1dd6",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "73c4d766-9c7a-4e80-a589-805eb3b8cff2",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "46f115c7-cc34-4161-a3a3-238910b494c9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "8145b32e-4549-4183-bce5-60d3936a4de4",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "93df2c70-fd2b-4e97-8df3-eee368699bea",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d8daeaaa-fbe9-4614-af7e-45b896d30ecb",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "733abbcf-5d1b-4ff2-b7f3-3563052cbd25",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "cb951af4-f5ae-4d05-8a06-a28b49797f33",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "c55e696d-2bae-4640-8801-f50d2c20a42b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "b7aac6ac-cc87-494d-aa95-842c21fc6759",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "98a253df-de13-4029-9daa-e538a520997d",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e531e392-6f5b-4962-9964-3967a4afc418",
+        "status": "UNMATCHED"
+      }
+    ],
+    "availability": {
+      "status": "OFFLINE",
+      "vehicle_id": "d491cb54-7ec1-4b6e-a6f9-1f1a8fd93792",
+      "city_id": "10000000-0000-4000-8000-000000000003",
+      "service_type": "ON_DEMAND"
+    },
+    "pending_cash": 0
+  },
+  "after": {
+    "rides": [
+      {
+        "id": "e8e23f90-4329-4381-9391-2dcccfd0b027",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "ef70b9f0-a77d-41b6-923c-7a622a6e1dd6",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "73c4d766-9c7a-4e80-a589-805eb3b8cff2",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "46f115c7-cc34-4161-a3a3-238910b494c9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "8145b32e-4549-4183-bce5-60d3936a4de4",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "93df2c70-fd2b-4e97-8df3-eee368699bea",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d8daeaaa-fbe9-4614-af7e-45b896d30ecb",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "733abbcf-5d1b-4ff2-b7f3-3563052cbd25",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "cb951af4-f5ae-4d05-8a06-a28b49797f33",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "c55e696d-2bae-4640-8801-f50d2c20a42b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "b7aac6ac-cc87-494d-aa95-842c21fc6759",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "98a253df-de13-4029-9daa-e538a520997d",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e531e392-6f5b-4962-9964-3967a4afc418",
+        "status": "UNMATCHED"
+      }
+    ],
+    "availability": {
+      "status": "OFFLINE",
+      "vehicle_id": "d491cb54-7ec1-4b6e-a6f9-1f1a8fd93792",
+      "city_id": "10000000-0000-4000-8000-000000000003",
+      "service_type": "ON_DEMAND"
+    },
+    "pending_cash": 0
+  },
+  "finished_utc": "2026-10-22T18:25:24.318925+00:00"
+}

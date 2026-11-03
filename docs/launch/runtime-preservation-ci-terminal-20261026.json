@@ -1,0 +1,74 @@
+{
+  "recorded_utc": "2026-10-26T08:05:55+00:00",
+  "source_head": "314fceefc2af2c0ea46f2a707477bb4a0d4e34b2",
+  "tested_merge_commit": "b16d2b1a1066d1c3d3a8f46781b33c3da97386bc",
+  "tree": "dc3e87d59501a1d09fa235de6d4c27e4870d15d8",
+  "run_id": 40210645580,
+  "run_number": 238,
+  "conclusion": "success",
+  "required_jobs": {
+    "backend": {
+      "id": 121220928936,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "ios-shared": {
+      "id": 121220929098,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "web": {
+      "id": 121220929129,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "gradle-dependency-submission": {
+      "id": 121220929144,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "gradle-wrapper-integrity": {
+      "id": 121220929151,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "documentation-and-provenance": {
+      "id": 121220929159,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "mobile": {
+      "id": 121220929171,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "dependency-review": {
+      "id": 121221571372,
+      "status": "completed",
+      "conclusion": "success"
+    }
+  },
+  "publisher": "skipped for draft PR; no image publication",
+  "full_backend_suite": {
+    "tests": 1458,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "runtime_preservation_cases": 15,
+  "real_ci_tls_probes": 8,
+  "tls_baseline_restored": true,
+  "migration_head": "20261025_0054",
+  "backend_junit_sha256": "093b43cf9b2166f3f5bfc6c803aff368e213186b91b438a443eae98e3199e709",
+  "test_artifact": {
+    "id": 12605837173,
+    "zip_sha256": "9f5ab30b10da3f71b8d5e9308c1edda9ba5749c9227863c88d09ba409d0a7889"
+  },
+  "provenance_artifact": {
+    "id": 12606051165,
+    "zip_sha256": "ab82815a2d00c931ae69760f63645cdef65f7623a1a43afbefa7a93edbfddbf0"
+  },
+  "platform_scope": "Android and web verification; unsigned iOS simulator compile/build. No physical or store acceptance.",
+  "hosted_schema_tls_or_ingestion_accepted": false,
+  "real_device_field_or_public_release_accepted": false
+}

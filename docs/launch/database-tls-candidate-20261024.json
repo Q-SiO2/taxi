@@ -1,0 +1,92 @@
+{
+  "recorded_utc": "2026-10-24T14:09:47.748580+00:00",
+  "commit": "3698f60334721d3289d616bb598ffee36cb81b24",
+  "tree": "905b241e569289d10bebecc0550e827edf80d184",
+  "parent": "90704d136ca32ad7212243208fac92c606e1764d",
+  "files": [
+    ".github/workflows/ci.yml",
+    "backend/migrations/env.py",
+    "backend/src/taximobile_api/core/config.py",
+    "backend/src/taximobile_api/core/live_events.py",
+    "backend/src/taximobile_api/db/session.py",
+    "backend/src/taximobile_api/db/transport.py",
+    "backend/src/taximobile_api/main.py",
+    "backend/src/taximobile_api/operations/outbox_replay.py",
+    "backend/src/taximobile_api/operations/railway_entrypoint.py",
+    "backend/src/taximobile_api/operations/ux_demo_seed.py",
+    "backend/tests/integration/test_postgres_tls_transport.py",
+    "backend/tests/unit/test_database_tls.py",
+    "backend/tests/unit/test_database_tls_ci_guard.py",
+    "backend/tests/unit/test_live_events.py",
+    "backend/tests/unit/test_production_compose.py",
+    "backend/tests/unit/test_railway_entrypoint.py",
+    "docs/README.md",
+    "docs/database.md",
+    "docs/implementation.md",
+    "docs/launch/database-tls-local-verification-r3-20261024.json",
+    "docs/launch/database-tls-local-verification-r4-20261024.json",
+    "docs/launch/database-tls-local-verification-r5-20261024.json",
+    "docs/launch/database-tls-source-verification-20261024.json",
+    "docs/launch/database-tls.md",
+    "docs/launch/dependency-refresh-candidate-20261023.json",
+    "docs/launch/dependency-refresh-ci-observation-20261023.json",
+    "docs/launch/dependency-refresh-ci-terminal-20261024.json",
+    "docs/launch/dependency-refresh.md",
+    "docs/launch/restore-controller-observation-20261024.json",
+    "docs/launch/restore-runtime-20261024.json",
+    "docs/launch/staging-backup-20261024.json",
+    "docs/launch/staging-backup-tools-preflight-20261024.json",
+    "docs/launch/staging-database-preflight-20261023.json",
+    "docs/launch/staging-document-storage-preflight-20261024.json",
+    "docs/launch/staging-restore-20261024.json",
+    "docs/launch/staging-restore-r2-20261024.json",
+    "docs/launch/staging-upgrade.md",
+    "docs/roadmap.md",
+    "infra/.env.example",
+    "infra/deploy/README.md",
+    "infra/deploy/compose.production.yaml",
+    "infra/scripts/generate_release_evidence.py",
+    "infra/scripts/run_database_tls_ci.py",
+    "infra/scripts/tests/test_validate_ci_security.py",
+    "infra/scripts/validate_ci_security.py",
+    "infra/scripts/validate_production_compose.py"
+  ],
+  "checks": [
+    {
+      "name": "docs",
+      "exit_code": 0,
+      "log_sha256": "f6ea2398eab7aebf09d0e4b0f907919e56a05dc9dd12913a2a49bff8f84550f0"
+    },
+    {
+      "name": "credentials",
+      "exit_code": 0,
+      "log_sha256": "ec562be1f9b3c881f1e32d3aa314eefa6912c2c503d134556121e20f81327e3f"
+    },
+    {
+      "name": "ci-security",
+      "exit_code": 0,
+      "log_sha256": "25537fc036d76a1eebcaa1531d91842d592a58cd0dac89b597ebc2f708465cfe"
+    },
+    {
+      "name": "production-compose",
+      "exit_code": 0,
+      "log_sha256": "5867dcbba9a4212289b3c9dcfb600d8bed77bf89342ce18e61fd43f505c7f243"
+    },
+    {
+      "name": "whitespace",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "original_head": "2835c8aa7f5e97a17afcdbe647fe589cbd0421e1",
+  "original_index_preserved": true,
+  "candidate_clean": true,
+  "compilation_inputs_identical": 371,
+  "dependency_locks_unchanged": true,
+  "published": true,
+  "hosted_accepted": false,
+  "published_utc": "2026-10-24T14:11:23.628887+00:00",
+  "pull_request": "https://github.com/Q-SiO2/taxi/pull/74",
+  "ci_run_id": 40101311813,
+  "ci_run_number": 230
+}

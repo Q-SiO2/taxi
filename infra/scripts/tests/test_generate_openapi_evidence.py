@@ -137,7 +137,7 @@ class OpenApiEvidenceTests(unittest.TestCase):
                          {key for key in environment if key.upper().startswith("TAXIMOBILE_")})
         self.assertNotIn("PYTHONPATH", environment)
         self.assertEqual("api", environment["TAXIMOBILE_PROCESS_ROLE"])
-        self.assertEqual(45, run.call_args.kwargs["timeout"])
+        self.assertEqual(180, run.call_args.kwargs["timeout"])
 
     def test_failed_or_timed_out_worker_does_not_leak_its_output(self):
         for response in (subprocess.CompletedProcess([], 1, stdout=b"private detail", stderr=b"private detail"),

@@ -1,0 +1,65 @@
+{
+  "candidate": "candidate-native-v20.json",
+  "verified_utc": "2026-10-22T10:35:55.487638+00:00",
+  "scope": "Bounded progress only; cold expiry, replacement core and full selected presentation remain pending",
+  "records": [
+    {
+      "record": "v20-initial-retained-session-observation.json",
+      "sha256": "6cceed717b9c9ba71533f01df9bcf3b7306fc30a0af9c793d4d9a644370c5644",
+      "scope": "Initial retained app-data observation; passenger old access expired, driver prior family already rejected"
+    },
+    {
+      "record": "v20-passenger-activity-initial.json",
+      "sha256": "9a8b2a5b15b14b9dfacc363d29778305a2f7f8a168a6603475f94e7e115b2a43",
+      "scope": "Standard am start MainActivity, existing app data/session retained. No login, business command, token read or family attribution."
+    },
+    {
+      "record": "v20-driver-activity-launcher-r3.json",
+      "sha256": "a7e258e43889bca9aa08d46d6a4ab009c20b844cd387e4403215ee36ca3fa448",
+      "scope": "Standard MAIN/LAUNCHER activity entries, existing app data/session retained. Prior plain-entry driver attempt remained authenticated but OS reused one activity; that attempt is retained, not multiple-entry acceptance. No login, business command, token read or family attribution."
+    },
+    {
+      "record": "v20-native-sheet-verification-20261022.json",
+      "sha256": "cd4507dc183ae7db2cb4688e9a900f8c2d9d8bdf4668d25beb8fc06165792c48",
+      "scope": "Owned API31 passenger actual visible header/body gestures; no native business input. JVM custom-action acceptance is separate from full TalkBack acceptance."
+    },
+    {
+      "record": "v20-native-quote-style-review-20261022.json",
+      "sha256": "214326313a22bc88e8398f9b600da2ec5a6a0c5231e253dc24bd09fb7107240b",
+      "scope": "Actual API31 passenger map-selected advisory quote and four style choices. UI labels/fare/control readiness and owner-scoped ride-list stability; not a hidden-coordinate or active-trip assertion."
+    },
+    {
+      "record": "v20-native-driver-welcome-review-r2.json",
+      "sha256": "dc209582f2f9a0b247dc5b5cbb362b9235d35b679224fcb6bd7b325fb3de690f",
+      "scope": "Actual EN welcome artwork/style options and normal existing-account re-entry; recordings are raw emulator observations, not physical performance acceptance"
+    },
+    {
+      "record": "v20-native-passenger-fr-core-review.json",
+      "sha256": "945dbe6a3fb989dbbe2a62251eafaf3a07fb7efd899f22715afb15c4ab1c8f1f",
+      "scope": "Actual idle authenticated account and populated receipt/earnings; no booking or settlement inputs"
+    },
+    {
+      "record": "v20-native-driver-fr-core-review.json",
+      "sha256": "3576a4e1b2e5fb764de6bc94c91afaa0160263806f6ae01e68343b6a79fe4519",
+      "scope": "Actual idle authenticated account and populated receipt/earnings; no booking or settlement inputs"
+    },
+    {
+      "record": "v20-native-driver-ar-core-review.json",
+      "sha256": "0052eb7762618b6827c563bc34860fb496ba3d9d85dccad25ff4400e6aa1ae8a",
+      "scope": "Actual idle authenticated account and populated receipt/earnings; no booking or settlement inputs"
+    },
+    {
+      "record": "v20-native-driver-en-core-review.json",
+      "sha256": "e7fae9478850824fe2573af082a4273461602a3fc4a0d8ac8f97fa71eeb0074b",
+      "scope": "Actual idle authenticated account and populated receipt/earnings; no booking or settlement inputs"
+    }
+  ],
+  "preserved_failures": [
+    "v20-native-driver-welcome-review-initial.json",
+    "v20-driver-activity-initial.json",
+    "v20-driver-activity-launcher-r2.json",
+    "v20-driver-entry-observer-interleaving-20261022.json",
+    "v20-native-passenger-ar-core-review.json"
+  ],
+  "qualification": "Driver r3 is isolated sequential observation after the interleaved r2 failure. Passenger first Arabic observer ran while OS preference still led French; no Arabic acceptance inferred. No source changes or backend command replay."
+}

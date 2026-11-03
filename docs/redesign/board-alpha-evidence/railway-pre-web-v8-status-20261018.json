@@ -1,0 +1,92 @@
+{
+  "verified_utc": "2026-10-18 19:54:21 UTC",
+  "scope": "Read-only preflight for the replacement web candidate; no changes applied",
+  "project": {
+    "id": "9f841575-c4f3-4a4d-bb83-2e6ff92e436e",
+    "name": "TaxiMobile Alpha",
+    "workspaceName": "Mohamed Karim El Gouichech's Projects"
+  },
+  "environment": {
+    "id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+    "name": "staging",
+    "unmergedChangesCount": null,
+    "stagedChanges": null
+  },
+  "services": [
+    {
+      "id": "41ccd6b2-41e2-4886-8d96-cc56f62aaab7",
+      "name": "alpha-postgis",
+      "numReplicas": null,
+      "cronSchedule": null,
+      "volumes": [
+        {
+          "id": "8ed86e48-25f5-4fa6-8feb-2f930ba8b547",
+          "name": "alpha-board-data-20261015",
+          "mountPath": "/var/lib/postgresql/data",
+          "sizeMB": 500,
+          "region": "sfo"
+        }
+      ],
+      "latestDeployment": {
+        "id": "10348a72-65f4-4b80-8474-e8a950ccd282",
+        "status": "SUCCESS",
+        "createdAt": "2026-10-15T11:39:00.931Z",
+        "url": null
+      }
+    },
+    {
+      "id": "758fa7d5-f8b8-4730-a00f-438e28184e35",
+      "name": "alpha-api",
+      "numReplicas": null,
+      "cronSchedule": null,
+      "volumes": [],
+      "latestDeployment": {
+        "id": "5f233980-bf46-468e-8a94-104e20eef451",
+        "status": "SUCCESS",
+        "createdAt": "2026-10-15T15:31:16.809Z",
+        "url": null
+      }
+    },
+    {
+      "id": "eb42d0ba-feae-4f7a-9c86-48f4d38006d0",
+      "name": "alpha-worker",
+      "numReplicas": null,
+      "cronSchedule": null,
+      "volumes": [],
+      "latestDeployment": {
+        "id": "8ca5a361-9b66-4d7a-8041-c9a5754bbe47",
+        "status": "SUCCESS",
+        "createdAt": "2026-10-12T17:22:09.505Z",
+        "url": null
+      }
+    },
+    {
+      "id": "568723a2-e456-4130-825a-077c5cae9f81",
+      "name": "alpha-routing",
+      "numReplicas": null,
+      "cronSchedule": null,
+      "volumes": [],
+      "latestDeployment": {
+        "id": "dec657d1-e507-421d-9bc2-15f0250385b7",
+        "status": "SUCCESS",
+        "createdAt": "2026-10-12T17:25:06.150Z",
+        "url": null
+      }
+    },
+    {
+      "id": "2d8ab069-2310-46ff-afe0-8fd4f42a5bd1",
+      "name": "alpha-web",
+      "numReplicas": null,
+      "cronSchedule": null,
+      "volumes": [],
+      "latestDeployment": {
+        "id": "7e30999d-719b-4f84-bda0-8bf45baccc2a",
+        "status": "SUCCESS",
+        "createdAt": "2026-10-18T14:07:53.711Z",
+        "url": null
+      }
+    }
+  ],
+  "buckets": [],
+  "pendingWork": []
+}

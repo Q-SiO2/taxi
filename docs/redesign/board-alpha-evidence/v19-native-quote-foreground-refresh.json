@@ -1,0 +1,8 @@
+{
+  "candidate": "candidate-native-v19.json",
+  "passed": true,
+  "same_process": "1879",
+  "fresh_quote_request_control_visible_after_resume": true,
+  "scope": "Actual quoted form retained across native background/resume; no booking input during recovery",
+  "observations": "v19-native-first.json"
+}

@@ -10,6 +10,13 @@ from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from taximobile_api.domains.auth.router import database_session
+from taximobile_api.domains.auth.dependencies import CurrentPrincipal, authenticated_principal
+from taximobile_api.domains.scheduled_bookings.local_time import (
+    TimeZoneRulesUnavailable, local_pickup_time_options, packaged_rules_version,
+)
+from taximobile_api.domains.scheduled_bookings.schemas import (
+    ScheduledLocalTimeOption, ScheduledLocalTimeRequest, ScheduledLocalTimeResponse,
+)
 from taximobile_api.domains.fixed_routes.models import (
     FixedRoute,
     FixedRouteDirection,
@@ -77,6 +84,35 @@ async def list_public_cities(
     )
     response.headers["Cache-Control"] = "public, max-age=60"
     return PublicCityListResponse(items=[_city_response(city) for city in cities])
+
+
+@router.post("/cities/{city_id}/scheduled-time-options", response_model=ScheduledLocalTimeResponse)
+async def scheduled_time_options(
+    city_id: UUID,
+    payload: ScheduledLocalTimeRequest,
+    response: Response,
+    principal: CurrentPrincipal = Depends(authenticated_principal),
+    session: AsyncSession = Depends(database_session),
+) -> ScheduledLocalTimeResponse:
+    del principal
+    city = await _public_city_or_404(session, city_id)
+    try:
+        options = local_pickup_time_options(
+            datetime.fromisoformat(f"{payload.local_date}T{payload.local_time}"), city.timezone,
+        )
+        version = packaged_rules_version()
+    except TimeZoneRulesUnavailable as error:
+        raise HTTPException(status_code=503, detail="City time rules are unavailable. Try again later.") from error
+    except ValueError as error:
+        raise HTTPException(status_code=422, detail="The clock selection is outside the supported date range.") from error
+    response.headers["Cache-Control"] = "no-store"
+    return ScheduledLocalTimeResponse(
+        city_id=city.id, city_timezone=city.timezone, local_date=payload.local_date,
+        local_time=payload.local_time, booking_available=public_city_booking_available(city),
+        rules_version=version,
+        options=[ScheduledLocalTimeOption(scheduled_for=instant, utc_offset_seconds=offset)
+                 for instant, offset in options],
+    )
 
 
 @router.get("/cities/{city_id}", response_model=PublicCityResponse)

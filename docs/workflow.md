@@ -1,5 +1,29 @@
 # TaxiMobile — Delivery and Verification Workflow
 
+## Active alpha execution loop — 12 October 2026
+
+Start with the next unblocked A task in [roadmap.md](roadmap.md), not the full
+production GAP closure sequence. Complete a small vertical slice, run meaningful
+regression/integration checks, render/review affected UI, update its checkpoint,
+then continue the next authorized priority. Inspect source and preserved dirty
+work before repeating an old audit defect. No source change accepts hosted,
+physical-device or legal outcomes. Paid provisioning, destructive operations and
+major policy decisions require their specific authorization; ordinary fixes do not.
+
+This file is the engineering handbook entry point. Setup/toolchains remain in
+[backend README](../backend/README.md), [client README](../TaxiMobile/README.md)
+and [infra README](../infra/README.md); Railway operations are in
+[deployment.md](deployment.md). The commands below are verified repository entry
+points, not claims that they ran on the latest candidate. For local rehearsal use
+the guarded launch/resume/stop procedures in [union_demo.md](union_demo.md).
+
+T0–T10 retains its full promotion meaning. A uses relevant automated/device/hosted
+checks and its own synthetic exit gates; it does not require real-city T8–T10
+acceptance. Never alter those catalogs or claim them accepted to accelerate A.
+At handoff report files, exact artifacts, checks passed/failed/not run, screenshots,
+accepted A gates, incomplete capabilities, blockers, Railway cost/service state
+and the next unblocked task. Keep credentials outside the handoff and Git.
+
 This is the operational reading guide for moving a requirement through code,
 verification and release evidence. It organizes existing decisions; it does not
 change business policy or authorize deployment. Read [readiness.md](readiness.md)

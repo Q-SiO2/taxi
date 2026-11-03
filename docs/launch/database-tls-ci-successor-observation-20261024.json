@@ -1,0 +1,62 @@
+{
+  "observed_utc": "2026-10-24T14:55:36.857Z",
+  "commit": "29198354250615940fa46ac7c1d8305da743ba86",
+  "run_id": 40102365437,
+  "run_number": 232,
+  "url": "https://github.com/Q-SiO2/taxi/actions/runs/40102365437",
+  "jobs": [
+    {
+      "id": 120896959136,
+      "name": "documentation-and-provenance",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120896959141,
+      "name": "gradle-wrapper-integrity",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120896959157,
+      "name": "gradle-dependency-submission",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120896959160,
+      "name": "web",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120896959181,
+      "name": "ios-shared",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 120896959280,
+      "name": "mobile",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120896959317,
+      "name": "backend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120897540935,
+      "name": "dependency-review",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "required_jobs_passed": 7,
+  "required_jobs_failed": 0,
+  "source_ci_terminal_accepted": false,
+  "hosted_accepted": false,
+  "scope": "Observed seven required successes; iOS remains running. Suite artifact independently verifies all 1317 backend cases, eight TLS probes and cleanup. Railway remains schema0052/TLSoff; current Trial availability and server/consumer rollout pending."
+}

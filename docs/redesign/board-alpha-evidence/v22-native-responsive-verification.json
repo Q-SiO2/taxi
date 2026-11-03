@@ -1,0 +1,14 @@
+{
+  "verified_utc": "2026-10-22T17:31:48.630548+00:00",
+  "candidate": "candidate-native-v22.json",
+  "passed": true,
+  "record": "v22-native-responsive-review-r2.json",
+  "record_sha256": "01447fa304dbc2a6a6947c5b5125a6b7f0877cc6ed85db5778d586457a28f4bb",
+  "cases": 16,
+  "screenshots": 32,
+  "source_inputs_unchanged": 414,
+  "restored_original_displays": true,
+  "server_state_unchanged": true,
+  "scope": "Selected English account/receipt/earnings in both roles, four styles at320/430dp. Actual populated money and currency visible. No business input.",
+  "limits": "No all-view/state, full visual owner approval, RTL-width cross-product, phone or full accessibility acceptance. First host DNS preflight failure retained separately. Functional material grammar still needs the compact shared treatment defined in the selected style contract."
+}

@@ -1,0 +1,90 @@
+{
+  "candidate": "candidate-native-v17.json",
+  "run": "v17-native-first.json",
+  "source": "Railway API proxy logs; native ktor-client POST requests in exact first interval",
+  "deployment_id": "e5e108a0-e5dd-4553-93fd-292026c98b63",
+  "passed": true,
+  "scope": "Eight lifecycle/availability/cash commands exactly once; advisory quote reads listed separately; credentials and source IPs excluded",
+  "rows": [
+    {
+      "timestamp": "2026-10-20T20:21:57.863398147Z",
+      "method": "POST",
+      "path": "/api/v1/drivers/me/availability/online",
+      "httpStatus": 200,
+      "totalDuration": 35
+    },
+    {
+      "timestamp": "2026-10-20T20:22:02.910525324Z",
+      "method": "POST",
+      "path": "/api/v1/rides",
+      "httpStatus": 201,
+      "totalDuration": 131
+    },
+    {
+      "timestamp": "2026-10-20T20:22:16.638287998Z",
+      "method": "POST",
+      "path": "/api/v1/ride-offers/5013bd9e-bdf4-4b93-84e5-2a2276d1e957/accept",
+      "httpStatus": 200,
+      "totalDuration": 39
+    },
+    {
+      "timestamp": "2026-10-20T20:22:39.892238892Z",
+      "method": "POST",
+      "path": "/api/v1/rides/25336df9-d090-4e8b-a5ab-f2b813e93ea8/en-route",
+      "httpStatus": 200,
+      "totalDuration": 46
+    },
+    {
+      "timestamp": "2026-10-20T20:23:06.614205039Z",
+      "method": "POST",
+      "path": "/api/v1/rides/25336df9-d090-4e8b-a5ab-f2b813e93ea8/arrived",
+      "httpStatus": 200,
+      "totalDuration": 35
+    },
+    {
+      "timestamp": "2026-10-20T20:23:24.422561265Z",
+      "method": "POST",
+      "path": "/api/v1/rides/25336df9-d090-4e8b-a5ab-f2b813e93ea8/start",
+      "httpStatus": 200,
+      "totalDuration": 31
+    },
+    {
+      "timestamp": "2026-10-20T20:23:50.567846895Z",
+      "method": "POST",
+      "path": "/api/v1/rides/25336df9-d090-4e8b-a5ab-f2b813e93ea8/complete",
+      "httpStatus": 200,
+      "totalDuration": 32
+    },
+    {
+      "timestamp": "2026-10-20T20:24:20.217590498Z",
+      "method": "POST",
+      "path": "/api/v1/rides/25336df9-d090-4e8b-a5ab-f2b813e93ea8/payments/cash/settle",
+      "httpStatus": 200,
+      "totalDuration": 39
+    }
+  ],
+  "quote_reads": [
+    {
+      "timestamp": "2026-10-20T20:21:13.382816269Z",
+      "method": "POST",
+      "path": "/api/v1/rides/estimate",
+      "httpStatus": 200,
+      "totalDuration": 16
+    },
+    {
+      "timestamp": "2026-10-20T20:21:30.030601009Z",
+      "method": "POST",
+      "path": "/api/v1/rides/estimate",
+      "httpStatus": 200,
+      "totalDuration": 14
+    },
+    {
+      "timestamp": "2026-10-20T20:21:30.787019543Z",
+      "method": "POST",
+      "path": "/api/v1/rides/estimate",
+      "httpStatus": 200,
+      "totalDuration": 17
+    }
+  ],
+  "quote_resume_record": "v17-native-quote-foreground-refresh.json"
+}

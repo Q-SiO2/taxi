@@ -1,0 +1,35 @@
+{
+  "observed_utc": "2026-10-23T10:16:33.329918+00:00",
+  "candidate": "candidate-native-v23.json",
+  "context": "Intentional staging DB/JWT/MFA-wrap-key/monitoring rotation and actual new API8b03...; normal sign-in preflight is separate from historical retained-session tests. No wipe/reinstall or business command.",
+  "roles": [
+    {
+      "role": "passenger",
+      "avd": "taximobile-board-aosp31-passenger",
+      "apk_sha256": "d230aef6501397adc7628931a94ea7f67b6459277c573e694fb023641a7e8390",
+      "font_scale": "1.0",
+      "size": "Physical size: 720x1600",
+      "ready_account_visible": false,
+      "session_expired_message_visible": false,
+      "sign_in_visible": false,
+      "screenshot": {
+        "path": "release-v23-passenger-entry-preflight.png",
+        "sha256": "6ec13c498cf5bf4cd8b5e0856d306d43de7329fb4aab863667d3e3e228ee44d8"
+      }
+    },
+    {
+      "role": "driver",
+      "avd": "taximobile-board-api35-driver",
+      "apk_sha256": "5574f9e20ef5ade1621f58683712b6eb78f556ca828c23d83689a084137657e3",
+      "font_scale": "1.0",
+      "size": "Physical size: 720x1600",
+      "ready_account_visible": false,
+      "session_expired_message_visible": false,
+      "sign_in_visible": false,
+      "screenshot": {
+        "path": "release-v23-driver-entry-preflight.png",
+        "sha256": "7f4af5c77ad07c67d897908ce89d5c8996f70189dfe2d6b6ba5e541e1850536e"
+      }
+    }
+  ]
+}

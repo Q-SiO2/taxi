@@ -93,6 +93,16 @@ OUTBOX_NOTIFICATION_POLICIES: dict[str, NotificationDeliveryPolicy] = {
             dead_letter_owner="dispatch_operations",
         ),
         NotificationDeliveryPolicy(
+            topic="ride.updated",
+            hint_type="RIDE_UPDATED",
+            channels=_RIDE_CHANNELS,
+            urgency=DeliveryUrgency.IMMEDIATE,
+            max_delivery_age_seconds=7_200,
+            fallback=DeliveryFallback.AUTHORIZED_RIDE_RELOAD,
+            quiet_hours_allowed=False,
+            dead_letter_owner="dispatch_operations",
+        ),
+        NotificationDeliveryPolicy(
             topic="ride.matching.failed",
             hint_type="RIDE_UNMATCHED",
             channels=_RIDE_CHANNELS,

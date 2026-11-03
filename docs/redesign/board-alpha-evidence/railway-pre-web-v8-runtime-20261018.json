@@ -1,0 +1,64 @@
+{
+  "verified_utc": "2026-10-18 19:58:48 UTC",
+  "scope": "Read-only environment-status preflight; no mutations",
+  "environment_id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+  "services": [
+    {
+      "name": "alpha-web",
+      "state": "online",
+      "replicas": {
+        "running": 1,
+        "crashed": 0,
+        "total": 1
+      },
+      "has_issues": false
+    },
+    {
+      "name": "alpha-api",
+      "state": "online",
+      "replicas": {
+        "running": 1,
+        "crashed": 0,
+        "total": 1
+      },
+      "has_issues": false
+    },
+    {
+      "name": "alpha-postgis",
+      "state": "online",
+      "replicas": {
+        "running": 1,
+        "crashed": 0,
+        "total": 1
+      },
+      "has_issues": false
+    },
+    {
+      "name": "alpha-routing",
+      "state": "online",
+      "replicas": {
+        "running": 1,
+        "crashed": 0,
+        "total": 1
+      },
+      "has_issues": false
+    },
+    {
+      "name": "alpha-worker",
+      "state": "online",
+      "replicas": {
+        "running": 1,
+        "crashed": 0,
+        "total": 1
+      },
+      "has_issues": false
+    }
+  ],
+  "pending_work": [],
+  "hours_back": 8,
+  "recent_failures": 0,
+  "limitations": [
+    "A healthy replica is not protected UI or business-journey acceptance",
+    "Trial allowance and unattached volume are recorded separately"
+  ]
+}

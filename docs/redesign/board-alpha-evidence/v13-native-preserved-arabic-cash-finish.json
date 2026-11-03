@@ -1,0 +1,43 @@
+{
+  "started_utc": "2026-10-19T20:14:51.332377+00:00",
+  "candidate": "candidate-native-v13.json",
+  "ride_id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+  "passed": true,
+  "recovered": true,
+  "steps": [
+    {
+      "name": "Exact preserved ride already COMPLETED; no completion replay",
+      "utc": "2026-10-19T20:14:52.581559+00:00"
+    },
+    {
+      "name": "Same ride completed through native UI; server cash remains pending",
+      "utc": "2026-10-19T20:14:52.873069+00:00"
+    },
+    {
+      "name": "Exact recovered ride cash confirmed on server and passenger native UI",
+      "utc": "2026-10-19T20:15:21.291524+00:00"
+    },
+    {
+      "name": "Driver idle/offline verified before new rehearsals",
+      "utc": "2026-10-19T20:15:22.980644+00:00"
+    }
+  ],
+  "scope": "Exact preserved Arabic ride already completed by explicit native retry; finish pending cash through native dated amount confirmation and verify participant/server/offline. Not a new full v13 rehearsal.",
+  "recovery_harness_sha256": "08208348f9589d2b53b7a4f514f052b360fa18f99d4c3004dcf6339067aaefec",
+  "screenshots": [
+    {
+      "path": "v13-preserved-arabic-cash-passenger-cash-pending.png",
+      "sha256": "68ce5b0f58fd0dec3a552a7449930b19e33d71b8b08e4928ca547fa87335b9d8"
+    },
+    {
+      "path": "v13-preserved-arabic-cash-driver-cash-dialog.png",
+      "sha256": "ca1ae652aeb47a9785a4a2f6265d923608a8846fd0fe40ddd7760b47dc3541d6"
+    },
+    {
+      "path": "v13-preserved-arabic-cash-passenger-cash-completed.png",
+      "sha256": "8dda674d48f1be4931ffd229e2dfbae8c3ecab6660a7697c9dde9242964b0688"
+    }
+  ],
+  "fare": "35.00",
+  "finished_utc": "2026-10-19T20:15:22.980808+00:00"
+}

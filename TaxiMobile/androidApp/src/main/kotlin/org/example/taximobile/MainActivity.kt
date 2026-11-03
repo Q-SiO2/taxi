@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val role = AppRole.valueOf(BuildConfig.APP_ROLE)
-        val dependencies = AndroidAppDependencies(this, role)
+        val dependencies = AndroidAppDependencies.forApplication(this, role)
         connectivityObserver = AndroidConnectivityObserver(this)
         setContent {
             var presentation by remember {
@@ -80,6 +80,7 @@ class MainActivity : ComponentActivity() {
             val foregroundRecoveryPolicy = remember { ForegroundRecoveryPolicy() }
             val foregroundDriverLocationPolicy = remember { ForegroundDriverLocationPolicy() }
             val foregroundDriverLocationResultGuard = remember { ForegroundDriverLocationResultGuard() }
+            val explicitDriverLocationGate = remember { org.example.taximobile.feature.location.OneShotLocationGate() }
             val actionGate = remember { AppActionGate() }
             val scope = rememberCoroutineScope()
             DisposableEffect(foregroundDriverLocationResultGuard) {
@@ -88,6 +89,7 @@ class MainActivity : ComponentActivity() {
             fun submitAction(
                 key: AppAction,
                 recoverFailure: Boolean = true,
+                onFinished: () -> Unit = {},
                 action: suspend () -> AppUiState,
             ) {
                 if (!actionGate.tryStart(key)) return
@@ -111,8 +113,15 @@ class MainActivity : ComponentActivity() {
                     } finally {
                         actionGate.finish(key)
                         pendingAction = actionGate.current
+                        onFinished()
                     }
                 }
+            }
+            suspend fun refreshPresentation() {
+                if (actionGate.current != null) return
+                val revision = actionGate.beginRead()
+                val restored = dependencies.appCoordinator.restore()
+                if (actionGate.canApplyRead(revision)) presentation = presentation.accept(restored)
             }
             val documentLauncher = rememberLauncherForActivityResult(
                 ActivityResultContracts.OpenDocument(),
@@ -142,6 +151,7 @@ class MainActivity : ComponentActivity() {
             LifecycleEventEffect(Lifecycle.Event.ON_STOP) {
                 foregroundDriverLocationResultGuard.invalidate()
                 appInForeground = false
+                currentLocationRequester.cancelPending()
                 foregroundRecoveryPolicy.onBackground()
             }
             LifecycleEventEffect(Lifecycle.Event.ON_START) {
@@ -151,7 +161,7 @@ class MainActivity : ComponentActivity() {
                     presentation.state.hasAuthenticatedSession()
                 ) {
                     scope.launch {
-                        presentation = presentation.accept(dependencies.appCoordinator.restore())
+                        refreshPresentation()
                     }
                 }
             }
@@ -163,7 +173,7 @@ class MainActivity : ComponentActivity() {
                         availability = driverState?.availability,
                         appInForeground = appInForeground,
                         networkUsable = connectivityStatus != ConnectivityStatus.UNAVAILABLE,
-                        platformRequestInFlight = automaticLocationRequestInFlight,
+                        platformRequestInFlight = automaticLocationRequestInFlight || explicitDriverLocationGate.inFlight,
                         appActionInFlight = pendingAction != null,
                     )
                     if (shouldRequest) {
@@ -171,6 +181,9 @@ class MainActivity : ComponentActivity() {
                         automaticLocationRequestInFlight = true
                         val started = currentLocationRequester.requestAuthorized { location ->
                             automaticLocationRequestInFlight = false
+                            // An explicit lookup owns the slot after preempting sampling.
+                            // Its cancellation is not a failed foreground GPS observation.
+                            if (explicitDriverLocationGate.inFlight) return@requestAuthorized
                             if (!foregroundDriverLocationResultGuard.canApply(
                                     request, presentation.state, appInForeground,
                                     connectivityStatus != ConnectivityStatus.UNAVAILABLE,
@@ -182,8 +195,15 @@ class MainActivity : ComponentActivity() {
                                     connectionIssue = foregroundDriverLocationUnavailableMessage()
                                 )
                             } else {
-                                submitAction(AppAction(AppActionKind.UPDATE_DRIVER_LOCATION)) {
-                                    dependencies.appCoordinator.updateDriverLocation(location)
+                                submitAction(
+                                    AppAction(AppActionKind.UPDATE_DRIVER_LOCATION),
+                                    onFinished = {
+                                        foregroundDriverLocationPolicy.recordSubmissionFinished(System.currentTimeMillis())
+                                    },
+                                ) {
+                                    dependencies.appCoordinator.updateDriverLocation(location) {
+                                        presentation.state as? AppUiState.DriverReady
+                                    }
                                 }
                             }
                         }
@@ -196,21 +216,21 @@ class MainActivity : ComponentActivity() {
                 }
             }
             LaunchedEffect(dependencies) {
-                presentation = presentation.accept(dependencies.appCoordinator.restore())
+                refreshPresentation()
             }
             LaunchedEffect(connectivityObserver) {
                 connectivityObserver.status.collect { observedStatus ->
                     if (observedStatus != connectivityStatus) foregroundDriverLocationResultGuard.invalidate()
                     connectivityStatus = observedStatus
                     if (recoveryPolicy.shouldRefresh(observedStatus)) {
-                        presentation = presentation.accept(dependencies.appCoordinator.restore())
+                        refreshPresentation()
                     }
                 }
             }
             LaunchedEffect(dependencies) {
                 PushRefreshSignals.hints.collect {
                     if (presentation.state.hasAuthenticatedSession()) {
-                        presentation = presentation.accept(dependencies.appCoordinator.restore())
+                        refreshPresentation()
                     }
                 }
             }
@@ -232,9 +252,11 @@ class MainActivity : ComponentActivity() {
                                 presentation.state, appInForeground, connectivityStatus, pendingAction,
                             )) return@listenForLiveUpdates
                         val owner = dependencies.appCoordinator.liveSessionLifetime.value
+                        val revision = actionGate.beginRead()
                         val restored = dependencies.appCoordinator.restore()
                         currentCoroutineContext().ensureActive()
                         if (owner == dependencies.appCoordinator.liveSessionLifetime.value &&
+                            actionGate.canApplyRead(revision) &&
                             canListenForLiveUpdates(
                                 presentation.state, appInForeground, connectivityStatus, pendingAction,
                             )) {
@@ -244,6 +266,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
             App(
+        stylePreferences = org.example.taximobile.feature.ui.theme.rememberTaxiStylePreferences(),
                 appRole = role,
                 state = presentation.state,
                 pendingAction = pendingAction,
@@ -251,8 +274,10 @@ class MainActivity : ComponentActivity() {
                 connectivityStatus = connectivityStatus,
                 connectionIssue = presentation.connectionIssue,
                 mapStyleUrl = BuildConfig.MAP_STYLE_URL,
-                showManualCoordinateEntry = BuildConfig.DEBUG,
+                showManualCoordinateEntry = BuildConfig.SHOW_MANUAL_COORDINATE_ENTRY,
+                placeSearchEnabled = BuildConfig.PLACE_SEARCH_ENABLED,
                 onLogin = { identifier, password ->
+                    actionGate.invalidateReads()
                     scope.launch {
                         presentation = AppStatePresentation(AppUiState.RestoringSession)
                         presentation = presentation.accept(dependencies.appCoordinator.login(
@@ -263,6 +288,7 @@ class MainActivity : ComponentActivity() {
                     }
                 },
                 onRegister = { displayName, email, phoneNumber, password ->
+                    actionGate.invalidateReads()
                     scope.launch {
                         presentation = AppStatePresentation(AppUiState.RegisteringAccount)
                         presentation = presentation.accept(
@@ -271,6 +297,7 @@ class MainActivity : ComponentActivity() {
                     }
                 },
                 onRecoverAccount = { identifier, recoveryCode, newPassword ->
+                    actionGate.invalidateReads()
                     scope.launch {
                         presentation = AppStatePresentation(AppUiState.RecoveringAccount)
                         presentation = presentation.accept(
@@ -317,6 +344,7 @@ class MainActivity : ComponentActivity() {
                     }
                 },
                 onRetry = {
+                    actionGate.invalidateReads()
                     scope.launch {
                         presentation = AppStatePresentation(AppUiState.RestoringSession)
                         presentation = presentation.accept(dependencies.appCoordinator.restore())
@@ -333,6 +361,28 @@ class MainActivity : ComponentActivity() {
                     }
                 },
                 onRequestCurrentLocation = currentLocationRequester::request,
+                onRequestDriverObservation = { onResult ->
+                    val driverState = presentation.state as? AppUiState.DriverReady
+                    if (driverState == null || !explicitDriverLocationGate.tryStart()) {
+                        onResult(null)
+                    } else {
+                        // Keep the first explicit lookup; only automatic sampling may yield.
+                        currentLocationRequester.cancelPending()
+                        val request = foregroundDriverLocationResultGuard.capture(driverState)
+                        currentLocationRequester.requestObservation { observation ->
+                            explicitDriverLocationGate.finish()
+                            onResult(
+                                observation.takeIf {
+                                    foregroundDriverLocationResultGuard.canApply(
+                                        request, presentation.state, appInForeground,
+                                        connectivityStatus != ConnectivityStatus.UNAVAILABLE,
+                                        pendingAction != null, allowOfflineStaging = true,
+                                    )
+                                },
+                            )
+                        }
+                    }
+                },
                 onSetDriverOnline = { online, cityId, serviceType ->
                     submitAction(AppAction(AppActionKind.SET_DRIVER_AVAILABILITY)) {
                         dependencies.appCoordinator.changeDriverAvailability(
@@ -344,7 +394,9 @@ class MainActivity : ComponentActivity() {
                 },
                 onUpdateDriverLocation = { location ->
                     submitAction(AppAction(AppActionKind.UPDATE_DRIVER_LOCATION)) {
-                        dependencies.appCoordinator.updateDriverLocation(location)
+                        dependencies.appCoordinator.updateDriverLocation(location) {
+                            presentation.state as? AppUiState.DriverReady
+                        }
                     }
                 },
                 onRegisterDriverVehicle = { vehicle ->
@@ -399,14 +451,19 @@ class MainActivity : ComponentActivity() {
                         dependencies.appCoordinator.requestFixedRoute(directionId, paymentMethod)
                     }
                 },
-                onEstimateScheduledPointToPoint = { scheduledFor, cityId, pickup, destination ->
+                onResolveScheduledLocalTime = { cityId, timezone, date, time, readId ->
                     submitAction(AppAction(AppActionKind.ESTIMATE_SCHEDULED_BOOKING)) {
-                        dependencies.appCoordinator.estimateScheduledPointToPoint(scheduledFor, cityId, pickup, destination)
+                        dependencies.appCoordinator.resolveScheduledLocalTime(cityId, timezone, date, time, readId)
                     }
                 },
-                onEstimateScheduledFixedRoute = { scheduledFor, directionId ->
+                onEstimateScheduledPointToPoint = { scheduledFor, cityId, pickup, destination, readId ->
+                    submitAction(AppAction(AppActionKind.ESTIMATE_SCHEDULED_BOOKING)) {
+                        dependencies.appCoordinator.estimateScheduledPointToPoint(scheduledFor, cityId, pickup, destination, readId)
+                    }
+                },
+                onEstimateScheduledFixedRoute = { scheduledFor, directionId, readId ->
                     submitAction(AppAction(AppActionKind.ESTIMATE_SCHEDULED_BOOKING, directionId)) {
-                        dependencies.appCoordinator.estimateScheduledFixedRoute(scheduledFor, directionId)
+                        dependencies.appCoordinator.estimateScheduledFixedRoute(scheduledFor, directionId, readId)
                     }
                 },
                 onSchedulePointToPoint = { scheduledFor, cityId, pickup, destination, note, estimate ->
@@ -422,6 +479,11 @@ class MainActivity : ComponentActivity() {
                 onCancelScheduledBooking = { bookingId ->
                     submitAction(AppAction(AppActionKind.CANCEL_SCHEDULED_BOOKING, bookingId)) {
                         dependencies.appCoordinator.cancelScheduledBooking(bookingId)
+                    }
+                },
+                onLoadPassengerScheduledBookings = { page ->
+                    submitAction(AppAction(AppActionKind.LOAD_PASSENGER_SCHEDULED_BOOKINGS, page.toString())) {
+                        dependencies.appCoordinator.loadPassengerScheduledBookings(page)
                     }
                 },
                 onSubmitManualTransfer = { rideId, payerReference ->
@@ -503,6 +565,11 @@ class MainActivity : ComponentActivity() {
                 onSettleDriverCash = { rideId ->
                     submitAction(AppAction(AppActionKind.SETTLE_DRIVER_CASH, rideId)) {
                         dependencies.appCoordinator.settleDriverCash(rideId)
+                    }
+                },
+                onLoadPendingCashPayments = { page ->
+                    submitAction(AppAction(AppActionKind.LOAD_PENDING_CASH_PAYMENTS, page.toString())) {
+                        dependencies.appCoordinator.loadDriverPendingCashPayments(page)
                     }
                 },
                 onApplyToDrive = { displayName ->

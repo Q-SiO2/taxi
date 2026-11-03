@@ -78,6 +78,19 @@ class ForegroundDriverLocationResultGuardTest {
     }
 
     @Test
+    fun manual_foreground_staging_allows_offline_only_for_the_same_uninterrupted_context() {
+        val guard = ForegroundDriverLocationResultGuard()
+        val offline = available.copy(availability = DriverAvailabilityStatus.OFFLINE)
+        val request = guard.capture(offline)
+        assertFalse(guard.canApply(request, offline, true, true, false))
+        assertTrue(guard.canApply(request, offline, true, true, false, allowOfflineStaging = true))
+        assertFalse(guard.canApply(request, offline, false, true, false, allowOfflineStaging = true))
+        assertFalse(guard.canApply(request, offline.copy(activeVehicleId = "vehicle-b"), true, true, false, allowOfflineStaging = true))
+        guard.invalidate()
+        assertFalse(guard.canApply(request, offline, true, true, false, allowOfflineStaging = true))
+    }
+
+    @Test
     fun multiple_invalidations_do_not_revalidate_an_old_request() {
         val guard = ForegroundDriverLocationResultGuard()
         val old = guard.capture(available)

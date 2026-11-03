@@ -1,0 +1,12 @@
+{
+  "started_utc": "2026-10-19T11:26:37.831785+00:00",
+  "authorization": "Owner approved scoped staging setup on the recorded 18 October proposal",
+  "environment_id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+  "target_user_id": "cb422bb7-52f3-4494-a962-b4e12f7b55a5",
+  "city_id": "10000000-0000-4000-8000-000000000003",
+  "scope": "Normal password/TOTP sessions, distinct requester/reviewer, four existing city roles only",
+  "quorum_record": "scoped-demo-quorum-applied-20261019.json",
+  "passed": false,
+  "requests": [],
+  "limitation": "Synthetic actors operated by one tester; this validates the mechanism, not independent human governance. No real payment command."
+}

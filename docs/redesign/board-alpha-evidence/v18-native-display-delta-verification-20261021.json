@@ -1,0 +1,32 @@
+{
+  "verified_utc": "2026-10-21T12:21:25.630881+00:00",
+  "passed": true,
+  "candidate": "candidate-native-v18.json",
+  "previous": "candidate-native-v17.json",
+  "source_deltas": [
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/CriticalStateUiTest.kt"
+  ],
+  "apk_comparison": [
+    {
+      "role": "passenger",
+      "changed_entries": [
+        "classes6.dex",
+        "classes15.dex"
+      ],
+      "no_added_or_removed_entries": true,
+      "all_resources_manifest_and_assets_unchanged": true
+    },
+    {
+      "role": "driver",
+      "changed_entries": [
+        "classes6.dex",
+        "classes15.dex"
+      ],
+      "no_added_or_removed_entries": true,
+      "all_resources_manifest_and_assets_unchanged": true
+    }
+  ],
+  "scope": "Read-only archive comparison; code-only display packet, no resource/manifest/asset change. Functional acceptance is in separate current native/presentation records."
+}

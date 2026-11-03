@@ -4,6 +4,8 @@ import kotlinx.coroutines.flow.StateFlow
 import org.example.taximobile.feature.app.AppUiState
 import org.example.taximobile.feature.app.hasAuthenticatedSession
 import org.example.taximobile.feature.ui.text.UiMessage
+import taximobile.shared.generated.resources.Res
+import taximobile.shared.generated.resources.message_action_reauthorization
 
 /**
  * Coarse platform connectivity signal. This is deliberately not an API-health
@@ -78,7 +80,8 @@ data class AppStatePresentation(
      * Executes an authenticated UI action exactly once. When its result cannot
      * prove the command's outcome, one read-only restore reconciles the UI with
      * backend truth. The original operation error remains visible after a
-     * successful restore, while an expired session always wins and signs out.
+     * successful restore. A resource 401 requires auth revalidation before
+     * declaring the refresh session expired; rejection by that restore wins.
      *
      * [restore] must only read current state. It must never replay [action].
      */
@@ -88,7 +91,8 @@ data class AppStatePresentation(
         onBackendConfirmed: (AppUiState) -> Unit = {},
     ): AppStatePresentation {
         val result = action()
-        if (result !is AppUiState.Offline || !state.hasAuthenticatedSession()) {
+        val needsReauthorization = result is AppUiState.SignedOut && result.requiresSessionRecheck
+        if ((result !is AppUiState.Offline && !needsReauthorization) || !state.hasAuthenticatedSession()) {
             if (result !is AppUiState.Offline && result !is AppUiState.SignedOut) {
                 onBackendConfirmed(result)
             }
@@ -97,7 +101,11 @@ data class AppStatePresentation(
 
         val reconciled = accept(restore())
         return if (reconciled.state.hasAuthenticatedSession()) {
-            reconciled.copy(connectionIssue = result.message)
+            reconciled.copy(connectionIssue = if (needsReauthorization) {
+                UiMessage(Res.string.message_action_reauthorization)
+            } else {
+                (result as AppUiState.Offline).message
+            })
         } else {
             reconciled
         }

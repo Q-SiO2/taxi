@@ -1,0 +1,62 @@
+{
+  "recorded_utc": "2026-10-25T16:10:20.356750+00:00",
+  "loopback_port": 55447,
+  "database": "taximobile_ci_runtime_preservation_20261025",
+  "fixture": "fresh owned local cluster; synthetic credentials only",
+  "railway_or_retained_fixture_mutations": false,
+  "source_sha256": "0207d44aef80e52ba09502d1ddcacadbed247293f874e32fcc5707aafc83270a",
+  "server_version": "16.14",
+  "checks": {
+    "repeated_valid_login_preserves_scram_verifier_and_all_checked_attributes": true,
+    "incorrect_password_fails_without_credential_or_attribute_changes": true,
+    "privileged_login_rejected_without_silent_role_repair": true,
+    "schema_creation_privilege_rejected_without_repair": true,
+    "established_login_preflight_is_read_only_with_bounded_statement_and_lock_timeouts": true,
+    "first_role_creation_and_two_later_logins_use_real_scram_authentication": true
+  },
+  "passed": true,
+  "owned_cluster_stopped": true,
+  "affected_files": [
+    "backend/src/taximobile_api/operations/railway_entrypoint.py",
+    "backend/tests/unit/test_railway_entrypoint.py",
+    "backend/tests/unit/test_railway_runtime_preservation.py"
+  ],
+  "observations": [
+    {
+      "file": "runtime-preservation-baseline-20261025.xml",
+      "sha256": "5e31cd37224b8e14a06dbdd62301c1277285b1861f3dc2b9b5dee639ee07f653",
+      "tests": 7,
+      "failures": 7,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "runtime-preservation-focused-r3-20261025.xml",
+      "sha256": "52637efebf2253a6ef4b4c1b7effa753915e69730869b8ee193d4de7c2fa7f9c",
+      "tests": 71,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "runtime-preservation-focused-r4-20261025.xml",
+      "sha256": "323a3fccf70eec9848d9f1d1f9ddde50fb770c3831945dfb6740b763c7bcbb8d",
+      "tests": 71,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "runtime-preservation-unit-r1-20261025.xml",
+      "sha256": "092f4d4ff8c6c919a2a888d23a6743cf59077aba539f829bd436e6fcb39c1385",
+      "tests": 1158,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "native_successor_ci_accepted": false,
+  "hosted_migration_or_tls_applied": false,
+  "credentials_mfa_grants_or_real_data_changed": false,
+  "secrets_or_password_verifiers_in_report": false
+}

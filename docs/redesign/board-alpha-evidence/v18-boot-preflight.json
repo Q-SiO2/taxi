@@ -1,0 +1,21 @@
+{
+  "utc": "2026-10-21T10:45:34.488636+00:00",
+  "candidate": "candidate-native-v18.json",
+  "scope": "Boot connection recovery only, no business commands",
+  "roles": [
+    {
+      "role": "passenger",
+      "screenshot": "v18-passenger-boot-preflight.png",
+      "sha256": "ab5d2bc0d985c55cb6fabeae260c1aee02db3662fd18f261e7f98bdad6807d58",
+      "connection_retry_visible": true,
+      "normal_connection_retry_tapped_once": true
+    },
+    {
+      "role": "driver",
+      "screenshot": "v18-driver-boot-preflight.png",
+      "sha256": "3e0bbd926c02f8f9423be33565806bc8bbdd8f355057b7758674e805bc84df1b",
+      "connection_retry_visible": true,
+      "normal_connection_retry_tapped_once": true
+    }
+  ]
+}

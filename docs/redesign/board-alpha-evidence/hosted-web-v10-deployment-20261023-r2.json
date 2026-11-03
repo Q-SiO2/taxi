@@ -1,0 +1,16 @@
+{
+  "issued_utc": "2026-10-23T10:08:08.966914+00:00",
+  "candidate": "candidate-web-v10.json",
+  "candidate_sha256": "63104284acd55fd57bea816c23b48ade324210df3e9f033fe0856c71d07c8d9a",
+  "project_id": "9f841575-c4f3-4a4d-bb83-2e6ff92e436e",
+  "environment_id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+  "service_id": "2d8ab069-2310-46ff-afe0-8fd4f42a5bd1",
+  "previous_deployment_id": "ceee310c-e957-49ad-945d-b9f2d292eb61",
+  "package_manifest_sha256": "be37bc97a881e2c5f736cb25f4f1ddbe8023def24bbf0e35c0c56305bf317475",
+  "assets": 93,
+  "state": "Exact upload deployment identified; readiness and hosted acceptance pending",
+  "accepted": false,
+  "cli_returncode": 0,
+  "deployment_id": "da158b10-2d82-468e-b1f1-cffba5c32ee4",
+  "observed_status": "INITIALIZING"
+}

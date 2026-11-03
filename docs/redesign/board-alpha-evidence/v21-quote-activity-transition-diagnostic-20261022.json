@@ -1,0 +1,6 @@
+{
+  "recorded_utc": "2026-10-22T11:23:03.971509+00:00",
+  "failed_observer": "v21-native-quote-style-review-20261022-r2.json",
+  "issue": "Observer read native hierarchy immediately after starting an Activity and required one scroll viewport before restoration/layout completed. No booking or point-selection mutation during that failed activity observation.",
+  "new_observer": "Require actual visible enabled Request after normal restore (bounded120s), then inspect/expand the measured sheet and selected-point cards. Preserve all activity-count/PID/price/no-command assertions; frozen APK/source unchanged."
+}

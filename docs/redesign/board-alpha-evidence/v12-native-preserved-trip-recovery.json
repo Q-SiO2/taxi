@@ -1,0 +1,16 @@
+{
+  "started_utc": "2026-10-19T19:04:57.730321+00:00",
+  "candidate": "candidate-native-v12.json",
+  "ride_id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+  "passed": false,
+  "recovered": false,
+  "steps": [
+    {
+      "name": "Preserved server IN_PROGRESS verified; exact APKs and existing clocks match",
+      "utc": "2026-10-19T19:05:00.112389+00:00"
+    }
+  ],
+  "scope": "Same preserved IN_PROGRESS trip; exact v12 native UI recovery, independent owned server reads; not a complete new-candidate rehearsal",
+  "failure_type": "SmokeFailure",
+  "finished_utc": "2026-10-19T19:06:13.499998+00:00"
+}

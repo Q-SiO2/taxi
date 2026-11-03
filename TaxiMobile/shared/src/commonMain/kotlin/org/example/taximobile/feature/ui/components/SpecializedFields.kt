@@ -1,5 +1,6 @@
 package org.example.taximobile.feature.ui.components
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -125,13 +126,15 @@ fun OtpInput(
     enabled: Boolean = true,
     contentDescriptionText: String,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     val digits = value.filter(Char::isDigit).take(length)
     BasicTextField(
         value = digits,
         onValueChange = { onValueChange(it.filter(Char::isDigit).take(length)) },
         enabled = enabled,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword, imeAction = ImeAction.Done),
-        cursorBrush = SolidColor(TaxiColors.Navy900),
+        cursorBrush = SolidColor(taxiColors.Navy900),
         modifier = modifier.fillMaxWidth().semantics { contentDescription = contentDescriptionText },
         decorationBox = { innerTextField ->
             Box {
@@ -140,11 +143,11 @@ fun OtpInput(
                         val selectedSlot = index == digits.length && digits.length < length
                         Surface(
                             modifier = Modifier.weight(1f).defaultMinSize(minHeight = 56.dp),
-                            shape = RoundedCornerShape(TaxiRadii.Md),
-                            color = TaxiColors.Surface0,
+                            shape = RoundedCornerShape(taxiRadii.Md),
+                            color = taxiColors.Surface0,
                             border = androidx.compose.foundation.BorderStroke(
                                 if (selectedSlot) 2.dp else 1.dp,
-                                if (selectedSlot) TaxiColors.Navy900 else TaxiColors.StrokeSubtle,
+                                if (selectedSlot) taxiColors.Navy900 else taxiColors.StrokeSubtle,
                             ),
                         ) {
                             Box(contentAlignment = Alignment.Center) {
@@ -167,12 +170,13 @@ fun RatingStars(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
+    val taxiColors = TaxiTheme.colors
     Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
         repeat(5) { index ->
             val score = index + 1
             Text(
                 text = if (score <= value) "★" else "☆",
-                color = if (score <= value) TaxiColors.Accent600 else TaxiColors.Ink300,
+                color = if (score <= value) taxiColors.Accent600 else taxiColors.Ink300,
                 style = MaterialTheme.typography.displaySmall,
                 modifier = Modifier
                     .defaultMinSize(48.dp, 48.dp)

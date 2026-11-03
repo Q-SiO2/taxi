@@ -1,0 +1,153 @@
+{
+  "recorded_utc": "2026-10-27T14:19:21.897914+00:00",
+  "source_predecessor": "8514a92525e28822d6f0480177f8daed85c20f3c",
+  "source_sha256": {
+    "backend/pyproject.toml": "0beb23e5f402887dffe7bacc5480b5453c6df991883af95e55f4888cb6e0c4f5",
+    "backend/requirements.lock": "b3e610a6313290c62b26a340e001a3a8383876df01547d2b4e904020c6e037e8",
+    "backend/requirements-dev.lock": "b56391979fbd375484bf39be78dbca31328bb07e677270b1aa0e7c3b2ca1a81f",
+    "backend/src/taximobile_api/domains/fixed_routes/router.py": "fa262f5d77414b412e5c7f46be0e69b44dcb9f6dcf633d8abda82eb0a7491f7a",
+    "backend/src/taximobile_api/domains/scheduled_bookings/local_time.py": "c517e05fbf33aeb26a5d7c166025340c4cf2e0769a2eee7d1cee4fa73b9b9adb",
+    "backend/src/taximobile_api/domains/scheduled_bookings/schemas.py": "b42b99df8a732d88cc1f931cb45837e5cfb0bc79e619e668eb93d829e7287cc1",
+    "backend/tests/unit/test_scheduled_local_time.py": "ba665db86d7716cc3886fff70d2dad84d70a8c45b80c18559396b34b05bad30a",
+    "backend/tests/integration/test_scheduled_local_time_http.py": "96bdc7ea1f1509d35fa5c96be8058304a6ef4c4db1bcb89afb2d05ed6292ac5c",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/scheduling/ScheduledLocalTimeOptions.kt": "d3ad58a06d2c9fbb87d375701b3d66e33937e4722d877084a51e2829ac4b4765",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/scheduling/ScheduledBookingModels.kt": "17f93939fef3e54ec7f58343eb2cd251ab3304d82a1e153ef4dbab063be1272a",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/scheduling/KtorScheduledBookingGateway.kt": "5ff2459af5859cafafd3ea2ad283b6390ee5d0373b489ea3d3342e1fd05495ab",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/AppUiState.kt": "00f9fe935d842b83dd55ab15014784af6526ab6d3d39fed9e66502406820ad57",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/MobileAppCoordinator.kt": "db6544d86e38a35552c18a6eaf7989567e44e55dfb9ad60c737ff6d9c0728e02",
+    "TaxiMobile/shared/src/commonMain/composeResources/values/strings.xml": "03ad2465776e70e5990c181b12ec84e01b4054d01dd3b06fbdfc68b5bb8f8003",
+    "TaxiMobile/shared/src/commonMain/composeResources/values-fr/strings.xml": "3f299809a0fc6177f1e7d06223ee9fe4c08528f9fd9bb96a83700285961afbc8",
+    "TaxiMobile/shared/src/commonMain/composeResources/values-ar/strings.xml": "4d938f77a47e0a01fac0519940f2b5019d7d2fb4e7dbef4e66cb5a71962809ff",
+    "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/domain/scheduling/ScheduledLocalTimeOptionsTest.kt": "3402ad9c5a9a5ef653fd11f71cf203c7cf425cc59fb866784750e979cabb4dfc",
+    "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/app/MobileAppCoordinatorTest.kt": "6d25f8f32f9ee67bb35aa5eb7aca72746a5ac9f3170ae5fe8f4a2b27f3f1dea3",
+    "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/app/QuoteSessionRecoveryTest.kt": "d7148268fa4b6d1c174e506000fc9dec0f3563ec1f017e75cbb37428b0b566b0",
+    "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/network/RideSchedulingCancellationTest.kt": "8ef3025f36b5e0013696e65c1a386d2bc58197266dfc7c918d116e9a89d1a60d",
+    "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/data/scheduling/ScheduledLocalTimeGatewayTest.kt": "522d571ba5164b3d24dfbaf6443068059c04a1e682f5f3243dcffb4c5ca9402a"
+  },
+  "platform": {
+    "jvm": {
+      "totals": {
+        "tests": 224,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "archive": "scheduled-local-time-jvm-20261027.zip",
+      "sha256": "10b80d9b2da8388989fd9a3047cc9030ec7fe03bd372d4ab7842333443ef49b7"
+    },
+    "android_host": {
+      "totals": {
+        "tests": 387,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "archive": "scheduled-local-time-android_host-20261027.zip",
+      "sha256": "48c1a997b77a017533c0d6de94bed830650d4cc7865b119a9d5be6f40cba1654"
+    }
+  },
+  "backend": {
+    "unit": {
+      "totals": {
+        "tests": 1212,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "junit_sha256": "00cd8c9cf54ad371f64432a8a72f94135c34bc6f48a98dca430e7d18cf940394"
+    },
+    "http_postgis": {
+      "totals": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "junit_sha256": "f01623f9e229bee834103237cade09ef5438ea03f5eefe239e9d7bec24e36f23"
+    },
+    "focused_unit": {
+      "totals": {
+        "tests": 44,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "junit_sha256": "cfe68caa4535b4fc349beb1a1f161621cf2927544102d63888eaf42a3f11f8bb"
+    }
+  },
+  "log_sha256": {
+    "debug_builds": "d9b632ed7ed33e9d6a65b4a9ed1b5cb2af0a89a263402bbeae0e97a2f50f5b63",
+    "final_shared": "725b4e7083521b27cd5eb4563d3611bf0141882b81f60bd98f66e953dfc14317",
+    "source_tools": "66d2b75bb0d48621c49d4bce47f6c9b9f5f6ba54c91075131acbc9011d215f6f",
+    "runtime_audit": "39464b9e33fc2a89d5a195a1d3b62251eb1b5079eeea28fd885cd4cc2758780c",
+    "development_audit": "39464b9e33fc2a89d5a195a1d3b62251eb1b5079eeea28fd885cd4cc2758780c"
+  },
+  "catalog_entries_per_language": 1296,
+  "source_build_tool_cases": 121,
+  "tzdata": {
+    "package": "2026.2",
+    "iana": "2026b",
+    "runtime_and_development_hash_audits_passed": true,
+    "packaged_rules_only": true,
+    "os_rules_fallback": false
+  },
+  "isolated_postgis": {
+    "scope": "fresh local synthetic cluster only",
+    "postgres": "16.14",
+    "postgis": "3.5 USE_GEOS=1 USE_PROJ=1 USE_STATS=1",
+    "migration_head": "20261025_0054",
+    "public_tables": 81,
+    "business_counts": {
+      "scheduled_bookings": 0,
+      "scheduled_booking_offers": 0,
+      "scheduled_booking_commitments": 0,
+      "scheduled_booking_events": 0,
+      "idempotency_records": 0,
+      "outbox_events": 0
+    },
+    "metadata_sha256": "4cc0f263bb20287e76801ed02a20472ce61d49a66f2551f85507fb4efcd9fb62",
+    "owned_cluster_stopped_data_retained": true
+  },
+  "source_inventory": {
+    "sha256": "55ac80eff588654a79d4ce01851218b240dbb1ee5b10e999b066df05e9551ba5",
+    "http_operations": 249,
+    "migrations": 54,
+    "roles": 9
+  },
+  "retained_initial_focused_failures": {
+    "totals": {
+      "tests": 43,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0
+    },
+    "junit_sha256": "480ffe81642a2b69ebefef0fd176936b512bec77fef0115b6e1c3ffbe6cbe6d4",
+    "causes": [
+      "24:00 parser normalization needed explicit hour bounds",
+      "active-city synthetic fixture missing configuration field"
+    ]
+  },
+  "debug_builds_same_application_sources_as_final_test_only_addition": true,
+  "native_date_time_controls_or_exposed_picker_states_implemented": false,
+  "overlapping_test_sets_must_not_be_summed": true,
+  "root_head_and_index_preserved": true,
+  "current_source_immutable_ci_minified_ios_or_production_web_accepted": false,
+  "physical_hosted_provider_operational_pilot_or_public_accepted": false,
+  "post_test_catalog_format_repair": {
+    "TaxiMobile/shared/src/commonMain/composeResources/values/strings.xml": {
+      "tested_lf_sha256": "afb3dc1548f24bceec71054a3d1df868223a8f6a29df818840ac20926ca7be4e",
+      "restored_crlf_sha256": "03ad2465776e70e5990c181b12ec84e01b4054d01dd3b06fbdfc68b5bb8f8003",
+      "normalized_bytes_identical": true
+    },
+    "TaxiMobile/shared/src/commonMain/composeResources/values-fr/strings.xml": {
+      "tested_lf_sha256": "c24285e61d95fb230dbd616e50a421160ad247e97e8bd3eb0276234eb5373793",
+      "restored_crlf_sha256": "3f299809a0fc6177f1e7d06223ee9fe4c08528f9fd9bb96a83700285961afbc8",
+      "normalized_bytes_identical": true
+    },
+    "TaxiMobile/shared/src/commonMain/composeResources/values-ar/strings.xml": {
+      "tested_lf_sha256": "6949dae3c14b4ef2df7c9b0b98d05d6adf0148793cff83c5f6d483b7b70f1163",
+      "restored_crlf_sha256": "4d938f77a47e0a01fac0519940f2b5019d7d2fb4e7dbef4e66cb5a71962809ff",
+      "normalized_bytes_identical": true
+    }
+  }
+}

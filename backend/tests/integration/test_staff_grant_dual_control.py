@@ -281,6 +281,18 @@ def test_staff_grant_changes_require_independent_decisions_and_are_replay_safe()
             201,
         ) == requested
 
+        pending_page = expect(
+            client.get(
+                "/api/v1/operations/administrative-grant-requests"
+                f"?market_id={LEGACY_MARKET_ID}&status=PENDING"
+                f"&target_user_id={target_id}&page=1&limit=1",
+                headers=checker_headers,
+            ),
+            200,
+        )
+        assert pending_page["items"][0]["id"] == requested["id"]
+        assert pending_page["total"] >= 1
+
         decision_payload = {
             "expected_version": requested["optimistic_version"],
             "reason": "Independent scope and duty review completed.",
@@ -328,6 +340,37 @@ def test_staff_grant_changes_require_independent_decisions_and_are_replay_safe()
             200,
         )
         assert any(item["id"] == requested["id"] for item in queue["items"])
+        pending_in_market = expect(
+            client.get(
+                f"/api/v1/operations/administrative-grant-requests?status=PENDING&market_id={LEGACY_MARKET_ID}",
+                headers=checker_headers,
+            ),
+            200,
+        )
+        assert all(item["status"] == "PENDING" for item in pending_in_market["items"])
+        approved_in_market = expect(
+            client.get(
+                f"/api/v1/operations/administrative-grants?market_id={LEGACY_MARKET_ID}",
+                headers=checker_headers,
+            ),
+            200,
+        )
+        assert any(item["id"] == approved["resulting_grant_id"] for item in approved_in_market["items"])
+        other_market = uuid4()
+        assert expect(
+            client.get(
+                f"/api/v1/operations/administrative-grants?market_id={other_market}",
+                headers=checker_headers,
+            ),
+            200,
+        )["total"] == 0
+        assert expect(
+            client.get(
+                f"/api/v1/operations/administrative-grant-requests?market_id={other_market}",
+                headers=checker_headers,
+            ),
+            200,
+        )["total"] == 0
 
         revoke_requested = expect(
             client.post(

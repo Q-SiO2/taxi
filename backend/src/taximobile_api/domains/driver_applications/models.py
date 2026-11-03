@@ -95,6 +95,7 @@ class DocumentScanStatus(StrEnum):
 class DocumentErasureReason(StrEnum):
     APPLICANT_DELETED = "APPLICANT_DELETED"
     RETENTION_EXPIRED = "RETENTION_EXPIRED"
+    UPLOAD_UNCOMMITTED = "UPLOAD_UNCOMMITTED"
 
 
 class ApplicationDecisionType(StrEnum):
@@ -285,6 +286,11 @@ class DriverApplicationDocument(Base):
             "retention_deadline > uploaded_at",
             name="driver_application_document_retention_after_upload",
         ),
+        CheckConstraint(
+            "upload_lease_until IS NULL OR "
+            "(deleted_at IS NOT NULL AND upload_lease_until > uploaded_at)",
+            name="driver_document_upload_lease",
+        ),
     )
 
     id: Mapped[UUID] = mapped_column(PostgreSQLUUID(as_uuid=True), primary_key=True, default=uuid4)
@@ -308,6 +314,7 @@ class DriverApplicationDocument(Base):
     )
     uploaded_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    upload_lease_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     retention_deadline: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
 
@@ -317,7 +324,7 @@ class DriverDocumentRetentionAction(Base):
     __tablename__ = "driver_document_retention_actions"
     __table_args__ = (
         CheckConstraint(
-            "reason IN ('APPLICANT_DELETED', 'RETENTION_EXPIRED')",
+            "reason IN ('APPLICANT_DELETED', 'RETENTION_EXPIRED', 'UPLOAD_UNCOMMITTED')",
             name="driver_document_retention_reason",
         ),
         UniqueConstraint("document_id", name="uq_driver_document_retention_document"),

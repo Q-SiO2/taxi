@@ -1,0 +1,154 @@
+{
+  "observed_utc": "2026-10-22T10:57:11.440968+00:00",
+  "project_id": "9f841575-c4f3-4a4d-bb83-2e6ff92e436e",
+  "environment_id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+  "method": "Existing scoped CLI read-only variable list; only names retained, raw values never written or printed",
+  "services": [
+    {
+      "service_id": "2d8ab069-2310-46ff-afe0-8fd4f42a5bd1",
+      "service": "alpha-web",
+      "variable_names": [
+        "PORT",
+        "RAILWAY_ENVIRONMENT",
+        "RAILWAY_ENVIRONMENT_ID",
+        "RAILWAY_ENVIRONMENT_NAME",
+        "RAILWAY_PRIVATE_DOMAIN",
+        "RAILWAY_PROJECT_ID",
+        "RAILWAY_PROJECT_NAME",
+        "RAILWAY_PUBLIC_DOMAIN",
+        "RAILWAY_SERVICE_ALPHA_API_URL",
+        "RAILWAY_SERVICE_ALPHA_WEB_URL",
+        "RAILWAY_SERVICE_ID",
+        "RAILWAY_SERVICE_NAME",
+        "RAILWAY_STATIC_URL"
+      ],
+      "rotation_review_names": [],
+      "sealed_names": []
+    },
+    {
+      "service_id": "41ccd6b2-41e2-4886-8d96-cc56f62aaab7",
+      "service": "alpha-postgis",
+      "variable_names": [
+        "PGDATA",
+        "POSTGRES_DB",
+        "POSTGRES_INITDB_ARGS",
+        "POSTGRES_PASSWORD",
+        "POSTGRES_USER",
+        "RAILWAY_ENVIRONMENT",
+        "RAILWAY_ENVIRONMENT_ID",
+        "RAILWAY_ENVIRONMENT_NAME",
+        "RAILWAY_PRIVATE_DOMAIN",
+        "RAILWAY_PROJECT_ID",
+        "RAILWAY_PROJECT_NAME",
+        "RAILWAY_SERVICE_ALPHA_API_URL",
+        "RAILWAY_SERVICE_ALPHA_WEB_URL",
+        "RAILWAY_SERVICE_ID",
+        "RAILWAY_SERVICE_NAME",
+        "RAILWAY_VOLUME_ID",
+        "RAILWAY_VOLUME_MOUNT_PATH",
+        "RAILWAY_VOLUME_NAME",
+        "TAXIMOBILE_RUNTIME_DATABASE_PASSWORD"
+      ],
+      "rotation_review_names": [
+        "POSTGRES_PASSWORD",
+        "TAXIMOBILE_RUNTIME_DATABASE_PASSWORD"
+      ],
+      "sealed_names": []
+    },
+    {
+      "service_id": "568723a2-e456-4130-825a-077c5cae9f81",
+      "service": "alpha-routing",
+      "variable_names": [
+        "PORT",
+        "RAILWAY_ENVIRONMENT",
+        "RAILWAY_ENVIRONMENT_ID",
+        "RAILWAY_ENVIRONMENT_NAME",
+        "RAILWAY_PRIVATE_DOMAIN",
+        "RAILWAY_PROJECT_ID",
+        "RAILWAY_PROJECT_NAME",
+        "RAILWAY_SERVICE_ALPHA_API_URL",
+        "RAILWAY_SERVICE_ALPHA_WEB_URL",
+        "RAILWAY_SERVICE_ID",
+        "RAILWAY_SERVICE_NAME"
+      ],
+      "rotation_review_names": [],
+      "sealed_names": []
+    },
+    {
+      "service_id": "758fa7d5-f8b8-4730-a00f-438e28184e35",
+      "service": "alpha-api",
+      "variable_names": [
+        "PORT",
+        "RAILWAY_ENVIRONMENT",
+        "RAILWAY_ENVIRONMENT_ID",
+        "RAILWAY_ENVIRONMENT_NAME",
+        "RAILWAY_PRIVATE_DOMAIN",
+        "RAILWAY_PROJECT_ID",
+        "RAILWAY_PROJECT_NAME",
+        "RAILWAY_PUBLIC_DOMAIN",
+        "RAILWAY_SERVICE_ALPHA_API_URL",
+        "RAILWAY_SERVICE_ALPHA_WEB_URL",
+        "RAILWAY_SERVICE_ID",
+        "RAILWAY_SERVICE_NAME",
+        "RAILWAY_STATIC_URL",
+        "TAXIMOBILE_CLIENT_COMPATIBILITY_ENFORCED",
+        "TAXIMOBILE_CORS_ORIGINS",
+        "TAXIMOBILE_DATABASE_POOL_MAX_OVERFLOW",
+        "TAXIMOBILE_DATABASE_POOL_SIZE",
+        "TAXIMOBILE_DATABASE_URL",
+        "TAXIMOBILE_ENV",
+        "TAXIMOBILE_GEOCODING_PROVIDER",
+        "TAXIMOBILE_JWT_SECRET",
+        "TAXIMOBILE_LOG_LEVEL",
+        "TAXIMOBILE_MANUAL_TRANSFER_ENABLED",
+        "TAXIMOBILE_MIGRATION_DATABASE_URL",
+        "TAXIMOBILE_MONITORING_TOKEN",
+        "TAXIMOBILE_OPERATIONS_MFA_ENCRYPTION_KEY",
+        "TAXIMOBILE_PROCESS_ROLE",
+        "TAXIMOBILE_ROUTING_BASE_URL",
+        "TAXIMOBILE_ROUTING_PROVIDER",
+        "TAXIMOBILE_RUNTIME_DATABASE_PASSWORD"
+      ],
+      "rotation_review_names": [
+        "TAXIMOBILE_DATABASE_URL",
+        "TAXIMOBILE_JWT_SECRET",
+        "TAXIMOBILE_MIGRATION_DATABASE_URL",
+        "TAXIMOBILE_MONITORING_TOKEN",
+        "TAXIMOBILE_RUNTIME_DATABASE_PASSWORD"
+      ],
+      "sealed_names": []
+    },
+    {
+      "service_id": "eb42d0ba-feae-4f7a-9c86-48f4d38006d0",
+      "service": "alpha-worker",
+      "variable_names": [
+        "PORT",
+        "RAILWAY_ENVIRONMENT",
+        "RAILWAY_ENVIRONMENT_ID",
+        "RAILWAY_ENVIRONMENT_NAME",
+        "RAILWAY_PRIVATE_DOMAIN",
+        "RAILWAY_PROJECT_ID",
+        "RAILWAY_PROJECT_NAME",
+        "RAILWAY_SERVICE_ALPHA_API_URL",
+        "RAILWAY_SERVICE_ALPHA_WEB_URL",
+        "RAILWAY_SERVICE_ID",
+        "RAILWAY_SERVICE_NAME",
+        "TAXIMOBILE_DATABASE_POOL_MAX_OVERFLOW",
+        "TAXIMOBILE_DATABASE_POOL_SIZE",
+        "TAXIMOBILE_DATABASE_URL",
+        "TAXIMOBILE_ENV",
+        "TAXIMOBILE_LOG_LEVEL",
+        "TAXIMOBILE_MONITORING_TOKEN",
+        "TAXIMOBILE_PROCESS_ROLE"
+      ],
+      "rotation_review_names": [
+        "TAXIMOBILE_DATABASE_URL",
+        "TAXIMOBILE_MONITORING_TOKEN"
+      ],
+      "sealed_names": []
+    }
+  ],
+  "values_persisted_or_logged": false,
+  "changes_performed": false,
+  "scope": "Names identify review candidates, not confirmed secret exposure or a complete dependency/rotation plan. Inspect existing bindings privately before coordinated Trial rollout; never recreate sealed variables or strand live consumers."
+}

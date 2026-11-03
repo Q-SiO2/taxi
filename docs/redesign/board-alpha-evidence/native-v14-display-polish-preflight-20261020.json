@@ -1,0 +1,9 @@
+{
+  "utc": "2026-10-20T09:54:05.711588+00:00",
+  "candidate": "candidate-native-v14.json",
+  "scope": "Native initial map selection and route preparation pass; no booking created and no full journey accepted",
+  "observed": "Recent-destination fallback exposes long coordinate strings in the real Arabic main booking flow",
+  "before_screenshot": "v14-first-stepped-passenger-fare-review-before.png",
+  "repair": "Display recent point fallback at up to five decimals, retaining original full-precision point in onSelect and all requests; no added test for this reversible label-only change, verify actual render and existing suites",
+  "next": "Freeze coherent presentation candidate and complete two same-instance journeys; do not count this partial preparation as a full trip"
+}

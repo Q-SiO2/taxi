@@ -167,7 +167,11 @@ The mobile implementation requests only foreground/when-in-use location after a
 user selects a current-location action. Once an approved driver explicitly goes
 online, it schedules already-authorized one-shot observations only while the app
 is foregrounded: 15 seconds in available/offered states and 10 seconds during an
-active ride. The automatic path never opens permission UI, and it stops when the
+active ride. After automatic submission/readback/reconciliation finishes, the
+same minimum idle interval applies before the next attempt; a slow network must
+not monopolize the driver's single-action gate with immediate sampling bursts.
+This does not weaken server freshness or allow parallel/replayed commands.
+The automatic path never opens permission UI, and it stops when the
 app is backgrounded, offline, paused or disconnected. Neither platform requests
 background-location permission or starts continuous OS tracking.
 Permission denial, timeout, or disabled location services must not submit a stale
@@ -341,6 +345,16 @@ host port. The key must not be reused for JWT, MFA, database, pager, monitoring,
 Firebase, or payment configuration and must be backed up/rotated through the
 deployment secret boundary; losing it makes retained ciphertext unrecoverable.
 
+The INSTREAM adapter consumes a bounded complete non-session response through
+connection closure, accepting only the single `stream: OK` NUL-terminated record.
+TCP fragmentation is permitted; unterminated, wrong-prefix, multiple, oversized
+or error records fail closed. A single deadline covers connection, upload
+backpressure and response; connection cleanup is bounded. Scan cancellation
+propagates without persisting a file. Atomic-write errors become the existing
+safe unavailable response and temporary ciphertext is removed. See the
+[scanner/recovery packet](launch/document-storage.md) for source and local
+evidence, separate from production daemon/storage acceptance.
+
 Review reads require the explicit document permission, application city scope,
 recent operations MFA, clean scan state, and a bounded reviewer quota. Every
 successful read is audited and streamed with an opaque filename, `no-store`, and
@@ -351,6 +365,40 @@ then performs idempotent physical deletion, hard-deletes metadata, and preserves
 only one immutable content-free erasure record. Production promotion requires a
 controlled clean/malware/reviewer/deletion drill plus encrypted-volume backup,
 key recovery, expiry, and restore evidence.
+
+On 24 October the owner selected a private encrypted S3-compatible adapter for
+Railway's separate API/worker. The existing filesystem adapter remains the
+portable default. See the [approved implementation packet](launch/document-s3.md):
+source transport work alone cannot activate ingestion before durable upload/
+orphan recovery, private credentials, actual scanner feeds and provider/restore
+acceptance. Public or presigned document URLs remain excluded.
+
+The [25 October source workflow](launch/document-s3.md) reserves hidden metadata
+with an upload lease before publishing ciphertext. Finalization refreshes the
+owner/application lock and checks its expected version and pending lease.
+Cancellation and unknown outcomes retain cleanup authority; an uncertain commit
+must never cause blind request deletion. Expired pending uploads have immutable
+`UPLOAD_UNCOMMITTED` erasure evidence. A bounded repeated sweep reconciles late
+unreferenced writes under the same opaque-key lock as upload registration,
+checking current database authority before deletion. Orphan operational logs
+contain only a fixed event and worker label, without keys, hashes or fabricated
+actors. Actual central log retention remains an operational acceptance gate.
+
+The source S3 selector requires explicit private endpoint/bucket credentials,
+the independent encryption key and scanner; mixed filesystem/S3 settings fail
+startup. Filesystem remains default and unconfigured storage remains disabled.
+The new lease migration and source wiring do not establish actual provider,
+scanner-feed, key recovery, capacity or real-document acceptance.
+
+[CI 236](launch/document-s3-ci-terminal-20261025.json) subsequently passes all
+eight required jobs and 1,443 backend cases for source 9e94fda. The separately
+approved [bounded actual S3 probe](launch/document-s3-provider-probe-20261025.json)
+passes five protocol/crypto checks with three synthetic objects and cleanup.
+It uses only a built-in fixture checker and transient local credentials; no
+application-service keys/configuration or real documents are introduced. Its
+new staging bucket is removed, while project registration metadata remains.
+Actual scanner feeds/capacity, service key custody, privacy/retention and hosted
+ingestion acceptance remain open.
 
 ## Logging
 
@@ -472,9 +520,15 @@ CI also runs a repository-owned high-confidence credential gate over Git-tracked
 source and configuration. It rejects committed Firebase configuration, signing
 containers, local environment files, private-key material, service-account JSON,
 and well-known live token formats without printing matched values. When run from
-a source archive without Git metadata, it scans only documented source roots and
+a source archive without its own Git root, including an archive nested inside
+another checkout, it scans only documented source roots and
 does not read ignored local `.env`, `local.properties`, caches, builds, backups,
 or generated environments.
+During local candidate preparation, run
+`python infra/scripts/validate_source_credentials.py --include-untracked` to also
+scan non-ignored untracked source/configuration before committing or archiving it.
+The default CI mode remains tracked-only. Neither mode substitutes for a complete
+secret-history or independent security review.
 
 Production container inputs are validated before rendering the deployment:
 application images require a full immutable digest; database URLs cannot target

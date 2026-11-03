@@ -1,0 +1,11 @@
+{
+  "candidate": "candidate-native-v18.json",
+  "role": "driver",
+  "started_utc": "2026-10-21T12:01:28.971391+00:00",
+  "passed": false,
+  "checks": [],
+  "scope": "Actual EN welcome artwork/style options and normal existing-account re-entry; recordings are raw emulator observations, not physical performance acceptance",
+  "logout_method": "Explicit current owned emulator session, native confirmation; no other session revoked",
+  "preflight_failure": "Generic sign-out scroll search failed before delivering a logout; original welcome-review.json retained",
+  "finished_utc": "2026-10-21T12:03:09.553198+00:00"
+}

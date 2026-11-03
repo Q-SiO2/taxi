@@ -1,0 +1,34 @@
+{
+  "created_utc": "2026-10-20T20:05:05.162284+00:00",
+  "passed": true,
+  "scope": "Six quote navigation cases plus existing auth/command recovery and history coordinator cases; actual replacement-native acceptance pending",
+  "counts": {
+    "tests": 72,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "red": "quote-refresh-red-20261020.json",
+  "archive": [
+    {
+      "path": ".tools/alpha-delivery/quote-refresh-green/TEST-org.example.taximobile.feature.app.QuoteSessionRecoveryTest.xml",
+      "sha256": "ff61ae654997f7e5c64638569fe08b4d1b8185c2aa652c36745e1b4b357e1c30"
+    },
+    {
+      "path": ".tools/alpha-delivery/quote-refresh-green/TEST-org.example.taximobile.feature.app.MobileAppCoordinatorTest.xml",
+      "sha256": "3fda7840bc507dd44d46f0184aaf5b8a86698fba61a635b2fe0ae6d8819a5ae5"
+    },
+    {
+      "path": ".tools/alpha-delivery/quote-refresh-green/quote-refresh-green-20261020.log",
+      "sha256": "5d34219aa545eae21cc28b448652570c5bd2b39e20dea17d2c7c1f98f9c36eef"
+    },
+    {
+      "path": ".tools/alpha-delivery/quote-refresh-green/MobileAppCoordinator.kt",
+      "sha256": "317259daaa2305b3aec67d6f45e7cb422dfe9c1465c60e31e99db88ff3ec6f6e"
+    },
+    {
+      "path": ".tools/alpha-delivery/quote-refresh-green/QuoteSessionRecoveryTest.kt",
+      "sha256": "2907b06fa26e21662204e193448820c552474783b7025f3d2e031666d703f3ab"
+    }
+  ]
+}

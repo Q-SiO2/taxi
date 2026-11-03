@@ -1,0 +1,32 @@
+{
+  "verified_utc": "2026-10-17T09:19:25.376340+00:00",
+  "candidate": "candidate-native-v9.json",
+  "scope": "fresh native location acquisition and upload readiness only; separate trip report required",
+  "driver_avd": "taximobile-board-api35-driver",
+  "api_level": 35,
+  "emulator": "official installed Google APIs x86_64 image, SwiftShader Vulkan, 2560 MB requested; guest MemTotal 2532420 kB",
+  "passenger_avd": "taximobile-board-aosp31-passenger",
+  "synthetic_fix": {
+    "latitude": 33.5731,
+    "longitude": -7.5898,
+    "hacc_metres": 5.0,
+    "observed_elapsed_timestamp": "11m19s486ms"
+  },
+  "checks": [
+    "Exact frozen v9 driver APK installed",
+    "Actual native driver email/password login passed",
+    "Observed Android foreground precise location permission granted",
+    "Fresh native location submitted status appeared in UI",
+    "API35 fix elapsed timestamp is compatible with boot uptime; invalid API31 fixture preserved separately"
+  ],
+  "capture": {
+    "path": "v9-clean-api35-driver-location.png",
+    "sha256": "553a8cd439811e01fb118db9c40f6ec8da7a5e50f9399999812e35ab50fc43c7"
+  },
+  "limitations": [
+    "Initial System UI ANR dismissed with Wait; first failed login record preserved",
+    "Owned emulator system animation scales set to zero for functional fixture",
+    "Synthetic GPS only; no physical GPS, lifecycle, background, OS push or road acceptance",
+    "No native freshness or backend dispatch threshold changed"
+  ]
+}

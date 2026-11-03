@@ -1,0 +1,107 @@
+{
+  "verified_utc": "2026-10-19T12:00:07.020553+00:00",
+  "web_deployment": "ceee310c-e957-49ad-945d-b9f2d292eb61",
+  "passed_within_scope": true,
+  "scope": "Actual Casablanca reviewer UI renders and one synthetic support triage command; not full operations acceptance",
+  "support": {
+    "language": "Arabic",
+    "style": "Glazed Machine",
+    "ticket_id": "e96bf80f-73d8-4959-a3b6-7c029c62519f",
+    "observed": [
+      "Two support cases and zero safety reports in scoped queue",
+      "Unassigned synthetic fare-question case opened",
+      "Explicit claim/participant acknowledgement dialog with separate internal/public note fields",
+      "Confirmed IN_PROGRESS, assigned to reviewer; note visibility labels distinct",
+      "Participant API shows public acknowledgement only"
+    ],
+    "privacy_readback": "v8-support-participant-privacy-20261019.json"
+  },
+  "booking": {
+    "booking_id": "b264d91c-1434-4d86-a366-cbf523dd5ccd",
+    "observed": [
+      "Historical synthetic fixed-route booking shows Unfulfilled",
+      "Casablanca scope, stored route/timezone and exact 11.00 MAD passenger / 8.00 MAD driver / 3.00 MAD operator split",
+      "Expanded stored transport 8.00 / scheduling 3.00 / service fee 0.00 MAD; refund cutoff 60 minutes",
+      "Same booking, scope and expanded policy retained from Arabic Glazed Machine to Arabic/French/English Notepad",
+      "Read-only recovery notice; no scheduling or refund command sent"
+    ]
+  },
+  "screenshots": [
+    {
+      "path": "v8-cases-arabic-queue.jpg",
+      "sha256": "284e7e116cf4725310e90a93a6e02dcdb2c7809f38872f1d39390e1cda1b7d05",
+      "bytes": 69121,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-cases-arabic-detail-unassigned.jpg",
+      "sha256": "f4eab0225ea7e3ecf4fb87067cb31ae106ddd72fb593be79addb3627a935dac2",
+      "bytes": 55964,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-support-claim-arabic-separated-notes.jpg",
+      "sha256": "e4f118025d743f49e2a82cd3526ec4ea0b5ad1afb3034a2dbc4e00a1f6e371e9",
+      "bytes": 51166,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-support-claimed-arabic-visible-notes.jpg",
+      "sha256": "55f0e72efae160bed315199dffeffd971af15896b6764317ef49373d845a8c59",
+      "bytes": 62467,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-support-claim-success-arabic.jpg",
+      "sha256": "a556e4f8b49b29ed2845fa7a320deaa8399f67bfa97ed34af42d03acb499ac4f",
+      "bytes": 68501,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-bookings-arabic-list.jpg",
+      "sha256": "68908723d4844cc9c3e69e953a0cd7eda1df33ae0f719b50a0dfb5726a5b8412",
+      "bytes": 70327,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-booking-arabic-policy-expanded.jpg",
+      "sha256": "ad324374c1a41226478e4cb05e487f944a82d36aed01a6817f95d20f241bab6e",
+      "bytes": 71695,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-booking-arabic-notepad.jpg",
+      "sha256": "74bf7a9dbcd1b424b08df71e904f5eab00ad658920a838c2aaab4da619309ac6",
+      "bytes": 68354,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-booking-french-notepad.jpg",
+      "sha256": "097d591578792a344c70b86b926e21c86112fd795c7b7dc9c97514db94993519",
+      "bytes": 87427,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-booking-english-notepad.jpg",
+      "sha256": "c858c7cff46f4761d54480951ac5cbb4fd176b46b6cddff2a5ca9ed429fb2504",
+      "bytes": 80881,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    }
+  ],
+  "limitations": [
+    "No pager-alert acknowledgement, safety handoff, resolution, closure, retention or legal hold acceptance",
+    "No participant support UI acceptance inferred from the read-only API privacy check",
+    "No full critical style/language/responsive matrix or screen-reader acceptance",
+    "Payment views and final native trips remain separate"
+  ]
+}

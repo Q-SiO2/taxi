@@ -1,0 +1,41 @@
+{
+  "recorded_utc": "2026-10-19T12:17:31.573376+00:00",
+  "phase": "red",
+  "tests": {
+    "tests": 3,
+    "failures": 3,
+    "errors": 0,
+    "skipped": 0
+  },
+  "archive": ".tools/alpha-delivery/completion-observation-red",
+  "sources": [
+    {
+      "path": "TaxiMobile/shared/src/jvmTest/kotlin/org/example/taximobile/feature/app/DriverCompletionLocationUiTest.kt",
+      "sha256": "217b10af6a4ee098282aefd57e9e0333989fd875f7cad63a6eff3fd29406a50b"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt",
+      "sha256": "b9d46a04c754368902e96ef4c2c7b15be902225888c2b275b8800b7e37987781"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/TaxiMobileScreen.kt",
+      "sha256": "c16bac0762e4bc75e632f9262dea195c21e9b5371f07252de9d11cb4e4e4ca8a"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/kotlin/org/example/taximobile/AndroidCurrentLocationRequester.kt",
+      "sha256": "5f0027de571ffebec9ee689c09eab05f97ed6dc39c04169e5aede8b184c163ae"
+    },
+    {
+      "path": "TaxiMobile/androidApp/src/main/kotlin/org/example/taximobile/MainActivity.kt",
+      "sha256": "a34eff89ac3da466131d17f708fedfc68ca5910868e9db8ceda33a712025b982"
+    },
+    {
+      "path": "TaxiMobile/shared/src/iosMain/kotlin/org/example/taximobile/MainViewController.kt",
+      "sha256": "3b04c1b20839e240c1793536a4bed3e7bbd72b276772f2f60b036cccfbb95ec9"
+    }
+  ],
+  "xml_sha256": "d1d21c3ea30c23438afde7f5b6aa2459668690c44ef7be99b8aeb1c1f53ef936",
+  "log_sha256": "5f84ef1e988c76f6040992a78b1b9fd9266e53f078095fb482d664f9b2ddec2e",
+  "scope": "Driver completion uses guarded observation callback, keeps duplicate lookup disabled, requires explicit completion and gives map-only actionable error",
+  "limitation": "Focused JVM UI regression only; no new native APK/runtime acceptance or iOS compilation inferred"
+}

@@ -2,6 +2,8 @@ package org.example.taximobile.operations.data
 
 import io.ktor.client.HttpClient
 import io.ktor.client.request.header
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
@@ -20,8 +22,13 @@ import org.example.taximobile.operations.model.AdministrativeGrantCreateRequest
 import org.example.taximobile.operations.model.AdministrativeGrantChangeRequestRecord
 import org.example.taximobile.operations.model.AdministrativeGrantDecisionRequest
 import org.example.taximobile.operations.model.AdministrativeGrantRevocationRequest
+import org.example.taximobile.operations.model.AdministrativeGrantRecord
+import org.example.taximobile.operations.model.PagedResponse
 
 interface StaffAccessGateway {
+    suspend fun listActiveGrants(accessToken: String, marketId: String, page: Int): PagedResponse<AdministrativeGrantRecord>
+    suspend fun listPendingRequests(accessToken: String, marketId: String, page: Int): PagedResponse<AdministrativeGrantChangeRequestRecord>
+
     suspend fun requestGrant(
         accessToken: String,
         idempotencyKey: String,
@@ -49,6 +56,36 @@ class KtorStaffAccessGateway(
 ) : StaffAccessGateway {
     private val endpoints = OperationsApiEndpoints(apiBaseUrl)
     private val json = Json { ignoreUnknownKeys = true; explicitNulls = false }
+
+    override suspend fun listActiveGrants(
+        accessToken: String,
+        marketId: String,
+        page: Int,
+    ): PagedResponse<AdministrativeGrantRecord> {
+        require(page >= 1)
+        return client.get(endpoints.url("operations/administrative-grants")) {
+            header(HttpHeaders.Authorization, "Bearer $accessToken")
+            parameter("market_id", marketId)
+            parameter("include_revoked", false)
+            parameter("page", page)
+            parameter("limit", 100)
+        }.decode()
+    }
+
+    override suspend fun listPendingRequests(
+        accessToken: String,
+        marketId: String,
+        page: Int,
+    ): PagedResponse<AdministrativeGrantChangeRequestRecord> {
+        require(page >= 1)
+        return client.get(endpoints.url("operations/administrative-grant-requests")) {
+            header(HttpHeaders.Authorization, "Bearer $accessToken")
+            parameter("market_id", marketId)
+            parameter("status", "PENDING")
+            parameter("page", page)
+            parameter("limit", 100)
+        }.decode()
+    }
 
     override suspend fun requestGrant(
         accessToken: String,

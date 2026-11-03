@@ -1,0 +1,27 @@
+{
+  "utc": "2026-10-20T09:42:33.580329+00:00",
+  "roles": [
+    {
+      "role": "driver",
+      "ui": [
+        "الاتصال غير متاح",
+        "الشبكة غير متاحة. حاول مجدداً عند الاتصال.",
+        "إعادة محاولة الاتصال"
+      ],
+      "screenshot": "v14-driver-restoration-20261020.png",
+      "sha256": "19484cbc8b7fd987a50c875a36c1be6f7dc2a4b34502a71a5390a7f43fcdd809"
+    },
+    {
+      "role": "passenger",
+      "ui": [
+        "واجهة مستخدم النظام لا يستجيب",
+        "إغلاق التطبيق",
+        "انتظار"
+      ],
+      "screenshot": "v14-passenger-restoration-20261020.png",
+      "sha256": "e6302830e69a39a27e716bf645d21ddbc5a6bb15d7e1b375551cbc372951b436"
+    }
+  ],
+  "scope": "Actual post-install UI restoration, not trip acceptance",
+  "driver_system_dialogs": "Three observed Messages/DigitalWellbeing/SystemUI Close app actions preserved in v14-driver-system-boot-dialog-1..3.png; first helper ended on null accessibility root during normal activity transition"
+}

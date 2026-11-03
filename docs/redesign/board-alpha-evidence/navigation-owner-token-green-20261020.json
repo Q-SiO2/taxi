@@ -1,0 +1,39 @@
+{
+  "created_utc": "2026-10-20T20:10:46.563313+00:00",
+  "passed": true,
+  "counts": {
+    "tests": 74,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "scope": "Eight new common quote/ownership cases plus existing coordinator, session and no-replay checks; actual v17 runtime acceptance pending",
+  "initial_red": "quote-refresh-red-20261020.json",
+  "token_red": "navigation-owner-token-red-20261020.json",
+  "archive": [
+    {
+      "path": ".tools/alpha-delivery/navigation-owner-token-green/TEST-org.example.taximobile.feature.app.QuoteSessionRecoveryTest.xml",
+      "sha256": "9e5f8745c954f5df2ee8bd6539464c68610d5cfb7379e149d77b3b753b455e85"
+    },
+    {
+      "path": ".tools/alpha-delivery/navigation-owner-token-green/TEST-org.example.taximobile.feature.app.MobileAppCoordinatorTest.xml",
+      "sha256": "97d5a02a931a2381696355a978048533894d1a815e0fdc7b06b8c6f477c62462"
+    },
+    {
+      "path": ".tools/alpha-delivery/navigation-owner-token-green/navigation-owner-token-green-20261020.log",
+      "sha256": "2d00d29f3290c8355d9e6c8d8c324f951bdafd30af888b7ac31d9829d3609a6e"
+    },
+    {
+      "path": ".tools/alpha-delivery/navigation-owner-token-green/MobileAppCoordinator.kt",
+      "sha256": "81e2f7061c5d380493c78631cc355cf8af068236bdbc2545a62760c13a2c4f90"
+    },
+    {
+      "path": ".tools/alpha-delivery/navigation-owner-token-green/AuthenticationSessionCoordinator.kt",
+      "sha256": "b35c59a1f98b09e9158c9992f57d21d940c57ec62c3c4f42f3dcc28b8568ba55"
+    },
+    {
+      "path": ".tools/alpha-delivery/navigation-owner-token-green/QuoteSessionRecoveryTest.kt",
+      "sha256": "b0a472dcf5567f57735335ee153b85796dafb803e8801cccf41db94d37941d57"
+    }
+  ]
+}

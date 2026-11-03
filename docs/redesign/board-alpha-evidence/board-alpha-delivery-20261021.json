@@ -1,0 +1,111 @@
+{
+  "recorded_utc": "2026-10-21T12:25:16.148120+00:00",
+  "native_candidate": "v18",
+  "hosted_web": "v8",
+  "api": "v6",
+  "core_and_selected_presentation_verified": true,
+  "public_or_pilot_acceptance": false,
+  "evidence": [
+    {
+      "path": "candidate-native-v18.json",
+      "sha256": "b38c2074c525111ae68b2d0efff7931d48edc76d04bf5937085bde06ee7a122c"
+    },
+    {
+      "path": "v18-native-display-delta-verification-20261021.json",
+      "sha256": "5b92a91b8aeb45d5a5e76b5fa0391cdba4d3e86e400f074fb2147fad22d29849"
+    },
+    {
+      "path": "v18-native-integrated-verification.json",
+      "sha256": "33d14b1922943a28b286945032e943678a875013ba204d4231d0faa17af5e21a"
+    },
+    {
+      "path": "v18-native-http-verification-20261021.json",
+      "sha256": "bd10e39f92e77aec2c6fd859d73ee49834295960676038c03e888e6129f5f11b"
+    },
+    {
+      "path": "v18-native-presentation-review.json",
+      "sha256": "78c5f0e1b8bb99e1721f36ad4a674327a1f438f2c63b1e41d44201d3915140ee"
+    },
+    {
+      "path": "railway-runtime-20261021-final.json",
+      "sha256": "2a7d972fb9ff3633f5328b51622d191d92609559cb06691f0a49c58fefdac604"
+    },
+    {
+      "path": "application-health-20261021-final.json",
+      "sha256": "744ed6411c88b3041c9a8c3f4a476f9f8ecebbfdece877961658555c2d9bbbb4"
+    },
+    {
+      "path": "v18-owned-fixture-shutdown-20261021.json",
+      "sha256": "e15e883d46fe904a1124dc480d3f3b81457c0e5945c650f097010b4306f6bcb0"
+    }
+  ],
+  "docs_validation": {
+    "command": "backend/.venv/Scripts/python.exe infra/scripts/validate_docs.py",
+    "result": "PASS",
+    "validator_unit_tests": "4 PASS in this delivery session; initial wrong discovery directory failed and was corrected",
+    "current_touched_document_and_archive_local_links": 524,
+    "document_files": 11,
+    "trailing_whitespace": 0,
+    "targeted_git_diff_check": "PASS"
+  },
+  "source_atlas": {
+    "views": 213,
+    "named_declarations": 271,
+    "source_files": 62,
+    "complete_four_root_file_set_and_hashes": "PASS",
+    "scope": "Inventory and authored review; not all-view native acceptance"
+  },
+  "documents": [
+    {
+      "path": "docs/README.md",
+      "sha256": "ac1a55b76eb0e6cbd8cbbb9da4103a410b5dc953cf6304addb1b233c21186363"
+    },
+    {
+      "path": "docs/roadmap.md",
+      "sha256": "3edb5d99114cdcd6ffb84d4aa062e40c868d912dff71002d92e21f7127236ad0"
+    },
+    {
+      "path": "docs/board-alpha.md",
+      "sha256": "55f800a21edcda1ddf14fc91189ce321241c7ac1393b49047765bfa7ff567d6b"
+    },
+    {
+      "path": "docs/board-alpha-handoff.md",
+      "sha256": "5926f287d84753228e43818bc16435e381e507b1d0df9e1646128b2f02c96c1b"
+    },
+    {
+      "path": "docs/board-demo.md",
+      "sha256": "d98d0aa2b40646f101131f9373ebdcf3d5295d71a07d63678747f0e5d039385a"
+    },
+    {
+      "path": "docs/implementation.md",
+      "sha256": "4c699c1c7b3184bcfeed1d69268ed61b23e4509db006da80a7329a5e128c7579"
+    },
+    {
+      "path": "docs/design.md",
+      "sha256": "1b00c662a67a9e43bf4e08b84274ad19bd4fc2f1a711ac1ed7acb25a364f86d1"
+    },
+    {
+      "path": "docs/history/board-alpha-checkpoints-20261021.md",
+      "sha256": "086745e89512fc5488198aad7a94ab1eecbaea0894f3e12f3c9087501405fbd9"
+    },
+    {
+      "path": "docs/history/roadmap-checkpoints-20261021.md",
+      "sha256": "9667a5a97f555a3567f2aa407c9811e38fda14df5dc8b38cc0f11ea37f2fca2f"
+    },
+    {
+      "path": "docs/history/board-demo-checkpoints-20261021.md",
+      "sha256": "dac201e9d5d298ae8b2cf9103d8001196d962604c8cc4260ece983b11e5d33ec"
+    },
+    {
+      "path": "docs/redesign/board-alpha-evidence/README.md",
+      "sha256": "c6db43978e800c080ad53cafb37a84354d0c2c2c3e7c24af3c0319671e36db86"
+    }
+  ],
+  "remaining_delivery": "Provider builds remain paused. Deploy the frozen proxy-only packet to existing web service after resumption, pass 103 hosted checks and normal /apply HTTPS entry. Current canonical /apply/ works. No native rebuild or repeated core rehearsal needed for nginx.",
+  "constraints": [
+    "Trial only; no paid upgrade, volume deletion or new infrastructure",
+    "Old full volume preserved unattached; temporary extra staff roles expired, not renewed",
+    "Physical Android deferred; iOS, all-view/width/state/full accessibility/native frame-cost and real-world release gates remain",
+    "Owned GPS feeder stopped and both owned emulators shut down normally with app data retained; phone untouched"
+  ]
+}

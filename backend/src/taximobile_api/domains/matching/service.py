@@ -11,6 +11,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from taximobile_api.core.config import Settings
 from taximobile_api.domains.auth.authority import active_user_exists, user_account_is_active
+from taximobile_api.domains.cooperatives.authority import (
+    driver_membership_is_active, operator_membership_allows,
+)
 from taximobile_api.domains.drivers.models import (
     AvailabilityStatus,
     DriverAccountStatus,
@@ -159,6 +162,7 @@ async def dispatch_ride(
             .where(
                 DriverProfile.account_status == DriverAccountStatus.ACTIVE,
                 active_user_exists(DriverProfile.user_id),
+                operator_membership_allows(DriverProfile.user_id, ride.operator_id, now),
                 DriverProfile.id.not_in(excluded_driver_ids),
                 DriverProfile.verification_status == VerificationStatus.APPROVED,
                 DriverProfile.availability_status == AvailabilityStatus.AVAILABLE,
@@ -231,6 +235,10 @@ async def dispatch_ride(
             database_session,
             proposed.user_id,
             serialize_with_status_change=True,
+        ):
+            continue
+        if not await driver_membership_is_active(
+            database_session, proposed.user_id, ride.operator_id, serialize_with_changes=True
         ):
             continue
         # The joined lock query can have started before a restriction committed.

@@ -1,0 +1,112 @@
+{
+  "candidate": "candidate-native-v14.json",
+  "run": "first",
+  "method": "Agent-stepped actual native UI: fresh rendered screenshots, explicit one-time taps, independent owned server readbacks",
+  "fidelity": "Owned API35 driver/API31 passenger emulators, synthetic GPS/accounts/cash",
+  "started_utc": "2026-10-20T09:45:17.706869+00:00",
+  "passed": false,
+  "prior_ride_ids": [
+    "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+    "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+    "98a253df-de13-4029-9daa-e538a520997d",
+    "359279df-4847-4ad3-bfa4-baa2136b45be",
+    "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+    "e531e392-6f5b-4962-9964-3967a4afc418",
+    "082f8b85-6598-423d-aac5-cf31eec3f30a",
+    "e734ed2c-a37c-424b-9d84-b31e6811cd09",
+    "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+    "65f3d974-1cb3-4c43-9486-80cd1007c256",
+    "03756c30-f453-4d09-ae50-c3fa8f3782a4",
+    "59576371-85a9-4732-a100-12f7295f0c0a",
+    "e1b2bf66-0887-4429-a798-e272cc4ebf1a",
+    "d8a67153-d7e5-4d96-8df0-be6ddb329d37",
+    "e8948a59-659f-4d70-b756-eaafd9cc1fa1",
+    "ee13caaa-3461-418d-b0b4-f32eab7dd516",
+    "a0ba8798-8536-4420-bde2-12aa9111b817"
+  ],
+  "steps": [
+    {
+      "action": "choose-destination",
+      "role": "passenger",
+      "utc": "2026-10-20T09:47:09.818680+00:00",
+      "tap": [
+        210,
+        450
+      ],
+      "observation": "v14-first-stepped-passenger-pickup-ready.png",
+      "server_before": null,
+      "confirmed": true,
+      "visible_result_resource": "destination_selected_on_map",
+      "confirmed_utc": "2026-10-20T09:47:16.878752+00:00"
+    }
+  ],
+  "installed_apks": [
+    {
+      "role": "driver",
+      "sha256": "ff66308a3f86508ba4ca5102e407b3bcc3f1b54ac28489a364750d72aa9d9a65"
+    },
+    {
+      "role": "passenger",
+      "sha256": "f07476e06cd4035c077189ef1ed8fb1d24e409fb5945bdae4f1f7506ad2b06f2"
+    }
+  ],
+  "clock_fixture": [
+    {
+      "role": "driver",
+      "host_minus_device_seconds": 0.86,
+      "method": "Owned emulator synchronization before availability/trip only"
+    },
+    {
+      "role": "passenger",
+      "host_minus_device_seconds": 0.72,
+      "method": "Owned emulator synchronization before availability/trip only"
+    }
+  ],
+  "runtime": [
+    {
+      "role": "driver",
+      "avd": "taximobile-board-api35-driver",
+      "sdk": "35",
+      "configuration": "config: mcc310-mnc260-en-rUS-ldltr-sw360dp-w360dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x720-v35",
+      "app_locales": "Locales for ma.taximobile.driver for user 0 are [ar-MA]"
+    },
+    {
+      "role": "passenger",
+      "avd": "taximobile-board-aosp31-passenger",
+      "sdk": "31",
+      "configuration": "config: mcc310-mnc260-ar-rMA,fr-rFR,en-rUS-ldrtl-sw360dp-w360dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x720-v31"
+    }
+  ],
+  "screenshots": [
+    {
+      "role": "passenger",
+      "path": "v14-first-stepped-passenger-pickup-ready.png",
+      "sha256": "006957677c2ef6fd37e27715fd9b9048c977b7a85a62c030c519177276b1f367",
+      "utc": "2026-10-20T09:46:51.323172+00:00"
+    },
+    {
+      "role": "passenger",
+      "path": "v14-first-stepped-passenger-choose-destination-after.png",
+      "sha256": "2c6f6c46babbbd96ecb24239e05b40bc888930b1efb4667dfbb15bec93e72eac",
+      "utc": "2026-10-20T09:47:18.051763+00:00"
+    },
+    {
+      "role": "passenger",
+      "path": "v14-first-stepped-passenger-fare-review-before.png",
+      "sha256": "9a006fbd204e5e390040ec9d218fd0302d8431369724d245aa76acf4a0881d68",
+      "utc": "2026-10-20T09:48:28.318915+00:00"
+    },
+    {
+      "role": "passenger",
+      "path": "v14-first-stepped-passenger-fare-review-current.png",
+      "sha256": "7614c3b12904f1c0ccd1e8444c54f6fbc52018b3f1b1b57df6b89af4691dd922",
+      "utc": "2026-10-20T09:50:33.594872+00:00"
+    }
+  ],
+  "last_observation": {
+    "role": "passenger",
+    "path": "v14-first-stepped-passenger-fare-review-current.png",
+    "sha256": "7614c3b12904f1c0ccd1e8444c54f6fbc52018b3f1b1b57df6b89af4691dd922",
+    "utc": "2026-10-20T09:50:33.594872+00:00"
+  }
+}

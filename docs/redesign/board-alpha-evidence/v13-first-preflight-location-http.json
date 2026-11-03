@@ -1,0 +1,11 @@
+{
+  "scope": "Accepted driver location update before rejected online preflight; does not include request bodies or a precise rejection reason",
+  "rows": [
+    {
+      "time": "2026-10-19T20:19:51.994182595Z",
+      "method": "POST",
+      "status": 200,
+      "path": "/api/v1/drivers/me/location"
+    }
+  ]
+}

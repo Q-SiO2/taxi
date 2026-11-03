@@ -18,6 +18,29 @@ class StaffAccessModelsTest {
     private val cityId = "b3f878e4-cf9f-4b82-97cc-c50483925582"
 
     @Test
+    fun pending_queue_uses_filtered_total_and_never_calls_a_stale_page_empty() {
+        val first = StaffPageState(page = 1, limit = 100, total = 135, shown = 100)
+        assertTrue(first.canNext)
+        assertFalse(first.canPrevious)
+        assertFalse(first.isCollectionEmpty)
+        assertTrue(first.allowsNavigation(2))
+        assertFalse(first.allowsNavigation(3))
+
+        val second = StaffPageState(page = 2, limit = 100, total = 135, shown = 35)
+        assertTrue(second.canPrevious)
+        assertFalse(second.canNext)
+
+        val changed = StaffPageState(page = 2, limit = 100, total = 90, shown = 0)
+        assertFalse(changed.isCollectionEmpty)
+        assertTrue(changed.isPageStale)
+        assertTrue(changed.canPrevious)
+        assertTrue(changed.allowsNavigation(2))
+        assertTrue(changed.allowsNavigation(1))
+
+        assertTrue(StaffPageState(page = 1, limit = 100, total = 0, shown = 0).isCollectionEmpty)
+    }
+
+    @Test
     fun role_templates_have_one_documented_scope_kind() {
         assertEquals(9, ADMINISTRATIVE_ROLE_TEMPLATES.size)
         assertEquals(

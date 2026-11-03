@@ -1,0 +1,87 @@
+{
+  "recorded_utc": "2026-10-26 20:30:40 UTC",
+  "source_head": "2e9275ad0615a4579cf580803afe3f9a4c76f61e",
+  "tested_merge_commit": "6e405d29e19316ab650e15cab49711b0ca90216f",
+  "tree": "07564bc92ad6dc6bca8e416b9970d0759921b79c",
+  "run_id": 40371093150,
+  "run_number": 254,
+  "status": "completed",
+  "conclusion": "failure",
+  "required_jobs": {
+    "ios-shared": {
+      "id": 121741715960,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "mobile": {
+      "id": 121741716153,
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    "gradle-wrapper-integrity": {
+      "id": 121741716334,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "backend": {
+      "id": 121741716535,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "documentation-and-provenance": {
+      "id": 121741716555,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "web": {
+      "id": 121741716567,
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    "gradle-dependency-submission": {
+      "id": 121741716642,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "dependency-review": {
+      "id": 121743187732,
+      "status": "completed",
+      "conclusion": "success"
+    }
+  },
+  "image_publisher": "skipped; PR source",
+  "full_backend_suite": {
+    "tests": 1482,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "tls_cases": 8,
+  "tls_baseline_restored": true,
+  "backend_junit_sha256": "5a525613960d24a82a2c04d7c700947ae6d3793e3016a13117fdd2c618b59706",
+  "test_artifact": {
+    "id": 12672054191,
+    "zip_sha256": "c0e951c3cd4c9682a46ec1e4a06c6ba676d9b187b5140233b0539f471bac467d"
+  },
+  "provenance_artifact": {
+    "id": 12673705923,
+    "zip_sha256": "39d5fe5a5d460586c4c4bd296fc8b056780b1eb59f8ab53260463590427bba7d"
+  },
+  "same_tree_verified": true,
+  "mobile_failure": {
+    "step": "Verify packaged Android release identities",
+    "error": "APK embedded compiler identity does not match the reviewed R8 mapping.",
+    "shared_tests_debug_and_both_minified_assembly": "passed",
+    "cause": "New desugared-library DEX includes a pinned L8 classfile marker and separate pinned full-release R8 dex marker without the application's pg-map-id. The old verifier treated both R8 markers as application markers."
+  },
+  "web_failure": {
+    "step": "Package reviewed web distribution without public source maps",
+    "error": "originWasmWebApp.js is 1275564 bytes, exceeding the 700000-byte budget",
+    "browser_tests_and_compatibility_build": "passed",
+    "chrome_release_boot": "skipped; packager failure"
+  },
+  "ios_scope": "Shared simulator source compilation and both unsigned Release simulator products passed; no device/signing acceptance.",
+  "whole_candidate_accepted": false,
+  "successor_source_ci_required": true,
+  "physical_hosted_provider_operational_pilot_or_public_accepted": false
+}

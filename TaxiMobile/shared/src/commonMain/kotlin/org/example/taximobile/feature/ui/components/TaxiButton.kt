@@ -1,5 +1,6 @@
 package org.example.taximobile.feature.ui.components
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,16 +33,18 @@ fun TaxiButton(
     loading: Boolean = false,
     style: TaxiButtonStyle = TaxiButtonStyle.Primary,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md)
     val loadingDescription = stringResource(Res.string.loading)
     val buttonModifier = modifier
         .fillMaxWidth()
-        .defaultMinSize(minHeight = if (style == TaxiButtonStyle.Primary) 54.dp else 48.dp)
+        .defaultMinSize(minHeight = if (style == TaxiButtonStyle.Primary) 56.dp else 48.dp)
         .semantics { if (loading) stateDescription = loadingDescription }
     val content: @Composable () -> Unit = {
         Box(contentAlignment = Alignment.Center) {
             if (loading) {
                 CircularProgressIndicator(
-                    color = if (style == TaxiButtonStyle.Destructive) Color.White else TaxiColors.Navy950,
+                    color = if (style == TaxiButtonStyle.Destructive || style == TaxiButtonStyle.Primary) Color.White else taxiColors.ink,
                     strokeWidth = 2.dp,
                     modifier = Modifier.defaultMinSize(minWidth = 20.dp, minHeight = 20.dp),
                 )
@@ -52,43 +55,48 @@ fun TaxiButton(
     }
     when (style) {
         TaxiButtonStyle.Primary -> Button(
+            shape = shape,
             onClick = onClick,
             modifier = buttonModifier,
             enabled = enabled && !loading,
             colors = ButtonDefaults.buttonColors(
-                containerColor = TaxiColors.Accent500,
-                contentColor = TaxiColors.Navy950,
-                disabledContainerColor = TaxiColors.Surface2,
-                disabledContentColor = TaxiColors.Ink300,
+                containerColor = taxiColors.Accent500,
+                contentColor = Color.White,
+                disabledContainerColor = taxiColors.Surface2,
+                disabledContentColor = taxiColors.Ink300,
             ),
             content = { content() },
         )
         TaxiButtonStyle.Destructive -> Button(
+            shape = shape,
             onClick = onClick,
             modifier = buttonModifier,
             enabled = enabled && !loading,
-            colors = ButtonDefaults.buttonColors(containerColor = TaxiColors.Danger600),
+            colors = ButtonDefaults.buttonColors(containerColor = taxiColors.Danger600),
             content = { content() },
         )
         TaxiButtonStyle.Secondary -> OutlinedButton(
+            shape = shape,
             onClick = onClick,
             modifier = buttonModifier,
             enabled = enabled && !loading,
             content = { content() },
         )
         TaxiButtonStyle.Tertiary -> TextButton(
+            shape = shape,
             onClick = onClick,
             modifier = buttonModifier,
             enabled = enabled && !loading,
             content = { content() },
         )
         TaxiButtonStyle.ToneLike -> TextButton(
+            shape = shape,
             onClick = onClick,
             modifier = buttonModifier,
             enabled = enabled && !loading,
             colors = ButtonDefaults.textButtonColors(
-                containerColor = TaxiColors.Accent100,
-                contentColor = TaxiColors.Accent600,
+                containerColor = taxiColors.Accent100,
+                contentColor = taxiColors.Accent600,
             ),
             content = { content() },
         )

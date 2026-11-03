@@ -1,0 +1,7 @@
+{
+  "recorded_utc": "2026-10-22T11:27:15.244147+00:00",
+  "failed_observer": "v21-native-quote-style-review-20261022-r3.json",
+  "issue": "Fresh-activity enabled Request was reached. Observer then tried to drag a header that was scrolled offscreen, so the gesture scrolled body instead; its forward search could not find the pickup card above. Actual restored Request/fare/route are visible in preserved diagnostic.",
+  "diagnostic": "v21-fresh-activity-request-visible-diagnostic.png",
+  "next_observer": "After reaching Request, reverse to the visible Where to/header before dragging the measured grabber, exactly as the existing four-style review already does. Keep fresh-activity count/PID, selected-point, price, enabled-request and no-booking checks. No app/APK change."
+}

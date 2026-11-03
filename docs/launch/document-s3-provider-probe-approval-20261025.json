@@ -1,0 +1,15 @@
+{
+  "recorded_utc": "2026-10-25T15:32:21.317689+00:00",
+  "authority": "Direct owner reply: Approve the bounded synthetic probe",
+  "proposal": "document-s3-provider-probe-proposal-20261025.json",
+  "proposal_sha256": "df3ca5e037871b25914a56e09c2c5e4113d68414d4cb320520919fb09515b3f9",
+  "scope": "One new private Amsterdam staging bucket; transient local credentials; <=3 synthetic objects/32 S3 operations; clean generated objects and remove only new empty bucket; <=$0.02 existing Trial credit; preserve existing services/volumes",
+  "applied": false,
+  "cli_context_project_verified": "9f841575-c4f3-4a4d-bb83-2e6ff92e436e",
+  "cli_link_keys": [
+    "projectId",
+    "projectName",
+    "environmentId",
+    "environmentName"
+  ]
+}

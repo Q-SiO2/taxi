@@ -1,0 +1,248 @@
+{
+  "candidate": "candidate-native-v18.json",
+  "started_utc": "2026-10-21T11:41:20.350472+00:00",
+  "passed": false,
+  "checks": [
+    {
+      "role": "passenger",
+      "style": "Folded Streets",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v18-ar-style-passenger-folded-streets-account.png",
+          "sha256": "366f7f653feab004d2ac86c4818dcd6700da74505079d0e5c9a80d127293a3c1"
+        },
+        {
+          "path": "v18-ar-style-passenger-folded-streets-financial.png",
+          "sha256": "a711759f00db975408002cc861aa039522c0026a5e66ceee94a359c8e8b3f945"
+        }
+      ]
+    },
+    {
+      "role": "passenger",
+      "style": "Street Press",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v18-ar-style-passenger-street-press-account.png",
+          "sha256": "827e3e1ceca223efdd052ca7f1f7bed738aef7c93b6530fe0bff13407ef5b727"
+        },
+        {
+          "path": "v18-ar-style-passenger-street-press-financial.png",
+          "sha256": "827e3e1ceca223efdd052ca7f1f7bed738aef7c93b6530fe0bff13407ef5b727"
+        }
+      ]
+    },
+    {
+      "role": "passenger",
+      "style": "Glazed Machine",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v18-ar-style-passenger-glazed-machine-account.png",
+          "sha256": "d3f006aa393b47e2a939b2e6ee4e7e88193fe1531a1227106ea90bc403e9cc7f"
+        },
+        {
+          "path": "v18-ar-style-passenger-glazed-machine-financial.png",
+          "sha256": "e9ff8a0e75ebc2d14405aa0efac0395022e1caf0d54a852678fb7d4f49753bef"
+        }
+      ]
+    },
+    {
+      "role": "passenger",
+      "style": "Notepad",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v18-ar-style-passenger-notepad-account.png",
+          "sha256": "13d6d9456d7f1d1127ac9607a132533032c76313da9e7ba886c85a3c01d712d8"
+        },
+        {
+          "path": "v18-ar-style-passenger-notepad-financial.png",
+          "sha256": "13d6d9456d7f1d1127ac9607a132533032c76313da9e7ba886c85a3c01d712d8"
+        }
+      ]
+    },
+    {
+      "role": "driver",
+      "style": "Folded Streets",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v18-ar-style-driver-folded-streets-account.png",
+          "sha256": "8ee9da4fe5f4e42ce2496af4f6fe007a33d1993943d1f7ae88e672d09037f65d"
+        },
+        {
+          "path": "v18-ar-style-driver-folded-streets-financial.png",
+          "sha256": "8ee9da4fe5f4e42ce2496af4f6fe007a33d1993943d1f7ae88e672d09037f65d"
+        }
+      ]
+    },
+    {
+      "role": "driver",
+      "style": "Street Press",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v18-ar-style-driver-street-press-account.png",
+          "sha256": "39b45810cd97aa6e89da86e27c4f2fba727824160a36c193db45dbed422e6542"
+        },
+        {
+          "path": "v18-ar-style-driver-street-press-financial.png",
+          "sha256": "39b45810cd97aa6e89da86e27c4f2fba727824160a36c193db45dbed422e6542"
+        }
+      ]
+    },
+    {
+      "role": "driver",
+      "style": "Glazed Machine",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v18-ar-style-driver-glazed-machine-account.png",
+          "sha256": "50aedd8eec47d6f412780f7c3a84c54a51c887121547afab04f979e7fe8c7d8b"
+        },
+        {
+          "path": "v18-ar-style-driver-glazed-machine-financial.png",
+          "sha256": "50aedd8eec47d6f412780f7c3a84c54a51c887121547afab04f979e7fe8c7d8b"
+        }
+      ]
+    },
+    {
+      "role": "driver",
+      "style": "Notepad",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v18-ar-style-driver-notepad-account.png",
+          "sha256": "c2739519352f46f0ecf4948ed26f4b8b28333b3b6d190a318dedd7ce4dc7d3df"
+        },
+        {
+          "path": "v18-ar-style-driver-notepad-financial.png",
+          "sha256": "c2739519352f46f0ecf4948ed26f4b8b28333b3b6d190a318dedd7ce4dc7d3df"
+        }
+      ]
+    }
+  ],
+  "scope": "Actual selected account/financial views across four styles, Notepad restart and1.3x text; no all-page acceptance",
+  "before": {
+    "rides": [
+      {
+        "id": "93df2c70-fd2b-4e97-8df3-eee368699bea",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d8daeaaa-fbe9-4614-af7e-45b896d30ecb",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "733abbcf-5d1b-4ff2-b7f3-3563052cbd25",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "cb951af4-f5ae-4d05-8a06-a28b49797f33",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "c55e696d-2bae-4640-8801-f50d2c20a42b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "b7aac6ac-cc87-494d-aa95-842c21fc6759",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "98a253df-de13-4029-9daa-e538a520997d",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e531e392-6f5b-4962-9964-3967a4afc418",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "082f8b85-6598-423d-aac5-cf31eec3f30a",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "e734ed2c-a37c-424b-9d84-b31e6811cd09",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "65f3d974-1cb3-4c43-9486-80cd1007c256",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "03756c30-f453-4d09-ae50-c3fa8f3782a4",
+        "status": "UNMATCHED"
+      }
+    ],
+    "availability": {
+      "status": "OFFLINE",
+      "vehicle_id": "d491cb54-7ec1-4b6e-a6f9-1f1a8fd93792",
+      "city_id": "10000000-0000-4000-8000-000000000003",
+      "service_type": "ON_DEMAND"
+    }
+  },
+  "restart_checks": [
+    {
+      "role": "passenger",
+      "style": "Notepad",
+      "normal_authenticated_restore": true,
+      "screenshot": {
+        "path": "v18-ar-style-passenger-notepad-restarted.png",
+        "sha256": "40c4bb09f2071383d0ea0086f3419046337512213fa4fb7cbe608cf6c937e704"
+      }
+    }
+  ],
+  "large_text_checks": [
+    {
+      "role": "passenger",
+      "font_scale": "1.3",
+      "style": "Notepad",
+      "screenshots": [
+        {
+          "path": "v18-ar-style-passenger-notepad-large-text-account.png",
+          "sha256": "e5b7d7934c7b982310747982ce7849e05e54b9535758382069ef02fc9f9978a2"
+        },
+        {
+          "path": "v18-ar-style-passenger-notepad-large-text-financial.png",
+          "sha256": "0caa2f8ba082e860ef883bd7dc6a705a905a1066e0299967c1a7eee9a7bb35fc"
+        }
+      ],
+      "limit": "Selected account/financial views only; no claim of all pages or TalkBack acceptance"
+    }
+  ],
+  "finished_utc": "2026-10-21T11:48:03.932418+00:00"
+}

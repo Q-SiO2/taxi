@@ -1,5 +1,51 @@
 # TaxiMobile — Product Specification
 
+## Active delivery goal - 23 October 2026
+
+The owner now requests full real-world deployment following the synthetic board
+alpha. [roadmap.md](roadmap.md) and [real-world-launch.md](real-world-launch.md)
+define the active B/C execution sequence and full capability scope. Android,
+iOS, applicant/operations web, on-demand, fixed routes, scheduled bookings and
+documented financial/support/account/city workflows require actual acceptance.
+Existing explicit deferrals and backend authority remain binding. No live
+transport or public activation is accepted merely by creating this goal.
+
+### First-city contract — owner decision, 23 October 2026
+
+Launch targets **Fès**, using **Fès Taxi Union** as the generic working operator name, with a closed-shop
+driver cohort: only verified union members may participate as drivers. Passengers
+may register normally without union membership. Driver membership is an additional
+backend-authoritative eligibility condition, alongside professional, vehicle and
+city/service authorization; membership never substitutes for those checks.
+
+The owner specifies autonomous taxis within their unions and no separate union
+transport permit to secure for this project. The union administers membership
+and the platform; retain individual driver/vehicle/service checks. The working
+name does not fabricate a registered entity. Service boundary, roster-verification
+responsibility and operating policies remain in the
+[R1 decision packet](launch/r1-decisions.md). This decision does
+not activate a city or convert synthetic Casablanca evidence into a Fès pilot.
+Android hardware and Google Play accounts are available; iOS signing, Mac and
+physical iPhone resources remain to be arranged within the full-release scope.
+
+## Prior alpha delivery contract — 12 October 2026
+
+The immediate product is a union-presentation-ready **technical alpha**, followed
+by an authorized real-world pilot and public release. [roadmap.md](roadmap.md)
+defines the only active sequence and acceptance checklist. A must make passenger,
+driver and representative organizational value visible through a genuine complete
+trip on tested Android apps and Railway staging. Professional visual quality,
+FR/AR/RTL usability and reproducibility are release requirements, not later polish.
+Use synthetic accounts/documents/trips/payment records and explicit provider
+disclosures. No live transport, commercial recruitment or real settlement in A.
+Physical GPS observations require consent and minimized protected handling.
+
+Retain cooperative licensed-taxi participation, private backend matching, cash,
+city governance and privacy rules below. The broader national/fixed-route/scheduled/
+transfer scope is preserved; it does not all precede an honest essential alpha.
+No unverified capability may be shown as available. Legal/operator/privacy/tariff
+feasibility proceeds alongside A; written approval precedes B's real operations.
+
 ## Current standing — 2026-09-02
 
 The repository implements the broad provider-independent passenger, driver,

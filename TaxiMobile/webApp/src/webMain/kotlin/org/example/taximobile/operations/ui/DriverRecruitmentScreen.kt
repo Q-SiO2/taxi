@@ -1,5 +1,6 @@
 package org.example.taximobile.operations.ui
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -32,7 +34,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import taximobile.shared.generated.resources.*
+import org.example.taximobile.feature.app.driverApplicationStatusResource
+import org.example.taximobile.feature.ui.text.ltrIsolate
 import org.example.taximobile.feature.ui.theme.TaxiColors
 import org.example.taximobile.feature.ui.theme.TaxiRadii
 import org.example.taximobile.feature.ui.theme.TaxiSpacing
@@ -56,27 +64,30 @@ internal fun DriverRecruitmentScreen(
     state: OperationsUiState,
     coordinator: OperationsCoordinator,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     val snapshot = state.snapshot ?: return
     val permissions = state.session?.permissions.orEmpty()
     val city = snapshot.cities.items.firstOrNull { it.id == state.scope.cityId }
     ScreenColumn {
         SectionHeading(
-            title = "Driver recruitment",
-            supportingText = "Version city requirements, review only granted applications, and inspect privacy-bounded onboarding health.",
+            title = stringResource(Res.string.web_recruitment_title),
+            supportingText = stringResource(Res.string.web_recruitment_intro),
         )
         if (city == null) {
-            EmptyState("Select a city", "Driver requirements and funnel aggregates require one explicitly scoped city.")
+            EmptyState(stringResource(Res.string.web_recruitment_choose_city),
+                stringResource(Res.string.web_recruitment_select_city_help))
             return@ScreenColumn
         }
         Surface(
-            color = TaxiColors.Info100,
-            shape = RoundedCornerShape(TaxiRadii.Md),
-            border = BorderStroke(1.dp, TaxiColors.Info600.copy(alpha = 0.25f)),
+            color = taxiColors.Info100,
+            shape = RoundedCornerShape(taxiRadii.Md),
+            border = BorderStroke(1.dp, taxiColors.Info600.copy(alpha = 0.25f)),
         ) {
             Text(
-                "Active city: ${city.localizedName.preferred()} (${city.code}). Browser selection never broadens backend grants.",
+                stringResource(Res.string.web_recruitment_city, city.localizedName.preferred(Locale.current.language)),
                 Modifier.fillMaxWidth().padding(TaxiSpacing.Md),
-                color = TaxiColors.Info600,
+                color = taxiColors.Info600,
             )
         }
         if (VIEW_SCOPED_OPERATIONAL_AGGREGATES in permissions) {
@@ -95,43 +106,57 @@ internal fun DriverRecruitmentScreen(
 private fun OnboardingAggregateSection(state: OperationsUiState) {
     val aggregate = state.snapshot?.onboardingAggregate
     SectionHeading(
-        "Onboarding funnel",
-        "Small cells are suppressed by the backend and never reconstructed in the browser.",
+        stringResource(Res.string.web_onboarding_funnel),
+        stringResource(Res.string.web_onboarding_privacy_help),
     )
     if (aggregate == null) {
-        EmptyState("Aggregate unavailable", "Select an authorized city or refresh the scoped data.")
+        EmptyState(stringResource(Res.string.web_onboarding_unavailable),
+            stringResource(Res.string.web_onboarding_unavailable_help))
         return
     }
     Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Md)) {
         MetricCard(
-            "Total applications",
-            aggregate.totalApplications?.toString() ?: "Suppressed",
-            if (aggregate.totalSuppressed) "Cell has fewer than ${aggregate.minimumCellSize} records" else "All statuses",
+            stringResource(Res.string.web_total_applications),
+            aggregate.totalApplications?.let { ltrIsolate(it.toString()) }
+                ?: stringResource(Res.string.web_privacy_hidden),
+            if (aggregate.totalSuppressed) stringResource(Res.string.web_privacy_below_count, aggregate.minimumCellSize)
+                else stringResource(Res.string.web_all_statuses),
             Modifier.width(220.dp),
         )
         MetricCard(
-            "Decided applications",
-            aggregate.decidedApplicationCount?.toString() ?: "Suppressed",
-            "Review-duration threshold: ${aggregate.minimumCellSize}",
+            stringResource(Res.string.web_decided_applications),
+            aggregate.decidedApplicationCount?.let { ltrIsolate(it.toString()) }
+                ?: stringResource(Res.string.web_privacy_hidden),
+            stringResource(Res.string.web_review_minimum_count, aggregate.minimumCellSize),
             Modifier.width(220.dp),
         )
         MetricCard(
-            "Average review time",
-            aggregate.averageReviewSeconds?.let(::formatReviewDuration) ?: "Suppressed",
-            "Measured only from sufficiently large decided cells",
+            stringResource(Res.string.web_average_review_time),
+            aggregate.averageReviewSeconds?.let { seconds ->
+                when {
+                    seconds < 3600 -> stringResource(Res.string.web_review_minutes, (seconds / 60).toInt())
+                    seconds < 86_400 -> stringResource(Res.string.web_review_hours, (seconds / 3600).toInt())
+                    else -> stringResource(Res.string.web_review_days, (seconds / 86_400).toInt())
+                }
+            }
+                ?: stringResource(Res.string.web_privacy_hidden),
+            stringResource(Res.string.web_review_private_help),
             Modifier.width(240.dp),
         )
     }
     DataCard {
         Column(Modifier.fillMaxWidth()) {
-            TableHeader(listOf("Status" to 2f, "Count" to 1f, "Privacy" to 2f))
+            TableHeader(listOf(stringResource(Res.string.web_table_status) to 2f,
+                stringResource(Res.string.web_table_count) to 1f,
+                stringResource(Res.string.web_table_privacy) to 2f))
             aggregate.statusCounts.forEach { count ->
                 TableRow {
-                    TableCell(count.status.replace('_', ' '), 2f)
-                    TableCell(count.value?.toString() ?: "—", 1f)
+                    TableCell(stringResource(driverApplicationStatusResource(count.status)), 2f)
+                    TableCell(count.value?.let { ltrIsolate(it.toString()) } ?: "—", 1f)
                     TableCell(
-                        if (count.suppressed) "Suppressed (< ${aggregate.minimumCellSize})" else "Publishable aggregate",
+                        if (count.suppressed) stringResource(Res.string.web_privacy_hidden_threshold, aggregate.minimumCellSize)
+                            else stringResource(Res.string.web_privacy_visible_total),
                         2f,
                     )
                 }
@@ -145,18 +170,19 @@ private fun RequirementVersionSection(
     state: OperationsUiState,
     coordinator: OperationsCoordinator,
 ) {
+    val taxiColors = TaxiTheme.colors
     val versions = state.snapshot?.driverRequirementVersions
     var editing by remember(state.scope.cityId) { mutableStateOf<DriverRequirementVersionRecord?>(null) }
     var pendingTransition by remember { mutableStateOf<Pair<DriverRequirementVersionRecord, String>?>(null) }
     SectionHeading(
-        "Driver requirement versions",
-        "Drafts are editable. Submission and activation require a fresh backend version plus explicit review evidence.",
-        action = { TextButton(onClick = { editing = NEW_REQUIREMENT_VERSION }, enabled = !state.interactionLocked) { Text("New draft") } },
+        stringResource(Res.string.web_req_versions),
+        stringResource(Res.string.web_req_versions_help),
+        action = { TextButton(onClick = { editing = NEW_REQUIREMENT_VERSION }, enabled = !state.interactionLocked) { Text(stringResource(Res.string.web_req_new_draft)) } },
     )
     if (versions == null) {
-        EmptyState("Requirement versions unavailable", "The active grant or city does not expose requirement administration.")
+        EmptyState(stringResource(Res.string.web_req_unavailable), stringResource(Res.string.web_req_unavailable_help))
     } else if (versions.items.isEmpty()) {
-        EmptyState("No requirement versions", "Create a draft before publishing driver recruitment for this city.")
+        EmptyState(stringResource(Res.string.web_req_empty), stringResource(Res.string.web_req_empty_help))
     } else {
         versions.items.forEach { version ->
             DataCard {
@@ -164,27 +190,28 @@ private fun RequirementVersionSection(
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically) {
                         Column {
-                            Text("Version ${version.version}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                            Text("Backend revision ${version.optimisticVersion} · ${version.items.size} item(s)",
-                                color = TaxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
+                            Text(stringResource(Res.string.web_req_version, ltrIsolate(version.version)), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            Text(stringResource(Res.string.web_req_revision_items, version.optimisticVersion, version.items.size),
+                                color = taxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
                         }
-                        StatusBadge(version.status)
+                        StatusBadge(version.status, label = recruitmentLabel(version.status))
                     }
-                    Text("Effective ${compactTimestamp(version.effectiveFrom)} to ${compactTimestamp(version.effectiveUntil)}")
+                    Text(stringResource(Res.string.web_req_period, ltrIsolate(version.effectiveFrom),
+                        version.effectiveUntil?.let(::ltrIsolate) ?: stringResource(Res.string.web_req_no_end)))
                     version.items.sortedBy { it.displayOrder }.forEach { item ->
-                        Text("${item.displayOrder}. ${item.requirementCode} · ${item.evidenceType} · ${item.validityRuleCode}",
-                            color = TaxiColors.Ink700, style = MaterialTheme.typography.bodySmall)
+                        Text("${ltrIsolate("${item.displayOrder}. ${item.requirementCode}")} · ${recruitmentLabel(item.evidenceType)} · ${recruitmentLabel(item.validityRuleCode)}",
+                            color = taxiColors.Ink700, style = MaterialTheme.typography.bodySmall)
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
                         if (version.status == "DRAFT") {
-                            OutlinedButton(onClick = { editing = version }, enabled = !state.interactionLocked) { Text("Edit draft") }
-                            Button(onClick = { pendingTransition = version to "IN_REVIEW" }, enabled = !state.interactionLocked) {
-                                Text("Submit for review")
+                            OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { editing = version }, enabled = !state.interactionLocked) { Text(stringResource(Res.string.web_req_edit_draft)) }
+                            Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { pendingTransition = version to "IN_REVIEW" }, enabled = !state.interactionLocked) {
+                                Text(stringResource(Res.string.web_req_submit_review))
                             }
                         }
                         if (version.status == "IN_REVIEW") {
-                            Button(onClick = { pendingTransition = version to "ACTIVE" }, enabled = !state.interactionLocked) {
-                                Text("Review activation")
+                            Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { pendingTransition = version to "ACTIVE" }, enabled = !state.interactionLocked) {
+                                Text(stringResource(Res.string.web_req_review_activation))
                             }
                         }
                     }
@@ -226,6 +253,8 @@ private fun RequirementVersionEditor(
     onUpdate: (DriverRequirementVersionRecord, DriverRequirementVersionUpdateRequest) -> Unit,
     onClose: () -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val codeTextStyle = MaterialTheme.typography.bodyLarge.copy(textDirection = TextDirection.Ltr)
     var version by remember(existing?.id) { mutableStateOf(existing?.version.orEmpty()) }
     var effectiveFrom by remember(existing?.id) { mutableStateOf(existing?.effectiveFrom.orEmpty()) }
     var effectiveUntil by remember(existing?.id) { mutableStateOf(existing?.effectiveUntil.orEmpty()) }
@@ -235,18 +264,18 @@ private fun RequirementVersionEditor(
     DataCard {
         Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Lg), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md)) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(if (existing == null) "Create requirement draft" else "Edit requirement ${existing.version}",
+                Text(if (existing == null) stringResource(Res.string.web_req_create_title) else stringResource(Res.string.web_req_edit_title, ltrIsolate(existing.version)),
                     style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                TextButton(onClick = onClose, enabled = !locked) { Text("Close") }
+                TextButton(onClick = onClose, enabled = !locked) { Text(stringResource(Res.string.web_recruit_close)) }
             }
-            Text("City ID ${shortId(cityId)} · all timestamps must include a timezone (for example 2026-08-24T12:00:00Z).",
-                color = TaxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
-            OutlinedTextField(version, { version = it.take(64) }, Modifier.fillMaxWidth(), label = { Text("Version") },
-                enabled = !locked && existing == null, singleLine = true)
+            Text(stringResource(Res.string.web_req_date_help, ltrIsolate(shortId(cityId)), ltrIsolate("2026-08-24T12:00:00Z")),
+                color = taxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
+            OutlinedTextField(version, { version = it.take(64) }, Modifier.fillMaxWidth(), label = { Text(stringResource(Res.string.web_req_version_label)) },
+                enabled = !locked && existing == null, singleLine = true, textStyle = codeTextStyle)
             OutlinedTextField(effectiveFrom, { effectiveFrom = it.take(40) }, Modifier.fillMaxWidth(),
-                label = { Text("Effective from (ISO 8601)") }, enabled = !locked, singleLine = true)
+                label = { Text(stringResource(Res.string.web_req_from)) }, enabled = !locked, singleLine = true, textStyle = codeTextStyle)
             OutlinedTextField(effectiveUntil, { effectiveUntil = it.take(40) }, Modifier.fillMaxWidth(),
-                label = { Text("Effective until (optional)") }, enabled = !locked, singleLine = true)
+                label = { Text(stringResource(Res.string.web_req_until)) }, enabled = !locked, singleLine = true, textStyle = codeTextStyle)
             items.forEachIndexed { index, item ->
                 RequirementItemEditor(
                     index = index,
@@ -257,8 +286,8 @@ private fun RequirementVersionEditor(
                     allowRemove = items.size > 1,
                 )
             }
-            OutlinedButton(onClick = { items = items + RequirementItemDraft(displayOrder = items.size) }, enabled = !locked) {
-                Text("Add requirement item")
+            OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { items = items + RequirementItemDraft(displayOrder = items.size) }, enabled = !locked) {
+                Text(stringResource(Res.string.web_req_add_item))
             }
             val inputs = items.mapNotNull(RequirementItemDraft::toInputOrNull)
             val valid = version.matches(Regex("^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")) &&
@@ -266,6 +295,7 @@ private fun RequirementVersionEditor(
                 inputs.map { it.requirementCode }.distinct().size == inputs.size &&
                 inputs.map { it.displayOrder }.distinct().size == inputs.size
             Button(
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                 onClick = {
                     if (existing == null) {
                         onCreate(
@@ -291,9 +321,9 @@ private fun RequirementVersionEditor(
                 },
                 enabled = valid && !locked,
                 modifier = Modifier.fillMaxWidth(),
-            ) { Text(if (existing == null) "Create backend draft" else "Save backend draft") }
-            if (!valid) Text("Complete unique codes/orders, localized copy, compatible evidence rules, and timezone-aware dates.",
-                color = TaxiColors.Warning600, style = MaterialTheme.typography.bodySmall)
+            ) { Text(if (existing == null) stringResource(Res.string.web_req_create) else stringResource(Res.string.web_req_save)) }
+            if (!valid) Text(stringResource(Res.string.web_req_invalid),
+                color = taxiColors.Warning600, style = MaterialTheme.typography.bodySmall)
         }
     }
 }
@@ -307,22 +337,26 @@ private fun RequirementItemEditor(
     onRemove: () -> Unit,
     allowRemove: Boolean,
 ) {
-    Surface(color = TaxiColors.Surface1, shape = RoundedCornerShape(TaxiRadii.Md),
-        border = BorderStroke(1.dp, TaxiColors.StrokeSubtle)) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
+    val codeTextStyle = MaterialTheme.typography.bodyLarge.copy(textDirection = TextDirection.Ltr)
+    Surface(color = taxiColors.Surface1, shape = RoundedCornerShape(taxiRadii.Md),
+        border = BorderStroke(1.dp, taxiColors.StrokeSubtle)) {
         Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Md), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("Requirement ${index + 1}", fontWeight = FontWeight.Bold)
-                if (allowRemove) TextButton(onClick = onRemove, enabled = !locked) { Text("Remove") }
+                Text(stringResource(Res.string.web_req_item, index + 1), fontWeight = FontWeight.Bold)
+                if (allowRemove) TextButton(onClick = onRemove, enabled = !locked) { Text(stringResource(Res.string.web_recruit_remove)) }
             }
             OutlinedTextField(item.requirementCode, { onChange(item.copy(requirementCode = it.uppercase().take(64))) },
-                Modifier.fillMaxWidth(), label = { Text("Requirement code") }, enabled = !locked, singleLine = true)
+                Modifier.fillMaxWidth(), label = { Text(stringResource(Res.string.web_req_code)) }, enabled = !locked, singleLine = true, textStyle = codeTextStyle)
             OutlinedTextField(item.copyKey, { onChange(item.copy(copyKey = it.lowercase().take(120))) },
-                Modifier.fillMaxWidth(), label = { Text("Localized copy key") }, enabled = !locked, singleLine = true)
-            Text("Evidence type", style = MaterialTheme.typography.labelMedium)
+                Modifier.fillMaxWidth(), label = { Text(stringResource(Res.string.web_req_copy_key)) }, enabled = !locked, singleLine = true, textStyle = codeTextStyle)
+            Text(stringResource(Res.string.web_req_evidence_type), style = MaterialTheme.typography.labelMedium)
             Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
                 EVIDENCE_TYPES.forEach { type ->
                     OutlinedButton(
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                         onClick = {
                             onChange(
                                 item.copy(
@@ -334,35 +368,36 @@ private fun RequirementItemEditor(
                         },
                         enabled = !locked,
                         border = BorderStroke(if (item.evidenceType == type) 2.dp else 1.dp,
-                            if (item.evidenceType == type) TaxiColors.Accent500 else TaxiColors.StrokeSubtle),
-                    ) { Text(type.replace('_', ' ')) }
+                            if (item.evidenceType == type) taxiColors.Accent500 else taxiColors.StrokeSubtle),
+                    ) { Text(recruitmentLabel(type)) }
                 }
             }
-            Text("Validity rule", style = MaterialTheme.typography.labelMedium)
+            Text(stringResource(Res.string.web_req_validity_rule), style = MaterialTheme.typography.labelMedium)
             Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
                 VALIDITY_RULES.getValue(item.evidenceType).forEach { rule ->
                     OutlinedButton(
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                         onClick = { onChange(item.copy(validityRule = rule)) },
                         enabled = !locked,
                         border = BorderStroke(if (item.validityRule == rule) 2.dp else 1.dp,
-                            if (item.validityRule == rule) TaxiColors.Accent500 else TaxiColors.StrokeSubtle),
-                    ) { Text(rule.replace('_', ' ')) }
+                            if (item.validityRule == rule) taxiColors.Accent500 else taxiColors.StrokeSubtle),
+                    ) { Text(recruitmentLabel(rule)) }
                 }
             }
             if (item.evidenceType == "CREDENTIAL") {
                 OutlinedTextField(item.referenceType, { onChange(item.copy(referenceType = it.uppercase().take(64))) },
-                    Modifier.fillMaxWidth(), label = { Text("Credential type code") }, enabled = !locked, singleLine = true)
+                    Modifier.fillMaxWidth(), label = { Text(stringResource(Res.string.web_req_credential_code)) }, enabled = !locked, singleLine = true, textStyle = codeTextStyle)
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(item.required, { onChange(item.copy(required = it)) }, enabled = !locked)
-                Text("Required")
+                Text(stringResource(Res.string.web_req_required))
             }
             OutlinedTextField(item.displayOrder.toString(), { value ->
                 value.filter(Char::isDigit).toIntOrNull()?.let { onChange(item.copy(displayOrder = it.coerceAtMost(1000))) }
-            }, Modifier.fillMaxWidth(), label = { Text("Display order") }, enabled = !locked, singleLine = true)
-            LocalizedCopyFields("Label", item.label, locked) { onChange(item.copy(label = it)) }
-            LocalizedCopyFields("Description", item.description, locked) { onChange(item.copy(description = it)) }
+            }, Modifier.fillMaxWidth(), label = { Text(stringResource(Res.string.web_req_order)) }, enabled = !locked, singleLine = true, textStyle = codeTextStyle)
+            LocalizedCopyFields(stringResource(Res.string.web_req_label), item.label, locked) { onChange(item.copy(label = it)) }
+            LocalizedCopyFields(stringResource(Res.string.web_req_description), item.description, locked) { onChange(item.copy(description = it)) }
         }
     }
 }
@@ -376,11 +411,11 @@ private fun LocalizedCopyFields(
 ) {
     Text(prefix, style = MaterialTheme.typography.labelLarge)
     OutlinedTextField(value.en, { onChange(value.copy(en = it.take(500))) }, Modifier.fillMaxWidth(),
-        label = { Text("$prefix · English") }, enabled = !locked)
+        label = { Text(stringResource(Res.string.web_req_locale_field, prefix, "English")) }, enabled = !locked, textStyle = recruitmentTextStyle(value.en))
     OutlinedTextField(value.fr, { onChange(value.copy(fr = it.take(500))) }, Modifier.fillMaxWidth(),
-        label = { Text("$prefix · Français") }, enabled = !locked)
+        label = { Text(stringResource(Res.string.web_req_locale_field, prefix, "Français")) }, enabled = !locked, textStyle = recruitmentTextStyle(value.fr))
     OutlinedTextField(value.ar, { onChange(value.copy(ar = it.take(500))) }, Modifier.fillMaxWidth(),
-        label = { Text("$prefix · العربية") }, enabled = !locked)
+        label = { Text(stringResource(Res.string.web_req_locale_field, prefix, "العربية")) }, enabled = !locked, textStyle = recruitmentTextStyle(value.ar))
 }
 
 @Composable
@@ -391,28 +426,35 @@ private fun RequirementTransitionDialog(
     onConfirm: (String) -> Unit,
     onDismiss: () -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     var reason by remember(version.id, target) { mutableStateOf("") }
     var confirmed by remember(version.id, target) { mutableStateOf(false) }
     AlertDialog(
+        shape = RoundedCornerShape(TaxiTheme.radii.Lg),
         onDismissRequest = { if (!busy) onDismiss() },
-        title = { Text(if (target == "ACTIVE") "Activate requirement version?" else "Submit requirement version?") },
+        title = { Text(if (target == "ACTIVE") stringResource(Res.string.web_req_activate_question) else stringResource(Res.string.web_req_submit_question)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md)) {
-                Text("Version ${version.version}, backend revision ${version.optimisticVersion}, ${version.items.size} item(s).")
-                Text("This command is audited and may replace the city's previous active requirements.", color = TaxiColors.Warning600)
-                OutlinedTextField(reason, { reason = it.take(240) }, Modifier.fillMaxWidth(), label = { Text("Review reason") })
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md)) {
+                Text(stringResource(Res.string.web_req_version, ltrIsolate(version.version)))
+                Text(stringResource(Res.string.web_req_revision_items, version.optimisticVersion, version.items.size))
+                Text(stringResource(Res.string.web_req_city_id, ltrIsolate(shortId(version.cityId))))
+                Text(stringResource(Res.string.web_req_period, ltrIsolate(version.effectiveFrom),
+                    version.effectiveUntil?.let(::ltrIsolate) ?: stringResource(Res.string.web_req_no_end)))
+                Text(stringResource(Res.string.web_req_replace_notice), color = taxiColors.Warning600)
+                OutlinedTextField(reason, { reason = it.take(240) }, Modifier.fillMaxWidth(),
+                    label = { Text(stringResource(Res.string.web_recruit_review_reason)) }, textStyle = recruitmentTextStyle(reason))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(confirmed, { confirmed = it }, enabled = !busy)
-                    Text("I reviewed the city, effective period, and complete item set.")
+                    Text(stringResource(Res.string.web_req_review_check))
                 }
             }
         },
         confirmButton = {
-            Button(onClick = { onConfirm(reason) }, enabled = !busy && confirmed && reason.trim().length >= 3) {
-                Text(if (target == "ACTIVE") "Confirm activation" else "Confirm submission")
+            Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onConfirm(reason) }, enabled = !busy && confirmed && reason.trim().length >= 3) {
+                Text(if (target == "ACTIVE") stringResource(Res.string.web_req_confirm_activation) else stringResource(Res.string.web_req_confirm_submission))
             }
         },
-        dismissButton = { TextButton(onClick = onDismiss, enabled = !busy) { Text("Cancel") } },
+        dismissButton = { TextButton(onClick = onDismiss, enabled = !busy) { Text(stringResource(Res.string.web_cancel)) } },
     )
 }
 
@@ -422,22 +464,22 @@ private fun DriverReviewSection(
     coordinator: OperationsCoordinator,
 ) {
     val queue = state.snapshot?.driverApplications
-    SectionHeading("Scoped application queue", "Oldest submitted applications appear first; every detail read is backend-scoped.")
+    SectionHeading(stringResource(Res.string.web_recruit_queue), stringResource(Res.string.web_recruit_queue_help))
     if (queue == null || queue.items.isEmpty()) {
-        EmptyState("No applications in this city queue", "Draft, withdrawn, or out-of-scope records may be intentionally absent.")
+        EmptyState(stringResource(Res.string.web_recruit_empty_queue), stringResource(Res.string.web_recruit_empty_queue_help))
     } else {
         DataCard(tableMinWidth = 900.dp) {
             Column(Modifier.fillMaxWidth()) {
-                TableHeader(listOf("Applicant" to 1.5f, "City" to 1f, "Status" to 1.3f, "Submitted" to 1.4f, "Action" to 1f))
+                TableHeader(listOf(stringResource(Res.string.web_recruit_applicant) to 1.5f, stringResource(Res.string.web_recruit_city) to 1f, stringResource(Res.string.web_table_status) to 1.3f, stringResource(Res.string.web_recruit_submitted) to 1.4f, stringResource(Res.string.web_recruit_action) to 1f))
                 queue.items.forEach { application ->
                     TableRow(selected = application.id == state.selectedDriverApplication?.application?.id) {
-                        TableCell(application.displayName, 1.5f, shortId(application.driverId))
-                        TableCell(application.cityCode, 1f, "requirements ${application.requirementVersion}")
-                        Box(Modifier.weight(1.3f)) { StatusBadge(application.status) }
-                        TableCell(compactTimestamp(application.submittedAt), 1.4f)
+                        TableCell(application.displayName, 1.5f, ltrIsolate(shortId(application.driverId)))
+                        TableCell(application.cityName.preferred(Locale.current.language), 1f, stringResource(Res.string.requirement_version_value, ltrIsolate(application.requirementVersion)))
+                        Box(Modifier.weight(1.3f)) { StatusBadge(application.status, label = recruitmentLabel(application.status)) }
+                        TableCell(ltrIsolate(compactTimestamp(application.submittedAt)), 1.4f)
                         Box(Modifier.weight(1f)) {
-                            OutlinedButton(onClick = { coordinator.selectDriverApplication(application.id) },
-                                enabled = !state.interactionLocked) { Text("Review") }
+                            OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { coordinator.selectDriverApplication(application.id) },
+                                enabled = !state.interactionLocked) { Text(stringResource(Res.string.web_recruit_review)) }
                         }
                     }
                 }
@@ -454,19 +496,24 @@ private fun DriverApplicationReview(
     state: OperationsUiState,
     coordinator: OperationsCoordinator,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     val application = detail.application
-    HorizontalDivider(color = TaxiColors.StrokeSubtle)
-    SectionHeading("Application review", "Personally identifying data below is available only for the current scoped review task.")
-    Surface(color = TaxiColors.Warning100, shape = RoundedCornerShape(TaxiRadii.Md)) {
+    HorizontalDivider(color = taxiColors.StrokeSubtle)
+    SectionHeading(stringResource(Res.string.web_recruit_review_title), stringResource(Res.string.web_recruit_review_help))
+    Surface(color = taxiColors.Warning100, shape = RoundedCornerShape(taxiRadii.Md)) {
         Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Md)) {
-            Text("Restricted applicant data", fontWeight = FontWeight.Bold, color = TaxiColors.Warning600)
-            Text("${detail.applicantDisplayName} · ${detail.applicantEmail ?: "no email"} · ${detail.applicantPhoneNumber ?: "no phone"}")
-            Text("Do not copy these fields into audit reasons, analytics, or applicant-safe messages.", style = MaterialTheme.typography.bodySmall)
+            Text(stringResource(Res.string.web_recruit_private_data), fontWeight = FontWeight.Bold, color = taxiColors.Warning600)
+            val person = stringResource(Res.string.web_recruit_person, detail.applicantDisplayName,
+                detail.applicantEmail?.let(::ltrIsolate) ?: stringResource(Res.string.web_recruit_no_email),
+                detail.applicantPhoneNumber?.let(::ltrIsolate) ?: stringResource(Res.string.web_recruit_no_phone))
+            Text(person, style = recruitmentTextStyle(person))
+            Text(stringResource(Res.string.web_recruit_private_notice), style = MaterialTheme.typography.bodySmall)
         }
     }
     Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Md)) {
-        StatusBadge(application.status)
-        Text("Application version ${application.optimisticVersion} · submission ${application.submissionRevision}")
+        StatusBadge(application.status, label = recruitmentLabel(application.status))
+        Text(stringResource(Res.string.web_recruit_app_revision, application.optimisticVersion, application.submissionRevision))
     }
     application.requirements.sortedBy { it.displayOrder }.forEach { requirement ->
         val answer = application.answers.firstOrNull { it.requirementItemId == requirement.id }
@@ -474,23 +521,29 @@ private fun DriverApplicationReview(
         DataCard {
             Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Md), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(requirement.localizedLabel.en, fontWeight = FontWeight.Bold)
-                    StatusBadge(evidence?.status ?: if (requirement.id in application.missingRequiredItemIds) "MISSING" else "PRESENT")
+                    val label = requirement.localizedLabel.inLanguage(Locale.current.language)
+                    Text(label, fontWeight = FontWeight.Bold, style = recruitmentTextStyle(label))
+                    val evidenceStatus = evidence?.status ?: if (requirement.id in application.missingRequiredItemIds) "MISSING" else "PRESENT"
+                    StatusBadge(evidenceStatus, label = recruitmentLabel(evidenceStatus))
                 }
-                Text("${requirement.requirementCode} · ${requirement.evidenceType} · ${requirement.validityRuleCode}",
-                    color = TaxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
+                Text("${ltrIsolate(requirement.requirementCode)} · ${recruitmentLabel(requirement.evidenceType)} · ${recruitmentLabel(requirement.validityRuleCode)}",
+                    color = taxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
                 answer?.let {
-                    Text("Answer: ${it.textValue ?: it.dateValue ?: it.booleanValue?.toString() ?: "—"}")
+                    val answerText = it.textValue ?: it.dateValue?.let(::ltrIsolate) ?: it.booleanValue?.let { value ->
+                        stringResource(if (value) Res.string.web_recruit_yes else Res.string.web_recruit_no)
+                    } ?: "—"
+                    Text(stringResource(Res.string.web_recruit_answer, answerText), style = recruitmentTextStyle(answerText))
                 }
                 evidence?.let {
-                    Text("Evidence reference: ${shortId(it.vehicleId ?: it.credentialId ?: it.profileId ?: it.documentId)}")
+                    Text(stringResource(Res.string.web_recruit_evidence_reference, ltrIsolate(shortId(it.vehicleId ?: it.credentialId ?: it.profileId ?: it.documentId))))
                 }
                 application.documents.filter { it.requirementItemId == requirement.id }.forEach { document ->
-                    Surface(color = TaxiColors.Surface1, shape = RoundedCornerShape(TaxiRadii.Sm)) {
+                    Surface(color = taxiColors.Surface1, shape = RoundedCornerShape(taxiRadii.Sm)) {
                         Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Sm)) {
-                            Text("Document ${shortId(document.id)} · ${document.scanStatus}")
-                            Text("${document.mediaType}, ${document.byteSize} bytes", style = MaterialTheme.typography.bodySmall)
+                            Text(stringResource(Res.string.web_recruit_document, ltrIsolate(shortId(document.id)), recruitmentLabel(document.scanStatus)))
+                            Text(stringResource(Res.string.web_recruit_document_size, ltrIsolate(document.mediaType), ltrIsolate(document.byteSize.toString())), style = MaterialTheme.typography.bodySmall)
                             OutlinedButton(
+                                shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                                 onClick = {
                                     coordinator.downloadDriverApplicationDocument(application.id, document.id)
                                 },
@@ -499,14 +552,14 @@ private fun DriverApplicationReview(
                                     scanStatus = document.scanStatus,
                                     interactionLocked = state.interactionLocked,
                                 ),
-                            ) { Text("Download protected copy") }
+                            ) { Text(stringResource(Res.string.web_recruit_download)) }
                             Text(
                                 if (browserProtectedDocumentDownloadAvailable) {
-                                    "Requires recent MFA. The audited response is no-store and uses an opaque filename."
+                                    stringResource(Res.string.web_recruit_download_help)
                                 } else {
-                                    "Protected download is unavailable in this browser build."
+                                    stringResource(Res.string.web_recruit_download_unavailable)
                                 },
-                                color = TaxiColors.Warning600,
+                                color = taxiColors.Warning600,
                                 style = MaterialTheme.typography.bodySmall,
                             )
                         }
@@ -516,9 +569,11 @@ private fun DriverApplicationReview(
         }
     }
     if (detail.decisions.isNotEmpty()) {
-        Text("Decision history", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+        Text(stringResource(Res.string.web_recruit_history), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         detail.decisions.forEach { decision ->
-            Text("${compactTimestamp(decision.createdAt)} · ${decision.decision} · ${decision.reasonCode} · ${decision.applicantSafeMessage}")
+            val history = stringResource(Res.string.web_recruit_history_row, ltrIsolate(decision.createdAt),
+                recruitmentLabel(decision.decision), recruitmentLabel(decision.reasonCode), decision.applicantSafeMessage)
+            Text(history, style = recruitmentTextStyle(history))
         }
     }
     CityAuthorizationReview(application, state.interactionLocked, coordinator)
@@ -537,6 +592,8 @@ private fun DriverDecisionForm(
     locked: Boolean,
     onDecision: (DriverApplicationDecisionRequest) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     val application = detail.application
     val decisions = when (application.status) {
         "SUBMITTED" -> listOf("START_REVIEW")
@@ -544,8 +601,8 @@ private fun DriverDecisionForm(
         else -> emptyList()
     }
     if (decisions.isEmpty()) {
-        Surface(color = TaxiColors.Surface2, shape = RoundedCornerShape(TaxiRadii.Md)) {
-            Text("No review transition is available from ${application.status}.", Modifier.fillMaxWidth().padding(TaxiSpacing.Md))
+        Surface(color = taxiColors.Surface2, shape = RoundedCornerShape(taxiRadii.Md)) {
+            Text(stringResource(Res.string.web_recruit_no_transition, recruitmentLabel(application.status)), Modifier.fillMaxWidth().padding(TaxiSpacing.Md))
         }
         return
     }
@@ -561,47 +618,50 @@ private fun DriverDecisionForm(
     var confirmed by remember(application.id, application.optimisticVersion) { mutableStateOf(false) }
     DataCard {
         Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Lg), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md)) {
-            Text("Record a decision", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-            Text("A safe message is shown to the applicant. Reviewer identity remains operations-only.", color = TaxiColors.Ink500)
+            Text(stringResource(Res.string.web_recruit_decision_title), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+            Text(stringResource(Res.string.web_recruit_decision_help), color = taxiColors.Ink500)
             Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
                 decisions.forEach { candidate ->
                     OutlinedButton(
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                         onClick = { decision = candidate; reason = DECISION_REASONS.getValue(candidate).first(); confirmed = false },
                         enabled = !locked,
                         border = BorderStroke(if (candidate == decision) 2.dp else 1.dp,
-                            if (candidate == decision) TaxiColors.Accent500 else TaxiColors.StrokeSubtle),
-                    ) { Text(candidate.replace('_', ' ')) }
+                            if (candidate == decision) taxiColors.Accent500 else taxiColors.StrokeSubtle),
+                    ) { Text(recruitmentLabel(candidate)) }
                 }
             }
             ScopeMenu(
-                label = "Reason",
-                selected = reason.replace('_', ' '),
-                options = DECISION_REASONS.getValue(decision).map { ScopeOption(it, it.replace('_', ' ')) },
+                label = stringResource(Res.string.web_recruit_reason),
+                selected = recruitmentLabel(reason),
+                options = DECISION_REASONS.getValue(decision).map { ScopeOption(it, recruitmentLabel(it)) },
                 enabled = !locked,
                 onSelected = { selected -> selected?.let { reason = it } },
             )
             OutlinedTextField(message, { message = it.take(500) }, Modifier.fillMaxWidth(),
-                label = { Text("Applicant-safe message") }, enabled = !locked)
+                label = { Text(stringResource(Res.string.web_recruit_safe_message)) }, enabled = !locked,
+                textStyle = recruitmentTextStyle(message))
             if (decision == "APPROVE") {
-                Text("Authorized services", fontWeight = FontWeight.Bold)
-                ServiceCheckbox("On-demand", onDemand, !locked) { onDemand = it }
-                ServiceCheckbox("Fixed route", fixedRoute, !locked) { fixedRoute = it }
-                ServiceCheckbox("Scheduled", scheduled, !locked) { scheduled = it }
+                Text(stringResource(Res.string.web_recruit_services), fontWeight = FontWeight.Bold)
+                ServiceCheckbox(stringResource(Res.string.service_type_on_demand), onDemand, !locked) { onDemand = it }
+                ServiceCheckbox(stringResource(Res.string.service_type_fixed_route), fixedRoute, !locked) { fixedRoute = it }
+                ServiceCheckbox(stringResource(Res.string.service_type_scheduled), scheduled, !locked) { scheduled = it }
                 val vehicleChoices = application.evidence.mapNotNull { it.vehicleId }.distinct()
                 ScopeMenu(
-                    label = "Authorized vehicle",
-                    selected = shortId(vehicleId),
-                    options = listOf(ScopeOption(null, "No vehicle binding")) + vehicleChoices.map { ScopeOption(it, shortId(it)) },
+                    label = stringResource(Res.string.web_recruit_vehicle),
+                    selected = vehicleId?.let { ltrIsolate(shortId(it)) } ?: stringResource(Res.string.web_recruit_no_vehicle),
+                    options = listOf(ScopeOption(null, stringResource(Res.string.web_recruit_no_vehicle))) + vehicleChoices.map { ScopeOption(it, ltrIsolate(shortId(it))) },
                     enabled = !locked,
                     onSelected = { vehicleId = it },
                 )
                 OutlinedTextField(validUntil, { validUntil = it.take(40) }, Modifier.fillMaxWidth(),
-                    label = { Text("Authorization expiry (optional ISO 8601)") }, enabled = !locked)
+                    label = { Text(stringResource(Res.string.web_recruit_authorization_expiry)) }, enabled = !locked,
+                    textStyle = MaterialTheme.typography.bodyLarge.copy(textDirection = TextDirection.Ltr))
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(confirmed, { confirmed = it }, enabled = !locked)
-                Text("I reviewed the current requirement version, evidence, city, reason, and applicant-safe message.")
+                Text(stringResource(Res.string.web_recruit_decision_check))
             }
             val serviceTypes = buildList {
                 if (onDemand) add("ON_DEMAND")
@@ -609,6 +669,7 @@ private fun DriverDecisionForm(
                 if (scheduled) add("SCHEDULED")
             }
             Button(
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                 onClick = {
                     onDecision(
                         DriverApplicationDecisionRequest(
@@ -626,7 +687,7 @@ private fun DriverDecisionForm(
                     (decision != "APPROVE" || serviceTypes.isNotEmpty()) &&
                     (validUntil.isBlank() || validUntil.hasTimezone()),
                 modifier = Modifier.fillMaxWidth(),
-            ) { Text("Confirm backend decision") }
+            ) { Text(stringResource(Res.string.web_recruit_confirm_decision)) }
         }
     }
 }
@@ -732,9 +793,3 @@ private val DECISION_REASONS = mapOf(
 )
 
 internal fun String.hasTimezone(): Boolean = endsWith("Z") || drop(10).contains('+') || drop(10).contains('-')
-
-private fun formatReviewDuration(seconds: Double): String = when {
-    seconds < 3600 -> "${(seconds / 60).toInt()} min"
-    seconds < 86_400 -> "${(seconds / 3600).toInt()} hr"
-    else -> "${(seconds / 86_400).toInt()} days"
-}

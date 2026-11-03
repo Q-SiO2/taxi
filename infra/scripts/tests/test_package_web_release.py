@@ -24,11 +24,12 @@ class WebReleasePackageTests(unittest.TestCase):
             '<!doctype html><meta name="taximobile-client-version" content="1.0.0">'
             '<meta name="taximobile-client-build" content="1">'
             '<link rel="icon" href="favicon.svg">'
-            '<script src="compatibility.js"></script>',
+            '<script src="locale.js"></script><script src="compatibility.js"></script>',
             encoding="utf-8",
         )
         (source / "favicon.svg").write_text("<svg></svg>", encoding="utf-8")
         (source / "styles.css").write_text("body {}", encoding="utf-8")
+        (source / "locale.js").write_text("/* app-owned locale adapter */", encoding="utf-8")
         (source / "compatibility.js").write_text(
             '/client-compatibility "X-TaxiMobile-Client" "X-TaxiMobile-Version" '
             '"X-TaxiMobile-Build" policy.status === "UPGRADE_REQUIRED" '
@@ -68,6 +69,53 @@ class WebReleasePackageTests(unittest.TestCase):
             with patch.dict(package_web_release.WEB_BUDGETS, {"originJsWebApp.js": 1}):
                 with self.assertRaises(WebPackageError):
                     package_distribution(source, root / "release")
+
+    def test_rejects_missing_locale_adapter(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = self._distribution(root)
+            (source / "locale.js").unlink()
+            with self.assertRaisesRegex(WebPackageError, "locale.js"):
+                package_distribution(source, root / "release")
+
+    def test_rejects_locale_adapter_loaded_after_compatibility_or_async(self) -> None:
+        for replacement in (
+            '<script src="compatibility.js"></script><script src="locale.js"></script>',
+            '<script async src="locale.js"></script><script src="compatibility.js"></script>',
+            '<script defer src="locale.js"></script><script src="compatibility.js"></script>',
+        ):
+            with self.subTest(replacement=replacement), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                source = self._distribution(root)
+                index = source / "index.html"
+                index.write_text(index.read_text(encoding="utf-8").replace(
+                    '<script src="locale.js"></script><script src="compatibility.js"></script>', replacement,
+                ), encoding="utf-8")
+                with self.assertRaisesRegex(WebPackageError, "locale.js before"):
+                    package_distribution(source, root / "release")
+
+    def test_deduplicates_identical_skiko_and_requires_host_alias(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = self._distribution(root)
+            hashed = "a" * 20 + ".wasm"
+            (source / hashed).write_bytes((source / "skiko.wasm").read_bytes())
+            output = root / "release"
+            manifest = package_distribution(source, output)
+            self.assertFalse((output / "skiko.wasm").exists())
+            self.assertEqual(b"skiko", (output / hashed).read_bytes())
+            self.assertEqual({"skiko.wasm": hashed}, manifest["hosting_requirements"]["asset_aliases"])
+            self.assertEqual(1, len([record for record in manifest["files"] if record["path"] == hashed]))
+
+    def test_different_binary_is_retained_even_when_size_matches(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = self._distribution(root)
+            (source / ("a" * 20 + ".wasm")).write_bytes(b"other")
+            output = root / "release"
+            manifest = package_distribution(source, output)
+            self.assertTrue((output / "skiko.wasm").is_file())
+            self.assertEqual({}, manifest["hosting_requirements"]["asset_aliases"])
 
     def test_rejects_missing_or_malformed_client_build_identity(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

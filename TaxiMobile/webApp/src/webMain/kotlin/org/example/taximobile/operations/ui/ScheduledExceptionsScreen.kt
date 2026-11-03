@@ -1,10 +1,13 @@
 package org.example.taximobile.operations.ui
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -20,30 +23,34 @@ import org.example.taximobile.feature.ui.theme.TaxiColors
 import org.example.taximobile.feature.ui.theme.TaxiSpacing
 import org.example.taximobile.operations.model.ScheduledBookingExceptionRecord
 import org.example.taximobile.operations.state.OperationsUiState
+import org.example.taximobile.feature.ui.text.ltrIsolate
+import org.jetbrains.compose.resources.stringResource
+import taximobile.shared.generated.resources.*
 
 /** Privacy-bounded exception review. The participant API does not expose names or supply data. */
 @Composable
 internal fun ScheduledExceptionsScreen(state: OperationsUiState) {
+    val taxiColors = TaxiTheme.colors
     val page = state.snapshot?.scheduledBookingExceptions
     var expandedId by remember(state.scope.cityId, state.scope.operatorId) {
         mutableStateOf<String?>(null)
     }
     Column(
-        Modifier.fillMaxWidth().padding(TaxiSpacing.Xl),
+        Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(TaxiSpacing.Xl),
         verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Lg),
     ) {
         SectionHeading(
-            "Scheduled booking exceptions",
-            "Review backend-confirmed offering, handoff, cancellation, and unfulfilled states in the selected authorized scope. Passenger identity and driver supply are intentionally absent.",
+            stringResource(Res.string.web_booking_exceptions),
+            stringResource(Res.string.web_booking_exceptions_help),
         )
         when {
             page == null -> EmptyState(
-                "Exception review unavailable",
-                "Select an authorized city or refresh the scoped operations snapshot.",
+                stringResource(Res.string.web_booking_unavailable),
+                stringResource(Res.string.web_booking_unavailable_help),
             )
             page.items.isEmpty() -> EmptyState(
-                "No scheduled exceptions",
-                "There are no offering, handoff, cancelled, or unfulfilled bookings in this scope.",
+                stringResource(Res.string.web_booking_empty),
+                stringResource(Res.string.web_booking_empty_help),
             )
             else -> {
                 page.items.forEach { booking ->
@@ -55,11 +62,7 @@ internal fun ScheduledExceptionsScreen(state: OperationsUiState) {
                         },
                     )
                 }
-                Text(
-                    "Showing ${page.items.size} of ${page.total} backend records.",
-                    color = TaxiColors.Ink500,
-                    style = MaterialTheme.typography.bodySmall,
-                )
+                PageLimitNote(page.items.size, page.total)
             }
         }
     }
@@ -71,6 +74,7 @@ private fun ScheduledExceptionCard(
     expanded: Boolean,
     onToggle: () -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     DataCard {
         Column(
             Modifier.fillMaxWidth().padding(TaxiSpacing.Lg),
@@ -83,43 +87,52 @@ private fun ScheduledExceptionCard(
             ) {
                 Column(Modifier.weight(1f)) {
                     Text(
-                        "${booking.serviceType.replace('_', ' ')} · ${compactTimestamp(booking.scheduledFor)}",
+                        "${recruitmentLabel(booking.serviceType)} · ${ltrIsolate(compactTimestamp(booking.scheduledFor))}",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                     )
                     Text(
-                        "${booking.cityTimezone} · booking ${booking.id}",
-                        color = TaxiColors.Ink500,
+                        stringResource(Res.string.web_booking_reference, ltrIsolate(booking.id), ltrIsolate(booking.cityTimezone)),
+                        color = taxiColors.Ink500,
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
-                StatusBadge(booking.status)
+                StatusBadge(booking.status, label = bookingLabel(booking.status))
             }
+            val route = "${booking.pickup.address ?: coordinateLabel(booking.pickup.latitude, booking.pickup.longitude)} → " +
+                (booking.destination.address ?: coordinateLabel(booking.destination.latitude, booking.destination.longitude))
+            Text(ltrIsolate(route), style = recruitmentTextStyle(route), color = taxiColors.Ink700)
             Text(
-                "${booking.pickup.address ?: coordinateLabel(booking.pickup.latitude, booking.pickup.longitude)} → " +
-                    (booking.destination.address ?: coordinateLabel(booking.destination.latitude, booking.destination.longitude)),
-                color = TaxiColors.Ink700,
+                stringResource(Res.string.web_booking_economics,
+                    ltrIsolate("${booking.economics.passengerTotal} ${booking.economics.currency}"),
+                    ltrIsolate("${booking.economics.expectedDriverNet} ${booking.economics.currency}"),
+                    ltrIsolate("${booking.economics.operatorAllocation} ${booking.economics.currency}")),
+                color = taxiColors.Ink700,
             )
             Text(
-                "Passenger total ${booking.economics.passengerTotal} ${booking.economics.currency} · " +
-                    "driver net ${booking.economics.expectedDriverNet} · operator ${booking.economics.operatorAllocation}",
-                color = TaxiColors.Ink700,
-            )
-            Text(
-                if (booking.driverCommitted) "A driver commitment is recorded." else "No active driver commitment is represented.",
-                color = if (booking.driverCommitted) TaxiColors.Success600 else TaxiColors.Warning600,
+                stringResource(if (booking.driverCommitted) Res.string.web_booking_committed else Res.string.web_booking_uncommitted),
+                color = if (booking.driverCommitted) taxiColors.Success600 else taxiColors.Warning600,
                 style = MaterialTheme.typography.bodySmall,
             )
-            OutlinedButton(onClick = onToggle) { Text(if (expanded) "Hide policy detail" else "Review policy detail") }
+            OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = onToggle) { Text(stringResource(if (expanded) Res.string.web_booking_hide else Res.string.web_booking_review)) }
             if (expanded) {
-                Text("Transport ${booking.economics.transportFare} · scheduling ${booking.economics.schedulingSurcharge} · service fee ${booking.economics.operatorServiceFee}")
-                Text("Tariff ${booking.economics.pricingRuleVersion} · fee ${booking.economics.operatorFeePolicyVersion} · schedule ${booking.economics.schedulingPolicyVersion}")
-                Text(booking.cancellationTerms.summary)
-                booking.cancellationFinancialOutcome?.let { Text("Cancellation outcome: $it") }
-                booking.liveRideId?.let { Text("Live ride: $it") }
+                Text(stringResource(Res.string.web_booking_fare_parts,
+                    ltrIsolate("${booking.economics.transportFare} ${booking.economics.currency}"),
+                    ltrIsolate("${booking.economics.schedulingSurcharge} ${booking.economics.currency}"),
+                    ltrIsolate("${booking.economics.operatorServiceFee} ${booking.economics.currency}")))
+                Text(stringResource(Res.string.web_booking_versions, ltrIsolate(booking.economics.pricingRuleVersion), ltrIsolate(booking.economics.operatorFeePolicyVersion), ltrIsolate(booking.economics.schedulingPolicyVersion)))
+                val termsResource = bookingRefundCodeResource(booking.cancellationTerms.surchargeRefundMode)
+                Text(when {
+                    termsResource == null -> stringResource(Res.string.web_booking_terms_unknown)
+                    booking.cancellationTerms.surchargeRefundMode == "FULL_BEFORE_CUTOFF" ->
+                        stringResource(termsResource, ltrIsolate(booking.cancellationTerms.passengerCancelCutoffMinutes.toString()))
+                    else -> stringResource(termsResource)
+                })
+                booking.cancellationFinancialOutcome?.let { Text(stringResource(Res.string.web_booking_cancellation, bookingLabel(it))) }
+                booking.liveRideId?.let { Text(stringResource(Res.string.web_booking_live_ride, ltrIsolate(it))) }
                 Text(
-                    "This review is read-only. Lifecycle repair remains a backend/worker responsibility.",
-                    color = TaxiColors.Ink500,
+                    stringResource(Res.string.web_booking_read_only),
+                    color = taxiColors.Ink500,
                     style = MaterialTheme.typography.bodySmall,
                 )
             }

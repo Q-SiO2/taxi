@@ -1,0 +1,30 @@
+{
+  "graphics": 24,
+  "motions": 18,
+  "pages": 213,
+  "plainViews": 32,
+  "motionAssignedViews": 38,
+  "artDirections": [
+    "Paper cut",
+    "Line chronicle",
+    "Print studio"
+  ],
+  "inputs": [
+    {
+      "file": "expressive_assets.py",
+      "sha256": "e9643dde60da998b79155fdd3ae9d955dd1823ac54b6e1550f7754f9105b0336"
+    },
+    {
+      "file": "expressive_catalog.py",
+      "sha256": "25348d45b3b7a2ae8670141e8bb01ca103f4e733a4c16b9536c0e3eaa6d0ef1b"
+    },
+    {
+      "file": "expressive-template.html",
+      "sha256": "aa03b222fc054f96af1cba419b4186f114b9c3194ae0e93280e1da924ab3b865"
+    },
+    {
+      "file": "atlas-data.json",
+      "sha256": "16c1fa83db51e4754e554145fb0d68c1329007696b0e3b9db8b989fdf35eb000"
+    }
+  ]
+}

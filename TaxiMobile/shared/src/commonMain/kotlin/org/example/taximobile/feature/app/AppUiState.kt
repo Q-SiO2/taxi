@@ -80,6 +80,9 @@ sealed interface AppUiState {
     ) : AppUiState
     data class SignedOut(
         val message: UiMessage? = null,
+        // A resource 401 is not proof that the stored refresh session expired.
+        // Native authenticated actions reconcile once through normal auth restore.
+        val requiresSessionRecheck: Boolean = false,
         val registrationCompleted: Boolean = false,
         val suggestedIdentifier: String? = null,
         val showRegistrationForm: Boolean = false,
@@ -108,6 +111,8 @@ sealed interface AppUiState {
         val pickup: org.example.taximobile.domain.rides.Coordinates? = null,
         val destination: org.example.taximobile.domain.rides.Coordinates? = null,
         val fareEstimate: FareEstimate? = null,
+        /** Session-owned reviewed input only; fare/route are still freshly authorized server reads. */
+        val reviewedPointQuoteInput: Pair<org.example.taximobile.domain.rides.Coordinates, org.example.taximobile.domain.rides.Coordinates>? = null,
         val routePlan: RoutePlan? = null,
         val routeUnavailable: Boolean = false,
         val serviceCities: List<PublicRideCity> = emptyList(),
@@ -118,8 +123,13 @@ sealed interface AppUiState {
         val activeFixedRoute: FixedRouteRideSummary? = null,
         val rateableRideId: String? = null,
         val rideHistory: List<RideSummary> = emptyList(),
-        val scheduledBookings: List<ScheduledBooking> = emptyList(),
+        val scheduledBookingPage: org.example.taximobile.domain.scheduling.ScheduledBookingPage? = null,
+        val scheduledBookingsLoadFailed: Boolean = false,
+        val scheduledBookingRequestedPage: Int = 1,
         val scheduledBookingEstimate: ScheduledBookingEstimate? = null,
+        val scheduledBookingEstimateReadId: String? = null,
+        val scheduledLocalTimeOptions: org.example.taximobile.domain.scheduling.ScheduledLocalTimeOptions? = null,
+        val scheduledLocalTimeReadId: String? = null,
         val latestCompletedReceipt: RideReceipt? = null,
         val selectedHistoryRide: RideSummary? = null,
         val selectedHistoryReceipt: RideReceipt? = null,
@@ -128,7 +138,9 @@ sealed interface AppUiState {
         val safetyReports: List<SafetyReport> = emptyList(),
         val accountSecurity: AccountSecurityUiState = AccountSecurityUiState(),
         val placeDiscovery: PlaceDiscoveryUiState = PlaceDiscoveryUiState(),
-    ) : AppUiState
+    ) : AppUiState {
+        val scheduledBookings: List<ScheduledBooking> get() = scheduledBookingPage?.items.orEmpty()
+    }
     data class DriverReady(
         val availability: DriverAvailabilityStatus,
         val displayName: String? = null,
@@ -152,7 +164,8 @@ sealed interface AppUiState {
         val routeUnavailable: Boolean = false,
         val activeServiceType: RideServiceType = RideServiceType.ON_DEMAND,
         val activeFixedRoute: FixedRouteRideSummary? = null,
-        val pendingCashRideId: String? = null,
+        val pendingCashPayments: org.example.taximobile.domain.drivers.PendingCashPaymentsPage? = null,
+        val pendingCashLoadFailed: Boolean = false,
         val offers: List<DriverRideOffer> = emptyList(),
         val scheduledOffers: List<ScheduledOffer> = emptyList(),
         val scheduledCommitments: List<ScheduledCommitment> = emptyList(),

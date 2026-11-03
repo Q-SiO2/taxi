@@ -1,0 +1,129 @@
+{
+  "candidate": "candidate-native-v23.json",
+  "started_utc": "2026-10-22T18:26:41.763642+00:00",
+  "passed": false,
+  "observations": [
+    {
+      "role": "passenger",
+      "label": "normal-roomy",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,1152][720,1504]"
+      ],
+      "recenter_bounds": [
+        "Bounds(left=584, top=888, right=688, bottom=992)"
+      ],
+      "inbox_bounds": [
+        "Bounds(left=525, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v23-map-chrome-passenger-normal-roomy.png",
+        "sha256": "d95b6c83c81ceb49933f966a4ef51a8940f1f2c62adc3b95eee6a6c2497ffc18"
+      }
+    },
+    {
+      "role": "passenger",
+      "label": "normal-expanded",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,352][720,1504]"
+      ],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=525, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v23-map-chrome-passenger-normal-expanded.png",
+        "sha256": "1a5e09e0df499247c054e4214df3bbdd09d9e3e5f273f92cd34ad81fdc73f25e"
+      }
+    },
+    {
+      "role": "passenger",
+      "label": "normal-inbox-open",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,352][720,1504]"
+      ],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=525, top=72, right=688, bottom=168)",
+        "Bounds(left=48, top=544, right=173, bottom=606)"
+      ],
+      "screenshot": {
+        "path": "v23-map-chrome-passenger-normal-inbox-open.png",
+        "sha256": "dc19d1af98f2af81ad5cb889d27fa3ef1d9049d3680240ddd7e48091073ece44"
+      }
+    },
+    {
+      "role": "passenger",
+      "label": "normal-collapse-restored",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,1152][720,1504]"
+      ],
+      "recenter_bounds": [
+        "Bounds(left=584, top=888, right=688, bottom=992)"
+      ],
+      "inbox_bounds": [
+        "Bounds(left=525, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v23-map-chrome-passenger-normal-collapse-restored.png",
+        "sha256": "620bd40136aa1fc087fef1ff9d784645943ddd1fc9377c4aab7e6fcbedc19b04"
+      }
+    },
+    {
+      "role": "passenger",
+      "label": "large-text-promoted",
+      "font_scale": "1.6",
+      "viewport": [],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=506, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v23-map-chrome-passenger-large-text-promoted.png",
+        "sha256": "334d45ae547daac5bead8e4cb1d2c87bf11decda851bd65fa13d72da25d455b5"
+      }
+    },
+    {
+      "role": "passenger",
+      "label": "large-text-inbox-open",
+      "font_scale": "1.6",
+      "viewport": [
+        "[0,352][720,1504]"
+      ],
+      "recenter_bounds": [],
+      "inbox_bounds": [
+        "Bounds(left=506, top=72, right=688, bottom=168)",
+        "Bounds(left=48, top=546, right=203, bottom=623)"
+      ],
+      "screenshot": {
+        "path": "v23-map-chrome-passenger-large-text-inbox-open.png",
+        "sha256": "e75714158d9a7971b2e5672e1cbd788d4dd13a6afa0301d2e9ec51ebe2649d4e"
+      }
+    },
+    {
+      "role": "driver",
+      "label": "failure-diagnostic",
+      "font_scale": "1.0",
+      "viewport": [
+        "[0,832][720,1552]"
+      ],
+      "recenter_bounds": [
+        "Bounds(left=584, top=568, right=688, bottom=672)"
+      ],
+      "inbox_bounds": [
+        "Bounds(left=526, top=72, right=688, bottom=168)"
+      ],
+      "screenshot": {
+        "path": "v23-map-chrome-driver-failure-diagnostic.png",
+        "sha256": "c47e908e5935489183a589dd36b1ff7ad7c5b1349b577a27da48de501bf12a18"
+      }
+    }
+  ],
+  "scope": "Actual API31 passenger/API35 driver, normal/1.6 system text, expanded sheet, visible Inbox navigation and restored map actions. No business input or physical-device acceptance.",
+  "failure_type": "RuntimeError",
+  "failure_detail": "Actual native chrome control not reached: driver_home",
+  "finished_utc": "2026-10-22T18:29:30.894205+00:00"
+}

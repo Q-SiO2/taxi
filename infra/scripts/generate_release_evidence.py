@@ -52,6 +52,7 @@ SOURCE_INPUTS = (
     "infra/scripts/generate_t3_system_report.py",
     "infra/scripts/package_web_release.py",
     "infra/scripts/run_t4_browser_smoke.py",
+    "infra/scripts/run_database_tls_ci.py",
     "infra/scripts/run_simulated_persona_suite.py",
     "infra/scripts/run_t3_backup_restore_rehearsal.py",
     "infra/scripts/t2_no_network.py",

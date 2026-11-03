@@ -80,6 +80,26 @@ data class AdministrativeGrantChangeRequestRecord(
     @SerialName("optimistic_version") val optimisticVersion: Int,
 )
 
+/** Uses each backend-filtered total, never the count of an unrelated snapshot. */
+data class StaffPageState(
+    val page: Int,
+    val limit: Int,
+    val total: Int,
+    val shown: Int,
+) {
+    val isCollectionEmpty: Boolean get() = total == 0
+    val isPageStale: Boolean get() = total > 0 && shown == 0
+    val canPrevious: Boolean get() = page > 1
+    val canNext: Boolean get() = page > 0 && limit > 0 && page.toLong() * limit < total
+
+    fun allowsNavigation(requestedPage: Int): Boolean = when (requestedPage) {
+        page -> isPageStale
+        page - 1 -> canPrevious
+        page + 1 -> canNext
+        else -> false
+    }
+}
+
 fun administrativeRoleTemplate(value: String): AdministrativeRoleTemplateOption? =
     ADMINISTRATIVE_ROLE_TEMPLATES.firstOrNull { it.value == value }
 

@@ -1,0 +1,54 @@
+{
+  "recorded_utc": "2026-10-26T08:30:00.957410+00:00",
+  "source_predecessor": "314fceefc2af2c0ea46f2a707477bb4a0d4e34b2",
+  "scope": "Synthetic actual Ktor pipeline failures; gateway and existing coordinator selection. No provider/hosted/device acceptance.",
+  "source_sha256": {
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/rides/KtorRideGateway.kt": "2858148b1264a5a1ecef9402c411296a260e188e4c1285a1d209cea6b07956d0",
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/data/scheduling/KtorScheduledBookingGateway.kt": "5542dd6f8232a89a7cf446d3c02fd3d4b9ac41a5c37837ef1a0c791a75cff882",
+    "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/data/network/RideSchedulingCancellationTest.kt": "d9c00cecffe3b43e7dff2518855b06cdf6b9877eee3eb0fa6f20a9377f0ffa10"
+  },
+  "baseline": {
+    "tests": 10,
+    "failures": 9,
+    "errors": 0,
+    "skipped": 0,
+    "xml_sha256": "bd23112f5b057d40a8fe36756b19ab363fb3a57086a4cdc5571eeac679b971d0",
+    "both_gateway_inputs_match_published_predecessor": true,
+    "test_fixture_precedes_extra_exact_body_assertions": true
+  },
+  "focused_corrected_jvm": {
+    "tests": 10,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "xml_sha256": "467fe2280cae693a4f7aba16509f38f07d054dcfc1fba47d7f98082484678852"
+  },
+  "final_affected_jvm": {
+    "totals": {
+      "tests": 109,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "zip_sha256": "094f013c64c37e36670ffba0d62f7f15293676decbec56c0ab58a112bddc8d43"
+  },
+  "final_affected_android_host": {
+    "totals": {
+      "tests": 128,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "zip_sha256": "2ff36cac4cd642c15883c66554b46e059b97fa39af0f921a7f1b66006c3695ce"
+  },
+  "selection": [
+    "org.example.taximobile.data.*",
+    "org.example.taximobile.feature.app.MobileAppCoordinatorTest"
+  ],
+  "cases": 10,
+  "same_key_retry_preserves_exact_serialized_body": true,
+  "existing_unrelated_compiler_warnings_retained": true,
+  "native_successor_ci_accepted": false,
+  "dependency_schema_api_policy_visual_or_hosted_changes": false,
+  "physical_process_death_provider_field_or_public_acceptance": false
+}

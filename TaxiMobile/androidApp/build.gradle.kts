@@ -150,6 +150,10 @@ val debugApiBaseUrl = providers.gradleProperty("taximobileDebugApiBaseUrl")
     .orElse("http://10.0.2.2:8000")
 val debugMapStyleUrl = providers.gradleProperty("taximobileDebugMapStyleUrl")
     .orElse("https://tiles.openfreemap.org/styles/positron")
+val debugPlaceSearchEnabled = providers.gradleProperty("taximobileDebugPlaceSearchEnabled")
+    .map(String::toBooleanStrict).orElse(true)
+val debugManualCoordinateEntry = providers.gradleProperty("taximobileDebugManualCoordinateEntry")
+    .map(String::toBooleanStrict).orElse(false)
 val releaseMapStyleUrl = providers.gradleProperty("taximobileReleaseMapStyleUrl")
 val releaseVersionCode = providers.gradleProperty("taximobileVersionCode")
 val releaseVersionName = providers.gradleProperty("taximobileVersionName")
@@ -188,6 +192,7 @@ kotlin {
     }
 }
 dependencies {
+    coreLibraryDesugaring(libs.desugar.jdk)
     implementation(project(":shared"))
 
     implementation(libs.androidx.activity.compose)
@@ -248,8 +253,12 @@ android {
             resValue("bool", "firebase_crashlytics_collection_enabled", "false")
             buildConfigField("String", "API_BASE_URL", debugApiBaseUrl.get().buildConfigString())
             buildConfigField("String", "MAP_STYLE_URL", debugMapStyleUrl.get().buildConfigString())
+            buildConfigField("boolean", "PLACE_SEARCH_ENABLED", debugPlaceSearchEnabled.get().toString())
+            buildConfigField("boolean", "SHOW_MANUAL_COORDINATE_ENTRY", debugManualCoordinateEntry.get().toString())
         }
         release {
+            buildConfigField("boolean", "PLACE_SEARCH_ENABLED", "true")
+            buildConfigField("boolean", "SHOW_MANUAL_COORDINATE_ENTRY", "false")
             resValue(
                 "bool",
                 "firebase_crashlytics_collection_enabled",
@@ -282,6 +291,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }

@@ -24,6 +24,8 @@ from taximobile_api.domains.payments.schemas import (
     ManualTransferClaimRequest,
     ManualTransferClaimResponse,
     PaymentResponse,
+    PendingCashPaymentListResponse,
+    PendingCashPaymentResponse,
 )
 from taximobile_api.domains.payments.service import (
     InvalidPaymentTransition,
@@ -32,6 +34,7 @@ from taximobile_api.domains.payments.service import (
     submit_manual_transfer_claim,
 )
 from taximobile_api.domains.rides.models import Ride, RideStatus
+from taximobile_api.domains.rides.service import record_ride_update
 from taximobile_api.domains.pricing.models import RideFinancialSnapshot
 from taximobile_api.domains.idempotency.service import (
     IdempotencyKeyReuse,
@@ -59,6 +62,55 @@ def manual_transfer_claim_response(
         ride_id=payment.ride_id,
         status=claim.status.value,
         submitted_at=claim.submitted_at,
+    )
+
+
+@router.get("/drivers/me/payments/cash/pending", response_model=PendingCashPaymentListResponse)
+async def pending_driver_cash_payments(
+    page: int = Query(default=1, ge=1),
+    limit: int = Query(default=20, ge=1, le=100),
+    principal: CurrentPrincipal = Depends(authenticated_principal),
+    session: AsyncSession = Depends(database_session),
+) -> PendingCashPaymentListResponse:
+    """Recover actual pending work, independent of the ride-history page.
+
+    No passenger identity/location, transfer reference or client-selected driver
+    is exposed. Oldest-first ordering prevents old unpaid work being buried by
+    new rides. This read grants no settlement authority; the command rechecks
+    ownership/state under locks. Concurrent settlement may move a page boundary,
+    so clients reload page one after a confirmed command.
+    """
+    try:
+        profile = await driver_for_user(session, principal.user_id)
+    except DriverMissing as error:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(error)) from error
+    filters = (
+        Ride.driver_id == profile.id,
+        Ride.status == RideStatus.COMPLETED,
+        Payment.method == PaymentMethod.CASH,
+        Payment.status == PaymentStatus.PENDING,
+    )
+    rows = (
+        await session.execute(
+            select(Payment, Ride.completed_at)
+            .join(Ride, Ride.id == Payment.ride_id)
+            .where(*filters)
+            .order_by(Payment.created_at.asc(), Payment.id.asc())
+            .offset((page - 1) * limit)
+            .limit(limit)
+        )
+    ).all()
+    total = await session.scalar(
+        select(func.count()).select_from(Payment)
+        .join(Ride, Ride.id == Payment.ride_id).where(*filters)
+    )
+    return PendingCashPaymentListResponse(
+        items=[PendingCashPaymentResponse(
+            payment_id=payment.id, ride_id=payment.ride_id,
+            amount=payment.amount, currency=payment.currency,
+            created_at=payment.created_at, completed_at=completed_at,
+        ) for payment, completed_at in rows],
+        page=page, limit=limit, total=total or 0,
     )
 
 
@@ -91,6 +143,7 @@ async def settle_cash(
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cash payment not found.")
             if payment.status == PaymentStatus.PENDING:
                 settle_cash_payment(payment)
+                await record_ride_update(session, ride)
             elif payment.status != PaymentStatus.COMPLETED:
                 raise InvalidPaymentTransition("Cash payment cannot be settled in its current state.")
             earning = await session.scalar(select(DriverEarning).where(DriverEarning.payment_id == payment.id).with_for_update())

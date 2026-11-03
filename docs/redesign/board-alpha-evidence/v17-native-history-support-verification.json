@@ -1,0 +1,66 @@
+{
+  "created_utc": "2026-10-20T20:31:21.138871+00:00",
+  "candidate": "candidate-native-v17.json",
+  "passed": true,
+  "scope": "Actual owned role history and passenger public support acknowledgement, same-process foreground refresh and15s wait, empty support send disabled; business snapshots unchanged",
+  "records": [
+    {
+      "record": "v17-native-passenger-between-trips-history-review.json",
+      "sha256": "a2205f6e8f5767ee6ff289a6318e2855eaf8aac41c019889048efbf1b4a710b4",
+      "passed": true,
+      "checks": [
+        {
+          "selected_ride_id": "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+          "same_process_foreground_refresh": true,
+          "live_wait_seconds": 15,
+          "pid": "2000"
+        },
+        {
+          "history_ride_id": "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+          "server_phase": "COMPLETED",
+          "server_payment": {
+            "method": "CASH",
+            "status": "COMPLETED"
+          },
+          "amount": "35.00"
+        },
+        {
+          "support_ticket_id": "e96bf80f-73d8-4959-a3b6-7c029c62519f",
+          "status": "IN_PROGRESS",
+          "latest_public_message_visible": true
+        },
+        {
+          "empty_support_send_disabled": true,
+          "ticket_create_sent": false
+        }
+      ]
+    },
+    {
+      "record": "v17-native-driver-history-review-continued.json",
+      "sha256": "8adde5a1590612533d3f35b18d67a84300213a0c969ad39106379aa4c133c270",
+      "passed": true,
+      "checks": [
+        {
+          "selected_ride_id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+          "same_process_foreground_refresh": true,
+          "live_wait_seconds": 15,
+          "pid": "2047"
+        },
+        {
+          "history_ride_id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+          "server_phase": "COMPLETED",
+          "server_feedback": {
+            "items": []
+          },
+          "note": "No populated feedback rendering claimed if the owner-scoped response is empty"
+        }
+      ]
+    }
+  ],
+  "preserved_driver_search_rejection": "v17-native-driver-history-review.json",
+  "continuation_qualification": "Driver continuation finds the already selected record with overlapping forward scroll. No new selection or business command; original search overscrolled while the result loaded.",
+  "limits": [
+    "No populated driver feedback render claimed for an empty server response",
+    "No complete all-page or physical-device acceptance"
+  ]
+}

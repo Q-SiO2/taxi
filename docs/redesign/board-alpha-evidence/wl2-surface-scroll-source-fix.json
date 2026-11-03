@@ -1,0 +1,33 @@
+{
+  "verified_utc": "2026-10-17T09:09:48.220786+00:00",
+  "scope": "source and focused JVM regression only; not packaged or deployed",
+  "checks": [
+    "2 focused TaxiColorContrastTest JVM cases passed, zero failures/errors/skips",
+    "Notepad Material container and inverse roles are grayscale; text contrast at least 4.5",
+    "Shared JVM compilation passed",
+    "34 Android rehearsal harness tests passed",
+    "Source atlas 213 views / 261 declarations / 58 files hash and syntax checks pass",
+    "Focused whitespace check passes"
+  ],
+  "source_files": [
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/theme/TaxiColors.kt",
+      "sha256": "7e4d3c21959d4e3818be077dbb5029e27a6670d203fe975d06ec9bd2762dd172"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/ui/theme/TaxiColorContrastTest.kt",
+      "sha256": "567233b563086fc95ed7ab0309ee93d1c1513b927929cda626c73400a65ae404"
+    },
+    {
+      "path": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsApp.kt",
+      "sha256": "47503f3c5c409abd34347c5b855c2007445b39b7eb16339bf6b566895b776bfb"
+    }
+  ],
+  "jvm_test_xml_sha256": "9a9e159eff8cc79230cf4780d332e0a294b5b2d5c395ddeb9fafc54351ee4013",
+  "limitations": [
+    "MFA vertical-scroll source still requires web JS/Wasm compilation and actual short-height error/cancel checks",
+    "New Material roles require actual Notepad dialog/map/control renders",
+    "Neither deployed web v5 nor archived native v9 contains these source fixes",
+    "New frozen candidates and their required journey acceptance are still required"
+  ]
+}

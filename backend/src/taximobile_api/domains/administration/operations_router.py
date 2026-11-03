@@ -221,6 +221,7 @@ def _reject_direct_grant_mutation(http_request: Request) -> None:
 
 @router.get("/administrative-grants", response_model=AdministrativeGrantListResponse)
 async def list_administrative_grants(
+    market_id: UUID | None = Query(default=None),
     user_id: UUID | None = Query(default=None),
     include_revoked: bool = Query(default=False),
     page: int = Query(default=1, ge=1),
@@ -231,6 +232,18 @@ async def list_administrative_grants(
     session: AsyncSession = Depends(database_session),
 ) -> AdministrativeGrantListResponse:
     filters = [_grant_visibility_filter(principal)]
+    if market_id is not None:
+        filters.append(
+            or_(
+                AdministrativeGrant.market_id == market_id,
+                AdministrativeGrant.operator_id.in_(
+                    select(Operator.id).where(Operator.market_id == market_id)
+                ),
+                AdministrativeGrant.city_id.in_(
+                    select(City.id).where(City.market_id == market_id)
+                ),
+            )
+        )
     if user_id is not None:
         filters.append(AdministrativeGrant.user_id == user_id)
     if not include_revoked:
@@ -408,6 +421,7 @@ async def revoke_administrative_grant(
     response_model=AdministrativeGrantChangeRequestListResponse,
 )
 async def list_administrative_grant_requests(
+    market_id: UUID | None = Query(default=None),
     request_status: AdministrativeGrantRequestStatus | None = Query(
         default=None,
         alias="status",
@@ -424,6 +438,18 @@ async def list_administrative_grant_requests(
     session: AsyncSession = Depends(database_session),
 ) -> AdministrativeGrantChangeRequestListResponse:
     filters = [_grant_request_visibility_filter(principal)]
+    if market_id is not None:
+        filters.append(
+            or_(
+                AdministrativeGrantChangeRequest.market_id == market_id,
+                AdministrativeGrantChangeRequest.operator_id.in_(
+                    select(Operator.id).where(Operator.market_id == market_id)
+                ),
+                AdministrativeGrantChangeRequest.city_id.in_(
+                    select(City.id).where(City.market_id == market_id)
+                ),
+            )
+        )
     if request_status is not None:
         filters.append(AdministrativeGrantChangeRequest.status == request_status)
     if action is not None:

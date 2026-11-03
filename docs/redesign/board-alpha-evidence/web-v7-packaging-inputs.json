@@ -1,0 +1,26 @@
+{
+  "captured_utc": "2026-10-18T14:07:14.263632+00:00",
+  "archive": ".tools/alpha-delivery/web-v7-packaging-inputs",
+  "scope": "Post-compilation packaging budget review; compiled application inputs remain immutable",
+  "sources": [
+    {
+      "path": "infra/scripts/package_web_release.py",
+      "sha256": "7b4c1a6621973a79638664b1107be7fba1b287e5aab15e5248a0d1ef33875117"
+    }
+  ],
+  "packaging_tests": 8,
+  "budget_review": {
+    "previous_js_bytes": 6467155,
+    "new_js_bytes": 6635078,
+    "raw_growth_percent": 2.5965513429011766,
+    "previous_gzip9_bytes": 1584625,
+    "new_gzip9_bytes": 1605280,
+    "old_ceiling": 6550000,
+    "new_ceiling": 6750000,
+    "headroom_bytes": 114922,
+    "reason": "Required EN/FR/AR recruitment/applicant presentation and recovery; no added framework or dependency",
+    "wasm_ceiling_unchanged": 9000000,
+    "total_ceiling_unchanged": 35000000,
+    "limitations": "Local gzip measurement is not hosted transfer or startup acceptance"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "candidate": "candidate-native-v20.json",
+  "verified_utc": "2026-10-22T10:56:02.590524+00:00",
+  "passed": true,
+  "checks": [
+    {
+      "role": "passenger",
+      "record": "v20-native-passenger-account-style-review.json",
+      "sha256": "7b5191eec9a1330bd20852449894f54226461c68cd75c340a2c29e267b949129",
+      "four_styles": true,
+      "notepad_survives_process_restart": true,
+      "selected_notepad_text_scale": "1.3",
+      "business_state_unchanged": true,
+      "screenshot_hashes_verified": 11
+    },
+    {
+      "role": "driver",
+      "record": "v20-native-driver-account-style-review.json",
+      "sha256": "77ad5845410cca7e18d35324429dd7418ae734f7c901987855a5a98636d1cbe1",
+      "four_styles": true,
+      "notepad_survives_process_restart": true,
+      "selected_notepad_text_scale": "1.3",
+      "business_state_unchanged": true,
+      "screenshot_hashes_verified": 11
+    }
+  ],
+  "scope": "Eight actual English role/style account and populated receipt/earnings views, both normal Notepad process restores and selected1.3x text. Fonts restored, Folded Streets restored. No native sign-in used during these checks. Not all pages/labels/languages/styles/font cross-product, full TalkBack or physical acceptance."
+}

@@ -1,0 +1,416 @@
+{
+  "candidate": "candidate-native-v19.json",
+  "started_utc": "2026-10-21T17:57:53.921017+00:00",
+  "passed": true,
+  "observations": [
+    {
+      "label": "peek-before",
+      "viewport": "[0,1152][720,1504]",
+      "screenshot": {
+        "path": "v19-sheet-peek-before.png",
+        "sha256": "d107567c8eb822e5068bef71446496badecd8b81681e3c57331afb9d640f52e3"
+      },
+      "texts": [
+        [
+          "Account",
+          "[120,102][229,139]"
+        ],
+        [
+          "9+",
+          "[623,104][654,136]"
+        ],
+        [
+          "\u2316",
+          "[625,920][647,960]"
+        ],
+        [
+          "\u25ce",
+          "[627,1048][646,1088]"
+        ],
+        [
+          "Where to?",
+          "[48,1216][266,1278]"
+        ],
+        [
+          "Choose on the map",
+          "[233,1346][487,1386]"
+        ],
+        [
+          "Browse fixed routes",
+          "[229,1482][491,1504]"
+        ]
+      ]
+    },
+    {
+      "label": "half-after-header-up",
+      "viewport": "[0,832][720,1504]",
+      "screenshot": {
+        "path": "v19-sheet-half-after-header-up.png",
+        "sha256": "c1a3fa573425daebc9a8c5fe08979fa586b0facaa050f2181bceb5bd621f0f5f"
+      },
+      "texts": [
+        [
+          "Account",
+          "[120,102][229,139]"
+        ],
+        [
+          "9+",
+          "[623,104][654,136]"
+        ],
+        [
+          "\u2316",
+          "[625,600][647,640]"
+        ],
+        [
+          "\u25ce",
+          "[627,728][646,768]"
+        ],
+        [
+          "Where to?",
+          "[48,896][266,958]"
+        ],
+        [
+          "Pickup defaults to your selected point.",
+          "[48,982][533,1019]"
+        ],
+        [
+          "Browse fixed routes",
+          "[96,1059][304,1139]"
+        ],
+        [
+          "Schedule",
+          "[459,1071][581,1111]"
+        ],
+        [
+          "Pickup",
+          "[163,1225][253,1262]"
+        ],
+        [
+          "Destination",
+          "[436,1225][588,1262]"
+        ],
+        [
+          "Pickup",
+          "[144,1358][224,1390]"
+        ],
+        [
+          "Choose the pickup on the map.",
+          "[144,1390][592,1432]"
+        ]
+      ]
+    },
+    {
+      "label": "expanded-after-header-up",
+      "viewport": "[0,352][720,1504]",
+      "screenshot": {
+        "path": "v19-sheet-expanded-after-header-up.png",
+        "sha256": "3fcba43bf9910ca7d6f148d41a868192488160e160d3dd4ea43b5a98c511b6be"
+      },
+      "texts": [
+        [
+          "Account",
+          "[120,102][229,139]"
+        ],
+        [
+          "\u2316",
+          "[625,120][647,160]"
+        ],
+        [
+          "\u25ce",
+          "[627,248][646,288]"
+        ],
+        [
+          "Where to?",
+          "[48,416][266,478]"
+        ],
+        [
+          "Pickup defaults to your selected point.",
+          "[48,502][533,539]"
+        ],
+        [
+          "Browse fixed routes",
+          "[96,579][304,659]"
+        ],
+        [
+          "Schedule",
+          "[459,591][581,631]"
+        ],
+        [
+          "Pickup",
+          "[163,745][253,782]"
+        ],
+        [
+          "Destination",
+          "[436,745][588,782]"
+        ],
+        [
+          "Pickup",
+          "[144,878][224,910]"
+        ],
+        [
+          "Choose the pickup on the map.",
+          "[144,910][592,952]"
+        ],
+        [
+          "Destination",
+          "[144,1035][276,1067]"
+        ],
+        [
+          "Choose the destination on the map.",
+          "[144,1067][640,1161]"
+        ],
+        [
+          "Recent destinations",
+          "[48,1217][370,1264]"
+        ],
+        [
+          "\u206633.57535, -7.59068\u2069",
+          "[222,1324][498,1364]"
+        ],
+        [
+          "\u206633.57614, -7.59098\u2069",
+          "[222,1452][498,1492]"
+        ]
+      ]
+    },
+    {
+      "label": "body-scroll",
+      "viewport": "[0,352][720,1504]",
+      "screenshot": {
+        "path": "v19-sheet-body-scroll.png",
+        "sha256": "512d84fc762d805a9cf00619cfc058875f2ac81fd41fb7b0974164939bb7491c"
+      },
+      "texts": [
+        [
+          "Account",
+          "[120,102][229,139]"
+        ],
+        [
+          "\u2316",
+          "[625,120][647,160]"
+        ],
+        [
+          "\u25ce",
+          "[627,248][646,288]"
+        ],
+        [
+          "Pickup",
+          "[163,433][253,470]"
+        ],
+        [
+          "Destination",
+          "[436,433][588,470]"
+        ],
+        [
+          "Pickup",
+          "[144,566][224,598]"
+        ],
+        [
+          "Choose the pickup on the map.",
+          "[144,598][592,640]"
+        ],
+        [
+          "Destination",
+          "[144,723][276,755]"
+        ],
+        [
+          "Choose the destination on the map.",
+          "[144,755][640,849]"
+        ],
+        [
+          "Recent destinations",
+          "[48,905][370,952]"
+        ],
+        [
+          "\u206633.57535, -7.59068\u2069",
+          "[222,1012][498,1052]"
+        ],
+        [
+          "\u206633.57614, -7.59098\u2069",
+          "[222,1140][498,1180]"
+        ],
+        [
+          "\u206633.57443, -7.59017\u2069",
+          "[222,1268][498,1308]"
+        ],
+        [
+          "Review fare",
+          "[283,1404][437,1444]"
+        ]
+      ]
+    },
+    {
+      "label": "body-restored-top",
+      "viewport": "[0,352][720,1504]",
+      "screenshot": {
+        "path": "v19-sheet-body-restored-top.png",
+        "sha256": "3fcba43bf9910ca7d6f148d41a868192488160e160d3dd4ea43b5a98c511b6be"
+      },
+      "texts": [
+        [
+          "Account",
+          "[120,102][229,139]"
+        ],
+        [
+          "\u2316",
+          "[625,120][647,160]"
+        ],
+        [
+          "\u25ce",
+          "[627,248][646,288]"
+        ],
+        [
+          "Where to?",
+          "[48,416][266,478]"
+        ],
+        [
+          "Pickup defaults to your selected point.",
+          "[48,502][533,539]"
+        ],
+        [
+          "Browse fixed routes",
+          "[96,579][304,659]"
+        ],
+        [
+          "Schedule",
+          "[459,591][581,631]"
+        ],
+        [
+          "Pickup",
+          "[163,745][253,782]"
+        ],
+        [
+          "Destination",
+          "[436,745][588,782]"
+        ],
+        [
+          "Pickup",
+          "[144,878][224,910]"
+        ],
+        [
+          "Choose the pickup on the map.",
+          "[144,910][592,952]"
+        ],
+        [
+          "Destination",
+          "[144,1035][276,1067]"
+        ],
+        [
+          "Choose the destination on the map.",
+          "[144,1067][640,1161]"
+        ],
+        [
+          "Recent destinations",
+          "[48,1217][370,1264]"
+        ],
+        [
+          "\u206633.57535, -7.59068\u2069",
+          "[222,1324][498,1364]"
+        ],
+        [
+          "\u206633.57614, -7.59098\u2069",
+          "[222,1452][498,1492]"
+        ]
+      ]
+    },
+    {
+      "label": "half-after-header-down",
+      "viewport": "[0,832][720,1504]",
+      "screenshot": {
+        "path": "v19-sheet-half-after-header-down.png",
+        "sha256": "c1a3fa573425daebc9a8c5fe08979fa586b0facaa050f2181bceb5bd621f0f5f"
+      },
+      "texts": [
+        [
+          "Account",
+          "[120,102][229,139]"
+        ],
+        [
+          "9+",
+          "[623,104][654,136]"
+        ],
+        [
+          "\u2316",
+          "[625,600][647,640]"
+        ],
+        [
+          "\u25ce",
+          "[627,728][646,768]"
+        ],
+        [
+          "Where to?",
+          "[48,896][266,958]"
+        ],
+        [
+          "Pickup defaults to your selected point.",
+          "[48,982][533,1019]"
+        ],
+        [
+          "Browse fixed routes",
+          "[96,1059][304,1139]"
+        ],
+        [
+          "Schedule",
+          "[459,1071][581,1111]"
+        ],
+        [
+          "Pickup",
+          "[163,1225][253,1262]"
+        ],
+        [
+          "Destination",
+          "[436,1225][588,1262]"
+        ],
+        [
+          "Pickup",
+          "[144,1358][224,1390]"
+        ],
+        [
+          "Choose the pickup on the map.",
+          "[144,1390][592,1432]"
+        ]
+      ]
+    },
+    {
+      "label": "peek-after-header-down",
+      "viewport": "[0,1152][720,1504]",
+      "screenshot": {
+        "path": "v19-sheet-peek-after-header-down.png",
+        "sha256": "1bfaa40d0ed5508e6720a2d8018971da2e2fd1885b08f45c8fd30ca691e7a136"
+      },
+      "texts": [
+        [
+          "Account",
+          "[120,102][229,139]"
+        ],
+        [
+          "9+",
+          "[623,104][654,136]"
+        ],
+        [
+          "\u2316",
+          "[625,920][647,960]"
+        ],
+        [
+          "\u25ce",
+          "[627,1048][646,1088]"
+        ],
+        [
+          "Where to?",
+          "[48,1216][266,1278]"
+        ],
+        [
+          "Choose on the map",
+          "[233,1346][487,1386]"
+        ],
+        [
+          "Browse fixed routes",
+          "[229,1482][491,1504]"
+        ]
+      ]
+    }
+  ],
+  "scope": "Owned API31 passenger actual visible header/body gestures; no native business input. JVM custom-action acceptance is separate from full TalkBack acceptance.",
+  "apk_sha256": "cb3ccc481c6be4c634c3090db835076e17af5888a8f7b9c454932d759dbf4822",
+  "finished_utc": "2026-10-21T17:58:25.103558+00:00"
+}

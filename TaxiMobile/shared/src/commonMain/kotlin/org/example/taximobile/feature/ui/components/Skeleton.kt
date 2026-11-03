@@ -1,5 +1,6 @@
 package org.example.taximobile.feature.ui.components
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -19,6 +20,12 @@ import org.example.taximobile.feature.ui.theme.TaxiMotion
 
 @Composable
 fun Skeleton(modifier: Modifier = Modifier) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
+    if (!TaxiTheme.style.decorativeMotion) {
+        androidx.compose.foundation.layout.Box(modifier.height(20.dp).background(taxiColors.selection, RoundedCornerShape(taxiRadii.Sm)))
+        return
+    }
     val transition = rememberInfiniteTransition(label = "Taxi skeleton")
     val alpha by transition.animateFloat(
         initialValue = 0.55f,
@@ -27,6 +34,6 @@ fun Skeleton(modifier: Modifier = Modifier) {
         label = "Taxi skeleton alpha",
     )
     androidx.compose.foundation.layout.Box(
-        modifier.height(20.dp).alpha(alpha).background(TaxiColors.Navy100, RoundedCornerShape(TaxiRadii.Sm)),
+        modifier.height(20.dp).alpha(alpha).background(taxiColors.Navy100, RoundedCornerShape(taxiRadii.Sm)),
     )
 }

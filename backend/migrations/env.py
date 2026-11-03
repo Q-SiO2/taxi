@@ -8,6 +8,7 @@ from sqlalchemy.exc import DBAPIError
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from taximobile_api.db.base import Base
+from taximobile_api.db.transport import DatabaseTLS
 from taximobile_api.operations.migration_lock import (
     MigrationAlreadyRunning, OFFLINE_MIGRATION_LOCK_SQL, acquire_migration_lock,
 )
@@ -66,6 +67,7 @@ async def run_async_migrations() -> None:
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
+        connect_args=DatabaseTLS.from_environment().connect_args(config.get_main_option("sqlalchemy.url")),
     )
     try:
         async with connectable.connect() as connection:

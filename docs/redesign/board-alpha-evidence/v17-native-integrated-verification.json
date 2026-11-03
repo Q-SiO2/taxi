@@ -1,0 +1,97 @@
+{
+  "verified_utc": "2026-10-21T09:59:55.140684+00:00",
+  "candidate": "candidate-native-v17.json",
+  "passed": true,
+  "records": [
+    {
+      "record": "v17-native-first.json",
+      "record_sha256": "1c58530f2de269076fe74b5157cf0cfc92aa0d0a48174bfd93c269c071733cb0",
+      "ride_id": "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+      "phase": "COMPLETED",
+      "payment": {
+        "method": "CASH",
+        "status": "COMPLETED"
+      },
+      "fare": {
+        "amount": "35.00",
+        "currency": "MAD",
+        "pricing_rule_version": "ux-demo-9f3f781b",
+        "components": [
+          {
+            "code": "TRANSPORT_FARE",
+            "label": "Transport fare",
+            "amount": "35.00"
+          }
+        ],
+        "economics": {
+          "transport_fare": "35.00",
+          "scheduling_surcharge": "0.00",
+          "operator_service_fee": "0.00",
+          "passenger_total": "35.00",
+          "expected_driver_net": "35.00",
+          "operator_allocation": "0.00",
+          "operator_fee_policy_version": "legacy-zero-fee-v1",
+          "operator_fee_calculation_mode": "FLAT_PER_COMPLETED_BOOKING",
+          "operator_fee_funding_mode": "DRIVER_SETTLEMENT_DEDUCTION"
+        }
+      },
+      "each_lifecycle_command_confirmed_once": true
+    },
+    {
+      "record": "v17-native-second.json",
+      "record_sha256": "f8ca71fd03aaef2e7b07b05925b0085b5e253f8b67a8cf7d86a47da45f2e048b",
+      "ride_id": "d8daeaaa-fbe9-4614-af7e-45b896d30ecb",
+      "phase": "COMPLETED",
+      "payment": {
+        "method": "CASH",
+        "status": "COMPLETED"
+      },
+      "fare": {
+        "amount": "35.00",
+        "currency": "MAD",
+        "pricing_rule_version": "ux-demo-9f3f781b",
+        "components": [
+          {
+            "code": "TRANSPORT_FARE",
+            "label": "Transport fare",
+            "amount": "35.00"
+          }
+        ],
+        "economics": {
+          "transport_fare": "35.00",
+          "scheduling_surcharge": "0.00",
+          "operator_service_fee": "0.00",
+          "passenger_total": "35.00",
+          "expected_driver_net": "35.00",
+          "operator_allocation": "0.00",
+          "operator_fee_policy_version": "legacy-zero-fee-v1",
+          "operator_fee_calculation_mode": "FLAT_PER_COMPLETED_BOOKING",
+          "operator_fee_funding_mode": "DRIVER_SETTLEMENT_DEDUCTION"
+        }
+      },
+      "each_lifecycle_command_confirmed_once": true
+    }
+  ],
+  "driver_availability": "OFFLINE",
+  "pending_cash_items": 0,
+  "source_input_count": 412,
+  "same_instance_record": "v17-same-instance-rebooking.json",
+  "quote_resume": "v17-native-quote-foreground-refresh.json",
+  "controlled_reconnect": "v17-native-controlled-reconnect.json",
+  "history_support": "v17-native-history-support-verification.json",
+  "http_corroboration": [
+    "v17-native-first-http.json",
+    "v17-native-second-http.json"
+  ],
+  "scope": "Two new native English lifecycle/cash runs on exact frozen APKs, same passenger process, quote-resume, history/support and bounded14snetwork fallback; fresh owner-scoped API/receipt/empty pending-cash readback",
+  "preserved_rejections": [
+    "v17-native-first-preflight-rejection.json",
+    "v17-native-driver-history-review.json",
+    "v17-native-account-style-review.json"
+  ],
+  "limitations": [
+    "Synthetic GPS/accounts/cash; no physical or real transport acceptance",
+    "No full locale x style x state, unknown-outcome or concurrency acceptance",
+    "Not a twice-timed consecutive seven-beat board rehearsal; hosted proxy repair remains undeployed"
+  ]
+}

@@ -103,7 +103,10 @@ async def accept_offer(
     try:
         async with session.begin():
             profile = await driver_for_user(session, principal.user_id)
-            ride = await accept_offer_atomically(session, offer_id, profile.id)
+            ride = await accept_offer_atomically(
+                session, offer_id, profile.id,
+                location_freshness_seconds=request.app.state.settings.matching_location_freshness_seconds,
+            )
     except DriverMissing as error:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(error)) from error
     except RideOfferUnavailable as error:

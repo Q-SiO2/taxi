@@ -1,0 +1,11 @@
+{
+  "verified_utc": "2026-10-21T17:18:26.035Z",
+  "read_succeeded": true,
+  "interval": {
+    "start": "2026-10-21T17:09:00Z",
+    "end": "2026-10-21T17:15:00Z"
+  },
+  "total_post_requests": 2,
+  "business_post_requests": [],
+  "scope": "API proxy POST audit of the dedicated synthetic staging motion window; no IP, user agent, auth/session identifiers or credentials retained."
+}

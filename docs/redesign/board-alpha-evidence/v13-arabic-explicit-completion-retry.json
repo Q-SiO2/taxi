@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-19T20:13:51.188686+00:00",
+  "ride_id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+  "scope": "One explicit native Complete retry after server IN_PROGRESS and fresh screenshot of loaded/enabled completion; no automatic business retry",
+  "tap": [
+    360,
+    1368
+  ],
+  "passed": true,
+  "status": "COMPLETED",
+  "payment": {
+    "method": "CASH",
+    "status": "PENDING"
+  }
+}

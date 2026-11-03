@@ -1,0 +1,10 @@
+{
+  "candidate": "candidate-native-v22.json",
+  "started_utc": "2026-10-22T16:30:31.394370+00:00",
+  "passed": false,
+  "roles": [],
+  "scope": "Owned saved emulator fixtures only. Exact installed identity and normal authenticated startup, no installation, wipe, fresh sign-in or claim of controlled expiry duration.",
+  "failure_type": "SmokeFailure",
+  "failure_detail": "The selected Android transport is not authorized and connected.",
+  "finished_utc": "2026-10-22T16:30:31.460136+00:00"
+}

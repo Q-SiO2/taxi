@@ -5,6 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
+import io.ktor.client.request.parameter
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
@@ -13,6 +14,7 @@ import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.json.JsonPrimitive
 import org.example.taximobile.core.network.ApiConfiguration
 import org.example.taximobile.data.auth.AuthenticationNetworkException
@@ -24,6 +26,8 @@ import org.example.taximobile.domain.drivers.DriverRideGateway
 import org.example.taximobile.domain.drivers.DriverEarningItem
 import org.example.taximobile.domain.drivers.DriverEarnings
 import org.example.taximobile.domain.drivers.DriverRideSummary
+import org.example.taximobile.domain.drivers.PendingCashPayment
+import org.example.taximobile.domain.drivers.PendingCashPaymentsPage
 import org.example.taximobile.domain.rides.Coordinates
 import org.example.taximobile.domain.rides.RideStatus
 import org.example.taximobile.domain.rides.RidePaymentMethod
@@ -58,6 +62,20 @@ class KtorDriverRideGateway(
                 operatorServiceFee = it.operatorServiceFee?.content ?: it.fees.content,
                 operatorAllocation = it.operatorAllocation?.content ?: "0.00",
             )
+        }
+    }
+
+    override suspend fun pendingCashPayments(page: Int): PendingCashPaymentsPage {
+        require(page >= 1)
+        return request {
+            val response = client.get(api.endpoint("drivers/me/payments/cash/pending")) {
+                authorize()
+                parameter("page", page)
+                parameter("limit", 20)
+            }
+            if (response.status == HttpStatusCode.Unauthorized) throw AuthenticationRejectedException()
+            if (!response.status.isSuccess()) throw ApiRequestException(response.status.value, "The server could not load pending cash payments.")
+            response.body<PendingCashPaymentsResponse>().toDomain(page)
         }
     }
 
@@ -145,6 +163,8 @@ class KtorDriverRideGateway(
 
     private suspend fun <T> request(block: suspend () -> T): T = try {
         block()
+    } catch (error: CancellationException) {
+        throw error
     } catch (error: AuthenticationRejectedException) {
         throw error
     } catch (error: ApiRequestException) {
@@ -155,6 +175,8 @@ class KtorDriverRideGateway(
 
     private suspend fun <T> idempotentRequest(block: suspend () -> T): T = try {
         block()
+    } catch (error: CancellationException) {
+        throw error
     } catch (error: AuthenticationRejectedException) {
         throw error
     } catch (error: ApiRequestException) {
@@ -162,6 +184,8 @@ class KtorDriverRideGateway(
     } catch (_: Exception) {
         try {
             block()
+        } catch (error: CancellationException) {
+            throw error
         } catch (retryError: AuthenticationRejectedException) {
             throw retryError
         } catch (retryError: ApiRequestException) {
@@ -174,6 +198,34 @@ class KtorDriverRideGateway(
 
 @Serializable
 private data class DriverRideListResponse(val items: List<DriverRideResponse>)
+
+@Serializable
+internal data class PendingCashPaymentsResponse(
+    val items: List<PendingCashPaymentResponse>,
+    val page: Int,
+    val limit: Int,
+    val total: Int,
+) {
+    fun toDomain(requestedPage: Int): PendingCashPaymentsPage {
+        require(page == requestedPage && limit == 20)
+        return PendingCashPaymentsPage(items.map {
+            require(it.method == "CASH" && it.status == "PENDING")
+            PendingCashPayment(it.paymentId, it.rideId, it.amount.content, it.currency, it.createdAt, it.completedAt)
+        }, page, limit, total)
+    }
+}
+
+@Serializable
+internal data class PendingCashPaymentResponse(
+    @SerialName("payment_id") val paymentId: String,
+    @SerialName("ride_id") val rideId: String,
+    val amount: JsonPrimitive,
+    val currency: String,
+    @SerialName("created_at") val createdAt: String,
+    @SerialName("completed_at") val completedAt: String? = null,
+    val method: String,
+    val status: String,
+)
 
 @Serializable
 private data class DriverRideResponse(

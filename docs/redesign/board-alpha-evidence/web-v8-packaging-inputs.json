@@ -1,0 +1,31 @@
+{
+  "captured_utc": "2026-10-19T11:20:10.701299+00:00",
+  "scope": "Post-compilation packaging-only budget review; original 411 build inputs preserved",
+  "archive": ".tools/alpha-delivery/web-v8-packaging-inputs",
+  "sources": [
+    {
+      "path": "infra/scripts/package_web_release.py",
+      "sha256": "c8f4eea15a78cc8474499b3181690f260291a7aa24159084033edf296feae2a2"
+    }
+  ],
+  "packaging_tests": {
+    "tests": 8,
+    "failures": 0,
+    "test_source_sha256": "93f4a2dd5e9be1722adc2b0403f917ffd9db589f0344352bfc97f4f3e7ede201",
+    "log_sha256": "37be361f5b537b8818fc29d27c2469fd3c821c9195f6bb0d391591027c443592"
+  },
+  "budget_review": {
+    "previous_js_bytes": 6635078,
+    "new_js_bytes": 6827377,
+    "raw_growth_percent": 2.8982176245704983,
+    "previous_gzip9_bytes": 1605280,
+    "new_gzip9_bytes": 1624307,
+    "old_ceiling": 6750000,
+    "new_ceiling": 6900000,
+    "headroom_bytes": 72623,
+    "wasm_ceiling_unchanged": 9000000,
+    "total_ceiling_unchanged": 35000000,
+    "reason": "Required localized payment/case/booking presentation and profile-only Save repair; no new runtime dependency",
+    "limitation": "Size and local gzip measurements do not prove hosted transfer or startup performance"
+  }
+}

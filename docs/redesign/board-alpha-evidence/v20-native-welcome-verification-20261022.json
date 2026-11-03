@@ -1,0 +1,26 @@
+{
+  "candidate": "candidate-native-v20.json",
+  "passed": true,
+  "verified_utc": "2026-10-22T10:43:05.540770+00:00",
+  "records": [
+    {
+      "role": "passenger",
+      "record": "v20-native-passenger-welcome-review.json",
+      "sha256": "9b8802a62fd24ffc9591bc3e62c026f03918afed57f5e32cebcb9ea48f645c7f",
+      "style_count": 4,
+      "existing_account_restored": true
+    },
+    {
+      "role": "driver",
+      "record": "v20-native-driver-welcome-review-r2.json",
+      "sha256": "dc209582f2f9a0b247dc5b5cbb362b9235d35b679224fcb6bd7b325fb3de690f",
+      "style_count": 4,
+      "existing_account_restored": true
+    }
+  ],
+  "scope": "Eight actual English welcome renders on exact frozen v20 APKs. Existing synthetic accounts re-entered normally; no new accounts or raw recordings. Prior v18 motion observations retain earlier APK identity.",
+  "entry_boundaries": [
+    "Passenger normal current-session logout performed once before welcome review; this fresh sign-in is not token-expiry recovery. Earlier retained passenger restore is separately recorded.",
+    "Driver was already signed out following rejected v19 refresh family. Fresh sign-in is explicitly not recovery of that rejected family. Initial observer interrupted by Messages ANR; retained separately."
+  ]
+}

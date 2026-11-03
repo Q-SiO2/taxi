@@ -1,0 +1,11 @@
+{
+  "started_utc": "2026-10-17T00:53:09.766474+00:00",
+  "candidate": "candidate-native-v9.json",
+  "role": "driver",
+  "api_level": 31,
+  "passed": false,
+  "method": "actual native sign-in UI; existing synthetic account",
+  "installed_sha256": "a7171bd6a6dc21f3bf5c1f6a072ebcc5e88f759c5741e80827eacad911d62e56",
+  "failure_type": "SmokeFailure",
+  "finished_utc": "2026-10-17T00:54:46.455893+00:00"
+}

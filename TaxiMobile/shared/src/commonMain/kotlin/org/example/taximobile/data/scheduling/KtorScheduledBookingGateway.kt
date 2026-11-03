@@ -5,6 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.patch
+import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -12,32 +13,82 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
+import io.ktor.serialization.ContentConvertException
+import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.time.TimeSource
 import org.example.taximobile.core.network.ApiConfiguration
 import org.example.taximobile.data.auth.AuthenticationNetworkException
 import org.example.taximobile.data.auth.AuthenticationRejectedException
 import org.example.taximobile.data.network.ApiRequestException
+import org.example.taximobile.data.network.apiFailure
 import org.example.taximobile.data.network.newIdempotencyKey
 import org.example.taximobile.domain.rides.Coordinates
 import org.example.taximobile.domain.scheduling.ScheduledBooking
 import org.example.taximobile.domain.scheduling.ScheduledBookingEstimate
 import org.example.taximobile.domain.scheduling.ScheduledBookingGateway
+import org.example.taximobile.domain.scheduling.ScheduledBookingPage
 import org.example.taximobile.domain.scheduling.ScheduledCancellationTerms
 import org.example.taximobile.domain.scheduling.ScheduledCommitment
 import org.example.taximobile.domain.scheduling.ScheduledEconomics
 import org.example.taximobile.domain.scheduling.ScheduledOffer
 import org.example.taximobile.domain.scheduling.ScheduledOfferPreference
+import org.example.taximobile.domain.scheduling.ScheduledLocalTimeOption
+import org.example.taximobile.domain.scheduling.ScheduledLocalTimeOptions
+import org.example.taximobile.domain.scheduling.matchesRequest
 
 class KtorScheduledBookingGateway(
     private val client: HttpClient,
     private val api: ApiConfiguration,
+    private val readClock: TimeSource = TimeSource.Monotonic,
     private val accessToken: suspend () -> String,
 ) : ScheduledBookingGateway {
-    override suspend fun passengerBookings(): List<ScheduledBooking> = request {
-        val response = client.get(api.endpoint("scheduled-bookings")) { authorize() }
-        response.requireSuccess("load scheduled bookings")
-        response.body<ScheduledBookingListResponse>().items.map(ScheduledBookingResponse::toDomain)
+    override suspend fun localTimeOptions(cityId: String, cityTimezone: String, localDate: String, localTime: String): ScheduledLocalTimeOptions = request {
+        val response = client.post(api.endpoint("cities/$cityId/scheduled-time-options")) {
+            authorize()
+            contentType(ContentType.Application.Json)
+            setBody(ScheduledLocalTimeRequest(localDate, localTime))
+        }
+        response.requireSuccess("resolve this pickup time")
+        try {
+            response.body<ScheduledLocalTimeResponse>().toDomain().also {
+                if (!it.matchesRequest(cityId, cityTimezone, localDate, localTime)) {
+                    throw ApiRequestException(502, "The server returned invalid pickup time options.")
+                }
+            }
+        } catch (_: ContentConvertException) {
+            throw ApiRequestException(502, "The server returned invalid pickup time options.")
+        } catch (_: IllegalArgumentException) {
+            throw ApiRequestException(502, "The server returned invalid pickup time options.")
+        }
+    }
+
+    override suspend fun passengerBookings(page: Int): ScheduledBookingPage {
+        require(page >= 1)
+        return request {
+            val response = client.get(api.endpoint("scheduled-bookings")) {
+                authorize()
+                parameter("page", page)
+                parameter("limit", 20)
+            }
+            response.requireSuccess("load scheduled bookings")
+            try {
+                response.body<ScheduledBookingListResponse>().toDomain(page)
+            } catch (_: ContentConvertException) {
+                throw ApiRequestException(502, "The server returned an invalid scheduled booking page.")
+            } catch (_: IllegalArgumentException) {
+                throw ApiRequestException(502, "The server returned an invalid scheduled booking page.")
+            }
+        }
+    }
+
+    override suspend fun passengerBooking(bookingId: String): ScheduledBooking = request {
+        val response = client.get(api.endpoint("scheduled-bookings/$bookingId")) { authorize() }
+        response.requireSuccess("load this scheduled booking")
+        response.body<ScheduledBookingResponse>().toDomain().also {
+            if (it.id != bookingId) throw ApiRequestException(502, "The server returned a different scheduled booking.")
+        }
     }
 
     override suspend fun estimatePointToPoint(
@@ -139,9 +190,10 @@ class KtorScheduledBookingGateway(
     }
 
     override suspend fun driverOffers(): List<ScheduledOffer> = request {
+        val started = readClock.markNow()
         val response = client.get(api.endpoint("drivers/me/scheduled-offers")) { authorize() }
         response.requireSuccess("load scheduled offers")
-        response.body<ScheduledOfferListResponse>().items.map(ScheduledOfferResponse::toDomain)
+        response.body<ScheduledOfferListResponse>().items.map { it.toDomain().copy(readStartedAt = started) }
     }
 
     override suspend fun driverCommitments(): List<ScheduledCommitment> = request {
@@ -186,13 +238,15 @@ class KtorScheduledBookingGateway(
         header(HttpHeaders.Authorization, "Bearer ${accessToken()}")
     }
 
-    private fun io.ktor.client.statement.HttpResponse.requireSuccess(action: String) {
+    private suspend fun io.ktor.client.statement.HttpResponse.requireSuccess(action: String) {
         if (status == HttpStatusCode.Unauthorized) throw AuthenticationRejectedException()
-        if (!status.isSuccess()) throw ApiRequestException(status.value, "The server could not $action.")
+        if (!status.isSuccess()) throw apiFailure("The server could not $action.")
     }
 
     private suspend fun <T> request(block: suspend () -> T): T = try {
         block()
+    } catch (error: CancellationException) {
+        throw error
     } catch (error: AuthenticationRejectedException) {
         throw error
     } catch (error: ApiRequestException) {
@@ -203,6 +257,8 @@ class KtorScheduledBookingGateway(
 
     private suspend fun <T> idempotentRequest(block: suspend () -> T): T = try {
         block()
+    } catch (error: CancellationException) {
+        throw error
     } catch (error: AuthenticationRejectedException) {
         throw error
     } catch (error: ApiRequestException) {
@@ -210,6 +266,8 @@ class KtorScheduledBookingGateway(
     } catch (_: Exception) {
         try {
             block()
+        } catch (error: CancellationException) {
+            throw error
         } catch (error: AuthenticationRejectedException) {
             throw error
         } catch (error: ApiRequestException) {
@@ -242,6 +300,33 @@ private fun ScheduledEconomicsResponse.toDomain() = ScheduledEconomics(
     transportFare, schedulingSurcharge, operatorServiceFee, passengerTotal,
     expectedDriverNet, operatorAllocation, currency, pricingRuleVersion,
     operatorFeePolicyVersion, schedulingPolicyVersion,
+)
+
+@Serializable
+internal data class ScheduledLocalTimeRequest(
+    @SerialName("local_date") val localDate: String,
+    @SerialName("local_time") val localTime: String,
+)
+
+@Serializable
+internal data class ScheduledLocalTimeOptionResponse(
+    @SerialName("scheduled_for") val scheduledFor: String,
+    @SerialName("utc_offset_seconds") val utcOffsetSeconds: Int,
+)
+
+@Serializable
+internal data class ScheduledLocalTimeResponse(
+    @SerialName("city_id") val cityId: String,
+    @SerialName("city_timezone") val cityTimezone: String,
+    @SerialName("local_date") val localDate: String,
+    @SerialName("local_time") val localTime: String,
+    @SerialName("booking_available") val bookingAvailable: Boolean,
+    @SerialName("rules_version") val rulesVersion: String,
+    val options: List<ScheduledLocalTimeOptionResponse>,
+)
+private fun ScheduledLocalTimeResponse.toDomain() = ScheduledLocalTimeOptions(
+    cityId, cityTimezone, localDate, localTime, bookingAvailable, rulesVersion,
+    options.map { ScheduledLocalTimeOption(it.scheduledFor, it.utcOffsetSeconds) },
 )
 
 @Serializable
@@ -299,7 +384,17 @@ internal fun ScheduledBookingResponse.toDomain() = ScheduledBooking(
     cancellationTerms.toDomain(), driverCommitted, liveRideId, cancellationFinancialOutcome, createdAt,
 )
 
-@Serializable internal data class ScheduledBookingListResponse(val items: List<ScheduledBookingResponse>)
+@Serializable internal data class ScheduledBookingListResponse(
+    val items: List<ScheduledBookingResponse>,
+    val page: Int,
+    val limit: Int,
+    val total: Int,
+) {
+    fun toDomain(requestedPage: Int): ScheduledBookingPage {
+        require(page == requestedPage && limit == 20)
+        return ScheduledBookingPage(items.map(ScheduledBookingResponse::toDomain), page, limit, total)
+    }
+}
 
 @Serializable
 internal data class ScheduledOfferResponse(

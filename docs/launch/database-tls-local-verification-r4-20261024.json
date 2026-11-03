@@ -1,0 +1,27 @@
+{
+  "recorded_utc": "2026-10-24T13:56:21.997034+00:00",
+  "return_code": 1,
+  "totals": {
+    "tests": 8,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  "report_sha256": "1af1578bff19f17a694598fbe3f4b0b624eb0f7a2bf4a6d08eedecac35aa0af2",
+  "fixture": {
+    "prepared_utc": "2026-10-24T13:29:59.570309+00:00",
+    "ca_sha256": "9837fefd73cf5adad0754517b65101415af6f2dd04a7dbadbd3b2cb9339d12d3",
+    "server_certificate_sha256": "13b2d0e67f0e9e4c48b3228df8879c3593318d519dfe5877ad4306af26ce981e",
+    "valid_hostname": "localhost",
+    "wrong_hostname": "127.0.0.1",
+    "certificate_valid_until": "2026-10-25T13:29:59+00:00",
+    "scope": "Local-only generated test PKI and stopped authenticated test clusters; no production keys, hosted setting or source credential changed."
+  },
+  "all_owned_clusters_stopped": true,
+  "hosted_service_or_credentials_changed": false,
+  "hosted_TLS_accepted": false,
+  "coverage": "Actual ORM file/PEM trust, untrusted CA, wrong hostname, absent server TLS, LISTEN readiness and no-op migration CA boundary; resource-guarded cases need explicit CI/provider fixture.",
+  "test_source_sha256": "00aa398b0487329b6ae82dd11a5963eb4b430f8440d21adb865bcd0986502be1",
+  "transport_source_sha256": "7f056fb0d47fef5dad6bf7b9e6230895ba6a9faaaf4e53153bc0ea8a7cc48702",
+  "restricted_runtime_verification": null
+}

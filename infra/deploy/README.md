@@ -209,7 +209,13 @@ boundary. In particular:
   ClamAV is private, has no host port, and receives neither document ciphertext
   nor its encryption key at rest; uploads are streamed to it before persistence.
 * `TAXIMOBILE_DATABASE_URL` points to migrated managed PostgreSQL/PostGIS and is
-  never exposed to mobile clients. `TAXIMOBILE_DATABASE_POOL_SIZE`,
+  never exposed to mobile clients. API, worker and migrator require database TLS
+  `verify-full`. Custom CA trust accepts one absolute `TAXIMOBILE_DATABASE_CA_FILE`
+  mounted into each process or `TAXIMOBILE_DATABASE_CA_PEM` bundle text; leave both
+  empty for system roots. Remove URL SSL/host overrides. See
+  [the transport contract](../../docs/launch/database-tls.md) and verify actual
+  encrypted sessions plus rejected wrong-CA/hostname connections.
+  `TAXIMOBILE_DATABASE_POOL_SIZE`,
   `TAXIMOBILE_DATABASE_POOL_MAX_OVERFLOW`, and
   `TAXIMOBILE_DATABASE_POOL_TIMEOUT_SECONDS` are explicit per-process bounds.
   Before changing replicas, prove `(pool size + maximum overflow) * replica count`

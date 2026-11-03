@@ -13,6 +13,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from taximobile_api.core.config import Settings
 from taximobile_api.domains.auth.authority import user_account_is_active
+from taximobile_api.domains.cooperatives.authority import (
+    driver_membership_is_active, operator_membership_allows,
+)
 from taximobile_api.domains.driver_applications.service import (
     RecruitmentConflict,
     select_active_authorization,
@@ -499,9 +502,11 @@ async def open_offering(
     candidate_ids = list(
         await session.scalars(
             select(DriverScheduledOfferPreference.driver_id)
+            .join(DriverProfile, DriverProfile.id == DriverScheduledOfferPreference.driver_id)
             .where(
                 DriverScheduledOfferPreference.city_id == booking.city_id,
                 DriverScheduledOfferPreference.enabled.is_(True),
+                operator_membership_allows(DriverProfile.user_id, booking.operator_id, current_time),
             )
             .order_by(DriverScheduledOfferPreference.updated_at, DriverScheduledOfferPreference.driver_id)
             .limit(50)
@@ -520,6 +525,10 @@ async def open_offering(
         if profile is None:
             continue
         if not await user_account_is_active(session, profile.user_id):
+            continue
+        if not await driver_membership_is_active(
+            session, profile.user_id, booking.operator_id, now=current_time
+        ):
             continue
         if await scheduled_driver_eligibility_failure(
             session, profile, vehicle, now=current_time
@@ -631,6 +640,11 @@ async def accept_offer(
         raise ScheduledOfferUnavailable("This scheduled offer is no longer available.")
     if booking.status != ScheduledBookingStatus.OFFERING or booking.current_commitment_id is not None:
         raise ScheduledOfferUnavailable("Another driver already committed or the booking closed.")
+    if not await driver_membership_is_active(
+        session, profile.user_id, booking.operator_id,
+        now=now, serialize_with_changes=True,
+    ):
+        raise ScheduledOfferUnavailable("Active membership with this operator is required.")
     vehicle = await session.get(Vehicle, profile.active_vehicle_id) if profile.active_vehicle_id else None
     eligibility_failure = await scheduled_driver_eligibility_failure(
         session, profile, vehicle, now=current_time
@@ -840,7 +854,13 @@ async def handoff_booking(
             current_time=current_time,
             matching_settings=matching_settings,
         )
-    if await scheduled_driver_eligibility_failure(session, profile, vehicle, now=current_time):
+    if (
+        not await driver_membership_is_active(
+            session, profile.user_id, booking.operator_id,
+            now=now, serialize_with_changes=True,
+        )
+        or await scheduled_driver_eligibility_failure(session, profile, vehicle, now=current_time)
+    ):
         return await fallback_handoff_or_unfulfilled(
             session,
             booking,

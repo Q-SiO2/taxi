@@ -1,5 +1,6 @@
 package org.example.taximobile.operations.ui
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,9 +44,13 @@ import org.example.taximobile.operations.model.PaymentRefundCreateRequest
 import org.example.taximobile.operations.model.RECONCILE_PAYMENTS
 import org.example.taximobile.operations.state.OperationsCoordinator
 import org.example.taximobile.operations.state.OperationsUiState
+import org.example.taximobile.feature.ui.text.ltrIsolate
+import org.jetbrains.compose.resources.stringResource
+import taximobile.shared.generated.resources.*
 
 @Composable
 fun PaymentOperationsScreen(state: OperationsUiState, coordinator: OperationsCoordinator) {
+    val taxiColors = TaxiTheme.colors
     val snapshot = state.snapshot?.paymentOperations
     val canConfigure = state.session?.hasPermission(MANAGE_PAYMENT_CAPABILITIES) == true
     val canReconcile = state.session?.hasPermission(RECONCILE_PAYMENTS) == true
@@ -54,16 +59,16 @@ fun PaymentOperationsScreen(state: OperationsUiState, coordinator: OperationsCoo
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(TaxiSpacing.Xl),
         verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Lg),
     ) {
-        Text("Payment control", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Text(stringResource(Res.string.web_pay_title), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
         Text(
-            "Capabilities determine what passengers may select. Claims and refunds remain separate, evidence-backed accounting commands.",
-            color = TaxiColors.Ink500,
+            stringResource(Res.string.web_pay_help),
+            color = taxiColors.Ink500,
         )
         if (canConfigure) {
             if (!exactScope) {
                 EmptyState(
-                    title = "Select one city and operator",
-                    detail = "Recipient and capability changes require an exact authorized scope. Queue review may still span your grants.",
+                    title = stringResource(Res.string.web_pay_scope_title),
+                    detail = stringResource(Res.string.web_pay_scope_help),
                 )
             } else {
                 RecipientCreator(state, coordinator)
@@ -86,12 +91,13 @@ private fun RecipientCreator(state: OperationsUiState, coordinator: OperationsCo
     var recipientName by remember { mutableStateOf("") }
     var bankAccount by remember { mutableStateOf("") }
     var walletId by remember { mutableStateOf("") }
-    OperationsPanel("New transfer recipient", "Draft first; recent MFA is required for verification.") {
-        Field(label, { label = it }, "Internal label", state)
-        Field(recipientName, { recipientName = it }, "Passenger-visible recipient name", state)
-        Field(bankAccount, { bankAccount = it }, "Bank account / RIB (optional)", state)
-        Field(walletId, { walletId = it }, "M-Wallet identifier (optional)", state)
+    OperationsPanel(stringResource(Res.string.web_pay_recipient_new), stringResource(Res.string.web_pay_recipient_new_help)) {
+        Field(label, { label = it }, stringResource(Res.string.web_pay_internal_label), state)
+        Field(recipientName, { recipientName = it }, stringResource(Res.string.web_pay_recipient_name), state)
+        Field(bankAccount, { bankAccount = it }, stringResource(Res.string.web_pay_bank_optional), state)
+        Field(walletId, { walletId = it }, stringResource(Res.string.web_pay_wallet_optional), state)
         Button(
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
             onClick = {
                 coordinator.createPaymentRecipient(
                     PaymentRecipientCreateRequest(
@@ -105,7 +111,7 @@ private fun RecipientCreator(state: OperationsUiState, coordinator: OperationsCo
             },
             enabled = !state.interactionLocked && label.length >= 2 && recipientName.length >= 2 &&
                 (bankAccount.length >= 3 || walletId.length >= 3),
-        ) { Text("Create recipient draft") }
+        ) { Text(stringResource(Res.string.web_pay_recipient_create)) }
     }
 }
 
@@ -115,30 +121,36 @@ private fun RecipientList(
     state: OperationsUiState,
     coordinator: OperationsCoordinator,
 ) {
+    val taxiColors = TaxiTheme.colors
     var reason by remember { mutableStateOf("") }
-    OperationsPanel("Recipient accounts", "Verified destinations are immutable; replace rather than editing history.") {
-        Field(reason, { reason = it }, "Audited verify/retire reason", state)
-        if (recipients.isEmpty()) Text("No recipient accounts in this scope.", color = TaxiColors.Ink500)
+    OperationsPanel(stringResource(Res.string.web_pay_recipients), stringResource(Res.string.web_pay_recipients_help)) {
+        Field(reason, { reason = it }, stringResource(Res.string.web_pay_recipient_reason), state)
+        if (recipients.isEmpty()) Text(stringResource(Res.string.web_pay_recipients_empty), color = taxiColors.Ink500)
         recipients.forEach { recipient ->
             RecordSurface {
-                Text(recipient.label, fontWeight = FontWeight.Bold)
-                Text("${recipient.recipientName} · ${recipient.status}", color = TaxiColors.Ink500)
+                Text(recipient.label, style = recruitmentTextStyle(recipient.label), fontWeight = FontWeight.Bold)
                 Text(
-                    listOfNotNull(recipient.bankAccount, recipient.walletId).joinToString(" · "),
+                    "${recipient.recipientName} · ${paymentLabel(recipient.status)}",
+                    style = recruitmentTextStyle(recipient.recipientName), color = taxiColors.Ink500,
+                )
+                Text(
+                    listOfNotNull(recipient.bankAccount, recipient.walletId).joinToString(" · ") { ltrIsolate(it) },
                     style = MaterialTheme.typography.bodySmall,
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
                     if (recipient.status == "DRAFT") {
                         Button(
+                            shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                             onClick = { coordinator.transitionPaymentRecipient(recipient, "verify", reason) },
                             enabled = !state.interactionLocked && reason.trim().length >= 3,
-                        ) { Text("Verify") }
+                        ) { Text(stringResource(Res.string.web_pay_verify)) }
                     }
                     if (recipient.status == "VERIFIED") {
                         OutlinedButton(
+                            shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                             onClick = { coordinator.transitionPaymentRecipient(recipient, "retire", reason) },
                             enabled = !state.interactionLocked && reason.trim().length >= 3,
-                        ) { Text("Retire") }
+                        ) { Text(stringResource(Res.string.web_pay_retire)) }
                     }
                 }
             }
@@ -152,38 +164,40 @@ private fun CapabilityCreator(
     recipients: List<PaymentRecipientRecord>,
     coordinator: OperationsCoordinator,
 ) {
+    val taxiColors = TaxiTheme.colors
     var version by remember { mutableStateOf("") }
     var serviceType by remember { mutableStateOf("ON_DEMAND") }
     var effectiveFrom by remember { mutableStateOf("") }
     var manualTransfer by remember { mutableStateOf(false) }
     var recipientId by remember { mutableStateOf<String?>(null) }
     val verified = recipients.filter { it.status == "VERIFIED" }
-    OperationsPanel("New payment capability", "Cash is mandatory. Manual transfer is advertised only with a verified destination.") {
-        Field(version, { version = it }, "Version (for example pay-casa-v1)", state)
-        Field(effectiveFrom, { effectiveFrom = it }, "Effective from (ISO-8601 with timezone)", state)
+    OperationsPanel(stringResource(Res.string.web_pay_capability_new), stringResource(Res.string.web_pay_capability_help)) {
+        Field(version, { version = it }, stringResource(Res.string.web_pay_version), state)
+        Field(effectiveFrom, { effectiveFrom = it }, stringResource(Res.string.web_pay_effective_input), state)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
             listOf("ON_DEMAND", "FIXED_ROUTE").forEach { value ->
-                FilterChip(selected = serviceType == value, onClick = { serviceType = value }, label = { Text(value.replace('_', ' ')) })
+                FilterChip(selected = serviceType == value, onClick = { serviceType = value }, label = { Text(recruitmentLabel(value)) })
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
             Switch(checked = manualTransfer, onCheckedChange = { manualTransfer = it; if (!it) recipientId = null })
-            Text("Enable external bank/M-Wallet transfer", modifier = Modifier.padding(top = 12.dp))
+            Text(stringResource(Res.string.web_pay_enable_transfer), modifier = Modifier.padding(top = 12.dp))
         }
         if (manualTransfer) {
-            Text("Verified recipient", style = MaterialTheme.typography.labelMedium)
+            Text(stringResource(Res.string.web_pay_verified_recipient), style = MaterialTheme.typography.labelMedium)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
                 verified.forEach { recipient ->
                     FilterChip(
                         selected = recipientId == recipient.id,
                         onClick = { recipientId = recipient.id },
-                        label = { Text(recipient.label) },
+                        label = { Text(recipient.label, style = recruitmentTextStyle(recipient.label)) },
                     )
                 }
             }
-            if (verified.isEmpty()) Text("Verify a recipient before creating this capability.", color = TaxiColors.Warning600)
+            if (verified.isEmpty()) Text(stringResource(Res.string.web_pay_verify_first), color = taxiColors.Warning600)
         }
         Button(
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
             onClick = {
                 coordinator.createPaymentCapability(
                     PaymentCapabilityCreateRequest(
@@ -198,7 +212,7 @@ private fun CapabilityCreator(
             },
             enabled = !state.interactionLocked && version.isNotBlank() && effectiveFrom.isNotBlank() &&
                 (!manualTransfer || recipientId != null),
-        ) { Text("Create capability draft") }
+        ) { Text(stringResource(Res.string.web_pay_capability_create)) }
     }
 }
 
@@ -208,10 +222,11 @@ private fun CapabilityList(
     state: OperationsUiState,
     coordinator: OperationsCoordinator,
 ) {
+    val taxiColors = TaxiTheme.colors
     var reason by remember { mutableStateOf("") }
-    OperationsPanel("Capability versions", "The active city bundle must reference the exact ACTIVE version.") {
-        Field(reason, { reason = it }, "Audited lifecycle reason", state)
-        if (capabilities.isEmpty()) Text("No payment capability versions in this scope.", color = TaxiColors.Ink500)
+    OperationsPanel(stringResource(Res.string.web_pay_versions), stringResource(Res.string.web_pay_versions_help)) {
+        Field(reason, { reason = it }, stringResource(Res.string.web_pay_lifecycle_reason), state)
+        if (capabilities.isEmpty()) Text(stringResource(Res.string.web_pay_versions_empty), color = taxiColors.Ink500)
         capabilities.forEach { capability ->
             CapabilityRow(capability, state, reason, coordinator)
         }
@@ -225,6 +240,7 @@ private fun CapabilityRow(
     reason: String,
     coordinator: OperationsCoordinator,
 ) {
+    val taxiColors = TaxiTheme.colors
     val next = when (capability.status) {
         "DRAFT" -> "submit"
         "IN_REVIEW" -> "approve"
@@ -232,17 +248,18 @@ private fun CapabilityRow(
         else -> null
     }
     RecordSurface {
-        Text("${capability.version} · ${capability.serviceType.replace('_', ' ')}", fontWeight = FontWeight.Bold)
+        Text("${ltrIsolate(capability.version)} · ${recruitmentLabel(capability.serviceType)}", fontWeight = FontWeight.Bold)
         Text(
-            "${capability.status} · CASH${if (capability.manualTransferEnabled) " + MANUAL TRANSFER" else ""}",
-            color = TaxiColors.Ink500,
+            "${paymentLabel(capability.status)} · ${stringResource(if (capability.manualTransferEnabled) Res.string.web_pay_cash_transfer else Res.string.payment_method_cash)}",
+            color = taxiColors.Ink500,
         )
-        Text("Effective ${capability.effectiveFrom}", style = MaterialTheme.typography.bodySmall)
+        Text(stringResource(Res.string.web_pay_effective_value, ltrIsolate(compactTimestamp(capability.effectiveFrom))), style = MaterialTheme.typography.bodySmall)
         next?.let {
             Button(
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                 onClick = { coordinator.transitionPaymentCapability(capability, it, reason) },
                 enabled = !state.interactionLocked && reason.trim().length >= 3,
-            ) { Text(it.replaceFirstChar { character -> character.uppercase() }) }
+            ) { Text(paymentLabel(it)) }
         }
     }
 }
@@ -253,26 +270,30 @@ private fun TransferQueue(
     state: OperationsUiState,
     coordinator: OperationsCoordinator,
 ) {
+    val taxiColors = TaxiTheme.colors
     var settlementReference by remember { mutableStateOf("") }
     var rejectionReason by remember { mutableStateOf("") }
-    OperationsPanel("Manual-transfer queue", "A passenger claim is not proof. Match amount, currency, TaxiMobile reference, and recipient statement independently.") {
-        Field(settlementReference, { settlementReference = it }, "Authoritative settlement reference", state)
-        Field(rejectionReason, { rejectionReason = it }, "Correction reason when rejecting", state)
-        if (transfers.isEmpty()) Text("No submitted claims in the selected authorized scope.", color = TaxiColors.Ink500)
+    OperationsPanel(stringResource(Res.string.web_pay_transfers), stringResource(Res.string.web_pay_transfers_help)) {
+        Field(settlementReference, { settlementReference = it }, stringResource(Res.string.web_pay_settlement_reference), state)
+        Field(rejectionReason, { rejectionReason = it }, stringResource(Res.string.web_pay_rejection_reason), state)
+        if (transfers.isEmpty()) Text(stringResource(Res.string.web_pay_transfers_empty), color = taxiColors.Ink500)
         transfers.forEach { transfer ->
             RecordSurface {
-                Text("${transfer.amount} ${transfer.currency} · ${transfer.paymentReference}", fontWeight = FontWeight.Bold)
-                Text("Recipient ${transfer.recipientLabel ?: "legacy pilot configuration"}", color = TaxiColors.Ink500)
-                Text("Payer reference: ${transfer.payerReference ?: "not supplied"}", style = MaterialTheme.typography.bodySmall)
+                Text("${ltrIsolate("${transfer.amount} ${transfer.currency}")} · ${ltrIsolate(transfer.paymentReference)}", fontWeight = FontWeight.Bold)
+                val recipientLabel = transfer.recipientLabel ?: stringResource(Res.string.web_pay_legacy_recipient)
+                Text(stringResource(Res.string.web_pay_recipient_value, recipientLabel), style = recruitmentTextStyle(recipientLabel), color = taxiColors.Ink500)
+                Text(stringResource(Res.string.web_pay_payer_reference, transfer.payerReference?.let(::ltrIsolate) ?: "—"), style = MaterialTheme.typography.bodySmall)
                 Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
                     Button(
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                         onClick = { coordinator.verifyManualTransfer(transfer.paymentId, settlementReference) },
                         enabled = !state.interactionLocked && settlementReference.trim().length >= 3,
-                    ) { Text("Verify against statement") }
+                    ) { Text(stringResource(Res.string.web_pay_verify_statement)) }
                     OutlinedButton(
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                         onClick = { coordinator.rejectManualTransfer(transfer.paymentId, rejectionReason) },
                         enabled = !state.interactionLocked && rejectionReason.trim().length >= 3,
-                    ) { Text("Reject claim") }
+                    ) { Text(stringResource(Res.string.web_pay_reject_claim)) }
                 }
             }
         }
@@ -287,14 +308,15 @@ private fun RefundRecorder(state: OperationsUiState, coordinator: OperationsCoor
     var method by remember { mutableStateOf("EXTERNAL_TRANSFER") }
     var reference by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
-    OperationsPanel("Record confirmed refund", "This appends returned-money evidence. It never initiates a bank transfer or claws back driver earnings.") {
-        Field(paymentId, { paymentId = it }, "Payment ID", state)
-        Field(amount, { amount = it }, "Returned amount", state)
-        Field(reason, { reason = it.uppercase() }, "Reason code", state)
-        Field(method, { method = it.uppercase() }, "Settlement method: CASH or EXTERNAL_TRANSFER", state)
-        Field(reference, { reference = it }, "Unique handover / outbound settlement reference", state)
-        Field(note, { note = it }, "Restricted operator note", state)
+    OperationsPanel(stringResource(Res.string.web_pay_refund_new), stringResource(Res.string.web_pay_refund_help)) {
+        Field(paymentId, { paymentId = it }, stringResource(Res.string.web_pay_payment_id), state)
+        Field(amount, { amount = it }, stringResource(Res.string.web_pay_returned_amount), state)
+        Field(reason, { reason = it.uppercase() }, stringResource(Res.string.web_pay_reason_code), state)
+        Field(method, { method = it.uppercase() }, stringResource(Res.string.web_pay_settlement_method), state)
+        Field(reference, { reference = it }, stringResource(Res.string.web_pay_refund_reference), state)
+        Field(note, { note = it }, stringResource(Res.string.web_pay_restricted_note), state)
         Button(
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
             onClick = {
                 coordinator.recordPaymentRefund(
                     paymentId.trim(),
@@ -303,19 +325,20 @@ private fun RefundRecorder(state: OperationsUiState, coordinator: OperationsCoor
             },
             enabled = !state.interactionLocked && paymentId.isNotBlank() && amount.isNotBlank() &&
                 reference.trim().length >= 3 && note.trim().length >= 3,
-        ) { Text("Record returned money") }
+        ) { Text(stringResource(Res.string.web_pay_record_returned)) }
     }
 }
 
 @Composable
 private fun RefundHistory(refunds: List<org.example.taximobile.operations.model.PaymentRefundRecord>) {
-    OperationsPanel("Refund history", "Append-only records visible in the selected authorization scope.") {
-        if (refunds.isEmpty()) Text("No refunds in scope.", color = TaxiColors.Ink500)
+    val taxiColors = TaxiTheme.colors
+    OperationsPanel(stringResource(Res.string.web_pay_refund_history), stringResource(Res.string.web_pay_refund_history_help)) {
+        if (refunds.isEmpty()) Text(stringResource(Res.string.web_pay_refunds_empty), color = taxiColors.Ink500)
         refunds.forEach { refund ->
             RecordSurface {
-                Text("${refund.amount} ${refund.currency} · ${refund.reason}", fontWeight = FontWeight.Bold)
-                Text("Payment ${refund.paymentId} · ${refund.settlementMethod}", color = TaxiColors.Ink500)
-                Text("Remaining refundable ${refund.remainingRefundableAmount} ${refund.currency}", style = MaterialTheme.typography.bodySmall)
+                Text("${ltrIsolate("${refund.amount} ${refund.currency}")} · ${ltrIsolate(refund.reason)}", fontWeight = FontWeight.Bold)
+                Text("${stringResource(Res.string.web_pay_payment_id)}: ${ltrIsolate(refund.paymentId)} · ${paymentLabel(refund.settlementMethod)}", color = taxiColors.Ink500)
+                Text(stringResource(Res.string.web_pay_remaining_value, ltrIsolate("${refund.remainingRefundableAmount} ${refund.currency}")), style = MaterialTheme.typography.bodySmall)
             }
         }
     }
@@ -323,15 +346,17 @@ private fun RefundHistory(refunds: List<org.example.taximobile.operations.model.
 
 @Composable
 private fun OperationsPanel(title: String, detail: String, content: @Composable ColumnScope.() -> Unit) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        color = TaxiColors.Surface0,
-        shape = RoundedCornerShape(TaxiRadii.Lg),
-        border = BorderStroke(1.dp, TaxiColors.StrokeSubtle),
+        color = taxiColors.Surface0,
+        shape = RoundedCornerShape(taxiRadii.Lg),
+        border = BorderStroke(1.dp, taxiColors.StrokeSubtle),
     ) {
         Column(Modifier.padding(TaxiSpacing.Lg), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
             Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-            Text(detail, color = TaxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
+            Text(detail, color = taxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
             content()
         }
     }
@@ -339,10 +364,12 @@ private fun OperationsPanel(title: String, detail: String, content: @Composable 
 
 @Composable
 private fun RecordSurface(content: @Composable ColumnScope.() -> Unit) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        color = TaxiColors.Surface1,
-        shape = RoundedCornerShape(TaxiRadii.Md),
+        color = taxiColors.Surface1,
+        shape = RoundedCornerShape(taxiRadii.Md),
     ) {
         Column(Modifier.padding(TaxiSpacing.Md), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) { content() }
     }
@@ -357,5 +384,6 @@ private fun Field(value: String, onValue: (String) -> Unit, label: String, state
         modifier = Modifier.fillMaxWidth(),
         singleLine = true,
         enabled = !state.interactionLocked,
+        textStyle = recruitmentTextStyle(value),
     )
 }

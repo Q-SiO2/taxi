@@ -1,0 +1,18 @@
+{
+  "created_utc": "2026-10-20T20:20:29.143695+00:00",
+  "candidate": "candidate-native-v17.json",
+  "passed": false,
+  "accepted_as_trip": false,
+  "reason": "Driver emulator System UI ANR blocks Account/Back preflight. No run initialization, availability/ride/cash command admitted. Native Wait selected after read-only screenshots.",
+  "log": ".tools/alpha-delivery/rehearse-v17-first.log",
+  "screenshots": [
+    {
+      "path": "v17-passenger-preflight-diagnostic.png",
+      "sha256": "36c2fed3700f5d37bfd1ebc16e2fe82b6ab028f4d4ec583f142f122f0d6743db"
+    },
+    {
+      "path": "v17-driver-preflight-diagnostic.png",
+      "sha256": "3e857b9ea18d738c3251411724ca1b34dda9b00cce143c40f99b19b5d316d278"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "candidate": "candidate-native-v23.json",
+  "web_candidate": "candidate-web-v10.json",
+  "run": "first",
+  "started_utc": "2026-10-23T10:31:35.013442+00:00",
+  "passed": false,
+  "beats": [
+    {
+      "beat": 1,
+      "description": "Four style options shown; Notepad selected then Folded Streets restored in actual native passenger UI",
+      "finished_utc": "2026-10-23T10:33:22.630738+00:00",
+      "screenshots": [
+        {
+          "path": "release-v23-board-first-style-options-notepad.png",
+          "sha256": "b8500b2e417bb2249c00eace7401b44b86bd8f575bfb2dc9414571217c9e9af1"
+        },
+        {
+          "path": "release-v23-board-first-selected-notepad.png",
+          "sha256": "a397d65b7a72dd6e726563b329fb82777b02b685c3b797e1118b8d4687e9da5d"
+        },
+        {
+          "path": "release-v23-board-first-style-options-folded-streets.png",
+          "sha256": "74ea02264580b649add385b684fef22bdcbdda8d66fe5f0e0840daa4a424bae8"
+        },
+        {
+          "path": "release-v23-board-first-selected-folded-streets.png",
+          "sha256": "2cb257ac580a0a172ba950f128c17671001773be28f87363d6f2197193a857af"
+        }
+      ]
+    }
+  ],
+  "scope": "Synthetic emulator and normal hosted browser rehearsal; actual elapsed time, not a seven-minute claim",
+  "finished_utc": "2026-10-23T10:44:52.129355+00:00",
+  "stopped_before_any_business_command": true,
+  "failure": "Driver location POST rejected with 422; enabled online control not reached. Retain preflight failure; next timed attempt must be separate.",
+  "native_record": "release-v23-native-first.json"
+}

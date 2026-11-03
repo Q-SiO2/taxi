@@ -1,0 +1,32 @@
+{
+  "pages": 213,
+  "groups": {
+    "Shared mobile": 20,
+    "Passenger": 43,
+    "Driver": 40,
+    "Deferred capability": 9,
+    "Applicant": 13,
+    "Operations": 88
+  },
+  "uniqueCompositions": 213,
+  "sourceInputs": [
+    {
+      "file": "mobile-pages.md",
+      "sha256": "db0d104004f225ff1641d125f46649417b2eea3266ee5315933e84abd4909a10"
+    },
+    {
+      "file": "web-pages.md",
+      "sha256": "ee1832a2ad094d1a6062c7b433e27f7d50f672af38baa06e2da8233dea74a0b6"
+    },
+    {
+      "file": "atlas_content.py",
+      "sha256": "7075cc89baacd50e6c2cdece95af2ea9519f0415b74f8ce2265ddd39045e6cfc"
+    }
+  ],
+  "sourceAudit": {
+    "date": "2026-10-22",
+    "files": 63,
+    "declarations": 272,
+    "scope": "Complete named Compose inventory in the four declared source roots, including selected-style entry/chooser/preference files; source/design links only, not native view acceptance"
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "verified_utc": "2026-10-21T11:43:24.632055+00:00",
+  "candidate": "candidate-native-v18.json",
+  "passed": true,
+  "records": [
+    {
+      "record": "v18-native-first.json",
+      "record_sha256": "eaa32f2322262c8a41af45925a034a21606316b8d336788fc4ed1dc2799cf844",
+      "ride_id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+      "phase": "COMPLETED",
+      "payment": {
+        "method": "CASH",
+        "status": "COMPLETED"
+      },
+      "fare": {
+        "amount": "35.00",
+        "currency": "MAD",
+        "pricing_rule_version": "ux-demo-9f3f781b",
+        "components": [
+          {
+            "code": "TRANSPORT_FARE",
+            "label": "Transport fare",
+            "amount": "35.00"
+          }
+        ],
+        "economics": {
+          "transport_fare": "35.00",
+          "scheduling_surcharge": "0.00",
+          "operator_service_fee": "0.00",
+          "passenger_total": "35.00",
+          "expected_driver_net": "35.00",
+          "operator_allocation": "0.00",
+          "operator_fee_policy_version": "legacy-zero-fee-v1",
+          "operator_fee_calculation_mode": "FLAT_PER_COMPLETED_BOOKING",
+          "operator_fee_funding_mode": "DRIVER_SETTLEMENT_DEDUCTION"
+        }
+      },
+      "each_native_business_command_confirmed_once": true
+    },
+    {
+      "record": "v18-native-second.json",
+      "record_sha256": "e541c48619cd48186305224064ae6711200bfd41faac01344d6a76492853c16f",
+      "ride_id": "93df2c70-fd2b-4e97-8df3-eee368699bea",
+      "phase": "COMPLETED",
+      "payment": {
+        "method": "CASH",
+        "status": "COMPLETED"
+      },
+      "fare": {
+        "amount": "35.00",
+        "currency": "MAD",
+        "pricing_rule_version": "ux-demo-9f3f781b",
+        "components": [
+          {
+            "code": "TRANSPORT_FARE",
+            "label": "Transport fare",
+            "amount": "35.00"
+          }
+        ],
+        "economics": {
+          "transport_fare": "35.00",
+          "scheduling_surcharge": "0.00",
+          "operator_service_fee": "0.00",
+          "passenger_total": "35.00",
+          "expected_driver_net": "35.00",
+          "operator_allocation": "0.00",
+          "operator_fee_policy_version": "legacy-zero-fee-v1",
+          "operator_fee_calculation_mode": "FLAT_PER_COMPLETED_BOOKING",
+          "operator_fee_funding_mode": "DRIVER_SETTLEMENT_DEDUCTION"
+        }
+      },
+      "each_native_business_command_confirmed_once": true
+    }
+  ],
+  "availability": {
+    "status": "OFFLINE",
+    "vehicle_id": "d491cb54-7ec1-4b6e-a6f9-1f1a8fd93792",
+    "city_id": "10000000-0000-4000-8000-000000000003",
+    "service_type": "ON_DEMAND"
+  },
+  "pending_cash_count": 0,
+  "rebooking": {
+    "candidate": "candidate-native-v18.json",
+    "pid": "1860",
+    "first_complete_run": "v18-native-first.json",
+    "passed": true,
+    "pid_after_first_trip": "1860",
+    "second_complete_run": "v18-native-second.json",
+    "pid_after_second_trip": "1860"
+  },
+  "timed_board_runs": [
+    {
+      "record": "v18-board-first.json",
+      "elapsed_seconds": 414.416,
+      "started_utc": "2026-10-21T10:46:23.537834+00:00",
+      "finished_utc": "2026-10-21T10:53:17.953Z"
+    },
+    {
+      "record": "v18-board-second.json",
+      "elapsed_seconds": 577.304,
+      "started_utc": "2026-10-21T11:31:02.398741+00:00",
+      "finished_utc": "2026-10-21T11:40:39.702Z"
+    }
+  ],
+  "between_rehearsals_seconds": 2264.445741,
+  "qualification": "Two consecutive full trip/board repetitions on the same APKs; intervening history read-only QA and browser logout/preparation are recorded. Not an uninterrupted recording; second elapsed time includes controlled recovery and agent verification overhead. HTTP log corroboration unavailable: Railway connector internal error during provider incident; once-only counts refer to recorded native inputs plus server confirmations."
+}

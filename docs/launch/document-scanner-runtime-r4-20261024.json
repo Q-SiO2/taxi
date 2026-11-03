@@ -1,0 +1,15 @@
+{
+  "recorded_utc": "2026-10-24T15:15:25.222331+00:00",
+  "version": "1.5.4",
+  "phase": "VERIFIED_EXTRACTED",
+  "scope": "Correct MSYS GPG path handling; reuse original complete vendor ZIP/signature and public key, no signature bypass",
+  "prior_observation": "document-scanner-runtime-20261024.json",
+  "passed": true,
+  "key_origin": "Official vendor HTTPS downloads page as returned by the web tool; direct key/page requests returned HTTP403",
+  "key_sha256": "8525af41798f3f7455b498f1835293d7d34ada1b347fcf88e2d3f15ccb46ffd8",
+  "signature_verified": true,
+  "signer_fingerprint": "5BADCA2665EF59DCF8A23D8B707F0DB480836771",
+  "zip_sha256": "0d9e0228b2674137ea1a2853566c98a0278ad52ab2582c3d6dbd75373848c395",
+  "daemon_path": ".tools/real-world-launch/clamav-runtime-20261024/portable/clamav-1.5.4.win.x64/clamd.exe",
+  "private_signing_keys_imported": false
+}

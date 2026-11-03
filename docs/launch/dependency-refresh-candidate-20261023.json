@@ -1,0 +1,57 @@
+{
+  "recorded_utc": "2026-10-23T23:48:24.836452+00:00",
+  "commit": "90704d136ca32ad7212243208fac92c606e1764d",
+  "tree": "9076dd265ae7ad3171dfc7110503605af4db86d6",
+  "parent": "aeff4a25d1d07ab8f6762fad9826af90cfb5708d",
+  "files": [
+    "backend/requirements-dev.lock",
+    "docs/README.md",
+    "docs/implementation.md",
+    "docs/launch/dependency-refresh-verification-20261023.json",
+    "docs/launch/dependency-refresh.md",
+    "docs/launch/session-recovery-candidate-20261023.json",
+    "docs/launch/session-recovery.md",
+    "docs/launch/session-release-terminal-20261023.json",
+    "docs/roadmap.md"
+  ],
+  "checks": [
+    {
+      "name": "docs",
+      "exit_code": 0,
+      "log": ".tools/real-world-launch/dependency-candidate-docs-20261023.log"
+    },
+    {
+      "name": "credentials",
+      "exit_code": 0,
+      "log": ".tools/real-world-launch/dependency-candidate-credentials-20261023.log"
+    },
+    {
+      "name": "ci-security",
+      "exit_code": 0,
+      "log": ".tools/real-world-launch/dependency-candidate-ci-security-20261023.log"
+    },
+    {
+      "name": "whitespace",
+      "exit_code": 0,
+      "log": ".tools/real-world-launch/dependency-candidate-whitespace-20261023.log"
+    }
+  ],
+  "original_head": "2835c8aa7f5e97a17afcdbe647fe589cbd0421e1",
+  "original_index_preserved": true,
+  "candidate_clean": true,
+  "compilation_inputs_identical": 371,
+  "runtime_and_linux_locks_unchanged": true,
+  "published": true,
+  "deployment_accepted": false,
+  "pull_request": "https://github.com/Q-SiO2/taxi/pull/74",
+  "pull_request_draft": true,
+  "ci": {
+    "run_id": 40041253043,
+    "run_number": 228,
+    "url": "https://github.com/Q-SiO2/taxi/actions/runs/40041253043",
+    "overall_pass": false,
+    "observation": "docs/launch/dependency-refresh-ci-observation-20261023.json"
+  },
+  "next_packet": "docs/launch/staging-upgrade.md",
+  "live_local_builds": []
+}

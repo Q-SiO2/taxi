@@ -1,0 +1,171 @@
+{
+  "candidate": "candidate-native-v15.json",
+  "run": "second-retry",
+  "method": "Agent-stepped actual native UI: fresh rendered screenshots, explicit one-time taps, independent owned server readbacks",
+  "fidelity": "Owned API35 driver/API31 passenger emulators, synthetic GPS/accounts/cash",
+  "started_utc": "2026-10-20T10:31:44.724738+00:00",
+  "passed": false,
+  "prior_ride_ids": [
+    "c55e696d-2bae-4640-8801-f50d2c20a42b",
+    "b7aac6ac-cc87-494d-aa95-842c21fc6759",
+    "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+    "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+    "98a253df-de13-4029-9daa-e538a520997d",
+    "359279df-4847-4ad3-bfa4-baa2136b45be",
+    "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+    "e531e392-6f5b-4962-9964-3967a4afc418",
+    "082f8b85-6598-423d-aac5-cf31eec3f30a",
+    "e734ed2c-a37c-424b-9d84-b31e6811cd09",
+    "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+    "65f3d974-1cb3-4c43-9486-80cd1007c256",
+    "03756c30-f453-4d09-ae50-c3fa8f3782a4",
+    "59576371-85a9-4732-a100-12f7295f0c0a",
+    "e1b2bf66-0887-4429-a798-e272cc4ebf1a",
+    "d8a67153-d7e5-4d96-8df0-be6ddb329d37",
+    "e8948a59-659f-4d70-b756-eaafd9cc1fa1",
+    "ee13caaa-3461-418d-b0b4-f32eab7dd516",
+    "a0ba8798-8536-4420-bde2-12aa9111b817"
+  ],
+  "steps": [
+    {
+      "action": "online",
+      "role": "driver",
+      "utc": "2026-10-20T10:32:00.710580+00:00",
+      "tap": [
+        360,
+        1427
+      ],
+      "observation": "v15-second-retry-stepped-driver-fresh-online-ready.png",
+      "server_before": "OFFLINE",
+      "confirmed": true,
+      "server_after": "AVAILABLE",
+      "confirmed_utc": "2026-10-20T10:32:01.950683+00:00"
+    },
+    {
+      "action": "request",
+      "role": "passenger",
+      "utc": "2026-10-20T10:34:23.545322+00:00",
+      "tap": [
+        360,
+        1425
+      ],
+      "observation": "v15-second-retry-stepped-passenger-request-ready.png",
+      "server_before": null,
+      "confirmed": true,
+      "server_after": "MATCHING",
+      "confirmed_utc": "2026-10-20T10:34:25.629805+00:00"
+    }
+  ],
+  "installed_apks": [
+    {
+      "role": "driver",
+      "sha256": "4695bd2e0ec714a610a0b93dfd48f297db70a887b836308420679704684f9305"
+    },
+    {
+      "role": "passenger",
+      "sha256": "6490db9ef0c9e64ef95d7ba66bf10e1e98cc08ccd60467393a909614bbaf8b32"
+    }
+  ],
+  "clock_fixture": [
+    {
+      "role": "driver",
+      "host_minus_device_seconds": 0.54,
+      "method": "Owned emulator synchronization before availability/trip only"
+    },
+    {
+      "role": "passenger",
+      "host_minus_device_seconds": 0.66,
+      "method": "Owned emulator synchronization before availability/trip only"
+    }
+  ],
+  "runtime": [
+    {
+      "role": "driver",
+      "avd": "taximobile-board-api35-driver",
+      "sdk": "35",
+      "configuration": "config: mcc310-mnc260-en-rUS-ldltr-sw360dp-w360dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x720-v35",
+      "app_locales": "Locales for ma.taximobile.driver for user 0 are [ar-MA]"
+    },
+    {
+      "role": "passenger",
+      "avd": "taximobile-board-aosp31-passenger",
+      "sdk": "31",
+      "configuration": "config: mcc310-mnc260-ar-rMA,fr-rFR,en-rUS-ldrtl-sw360dp-w360dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x720-v31"
+    }
+  ],
+  "screenshots": [
+    {
+      "role": "driver",
+      "path": "v15-second-retry-stepped-driver-fresh-online-ready.png",
+      "sha256": "d1a644ca3feecdcaf836bf19a6879609de31309f4a7cd41b790d992167bb8276",
+      "utc": "2026-10-20T10:31:59.269850+00:00"
+    },
+    {
+      "role": "driver",
+      "path": "v15-second-retry-stepped-driver-online-after.png",
+      "sha256": "c2a600fd24d08351233512b3bba275db9c6b1f551b946af3c5677ebaf59cd4d9",
+      "utc": "2026-10-20T10:32:03.055991+00:00"
+    },
+    {
+      "role": "passenger",
+      "path": "v15-second-retry-stepped-passenger-fare-review.png",
+      "sha256": "f812de3be414b0811cf01ee72d2d42d35f9c38310f2f4cf14323330b1fa96253",
+      "utc": "2026-10-20T10:32:49.028480+00:00"
+    },
+    {
+      "role": "passenger",
+      "path": "v15-second-retry-stepped-passenger-fare-control-scrolled.png",
+      "sha256": "5245fec38c5b68f16aab3975e60945e769eea61f23777544249786ba44e1ed23",
+      "utc": "2026-10-20T10:33:22.913958+00:00"
+    },
+    {
+      "role": "passenger",
+      "path": "v15-second-retry-stepped-passenger-fare-control-bottom.png",
+      "sha256": "ab46c3116017af0d99e25fbb351f03721a94318de17252e7ea00b343e6bd6fb7",
+      "utc": "2026-10-20T10:33:39.401510+00:00"
+    },
+    {
+      "role": "passenger",
+      "path": "v15-second-retry-stepped-passenger-current-server-fare-request.png",
+      "sha256": "604995e42c58657c54504ed00ae4065f04704b717b97ec1fd78fed217281c033",
+      "utc": "2026-10-20T10:33:55.144193+00:00"
+    },
+    {
+      "role": "passenger",
+      "path": "v15-second-retry-stepped-passenger-request-ready.png",
+      "sha256": "9d4863082c3d2622623280af9764a8c93c99eebee7d986a86f764cda3d73b7e9",
+      "utc": "2026-10-20T10:34:08.968968+00:00"
+    },
+    {
+      "role": "passenger",
+      "path": "v15-second-retry-stepped-passenger-request-after.png",
+      "sha256": "4d09b75f4d0094e061c41ccd857af05cbd976c6c6b3ee18389b8a4ff528124d3",
+      "utc": "2026-10-20T10:34:28.575626+00:00"
+    },
+    {
+      "role": "driver",
+      "path": "v15-second-retry-stepped-driver-offer-ready.png",
+      "sha256": "092c3f9f1f730b3c6230f4a10d4488b35884dda4c383cb9d0850c2f9ccdbb81f",
+      "utc": "2026-10-20T10:34:48.470690+00:00"
+    },
+    {
+      "role": "passenger",
+      "path": "v15-second-retry-stepped-passenger-request-terminal-inspection.png",
+      "sha256": "c1801693c4ee3b551d623049cbb27907785e6426ec2f3ef5905483a959b54d42",
+      "utc": "2026-10-20T10:35:40.741047+00:00"
+    }
+  ],
+  "last_observation": {
+    "role": "passenger",
+    "path": "v15-second-retry-stepped-passenger-request-terminal-inspection.png",
+    "sha256": "c1801693c4ee3b551d623049cbb27907785e6426ec2f3ef5905483a959b54d42",
+    "utc": "2026-10-20T10:35:40.741047+00:00"
+  },
+  "ride_id": "cb951af4-f5ae-4d05-8a06-a28b49797f33",
+  "failure": {
+    "kind": "Offer expired before accept precondition check",
+    "ride_status": "UNMATCHED",
+    "accept_input_sent": false,
+    "automatic_retry": false
+  }
+}

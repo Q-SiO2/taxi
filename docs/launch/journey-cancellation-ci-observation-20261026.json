@@ -1,0 +1,76 @@
+{
+  "recorded_utc": "2026-10-26T08:51:33+00:00",
+  "source_head": "5023ffcb9d16fae34893187574786dc57742a0ed",
+  "tested_merge_commit": "d9e95dc89b6cf9a71dda30d1cd13e90b4ea2d5bb",
+  "tree": "171b38d1f542c9f637ff20b5073421562950320a",
+  "run_id": 40292912205,
+  "run_number": 240,
+  "status": "in_progress",
+  "conclusion": null,
+  "required_jobs": {
+    "web": {
+      "id": 121471965832,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "documentation-and-provenance": {
+      "id": 121471966140,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "gradle-wrapper-integrity": {
+      "id": 121471966142,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "ios-shared": {
+      "id": 121471966194,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "gradle-dependency-submission": {
+      "id": 121471966215,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "backend": {
+      "id": 121471966273,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "mobile": {
+      "id": 121471966285,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "dependency-review": {
+      "id": 121472803464,
+      "status": "completed",
+      "conclusion": "success"
+    }
+  },
+  "full_backend_suite": {
+    "tests": 1458,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "real_tls_cases": 8,
+  "tls_baseline_restored": true,
+  "backend_junit_sha256": "c980ec5cecba2d501955760f2f3f17bd774b2871cf42f54bc1195792c3af51e3",
+  "test_artifact": {
+    "id": 12637336760,
+    "zip_sha256": "fc74c088457089a39a7f0df988daa389fbc2d09bc8afd80ccf16272bd932d64e"
+  },
+  "provenance_artifact": {
+    "id": 12636927367,
+    "zip_sha256": "f018893c0646309fd95d69067fef3999ddc897401fb73a72197cc741af1a8a61"
+  },
+  "all_required_jobs_accepted": false,
+  "remaining_job": "ios-shared application builds; shared production/test-source compile already passed",
+  "later_label_source": "36b2d8ec944a6783704874398c91ce922347fc7e",
+  "later_label_native_run": 40295112876,
+  "later_label_run_number": 242,
+  "predecessor_jobs_do_not_accept_later_labels": true,
+  "hosted_or_physical_or_public_accepted": false
+}

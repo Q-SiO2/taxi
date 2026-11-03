@@ -1,0 +1,324 @@
+{
+  "verified_utc": "2026-10-18 20:09:50 UTC",
+  "scope": "One-time bootstrap configuration cleanup and controlled API redeployment, not new application source or protected UI acceptance",
+  "project_id": "9f841575-c4f3-4a4d-bb83-2e6ff92e436e",
+  "environment_id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+  "service_id": "758fa7d5-f8b8-4730-a00f-438e28184e35",
+  "previous_deployment": "5f233980-bf46-468e-8a94-104e20eef451",
+  "deployment_id": "e5e108a0-e5dd-4553-93fd-292026c98b63",
+  "removed_names": [
+    "TAXIMOBILE_ALPHA_MFA_RECOVERY_CODES",
+    "TAXIMOBILE_ALPHA_MFA_SECRET",
+    "TAXIMOBILE_ALPHA_SEED_PASSWORD",
+    "TAXIMOBILE_ALPHA_SEED_SUFFIX"
+  ],
+  "before_variable_count": 22,
+  "after_variable_count": 18,
+  "remaining_variable_names": [
+    "PORT",
+    "TAXIMOBILE_CLIENT_COMPATIBILITY_ENFORCED",
+    "TAXIMOBILE_CORS_ORIGINS",
+    "TAXIMOBILE_DATABASE_POOL_MAX_OVERFLOW",
+    "TAXIMOBILE_DATABASE_POOL_SIZE",
+    "TAXIMOBILE_DATABASE_URL",
+    "TAXIMOBILE_ENV",
+    "TAXIMOBILE_GEOCODING_PROVIDER",
+    "TAXIMOBILE_JWT_SECRET",
+    "TAXIMOBILE_LOG_LEVEL",
+    "TAXIMOBILE_MANUAL_TRANSFER_ENABLED",
+    "TAXIMOBILE_MIGRATION_DATABASE_URL",
+    "TAXIMOBILE_MONITORING_TOKEN",
+    "TAXIMOBILE_OPERATIONS_MFA_ENCRYPTION_KEY",
+    "TAXIMOBILE_PROCESS_ROLE",
+    "TAXIMOBILE_ROUTING_BASE_URL",
+    "TAXIMOBILE_ROUTING_PROVIDER",
+    "TAXIMOBILE_RUNTIME_DATABASE_PASSWORD"
+  ],
+  "service_config_unchanged": true,
+  "config": {
+    "networking": {
+      "serviceDomains": {
+        "alpha-api-staging.up.railway.app": {
+          "port": 8000
+        }
+      }
+    },
+    "build": {
+      "builder": "DOCKERFILE",
+      "buildEnvironment": "V3",
+      "dockerfilePath": "Dockerfile"
+    },
+    "deploy": {
+      "startCommand": "python -m taximobile_api.operations.railway_entrypoint api",
+      "preDeployCommand": [
+        "python -m taximobile_api.operations.railway_entrypoint migrate"
+      ],
+      "preDeployTimeoutSeconds": 300,
+      "healthcheckPath": "/ready",
+      "limitOverride": {
+        "containers": {
+          "cpu": 1,
+          "memoryBytes": 500000000
+        }
+      },
+      "healthcheckTimeout": 120,
+      "restartPolicyMaxRetries": 3,
+      "useLegacyStacker": false,
+      "ipv6EgressEnabled": false,
+      "runtime": "V2",
+      "multiRegionConfig": {
+        "sfo": {
+          "numReplicas": 1
+        }
+      }
+    }
+  },
+  "method": "Railway CLI variable --skip-deploys delete for only the four reviewed keys, then redeploy the existing normal-migration API build once",
+  "values_read_from_railway": false,
+  "credentials_rotated": false,
+  "runtime": {
+    "environment": {
+      "id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+      "name": "staging"
+    },
+    "services": [
+      {
+        "serviceId": "758fa7d5-f8b8-4730-a00f-438e28184e35",
+        "serviceName": "alpha-api",
+        "state": "online",
+        "statusText": "Online",
+        "activeDeployments": [
+          {
+            "id": "e5e108a0-e5dd-4553-93fd-292026c98b63",
+            "status": "SUCCESS",
+            "createdAt": "2026-10-18T20:07:25.036Z",
+            "statusUpdatedAt": "2026-10-18T20:08:17.539Z"
+          }
+        ],
+        "replicaStatus": {
+          "running": 1,
+          "crashed": 0,
+          "total": 1
+        },
+        "cronJob": null,
+        "issues": {
+          "warningCount": 0,
+          "criticalCount": 0
+        },
+        "recentFailures": 0,
+        "recentFailedDeployments": [],
+        "hasIssues": false,
+        "isCronJob": false,
+        "hasVolume": false
+      },
+      {
+        "serviceId": "2d8ab069-2310-46ff-afe0-8fd4f42a5bd1",
+        "serviceName": "alpha-web",
+        "state": "online",
+        "statusText": "Online",
+        "activeDeployments": [
+          {
+            "id": "7e30999d-719b-4f84-bda0-8bf45baccc2a",
+            "status": "SUCCESS",
+            "createdAt": "2026-10-18T14:07:53.711Z",
+            "statusUpdatedAt": "2026-10-18T14:08:19.539Z"
+          }
+        ],
+        "replicaStatus": {
+          "running": 1,
+          "crashed": 0,
+          "total": 1
+        },
+        "cronJob": null,
+        "issues": {
+          "warningCount": 0,
+          "criticalCount": 0
+        },
+        "recentFailures": 0,
+        "recentFailedDeployments": [],
+        "hasIssues": false,
+        "isCronJob": false,
+        "hasVolume": false
+      },
+      {
+        "serviceId": "41ccd6b2-41e2-4886-8d96-cc56f62aaab7",
+        "serviceName": "alpha-postgis",
+        "state": "online",
+        "statusText": "Online",
+        "activeDeployments": [
+          {
+            "id": "10348a72-65f4-4b80-8474-e8a950ccd282",
+            "status": "SUCCESS",
+            "createdAt": "2026-10-15T11:39:00.931Z",
+            "statusUpdatedAt": "2026-10-15T11:39:14.627Z"
+          }
+        ],
+        "replicaStatus": {
+          "running": 1,
+          "crashed": 0,
+          "total": 1
+        },
+        "cronJob": null,
+        "issues": {
+          "warningCount": 0,
+          "criticalCount": 0
+        },
+        "recentFailures": 0,
+        "recentFailedDeployments": [],
+        "hasIssues": false,
+        "isCronJob": false,
+        "hasVolume": true
+      },
+      {
+        "serviceId": "568723a2-e456-4130-825a-077c5cae9f81",
+        "serviceName": "alpha-routing",
+        "state": "online",
+        "statusText": "Online",
+        "activeDeployments": [
+          {
+            "id": "dec657d1-e507-421d-9bc2-15f0250385b7",
+            "status": "SUCCESS",
+            "createdAt": "2026-10-12T17:25:06.150Z",
+            "statusUpdatedAt": "2026-10-12T17:30:35.551Z"
+          }
+        ],
+        "replicaStatus": {
+          "running": 1,
+          "crashed": 0,
+          "total": 1
+        },
+        "cronJob": null,
+        "issues": {
+          "warningCount": 0,
+          "criticalCount": 0
+        },
+        "recentFailures": 0,
+        "recentFailedDeployments": [],
+        "hasIssues": false,
+        "isCronJob": false,
+        "hasVolume": false
+      },
+      {
+        "serviceId": "eb42d0ba-feae-4f7a-9c86-48f4d38006d0",
+        "serviceName": "alpha-worker",
+        "state": "online",
+        "statusText": "Online",
+        "activeDeployments": [
+          {
+            "id": "8ca5a361-9b66-4d7a-8041-c9a5754bbe47",
+            "status": "SUCCESS",
+            "createdAt": "2026-10-12T17:22:09.505Z",
+            "statusUpdatedAt": "2026-10-12T17:27:38.043Z"
+          }
+        ],
+        "replicaStatus": {
+          "running": 1,
+          "crashed": 0,
+          "total": 1
+        },
+        "cronJob": null,
+        "issues": {
+          "warningCount": 0,
+          "criticalCount": 0
+        },
+        "recentFailures": 0,
+        "recentFailedDeployments": [],
+        "hasIssues": false,
+        "isCronJob": false,
+        "hasVolume": false
+      }
+    ],
+    "pendingWork": [],
+    "summary": {
+      "totalServices": 5,
+      "servicesWithIssues": 0,
+      "totalFailures": 0
+    }
+  },
+  "predeploy_and_startup_logs": [
+    {
+      "timestamp": "2026-10-18T20:08:01.548069028Z",
+      "severity": "info",
+      "message": "Starting Container",
+      "attributes": [
+        {
+          "key": "level",
+          "value": "\"info\""
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-18T20:08:05.393531530Z",
+      "severity": "info",
+      "message": "Railway alpha database verified: {\"analytics_projection_refresh\": \"verified\", \"checkpoint_timeout\": \"30s\", \"database_bytes\": 40907235, \"max_wal_size\": \"32MB\", \"migration_head\": \"20260908_0052\", \"min_wal_size\": \"32MB\", \"postgis_version\": \"3.4 USE_GEOS=1 USE_PROJ=1 USE_STATS=1\", \"public_tables\": 81, \"runtime_admin_or_public_schema_create\": false, \"runtime_role\": \"taximobile_runtime\", \"shared_buffers\": \"32MB\"}",
+      "attributes": [
+        {
+          "key": "level",
+          "value": "\"info\""
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-18T20:08:09.565628316Z",
+      "severity": "info",
+      "message": "Starting Container",
+      "attributes": [
+        {
+          "key": "level",
+          "value": "\"info\""
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-18T20:08:13.193334837Z",
+      "severity": "error",
+      "message": "INFO:     Started server process [1]",
+      "attributes": [
+        {
+          "key": "level",
+          "value": "\"error\""
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-18T20:08:13.193338097Z",
+      "severity": "error",
+      "message": "INFO:     Waiting for application startup.",
+      "attributes": [
+        {
+          "key": "level",
+          "value": "\"error\""
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-18T20:08:13.193341167Z",
+      "severity": "error",
+      "message": "INFO:     Application startup complete.",
+      "attributes": [
+        {
+          "key": "level",
+          "value": "\"error\""
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-18T20:08:13.193343677Z",
+      "severity": "error",
+      "message": "INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)",
+      "attributes": [
+        {
+          "key": "level",
+          "value": "\"error\""
+        }
+      ]
+    }
+  ],
+  "http_evidence": "api-bootstrap-cleanup-http-20261018-first.json",
+  "limitations": [
+    "Normal owner login/read and proxy boundaries passed; no new browser MFA or native journey is inferred",
+    "The preserved NOT_STARTED revision1 draft still requires the replacement UI Save/Submit rehearsal",
+    "Existing backend v6 build reused; no new API source or database schema change",
+    "No paid plan, resource expansion, public database ingress, service or volume deletion"
+  ]
+}

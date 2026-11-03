@@ -1,0 +1,39 @@
+{
+  "verified_utc": "2026-10-18T20:09:06.546245+00:00",
+  "api_deployment": "e5e108a0-e5dd-4553-93fd-292026c98b63",
+  "scope": "Fresh readiness, proxy/auth boundaries and unchanged owned synthetic draft; no domain writes",
+  "passed": true,
+  "checks": [
+    {
+      "path": "/ready",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "path": "/api/v1/auth/login",
+      "account": "Omar Empty State synthetic owner",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "path": "owned city application",
+      "status": 200,
+      "application_id": "0de83ae6-2f00-4dbd-8f23-34b491e5698e",
+      "facts": {
+        "status": "NOT_STARTED",
+        "revision": 1,
+        "complete": true
+      }
+    },
+    {
+      "path": "web proxy compatibility",
+      "status": 200,
+      "compatibility": "SUPPORTED"
+    },
+    {
+      "path": "web protected rides without session",
+      "status": 401,
+      "expected": 401
+    }
+  ]
+}

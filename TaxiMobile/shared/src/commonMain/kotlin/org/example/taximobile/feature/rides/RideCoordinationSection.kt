@@ -1,5 +1,6 @@
 package org.example.taximobile.feature.rides
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,12 +33,13 @@ private val DRIVER_ACTIONS = listOf(
 
 @Composable
 internal fun RideLatestCoordinationMessage(message: RideCoordinationMessage?) {
+    val taxiColors = TaxiTheme.colors
     if (message == null) return
     TaxiCard {
         Text(
             stringResource(Res.string.latest_ride_coordination_update),
             style = MaterialTheme.typography.labelLarge,
-            color = TaxiColors.Ink500,
+            color = taxiColors.Ink500,
         )
         Text(
             stringResource(message.code.copyResource()),
@@ -54,6 +56,7 @@ internal fun RideCoordinationActions(
     onSend: (String, RideCoordinationCode) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val taxiColors = TaxiTheme.colors
     val actions = when (senderRole) {
         RideCoordinationSenderRole.PASSENGER -> PASSENGER_ACTIONS
         RideCoordinationSenderRole.DRIVER -> DRIVER_ACTIONS
@@ -68,7 +71,7 @@ internal fun RideCoordinationActions(
         Text(
             stringResource(Res.string.ride_coordination_help),
             style = MaterialTheme.typography.bodySmall,
-            color = TaxiColors.Ink500,
+            color = taxiColors.Ink500,
         )
         actions.forEach { code ->
             TaxiButton(

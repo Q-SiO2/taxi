@@ -1,0 +1,30 @@
+{
+  "verified_utc": "2026-10-18T14:09:00.675500+00:00",
+  "web_deployment": "7e30999d-719b-4f84-bda0-8bf45baccc2a",
+  "package_manifest_sha256": "bc66d981f36bda6eb5bfb0253e6660cc47e7b527f93840bd9778d048ad17997a",
+  "scope": "Anonymous HTTP boundaries, applicant rewrite and every exact public asset; no authenticated journey inferred",
+  "passed": false,
+  "checks": [
+    {
+      "path": "/health",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "path": "/release-manifest.json",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "path": "/webApp.js.map",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "path": "/api/v1/rides",
+      "status": 426,
+      "expected": 401
+    }
+  ],
+  "check_count": 4
+}

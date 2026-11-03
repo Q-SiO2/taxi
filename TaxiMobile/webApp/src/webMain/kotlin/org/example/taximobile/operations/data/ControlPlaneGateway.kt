@@ -2,6 +2,8 @@ package org.example.taximobile.operations.data
 
 import io.ktor.client.HttpClient
 import io.ktor.client.request.header
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -12,6 +14,13 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
+import org.example.taximobile.operations.model.OperatorMembershipRecord
+import org.example.taximobile.operations.model.OperatorMembershipPage
+import org.example.taximobile.operations.model.OperatorMembershipCreateRequest
+import org.example.taximobile.operations.model.OperatorMembershipUpdateRequest
+import org.example.taximobile.operations.model.OperatorMembershipPolicyRequest
+import org.example.taximobile.operations.model.operatorMembershipWireJson
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -33,6 +42,10 @@ import org.example.taximobile.operations.model.ServiceAreaVersionCreateRequest
 import org.example.taximobile.operations.model.ServiceAreaVersionRecord
 
 interface ControlPlaneGateway {
+    suspend fun memberships(accessToken: String, operatorId: String, page: Int): OperatorMembershipPage
+    suspend fun enrollMember(accessToken: String, operatorId: String, key: String, request: OperatorMembershipCreateRequest): OperatorMembershipRecord
+    suspend fun updateMember(accessToken: String, operatorId: String, memberId: String, key: String, request: OperatorMembershipUpdateRequest): OperatorMembershipRecord
+    suspend fun updateMembershipPolicy(accessToken: String, operatorId: String, request: OperatorMembershipPolicyRequest): OperatorRecord
     suspend fun createCity(accessToken: String, request: CityCreateRequest): CityRecord
     suspend fun createOperator(accessToken: String, request: OperatorCreateRequest): OperatorRecord
     suspend fun updateOperatorStatus(
@@ -85,6 +98,38 @@ class KtorControlPlaneGateway(
 ) : ControlPlaneGateway {
     private val endpoints = OperationsApiEndpoints(apiBaseUrl)
     private val json = Json { ignoreUnknownKeys = true; explicitNulls = false }
+    // Complete record edits must carry nulls so staff can explicitly clear dates
+    // or numbers. The application-wide nullable-field omission is unsuitable.
+
+    override suspend fun memberships(accessToken: String, operatorId: String, page: Int): OperatorMembershipPage =
+        client.get(endpoints.url("operations/operators/$operatorId/memberships")) {
+            authorize(accessToken)
+            parameter("page", page)
+            parameter("limit", 20)
+        }.decode()
+
+    override suspend fun enrollMember(accessToken: String, operatorId: String, key: String, request: OperatorMembershipCreateRequest): OperatorMembershipRecord =
+        client.post(endpoints.url("operations/operators/$operatorId/memberships")) {
+            authorize(accessToken)
+            header("Idempotency-Key", key)
+            contentType(ContentType.Application.Json)
+            setBody(operatorMembershipWireJson.encodeToString(request))
+        }.decode()
+
+    override suspend fun updateMember(accessToken: String, operatorId: String, memberId: String, key: String, request: OperatorMembershipUpdateRequest): OperatorMembershipRecord =
+        client.patch(endpoints.url("operations/operators/$operatorId/memberships/$memberId")) {
+            authorize(accessToken)
+            header("Idempotency-Key", key)
+            contentType(ContentType.Application.Json)
+            setBody(operatorMembershipWireJson.encodeToString(request))
+        }.decode()
+
+    override suspend fun updateMembershipPolicy(accessToken: String, operatorId: String, request: OperatorMembershipPolicyRequest): OperatorRecord =
+        client.patch(endpoints.url("operations/operators/$operatorId")) {
+            authorize(accessToken)
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }.decode()
 
     override suspend fun createCity(accessToken: String, request: CityCreateRequest): CityRecord =
         client.post(endpoints.url("operations/cities")) {

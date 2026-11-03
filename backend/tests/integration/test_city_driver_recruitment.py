@@ -10,7 +10,8 @@ from uuid import UUID, uuid4
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import text
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncSessionTransaction, async_sessionmaker, create_async_engine
+from s3_document_fixtures import SyntheticS3Objects
 
 from taximobile_api.core.config import Settings
 from taximobile_api.domains.administration.bootstrap import bootstrap_initial_platform_grant
@@ -18,7 +19,13 @@ from taximobile_api.domains.auth.bootstrap import bootstrap_initial_administrato
 from taximobile_api.domains.analytics.service import refresh_operational_analytics
 from taximobile_api.domains.markets.constants import LEGACY_CITY_ID
 from taximobile_api.main import create_app
-from taximobile_api.integrations.driver_documents import InMemoryDriverDocumentStore
+from taximobile_api.integrations.driver_documents import (
+    EncryptedFilesystemDriverDocumentStore,
+    InMemoryDriverDocumentStore,
+    ProtectedDriverDocumentStore,
+)
+from taximobile_api.integrations.document_storage_config import S3DocumentStorageSettings
+from taximobile_api.integrations.s3_driver_documents import S3DriverDocumentStore
 from taximobile_api.workers.driver_document_retention import (
     DriverDocumentRetentionProcessor,
 )
@@ -143,7 +150,7 @@ async def refresh_and_reconcile_analytics(settings: Settings) -> tuple[int, int,
 
 async def process_and_verify_document_erasure(
     settings: Settings,
-    store: InMemoryDriverDocumentStore,
+    store: ProtectedDriverDocumentStore,
     document_id: str,
 ) -> tuple[int, int, int]:
     engine = create_async_engine(settings.database_url, pool_pre_ping=True)
@@ -762,14 +769,25 @@ def test_scoped_reviewer_can_verify_only_a_vehicle_selected_in_the_application()
         assert reverified["verification_status"] == "VERIFIED"
 
 
-def test_protected_document_upload_review_replacement_and_deletion() -> None:
+@pytest.mark.parametrize("store_kind", ["memory", "filesystem", "synthetic_s3"])
+@pytest.mark.parametrize("lose_commit_ack", [False, True])
+def test_protected_document_upload_review_replacement_and_deletion(tmp_path, monkeypatch, store_kind, lose_commit_ack) -> None:
     settings = integration_settings()
     asyncio.run(seed_platform_administrator(settings))
     suffix = uuid4().hex
     city_id = asyncio.run(seed_recruiting_test_city(settings, suffix))
-    store = InMemoryDriverDocumentStore(CleanDocumentScanner(), max_bytes=1024)
+    store = (EncryptedFilesystemDriverDocumentStore(tmp_path, bytes(range(32)), CleanDocumentScanner(), max_bytes=1024)
+             if store_kind == "filesystem" else InMemoryDriverDocumentStore(CleanDocumentScanner(), max_bytes=1024))
+    objects = None
+    if store_kind == "synthetic_s3":
+        objects = SyntheticS3Objects()
+        store = S3DriverDocumentStore(
+            S3DocumentStorageSettings("https://s3.example.test", "synthetic-document-bucket",
+                "synthetic-document-access", "synthetic-document-secret-only"),
+            bytes(range(32)), CleanDocumentScanner(), max_bytes=1024, client=objects,
+        )
 
-    with TestClient(create_app(settings=settings, driver_document_store=store)) as client:
+    with TestClient(create_app(settings=settings, driver_document_store=store), raise_server_exceptions=False) as client:
         operations_headers = operations_login(client)
         requirement = expect(
             client.post(
@@ -867,8 +885,44 @@ def test_protected_document_upload_review_replacement_and_deletion() -> None:
         )
         assert hidden.status_code == 404
 
-        uploaded = expect(
-            client.post(
+        if store_kind == "filesystem":
+            def unavailable_publish(_source, _target):
+                raise OSError("private-storage-fixture-path")
+            with monkeypatch.context() as fault:
+                fault.setattr("taximobile_api.integrations.driver_documents.os.replace", unavailable_publish)
+                unavailable = client.post(
+                    f"/api/v1/drivers/me/city-applications/{application_id}/documents",
+                    headers=applicant_headers,
+                    data={"requirement_item_id": requirement_item_id, "expected_application_version": 1},
+                    files={"file": ("identity.pdf", DOCUMENT_PDF, "application/pdf")},
+                )
+            assert unavailable.status_code == 503
+            assert "private-storage-fixture" not in unavailable.text
+            unchanged = expect(client.get(f"/api/v1/drivers/me/city-applications/{application_id}", headers=applicant_headers), 200)
+            assert unchanged["optimistic_version"] == 1 and unchanged["documents"] == []
+            assert list(tmp_path.rglob("*.bin")) == []
+            assert list(tmp_path.rglob(".upload-*")) == []
+
+        from taximobile_api.domains.driver_applications import router as document_router
+        original_attach = document_router.attach_clean_document
+        original_exit = AsyncSessionTransaction.__aexit__
+
+        async def mark_activation(session, *args, **kwargs):
+            result = await original_attach(session, *args, **kwargs)
+            session.info["synthetic_document_commit_ack_loss"] = True
+            return result
+
+        async def lose_ack_after_actual_commit(transaction, *args):
+            result = await original_exit(transaction, *args)
+            if transaction.session.info.pop("synthetic_document_commit_ack_loss", False):
+                raise RuntimeError("synthetic private commit acknowledgement lost")
+            return result
+
+        with monkeypatch.context() as patch:
+            if lose_commit_ack:
+                patch.setattr(document_router, "attach_clean_document", mark_activation)
+                patch.setattr(AsyncSessionTransaction, "__aexit__", lose_ack_after_actual_commit)
+            upload_response = client.post(
                 f"/api/v1/drivers/me/city-applications/{application_id}/documents",
                 headers=applicant_headers,
                 data={
@@ -876,13 +930,23 @@ def test_protected_document_upload_review_replacement_and_deletion() -> None:
                     "expected_application_version": 1,
                 },
                 files={"file": ("identity.pdf", DOCUMENT_PDF, "application/pdf")},
-            ),
-            201,
-        )
+            )
+        if lose_commit_ack:
+            assert upload_response.status_code == 500
+            assert "synthetic private" not in upload_response.text
+            uploaded = expect(client.get(f"/api/v1/drivers/me/city-applications/{application_id}",
+                                         headers=applicant_headers), 200)
+        else:
+            uploaded = expect(upload_response, 201)
         first_document_id = uploaded["documents"][0]["id"]
         assert uploaded["optimistic_version"] == 2
         assert uploaded["complete"] is True
         assert uploaded["documents"][0]["scan_status"] == "CLEAN"
+        if store_kind == "filesystem":
+            payloads = [path.read_bytes() for path in tmp_path.rglob("*.bin")]
+            assert len(payloads) == 1 and all(DOCUMENT_PDF not in value for value in payloads)
+        if objects is not None:
+            assert len(objects.objects) == 1 and all(DOCUMENT_PDF not in value for value in objects.objects.values())
 
         download = client.get(
             f"/api/v1/operations/driver-applications/{application_id}/documents/"
@@ -930,13 +994,19 @@ def test_protected_document_upload_review_replacement_and_deletion() -> None:
         assert deleted["complete"] is False
         assert deleted["documents"] == []
 
-    processed, document_count, audit_count = asyncio.run(
-        process_and_verify_document_erasure(
-            settings,
-            store,
-            replacement_document_id,
+        processed, document_count, audit_count = asyncio.run(
+            process_and_verify_document_erasure(
+                settings,
+                store,
+                replacement_document_id,
+            )
         )
-    )
-    assert processed >= 1
-    assert document_count == 0
-    assert audit_count == 1
+        assert processed >= 1
+        assert document_count == 0
+        assert audit_count == 1
+        if objects is not None:
+            assert objects.objects == {} and not objects.closed
+    if store_kind == "filesystem":
+        assert list(tmp_path.rglob("*.bin")) == []
+    if objects is not None:
+        assert objects.closed

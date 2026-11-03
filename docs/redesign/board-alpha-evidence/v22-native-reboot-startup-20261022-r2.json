@@ -1,0 +1,35 @@
+{
+  "candidate": "candidate-native-v22.json",
+  "started_utc": "2026-10-22T16:30:54.671238+00:00",
+  "passed": true,
+  "roles": [
+    {
+      "role": "driver",
+      "serial": "emulator-5556",
+      "avd": "taximobile-board-api35-driver",
+      "apk_sha256": "53378d102e320aec30ffb5016ca11874b982ba8a3c56a01ac932053f63dc29f0",
+      "pid": "1379",
+      "font_scale": "1.0",
+      "account_toolbar_visible": true,
+      "screenshot": {
+        "path": "v22-native-reboot-r2-driver-startup.png",
+        "sha256": "28c9bf1a0698fc0ca4ef15fd2a15606dffb1541da8bf80599a0d6199f1c723e1"
+      }
+    },
+    {
+      "role": "passenger",
+      "serial": "emulator-5554",
+      "avd": "taximobile-board-aosp31-passenger",
+      "apk_sha256": "702b01a86a38e93bb81ca7a9cbd263c58d630b5f06cc126fceecd3ae6570e773",
+      "pid": "1838",
+      "font_scale": "1.0",
+      "account_toolbar_visible": true,
+      "screenshot": {
+        "path": "v22-native-reboot-r2-passenger-startup.png",
+        "sha256": "ebf6b65bcb1b6dcfb25fd604ce4526f23f80f7913dd13a79f465ac41cfdc452f"
+      }
+    }
+  ],
+  "scope": "Owned saved emulator fixtures only. Exact installed identity and normal authenticated startup, no installation, wipe, fresh sign-in or claim of controlled expiry duration.",
+  "finished_utc": "2026-10-22T16:33:39.347861+00:00"
+}

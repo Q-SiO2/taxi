@@ -1,0 +1,89 @@
+{
+  "observed_utc": "2026-10-23T23:48:23.290Z",
+  "commit": "90704d136ca32ad7212243208fac92c606e1764d",
+  "run_id": 40041253043,
+  "run_number": 228,
+  "overall_pass": false,
+  "jobs": [
+    {
+      "id": 120712605083,
+      "name": "documentation-and-provenance",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120712605318,
+      "name": "mobile",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 120712605398,
+      "name": "backend",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 120712605475,
+      "name": "gradle-dependency-submission",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120712605497,
+      "name": "web",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 120712605508,
+      "name": "gradle-wrapper-integrity",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120712605644,
+      "name": "ios-shared",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 120713256794,
+      "name": "dependency-review",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "backend_verified_steps": [
+    {
+      "name": "Run python -m pip install --require-hashes --requirement requirements-dev.lock --requirement requirements-linux.lock",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run python -m pip install --no-deps .",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run python -m pip_audit --no-deps --requirement requirements.lock",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run python -m pip_audit --no-deps --requirement requirements-dev.lock --requirement requirements-linux.lock",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run alembic upgrade head",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Execute bounded T2 simulated-persona baseline",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ]
+}

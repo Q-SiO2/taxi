@@ -1,0 +1,112 @@
+{
+  "candidate": "candidate-native-v19.json",
+  "started_utc": "2026-10-21T18:19:47.126299+00:00",
+  "passed": false,
+  "scope": "Actual owned driver history detail, fresh feedback read and foreground catch-up; no consequential input",
+  "screenshots": [],
+  "checks": [],
+  "before": {
+    "rides": [
+      {
+        "id": "46f115c7-cc34-4161-a3a3-238910b494c9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "8145b32e-4549-4183-bce5-60d3936a4de4",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "93df2c70-fd2b-4e97-8df3-eee368699bea",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d8daeaaa-fbe9-4614-af7e-45b896d30ecb",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "733abbcf-5d1b-4ff2-b7f3-3563052cbd25",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "c55e696d-2bae-4640-8801-f50d2c20a42b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "98a253df-de13-4029-9daa-e538a520997d",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "59576371-85a9-4732-a100-12f7295f0c0a",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d8a67153-d7e5-4d96-8df0-be6ddb329d37",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e8948a59-659f-4d70-b756-eaafd9cc1fa1",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "ee13caaa-3461-418d-b0b4-f32eab7dd516",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "a0ba8798-8536-4420-bde2-12aa9111b817",
+        "status": "COMPLETED"
+      }
+    ],
+    "tickets": [
+      {
+        "id": "1f7c26be-edb3-4b05-bff1-7f4bd2bdaf51",
+        "city_id": "10000000-0000-4000-8000-000000000003",
+        "category": "RIDE_PROBLEM",
+        "subject": "Example driver support request",
+        "description": "Synthetic ticket for local UX review.",
+        "ride_id": "a0ba8798-8536-4420-bde2-12aa9111b817",
+        "status": "OPEN",
+        "latest_public_message": null,
+        "latest_public_message_at": null,
+        "resolved_at": null,
+        "closed_at": null,
+        "created_at": "2026-10-12T11:46:19.121262Z",
+        "updated_at": "2026-10-15T11:46:19.217130Z"
+      }
+    ]
+  },
+  "failure_type": "RuntimeError",
+  "failure_detail": "Visible native history state was not reached",
+  "finished_utc": "2026-10-21T18:21:07.142312+00:00"
+}

@@ -1,0 +1,15 @@
+{
+  "recorded_utc": "2026-10-24T14:23:32.853510+00:00",
+  "parent": "3698f60334721d3289d616bb598ffee36cb81b24",
+  "scope": "API test-double correction after CI 230; production implementation and all dependency/mobile/web compilation inputs unchanged",
+  "system_api_tests": {
+    "tests": 44,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "junit_sha256": "e367954868c56dbf48e4d351e98aa2fe0834a0a434c1be1e08a0c73bf978d8f7",
+  "test_source_sha256": "67e1395d696cfe477a75e5aa395c1b517c2d5efe991bcb4dba8235b7492d0ea7",
+  "fresh_exact_source_ci_required": true,
+  "hosted_accepted": false
+}

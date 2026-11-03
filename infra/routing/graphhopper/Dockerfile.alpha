@@ -1,0 +1,25 @@
+FROM eclipse-temurin:17-jre-jammy@sha256:1e38389ecd9e5c444e40d4385be4a4a5f56a836a38a6e41c099810c32ec1c595 AS prepare
+
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends ca-certificates curl \
+    && mkdir -p /opt/graphhopper /data \
+    && curl --fail --location --proto '=https' --proto-redir '=https' --tlsv1.2 \
+        --output /opt/graphhopper/graphhopper-web.jar \
+        https://repo1.maven.org/maven2/com/graphhopper/graphhopper-web/11.0/graphhopper-web-11.0.jar \
+    && echo 'b59c024afe172ec6ec85b6327006c3138ec58c7d0bcd26253d0e42853f613def  /opt/graphhopper/graphhopper-web.jar' \
+        | sha256sum --check --strict
+COPY config.alpha.yml /opt/graphhopper/config.yml
+COPY casablanca-alpha.osm.pbf /data/casablanca-alpha.osm.pbf
+WORKDIR /opt/graphhopper
+RUN echo 'a9a25013e32f71ccb671b1d50e0a8d8b422a86c8baf81781635a44ce73ef006b  /data/casablanca-alpha.osm.pbf' \
+        | sha256sum --check --strict \
+    && java -Xms64m -Xmx512m -jar graphhopper-web.jar import config.yml
+
+FROM eclipse-temurin:17-jre-jammy@sha256:1e38389ecd9e5c444e40d4385be4a4a5f56a836a38a6e41c099810c32ec1c595
+COPY --from=prepare --chown=10001:10001 /opt/graphhopper /opt/graphhopper
+COPY --from=prepare --chown=10001:10001 /data /data
+USER 10001:10001
+WORKDIR /opt/graphhopper
+EXPOSE 8002
+# Import is baked into the immutable image; no second billable persistent volume.
+ENTRYPOINT ["java", "-Xms64m", "-Xmx256m", "-XX:ActiveProcessorCount=1", "-jar", "graphhopper-web.jar", "server", "config.yml"]

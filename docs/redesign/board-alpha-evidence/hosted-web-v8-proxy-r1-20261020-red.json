@@ -1,0 +1,16 @@
+{
+  "verified_utc": "2026-10-20T18:54:09.562646+00:00",
+  "web_deployment": "ceee310c-e957-49ad-945d-b9f2d292eb61",
+  "package_manifest_sha256": "c102804385af05a5c1414b7dc36792d729cdc36b7dff736aa6812193c94af61a",
+  "scope": "Anonymous HTTP boundaries, applicant rewrite and every exact public asset; no authenticated journey inferred",
+  "passed": false,
+  "checks": [
+    {
+      "path": "/apply",
+      "status": 302,
+      "location": "http://alpha-web-staging.up.railway.app:8080/apply/",
+      "expected": "302 with relative /apply/ Location; retain browser HTTPS origin"
+    }
+  ],
+  "check_count": 1
+}

@@ -1,0 +1,15 @@
+{
+  "recorded_utc": "2026-10-25T15:05:35.083245+00:00",
+  "head": "9e94fda14f8b18e26e26cebf3f8faad80bbdf96a",
+  "tree": "c8f6b65a3b692d78f94b1cba92a24770e74eaf93",
+  "parent": "1e30102c5e6d0c863e02c37bcf48cb5f4488a8ad",
+  "draft_pull_request": "https://github.com/Q-SiO2/taxi/pull/74",
+  "ci_run": 40205185906,
+  "ci_number": 236,
+  "ci_status": "PENDING",
+  "candidate_clean": true,
+  "original_root_head_index_preserved": true,
+  "mobile_web_inputs_preserved": 371,
+  "hosting_or_bucket_mutations_performed": false,
+  "real_world_release_accepted": false
+}

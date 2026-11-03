@@ -1,5 +1,6 @@
 package org.example.taximobile.operations.ui
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -50,6 +51,8 @@ internal fun SecurityIncidentScreen(
     state: OperationsUiState,
     coordinator: OperationsCoordinator,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     val workspace = state.snapshot?.securityIncidents
     val authorized = state.session?.hasPermission(MANAGE_SECURITY_INCIDENTS) == true
 
@@ -60,14 +63,14 @@ internal fun SecurityIncidentScreen(
         )
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = TaxiColors.Warning100,
-            shape = RoundedCornerShape(TaxiRadii.Md),
-            border = BorderStroke(1.dp, TaxiColors.Warning600),
+            color = taxiColors.Warning100,
+            shape = RoundedCornerShape(taxiRadii.Md),
+            border = BorderStroke(1.dp, taxiColors.Warning600),
         ) {
             Text(
                 "Never paste passwords, tokens, provider credentials, raw callback bodies, or unnecessary participant identity here. Commands are not replayed automatically after MFA or conflicts.",
                 modifier = Modifier.padding(TaxiSpacing.Md),
-                color = TaxiColors.Ink700,
+                color = taxiColors.Ink700,
                 style = MaterialTheme.typography.bodySmall,
             )
         }
@@ -96,6 +99,7 @@ private fun CreateSecurityIncidentPanel(
     state: OperationsUiState,
     coordinator: OperationsCoordinator,
 ) {
+    val taxiColors = TaxiTheme.colors
     var severity by remember { mutableStateOf(SecurityIncidentSeverity.SEV2) }
     var category by remember { mutableStateOf(SecurityIncidentCategory.ACCOUNT_COMPROMISE) }
     var summary by remember { mutableStateOf("") }
@@ -166,8 +170,9 @@ private fun CreateSecurityIncidentPanel(
             singleLine = true,
             enabled = !state.interactionLocked,
         )
-        inputError?.let { Text(it, color = TaxiColors.Warning600) }
+        inputError?.let { Text(it, color = taxiColors.Warning600) }
         Button(
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
             onClick = {
                 val submitted = confirmation
                 confirmation = ""
@@ -189,6 +194,7 @@ private fun CreateSecurityIncidentPanel(
 
 @Composable
 private fun IncidentQueue(state: OperationsUiState, coordinator: OperationsCoordinator) {
+    val taxiColors = TaxiTheme.colors
     val page = state.snapshot?.securityIncidents?.incidents ?: return
     SectionHeading("Incident queue", "Open and closed records in the selected market scope.")
     if (page.items.isEmpty()) {
@@ -207,15 +213,16 @@ private fun IncidentQueue(state: OperationsUiState, coordinator: OperationsCoord
                             StatusBadge(incident.severity)
                             StatusBadge(incident.status)
                         }
-                        Text(incident.reference, fontWeight = FontWeight.Bold, color = TaxiColors.Navy900)
-                        Text(incident.summary, color = TaxiColors.Ink700, maxLines = 2)
+                        Text(incident.reference, fontWeight = FontWeight.Bold, color = taxiColors.Navy900)
+                        Text(incident.summary, color = taxiColors.Ink700, maxLines = 2)
                         Text(
                             "Opened ${compactTimestamp(incident.openedAt)} · containment ${compactTimestamp(incident.containmentDueAt)}",
                             style = MaterialTheme.typography.bodySmall,
-                            color = TaxiColors.Ink500,
+                            color = taxiColors.Ink500,
                         )
                     }
                     OutlinedButton(
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
                         onClick = { coordinator.selectSecurityIncident(incident.id) },
                         enabled = !state.interactionLocked,
                     ) { Text(if (state.selectedSecurityIncident?.id == incident.id) "Selected" else "Review") }
@@ -228,13 +235,14 @@ private fun IncidentQueue(state: OperationsUiState, coordinator: OperationsCoord
 
 @Composable
 private fun IncidentDetail(state: OperationsUiState, incident: SecurityIncidentRecord) {
+    val taxiColors = TaxiTheme.colors
     SecurityIncidentPanel(incident.reference, "Authoritative incident state · version ${incident.optimisticVersion}") {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
             StatusBadge(incident.severity)
             StatusBadge(incident.status)
             StatusBadge(incident.category)
         }
-        Text(incident.summary, color = TaxiColors.Ink900)
+        Text(incident.summary, color = taxiColors.Ink900)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Xl)) {
             KeyValue("Lead", shortId(incident.leadUserId))
             KeyValue("Detected", compactTimestamp(incident.detectedAt))
@@ -251,7 +259,7 @@ private fun IncidentDetail(state: OperationsUiState, incident: SecurityIncidentR
             }
         }
         if (state.securityIncidentTimeline == null) {
-            Text("Timeline unavailable; refresh before acting.", color = TaxiColors.Warning600)
+            Text("Timeline unavailable; refresh before acting.", color = taxiColors.Warning600)
         }
     }
 }
@@ -262,6 +270,7 @@ private fun IncidentResponsibilitiesPanel(
     coordinator: OperationsCoordinator,
     incident: SecurityIncidentRecord,
 ) {
+    val taxiColors = TaxiTheme.colors
     val page = state.securityIncidentResponsibilities
     var responsibility by remember(incident.id) {
         mutableStateOf(SecurityIncidentResponsibility.SECURITY_RESPONSE_LEAD)
@@ -292,11 +301,11 @@ private fun IncidentResponsibilitiesPanel(
         when {
             page == null -> Text(
                 "Responsibility history unavailable; refresh before assigning.",
-                color = TaxiColors.Warning600,
+                color = taxiColors.Warning600,
             )
             page.items.isEmpty() -> Text(
                 "No responsibility assignment was returned. Stop and investigate the incident record.",
-                color = TaxiColors.Warning600,
+                color = taxiColors.Warning600,
             )
             else -> {
                 page.items.filter { it.releasedAt == null }.forEach { assignment ->
@@ -309,7 +318,7 @@ private fun IncidentResponsibilitiesPanel(
                             Text("Active · ${shortId(assignment.assignedUserId)}")
                             Text(
                                 "Since ${compactTimestamp(assignment.assignedAt)} · ${assignment.assignmentReference}",
-                                color = TaxiColors.Ink500,
+                                color = taxiColors.Ink500,
                                 style = MaterialTheme.typography.bodySmall,
                             )
                         }
@@ -322,7 +331,7 @@ private fun IncidentResponsibilitiesPanel(
                         Text(
                             "${assignment.responsibility.replace('_', ' ')} · ${shortId(assignment.assignedUserId)} · " +
                                 "${compactTimestamp(assignment.assignedAt)} to ${compactTimestamp(assignment.releasedAt!!)}",
-                            color = TaxiColors.Ink500,
+                            color = taxiColors.Ink500,
                             style = MaterialTheme.typography.bodySmall,
                         )
                     }
@@ -333,7 +342,7 @@ private fun IncidentResponsibilitiesPanel(
         if (incident.postmortemCompletedAt != null) {
             Text(
                 "Postmortem complete: responsibility history is read-only.",
-                color = TaxiColors.Ink500,
+                color = taxiColors.Ink500,
             )
             return@SecurityIncidentPanel
         }
@@ -388,8 +397,9 @@ private fun IncidentResponsibilitiesPanel(
             singleLine = true,
             enabled = !state.interactionLocked,
         )
-        inputError?.let { Text(it, color = TaxiColors.Warning600) }
+        inputError?.let { Text(it, color = taxiColors.Warning600) }
         Button(
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
             onClick = {
                 val submitted = confirmation
                 confirmation = ""
@@ -412,6 +422,8 @@ private fun TimelinePanel(
     coordinator: OperationsCoordinator,
     incident: SecurityIncidentRecord,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     var kind by remember { mutableStateOf(SecurityIncidentTimelineKind.EVIDENCE_LINKED) }
     var summary by remember { mutableStateOf("") }
     var occurredAt by remember { mutableStateOf(Clock.System.now().toString()) }
@@ -430,16 +442,16 @@ private fun TimelinePanel(
         state.securityIncidentTimeline?.items?.forEach { entry ->
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                color = TaxiColors.Surface1,
-                shape = RoundedCornerShape(TaxiRadii.Md),
+                color = taxiColors.Surface1,
+                shape = RoundedCornerShape(taxiRadii.Md),
             ) {
                 Column(Modifier.padding(TaxiSpacing.Md)) {
                     Text("#${entry.sequence} · ${entry.kind.replace('_', ' ')}", fontWeight = FontWeight.Bold)
-                    Text(entry.summary, color = TaxiColors.Ink700)
+                    Text(entry.summary, color = taxiColors.Ink700)
                     Text(
                         "${compactTimestamp(entry.occurredAt)} · ${entry.externalReference ?: entry.auditLogId?.let(::shortId) ?: "Lifecycle event"}",
                         style = MaterialTheme.typography.bodySmall,
-                        color = TaxiColors.Ink500,
+                        color = taxiColors.Ink500,
                     )
                 }
             }
@@ -488,8 +500,9 @@ private fun TimelinePanel(
             singleLine = true,
             enabled = !state.interactionLocked,
         )
-        inputError?.let { Text(it, color = TaxiColors.Warning600) }
+        inputError?.let { Text(it, color = taxiColors.Warning600) }
         Button(
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
             onClick = {
                 val submitted = confirmation
                 confirmation = ""
@@ -513,6 +526,7 @@ private fun IncidentTransitionPanel(
     coordinator: OperationsCoordinator,
     incident: SecurityIncidentRecord,
 ) {
+    val taxiColors = TaxiTheme.colors
     val transition = securityIncidentTransitionFor(incident.status)
     if (transition == null) {
         EmptyState(
@@ -576,8 +590,9 @@ private fun IncidentTransitionPanel(
             singleLine = true,
             enabled = !state.interactionLocked,
         )
-        inputError?.let { Text(it, color = TaxiColors.Warning600) }
+        inputError?.let { Text(it, color = taxiColors.Warning600) }
         Button(
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
             onClick = {
                 val submitted = confirmation
                 confirmation = ""
@@ -600,6 +615,7 @@ private fun IncidentPostmortemPanel(
     coordinator: OperationsCoordinator,
     incident: SecurityIncidentRecord,
 ) {
+    val taxiColors = TaxiTheme.colors
     if (incident.status != "CLOSED") return
     if (incident.postmortemCompletedAt != null) {
         SecurityIncidentPanel(
@@ -689,8 +705,9 @@ private fun IncidentPostmortemPanel(
             singleLine = true,
             enabled = !state.interactionLocked,
         )
-        inputError?.let { Text(it, color = TaxiColors.Warning600) }
+        inputError?.let { Text(it, color = taxiColors.Warning600) }
         Button(
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
             onClick = {
                 val submitted = confirmation
                 confirmation = ""
@@ -747,18 +764,20 @@ private fun SecurityIncidentPanel(
     detail: String,
     content: @Composable ColumnScope.() -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        color = TaxiColors.Surface0,
-        shape = RoundedCornerShape(TaxiRadii.Lg),
-        border = BorderStroke(1.dp, TaxiColors.StrokeSubtle),
+        color = taxiColors.Surface0,
+        shape = RoundedCornerShape(taxiRadii.Lg),
+        border = BorderStroke(1.dp, taxiColors.StrokeSubtle),
     ) {
         Column(
             Modifier.padding(TaxiSpacing.Lg),
             verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm),
         ) {
             Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-            Text(detail, color = TaxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
+            Text(detail, color = taxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
             content()
         }
     }

@@ -1,0 +1,34 @@
+{
+  "observed_utc": "2026-10-22T10:26:06.816888+00:00",
+  "owner_answer": "Railway is reconnected",
+  "connector_followup": {
+    "attempts_after_owner_answer": 2,
+    "outcome": "UNAUTHORIZED: This app connection requires reauthentication",
+    "fresh_topology_available": false
+  },
+  "cli_followup": {
+    "whoami_authenticated": false,
+    "normal_login_opened": true,
+    "browser_outcome": "Railway login page; no existing authenticated Railway browser session available to this tool",
+    "flow_stopped": true,
+    "new_credential_or_scope_created": false
+  },
+  "provider": {
+    "source": "https://status.railway.com/",
+    "latest_observed_update_utc": "2026-10-22T10:15:00Z",
+    "trial_builds_available": false
+  },
+  "security_disclosure": {
+    "source": "https://blog.railway.com/p/security-disclosure-wednesday-october-21st",
+    "recommendation": "Rotate stored environment secrets and review service logs",
+    "taximobile_specific_exposure_established": false,
+    "rotation_performed": false,
+    "next_packet": "Inventory existing staging bindings privately after provider authentication; coordinate dependency credentials/signing keys and service rollout when Trial resumes; verify and re-establish synthetic sessions. Do not strand consumers while deployment unavailable."
+  },
+  "constraints": [
+    "No duplicate deployment",
+    "No upgrade or new project/volume",
+    "Preserved volume retained",
+    "Continue independent native implementation/runtime work"
+  ]
+}

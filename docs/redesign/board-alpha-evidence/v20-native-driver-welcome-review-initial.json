@@ -1,0 +1,10 @@
+{
+  "candidate": "candidate-native-v20.json",
+  "role": "driver",
+  "passed": false,
+  "recorded_utc": "2026-10-22T10:23:24.653064+00:00",
+  "checks": [],
+  "failure": "Observer blocked by actual API35 system dialog: Messages is not responding, covering TaxiMobile welcome. Tool interruption did not execute Python finally, so this diagnostic preserves the attempt explicitly. No successful style checks claimed.",
+  "diagnostic": "v20-driver-messages-anr-20261022.png",
+  "recovery": "Stopped observer; dismissed only the observed system Close app control. No app-data wipe, sign-in or business command. New unique observer attempt follows."
+}

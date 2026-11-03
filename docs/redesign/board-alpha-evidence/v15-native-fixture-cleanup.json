@@ -1,0 +1,17 @@
+{
+  "method": "Normal emu kill only after completed native verification; no data wipe or snapshot acceptance claim; physical device untouched",
+  "devices": [
+    {
+      "role": "passenger",
+      "owned_avd": "taximobile-board-aosp31-passenger",
+      "font_scale": "1.0",
+      "configuration": "config: mcc310-mnc260-en-rUS,fr-rFR,ar-rMA-ldltr-sw360dp-w360dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x720-v31"
+    },
+    {
+      "role": "driver",
+      "owned_avd": "taximobile-board-api35-driver",
+      "font_scale": "1.0",
+      "configuration": "config: mcc310-mnc260-en-rUS-ldltr-sw360dp-w360dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x720-v35"
+    }
+  ]
+}

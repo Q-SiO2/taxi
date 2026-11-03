@@ -364,6 +364,18 @@ def parser() -> argparse.ArgumentParser:
     return command
 
 
+async def _run_cli_acceptance(
+    *, provider_name: str, base_url: str, timeout_seconds: float
+) -> RoutingAcceptanceReport:
+    # HTTP connection transports belong to the loop that performed the calls.
+    # Close them before that same loop exits, including failed/cancelled runs.
+    provider = create_routing_provider(provider_name, base_url, timeout_seconds=timeout_seconds)
+    try:
+        return await run_routing_acceptance(provider_name=provider_name, provider=provider)
+    finally:
+        await provider.aclose()
+
+
 def main(argv: list[str] | None = None) -> int:
     arguments = parser().parse_args(argv)
     if not 0.1 <= arguments.timeout_seconds <= 60:
@@ -375,17 +387,13 @@ def main(argv: list[str] | None = None) -> int:
         print(str(error), file=sys.stderr)
         return 2
 
-    provider = create_routing_provider(
-        arguments.provider,
-        arguments.base_url.rstrip("/"),
-        timeout_seconds=arguments.timeout_seconds,
-    )
-    try:
-        report = asyncio.run(
-            run_routing_acceptance(provider_name=arguments.provider, provider=provider)
+    report = asyncio.run(
+        _run_cli_acceptance(
+            provider_name=arguments.provider,
+            base_url=arguments.base_url.rstrip("/"),
+            timeout_seconds=arguments.timeout_seconds,
         )
-    finally:
-        asyncio.run(provider.aclose())
+    )
     print(json.dumps(report.as_dict(), sort_keys=True))
     return 0 if report.passed else 1
 

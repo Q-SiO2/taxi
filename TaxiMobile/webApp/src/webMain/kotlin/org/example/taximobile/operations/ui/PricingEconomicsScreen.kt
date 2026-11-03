@@ -1,5 +1,6 @@
 package org.example.taximobile.operations.ui
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -100,12 +101,14 @@ private fun PricingScopeBanner(
     currency: String,
     assignmentReady: Boolean,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     Surface(
-        color = if (assignmentReady) TaxiColors.Info100 else TaxiColors.Warning100,
-        shape = RoundedCornerShape(TaxiRadii.Md),
+        color = if (assignmentReady) taxiColors.Info100 else taxiColors.Warning100,
+        shape = RoundedCornerShape(taxiRadii.Md),
         border = BorderStroke(
             1.dp,
-            (if (assignmentReady) TaxiColors.Info600 else TaxiColors.Warning600).copy(alpha = 0.25f),
+            (if (assignmentReady) taxiColors.Info600 else taxiColors.Warning600).copy(alpha = 0.25f),
         ),
     ) {
         Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Md), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
@@ -116,7 +119,7 @@ private fun PricingScopeBanner(
                 } else {
                     "No active on-demand assignment is visible in this snapshot. Drafts may be possible, but activation will fail closed."
                 },
-                color = if (assignmentReady) TaxiColors.Info600 else TaxiColors.Warning600,
+                color = if (assignmentReady) taxiColors.Info600 else taxiColors.Warning600,
                 style = MaterialTheme.typography.bodySmall,
             )
         }
@@ -349,23 +352,24 @@ private fun PolicyCard(
     onEdit: () -> Unit,
     onTransition: (String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     DataCard {
         Column(Modifier.fillMaxWidth().padding(TaxiSpacing.Lg), verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Column {
                     Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    Text("Version $version · backend revision $revision", color = TaxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
+                    Text("Version $version · backend revision $revision", color = taxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
                 }
                 StatusBadge(status)
             }
-            details.forEach { Text(it, color = TaxiColors.Ink700, style = MaterialTheme.typography.bodyMedium) }
-            Text("Effective ${compactTimestamp(effectiveFrom)} to ${compactTimestamp(effectiveUntil)}", color = TaxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
+            details.forEach { Text(it, color = taxiColors.Ink700, style = MaterialTheme.typography.bodyMedium) }
+            Text("Effective ${compactTimestamp(effectiveFrom)} to ${compactTimestamp(effectiveUntil)}", color = taxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
             Row(horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
                 if (status == "DRAFT") {
-                    OutlinedButton(onClick = onEdit, enabled = !locked) { Text("Edit draft") }
+                    OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = onEdit, enabled = !locked) { Text("Edit draft") }
                 }
                 pricingPolicyTargetFor(status)?.let { target ->
-                    Button(onClick = { onTransition(target) }, enabled = !locked) {
+                    Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onTransition(target) }, enabled = !locked) {
                         Text(if (target == "IN_REVIEW") "Submit for review" else "Review activation")
                     }
                 }
@@ -406,7 +410,7 @@ private fun PolicyTransitionDialog(
             }
         },
         confirmButton = {
-            Button(onClick = { onConfirm(reason.trim()) }, enabled = reason.trim().length in 3..240 && !busy) {
+            Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onConfirm(reason.trim()) }, enabled = reason.trim().length in 3..240 && !busy) {
                 Text(if (busy) "Waiting for backend…" else if (target == "ACTIVE") "Activate" else "Submit")
             }
         },

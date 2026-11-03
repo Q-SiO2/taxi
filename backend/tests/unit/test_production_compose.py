@@ -27,6 +27,20 @@ def test_committed_production_manifest_preserves_security_and_readiness_contract
 
 
 @pytest.mark.parametrize("service", ["migrate", "api", "worker"])
+@pytest.mark.parametrize("mode", [None, "disable", "require", "verify-ca"])
+def test_every_database_consumer_requires_full_tls_identity(service, mode):
+    document = deepcopy(production_manifest())
+    environment = document["services"][service]["environment"]
+    if mode is None:
+        # Keep the closed migrator key set intact to test the transport invariant.
+        environment["TAXIMOBILE_DATABASE_TLS_MODE"] = None
+    else:
+        environment["TAXIMOBILE_DATABASE_TLS_MODE"] = mode
+    with pytest.raises(ValueError, match="TLS verify-full"):
+        validator.validate_document(document)
+
+
+@pytest.mark.parametrize("service", ["migrate", "api", "worker"])
 def test_application_roles_cannot_regain_root_identity(service: str) -> None:
     document = deepcopy(production_manifest())
     document["services"][service]["user"] = "0:0"

@@ -1,0 +1,60 @@
+{
+  "verified_utc": "2026-10-19T11:29:41.948204+00:00",
+  "passed": true,
+  "proposal": "scoped-demo-access-proposal-20261018.json",
+  "authorization": "Owner explicitly approved the scoped staging setup, including non-expiring three-account MFA quorum",
+  "quorum": "scoped-demo-quorum-applied-20261019.json",
+  "city_workflow": "scoped-demo-city-grants-applied-20261019-contract-corrected.json",
+  "readback": "scoped-demo-access-readback-20261019.json",
+  "new_city_grants": [
+    {
+      "id": "42607e14-9f31-4d8a-8cc8-5c9682a4df51",
+      "role": "SUPPORT_AGENT",
+      "city_id": "10000000-0000-4000-8000-000000000003",
+      "granted_at": "2026-10-19T11:27:04.877039+00:00",
+      "expires_at": "2026-10-20T11:27:04.447790+00:00"
+    },
+    {
+      "id": "0fd5c37b-6fae-48b1-bf96-8a196217b00a",
+      "role": "SAFETY_RESPONDER",
+      "city_id": "10000000-0000-4000-8000-000000000003",
+      "granted_at": "2026-10-19T11:27:05.519329+00:00",
+      "expires_at": "2026-10-20T11:27:05.066804+00:00"
+    },
+    {
+      "id": "2fa19523-0dc2-48e1-a5ae-a91a9cb2b09d",
+      "role": "PRICING_MANAGER",
+      "city_id": "10000000-0000-4000-8000-000000000003",
+      "granted_at": "2026-10-19T11:27:06.131192+00:00",
+      "expires_at": "2026-10-20T11:27:05.679222+00:00"
+    },
+    {
+      "id": "5c7e7136-76ce-4fe7-ba81-d9854ef5c0bc",
+      "role": "PAYMENT_RECONCILER",
+      "city_id": "10000000-0000-4000-8000-000000000003",
+      "granted_at": "2026-10-19T11:27:06.757332+00:00",
+      "expires_at": "2026-10-20T11:27:06.292368+00:00"
+    }
+  ],
+  "expiry_semantics": "Each expiry was fixed 24 hours from its request immediately before review; actual granted duration is less than 24 hours by under one second. Exact stored timestamps are above.",
+  "browser_mfa_workspace": {
+    "path": "v8-reviewer-mfa-scoped-workspace.jpg",
+    "sha256": "fd06b8a30be2b1e827e6104c2c33a767f9e2d595e84f89a321c60888ee2bba69",
+    "bytes": 67672,
+    "format": "JPEG",
+    "viewport": "1280x720 actual browser"
+  },
+  "initial_helper_attempt": "scoped-demo-city-grants-applied-20261019.json preserved: helper expected wrong authentication-strength label; login succeeded but zero grant requests were sent. Corrected to documented PASSWORD_TOTP_MFA before second attempt.",
+  "controls": [
+    "Normal password/TOTP",
+    "Distinct requester and approver IDs",
+    "Normal protected grant request/review endpoints",
+    "Existing trusted initial bootstrap/enrollment functions only",
+    "No factor replacement, direct grant-table edit or cohort reset"
+  ],
+  "limitations": [
+    "Quorum grants are non-expiring",
+    "Synthetic accounts under one tester do not prove independent human governance",
+    "No production, real-money or pilot acceptance"
+  ]
+}

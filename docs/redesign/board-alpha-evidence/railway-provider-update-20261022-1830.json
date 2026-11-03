@@ -1,0 +1,11 @@
+{
+  "verified_utc": "2026-10-22T18:41:09.697327+00:00",
+  "source": "https://status.railway.com/",
+  "provider_update_utc": "2026-10-22T18:30:00Z",
+  "pro_enterprise_rollouts": "Normal",
+  "hobby_rollouts": "Not yet enabled",
+  "free_trial_rollouts": "Not yet enabled; follow Hobby",
+  "next_announced_update_utc": "2026-10-22T19:15:00Z",
+  "scope": "Fresh unauthenticated HTTPS fetch with no-cache request, public status text parsed. Not a TaxiMobile deployment or account mutation.",
+  "action": "Preserve Trial plan; exact web v9 prepared but not uploaded. Coordinate credential recovery only with viable dependent rollout."
+}

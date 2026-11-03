@@ -1,0 +1,14 @@
+{
+  "utc": "2026-10-15T16:32:26.650643+00:00",
+  "candidate_manifest": "candidate.json",
+  "transport": "Android emulator API35 at 360dp",
+  "physical_device": false,
+  "checks": [
+    "updated passenger APK installed without clearing app data",
+    "secure session restored after emulator restart",
+    "Notepad preference retained",
+    "real Casablanca map loaded",
+    "latest server-confirmed cash receipt restored"
+  ],
+  "repeat_two_role_trip": "pending; second emulator startup instability under host memory pressure"
+}

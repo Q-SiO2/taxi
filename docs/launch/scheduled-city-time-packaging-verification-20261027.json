@@ -1,0 +1,144 @@
+{
+  "recorded_utc": "2026-10-27T12:29:49.546332+00:00",
+  "source_predecessor": "2e9275ad0615a4579cf580803afe3f9a4c76f61e",
+  "source_sha256": {
+    "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/domain/scheduling/ScheduledCityTime.kt": "f99c906172de2b8d60540d9a5f78755679dd91fea8b8995db7fc20461eb4031f",
+    "TaxiMobile/scripts/generate_android_verification_manifest.py": "c8957f8ac3f53cbc576f917929dec73dc3b13a4f0e78c6d73b6f02cad9917d3f",
+    "TaxiMobile/scripts/tests/test_generate_android_verification_manifest.py": "77c2902274c1a13d4fe2bda9eb9fddc62944dc2f91e914dccecac6c8a194f5e0",
+    "TaxiMobile/webApp/karma.config.d/city-time-startup.js": "b93aa6943430c5ab6745ce20fa3ffc4875c32bdd7db08d7ee262df901c97bd97",
+    "TaxiMobile/webApp/src/webTest/resources/city-time-mocha.js": "30ee6c2fc361b3929306bce555550453b7481a9f5b42ec0fd5e181d21092ee10"
+  },
+  "platform": {
+    "jvm": {
+      "totals": {
+        "tests": 189,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suite_count": 15,
+      "archive": "city-time-packaging-jvm-20261027.zip",
+      "sha256": "b18bd8b3cf235d4e4b02081ff600f343011b693a537964f84cf724bcbac19af3"
+    },
+    "android_host": {
+      "totals": {
+        "tests": 363,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suite_count": 67,
+      "archive": "city-time-packaging-android_host-20261027.zip",
+      "sha256": "f2e0da2317a79937e2c3400e24d773183ed482475ca323a3c74a84e41fdbf119"
+    },
+    "js_browser": {
+      "totals": {
+        "tests": 86,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suite_count": 21,
+      "archive": "city-time-packaging-js_browser-20261027.zip",
+      "sha256": "34c6a1de276271c590abfb27e17c50b715e7fc943f3b6d3c7070312dda44bdb0"
+    },
+    "wasm_browser": {
+      "totals": {
+        "tests": 86,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suite_count": 21,
+      "archive": "city-time-packaging-wasm_browser-20261027.zip",
+      "sha256": "aeddd00ae71b8f01b1cbcf41893a6fe6fa008f14e63b4ac0f16b0e9171df8c2e"
+    }
+  },
+  "platform_log_sha256": "a723e2942e602d7f2e9372ef792034f7513c0b8bd241ac4b5dae7682cc85cb4d",
+  "browser_log_sha256": "03802e4c551bef43008e9dab89f2c0eb488cae88e298fa6af6121f4665f41877",
+  "source_tool_suite": {
+    "tests": 121,
+    "failures": 0,
+    "errors": 0,
+    "log_sha256": "de5086186a0991969a61b96ca1577b0c97d6cec500a3c2aefc2e6c5480c954e7"
+  },
+  "scope_probe": {
+    "framework": "actual installed Mocha",
+    "cases_passed": 2,
+    "provider_suite_timeout_ms": 10000,
+    "unrelated_default_timeout_ms": 2000
+  },
+  "browser_cold_lookup_observed_ms": {
+    "js": 1414,
+    "wasm": 204,
+    "performance_accepted": false
+  },
+  "web_release": {
+    "manifest_sha256": "819c2fcbf27d26d6c5c16cd532d119f3270a1b4425f726b07703cf45fab56967",
+    "summary": {
+      "client_build": "1",
+      "client_version": "1.0.0",
+      "excluded_source_map_count": 3,
+      "source_bytes_excluding_maps": 29871289,
+      "source_file_count": 93,
+      "wasm_aliases": {
+        "skiko.wasm": "6e23e5428398b92da386.wasm"
+      }
+    },
+    "raw_js_bytes": 6953397,
+    "raw_wasm_loader_bytes": 543264,
+    "budgets_unchanged": true,
+    "test_hook_shipped": false
+  },
+  "chrome_boot": {
+    "report_sha256": "1582d135ac30d372a11e3f48b83650efcec21f1dbbc0576a8ab42780843c9f8f",
+    "scenarios_passed": 4,
+    "browser_families": [
+      "CHROME"
+    ],
+    "covered_catalog_cases": [],
+    "phase_accepted": false
+  },
+  "existing_android_artifact_reinspection": {
+    "artifact_source_head": "2e9275ad0615a4579cf580803afe3f9a4c76f61e",
+    "report_sha256": "aefff513beac4a42754c0c504169192fe81d9f83c6bc90f7469bec9d735d32b4",
+    "cache_successor_not_present_in_these_binaries": true,
+    "artifacts": [
+      {
+        "role": "passenger",
+        "sha256": "74d0b01d362c5f17a6fe91c12d347badcfe9ecf0a9e22cde81ebbb6bbd57882d",
+        "r8_version": "9.1.56",
+        "compiler_markers": {
+          "desugared_library_configuration": "com.tools.android:desugar_jdk_libs_configuration:2.1.5",
+          "desugared_library_dex_count": 1,
+          "program_marker_count": 1
+        }
+      },
+      {
+        "role": "driver",
+        "sha256": "0d9430b8747890522f0d12a3ce7844bce09cce636776102f89400f284c21d21b",
+        "r8_version": "9.1.56",
+        "compiler_markers": {
+          "desugared_library_configuration": "com.tools.android:desugar_jdk_libs_configuration:2.1.5",
+          "desugared_library_dex_count": 1,
+          "program_marker_count": 1
+        }
+      }
+    ]
+  },
+  "failed_observations": {
+    "wasm_size_baseline_sha256": "9d3b131652938246dc585c3c7110b6f223d90ef8c735d45d43c6e0b24d7b24f0",
+    "l8_negative_baseline": {
+      "tests": 24,
+      "failures": 1,
+      "errors": 1,
+      "log_sha256": "eaedfc5138b4883baa6a95ea30443a67c7f2e2fa0a863a1079f59799946aa05a"
+    },
+    "cold_timeout_log_sha256": "b6c60f72295de9a4b3e5b3a53bbeeec528abff625398cd555b8fdb91f35551b9",
+    "initial_hook_order_log_sha256": "310c3b4b22ce0b1b3c287a87b122b65f086c70f24f8215fdbd427749bbb3e42a"
+  },
+  "root_head_and_index_preserved": true,
+  "overlapping_test_sets_must_not_be_summed": true,
+  "immutable_successor_ci_accepted": false,
+  "physical_signing_store_hosted_provider_operational_pilot_or_public_accepted": false
+}

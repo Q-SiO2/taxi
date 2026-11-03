@@ -1,0 +1,2984 @@
+[
+  {
+    "id": "S00",
+    "name": "Session restore",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "S01",
+    "name": "Compatibility gate",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "S02",
+    "name": "Welcome",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "bounded entry framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "S03",
+    "name": "Sign in",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "S04",
+    "name": "Create account",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "S05",
+    "name": "Account-created acknowledgement",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "S06",
+    "name": "Recovery",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "S07",
+    "name": "Recovery acknowledgement",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "S08",
+    "name": "Session expired / revoked",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "S09",
+    "name": "Connection interruption",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "S10",
+    "name": "Location rationale",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "S11",
+    "name": "Notification rationale",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "S12",
+    "name": "Language / style",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "S13",
+    "name": "Sign-out confirmation",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "S14",
+    "name": "Account security",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "S15",
+    "name": "Password change",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "S16",
+    "name": "Active sessions",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "S17",
+    "name": "Session revocation review",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "S18",
+    "name": "Recovery-code generation",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "S19",
+    "name": "One-time recovery-code custody",
+    "group": "Shared mobile",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R00",
+    "name": "Ride home",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "bounded entry framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R01",
+    "name": "Destination map",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R02",
+    "name": "Pickup map",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R03",
+    "name": "Point confirmation / fallback",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R04",
+    "name": "Optional place lookup",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R05",
+    "name": "Ride review",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R06",
+    "name": "Fare detail",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R07",
+    "name": "Payment method",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R08",
+    "name": "Request pending",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R09",
+    "name": "Matching",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R10",
+    "name": "Unmatched",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R11",
+    "name": "Assigned",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R12",
+    "name": "Driver approaching",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R13",
+    "name": "Driver arrived",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R14",
+    "name": "In ride",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R15",
+    "name": "Cancellation review",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R16",
+    "name": "Cancelled / unavailable journey",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R17",
+    "name": "Completed / cash pending",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R18",
+    "name": "Receipt",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R19",
+    "name": "Manual-transfer instructions",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R20",
+    "name": "Transfer processing / refund detail",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R21",
+    "name": "Rating",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R22",
+    "name": "Trip list",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "bounded entry framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R23",
+    "name": "Trip detail",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R24",
+    "name": "Fixed-route directory",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "bounded entry framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R25",
+    "name": "Fixed-route direction",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R26",
+    "name": "Schedule selection",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R27",
+    "name": "Schedule review",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R28",
+    "name": "Upcoming booking list",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R29",
+    "name": "Booking detail / cancellation",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R30",
+    "name": "Account",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "bounded entry framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R31",
+    "name": "Profile edit",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R32",
+    "name": "Inbox",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "bounded entry framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R33",
+    "name": "Help hub",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "bounded entry framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R34",
+    "name": "Support case creation",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R35",
+    "name": "Own support case / timeline",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R36",
+    "name": "Safety during trip",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R37",
+    "name": "Assigned coordination",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R38",
+    "name": "Recent destination chooser",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R39",
+    "name": "Own safety reports",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R40",
+    "name": "Safety report creation",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R41",
+    "name": "Service-city selector",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "R42",
+    "name": "Development coordinate fallback",
+    "group": "Passenger",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D00",
+    "name": "Onboarding overview",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "bounded entry framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D01",
+    "name": "City / application selection",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D02",
+    "name": "Identity / credentials",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D03",
+    "name": "Document requirements",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D04",
+    "name": "Vehicle application",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D05",
+    "name": "Application review / submit",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D06",
+    "name": "Application status",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D07",
+    "name": "Eligibility restriction",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D10",
+    "name": "Offline work home",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "bounded entry framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D11",
+    "name": "Location / network diagnostic",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D12",
+    "name": "Online waiting",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D13",
+    "name": "Incoming immediate offer",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D14",
+    "name": "Fixed-route / scheduled offer",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D15",
+    "name": "Offer expired / lost / uncertain",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D16",
+    "name": "Assigned / navigate to pickup",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D17",
+    "name": "At pickup",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D18",
+    "name": "In trip",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D19",
+    "name": "Completion review",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D20",
+    "name": "Cash confirmation",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D21",
+    "name": "Pending cash queue",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D22",
+    "name": "Cash review / outcome",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D23",
+    "name": "Earnings",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "bounded entry framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D24",
+    "name": "Earning / trip detail",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D25",
+    "name": "Work history",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "bounded entry framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D26",
+    "name": "Upcoming commitments",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D27",
+    "name": "Commitment detail / handoff",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D28",
+    "name": "Driver account",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "bounded entry framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D29",
+    "name": "Vehicles",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D30",
+    "name": "Vehicle registration / detail",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D31",
+    "name": "Driver inbox",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "bounded entry framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D32",
+    "name": "Driver Help / own case",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "bounded entry framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D33",
+    "name": "Driver safety / coordination",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D34",
+    "name": "Scheduled-offer preferences",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D35",
+    "name": "Cooperative membership",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D36",
+    "name": "Professional credentials",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D37",
+    "name": "Vehicle deactivation review",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D38",
+    "name": "Online city/service choice",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D39",
+    "name": "Driver safety report history",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D40",
+    "name": "Driver safety report creation",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "D41",
+    "name": "Immediate fixed-route offer",
+    "group": "Driver",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "L00",
+    "name": "Auth-method chooser / OTP phone entry",
+    "group": "Deferred capability",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "L01",
+    "name": "OTP verification / resend",
+    "group": "Deferred capability",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "L02",
+    "name": "Saved Home/Work / saved-place editor",
+    "group": "Deferred capability",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "L03",
+    "name": "Service-category chooser",
+    "group": "Deferred capability",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "L04",
+    "name": "Card checkout / wallet / payout",
+    "group": "Deferred capability",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "L05",
+    "name": "Continuous tracking / live trip sharing",
+    "group": "Deferred capability",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "L06",
+    "name": "Contact verification / account export-delete",
+    "group": "Deferred capability",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "L07",
+    "name": "General messaging / masked calls / emergency integration",
+    "group": "Deferred capability",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "L08",
+    "name": "Cooperative governance/voting",
+    "group": "Deferred capability",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "A00",
+    "name": "Welcome",
+    "group": "Applicant",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "bounded entry framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "A01",
+    "name": "Sign in",
+    "group": "Applicant",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "A02",
+    "name": "Registration",
+    "group": "Applicant",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "A03",
+    "name": "City/application list",
+    "group": "Applicant",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "bounded entry framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "A04",
+    "name": "Application overview",
+    "group": "Applicant",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "bounded entry framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "A05",
+    "name": "Identity/credential step",
+    "group": "Applicant",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "A06",
+    "name": "Evidence/document step",
+    "group": "Applicant",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "A07",
+    "name": "Vehicle step",
+    "group": "Applicant",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "A08",
+    "name": "Review/submit",
+    "group": "Applicant",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "A09",
+    "name": "Status/timeline",
+    "group": "Applicant",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "A10",
+    "name": "More information/replacement",
+    "group": "Applicant",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "A11",
+    "name": "Withdrawal review",
+    "group": "Applicant",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "A12",
+    "name": "Account/language/style/sign out",
+    "group": "Applicant",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O00",
+    "name": "Sign in",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O01",
+    "name": "MFA verification",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O02",
+    "name": "Step-up review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O03",
+    "name": "Scope picker",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O04",
+    "name": "Access/session gate",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O05",
+    "name": "Rollout overview",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O06",
+    "name": "Cities",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O07",
+    "name": "City creation",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O08",
+    "name": "Service-area versions",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O09",
+    "name": "Service-area review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O10",
+    "name": "Configuration assembly",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O11",
+    "name": "Configuration review/activation",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O12",
+    "name": "Readiness evidence",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O13",
+    "name": "City lifecycle review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O14",
+    "name": "Operators",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O15",
+    "name": "Operator creation/edit",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O16",
+    "name": "Operator status/assignment review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O17",
+    "name": "Tariffs",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O18",
+    "name": "Tariff editor/review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O19",
+    "name": "Operator fees",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O20",
+    "name": "Fee editor/review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O21",
+    "name": "Scheduling policy",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O22",
+    "name": "Scheduling editor/review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O23",
+    "name": "Fixed-route catalogue",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O24",
+    "name": "Route identity editor",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O25",
+    "name": "Route version/direction/stop editor",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O26",
+    "name": "Route publication/replacement review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O27",
+    "name": "Staff access",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O28",
+    "name": "Grant request",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O29",
+    "name": "Revoke request",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O30",
+    "name": "Independent grant decision",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O31",
+    "name": "Recruitment queue",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O32",
+    "name": "Requirement versions",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O33",
+    "name": "Requirement editor/review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O34",
+    "name": "Application review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O35",
+    "name": "Driver decision review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O36",
+    "name": "Protected-document retrieval",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O37",
+    "name": "Payment overview",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O38",
+    "name": "Recipient list/create",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O39",
+    "name": "Capability list/create",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O40",
+    "name": "Transfer queue/detail",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O41",
+    "name": "Transfer decision review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O42",
+    "name": "Refund recorder/review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O43",
+    "name": "Refund ledger/detail",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O44",
+    "name": "Scheduled exceptions",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O45",
+    "name": "Intelligence overview",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O46",
+    "name": "Aggregate report detail",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O47",
+    "name": "Support/safety queues",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O48",
+    "name": "Case detail/timeline",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O49",
+    "name": "Support triage/transition",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O50",
+    "name": "Safety handoff/transition",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O51",
+    "name": "Overdue alert acknowledgement",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O52",
+    "name": "Retention/legal hold",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O53",
+    "name": "Account security",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O54",
+    "name": "Account-security command review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O55",
+    "name": "Incident queue/create",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O56",
+    "name": "Incident detail/responsibility",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O57",
+    "name": "Incident timeline/event",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O58",
+    "name": "Incident transition/recovery",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O59",
+    "name": "Postmortem",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O60",
+    "name": "Audit",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O61",
+    "name": "Restricted/empty/error detail",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O62",
+    "name": "City driver authorization detail",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O63",
+    "name": "City authorization suspension",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O64",
+    "name": "City authorization revocation",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O65",
+    "name": "City authorization reinstatement",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O66",
+    "name": "City-service assignment creation",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O67",
+    "name": "Service-area boundary editor",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O68",
+    "name": "Recipient lifecycle review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O69",
+    "name": "Payment-capability lifecycle review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O70",
+    "name": "Operations MFA recovery-code mode",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O71",
+    "name": "Safety case detail",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O72",
+    "name": "Retention review detail",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O73",
+    "name": "Legal-hold placement review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O74",
+    "name": "Legal-hold release review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O75",
+    "name": "Overdue alert detail",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O76",
+    "name": "Recipient creation",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O77",
+    "name": "Payment-capability creation",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O78",
+    "name": "Requirement-version lifecycle review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O79",
+    "name": "Tariff lifecycle review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O80",
+    "name": "Fee-policy lifecycle review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O81",
+    "name": "Scheduling-policy lifecycle review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O82",
+    "name": "Route replacement review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O83",
+    "name": "Route retirement review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O84",
+    "name": "Support triage",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O85",
+    "name": "Safety transition review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O86",
+    "name": "Selected city detail",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  },
+  {
+    "id": "O87",
+    "name": "Readiness decision review",
+    "group": "Operations",
+    "styles": [
+      "folded_streets",
+      "street_press",
+      "glazed_machine",
+      "notepad"
+    ],
+    "expressiveContext": "static functional framing",
+    "notepad": "grayscale ruled utility; icons and main workflow retained; no decorative animation",
+    "mainIllustration": false
+  }
+]

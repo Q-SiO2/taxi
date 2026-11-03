@@ -89,8 +89,10 @@ class KtorDriverRecruitmentGateway(
             setBody(
                 UpdateCityApplicationDto(
                     expectedVersion = expectedVersion,
-                    answers = answers.takeIf(List<*>::isNotEmpty)?.map(ApplicationAnswerDraftDto::from),
-                    evidence = evidence.takeIf(List<*>::isNotEmpty)?.map(ApplicationEvidenceDraftDto::from),
+                    // Explicit empty patches permit profile-only saves; omitted changes are rejected.
+                    // Deletion still requires the separate removal item IDs.
+                    answers = answers.map(ApplicationAnswerDraftDto::from),
+                    evidence = evidence.map(ApplicationEvidenceDraftDto::from),
                     removeAnswerItemIds = removeAnswerItemIds,
                     removeEvidenceItemIds = removeEvidenceItemIds,
                 ),

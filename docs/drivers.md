@@ -1,5 +1,23 @@
 # TaxiMobile — Driver System Specification
 
+## Native location acknowledgement — board refinement, 15 October 2026
+
+An automatic foreground location upload must not reload the full driver
+dashboard while holding the client command gate. The backend still accepts or
+rejects the observation using its existing provenance, eligibility and freshness
+rules. After acknowledgement, native presentation updates only that accepted
+coordinate and advisory route guidance on the latest confirmed driver snapshot.
+Availability, offers, trip phase, cash, eligibility and earnings remain exactly
+as last confirmed by their authoritative reads/commands; GPS acknowledgement
+cannot infer or promote them. REST catch-up and live hints continue normally.
+
+Fence the acknowledgement by session lifetime, read the latest projection after
+network IO, and never overwrite a newer trip phase with an older route result.
+Rejection or lost session must not patch the map. A caller without a valid
+current driver projection uses the existing full refresh path. This refinement
+addresses repeated native action locking observed during the board rehearsal;
+its tests and actual repeat result belong in [board-alpha.md](board-alpha.md).
+
 ## Current standing — 2026-09-03
 
 Driver profiles, vehicles, credentials, availability, city applications,
@@ -197,6 +215,19 @@ The backend must contain the authoritative verification state.
 
 Driver documents may contain highly sensitive information.
 
+The [25 October durable upload source](launch/document-s3.md) records hidden
+pending metadata before publication, then attaches confirmed bytes only after
+the final owner/version/lease transaction. Pending uploads are not evidence of
+driver eligibility. Expired leases and repeated bounded orphan sweeps reconcile
+interrupted/late writes. S3 API/worker configuration is source work under the
+owner-selected design; actual private storage, scanner feeds, key recovery and
+participant-document acceptance remain required before hosted ingestion.
+
+Source 9e94fda passes all eight CI 236 jobs and 1,443 backend tests. A separately
+approved [actual S3 protocol probe](launch/document-s3-provider-probe-20261025.json)
+passes with built-in synthetic fixtures and cleanup; it does not provision a
+permanent driver-document service boundary or accept production scanner feeds.
+
 The city-application document capability:
 
 * accepts only bounded PDF, JPEG, and PNG bytes whose declared and detected types match;
@@ -209,6 +240,10 @@ The city-application document capability:
 * soft-deletes transactionally, then physically erases through the retention worker with immutable content-free evidence.
 
 Document URLs should never be guessable public URLs.
+
+The [protected-document packet](launch/document-storage.md) records scanner
+protocol and ciphertext/key recovery checks. It does not accept hosted storage,
+current signature feeds, real participant documents or jurisdictional policy.
 
 ---
 
@@ -401,12 +436,26 @@ processing “Go Online”; client permission state alone is never trusted.
 
 After backend-confirmed online entry, the app maintains freshness through
 foreground-only, already-authorized one-shot observations: 15 seconds while
-available/offered and 10 seconds during an active ride. Offline, paused,
+available/offered and 10 seconds during an active ride. These are minimum idle
+intervals after an automatic submission acknowledgement/recovery
+finish, not permission to run catch-up bursts after a slow command. This leaves
+the single-action gate available for offer/ride controls. Offline, paused,
 backgrounded and disconnected states disarm the scheduler. The automatic path
 never asks for permission; if permission/services are unavailable it warns the
 driver and backs off. Stale server state is ignored by matching even if the UI
 has not yet refreshed. Drivers must keep the app visible during this bounded
 pilot model; no background location permission is requested.
+
+Android driver observations now use a bounded foreground listener to wait for
+one fix acquired after the current request began, rather than reusing the SDK's
+cached current location. Cached, future-monotonic, delayed or inaccurate fixes
+are ignored within the existing 15-second window. The listener is removed on
+the first usable fix, timeout or foreground exit; late callbacks cannot finish
+a replacement request. Ordinary passenger coordinate lookup retains its existing
+recent-location fallback. No background service, permission or history is added.
+The native acquisition timestamp and accuracy still reach the existing server
+checks unchanged in meaning; dispatch freshness and duplicate-time rejection
+are not relaxed. iOS device acquisition remains a separate unverified path.
 
 ---
 
@@ -437,6 +486,17 @@ Location updates should contain:
 * Accuracy where available.
 * Heading where available.
 * Speed where available.
+
+For the Android/iOS foreground alpha path, the client now carries the native
+acquisition timestamp and horizontal accuracy through to `POST /drivers/me/location`.
+It rejects observations older than 30 seconds, more than 5 seconds future-dated,
+less precise than 100 metres, or invalid, before submission. An Android cached
+fallback retains its original monotonic age; send time is never substituted for
+acquisition time. Offline location staging and operational refresh request a new
+native fix from the driver UI; editable coordinates are not a dispatch input.
+The backend remains authoritative for eligibility, service area, movement and
+freshness. These source rules still require device/foreground-transition and
+iOS-native acceptance before field use.
 
 The backend should reject obviously invalid location updates.
 
@@ -620,7 +680,35 @@ not merge these into an unexplained “commission.”
 
 Cooperative membership is distinct from being a driver.
 
-A driver may be:
+For the owner-selected **Fès union-operated launch**, only verified members of the
+operating union may participate as drivers. Ordinary passenger registration has
+no membership restriction. Membership is an additional backend-owned condition;
+driver approval, professional credentials, vehicle verification and city/service
+authorization remain independently required. A client claim, uploaded membership
+number alone or approved taxi license cannot establish union membership.
+
+The implementation must use the existing operator/cooperative/member authorities
+where appropriate to the confirmed legal entity, without granting membership as
+a side effect of driver approval. New availability and allocation/acceptance must
+revalidate current membership for the operating organization, including withdrawal
+or suspension after going online. Ending membership must not silently discard an
+already accepted trip, its safety/support access or outstanding financial records.
+The membership verification and revocation staff workflow requires a named union
+authority and audit evidence before real enrollment. The owner confirmed reuse of
+the existing cooperative register for the union on 23 October; this software
+mapping is not evidence of the union's legal form or transport authorization.
+
+The operator's explicit `requires_active_membership` policy enables closed-shop
+admission. It defaults to false for existing/open-participation operators. The
+Fès union launch must enable it and link the approved register before activation.
+An enabled policy requires a linked register. Admission requires that organization
+and the user's membership to be ACTIVE, with an optional joined date no later than
+admission and no ended date at or before admission. Membership in a different
+register cannot satisfy it. Final assignment/commitment reads serialize with
+membership status and operator policy changes; passenger registration and already
+accepted trip completion are outside this new-work gate.
+
+The general model can distinguish:
 
 ```text
 Verified driver

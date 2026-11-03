@@ -95,6 +95,7 @@ def validate_document(document: Any) -> None:
     migrate_environment = _mapping(migrate.get("environment"), "migrate.environment")
     if set(migrate_environment) != {
         "TAXIMOBILE_ENV", "TAXIMOBILE_DATABASE_URL",
+        "TAXIMOBILE_DATABASE_TLS_MODE", "TAXIMOBILE_DATABASE_CA_FILE", "TAXIMOBILE_DATABASE_CA_PEM",
         "TAXIMOBILE_MIGRATION_LOCK_TIMEOUT_SECONDS", "TAXIMOBILE_MIGRATION_STATEMENT_TIMEOUT_SECONDS",
     }:
         raise ValueError("Migration service may receive only environment, database and migration-limit configuration.")
@@ -103,6 +104,9 @@ def validate_document(document: Any) -> None:
 
     api_environment = _mapping(api.get("environment"), "api.environment")
     worker_environment = _mapping(worker.get("environment"), "worker.environment")
+    for name, environment in (("migrate", migrate_environment), ("api", api_environment), ("worker", worker_environment)):
+        if environment.get("TAXIMOBILE_DATABASE_TLS_MODE") != "verify-full":
+            raise ValueError(f"{name} must require database TLS verify-full.")
     if api_environment.get("TAXIMOBILE_PROCESS_ROLE") != "api":
         raise ValueError("API service must use the closed api process role.")
     if worker_environment.get("TAXIMOBILE_PROCESS_ROLE") != "worker":

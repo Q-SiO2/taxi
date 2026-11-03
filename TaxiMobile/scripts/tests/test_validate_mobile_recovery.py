@@ -4,6 +4,7 @@ import importlib.util
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 
 MODULE_PATH = Path(__file__).resolve().parents[1] / "validate_mobile_recovery.py"
@@ -14,6 +15,51 @@ SPEC.loader.exec_module(MODULE)
 
 
 class MobileRecoveryValidationTest(unittest.TestCase):
+    def test_offer_guard_requires_null_expiry_refresh_and_loop_protection(self) -> None:
+        original = Path.read_text
+        mutations = (
+            ("current == null || current.expired", "current.expired"),
+            ("current == null || current.expired", "current == null"),
+            ("onExpired()", "missing_refresh()"),
+            ("if (!refreshRequested)", "if (true)"),
+            ("refreshRequested = true; onExpired()", "onExpired(); refreshRequested = true"),
+        )
+        for before, after in mutations:
+            with self.subTest(mutation=after):
+                def read(path, *args, **kwargs):
+                    text = original(path, *args, **kwargs)
+                    if path.name == "DriverHome.kt":
+                        self.assertIn(before, text)
+                        text = text.replace(before, after)
+                    return text
+                with patch.object(Path, "read_text", read):
+                    with self.assertRaisesRegex(MODULE.MobileRecoveryConfigurationError, "authoritative refresh"):
+                        MODULE.validate_mobile_recovery()
+
+    def test_comment_decoy_cannot_supply_an_offer_refresh_guard(self) -> None:
+        original = Path.read_text
+        def read(path, *args, **kwargs):
+            text = original(path, *args, **kwargs)
+            if path.name == "DriverHome.kt":
+                text = text.replace("current == null || current.expired", "current.expired")
+                text = text.replace("val current = offerCountdown(offer)",
+                    "val current = offerCountdown(offer)\n// if (current == null || current.expired) { if (!refreshRequested) { refreshRequested = true; onExpired() }; break }")
+            return text
+        with patch.object(Path, "read_text", read):
+            with self.assertRaisesRegex(MODULE.MobileRecoveryConfigurationError, "authoritative refresh"):
+                MODULE.validate_mobile_recovery()
+
+    def test_equivalent_combined_guard_whitespace_is_accepted(self) -> None:
+        original = Path.read_text
+        def read(path, *args, **kwargs):
+            text = original(path, *args, **kwargs)
+            if path.name == "DriverHome.kt":
+                text = text.replace("current == null || current.expired", "current == null\n                || current.expired")
+                text = text.replace("refreshRequested = true; onExpired()", "refreshRequested=true; onExpired( )")
+            return text
+        with patch.object(Path, "read_text", read):
+            MODULE.validate_mobile_recovery()
+
     def test_repository_wiring_is_valid(self) -> None:
         MODULE.validate_mobile_recovery()
 
@@ -31,6 +77,7 @@ class MobileRecoveryValidationTest(unittest.TestCase):
                 "shared/src/commonMain/kotlin/org/example/taximobile/App.kt",
                 "shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
                 "shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt",
+                "shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/PendingCashPaymentsSection.kt",
                 "shared/src/commonMain/kotlin/org/example/taximobile/feature/app/TaxiMobileScreen.kt",
                 "shared/src/commonMain/kotlin/org/example/taximobile/feature/app/SharedSections.kt",
                 "shared/src/commonMain/kotlin/org/example/taximobile/feature/location/OneShotLocationGate.kt",
@@ -65,6 +112,7 @@ class MobileRecoveryValidationTest(unittest.TestCase):
                 "shared/src/commonMain/kotlin/org/example/taximobile/App.kt",
                 "shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
                 "shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt",
+                "shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/PendingCashPaymentsSection.kt",
                 "shared/src/commonMain/kotlin/org/example/taximobile/feature/app/TaxiMobileScreen.kt",
                 "shared/src/commonMain/kotlin/org/example/taximobile/feature/app/SharedSections.kt",
                 "shared/src/commonMain/kotlin/org/example/taximobile/feature/location/OneShotLocationGate.kt",
@@ -87,6 +135,58 @@ class MobileRecoveryValidationTest(unittest.TestCase):
 
             with self.assertRaises(MODULE.MobileRecoveryConfigurationError):
                 MODULE.validate_mobile_recovery(root)
+
+    def test_cash_loading_without_exact_ride_scope_is_rejected(self) -> None:
+        original = Path.read_text
+
+        def read(path, *args, **kwargs):
+            text = original(path, *args, **kwargs)
+            if path.name == "PendingCashPaymentsSection.kt":
+                text = text.replace("AppActionKind.SETTLE_DRIVER_CASH, payment.rideId", "AppActionKind.SETTLE_DRIVER_CASH")
+            return text
+
+        with patch.object(Path, "read_text", read):
+            with self.assertRaisesRegex(MODULE.MobileRecoveryConfigurationError, "ride-scoped"):
+                MODULE.validate_mobile_recovery()
+
+    def test_disconnected_pending_cash_component_is_rejected(self) -> None:
+        original = Path.read_text
+
+        def read(path, *args, **kwargs):
+            text = original(path, *args, **kwargs)
+            if path.name == "DriverHome.kt":
+                text = text.replace("PendingCashPaymentsSection(state.pendingCashPayments,", "PendingCashPaymentsSection(null,")
+            return text
+
+        with patch.object(Path, "read_text", read):
+            with self.assertRaisesRegex(MODULE.MobileRecoveryConfigurationError, "disconnected"):
+                MODULE.validate_mobile_recovery()
+
+    def test_success_feedback_that_animates_notepad_is_rejected(self) -> None:
+        original = Path.read_text
+
+        def read(path, *args, **kwargs):
+            text = original(path, *args, **kwargs)
+            if path.name == "SuccessConfirmation.kt":
+                text = text.replace("durationMillis = if (TaxiTheme.style.decorativeMotion) 320 else 0", "durationMillis = 320")
+            return text
+
+        with patch.object(Path, "read_text", read):
+            with self.assertRaisesRegex(MODULE.MobileRecoveryConfigurationError, "Notepad"):
+                MODULE.validate_mobile_recovery()
+
+    def test_unbounded_fresh_location_listener_is_rejected(self) -> None:
+        original = Path.read_text
+
+        def read(path, *args, **kwargs):
+            text = original(path, *args, **kwargs)
+            if path.name == "AndroidCurrentLocationRequester.kt":
+                text = text.replace("LocationManagerCompat.removeUpdates(locationManager, listener)", "missing_cleanup()")
+            return text
+
+        with patch.object(Path, "read_text", read):
+            with self.assertRaisesRegex(MODULE.MobileRecoveryConfigurationError, "bounded listener"):
+                MODULE.validate_mobile_recovery()
 
 
 if __name__ == "__main__":

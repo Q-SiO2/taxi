@@ -1,0 +1,21 @@
+{
+  "candidate": "candidate-native-v15.json",
+  "recorded_utc": "2026-10-20T19:27:05.331528+00:00",
+  "passed": false,
+  "scope": "Read-only native passenger history selection after the two successful cash trips",
+  "failed_native_review": "v15-native-passenger-history-support-review-r2.json",
+  "visible_history_list": "v15-native-passenger-secondary-history-list.png",
+  "diagnostic_after_read": "v15-passenger-history-detail-diagnostic.png",
+  "proxy_trace": "v15-history-selection-native-http.json",
+  "observed": "Native Ktor fetched selected historical ride and receipt with HTTP 200, then subsequent dashboard catch-up reads occurred; selected detail could not remain visible to the bounded review",
+  "source_finding": "MobileAppCoordinator loadPassengerRideHistoryDetail returns selected fields only on its immediate result; later authenticatedProductState reconstructs defaults without selection intent. Driver history follows the same pattern.",
+  "planned_regression_scope": [
+    "Passenger refresh retains selection while rereading changed cash status",
+    "Driver refresh retains selection while rereading newly submitted feedback",
+    "Revoked selected-history access returns explicit error without stale details",
+    "Sign out/sign in clears navigation ownership",
+    "A history result arriving after sign out must not install old selected data"
+  ],
+  "business_commands_in_review": false,
+  "qualification": "Successful v15 core trip/receipt/style checks retain their scope; they do not accept this history navigation failure."
+}

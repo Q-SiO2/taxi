@@ -1,0 +1,349 @@
+{
+  "candidate": "candidate-native-v17.json",
+  "run": "second",
+  "method": "Agent-stepped actual native UI: fresh rendered screenshots, explicit one-time taps, independent owned server readbacks",
+  "fidelity": "Owned API35 driver/API31 passenger emulators, synthetic GPS/accounts/cash",
+  "started_utc": "2026-10-20T20:31:37.643853+00:00",
+  "passed": true,
+  "prior_ride_ids": [
+    "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+    "733abbcf-5d1b-4ff2-b7f3-3563052cbd25",
+    "74cf05e3-9d1b-4d15-9a67-804226a20924",
+    "cb951af4-f5ae-4d05-8a06-a28b49797f33",
+    "c55e696d-2bae-4640-8801-f50d2c20a42b",
+    "b7aac6ac-cc87-494d-aa95-842c21fc6759",
+    "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+    "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+    "98a253df-de13-4029-9daa-e538a520997d",
+    "359279df-4847-4ad3-bfa4-baa2136b45be",
+    "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+    "e531e392-6f5b-4962-9964-3967a4afc418",
+    "082f8b85-6598-423d-aac5-cf31eec3f30a",
+    "e734ed2c-a37c-424b-9d84-b31e6811cd09",
+    "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+    "65f3d974-1cb3-4c43-9486-80cd1007c256",
+    "03756c30-f453-4d09-ae50-c3fa8f3782a4",
+    "59576371-85a9-4732-a100-12f7295f0c0a",
+    "e1b2bf66-0887-4429-a798-e272cc4ebf1a",
+    "d8a67153-d7e5-4d96-8df0-be6ddb329d37"
+  ],
+  "steps": [
+    {
+      "action": "post-trip-destination",
+      "role": "passenger",
+      "utc": "2026-10-20T20:31:39.365386+00:00",
+      "tap": [
+        250,
+        460
+      ],
+      "observation": "v17-second-stepped-passenger-same-instance-map-before-selection.png",
+      "server_before": null,
+      "confirmed": true,
+      "visible_result_resource": "destination_selected_on_map",
+      "confirmed_utc": "2026-10-20T20:31:44.275490+00:00"
+    },
+    {
+      "action": "online",
+      "role": "driver",
+      "utc": "2026-10-20T20:32:21.277191+00:00",
+      "tap": [
+        360,
+        1121
+      ],
+      "observation": "v17-second-stepped-driver-online-ready.png",
+      "server_before": "OFFLINE",
+      "confirmed": true,
+      "server_after": "AVAILABLE",
+      "confirmed_utc": "2026-10-20T20:32:22.016004+00:00"
+    },
+    {
+      "action": "request",
+      "role": "passenger",
+      "utc": "2026-10-20T20:32:26.309747+00:00",
+      "tap": [
+        360,
+        1424
+      ],
+      "observation": "v17-second-stepped-passenger-request-ready.png",
+      "server_before": null,
+      "confirmed": true,
+      "server_after": "MATCHING",
+      "confirmed_utc": "2026-10-20T20:32:27.557749+00:00"
+    },
+    {
+      "action": "accept",
+      "role": "driver",
+      "utc": "2026-10-20T20:32:40.825681+00:00",
+      "tap": [
+        360,
+        1213
+      ],
+      "observation": "v17-second-stepped-driver-accept-ready.png",
+      "server_before": "MATCHING",
+      "confirmed": true,
+      "server_after": "ACCEPTED",
+      "confirmed_utc": "2026-10-20T20:32:42.647422+00:00"
+    },
+    {
+      "action": "heading",
+      "role": "driver",
+      "utc": "2026-10-20T20:33:01.976927+00:00",
+      "tap": [
+        360,
+        978
+      ],
+      "observation": "v17-second-stepped-driver-heading-ready.png",
+      "server_before": "ACCEPTED",
+      "confirmed": true,
+      "server_after": "DRIVER_EN_ROUTE",
+      "confirmed_utc": "2026-10-20T20:33:02.789867+00:00"
+    },
+    {
+      "action": "arrive",
+      "role": "driver",
+      "utc": "2026-10-20T20:33:18.112420+00:00",
+      "tap": [
+        360,
+        966
+      ],
+      "observation": "v17-second-stepped-driver-arrive-ready.png",
+      "server_before": "DRIVER_EN_ROUTE",
+      "confirmed": true,
+      "server_after": "DRIVER_ARRIVED",
+      "confirmed_utc": "2026-10-20T20:33:18.862127+00:00"
+    },
+    {
+      "action": "start",
+      "role": "driver",
+      "utc": "2026-10-20T20:33:36.625572+00:00",
+      "tap": [
+        360,
+        963
+      ],
+      "observation": "v17-second-stepped-driver-start-ready.png",
+      "server_before": "DRIVER_ARRIVED",
+      "confirmed": true,
+      "server_after": "IN_PROGRESS",
+      "confirmed_utc": "2026-10-20T20:33:37.374949+00:00"
+    },
+    {
+      "action": "complete",
+      "role": "driver",
+      "utc": "2026-10-20T20:34:20.022635+00:00",
+      "tap": [
+        360,
+        1221
+      ],
+      "observation": "v17-second-stepped-driver-complete-ready.png",
+      "server_before": "IN_PROGRESS",
+      "confirmed": true,
+      "server_after": "COMPLETED",
+      "confirmed_utc": "2026-10-20T20:34:20.735282+00:00"
+    },
+    {
+      "action": "cash",
+      "role": "driver",
+      "utc": "2026-10-20T20:34:34.571100+00:00",
+      "tap": [
+        492,
+        956
+      ],
+      "observation": "v17-second-stepped-driver-cash-ready.png",
+      "server_before": {
+        "method": "CASH",
+        "status": "PENDING"
+      },
+      "confirmed": true,
+      "server_after": {
+        "method": "CASH",
+        "status": "COMPLETED"
+      },
+      "confirmed_utc": "2026-10-20T20:34:35.331696+00:00"
+    }
+  ],
+  "installed_apks": [
+    {
+      "role": "driver",
+      "sha256": "6df9fe8289032373a4f89aafbda9aa844cd4d55816d63d67e8e8d51125bdaf68"
+    },
+    {
+      "role": "passenger",
+      "sha256": "8fbc3189414a17282fd6b16c05a1cb7d659196289f212734183024438b486610"
+    }
+  ],
+  "clock_fixture": [
+    {
+      "role": "driver",
+      "host_minus_device_seconds": 0.11,
+      "method": "Owned emulator synchronization before availability/trip only"
+    },
+    {
+      "role": "passenger",
+      "host_minus_device_seconds": 0.7,
+      "method": "Owned emulator synchronization before availability/trip only"
+    }
+  ],
+  "runtime": [
+    {
+      "role": "driver",
+      "avd": "taximobile-board-api35-driver",
+      "sdk": "35",
+      "configuration": "config: mcc310-mnc260-en-rUS-ldltr-sw360dp-w360dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x720-v35",
+      "app_locales": "Locales for ma.taximobile.driver for user 0 are [en-US]"
+    },
+    {
+      "role": "passenger",
+      "avd": "taximobile-board-aosp31-passenger",
+      "sdk": "31",
+      "configuration": "config: mcc310-mnc260-en-rUS,fr-rFR,ar-rMA-ldltr-sw360dp-w360dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x720-v31"
+    }
+  ],
+  "screenshots": [
+    {
+      "role": "passenger",
+      "path": "v17-second-stepped-passenger-same-instance-map-before-selection.png",
+      "sha256": "197533952dac5697fb0ead1d063b1cc1ea75683fa8e5acf336dc70e26525d2e5",
+      "utc": "2026-10-20T20:31:39.184701+00:00"
+    },
+    {
+      "role": "passenger",
+      "path": "v17-second-stepped-passenger-post-trip-destination-after.png",
+      "sha256": "9cb01fbfdcb349c6a189ef6068621ff73c1f8aa2dba212244cbadd18c0c40f32",
+      "utc": "2026-10-20T20:31:45.042548+00:00"
+    },
+    {
+      "role": "driver",
+      "path": "v17-second-stepped-driver-online-ready.png",
+      "sha256": "ccfb8bccd1d87f216f7179d79123ed0f04296ba54191223370c94a41f23b0b9c",
+      "utc": "2026-10-20T20:32:20.534542+00:00"
+    },
+    {
+      "role": "driver",
+      "path": "v17-second-stepped-driver-online-after.png",
+      "sha256": "9eec79ef139945826f4d04c4b094f4e60798754808b01eabaef39ee28563d0a9",
+      "utc": "2026-10-20T20:32:22.847081+00:00"
+    },
+    {
+      "role": "passenger",
+      "path": "v17-second-stepped-passenger-request-ready.png",
+      "sha256": "7c0a47dda2db9a4dde524a8d75b8ca6ce1778a2d3fa98ee7596766db5a2410d2",
+      "utc": "2026-10-20T20:32:25.222067+00:00"
+    },
+    {
+      "role": "passenger",
+      "path": "v17-second-stepped-passenger-request-after.png",
+      "sha256": "17dc04f2ecfbc76d3b4415aed9dd9d34572034d9de8a016856fd4a4651efac29",
+      "utc": "2026-10-20T20:32:28.640097+00:00"
+    },
+    {
+      "role": "driver",
+      "path": "v17-second-stepped-driver-accept-ready.png",
+      "sha256": "f46c2293fdcbd1cc282ad687c7da9730e5dcb0e3b313d4ffcdeb095c64dad8b3",
+      "utc": "2026-10-20T20:32:38.978158+00:00"
+    },
+    {
+      "role": "driver",
+      "path": "v17-second-stepped-driver-accept-after.png",
+      "sha256": "235b97d6bb5822732164d5899af4f13e91e75bc482a63364c550e6f28850f442",
+      "utc": "2026-10-20T20:32:43.996552+00:00"
+    },
+    {
+      "role": "driver",
+      "path": "v17-second-stepped-driver-heading-ready.png",
+      "sha256": "79320d9d610978b96233ef9bef71bc96c0821fd5cf4b93d91409a109aa166f3f",
+      "utc": "2026-10-20T20:33:00.655220+00:00"
+    },
+    {
+      "role": "driver",
+      "path": "v17-second-stepped-driver-heading-after.png",
+      "sha256": "96adabe3525e5791501a213c7558c2fdec8ef312962685e0bca2661011e93007",
+      "utc": "2026-10-20T20:33:03.695306+00:00"
+    },
+    {
+      "role": "driver",
+      "path": "v17-second-stepped-driver-arrive-ready.png",
+      "sha256": "3be598fca93f864a4fb243c437bdaa660589a18d09956cb59e7255d3bbf5a1c3",
+      "utc": "2026-10-20T20:33:17.295517+00:00"
+    },
+    {
+      "role": "driver",
+      "path": "v17-second-stepped-driver-arrive-after.png",
+      "sha256": "118e11c22b8a8469e5511059875701ef76f051810b021eef505b8dddf0b20741",
+      "utc": "2026-10-20T20:33:19.664246+00:00"
+    },
+    {
+      "role": "driver",
+      "path": "v17-second-stepped-driver-start-ready.png",
+      "sha256": "68ef19781d1f0342af30eb33fc6fde1531fd43c47b0a16771e11651869f74591",
+      "utc": "2026-10-20T20:33:35.842224+00:00"
+    },
+    {
+      "role": "driver",
+      "path": "v17-second-stepped-driver-start-after.png",
+      "sha256": "f2d3fe653fa631e3daaf535ed563628047ce3c8083f931aaf04b78d1c76182fd",
+      "utc": "2026-10-20T20:33:38.168309+00:00"
+    },
+    {
+      "role": "driver",
+      "path": "v17-second-stepped-driver-controlled-outage.png",
+      "sha256": "a251175db41509ab32032264dd6b529a4f9a3c40364b991e75301c782092f7e1",
+      "utc": "2026-10-20T20:34:09.046119+00:00"
+    },
+    {
+      "role": "driver",
+      "path": "v17-second-stepped-driver-complete-ready.png",
+      "sha256": "f60ac59f5c67b46fcf2c327774d14ae599ce9b385f05fe6fa0ba3a4cb025c51b",
+      "utc": "2026-10-20T20:34:19.238214+00:00"
+    },
+    {
+      "role": "driver",
+      "path": "v17-second-stepped-driver-complete-after.png",
+      "sha256": "2ad682757ee1106bf7b5708f4897618e0c3f8eb62389a4b684a961f3d3d95258",
+      "utc": "2026-10-20T20:34:21.539060+00:00"
+    },
+    {
+      "role": "passenger",
+      "path": "v17-second-stepped-passenger-cash-pending.png",
+      "sha256": "0a1993ff0ad41815b4edf058d826f819054b7476a1cb80a920cf4bcd6e575715",
+      "utc": "2026-10-20T20:34:26.480700+00:00"
+    },
+    {
+      "role": "driver",
+      "path": "v17-second-stepped-driver-dated-cash-dialog.png",
+      "sha256": "c793416dac9a92d34027de2b2293d61996519e60035ea1faa28a995532ba93ea",
+      "utc": "2026-10-20T20:34:31.376950+00:00"
+    },
+    {
+      "role": "driver",
+      "path": "v17-second-stepped-driver-cash-ready.png",
+      "sha256": "c793416dac9a92d34027de2b2293d61996519e60035ea1faa28a995532ba93ea",
+      "utc": "2026-10-20T20:34:33.780302+00:00"
+    },
+    {
+      "role": "driver",
+      "path": "v17-second-stepped-driver-cash-after.png",
+      "sha256": "b88b6377021c0dcace3f4a972af74c85f19eccfd98ca69e51803069183278c00",
+      "utc": "2026-10-20T20:34:36.148287+00:00"
+    },
+    {
+      "role": "passenger",
+      "path": "v17-second-stepped-passenger-cash-completed.png",
+      "sha256": "e78d5d345192dc2c09011095ce746ef0f72a9c3da88e66f3d37ceaecef2512fa",
+      "utc": "2026-10-20T20:34:40.873519+00:00"
+    }
+  ],
+  "last_observation": {
+    "role": "passenger",
+    "path": "v17-second-stepped-passenger-cash-completed.png",
+    "sha256": "e78d5d345192dc2c09011095ce746ef0f72a9c3da88e66f3d37ceaecef2512fa",
+    "utc": "2026-10-20T20:34:40.873519+00:00"
+  },
+  "ride_id": "d8daeaaa-fbe9-4614-af7e-45b896d30ecb",
+  "fare": "35.00",
+  "payment": {
+    "method": "CASH",
+    "status": "COMPLETED"
+  },
+  "driver_availability": "OFFLINE",
+  "finished_utc": "2026-10-20T20:34:43.006332+00:00"
+}

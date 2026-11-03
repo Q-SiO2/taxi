@@ -1,0 +1,16 @@
+{
+  "started_utc": "2026-10-19T20:07:51.808981+00:00",
+  "candidate": "candidate-native-v13.json",
+  "ride_id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+  "passed": false,
+  "recovered": false,
+  "steps": [
+    {
+      "name": "Preserved server IN_PROGRESS verified; exact APKs and existing clocks match",
+      "utc": "2026-10-19T20:07:53.348400+00:00"
+    }
+  ],
+  "scope": "Preserved v12 Arabic IN_PROGRESS trip under exact v13 APKs. Force explicit lookup during observed automatic GPS registration, then normal completion/cash; never a complete new v13 rehearsal.",
+  "failure_type": "SmokeFailure",
+  "finished_utc": "2026-10-19T20:09:07.462076+00:00"
+}

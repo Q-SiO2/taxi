@@ -1,0 +1,79 @@
+{
+  "observed_utc": "2026-10-24T14:56:49.639Z",
+  "commit": "29198354250615940fa46ac7c1d8305da743ba86",
+  "tree": "799fda5b5fd70b12fbbf26e5a016d667db5fc2ca",
+  "run_id": 40102365437,
+  "run_number": 232,
+  "url": "https://github.com/Q-SiO2/taxi/actions/runs/40102365437",
+  "status": "COMPLETED",
+  "required_jobs_passed": 8,
+  "required_jobs_failed": 0,
+  "jobs": [
+    {
+      "id": 120896959136,
+      "name": "documentation-and-provenance",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120896959141,
+      "name": "gradle-wrapper-integrity",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120896959157,
+      "name": "gradle-dependency-submission",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120896959160,
+      "name": "web",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120896959181,
+      "name": "ios-shared",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120896959280,
+      "name": "mobile",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120896959317,
+      "name": "backend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120897540935,
+      "name": "dependency-review",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120901894649,
+      "name": "publish-backend-image",
+      "status": "completed",
+      "conclusion": "skipped"
+    }
+  ],
+  "source_ci_passed": true,
+  "full_backend_tests": 1317,
+  "backend_test_failures_errors_skips": 0,
+  "real_tls_cases": 8,
+  "fixture_baseline_restored": true,
+  "backend_image_publication": "Skipped by the existing draft-PR/main-only publication boundary",
+  "scope": "Exact candidate source CI; unsigned iOS simulator and Android verification products do not establish signed distribution, physical/provider/field acceptance or hosted TLS.",
+  "hosted_schema": "20260908_0052 at separately observed baseline",
+  "hosted_tls_accepted": false,
+  "hosted_upgrade_accepted": false,
+  "physical_or_field_accepted": false,
+  "public_launch_accepted": false
+}

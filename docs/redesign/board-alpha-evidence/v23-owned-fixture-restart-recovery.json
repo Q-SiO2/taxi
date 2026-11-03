@@ -1,0 +1,36 @@
+{
+  "started_utc": "2026-10-22T18:36:47.034559+00:00",
+  "candidate": "candidate-native-v23.json",
+  "passed": true,
+  "prior_record": "v23-owned-fixture-restart.json",
+  "roles": [
+    {
+      "role": "passenger",
+      "serial": "emulator-5554",
+      "avd": "taximobile-board-aosp31-passenger",
+      "apk_sha256": "d230aef6501397adc7628931a94ea7f67b6459277c573e694fb023641a7e8390",
+      "font_scale": "1.0",
+      "ready": true,
+      "wifi_connected": true,
+      "screenshot": {
+        "path": "v23-fixture-restored-passenger.png",
+        "sha256": "a9007c5ad168fab5678505b03f07a259842d7ad4e3ac70a2a2276c68bc875958"
+      }
+    },
+    {
+      "role": "driver",
+      "serial": "emulator-5556",
+      "avd": "taximobile-board-api35-driver",
+      "apk_sha256": "5574f9e20ef5ade1621f58683712b6eb78f556ca828c23d83689a084137657e3",
+      "font_scale": "1.0",
+      "ready": true,
+      "wifi_connected": true,
+      "screenshot": {
+        "path": "v23-fixture-restored-driver.png",
+        "sha256": "94ea1e5d581d78ad96c11ac4878c673d53ae77b28e8bd6738695541600354f20"
+      }
+    }
+  ],
+  "scope": "Exact owned AVDs normal boot and retained-session foreground only; no reinstall, app-data wipe, sign-in or business commands",
+  "finished_utc": "2026-10-22T18:37:33.087156+00:00"
+}

@@ -1,0 +1,19 @@
+{
+  "utc": "2026-10-21T12:21:51.560025+00:00",
+  "passed": true,
+  "scope": "Only two owned headless board emulators shut down normally after evidence freeze; app data/locales/styles retained. No wipe, phone operation or Railway change.",
+  "roles": [
+    {
+      "serial": "emulator-5556",
+      "avd": "taximobile-board-api35-driver",
+      "normal_shutdown_sent_utc": "2026-10-21T12:21:51.330113+00:00",
+      "data_retained": true
+    },
+    {
+      "serial": "emulator-5554",
+      "avd": "taximobile-board-aosp31-passenger",
+      "normal_shutdown_sent_utc": "2026-10-21T12:21:51.559980+00:00",
+      "data_retained": true
+    }
+  ]
+}

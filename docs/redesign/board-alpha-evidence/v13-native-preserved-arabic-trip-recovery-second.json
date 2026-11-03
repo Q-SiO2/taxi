@@ -1,0 +1,35 @@
+{
+  "started_utc": "2026-10-19T20:11:05.754899+00:00",
+  "candidate": "candidate-native-v13.json",
+  "ride_id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+  "passed": false,
+  "recovered": false,
+  "steps": [
+    {
+      "name": "Preserved server IN_PROGRESS verified; exact APKs and existing clocks match",
+      "utc": "2026-10-19T20:11:07.611977+00:00"
+    },
+    {
+      "name": "Explicit native lookup requested while automatic native GPS registration was observed",
+      "utc": "2026-10-19T20:11:10.420335+00:00"
+    },
+    {
+      "name": "Fresh guarded completion coordinate acquired in native UI",
+      "utc": "2026-10-19T20:11:19.947659+00:00"
+    }
+  ],
+  "scope": "Preserved v12 Arabic IN_PROGRESS trip under exact v13 APKs. Force explicit lookup during observed automatic GPS registration, then normal completion/cash; never a complete new v13 rehearsal.",
+  "recovery_harness_sha256": "153d0bf4e1c0e5b8508e3092666c9d10182c9be542648db4579dd9b3afdef3c2",
+  "automatic_registration_before_explicit": [
+    "10209/ma.taximobile.driver/84E2F093 Request[@+1s0ms HIGH_ACCURACY, duration=+15s0ms, minUpdateInterval=0, WorkSource{10209 ma.taximobile.driver}]"
+  ],
+  "explicit_tap_utc": "2026-10-19T20:11:10.230086+00:00",
+  "screenshots": [
+    {
+      "path": "v13-preserved-arabic-second-driver-location-loaded.png",
+      "sha256": "65a64cdfa710c2d6a7de595cd9ec545e73957811123de230e7ac90de2c1f7a31"
+    }
+  ],
+  "failure_type": "RuntimeError",
+  "finished_utc": "2026-10-19T20:12:04.108610+00:00"
+}

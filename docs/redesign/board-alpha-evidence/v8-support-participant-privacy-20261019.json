@@ -1,0 +1,15 @@
+{
+  "verified_utc": "2026-10-19T11:44:34.687727+00:00",
+  "passed": true,
+  "web_deployment": "ceee310c-e957-49ad-945d-b9f2d292eb61",
+  "scope": "Actual Arabic UI claim/acknowledgement with distinct participant/internal notes, followed by owned read-only participant API checks",
+  "ticket_id": "e96bf80f-73d8-4959-a3b6-7c029c62519f",
+  "status": "IN_PROGRESS",
+  "latest_public_message": "ملف تجريبي: تسلّمنا طلب الدعم.",
+  "participant_excludes_internal_note_and_staff_fields": true,
+  "limitations": [
+    "No escalation, resolution, closure, retention or legal hold command tested",
+    "Synthetic support only; no real refund or settlement",
+    "Full locale/style/accessibility acceptance remains separate"
+  ]
+}

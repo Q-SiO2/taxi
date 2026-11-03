@@ -34,6 +34,13 @@ It is responsible for:
 
 The backend is authoritative for ride state.
 
+En-route, arrival, start and completion persist a generic `RIDE_UPDATED` inbox
+entry and transactional `ride.updated` outbox signal for the passenger. The
+worker resolves the committed ride's current owner and sends only an opaque
+ride reference. Clients reload the authorized ride/receipt, including after
+completion; the hint never carries a trusted status or passenger location.
+First cash settlement uses the same catch-up signal without changing ride state.
+
 ---
 
 # 2. Ride Participants

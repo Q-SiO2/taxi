@@ -1,0 +1,41 @@
+{
+  "observed_utc": "2026-10-21T18:32:35.752Z",
+  "candidate": "candidate-native-v19.json",
+  "accepted_for_full_presentation": false,
+  "retained_passes": [
+    "candidate-native-v19.json",
+    "v19-native-integrated-verification.json",
+    "v19-native-sheet-verification-20261021.json",
+    "v19-native-quote-style-review-20261021.json",
+    "v19-native-history-support-verification.json"
+  ],
+  "failed_observation": "v19-native-account-style-review.json",
+  "native_screenshot": "v19-driver-style-progress-observation.png",
+  "native_condition": "Driver was backgrounded while passenger style/restart/font observations ran. Normal driver foreground then showed the actual Session expired / Sign in again state. The120s account observer failed; this is not merely slow startup. No native business command was sent during presentation review.",
+  "http_observation": [
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "httpStatus": 200,
+      "timestamp": "2026-10-21T18:26:56.386069909Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "httpStatus": 401,
+      "timestamp": "2026-10-21T18:26:56.602974945Z"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "httpStatus": 401,
+      "timestamp": "2026-10-21T18:26:56.919479568Z"
+    }
+  ],
+  "http_boundary": "Native Ktor UA; proxy trace does not identify client role/token family, so correlation does not prove that all three refreshes used the driver's same token. No credentials, IPs, user agents, session IDs or raw bodies retained.",
+  "source_hypotheses": [
+    "Android MainActivity and Firebase service independently construct AndroidAppDependencies, each with a distinct credential coordinator mutex",
+    "Refresh-to-protected-save span is cancellable after server rotation; activity/subscription cancellation can lose a rotated pair"
+  ],
+  "next": "Reproduce bounded credential concurrency/cancellation cases before choosing a fix; preserve backend one-use refresh-family revocation and all command authority/replay restrictions."
+}

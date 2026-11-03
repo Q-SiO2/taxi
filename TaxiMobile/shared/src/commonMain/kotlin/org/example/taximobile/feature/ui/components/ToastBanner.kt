@@ -1,5 +1,6 @@
 package org.example.taximobile.feature.ui.components
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,17 +26,18 @@ fun ToastBanner(
     modifier: Modifier = Modifier,
     onDismiss: (() -> Unit)? = null,
 ) {
+    val taxiRadii = TaxiTheme.radii
     LaunchedEffect(message, tone, onDismiss) {
         if (onDismiss != null && tone != StatusTone.Danger) {
             delay(TaxiMotion.InformationalBannerMillis.toLong())
             onDismiss()
         }
     }
-    val colors = statusToneColors(tone)
+    val colors = statusToneColors(tone, TaxiTheme.colors)
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(colors.background, RoundedCornerShape(TaxiRadii.Md))
+            .background(colors.background, RoundedCornerShape(taxiRadii.Md))
             .semantics(mergeDescendants = true) {
                 liveRegion = if (tone == StatusTone.Danger) LiveRegionMode.Assertive else LiveRegionMode.Polite
             }

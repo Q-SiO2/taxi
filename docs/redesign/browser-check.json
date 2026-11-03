@@ -1,0 +1,85 @@
+{
+  "date": "2026-10-13",
+  "atlasChecks": [
+    {
+      "overflow": [],
+      "profile": "320 px / Jakarta / Graphite / LTR / 200%",
+      "screens": 213,
+      "scrollWidth": 305,
+      "sections": 460,
+      "width": 305
+    },
+    {
+      "overflow": [],
+      "profile": "1440 px / Jakarta / Electric / FR structural labels / 200%",
+      "screens": 213,
+      "scrollWidth": 1425,
+      "width": 1425
+    },
+    {
+      "overflow": [],
+      "profile": "360 px / IBM Plex / Orchid dark / RTL / 200%",
+      "rtl": true,
+      "screens": 213,
+      "scrollWidth": 345,
+      "width": 345
+    }
+  ],
+  "componentChecks": {
+    "components": 40,
+    "overflow": [],
+    "scrollWidth": 1265,
+    "width": 1265
+  },
+  "contactSheets": [
+    {
+      "family": "S",
+      "name": "shared",
+      "count": 20,
+      "scroll": 1425,
+      "width": 1425,
+      "bytes": 625936
+    },
+    {
+      "family": "R",
+      "name": "passenger",
+      "count": 43,
+      "scroll": 1425,
+      "width": 1425,
+      "bytes": 1206122
+    },
+    {
+      "family": "D",
+      "name": "driver",
+      "count": 40,
+      "scroll": 1425,
+      "width": 1425,
+      "bytes": 1150857
+    },
+    {
+      "family": "L",
+      "name": "deferred",
+      "count": 9,
+      "scroll": 1425,
+      "width": 1425,
+      "bytes": 362111
+    },
+    {
+      "family": "A",
+      "name": "applicant",
+      "count": 13,
+      "scroll": 1425,
+      "width": 1425,
+      "bytes": 445242
+    },
+    {
+      "family": "O",
+      "name": "operations",
+      "count": 88,
+      "scroll": 1425,
+      "width": 1425,
+      "bytes": 2452764
+    }
+  ],
+  "notes": "Browser documentation specimens only. FR/AR structural labels are drafts; no native, hosted or alpha gate acceptance."
+}

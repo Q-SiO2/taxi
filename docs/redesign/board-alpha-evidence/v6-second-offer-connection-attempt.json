@@ -1,0 +1,19 @@
+{
+  "candidate": "candidate-native-v6.json",
+  "run": "second",
+  "started_utc": "2026-10-15T21:32:51.186694+00:00",
+  "fidelity": "two API35 Android emulators, synthetic GPS/accounts/cash; native writes and server reads",
+  "passed": false,
+  "steps": [
+    {
+      "name": "Server on-demand availability confirmed",
+      "utc": "2026-10-15T21:32:56.512891+00:00"
+    },
+    {
+      "name": "Native booking confirmed",
+      "utc": "2026-10-15T21:33:00.102010+00:00"
+    }
+  ],
+  "ride_id": "082f8b85-6598-423d-aac5-cf31eec3f30a",
+  "finished_utc": "2026-10-15T21:34:49.433797+00:00"
+}

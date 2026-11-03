@@ -6,6 +6,7 @@ from uuid import UUID
 
 from taximobile_api.domains.auth.dependencies import CurrentPrincipal, authenticated_principal
 from taximobile_api.domains.auth.router import database_session
+from taximobile_api.domains.cooperatives.authority import driver_membership_is_active, online_operator_id
 from taximobile_api.domains.drivers.models import AvailabilityStatus, DriverCredential, DriverLocation, DriverVerification, Vehicle, VehicleStatus, VehicleVerificationStatus
 from taximobile_api.domains.drivers.schemas import (
     ActiveVehicleRequest,
@@ -362,6 +363,21 @@ async def go_online(
                 ),
                 requested_service_type=requested_service,
             )
+            operator_id = await online_operator_id(
+                session, selected.city, selected.service_type, now=datetime.now(UTC)
+            )
+            if operator_id is None:
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail="No active operator covers the selected city service.",
+                )
+            if not await driver_membership_is_active(
+                session, profile.user_id, operator_id, serialize_with_changes=True
+            ):
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail="Active membership with this operator is required.",
+                )
             assert latest_location is not None
             if not await location_is_inside_active_service_area(
                 session,

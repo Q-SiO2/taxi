@@ -1,0 +1,26 @@
+{
+  "prepared_utc": "2026-10-24T12:36:05.829152+00:00",
+  "target": ".tools/real-world-launch/protected-staging/restore-runtime/pgsql",
+  "postgresql": "16.14",
+  "postgis": "3.4.2",
+  "source_postgis": "3.4.3",
+  "compatibility": "Same 3.4 minor line; patch/platform difference requires actual restore checks, not exact-binary equivalence.",
+  "source_archive": "https://download-cache.osgeo.org/postgis/windows/pg16/archive/postgis-bundle-pg16-3.4.2x64.zip",
+  "archive_bytes": 135576037,
+  "official_https_md5": "a5ac63730e607a58b190364cc365d821",
+  "observed_sha256": "bdf95114c067b5d315ae63e9dcdc0700511d09f97759a803c895702a6ef267ff",
+  "integrity_scope": "Official HTTPS plus published legacy MD5 and ZIP CRC; observed SHA256 retained, not a signature verification.",
+  "overlay_files": 1256,
+  "existing_runtime_changed": false,
+  "retained_download_observations": [
+    "Initial180secondtransfer timed out with53,268,079 bytes retained.",
+    "Four mirror ranges reached their declared 170-second deadlines; partial parts and error log retained.",
+    "Native bounded resume against original origin completed without redownloading the prefix."
+  ],
+  "range_part_bytes": {
+    "postgis34-remaining-0.part": 4194304,
+    "postgis34-remaining-1.part": 4194304,
+    "postgis34-remaining-2.part": 4194304,
+    "postgis34-remaining-3.part": 4194304
+  }
+}

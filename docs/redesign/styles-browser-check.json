@@ -1,0 +1,327 @@
+{
+  "date": "2026-10-15",
+  "styleSelection": [
+    {
+      "contexts": 4,
+      "facts": [
+        "PickupCentral square",
+        "DestinationSeafront",
+        "Estimated fare35 MAD",
+        "Pickup distance1.2 km",
+        "Estimated fare35 MAD",
+        "Offer statePending your decision",
+        "Final fare35 MAD",
+        "MethodCash",
+        "PaymentNot yet confirmed"
+      ],
+      "field": "prism",
+      "fieldDisplay": "block",
+      "icons": 9,
+      "phase": "static",
+      "playDisabled": false,
+      "scrubDisabled": false,
+      "style": "fold"
+    },
+    {
+      "contexts": 4,
+      "facts": [
+        "PickupCentral square",
+        "DestinationSeafront",
+        "Estimated fare35 MAD",
+        "Pickup distance1.2 km",
+        "Estimated fare35 MAD",
+        "Offer statePending your decision",
+        "Final fare35 MAD",
+        "MethodCash",
+        "PaymentNot yet confirmed"
+      ],
+      "field": "collage",
+      "fieldDisplay": "block",
+      "icons": 9,
+      "phase": "static",
+      "playDisabled": false,
+      "scrubDisabled": false,
+      "style": "print"
+    },
+    {
+      "contexts": 4,
+      "facts": [
+        "PickupCentral square",
+        "DestinationSeafront",
+        "Estimated fare35 MAD",
+        "Pickup distance1.2 km",
+        "Estimated fare35 MAD",
+        "Offer statePending your decision",
+        "Final fare35 MAD",
+        "MethodCash",
+        "PaymentNot yet confirmed"
+      ],
+      "field": "grain",
+      "fieldDisplay": "block",
+      "icons": 9,
+      "phase": "static",
+      "playDisabled": false,
+      "scrubDisabled": false,
+      "style": "tactile"
+    },
+    {
+      "contexts": 4,
+      "facts": [
+        "PickupCentral square",
+        "DestinationSeafront",
+        "Estimated fare35 MAD",
+        "Pickup distance1.2 km",
+        "Estimated fare35 MAD",
+        "Offer statePending your decision",
+        "Final fare35 MAD",
+        "MethodCash",
+        "PaymentNot yet confirmed"
+      ],
+      "field": "notepad",
+      "fieldDisplay": "none",
+      "icons": 9,
+      "phase": "disabled-style",
+      "playDisabled": true,
+      "scrubDisabled": true,
+      "style": "notepad"
+    }
+  ],
+  "previewPersistence": {
+    "notice": "Your preview selection is saved in this browser only.",
+    "selected": "notepad",
+    "stageStyle": "notepad"
+  },
+  "motion": [
+    {
+      "actionFixed": true,
+      "factsUnchanged": true,
+      "fieldTransform": "matrix(0.999391, 0.0348995, -0.0348995, 0.999391, 14.2707, -7.50653)",
+      "phase": "scrubbed",
+      "progress": "50.0",
+      "style": "fold"
+    },
+    {
+      "actionFixed": true,
+      "factsUnchanged": true,
+      "fieldTransform": "matrix(0.999391, 0.0348995, -0.0348995, 0.999391, 14.2707, -7.50653)",
+      "phase": "scrubbed",
+      "progress": "50.0",
+      "style": "print"
+    },
+    {
+      "actionFixed": true,
+      "factsUnchanged": true,
+      "fieldTransform": "matrix(0.999391, 0.0348995, -0.0348995, 0.999391, 14.2707, -7.50653)",
+      "phase": "scrubbed",
+      "progress": "50.0",
+      "style": "tactile"
+    }
+  ],
+  "reducedMotion": "suppressed",
+  "labCompact": [
+    {
+      "direction": "rtl",
+      "icons": 9,
+      "overflow": [],
+      "scroll": 305,
+      "style": "fold",
+      "width": 305
+    },
+    {
+      "direction": "rtl",
+      "icons": 9,
+      "overflow": [],
+      "scroll": 305,
+      "style": "print",
+      "width": 305
+    },
+    {
+      "direction": "rtl",
+      "icons": 9,
+      "overflow": [],
+      "scroll": 305,
+      "style": "tactile",
+      "width": 305
+    },
+    {
+      "direction": "rtl",
+      "icons": 9,
+      "overflow": [],
+      "scroll": 305,
+      "style": "notepad",
+      "width": 305
+    }
+  ],
+  "fullAtlas": [
+    {
+      "art": 0,
+      "checkedStyles": [
+        "fold",
+        "fold"
+      ],
+      "draft": "Style review draft",
+      "filter": "none",
+      "ink": "rgb(25, 26, 35)",
+      "style": "fold",
+      "surface": "rgb(247, 239, 217)",
+      "views": 213
+    },
+    {
+      "art": 0,
+      "checkedStyles": [
+        "print",
+        "print"
+      ],
+      "draft": "Style review draft",
+      "filter": "none",
+      "ink": "rgb(25, 26, 35)",
+      "style": "print",
+      "surface": "rgb(255, 248, 232)",
+      "views": 213
+    },
+    {
+      "art": 0,
+      "checkedStyles": [
+        "tactile",
+        "tactile"
+      ],
+      "draft": "Style review draft",
+      "filter": "none",
+      "ink": "rgb(25, 26, 35)",
+      "style": "tactile",
+      "surface": "rgb(247, 240, 229)",
+      "views": 213
+    },
+    {
+      "art": 0,
+      "checkedStyles": [
+        "notepad",
+        "notepad"
+      ],
+      "draft": "Style review draft",
+      "filter": "grayscale(1)",
+      "ink": "rgb(24, 24, 24)",
+      "style": "notepad",
+      "surface": "rgb(255, 255, 255)",
+      "views": 213
+    }
+  ],
+  "inlineAtlasStyleChoice": {
+    "body": "print",
+    "draft": "Style review draft",
+    "style": "print"
+  },
+  "atlasCompact": [
+    {
+      "art": 0,
+      "overflow": 0,
+      "scroll": 345,
+      "style": "fold",
+      "views": 213,
+      "width": 345
+    },
+    {
+      "art": 0,
+      "overflow": 0,
+      "scroll": 345,
+      "style": "print",
+      "views": 213,
+      "width": 345
+    },
+    {
+      "art": 0,
+      "overflow": 0,
+      "scroll": 345,
+      "style": "tactile",
+      "views": 213,
+      "width": 345
+    },
+    {
+      "art": 0,
+      "overflow": 0,
+      "scroll": 345,
+      "style": "notepad",
+      "views": 213,
+      "width": 345
+    }
+  ],
+  "components": [
+    {
+      "cashStillSelected": true,
+      "components": 40,
+      "filter": "none",
+      "selectedStyle": "fold",
+      "statusText": "○ Draft◷ Pending✓ Confirmed! Failed◇ Restricted",
+      "style": "fold"
+    },
+    {
+      "cashStillSelected": true,
+      "components": 40,
+      "filter": "none",
+      "selectedStyle": "print",
+      "statusText": "○ Draft◷ Pending✓ Confirmed! Failed◇ Restricted",
+      "style": "print"
+    },
+    {
+      "cashStillSelected": true,
+      "components": 40,
+      "filter": "none",
+      "selectedStyle": "tactile",
+      "statusText": "○ Draft◷ Pending✓ Confirmed! Failed◇ Restricted",
+      "style": "tactile"
+    },
+    {
+      "cashStillSelected": true,
+      "components": 40,
+      "filter": "grayscale(1)",
+      "selectedStyle": "notepad",
+      "statusText": "○ Draft◷ Pending✓ Confirmed! Failed◇ Restricted",
+      "style": "notepad"
+    }
+  ],
+  "inlineComponentStyleChoice": {
+    "body": "print",
+    "cashStillSelected": true,
+    "style": "print"
+  },
+  "componentsCompact": [
+    {
+      "components": 40,
+      "overflow": [],
+      "scroll": 345,
+      "style": "fold",
+      "width": 345
+    },
+    {
+      "components": 40,
+      "overflow": [],
+      "scroll": 345,
+      "style": "print",
+      "width": 345
+    },
+    {
+      "components": 40,
+      "overflow": [],
+      "scroll": 345,
+      "style": "tactile",
+      "width": 345
+    },
+    {
+      "components": 40,
+      "overflow": [],
+      "scroll": 345,
+      "style": "notepad",
+      "width": 345
+    }
+  ],
+  "finalMainLab": {
+    "contexts": 4,
+    "icons": 9,
+    "images": 0,
+    "playDisabled": true,
+    "scrubDisabled": true,
+    "selected": "notepad"
+  },
+  "nativeImplementationVerified": false,
+  "limits": "Documentation/browser specimens only. Native preference, actual workflows, OS settings and device/release acceptance remain implementation work."
+}

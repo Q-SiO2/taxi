@@ -1,0 +1,171 @@
+{
+  "candidate": "candidate-native-v15.json",
+  "locale": "ar-MA",
+  "started_utc": "2026-10-20T10:45:08.368798+00:00",
+  "passed": false,
+  "checks": [
+    {
+      "role": "passenger",
+      "style": "Folded Streets",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v15-ar-style-passenger-folded-streets-account.png",
+          "sha256": "e67b33295d0b007fda32bdcec3508e5c7bda2bf6f9a25547502e00c1b7243a2b"
+        },
+        {
+          "path": "v15-ar-style-passenger-folded-streets-financial.png",
+          "sha256": "e67b33295d0b007fda32bdcec3508e5c7bda2bf6f9a25547502e00c1b7243a2b"
+        }
+      ]
+    },
+    {
+      "role": "passenger",
+      "style": "Street Press",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v15-ar-style-passenger-street-press-account.png",
+          "sha256": "d6822668e1b5fab7b77e69b1eb11ca25da5fd9dd450e0151f6ff907e24d6fa89"
+        },
+        {
+          "path": "v15-ar-style-passenger-street-press-financial.png",
+          "sha256": "d6822668e1b5fab7b77e69b1eb11ca25da5fd9dd450e0151f6ff907e24d6fa89"
+        }
+      ]
+    },
+    {
+      "role": "passenger",
+      "style": "Glazed Machine",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v15-ar-style-passenger-glazed-machine-account.png",
+          "sha256": "dbfd933f89874c8040d025bc698b704c103b1e8a42756c61984415040b2ddeea"
+        },
+        {
+          "path": "v15-ar-style-passenger-glazed-machine-financial.png",
+          "sha256": "dbfd933f89874c8040d025bc698b704c103b1e8a42756c61984415040b2ddeea"
+        }
+      ]
+    },
+    {
+      "role": "passenger",
+      "style": "Notepad",
+      "selected_label_verified": true,
+      "screenshots": [
+        {
+          "path": "v15-ar-style-passenger-notepad-account.png",
+          "sha256": "9a12842213efc4f75fb457bbcc9dcf443a31d52c21a9de7c4efc8c44db64f8c6"
+        },
+        {
+          "path": "v15-ar-style-passenger-notepad-financial.png",
+          "sha256": "9a12842213efc4f75fb457bbcc9dcf443a31d52c21a9de7c4efc8c44db64f8c6"
+        }
+      ]
+    }
+  ],
+  "scope": "Four actual native account/receipt/earnings styles; presentation changes only, no command writes",
+  "before": {
+    "rides": [
+      {
+        "id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "cb951af4-f5ae-4d05-8a06-a28b49797f33",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "c55e696d-2bae-4640-8801-f50d2c20a42b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "b7aac6ac-cc87-494d-aa95-842c21fc6759",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "98a253df-de13-4029-9daa-e538a520997d",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e531e392-6f5b-4962-9964-3967a4afc418",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "082f8b85-6598-423d-aac5-cf31eec3f30a",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "e734ed2c-a37c-424b-9d84-b31e6811cd09",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "65f3d974-1cb3-4c43-9486-80cd1007c256",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "03756c30-f453-4d09-ae50-c3fa8f3782a4",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "59576371-85a9-4732-a100-12f7295f0c0a",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e1b2bf66-0887-4429-a798-e272cc4ebf1a",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "d8a67153-d7e5-4d96-8df0-be6ddb329d37",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e8948a59-659f-4d70-b756-eaafd9cc1fa1",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "ee13caaa-3461-418d-b0b4-f32eab7dd516",
+        "status": "COMPLETED"
+      }
+    ],
+    "availability": {
+      "status": "OFFLINE",
+      "vehicle_id": "d491cb54-7ec1-4b6e-a6f9-1f1a8fd93792",
+      "city_id": "10000000-0000-4000-8000-000000000003",
+      "service_type": "ON_DEMAND"
+    }
+  },
+  "restart_checks": [
+    {
+      "role": "passenger",
+      "style": "Notepad",
+      "normal_authenticated_restore": true,
+      "screenshot": {
+        "path": "v15-ar-style-passenger-notepad-restarted.png",
+        "sha256": "3d63be0afbf06af7ca726dc96d0003bec306c2e239fe215ba53275bf89e944d1"
+      }
+    }
+  ],
+  "finished_utc": "2026-10-20T10:47:29.953443+00:00"
+}

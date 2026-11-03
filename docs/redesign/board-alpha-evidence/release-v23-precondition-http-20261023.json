@@ -1,0 +1,44 @@
+{
+  "observed_utc": "2026-10-23T10:40:35.326322+00:00",
+  "passed": false,
+  "reason": "First final-pair native rehearsal stopped before online: inspect native location upload precondition; no command replay.",
+  "untruncated": true,
+  "requests": [
+    {
+      "timestamp": "2026-10-23T10:32:11.184800613Z",
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "httpStatus": 200
+    },
+    {
+      "timestamp": "2026-10-23T10:32:51.582251426Z",
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "httpStatus": 200
+    },
+    {
+      "timestamp": "2026-10-23T10:35:28.238234265Z",
+      "method": "POST",
+      "path": "/api/v1/rides/estimate",
+      "httpStatus": 200
+    },
+    {
+      "timestamp": "2026-10-23T10:36:19.187147853Z",
+      "method": "POST",
+      "path": "/api/v1/rides/estimate",
+      "httpStatus": 200
+    },
+    {
+      "timestamp": "2026-10-23T10:36:31.609074069Z",
+      "method": "POST",
+      "path": "/api/v1/rides/estimate",
+      "httpStatus": 200
+    },
+    {
+      "timestamp": "2026-10-23T10:37:15.679881150Z",
+      "method": "POST",
+      "path": "/api/v1/drivers/me/location",
+      "httpStatus": 422
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "verified_utc": "2026-10-22T10:03:27.914642+00:00",
+  "result": {
+    "tests": 6,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  "failed_cases": [
+    "failed_protected_save_after_cancellation_revokes_issued_session_and_does_not_resume_ui[jvm]"
+  ],
+  "scope": "Added deadline and protected-save/cancellation checks after initial115-case green. Deadline passes; cancelled observer incorrectly resumes with typed storage-failure state despite successful issued-session cleanup. No native acceptance inferred.",
+  "archive": ".tools/alpha-delivery/session-cancellation-cleanup-red-20261022",
+  "sources": [
+    {
+      "path": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/auth/AuthenticationSessionCoordinator.kt",
+      "sha256": "2d0350aa9bfd43e8e95faec0c555f090252d6b47552f9bd617b28fc53d5e54a9"
+    },
+    {
+      "path": "TaxiMobile/shared/src/commonTest/kotlin/org/example/taximobile/feature/auth/AuthenticationSessionCancellationTest.kt",
+      "sha256": "d50364d73f4efe68b63b3a737fb75223a430bc7adf37ee82cede258c615ac309"
+    }
+  ]
+}

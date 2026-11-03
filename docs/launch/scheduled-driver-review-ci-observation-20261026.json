@@ -1,0 +1,73 @@
+{
+  "recorded_utc": "2026-10-26 16:05:19 UTC",
+  "source_head": "9b656d960bf5057511815136fbaa032a6fad9f6d",
+  "tested_merge_commit": "9d6cbfef15da843a2702d1fe5ddf49cfda80f8ad",
+  "tree": "006b79e3fabdb6caa764810a7dbc093490df9203",
+  "run_id": 40352843861,
+  "run_number": 248,
+  "status": "in_progress",
+  "conclusion": null,
+  "required_jobs": {
+    "gradle-wrapper-integrity": {
+      "id": 121677277434,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "gradle-dependency-submission": {
+      "id": 121677277560,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "documentation-and-provenance": {
+      "id": 121677277738,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "backend": {
+      "id": 121677277807,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "ios-shared": {
+      "id": 121677277832,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "web": {
+      "id": 121677277898,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "mobile": {
+      "id": 121677278371,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "dependency-review": {
+      "id": 121678937872,
+      "status": "completed",
+      "conclusion": "success"
+    }
+  },
+  "full_backend_suite": {
+    "tests": 1482,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "tls_cases": 8,
+  "tls_baseline_restored": true,
+  "backend_junit_sha256": "3f0b4e552251dcd9698d35ff682036ea7aceb34e1927a0b3ec9b72f1bc3345f5",
+  "test_artifact": {
+    "id": 12665002707,
+    "zip_sha256": "e966002ac7c3fbcff34e73398f3e957254b2fb3f9a67c249fda7f6401079e47c"
+  },
+  "provenance_artifact": {
+    "id": 12664059108,
+    "zip_sha256": "e38e1f22839d475ccba077316cf1a0319a81e9ca4fc2bca1e66a49f2e3310d8c"
+  },
+  "same_tree_verified": true,
+  "platform_scope": "Seven jobs passed at this snapshot; iOS Release simulator builds still running.",
+  "later_immediate_offer_source_not_accepted_by_this_run": true,
+  "hosted_physical_provider_or_public_accepted": false
+}

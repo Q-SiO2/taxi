@@ -1,0 +1,26 @@
+{
+  "recorded_utc": "2026-10-26T08:05:55.430766+00:00",
+  "scope": "Read-only current Trial gate after overnight continuation",
+  "trial": {
+    "hasExhaustedFreePlan": false,
+    "isTrialing": false,
+    "remainingUsageCreditBalance": -1.2347478455828274,
+    "trialDaysRemaining": 6
+  },
+  "subscription_type": "trial",
+  "pending_patches": [],
+  "resource_changes_performed": false,
+  "decision": "STOP_DEPENDENT_HOSTING_CHANGES",
+  "reason": "Current credit is negative and isTrialing is false. hasExhaustedFreePlan=false alone does not establish usable authorized Trial capacity.",
+  "planned_server_tls_apply_executed": false,
+  "purchase_or_upgrade_performed": false,
+  "service_or_volume_deletion_performed": false,
+  "existing_resources_confirmed_running": false,
+  "running_state_note": "This workspace/billing read does not establish current application runtime state.",
+  "work_that_continues": [
+    "Complete exact-source CI evidence and docs",
+    "Preserve protected rollback archives and prepared TLS packet",
+    "Independent source behavior and negative/concurrency checks within existing product contracts"
+  ],
+  "reopen_condition": "Fresh positive authorized allowance/capacity and refreshed target/backup/config guards, or a separately approved concrete hosting budget; never infer purchase approval from this stop."
+}

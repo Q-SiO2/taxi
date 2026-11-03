@@ -1,0 +1,39 @@
+{
+  "verified_utc": "2026-10-22T23:58:19.864449+00:00",
+  "passed": true,
+  "services": [
+    {
+      "service": "api",
+      "deployment_id": "8b03ad50-ba24-4d38-88b3-dc5321cd77cd",
+      "checks": {
+        "health": 200,
+        "ready": 200,
+        "metrics_unauthenticated": 401,
+        "metrics_old_token": 401,
+        "metrics_new_token": 200
+      }
+    },
+    {
+      "service": "worker",
+      "deployment_id": "0bc39434-5d26-4e7b-8645-350526e638dd",
+      "checks": {
+        "health": 200,
+        "ready": 200,
+        "metrics_unauthenticated": 401,
+        "metrics_old_token": 401,
+        "metrics_new_token": 200
+      }
+    }
+  ],
+  "normal_driver_login": true,
+  "new_signing_secret_verified_privately": true,
+  "old_signing_secret_rejected_for_new_token": true,
+  "driver_offline": true,
+  "pending_cash": 0,
+  "verifier_own_logout_confirmed": true,
+  "scope": "Readiness and monitoring on actual recovered containers; normal synthetic driver login/read/logout proves current signing key without exporting token/secret. No business command, staff-role change or native UI/session acceptance inferred.",
+  "limitations": [
+    "Current configured API/worker monitoring guards only; unconfigured external monitor consumers are not established",
+    "Normal staff MFA, applicant and final native presentation checks remain required"
+  ]
+}

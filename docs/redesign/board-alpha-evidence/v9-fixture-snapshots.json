@@ -1,0 +1,20 @@
+{
+  "verified_utc": "2026-10-17T09:22:21.933215+00:00",
+  "driver_server_status": "OFFLINE",
+  "apps_force_stopped_after_completed_cash_trip": true,
+  "passed": false,
+  "snapshots": [
+    {
+      "role": "driver",
+      "serial": "emulator-5556",
+      "avd": "taximobile-board-api35-driver",
+      "name": "board-v9-verified",
+      "returncode": 0,
+      "output": "KO: Snapshot save is skipped. Reason: UNSUPPORTED_VK_APP"
+    }
+  ],
+  "limitations": [
+    "Restore has not yet been tested",
+    "Private snapshots stay local and are not release artifacts"
+  ]
+}

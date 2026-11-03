@@ -1,0 +1,30 @@
+{
+  "created_utc": "2026-10-20T20:07:13.943051+00:00",
+  "phase": "Additional token-rotation case rejects the initial quote correction",
+  "counts": {
+    "tests": 18,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  "finding": "LocalSessionLifetime changes on token rotation to fence WebSocket subscriptions. Navigation must use the credential-owner epoch that changes only on login/end, plus active/ending checks. Do not change existing subscription generation behavior.",
+  "archive": [
+    {
+      "path": ".tools/alpha-delivery/quote-refresh-token-red/TEST-org.example.taximobile.feature.app.QuoteSessionRecoveryTest.xml",
+      "sha256": "b2551e0de1e2fd18e5af8e68a63dec0e45599ee7b840fa95de99c76a3c9aee15"
+    },
+    {
+      "path": ".tools/alpha-delivery/quote-refresh-token-red/quote-refresh-token-rotation-green-20261020.log",
+      "sha256": "78066c2aeedd12ff9c2e037f81451ddf0d8baf41d33e415ac2acf954fc823782"
+    },
+    {
+      "path": ".tools/alpha-delivery/quote-refresh-token-red/MobileAppCoordinator.kt",
+      "sha256": "317259daaa2305b3aec67d6f45e7cb422dfe9c1465c60e31e99db88ff3ec6f6e"
+    },
+    {
+      "path": ".tools/alpha-delivery/quote-refresh-token-red/QuoteSessionRecoveryTest.kt",
+      "sha256": "c46898f71cf2f1b8bf11091b4f0799a21b5164b37c2553a7989a5d7fc77f8ef2"
+    }
+  ],
+  "note": "The initial log filename says green; this is explicitly a failed red result."
+}

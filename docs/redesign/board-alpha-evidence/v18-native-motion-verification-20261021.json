@@ -1,0 +1,747 @@
+{
+  "candidate": "candidate-native-v18.json",
+  "verified_utc": "2026-10-21T17:14:53.418947+00:00",
+  "observations": "v18-native-motion-observations-20261021.json",
+  "observations_sha256": "94531544ceece9748cf232d97a8d80db6df0fbff508c09ca923cdbdcb4faa265",
+  "passed": true,
+  "conditions": [
+    {
+      "style": "Folded Streets",
+      "animator_duration_scale": "1",
+      "expected": "bounded motion",
+      "art_roi": [
+        48,
+        334,
+        672,
+        566
+      ],
+      "peak_art_changed_pixels": 84543,
+      "art_differences_from_first": [
+        {
+          "changed_pixels": 84542,
+          "mean_channel_error": 4.392343,
+          "maximum_channel_difference": 19
+        },
+        {
+          "changed_pixels": 84543,
+          "mean_channel_error": 4.45884,
+          "maximum_channel_difference": 20
+        },
+        {
+          "changed_pixels": 84543,
+          "mean_channel_error": 4.45884,
+          "maximum_channel_difference": 20
+        },
+        {
+          "changed_pixels": 84543,
+          "mean_channel_error": 4.45884,
+          "maximum_channel_difference": 20
+        },
+        {
+          "changed_pixels": 84543,
+          "mean_channel_error": 4.45884,
+          "maximum_channel_difference": 20
+        },
+        {
+          "changed_pixels": 84543,
+          "mean_channel_error": 4.45884,
+          "maximum_channel_difference": 20
+        }
+      ],
+      "settled_last_two_frames": {
+        "changed_pixels": 0,
+        "mean_channel_error": 0.0,
+        "maximum_channel_difference": 0
+      },
+      "stable_text_and_actions_roi": [
+        48,
+        630,
+        672,
+        1044
+      ],
+      "peak_text_action_changed_pixels": 0,
+      "frames": [
+        {
+          "path": "v18-motion-folded-streets-scale-1-0.png",
+          "sha256": "3d9972dc3754d64a881a79a431e33bf522cc214e7a1e195682f84aa4d7d1bab2",
+          "capture_started_seconds": 0.051,
+          "capture_finished_seconds": 1.631
+        },
+        {
+          "path": "v18-motion-folded-streets-scale-1-1.png",
+          "sha256": "27ade72932db8eab4dd5ce0d687b779e92e9041097148bf220a9a2cdbb038b41",
+          "capture_started_seconds": 1.631,
+          "capture_finished_seconds": 2.736
+        },
+        {
+          "path": "v18-motion-folded-streets-scale-1-2.png",
+          "sha256": "a154f82efd566a298e17a2bf1ecdf24fed74c674ddc1734e8d0b7e80ed241b81",
+          "capture_started_seconds": 2.736,
+          "capture_finished_seconds": 3.418
+        },
+        {
+          "path": "v18-motion-folded-streets-scale-1-3.png",
+          "sha256": "a154f82efd566a298e17a2bf1ecdf24fed74c674ddc1734e8d0b7e80ed241b81",
+          "capture_started_seconds": 3.419,
+          "capture_finished_seconds": 4.163
+        },
+        {
+          "path": "v18-motion-folded-streets-scale-1-4.png",
+          "sha256": "f72c4977b26ed336085a20b385983db48e6b1735c3dabe70bb28317fdccc799b",
+          "capture_started_seconds": 4.163,
+          "capture_finished_seconds": 4.868
+        },
+        {
+          "path": "v18-motion-folded-streets-scale-1-5.png",
+          "sha256": "f72c4977b26ed336085a20b385983db48e6b1735c3dabe70bb28317fdccc799b",
+          "capture_started_seconds": 4.868,
+          "capture_finished_seconds": 5.576
+        },
+        {
+          "path": "v18-motion-folded-streets-scale-1-6.png",
+          "sha256": "f72c4977b26ed336085a20b385983db48e6b1735c3dabe70bb28317fdccc799b",
+          "capture_started_seconds": 5.576,
+          "capture_finished_seconds": 6.295
+        }
+      ]
+    },
+    {
+      "style": "Street Press",
+      "animator_duration_scale": "1",
+      "expected": "bounded motion",
+      "art_roi": [
+        48,
+        334,
+        672,
+        566
+      ],
+      "peak_art_changed_pixels": 19735,
+      "art_differences_from_first": [
+        {
+          "changed_pixels": 19735,
+          "mean_channel_error": 9.526765,
+          "maximum_channel_difference": 145
+        },
+        {
+          "changed_pixels": 19735,
+          "mean_channel_error": 9.549629,
+          "maximum_channel_difference": 145
+        },
+        {
+          "changed_pixels": 19735,
+          "mean_channel_error": 9.549629,
+          "maximum_channel_difference": 145
+        },
+        {
+          "changed_pixels": 19735,
+          "mean_channel_error": 9.549629,
+          "maximum_channel_difference": 145
+        },
+        {
+          "changed_pixels": 19735,
+          "mean_channel_error": 9.549629,
+          "maximum_channel_difference": 145
+        },
+        {
+          "changed_pixels": 19735,
+          "mean_channel_error": 9.549629,
+          "maximum_channel_difference": 145
+        }
+      ],
+      "settled_last_two_frames": {
+        "changed_pixels": 0,
+        "mean_channel_error": 0.0,
+        "maximum_channel_difference": 0
+      },
+      "stable_text_and_actions_roi": [
+        48,
+        630,
+        672,
+        1044
+      ],
+      "peak_text_action_changed_pixels": 0,
+      "frames": [
+        {
+          "path": "v18-motion-street-press-scale-1-0.png",
+          "sha256": "7de299049651bf30750726cf09325b3788238fbd38e59c3435ce6e628713fcfa",
+          "capture_started_seconds": 0.055,
+          "capture_finished_seconds": 1.638
+        },
+        {
+          "path": "v18-motion-street-press-scale-1-1.png",
+          "sha256": "80d75d40307d4c15f7ade6f6326ad179929be5bd1794ae3cc294b27f5514573b",
+          "capture_started_seconds": 1.641,
+          "capture_finished_seconds": 2.702
+        },
+        {
+          "path": "v18-motion-street-press-scale-1-2.png",
+          "sha256": "364725abbb9ea0a0682406dcc3b45ffdc1212826f652be3dbe868826f0afca6b",
+          "capture_started_seconds": 2.703,
+          "capture_finished_seconds": 3.284
+        },
+        {
+          "path": "v18-motion-street-press-scale-1-3.png",
+          "sha256": "364725abbb9ea0a0682406dcc3b45ffdc1212826f652be3dbe868826f0afca6b",
+          "capture_started_seconds": 3.284,
+          "capture_finished_seconds": 3.844
+        },
+        {
+          "path": "v18-motion-street-press-scale-1-4.png",
+          "sha256": "364725abbb9ea0a0682406dcc3b45ffdc1212826f652be3dbe868826f0afca6b",
+          "capture_started_seconds": 3.844,
+          "capture_finished_seconds": 4.447
+        },
+        {
+          "path": "v18-motion-street-press-scale-1-5.png",
+          "sha256": "364725abbb9ea0a0682406dcc3b45ffdc1212826f652be3dbe868826f0afca6b",
+          "capture_started_seconds": 4.447,
+          "capture_finished_seconds": 5.018
+        },
+        {
+          "path": "v18-motion-street-press-scale-1-6.png",
+          "sha256": "364725abbb9ea0a0682406dcc3b45ffdc1212826f652be3dbe868826f0afca6b",
+          "capture_started_seconds": 5.018,
+          "capture_finished_seconds": 5.594
+        }
+      ]
+    },
+    {
+      "style": "Glazed Machine",
+      "animator_duration_scale": "1",
+      "expected": "bounded motion",
+      "art_roi": [
+        48,
+        334,
+        672,
+        566
+      ],
+      "peak_art_changed_pixels": 129632,
+      "art_differences_from_first": [
+        {
+          "changed_pixels": 129612,
+          "mean_channel_error": 4.003613,
+          "maximum_channel_difference": 80
+        },
+        {
+          "changed_pixels": 129632,
+          "mean_channel_error": 4.013599,
+          "maximum_channel_difference": 80
+        },
+        {
+          "changed_pixels": 129632,
+          "mean_channel_error": 4.013599,
+          "maximum_channel_difference": 80
+        },
+        {
+          "changed_pixels": 129632,
+          "mean_channel_error": 4.013599,
+          "maximum_channel_difference": 80
+        },
+        {
+          "changed_pixels": 129632,
+          "mean_channel_error": 4.013599,
+          "maximum_channel_difference": 80
+        },
+        {
+          "changed_pixels": 129632,
+          "mean_channel_error": 4.013599,
+          "maximum_channel_difference": 80
+        }
+      ],
+      "settled_last_two_frames": {
+        "changed_pixels": 0,
+        "mean_channel_error": 0.0,
+        "maximum_channel_difference": 0
+      },
+      "stable_text_and_actions_roi": [
+        48,
+        630,
+        672,
+        1044
+      ],
+      "peak_text_action_changed_pixels": 0,
+      "frames": [
+        {
+          "path": "v18-motion-glazed-machine-scale-1-0.png",
+          "sha256": "a0c5a0680f2354172c2019649c61c32e6686e5e715ffe054f9b48f075f633c2d",
+          "capture_started_seconds": 0.062,
+          "capture_finished_seconds": 1.533
+        },
+        {
+          "path": "v18-motion-glazed-machine-scale-1-1.png",
+          "sha256": "9ebe43adec35ed6c57a022b28425dbcd2556759541797ce167c73a58d3c46c32",
+          "capture_started_seconds": 1.533,
+          "capture_finished_seconds": 2.861
+        },
+        {
+          "path": "v18-motion-glazed-machine-scale-1-2.png",
+          "sha256": "1fcc32a990576ab9dced0c7a063c7ed5d655f4b47c5106220612d94db40099fe",
+          "capture_started_seconds": 2.861,
+          "capture_finished_seconds": 3.658
+        },
+        {
+          "path": "v18-motion-glazed-machine-scale-1-3.png",
+          "sha256": "1fcc32a990576ab9dced0c7a063c7ed5d655f4b47c5106220612d94db40099fe",
+          "capture_started_seconds": 3.659,
+          "capture_finished_seconds": 4.42
+        },
+        {
+          "path": "v18-motion-glazed-machine-scale-1-4.png",
+          "sha256": "1fcc32a990576ab9dced0c7a063c7ed5d655f4b47c5106220612d94db40099fe",
+          "capture_started_seconds": 4.42,
+          "capture_finished_seconds": 5.146
+        },
+        {
+          "path": "v18-motion-glazed-machine-scale-1-5.png",
+          "sha256": "1fcc32a990576ab9dced0c7a063c7ed5d655f4b47c5106220612d94db40099fe",
+          "capture_started_seconds": 5.146,
+          "capture_finished_seconds": 5.919
+        },
+        {
+          "path": "v18-motion-glazed-machine-scale-1-6.png",
+          "sha256": "1fcc32a990576ab9dced0c7a063c7ed5d655f4b47c5106220612d94db40099fe",
+          "capture_started_seconds": 5.92,
+          "capture_finished_seconds": 6.697
+        }
+      ]
+    },
+    {
+      "style": "Notepad",
+      "animator_duration_scale": "1",
+      "expected": "static",
+      "art_roi": [
+        48,
+        334,
+        672,
+        390
+      ],
+      "peak_art_changed_pixels": 0,
+      "art_differences_from_first": [
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        }
+      ],
+      "settled_last_two_frames": {
+        "changed_pixels": 0,
+        "mean_channel_error": 0.0,
+        "maximum_channel_difference": 0
+      },
+      "stable_text_and_actions_roi": [
+        48,
+        630,
+        672,
+        1044
+      ],
+      "peak_text_action_changed_pixels": 0,
+      "frames": [
+        {
+          "path": "v18-motion-notepad-scale-1-0.png",
+          "sha256": "73d52141b71a07eb8b674d948f96235eab9a28d0cf6d8b5570892db589a3d9a2",
+          "capture_started_seconds": 0.051,
+          "capture_finished_seconds": 0.735
+        },
+        {
+          "path": "v18-motion-notepad-scale-1-1.png",
+          "sha256": "73d52141b71a07eb8b674d948f96235eab9a28d0cf6d8b5570892db589a3d9a2",
+          "capture_started_seconds": 0.735,
+          "capture_finished_seconds": 1.29
+        },
+        {
+          "path": "v18-motion-notepad-scale-1-2.png",
+          "sha256": "73d52141b71a07eb8b674d948f96235eab9a28d0cf6d8b5570892db589a3d9a2",
+          "capture_started_seconds": 1.291,
+          "capture_finished_seconds": 1.798
+        },
+        {
+          "path": "v18-motion-notepad-scale-1-3.png",
+          "sha256": "73d52141b71a07eb8b674d948f96235eab9a28d0cf6d8b5570892db589a3d9a2",
+          "capture_started_seconds": 1.798,
+          "capture_finished_seconds": 2.334
+        },
+        {
+          "path": "v18-motion-notepad-scale-1-4.png",
+          "sha256": "73d52141b71a07eb8b674d948f96235eab9a28d0cf6d8b5570892db589a3d9a2",
+          "capture_started_seconds": 2.334,
+          "capture_finished_seconds": 2.922
+        },
+        {
+          "path": "v18-motion-notepad-scale-1-5.png",
+          "sha256": "73d52141b71a07eb8b674d948f96235eab9a28d0cf6d8b5570892db589a3d9a2",
+          "capture_started_seconds": 2.922,
+          "capture_finished_seconds": 3.522
+        },
+        {
+          "path": "v18-motion-notepad-scale-1-6.png",
+          "sha256": "73d52141b71a07eb8b674d948f96235eab9a28d0cf6d8b5570892db589a3d9a2",
+          "capture_started_seconds": 3.522,
+          "capture_finished_seconds": 4.102
+        }
+      ]
+    },
+    {
+      "style": "Folded Streets",
+      "animator_duration_scale": "0",
+      "expected": "static",
+      "art_roi": [
+        48,
+        334,
+        672,
+        566
+      ],
+      "peak_art_changed_pixels": 0,
+      "art_differences_from_first": [
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        }
+      ],
+      "settled_last_two_frames": {
+        "changed_pixels": 0,
+        "mean_channel_error": 0.0,
+        "maximum_channel_difference": 0
+      },
+      "stable_text_and_actions_roi": [
+        48,
+        630,
+        672,
+        1044
+      ],
+      "peak_text_action_changed_pixels": 0,
+      "frames": [
+        {
+          "path": "v18-motion-folded-streets-scale-0-0.png",
+          "sha256": "74a17806068be208ad350c0f55619f1476707efa01674a9286701edd72826114",
+          "capture_started_seconds": 0.051,
+          "capture_finished_seconds": 0.764
+        },
+        {
+          "path": "v18-motion-folded-streets-scale-0-1.png",
+          "sha256": "74a17806068be208ad350c0f55619f1476707efa01674a9286701edd72826114",
+          "capture_started_seconds": 0.764,
+          "capture_finished_seconds": 1.475
+        },
+        {
+          "path": "v18-motion-folded-streets-scale-0-2.png",
+          "sha256": "74a17806068be208ad350c0f55619f1476707efa01674a9286701edd72826114",
+          "capture_started_seconds": 1.476,
+          "capture_finished_seconds": 2.131
+        },
+        {
+          "path": "v18-motion-folded-streets-scale-0-3.png",
+          "sha256": "74a17806068be208ad350c0f55619f1476707efa01674a9286701edd72826114",
+          "capture_started_seconds": 2.132,
+          "capture_finished_seconds": 2.835
+        },
+        {
+          "path": "v18-motion-folded-streets-scale-0-4.png",
+          "sha256": "74a17806068be208ad350c0f55619f1476707efa01674a9286701edd72826114",
+          "capture_started_seconds": 2.835,
+          "capture_finished_seconds": 3.564
+        },
+        {
+          "path": "v18-motion-folded-streets-scale-0-5.png",
+          "sha256": "74a17806068be208ad350c0f55619f1476707efa01674a9286701edd72826114",
+          "capture_started_seconds": 3.564,
+          "capture_finished_seconds": 4.272
+        },
+        {
+          "path": "v18-motion-folded-streets-scale-0-6.png",
+          "sha256": "74a17806068be208ad350c0f55619f1476707efa01674a9286701edd72826114",
+          "capture_started_seconds": 4.272,
+          "capture_finished_seconds": 4.99
+        }
+      ]
+    },
+    {
+      "style": "Street Press",
+      "animator_duration_scale": "0",
+      "expected": "static",
+      "art_roi": [
+        48,
+        334,
+        672,
+        566
+      ],
+      "peak_art_changed_pixels": 0,
+      "art_differences_from_first": [
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        }
+      ],
+      "settled_last_two_frames": {
+        "changed_pixels": 0,
+        "mean_channel_error": 0.0,
+        "maximum_channel_difference": 0
+      },
+      "stable_text_and_actions_roi": [
+        48,
+        630,
+        672,
+        1044
+      ],
+      "peak_text_action_changed_pixels": 0,
+      "frames": [
+        {
+          "path": "v18-motion-street-press-scale-0-0.png",
+          "sha256": "5d8cdcf1f3f2aed23445b9809160952347260335648d0e29d741a9462227759e",
+          "capture_started_seconds": 0.051,
+          "capture_finished_seconds": 0.584
+        },
+        {
+          "path": "v18-motion-street-press-scale-0-1.png",
+          "sha256": "5d8cdcf1f3f2aed23445b9809160952347260335648d0e29d741a9462227759e",
+          "capture_started_seconds": 0.584,
+          "capture_finished_seconds": 1.107
+        },
+        {
+          "path": "v18-motion-street-press-scale-0-2.png",
+          "sha256": "5d8cdcf1f3f2aed23445b9809160952347260335648d0e29d741a9462227759e",
+          "capture_started_seconds": 1.107,
+          "capture_finished_seconds": 1.713
+        },
+        {
+          "path": "v18-motion-street-press-scale-0-3.png",
+          "sha256": "5d8cdcf1f3f2aed23445b9809160952347260335648d0e29d741a9462227759e",
+          "capture_started_seconds": 1.713,
+          "capture_finished_seconds": 2.295
+        },
+        {
+          "path": "v18-motion-street-press-scale-0-4.png",
+          "sha256": "5d8cdcf1f3f2aed23445b9809160952347260335648d0e29d741a9462227759e",
+          "capture_started_seconds": 2.295,
+          "capture_finished_seconds": 2.882
+        },
+        {
+          "path": "v18-motion-street-press-scale-0-5.png",
+          "sha256": "5d8cdcf1f3f2aed23445b9809160952347260335648d0e29d741a9462227759e",
+          "capture_started_seconds": 2.882,
+          "capture_finished_seconds": 3.429
+        },
+        {
+          "path": "v18-motion-street-press-scale-0-6.png",
+          "sha256": "5d8cdcf1f3f2aed23445b9809160952347260335648d0e29d741a9462227759e",
+          "capture_started_seconds": 3.43,
+          "capture_finished_seconds": 4.017
+        }
+      ]
+    },
+    {
+      "style": "Glazed Machine",
+      "animator_duration_scale": "0",
+      "expected": "static",
+      "art_roi": [
+        48,
+        334,
+        672,
+        566
+      ],
+      "peak_art_changed_pixels": 0,
+      "art_differences_from_first": [
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        },
+        {
+          "changed_pixels": 0,
+          "mean_channel_error": 0.0,
+          "maximum_channel_difference": 0
+        }
+      ],
+      "settled_last_two_frames": {
+        "changed_pixels": 0,
+        "mean_channel_error": 0.0,
+        "maximum_channel_difference": 0
+      },
+      "stable_text_and_actions_roi": [
+        48,
+        630,
+        672,
+        1044
+      ],
+      "peak_text_action_changed_pixels": 0,
+      "frames": [
+        {
+          "path": "v18-motion-glazed-machine-scale-0-0.png",
+          "sha256": "3b07cc311545ea48e28918139b105cad4e0c792eeb6608646372c8a7b5efd51d",
+          "capture_started_seconds": 0.051,
+          "capture_finished_seconds": 0.755
+        },
+        {
+          "path": "v18-motion-glazed-machine-scale-0-1.png",
+          "sha256": "3b07cc311545ea48e28918139b105cad4e0c792eeb6608646372c8a7b5efd51d",
+          "capture_started_seconds": 0.755,
+          "capture_finished_seconds": 1.438
+        },
+        {
+          "path": "v18-motion-glazed-machine-scale-0-2.png",
+          "sha256": "3b07cc311545ea48e28918139b105cad4e0c792eeb6608646372c8a7b5efd51d",
+          "capture_started_seconds": 1.438,
+          "capture_finished_seconds": 2.152
+        },
+        {
+          "path": "v18-motion-glazed-machine-scale-0-3.png",
+          "sha256": "3b07cc311545ea48e28918139b105cad4e0c792eeb6608646372c8a7b5efd51d",
+          "capture_started_seconds": 2.152,
+          "capture_finished_seconds": 2.898
+        },
+        {
+          "path": "v18-motion-glazed-machine-scale-0-4.png",
+          "sha256": "3b07cc311545ea48e28918139b105cad4e0c792eeb6608646372c8a7b5efd51d",
+          "capture_started_seconds": 2.898,
+          "capture_finished_seconds": 3.647
+        },
+        {
+          "path": "v18-motion-glazed-machine-scale-0-5.png",
+          "sha256": "3b07cc311545ea48e28918139b105cad4e0c792eeb6608646372c8a7b5efd51d",
+          "capture_started_seconds": 3.647,
+          "capture_finished_seconds": 4.413
+        },
+        {
+          "path": "v18-motion-glazed-machine-scale-0-6.png",
+          "sha256": "3b07cc311545ea48e28918139b105cad4e0c792eeb6608646372c8a7b5efd51d",
+          "capture_started_seconds": 4.413,
+          "capture_finished_seconds": 5.141
+        }
+      ]
+    }
+  ],
+  "scope": "Actual API31 passenger English welcome screenshots on exact frozen v18. Pixel comparison of the visually confirmed artwork and stable text/actions; no physical or frame-time/performance acceptance.",
+  "same_style_static_pose": [
+    {
+      "style": "Folded Streets",
+      "normal_settled_vs_reduced_motion": {
+        "changed_pixels": 0,
+        "mean_channel_error": 0.0,
+        "maximum_channel_difference": 0
+      }
+    },
+    {
+      "style": "Street Press",
+      "normal_settled_vs_reduced_motion": {
+        "changed_pixels": 0,
+        "mean_channel_error": 0.0,
+        "maximum_channel_difference": 0
+      }
+    },
+    {
+      "style": "Glazed Machine",
+      "normal_settled_vs_reduced_motion": {
+        "changed_pixels": 0,
+        "mean_channel_error": 0.0,
+        "maximum_channel_difference": 0
+      }
+    }
+  ],
+  "settings_restored": {
+    "animator_duration_scale": "null",
+    "window_animation_scale": "1.0",
+    "transition_animation_scale": "1.0"
+  },
+  "normal_existing_account_restored": true,
+  "limitations": [
+    "Seven-frame snapshots per condition establish visible change/static behavior, not frame-rate, exact duration or animation CPU cost",
+    "API31 passenger welcome only; no inference of iOS, physical Android, all screens or full assistive-technology acceptance",
+    "Original raw video clips remain separate; no video decoding or editing was needed"
+  ]
+}

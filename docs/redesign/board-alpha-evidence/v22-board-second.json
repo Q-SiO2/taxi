@@ -1,0 +1,141 @@
+{
+  "candidate": "candidate-native-v22.json",
+  "web_candidate": "candidate-web-v8.json",
+  "run": "second",
+  "started_utc": "2026-10-22T17:04:17.102912+00:00",
+  "passed": true,
+  "beats": [
+    {
+      "beat": 1,
+      "description": "Four style options shown; Notepad selected then Folded Streets restored in actual native passenger UI",
+      "finished_utc": "2026-10-22T17:05:00.803866+00:00",
+      "screenshots": [
+        {
+          "path": "v22-board-second-style-options-notepad.png",
+          "sha256": "6d3e063c73700399305c4b56e310005d25c8752444b070a9d4cc710ed715543c"
+        },
+        {
+          "path": "v22-board-second-selected-notepad.png",
+          "sha256": "ea6eba389e56f830d1746da8b9f12d630ce79efc9c4787ac0efdf0cc8374de67"
+        },
+        {
+          "path": "v22-board-second-style-options-folded-streets.png",
+          "sha256": "79b607b7bdb45807de4d394749d7bb16df8cbf49c8b028690487bd69024ee24d"
+        },
+        {
+          "path": "v22-board-second-selected-folded-streets.png",
+          "sha256": "b1fe9c3d3259ab969c0aadaf2bcf983946dc7caa13c6d2883eb7dca734ca7c8b"
+        }
+      ]
+    },
+    {
+      "beat": 2,
+      "description": "Native map selection, backend fare and new passenger request with eligible driver ready",
+      "finished_utc": "2026-10-22T17:06:47.272347+00:00",
+      "native_record": "v22-native-second.json",
+      "confirmed_once_actions": [
+        "online",
+        "request"
+      ]
+    },
+    {
+      "beat": 3,
+      "description": "Private driver offer accepted; same server assignment",
+      "finished_utc": "2026-10-22T17:07:07.774975+00:00",
+      "native_record": "v22-native-second.json",
+      "confirmed_once_actions": [
+        "accept"
+      ]
+    },
+    {
+      "beat": 4,
+      "description": "Native heading, arrival, start and completion; passenger follows authoritative trip",
+      "finished_utc": "2026-10-22T17:09:04.798131+00:00",
+      "native_record": "v22-native-second.json",
+      "confirmed_once_actions": [
+        "heading",
+        "arrive",
+        "start",
+        "complete"
+      ]
+    },
+    {
+      "beat": 5,
+      "description": "Pending cash, dated amount confirmation and completed passenger receipt",
+      "finished_utc": "2026-10-22T17:09:25.380357+00:00",
+      "native_record": "v22-native-second.json",
+      "confirmed_once_actions": [
+        "cash"
+      ]
+    },
+    {
+      "beat": 6,
+      "description": "Fresh normal reviewer login and MFA; authorized Casablanca; same Submitted Omar application revision 7/submission 2 read without decision",
+      "finished_utc": "2026-10-22T17:11:11.775Z",
+      "screenshot": {
+        "path": "v22-board-second-beat-6.png",
+        "sha256": "d8fd55f0d385c93ba723b256fee5f0d18d480edb4d13d0fe9c72f2f940b11086"
+      },
+      "application_id": "0de83ae6-2f00-4dbd-8f23-34b491e5698e",
+      "revision": 7,
+      "submission_number": 2,
+      "scope": "casablanca",
+      "review_decision_sent": false
+    },
+    {
+      "beat": 7,
+      "description": "Fresh normal applicant login; same Omar Casablanca application remains Submitted at revision 7 with public history disclosed; no resubmission",
+      "finished_utc": "2026-10-22T17:11:46.464Z",
+      "screenshot": {
+        "path": "v22-board-second-beat-7.png",
+        "sha256": "afc679b6ea593dc5f80686c9e1b97db232fb47ae40b69880a350ae47e15ace94"
+      },
+      "application_id": "0de83ae6-2f00-4dbd-8f23-34b491e5698e",
+      "revision": 7,
+      "submission_number": 2,
+      "resubmit_sent": false
+    }
+  ],
+  "scope": "Synthetic emulator and normal hosted browser rehearsal; actual elapsed time, not a seven-minute claim",
+  "finished_utc": "2026-10-22T17:11:46.464Z",
+  "elapsed_seconds": 449.362,
+  "verification": {
+    "utc": "2026-10-22T17:12:05.222889+00:00",
+    "ride_id": "e8e23f90-4329-4381-9391-2dcccfd0b027",
+    "ride_status": "COMPLETED",
+    "payment": {
+      "method": "CASH",
+      "status": "COMPLETED"
+    },
+    "amount": "35.00",
+    "driver_availability": "OFFLINE",
+    "command_counts": {
+      "online": 1,
+      "request": 1,
+      "accept": 1,
+      "heading": 1,
+      "arrive": 1,
+      "start": 1,
+      "complete": 1,
+      "cash": 1
+    },
+    "installed_apks": [
+      {
+        "role": "driver",
+        "sha256": "53378d102e320aec30ffb5016ca11874b982ba8a3c56a01ac932053f63dc29f0"
+      },
+      {
+        "role": "passenger",
+        "sha256": "702b01a86a38e93bb81ca7a9cbd263c58d630b5f06cc126fceecd3ae6570e773"
+      }
+    ],
+    "all_linked_screenshot_hashes_match": true,
+    "native_completed_before_staff_and_applicant": true
+  },
+  "limitations": [
+    "Synthetic GPS/accounts/cash only; no physical Android or real transport acceptance",
+    "Agent-operated timed UI run includes verification overhead; no edited video or real-time narration",
+    "No new review/application command or staff permission grant",
+    "Broader gate acceptance and provider-paused redirect deployment remain separate"
+  ]
+}

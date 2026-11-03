@@ -58,10 +58,15 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@js-joda/core@3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@js-joda/core/-/core-3.2.0.tgz#3e61e21b7b2b8a6be746df1335cf91d70db2a273"
-  integrity sha512-PMqgJ0sw5B7FKb2d5bWYIoxjri+QlW/Pys7+Rw82jSH0QN3rB05jZ/VrrsUdh1w4+i2kw9JOejXGq/KhDOX7Kg==
+"@js-joda/core@3.2.0", "@js-joda/core@5.7.0":
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/@js-joda/core/-/core-5.7.0.tgz#526d437b07cbb41e28df34d487cbfccbe730185b"
+  integrity sha512-WBu4ULVVxySLLzK1Ppq+OdfP+adRS4ntmDQT915rzDJ++i95gc2jZkM5B6LWEAwN3lGXpfie3yPABozdD3K3Vg==
+
+"@js-joda/timezone@2.26.0":
+  version "2.26.0"
+  resolved "https://registry.yarnpkg.com/@js-joda/timezone/-/timezone-2.26.0.tgz#54be4117a0efd46ce920866cd1bf21291743ae46"
+  integrity sha512-pX3snc+twbNmXtsfcnT+nGuGQSa80pnsf/yUoTJSuqohV/2JRTsdvfysG17/cI+lQ+jgFCSnW6Kl7RmwGseS0g==
 
 "@jsonjoy.com/base64@17.67.0":
   version "17.67.0"

@@ -1,0 +1,124 @@
+{
+  "candidate": "candidate-native-v22.json",
+  "started_utc": "2026-10-22T17:08:02.267926+00:00",
+  "passed": true,
+  "samples": [
+    {
+      "utc": "2026-10-22T17:08:28.331892+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:29.190968+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:30.058567+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:30.894118+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:31.728070+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:32.566348+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:33.416255+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:34.270540+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:35.109045+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:35.948290+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:36.780833+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:37.618164+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:38.459972+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:39.305379+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:40.141763+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:40.978937+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:41.825031+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:42.695823+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:43.556293+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:44.392319+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:45.250832+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    },
+    {
+      "utc": "2026-10-22T17:08:46.104852+00:00",
+      "wifi_on": "0",
+      "mobile_data": "0"
+    }
+  ],
+  "scope": "Independent read-only actual Android wifi_on/mobile_data observations. No radio change, native input, HTTP request or assertion about every possible transport.",
+  "restored_sample": {
+    "utc": "2026-10-22T17:08:46.971467+00:00",
+    "wifi_on": "1",
+    "mobile_data": "1"
+  },
+  "finished_utc": "2026-10-22T17:08:46.971653+00:00"
+}

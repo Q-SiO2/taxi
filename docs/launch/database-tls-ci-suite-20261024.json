@@ -1,0 +1,31 @@
+{
+  "observed_utc": "2026-10-24T14:43:51.491294+00:00",
+  "commit": "29198354250615940fa46ac7c1d8305da743ba86",
+  "run_id": 40102365437,
+  "run_number": 232,
+  "job_id": 120896959317,
+  "url": "https://github.com/Q-SiO2/taxi/actions/runs/40102365437",
+  "artifact_id": 12563297444,
+  "artifact_sha256": "ad1d8c5586b234e9d70a15e1e16807d036043aab7550e479b017694e02764922",
+  "fixture_report": {
+    "recorded_utc": "2026-10-24T14:26:04.988652+00:00",
+    "passed": true,
+    "scope": "Disposable CI PostgreSQL identity/transport probes inside the full backend suite; no hosted or phase acceptance",
+    "hosted_accepted": false,
+    "phase": "SUITE_PASSED",
+    "full_suite": {
+      "tests": 1317,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tls_cases": 8,
+    "tls_passed": true,
+    "junit_sha256": "5d6182967675c63b48913a52f7505b19a5332302c4456c418b1028134eef720f",
+    "certificate_sha256": "0b220211f4e6a438d719a771085b51a9fa4b531e2e064ef099d02f518f23ae80",
+    "baseline_restored": true
+  },
+  "scope": "Full unfiltered backend test suite including real TLS passes; downstream image/security/platform jobs still pending at capture",
+  "source_ci_terminal_accepted": false,
+  "hosted_accepted": false
+}

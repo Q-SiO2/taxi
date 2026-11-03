@@ -1,0 +1,18 @@
+{
+  "recorded_utc": "2026-10-26T16:48:13.361989+00:00",
+  "source_predecessor": "e38ae7b59da64b73966a7e794b30382df572502f",
+  "source_sha256": {
+    "TaxiMobile/scripts/validate_mobile_recovery.py": "8f0a392d8c6a5476381904f5a2cf7524dca0d98017b37e9c38d645f7fe8c0fb8",
+    "TaxiMobile/scripts/tests/test_validate_mobile_recovery.py": "78ca9fe70190cb5e3d6606ed5e4ede0526fc0f31d5f60cedcede84b25ebfdb3f"
+  },
+  "python_suite": {
+    "tests": 117,
+    "failures": 0,
+    "errors": 0,
+    "log_sha256": "91160c183dd878fc82e8564f16b23505dbbc27e718435ebc9b34fb4a436783e8"
+  },
+  "app_backend_build_dependencies_unchanged": true,
+  "city_time_work_excluded": true,
+  "immutable_successor_ci_accepted": false,
+  "physical_hosted_provider_pilot_or_public_accepted": false
+}

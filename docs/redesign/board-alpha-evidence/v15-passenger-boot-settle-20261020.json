@@ -1,0 +1,12 @@
+{
+  "started_utc": "2026-10-20T10:07:49.813935+00:00",
+  "role": "passenger",
+  "serial": "emulator-5554",
+  "actions": [],
+  "scope": "Known observed bundled-system boot dialogs and explicit read-only native Retry connection only; no app reset/security/network setting change",
+  "ui_after": [
+    "TaxiMobile",
+    "جارٍ التحقق من جلستك الآمنة…"
+  ],
+  "finished_utc": "2026-10-20T10:07:58.764343+00:00"
+}

@@ -1,0 +1,45 @@
+{
+  "verified_utc": "2026-10-19T19:31:18.167059+00:00",
+  "passed_within_scope": true,
+  "candidate": "candidate-native-v12.json",
+  "ride_id": "98a253df-de13-4029-9daa-e538a520997d",
+  "server_status": "COMPLETED",
+  "payment": {
+    "method": "CASH",
+    "status": "COMPLETED"
+  },
+  "fare": "35.00",
+  "driver_availability": "OFFLINE",
+  "actual_native_attempt": "v12-native-first-fr-trip-recovery.json",
+  "first_attempt": "v12-native-first.json",
+  "start_retry": "v12-first-fr-explicit-start-retry.json",
+  "qualification": "Initial full run did not confirm Start. One explicit native retry after server pickup readback started the trip. The recovery used native completion and cash confirmation; server confirmed cash completed, but its final passenger hierarchy read failed. A later native passenger cash-completed view and independent receipt/offline reads now qualify recovery only.",
+  "screenshots": [
+    {
+      "path": "v12-first-fr-recovery-driver-location-loaded.png",
+      "sha256": "0b9cebef3730523dd9370840edbb49faf01f611c4926b08ca47fc2fe54bdc7bd"
+    },
+    {
+      "path": "v12-first-fr-recovery-passenger-cash-pending.png",
+      "sha256": "2a51642e0bff890b04c8842e0324077aac49128cc137773b06ae0ba89104aa4b"
+    },
+    {
+      "path": "v12-first-fr-recovery-driver-cash-dialog.png",
+      "sha256": "7c7aa89e4dfbbd100b6bf3c0ae8a6d5e6342a36ee1a49e44827291eddf967566"
+    },
+    {
+      "path": "v12-first-fr-recovery-passenger-cash-completed.png",
+      "sha256": "3d3356a05f1f23c57d13e520838d2f2c3796173bbc6f7647844cc838203cb075"
+    },
+    {
+      "path": "v12-first-fr-recovery-driver-idle.png",
+      "sha256": "4427fc8477e542ac36c3db1cc2b5b59d26999e087eb7b5924fb1e81853c43dbd"
+    }
+  ],
+  "limitations": [
+    "Recovery followed a failed v12 full run and explicit Start retry; it never counts as a clean full rehearsal",
+    "Synthetic GPS/accounts/35.00 MAD cash only",
+    "Bundled-system boot dialogs and low host memory are emulator fidelity/performance limits, not physical-device acceptance",
+    "No direct completion/payment API command or database reset was used"
+  ]
+}

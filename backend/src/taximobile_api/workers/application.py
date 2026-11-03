@@ -54,9 +54,12 @@ class BackgroundWorkerRuntime:
         self._settings = settings
         self._live_event_publisher = live_event_publisher
         self._push_provider = push_provider
+        self._owns_document_store = driver_document_store is None
         self._driver_document_store = (
             driver_document_store
             or create_driver_document_store(
+                backend=settings.driver_document_storage_backend,
+                s3_settings=settings.driver_document_s3,
                 root=settings.driver_document_storage_root,
                 encryption_key=settings.driver_document_encryption_key,
                 clamav_host=settings.driver_document_clamav_host,
@@ -175,3 +178,5 @@ class BackgroundWorkerRuntime:
             task.cancel()
         if tasks:
             await asyncio.gather(*tasks, return_exceptions=True)
+        if self._owns_document_store:
+            await self._driver_document_store.aclose()

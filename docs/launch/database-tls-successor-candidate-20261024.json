@@ -1,0 +1,37 @@
+{
+  "recorded_utc": "2026-10-24T14:24:20.082688+00:00",
+  "commit": "29198354250615940fa46ac7c1d8305da743ba86",
+  "tree": "799fda5b5fd70b12fbbf26e5a016d667db5fc2ca",
+  "parent": "3698f60334721d3289d616bb598ffee36cb81b24",
+  "files": [
+    "backend/tests/api/test_system.py",
+    "docs/launch/database-tls.md",
+    "docs/launch/staging-tls-rollout.md",
+    "docs/launch/database-tls-candidate-20261024.json",
+    "docs/launch/database-tls-ci-observation-20261024.json",
+    "docs/launch/database-tls-readiness-verification-20261024.json"
+  ],
+  "checks": [
+    {
+      "name": "docs",
+      "exit_code": 0
+    },
+    {
+      "name": "credentials",
+      "exit_code": 0
+    },
+    {
+      "name": "ci-security",
+      "exit_code": 0
+    }
+  ],
+  "original_head_and_index_preserved": true,
+  "production_implementation_unchanged": true,
+  "compilation_inputs_identical": 371,
+  "published": true,
+  "hosted_accepted": false,
+  "published_utc": "2026-10-24T14:28:48.415743+00:00",
+  "pull_request": "https://github.com/Q-SiO2/taxi/pull/74",
+  "ci_run_id": 40102365437,
+  "ci_run_number": 232
+}

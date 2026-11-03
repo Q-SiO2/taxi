@@ -1,0 +1,161 @@
+{
+  "verified_utc": "2026-10-20 11:15:15 UTC",
+  "scope": "Existing trial staging health; no configuration or billing mutation",
+  "environment": {
+    "id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+    "name": "staging"
+  },
+  "services": [
+    {
+      "serviceId": "2d8ab069-2310-46ff-afe0-8fd4f42a5bd1",
+      "serviceName": "alpha-web",
+      "state": "online",
+      "statusText": "Online",
+      "activeDeployments": [
+        {
+          "id": "ceee310c-e957-49ad-945d-b9f2d292eb61",
+          "status": "SUCCESS",
+          "createdAt": "2026-10-19T11:21:12.073Z",
+          "statusUpdatedAt": "2026-10-19T11:21:39.721Z"
+        }
+      ],
+      "replicaStatus": {
+        "running": 1,
+        "crashed": 0,
+        "total": 1
+      },
+      "cronJob": null,
+      "issues": {
+        "warningCount": 0,
+        "criticalCount": 0
+      },
+      "recentFailures": 0,
+      "recentFailedDeployments": [],
+      "hasIssues": false,
+      "isCronJob": false,
+      "hasVolume": false
+    },
+    {
+      "serviceId": "758fa7d5-f8b8-4730-a00f-438e28184e35",
+      "serviceName": "alpha-api",
+      "state": "online",
+      "statusText": "Online",
+      "activeDeployments": [
+        {
+          "id": "e5e108a0-e5dd-4553-93fd-292026c98b63",
+          "status": "SUCCESS",
+          "createdAt": "2026-10-18T20:07:25.036Z",
+          "statusUpdatedAt": "2026-10-18T20:08:17.539Z"
+        }
+      ],
+      "replicaStatus": {
+        "running": 1,
+        "crashed": 0,
+        "total": 1
+      },
+      "cronJob": null,
+      "issues": {
+        "warningCount": 0,
+        "criticalCount": 0
+      },
+      "recentFailures": 0,
+      "recentFailedDeployments": [],
+      "hasIssues": false,
+      "isCronJob": false,
+      "hasVolume": false
+    },
+    {
+      "serviceId": "41ccd6b2-41e2-4886-8d96-cc56f62aaab7",
+      "serviceName": "alpha-postgis",
+      "state": "online",
+      "statusText": "Online",
+      "activeDeployments": [
+        {
+          "id": "10348a72-65f4-4b80-8474-e8a950ccd282",
+          "status": "SUCCESS",
+          "createdAt": "2026-10-15T11:39:00.931Z",
+          "statusUpdatedAt": "2026-10-15T11:39:14.627Z"
+        }
+      ],
+      "replicaStatus": {
+        "running": 1,
+        "crashed": 0,
+        "total": 1
+      },
+      "cronJob": null,
+      "issues": {
+        "warningCount": 0,
+        "criticalCount": 0
+      },
+      "recentFailures": 0,
+      "recentFailedDeployments": [],
+      "hasIssues": false,
+      "isCronJob": false,
+      "hasVolume": true
+    },
+    {
+      "serviceId": "568723a2-e456-4130-825a-077c5cae9f81",
+      "serviceName": "alpha-routing",
+      "state": "online",
+      "statusText": "Online",
+      "activeDeployments": [
+        {
+          "id": "dec657d1-e507-421d-9bc2-15f0250385b7",
+          "status": "SUCCESS",
+          "createdAt": "2026-10-12T17:25:06.150Z",
+          "statusUpdatedAt": "2026-10-12T17:30:35.551Z"
+        }
+      ],
+      "replicaStatus": {
+        "running": 1,
+        "crashed": 0,
+        "total": 1
+      },
+      "cronJob": null,
+      "issues": {
+        "warningCount": 0,
+        "criticalCount": 0
+      },
+      "recentFailures": 0,
+      "recentFailedDeployments": [],
+      "hasIssues": false,
+      "isCronJob": false,
+      "hasVolume": false
+    },
+    {
+      "serviceId": "eb42d0ba-feae-4f7a-9c86-48f4d38006d0",
+      "serviceName": "alpha-worker",
+      "state": "online",
+      "statusText": "Online",
+      "activeDeployments": [
+        {
+          "id": "8ca5a361-9b66-4d7a-8041-c9a5754bbe47",
+          "status": "SUCCESS",
+          "createdAt": "2026-10-12T17:22:09.505Z",
+          "statusUpdatedAt": "2026-10-12T17:27:38.043Z"
+        }
+      ],
+      "replicaStatus": {
+        "running": 1,
+        "crashed": 0,
+        "total": 1
+      },
+      "cronJob": null,
+      "issues": {
+        "warningCount": 0,
+        "criticalCount": 0
+      },
+      "recentFailures": 0,
+      "recentFailedDeployments": [],
+      "hasIssues": false,
+      "isCronJob": false,
+      "hasVolume": false
+    }
+  ],
+  "pendingWork": [],
+  "summary": {
+    "totalServices": 5,
+    "servicesWithIssues": 0,
+    "totalFailures": 0
+  }
+}

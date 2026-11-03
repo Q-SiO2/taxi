@@ -209,7 +209,9 @@ async def owned_application(
         DriverCityApplication.driver_id == driver_id,
     )
     if lock:
-        statement = statement.with_for_update()
+        # The upload request crosses committed preflight/reservation/publication
+        # stages. Refresh a cached application only after acquiring its lock.
+        statement = statement.with_for_update().execution_options(populate_existing=True)
     application = await session.scalar(statement)
     if application is None:
         raise RecruitmentNotFound("Driver city application not found.")

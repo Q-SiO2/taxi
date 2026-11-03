@@ -8,18 +8,24 @@ import android.location.LocationManager
 import android.os.CancellationSignal
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.location.LocationManagerCompat
+import androidx.core.location.LocationListenerCompat
+import androidx.core.location.LocationRequestCompat
 import org.example.taximobile.domain.rides.Coordinates
+import org.example.taximobile.domain.drivers.DriverLocationObservation
 import org.example.taximobile.feature.location.OneShotLocationGate
+import org.example.taximobile.feature.location.nativeFixAcquiredAfterRequest
 
 /**
  * Performs one foreground-only location lookup.
  *
- * It intentionally does not subscribe to continuous updates or retain location
- * history. User-initiated requests may ask for when-in-use permission;
+ * Driver observations wait for one newly acquired fix with a bounded listener;
+ * it is removed on success, timeout or foreground exit. No location history or
+ * background service is retained. User requests may ask for when-in-use permission;
  * foreground online refreshes use [requestAuthorized] and never open permission
  * UI. A recent platform location is used only as a timeout fallback, and the
  * caller decides whether to submit the returned coordinate to the backend.
@@ -34,23 +40,39 @@ internal class AndroidCurrentLocationRequester(
     }
     private val mainHandler = Handler(Looper.getMainLooper())
     private val requestGate = OneShotLocationGate()
-    private var pendingResult: ((Coordinates?) -> Unit)? = null
+    private var pendingResult: ((DriverLocationObservation?) -> Unit)? = null
     private var cancellationSignal: CancellationSignal? = null
     private var fallbackLocation: Location? = null
+    private var requiresFreshFix = true
+    private var freshLocationListener: LocationListenerCompat? = null
 
     private val permissionLauncher = activity.registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions(),
     ) { grants ->
         val granted = grants[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
             grants[Manifest.permission.ACCESS_COARSE_LOCATION] == true
-        if (granted) loadCurrentLocation() else finish(null)
+        if (pendingResult != null) {
+            if (granted) loadCurrentLocation() else finish(null)
+        }
     }
 
-    private val timeout = Runnable { finish(fallbackLocation?.toCoordinates()) }
+    private val timeout = Runnable { finish(fallbackLocation?.toObservation()) }
 
     fun request(onResult: (Coordinates?) -> Unit) {
-        if (!requestGate.tryStart()) return
+        startObservation(requireFresh = false) { onResult(it?.coordinates) }
+    }
+
+    fun requestObservation(onResult: (DriverLocationObservation?) -> Unit) {
+        startObservation(requireFresh = true, onResult)
+    }
+
+    private fun startObservation(requireFresh: Boolean, onResult: (DriverLocationObservation?) -> Unit) {
+        if (!requestGate.tryStart()) {
+            onResult(null)
+            return
+        }
         pendingResult = onResult
+        requiresFreshFix = requireFresh
         if (hasLocationPermission()) {
             loadCurrentLocation()
         } else {
@@ -63,13 +85,14 @@ internal class AndroidCurrentLocationRequester(
         }
     }
 
-    fun requestAuthorized(onResult: (Coordinates?) -> Unit): Boolean {
+    fun requestAuthorized(onResult: (DriverLocationObservation?) -> Unit): Boolean {
         if (!hasLocationPermission()) {
             onResult(null)
             return true
         }
         if (!requestGate.tryStart()) return false
         pendingResult = onResult
+        requiresFreshFix = true
         loadCurrentLocation()
         return true
     }
@@ -86,19 +109,48 @@ internal class AndroidCurrentLocationRequester(
         }
 
         try {
+            mainHandler.postDelayed(timeout, CURRENT_LOCATION_TIMEOUT_MILLIS)
+            if (requiresFreshFix) {
+                fallbackLocation = null
+                val requestStartedNanos = SystemClock.elapsedRealtimeNanos()
+                val listener = object : LocationListenerCompat {
+                    override fun onLocationChanged(location: Location) {
+                        if (freshLocationListener !== this || !nativeFixAcquiredAfterRequest(
+                                requestStartedNanos, location.elapsedRealtimeNanos, SystemClock.elapsedRealtimeNanos(),
+                            )) return
+                        val observation = location.toObservation()
+                        if (observation.isUsableAt(System.currentTimeMillis())) finish(observation)
+                    }
+                }
+                freshLocationListener = listener
+                LocationManagerCompat.requestLocationUpdates(
+                    locationManager, provider,
+                    LocationRequestCompat.Builder(1_000L)
+                        .setQuality(LocationRequestCompat.QUALITY_HIGH_ACCURACY)
+                        .setMinUpdateIntervalMillis(0L)
+                        .setDurationMillis(CURRENT_LOCATION_TIMEOUT_MILLIS)
+                        .build(),
+                    ContextCompat.getMainExecutor(activity), listener,
+                )
+                return
+            }
             fallbackLocation = listOf(LocationManager.GPS_PROVIDER, LocationManager.NETWORK_PROVIDER)
                 .mapNotNull { candidate -> runCatching { locationManager.getLastKnownLocation(candidate) }.getOrNull() }
                 .filter { location -> System.currentTimeMillis() - location.time <= LAST_LOCATION_MAX_AGE_MILLIS }
                 .maxByOrNull(Location::getTime)
 
-            cancellationSignal = CancellationSignal()
-            mainHandler.postDelayed(timeout, CURRENT_LOCATION_TIMEOUT_MILLIS)
+            val requestCancellation = CancellationSignal()
+            cancellationSignal = requestCancellation
             LocationManagerCompat.getCurrentLocation(
                 locationManager,
                 provider,
-                cancellationSignal,
+                requestCancellation,
                 ContextCompat.getMainExecutor(activity),
-            ) { location -> finish(location?.toCoordinates() ?: fallbackLocation?.toCoordinates()) }
+            ) { location ->
+                if (cancellationSignal === requestCancellation) {
+                    finish(location?.toObservation() ?: fallbackLocation?.toObservation())
+                }
+            }
         } catch (_: SecurityException) {
             finish(null)
         } catch (_: IllegalArgumentException) {
@@ -122,10 +174,19 @@ internal class AndroidCurrentLocationRequester(
         ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
             ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
-    private fun finish(location: Coordinates?) {
+    private fun finish(location: DriverLocationObservation?) {
         mainHandler.removeCallbacks(timeout)
         cancellationSignal?.cancel()
         cancellationSignal = null
+        val listener = freshLocationListener
+        freshLocationListener = null
+        if (listener != null) {
+            try {
+                LocationManagerCompat.removeUpdates(locationManager, listener)
+            } catch (_: SecurityException) {
+                // Permission revocation has already removed authorization.
+            }
+        }
         fallbackLocation = null
         val result = pendingResult
         pendingResult = null
@@ -133,7 +194,18 @@ internal class AndroidCurrentLocationRequester(
         result?.invoke(location)
     }
 
-    private fun Location.toCoordinates(): Coordinates = Coordinates(latitude, longitude)
+    fun cancelPending() = finish(null)
+
+    private fun Location.toObservation(): DriverLocationObservation {
+        // elapsedRealtimeNanos is monotonic: a cached fix cannot inherit the
+        // wall-clock time at which a delayed callback happens to be delivered.
+        val ageNanos = SystemClock.elapsedRealtimeNanos() - elapsedRealtimeNanos
+        return DriverLocationObservation(
+            coordinates = Coordinates(latitude, longitude),
+            observedAtEpochMillis = System.currentTimeMillis() - ageNanos / 1_000_000L,
+            accuracyMeters = if (hasAccuracy()) accuracy.toDouble() else Double.NaN,
+        )
+    }
 
     private companion object {
         const val CURRENT_LOCATION_TIMEOUT_MILLIS = 15_000L

@@ -1,5 +1,6 @@
 package org.example.taximobile.operations.ui
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,9 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.Checkbox
+import org.jetbrains.compose.resources.stringResource
+import taximobile.shared.generated.resources.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -107,6 +111,7 @@ internal fun CreateOperatorDialog(
     var name by remember { mutableStateOf("") }
     var operatorType by remember { mutableStateOf("LOCAL_ENTITY") }
     var cooperativeId by remember { mutableStateOf("") }
+    var requiresMembership by remember { mutableStateOf(false) }
     val valid = name.trim().isNotEmpty() &&
         (operatorType != "COOPERATIVE" || cooperativeId.trim().isNotEmpty())
     EditorDialog(
@@ -123,6 +128,7 @@ internal fun CreateOperatorDialog(
                     cooperativeId = cooperativeId.trim().ifEmpty { null },
                     name = name.trim(),
                     operatorType = operatorType,
+                    requiresActiveMembership = requiresMembership,
                 )
             )
         },
@@ -130,6 +136,7 @@ internal fun CreateOperatorDialog(
         EditorField(name, { name = it.take(200) }, "Operator name")
         ChoiceChips("Operator type", listOf("LOCAL_ENTITY", "PLATFORM", "COOPERATIVE"), operatorType) {
             operatorType = it
+            if (it != "COOPERATIVE") { cooperativeId = ""; requiresMembership = false }
         }
         if (operatorType == "COOPERATIVE") {
             EditorField(
@@ -138,6 +145,10 @@ internal fun CreateOperatorDialog(
                 "Existing cooperative ID",
                 "Required because cooperative records remain independently governed",
             )
+            Row {
+                Checkbox(checked = requiresMembership, onCheckedChange = { requiresMembership = it })
+                Text(stringResource(Res.string.web_members_required))
+            }
         }
     }
 }
@@ -150,6 +161,7 @@ internal fun CreateAssignmentDialog(
     onDismiss: () -> Unit,
     onConfirm: (OperatorCityAssignmentCreateRequest) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     var serviceType by remember { mutableStateOf("ON_DEMAND") }
     var effectiveFrom by remember { mutableStateOf("") }
     var effectiveUntil by remember { mutableStateOf("") }
@@ -176,7 +188,7 @@ internal fun CreateAssignmentDialog(
         ChoiceChips("Service", controlPlaneServices, serviceType) { serviceType = it }
         EditorField(effectiveFrom, { effectiveFrom = it.take(40) }, "Effective from", "2026-09-01T00:00:00Z")
         EditorField(effectiveUntil, { effectiveUntil = it.take(40) }, "Effective until · optional", "2027-09-01T00:00:00Z")
-        Text("Timestamps must include Z or an explicit UTC offset.", color = TaxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
+        Text("Timestamps must include Z or an explicit UTC offset.", color = taxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
     }
 }
 
@@ -242,6 +254,7 @@ internal fun CreateConfigurationDialog(
     onDismiss: () -> Unit,
     onConfirm: (CityConfigurationCreateRequest) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     val areas = snapshot.serviceAreas?.items.orEmpty().filter { it.status in setOf("APPROVED", "ACTIVE") }
     val requirements = snapshot.driverRequirementVersions?.items.orEmpty().filter { it.status == "ACTIVE" }
     val assignments = snapshot.assignments.items.filter {
@@ -308,9 +321,9 @@ internal fun CreateConfigurationDialog(
                 onSelect = { requirementId = it },
             )
         }
-        Text("Enabled services", color = TaxiColors.Navy900, fontWeight = FontWeight.Bold)
+        Text("Enabled services", color = taxiColors.Navy900, fontWeight = FontWeight.Bold)
         if (resolved.isEmpty()) {
-            Text("No active on-demand or fixed-route assignment is loaded for this city.", color = TaxiColors.Danger600)
+            Text("No active on-demand or fixed-route assignment is loaded for this city.", color = taxiColors.Danger600)
         }
         resolved.forEach { service ->
             val type = service.assignment.serviceType
@@ -325,12 +338,12 @@ internal fun CreateConfigurationDialog(
             Text(
                 if (service.missing.isEmpty()) "Compatible active policy and payment versions resolved."
                 else "Missing ${service.missing.joinToString()}",
-                color = if (service.missing.isEmpty()) TaxiColors.Ink500 else TaxiColors.Danger600,
+                color = if (service.missing.isEmpty()) taxiColors.Ink500 else taxiColors.Danger600,
                 style = MaterialTheme.typography.bodySmall,
             )
         }
         if ("FIXED_ROUTE" in selectedServices) {
-            Text("Published route versions", color = TaxiColors.Navy900, fontWeight = FontWeight.Bold)
+            Text("Published route versions", color = taxiColors.Navy900, fontWeight = FontWeight.Bold)
             routeVersions.forEach { route ->
                 FilterChip(
                     selected = route.id in routeIds,
@@ -349,7 +362,7 @@ internal fun CreateConfigurationDialog(
             }
         }
         if (missing.isNotEmpty()) {
-            Text("Resolve before creating: ${missing.joinToString()}.", color = TaxiColors.Danger600, style = MaterialTheme.typography.bodySmall)
+            Text("Resolve before creating: ${missing.joinToString()}.", color = taxiColors.Danger600, style = MaterialTheme.typography.bodySmall)
         }
     }
 }
@@ -394,12 +407,13 @@ internal fun ControlPlaneConfirmDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     AlertDialog(
         onDismissRequest = { if (!busy) onDismiss() },
         title = { Text(title) },
-        text = { Text(explanation, color = TaxiColors.Ink700) },
+        text = { Text(explanation, color = taxiColors.Ink700) },
         confirmButton = {
-            Button(onClick = onConfirm, enabled = !busy) {
+            Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = onConfirm, enabled = !busy) {
                 Text(if (busy) "Waiting for backend…" else confirmLabel)
             }
         },
@@ -476,6 +490,7 @@ private fun EditorDialog(
     onConfirm: () -> Unit,
     content: @Composable () -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     AlertDialog(
         onDismissRequest = { if (!busy) onDismiss() },
         title = { Text(title) },
@@ -484,12 +499,12 @@ private fun EditorDialog(
                 Modifier.fillMaxWidth().heightIn(max = 560.dp).verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Md),
             ) {
-                Text(explanation, color = TaxiColors.Ink700, style = MaterialTheme.typography.bodyMedium)
+                Text(explanation, color = taxiColors.Ink700, style = MaterialTheme.typography.bodyMedium)
                 content()
             }
         },
         confirmButton = {
-            Button(onClick = onConfirm, enabled = !busy && valid) {
+            Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = onConfirm, enabled = !busy && valid) {
                 Text(if (busy) "Waiting for backend…" else confirmLabel)
             }
         },
@@ -517,7 +532,8 @@ private fun EditorField(
 
 @Composable
 private fun ChoiceChips(label: String, options: List<String>, selected: String, onSelect: (String) -> Unit) {
-    Text(label, color = TaxiColors.Navy900, fontWeight = FontWeight.Bold)
+    val taxiColors = TaxiTheme.colors
+    Text(label, color = taxiColors.Navy900, fontWeight = FontWeight.Bold)
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm)) {
         options.forEach { option ->
             FilterChip(
@@ -536,9 +552,10 @@ private fun RecordChoice(
     selectedId: String?,
     onSelect: (String) -> Unit,
 ) {
-    Text(label, color = TaxiColors.Navy900, fontWeight = FontWeight.Bold)
+    val taxiColors = TaxiTheme.colors
+    Text(label, color = taxiColors.Navy900, fontWeight = FontWeight.Bold)
     if (options.isEmpty()) {
-        Text("No compatible version is loaded.", color = TaxiColors.Danger600, style = MaterialTheme.typography.bodySmall)
+        Text("No compatible version is loaded.", color = taxiColors.Danger600, style = MaterialTheme.typography.bodySmall)
     } else {
         Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
             options.forEach { (id, text) ->

@@ -1,0 +1,21 @@
+{
+  "candidate": "candidate-native-v15.json",
+  "role": "driver",
+  "locale": "fr",
+  "started_utc": "2026-10-20T10:58:42.116299+00:00",
+  "passed": true,
+  "scope": "Actual idle authenticated account and populated receipt/earnings; no booking or settlement inputs",
+  "screenshots": [
+    {
+      "path": "v15-native-driver-fr-account.png",
+      "sha256": "090995130fca89f60795868a92fabb6c48287925c5dff2997526669a7a5779eb"
+    },
+    {
+      "path": "v15-native-driver-fr-financial.png",
+      "sha256": "090995130fca89f60795868a92fabb6c48287925c5dff2997526669a7a5779eb"
+    }
+  ],
+  "configuration": "config: mcc310-mnc260-en-rUS-ldltr-sw360dp-w360dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x720-v35",
+  "app_locales": "Locales for ma.taximobile.driver for user 0 are [fr-FR]",
+  "finished_utc": "2026-10-20T10:59:00.555736+00:00"
+}

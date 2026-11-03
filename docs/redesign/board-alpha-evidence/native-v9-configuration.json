@@ -1,0 +1,36 @@
+{
+  "passed": true,
+  "method": "Android SDK apkanalyzer dex code",
+  "artifacts": [
+    {
+      "role": "passenger",
+      "path": "TaxiMobile\\androidApp\\build\\outputs\\apk\\passenger\\debug\\androidApp-passenger-debug.apk",
+      "bytes": 81141147,
+      "sha256": "255fe68cd7eaed0ba41996130d11f08d6f03e5aec09baa35bff591521766bbc0",
+      "configuration": {
+        "api": "https://alpha-api-staging.up.railway.app",
+        "map_style": "https://tiles.openfreemap.org/styles/positron",
+        "place_search": false,
+        "manual_coordinate_entry": false,
+        "application_id": "ma.taximobile.passenger",
+        "role": "PASSENGER",
+        "client_version": "1.0.0"
+      }
+    },
+    {
+      "role": "driver",
+      "path": "TaxiMobile\\androidApp\\build\\outputs\\apk\\driver\\debug\\androidApp-driver-debug.apk",
+      "bytes": 81141143,
+      "sha256": "a7171bd6a6dc21f3bf5c1f6a072ebcc5e88f759c5741e80827eacad911d62e56",
+      "configuration": {
+        "api": "https://alpha-api-staging.up.railway.app",
+        "map_style": "https://tiles.openfreemap.org/styles/positron",
+        "place_search": false,
+        "manual_coordinate_entry": false,
+        "application_id": "ma.taximobile.driver",
+        "role": "DRIVER",
+        "client_version": "1.0.0"
+      }
+    }
+  ]
+}

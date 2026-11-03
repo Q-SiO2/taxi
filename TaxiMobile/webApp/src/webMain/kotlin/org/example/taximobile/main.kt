@@ -55,6 +55,9 @@ fun main() {
         DisposableEffect(client) {
             onDispose { client.close() }
         }
+        val stylePreferences = org.example.taximobile.feature.ui.theme.rememberTaxiStylePreferences()
+        WebLanguageEnvironment {
+        androidx.compose.runtime.CompositionLocalProvider(org.example.taximobile.feature.ui.theme.LocalTaxiStylePreferences provides stylePreferences) {
         when (surface) {
             WebSurface.OPERATIONS -> {
                 val coordinator = remember(client, environment, coroutineScope) {
@@ -83,6 +86,8 @@ fun main() {
                 }
                 ApplicantPortalApp(coordinator)
             }
+        }
+        }
         }
     }
 }

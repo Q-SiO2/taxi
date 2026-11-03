@@ -1,0 +1,18 @@
+{
+  "started_utc": "2026-10-22T18:33:16.465792+00:00",
+  "candidate": "candidate-native-v23.json",
+  "passed": false,
+  "scope": "Owned API35 emulator connection setup only, driver idle; no business input or native sign-in. Host network unchanged.",
+  "wifi_before": "1",
+  "data_before": "1",
+  "android_before": "Wifi is enabled\r\nWifi scanning is only available when wifi is enabled\r\n==== Primary ClientModeManager instance ====\r\nWifi is not connected",
+  "screenshot": {
+    "path": "v23-driver-network-unavailable.png",
+    "sha256": "d54ee96466f7572d6e146eca6bbfc8305f626cbf47954b37df814b5037023ea2"
+  },
+  "wifi_after": "1",
+  "data_after": "1",
+  "android_after": "Wifi is enabled\r\nWifi scanning is only available when wifi is enabled\r\n==== Primary ClientModeManager instance ====\r\nWifi is not connected",
+  "settings_restored": true,
+  "finished_utc": "2026-10-22T18:33:31.108852+00:00"
+}

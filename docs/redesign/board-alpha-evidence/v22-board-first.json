@@ -1,0 +1,36 @@
+{
+  "candidate": "candidate-native-v22.json",
+  "web_candidate": "candidate-web-v8.json",
+  "run": "first",
+  "started_utc": "2026-10-22T16:34:07.465217+00:00",
+  "passed": false,
+  "beats": [
+    {
+      "beat": 1,
+      "description": "Four style options shown; Notepad selected then Folded Streets restored in actual native passenger UI",
+      "finished_utc": "2026-10-22T16:34:59.420687+00:00",
+      "screenshots": [
+        {
+          "path": "v22-board-first-style-options-notepad.png",
+          "sha256": "2e52b9d12f7eff11e0c6bc305514e9e801206dde6b13d6f760e736ab3527ca54"
+        },
+        {
+          "path": "v22-board-first-selected-notepad.png",
+          "sha256": "c65c621939be727b4474431ec631ed626e2dbb25f3fab41db1907863585b1ef6"
+        },
+        {
+          "path": "v22-board-first-style-options-folded-streets.png",
+          "sha256": "1c5400fc99c47da058887b3ed642f6f468df6bd3d79dff94aef9ee90eeb3c8bc"
+        },
+        {
+          "path": "v22-board-first-selected-folded-streets.png",
+          "sha256": "601253f688608ba84d97966ca1d7df8e07a27dbcbd2e7833abe83f3c1caa3aa9"
+        }
+      ]
+    }
+  ],
+  "scope": "Synthetic emulator and normal hosted browser rehearsal; actual elapsed time, not a seven-minute claim",
+  "finished_utc": "2026-10-22T16:39:49.954308+00:00",
+  "failure": "Native completion tap was not confirmed; no completion POST recorded in the diagnostic window. Deliberate later recovery is separate, never a clean repetition.",
+  "failed_native_record": "v22-native-first.json"
+}

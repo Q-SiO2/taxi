@@ -13,8 +13,65 @@ import org.example.taximobile.feature.app.AppUiState
 import org.example.taximobile.feature.ui.text.UiMessage
 import taximobile.shared.generated.resources.Res
 import taximobile.shared.generated.resources.message_network_unavailable
+import taximobile.shared.generated.resources.message_action_reauthorization
 
 class ConnectivityTest {
+    @Test
+    fun resource_401_revalidates_once_without_replaying_or_confirming_the_action() = runBlocking {
+        val previous = AppUiState.DriverReady(DriverAvailabilityStatus.ON_RIDE)
+        val authoritative = previous.copy(activeRideId = "existing-ride")
+        var calls = 0
+        var restores = 0
+        var confirmations = 0
+        val result = AppStatePresentation(previous).performAuthenticatedAction(
+            action = { calls += 1; AppUiState.SignedOut(requiresSessionRecheck = true) },
+            restore = { restores += 1; authoritative },
+            onBackendConfirmed = { confirmations += 1 },
+        )
+        assertEquals(1, calls)
+        assertEquals(1, restores)
+        assertEquals(0, confirmations)
+        assertSame(authoritative, result.state)
+        assertEquals(UiMessage(Res.string.message_action_reauthorization), result.connectionIssue)
+    }
+
+    @Test
+    fun revoked_refresh_session_still_signs_out_after_resource_401() = runBlocking {
+        val signedOut = AppUiState.SignedOut()
+        var restores = 0
+        val result = AppStatePresentation(AppUiState.PassengerReady()).performAuthenticatedAction(
+            action = { AppUiState.SignedOut(requiresSessionRecheck = true) },
+            restore = { restores += 1; signedOut },
+        )
+        assertEquals(1, restores)
+        assertSame(signedOut, result.state)
+        assertNull(result.connectionIssue)
+    }
+
+    @Test
+    fun deliberate_signout_never_restores_or_reopens_the_session() = runBlocking {
+        var restores = 0
+        val signedOut = AppUiState.SignedOut()
+        val result = AppStatePresentation(AppUiState.PassengerReady()).performAuthenticatedAction(
+            action = { signedOut },
+            restore = { restores += 1; AppUiState.PassengerReady() },
+        )
+        assertEquals(0, restores)
+        assertSame(signedOut, result.state)
+    }
+
+    @Test
+    fun unauthenticated_screen_cannot_recover_a_resource_401_into_an_account() = runBlocking {
+        var restores = 0
+        val rejected = AppUiState.SignedOut(requiresSessionRecheck = true)
+        val result = AppStatePresentation(AppUiState.SignedOut()).performAuthenticatedAction(
+            action = { rejected },
+            restore = { restores += 1; AppUiState.PassengerReady() },
+        )
+        assertEquals(0, restores)
+        assertSame(rejected, result.state)
+    }
+
     @Test
     fun recovery_refreshes_once_only_after_an_unavailable_to_available_edge() {
         val policy = ConnectivityRecoveryPolicy()

@@ -1,7 +1,9 @@
 package org.example.taximobile.feature.ui.components
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +27,7 @@ fun MapFab(
     enabled: Boolean = true,
     loading: Boolean = false,
 ) {
+    val taxiColors = TaxiTheme.colors
     val loadingDescription = stringResource(Res.string.loading)
     FloatingActionButton(
         onClick = { if (enabled && !loading) onClick() },
@@ -33,12 +36,17 @@ fun MapFab(
             if (!enabled || loading) disabled()
             if (loading) stateDescription = loadingDescription
         },
-        containerColor = TaxiColors.Surface0,
-        contentColor = TaxiColors.Navy900,
+        containerColor = taxiColors.Surface0,
+        contentColor = taxiColors.Navy900,
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),
+        elevation = if (TaxiTheme.style == org.example.taximobile.feature.ui.theme.TaxiStyle.Notepad) {
+            FloatingActionButtonDefaults.elevation(defaultElevation = 0.dp, pressedElevation = 0.dp,
+                focusedElevation = 0.dp, hoveredElevation = 0.dp)
+        } else FloatingActionButtonDefaults.elevation(),
     ) {
         if (loading) {
             CircularProgressIndicator(
-                color = TaxiColors.Navy900,
+                color = taxiColors.Navy900,
                 strokeWidth = 2.dp,
                 modifier = Modifier.size(20.dp),
             )

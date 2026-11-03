@@ -1,0 +1,38 @@
+{
+  "started_utc": "2026-10-19T19:29:30.619388+00:00",
+  "candidate": "candidate-native-v12.json",
+  "ride_id": "98a253df-de13-4029-9daa-e538a520997d",
+  "passed": false,
+  "recovered": false,
+  "steps": [
+    {
+      "name": "Preserved server IN_PROGRESS verified; exact APKs and existing clocks match",
+      "utc": "2026-10-19T19:29:32.312402+00:00"
+    },
+    {
+      "name": "Fresh guarded completion coordinate acquired in native UI",
+      "utc": "2026-10-19T19:29:44.828582+00:00"
+    },
+    {
+      "name": "Same ride completed through native UI; server cash remains pending",
+      "utc": "2026-10-19T19:29:48.906300+00:00"
+    }
+  ],
+  "scope": "French first attempt recovered after one explicit Start retry; native completion/cash and independent readback; failed full-run record remains separate",
+  "screenshots": [
+    {
+      "path": "v12-first-fr-recovery-driver-location-loaded.png",
+      "sha256": "0b9cebef3730523dd9370840edbb49faf01f611c4926b08ca47fc2fe54bdc7bd"
+    },
+    {
+      "path": "v12-first-fr-recovery-passenger-cash-pending.png",
+      "sha256": "2a51642e0bff890b04c8842e0324077aac49128cc137773b06ae0ba89104aa4b"
+    },
+    {
+      "path": "v12-first-fr-recovery-driver-cash-dialog.png",
+      "sha256": "7c7aa89e4dfbbd100b6bf3c0ae8a6d5e6342a36ee1a49e44827291eddf967566"
+    }
+  ],
+  "failure_type": "SmokeFailure",
+  "finished_utc": "2026-10-19T19:30:20.205529+00:00"
+}

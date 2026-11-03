@@ -39,6 +39,29 @@ class AccountSecurityModelsTest {
     }
 
     @Test
+    fun command_exposes_stable_issue_codes_for_localized_feedback() {
+        val market = "7f5b1477-0773-4a3c-80ef-ae7a4db56fa7"
+        val target = "eef3fa3a-5740-4b47-a22b-b4638a0870fa"
+        fun issue(
+            marketId: String? = market,
+            targetUserId: String = target,
+            reasonCode: String = "ACCOUNT_COMPROMISE",
+            caseReference: String = "SEC-CASE-2026",
+            confirmation: String = "SUSPEND",
+        ) = accountSecurityInputIssue(
+            marketId, targetUserId, AccountSecurityAction.SUSPEND,
+            reasonCode, caseReference, confirmation,
+        )
+
+        assertEquals(AccountSecurityInputIssue.MARKET, issue(marketId = null))
+        assertEquals(AccountSecurityInputIssue.TARGET, issue(targetUserId = "wrong"))
+        assertEquals(AccountSecurityInputIssue.REASON, issue(reasonCode = "FREE_TEXT"))
+        assertEquals(AccountSecurityInputIssue.CASE_REFERENCE, issue(caseReference = "unknown"))
+        assertEquals(AccountSecurityInputIssue.CONFIRMATION, issue(confirmation = "REVOKE"))
+        assertNull(issue(confirmation = "suspend"))
+    }
+
+    @Test
     fun response_decodes_revocation_counts() {
         val response = Json { ignoreUnknownKeys = true }.decodeFromString<AccountSecurityActionResponse>(
             """{"user_id":"eef3fa3a-5740-4b47-a22b-b4638a0870fa","status":"SUSPENDED","sessions_revoked":3,"device_registrations_revoked":2,"changed_at":"2026-09-01T20:00:00Z"}"""

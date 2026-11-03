@@ -49,6 +49,15 @@ sends the selected method with `POST /rides`. Ride creation resolves the same
 authority again and snapshots the city, operator, capability, selected method
 and, for `MANUAL_TRANSFER`, verified recipient account and displayable
 destination. Later configuration changes must not alter those instructions.
+If the estimate omits `payment_methods` or contains no method supported by the
+client, the quote fails explicitly. The client must not invent a cash capability
+from an incomplete response.
+When a fresh point or fixed-route estimate changes the offered methods, the
+passenger selection and submitted method must resolve against that displayed
+estimate before the booking action is enabled. An empty offer cannot be booked.
+The shared fare model requires explicit backend-advertised methods, and the ride
+request gateway requires an explicit selected method; neither supplies a cash
+default to callers.
 
 Ride completion creates exactly one pending payment using the snapshotted method.
 Completing the ride does not settle cash or prove that an external transfer moved.
@@ -99,6 +108,32 @@ The passenger receipt read exposes the server-owned `CASH` method and `PENDING`
 or `COMPLETED` status after ride completion. It is informational only: neither
 participant can alter payment state through the receipt, and `PENDING` must not
 be presented as successful payment.
+
+The driver recovers actual pending cash work after refresh, restart or session
+renewal through `GET /drivers/me/payments/cash/pending`, rather than a temporary
+completion-screen flag or inference from earnings. It is an assigned-driver-only,
+oldest-first paginated queue of completed rides with actual `CASH`/`PENDING`
+payments, independent of ride-history pagination. Cards and the confirmation
+dialog expose the ride reference, recorded amount/currency and date. A failed
+queue read displays a reload action, not an empty/successful payment state.
+Settlement retains the existing locked authorization and idempotency checks;
+after success the client reloads page one and earnings from the backend. The
+2026-10-05 rehearsal exposed the original missing recovery projection. The
+corrective candidate passed the complete local backend and JVM/Android-host
+test/build gates on 2026-10-08. The same retained demo payment was then confirmed
+through the native driver UI, without replaying ride completion: pending cash
+became completed, exactly one earning was added, and the queue and earnings
+survived a driver-app restart. These are synthetic local Android observations;
+real cash acceptance remains GAP-010, not implied by this code. Dated candidate
+identities and physical-device boundaries are recorded in `union_demo.md`.
+
+Normal read-only restoration preserves the driver's selected queue page rather
+than continually returning them to page one. If that page becomes empty after
+other authoritative settlement, it is clamped to the last remaining page. Only
+this integer navigation preference is retained; payment facts still come from
+the backend. Login/logout, a new ride completion and a confirmed cash command
+reset page one. Pending work is prominent in the idle driver view, while current
+active-ride controls take priority over older financial work.
 
 ## Cost and Provider Decision Record
 
@@ -303,6 +338,10 @@ refund command is idempotent and audited; duplicate settlement evidence is
 rejected.
 
 ## Driver Settlement
+
+The Fès [D05 settlement decision packet](launch/operator-driver-settlement-decision.md)
+sets out the still-unapproved cash custody, transfer payable, offset, period,
+refund and payout choices. It does not authorize a ledger migration or payout.
 
 Driver earnings must be recorded separately from the passenger charge.
 

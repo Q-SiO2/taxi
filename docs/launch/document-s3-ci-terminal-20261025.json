@@ -1,0 +1,94 @@
+{
+  "recorded_utc": "2026-10-25 15:43:57 UTC",
+  "source_head": "9e94fda14f8b18e26e26cebf3f8faad80bbdf96a",
+  "tested_merge_commit": "e68cf1dcaf936816012215cb7292d3f2474cf83f",
+  "tree": "c8f6b65a3b692d78f94b1cba92a24770e74eaf93",
+  "head_tree_matches_tested_merge_tree": true,
+  "ci_run": 40205185906,
+  "ci_number": 236,
+  "status": "completed",
+  "conclusion": "success",
+  "required_jobs": [
+    {
+      "id": 121204488513,
+      "name": "gradle-wrapper-integrity",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121204488629,
+      "name": "backend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121204488632,
+      "name": "gradle-dependency-submission",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121204488660,
+      "name": "mobile",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121204488753,
+      "name": "web",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121204488757,
+      "name": "ios-shared",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121204488804,
+      "name": "documentation-and-provenance",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 121205146399,
+      "name": "dependency-review",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "intentionally_skipped": [
+    {
+      "id": 121210486756,
+      "name": "publish-backend-image"
+    }
+  ],
+  "full_backend_suite": {
+    "tests": 1443,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "new_document_recovery_cases": 14,
+  "http_document_lifecycle_variants": 6,
+  "repeated_listing_cancellation_case": 1,
+  "real_ci_tls_probes": 8,
+  "tls_baseline_restored": true,
+  "migration_head": "20261025_0054",
+  "backend_junit_sha256": "61bf4a4d983ec3bc68c46d5adfe5e3cbe1215040d3b20c128724311e83415cab",
+  "test_artifact": {
+    "id": 12603253347,
+    "zip_sha256": "5242a3919a40b24037cab8b53f61a3bd7be011e042cdadb52077cd355256be2e"
+  },
+  "provenance_artifact": {
+    "id": 12603133810,
+    "zip_sha256": "d34a48c1a3ac65872aa88f7f2e2c246b0a9c4395aec752e443c5a7f5a6b0938d"
+  },
+  "backend_checks_accepted": "Hash-locked runtime/development/Linux audits; source/API contracts; 0054 migration; unfiltered unit/API/PostGIS suite; image SBOM and blocking high/critical scan; production/monitoring controls",
+  "platform_scope": "Android debug/minified verification, web/browser release boot, unsigned iOS simulator production/test-source compile and both app builds; not physical or store distribution acceptance",
+  "predecessor_ci_not_reused": true,
+  "hosted_schema_tls_or_ingestion_accepted": false,
+  "official_scanner_feeds_and_capacity_accepted": false,
+  "real_device_signing_field_and_public_release_accepted": false
+}

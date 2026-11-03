@@ -1,0 +1,111 @@
+{
+  "verified_utc": "2026-10-21T18:20:22.092117+00:00",
+  "candidate": "candidate-native-v19.json",
+  "passed": true,
+  "records": [
+    {
+      "record": "v19-native-first.json",
+      "record_sha256": "55b5b487e83b721b1a1c6b8fc0e88b644a01df9139121bc080c70d34fd2560ed",
+      "ride_id": "8145b32e-4549-4183-bce5-60d3936a4de4",
+      "phase": "COMPLETED",
+      "payment": {
+        "method": "CASH",
+        "status": "COMPLETED"
+      },
+      "fare": {
+        "amount": "35.00",
+        "currency": "MAD",
+        "pricing_rule_version": "ux-demo-9f3f781b",
+        "components": [
+          {
+            "code": "TRANSPORT_FARE",
+            "label": "Transport fare",
+            "amount": "35.00"
+          }
+        ],
+        "economics": {
+          "transport_fare": "35.00",
+          "scheduling_surcharge": "0.00",
+          "operator_service_fee": "0.00",
+          "passenger_total": "35.00",
+          "expected_driver_net": "35.00",
+          "operator_allocation": "0.00",
+          "operator_fee_policy_version": "legacy-zero-fee-v1",
+          "operator_fee_calculation_mode": "FLAT_PER_COMPLETED_BOOKING",
+          "operator_fee_funding_mode": "DRIVER_SETTLEMENT_DEDUCTION"
+        }
+      },
+      "each_native_business_command_confirmed_once": true,
+      "http_record": "v19-native-first-http.json"
+    },
+    {
+      "record": "v19-native-second.json",
+      "record_sha256": "bce8e8592d3435112f99da75aa479f82c937c9dad17ba21c65409c32935f0b87",
+      "ride_id": "46f115c7-cc34-4161-a3a3-238910b494c9",
+      "phase": "COMPLETED",
+      "payment": {
+        "method": "CASH",
+        "status": "COMPLETED"
+      },
+      "fare": {
+        "amount": "35.00",
+        "currency": "MAD",
+        "pricing_rule_version": "ux-demo-9f3f781b",
+        "components": [
+          {
+            "code": "TRANSPORT_FARE",
+            "label": "Transport fare",
+            "amount": "35.00"
+          }
+        ],
+        "economics": {
+          "transport_fare": "35.00",
+          "scheduling_surcharge": "0.00",
+          "operator_service_fee": "0.00",
+          "passenger_total": "35.00",
+          "expected_driver_net": "35.00",
+          "operator_allocation": "0.00",
+          "operator_fee_policy_version": "legacy-zero-fee-v1",
+          "operator_fee_calculation_mode": "FLAT_PER_COMPLETED_BOOKING",
+          "operator_fee_funding_mode": "DRIVER_SETTLEMENT_DEDUCTION"
+        }
+      },
+      "each_native_business_command_confirmed_once": true,
+      "http_record": "v19-native-second-http.json"
+    }
+  ],
+  "availability": {
+    "status": "OFFLINE",
+    "vehicle_id": "d491cb54-7ec1-4b6e-a6f9-1f1a8fd93792",
+    "city_id": "10000000-0000-4000-8000-000000000003",
+    "service_type": "ON_DEMAND"
+  },
+  "pending_cash_count": 0,
+  "rebooking": {
+    "candidate": "candidate-native-v19.json",
+    "pid": "1879",
+    "first_complete_run": "v19-native-first.json",
+    "passed": true,
+    "pid_after_first_trip": "1879",
+    "second_complete_run": "v19-native-second.json",
+    "pid_after_second_trip": "1879"
+  },
+  "timed_board_runs": [
+    {
+      "record": "v19-board-first.json",
+      "elapsed_seconds": 496.902,
+      "started_utc": "2026-10-21T18:02:48.243509+00:00",
+      "finished_utc": "2026-10-21T18:11:05.145Z"
+    },
+    {
+      "record": "v19-board-second.json",
+      "elapsed_seconds": 501.696,
+      "started_utc": "2026-10-21T18:11:40.819567+00:00",
+      "finished_utc": "2026-10-21T18:20:02.515Z"
+    }
+  ],
+  "between_rehearsals_seconds": 35.674567,
+  "source_inputs_unchanged": 412,
+  "scope": "Exact frozen API31 passenger/API35 driver, English native journeys and Arabic hosted staff/applicant. Synthetic GPS/accounts/cash only. Second run includes actual passenger arrival/in-progress rendering and controlled 14-second driver radio interruption. All business commands originate once from native UI; no HTTP business replay.",
+  "qualification": "Normal browser logout, fresh readback and identity preparation between timed runs are disclosed. No uninterrupted recording, seven-minute guarantee, physical Android, all-page/style/language cross-product, full TalkBack, iOS or production acceptance."
+}

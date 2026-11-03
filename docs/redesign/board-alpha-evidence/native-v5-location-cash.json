@@ -1,0 +1,10 @@
+{
+  "candidate": "candidate-native-v5.json",
+  "utc": "2026-10-15T20:19:06.846373+00:00",
+  "evidence": "actual Android driver UI; synthetic GPS/accounts/cash; server confirmation",
+  "passed": true,
+  "location_to_ready_seconds": 13.93,
+  "cash_dialog_date": "2026-10-13",
+  "cash_dialog_amount": "35.00 MAD",
+  "cash_queue_after": 0
+}

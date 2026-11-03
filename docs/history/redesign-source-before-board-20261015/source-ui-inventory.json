@@ -1,0 +1,2613 @@
+[
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/App.kt",
+    "line": 31,
+    "function": "App",
+    "classification": "composition shell",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/account/AccountSecuritySection.kt",
+    "line": 39,
+    "function": "AccountSecuritySection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "S14",
+      "S15",
+      "S16",
+      "S17",
+      "S18",
+      "S19"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/SharedSections.kt",
+    "line": 32,
+    "function": "NotificationInboxSection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R32",
+      "D31"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/SharedSections.kt",
+    "line": 58,
+    "function": "AppNotification.localizedCopy",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/SharedSections.kt",
+    "line": 102,
+    "function": "SupportTicketSection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R34",
+      "R35",
+      "D32"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/SharedSections.kt",
+    "line": 158,
+    "function": "SafetyReportSection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R39",
+      "R40",
+      "D39",
+      "D40"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/SharedSections.kt",
+    "line": 239,
+    "function": "supportCategoryLabel",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/SharedSections.kt",
+    "line": 249,
+    "function": "supportStatusLabel",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/SharedSections.kt",
+    "line": 260,
+    "function": "safetyCategoryLabel",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/SharedSections.kt",
+    "line": 274,
+    "function": "safetyStatusLabel",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/TaxiMobileScreen.kt",
+    "line": 59,
+    "function": "TaxiMobileScreen",
+    "classification": "composition shell",
+    "designRefs": [
+      "S00",
+      "S01",
+      "S02",
+      "S03",
+      "S04",
+      "S05",
+      "S06",
+      "S07",
+      "S08",
+      "S09",
+      "S10",
+      "S11",
+      "S12",
+      "S13"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/TaxiMobileScreen.kt",
+    "line": 255,
+    "function": "GatePage",
+    "classification": "composition shell",
+    "designRefs": [
+      "S00",
+      "S01",
+      "S02",
+      "S03",
+      "S04",
+      "S05",
+      "S06",
+      "S07",
+      "S08",
+      "S09",
+      "S10",
+      "S11",
+      "S12",
+      "S13"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/TaxiMobileScreen.kt",
+    "line": 280,
+    "function": "SessionLoadingScreen",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "S00"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/TaxiMobileScreen.kt",
+    "line": 298,
+    "function": "SignedOutContent",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "S03",
+      "S04",
+      "S05",
+      "S06",
+      "S07"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/TaxiMobileScreen.kt",
+    "line": 509,
+    "function": "WelcomeContent",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "S02"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/TaxiMobileScreen.kt",
+    "line": 555,
+    "function": "DriverApplicationRequiredContent",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/TaxiMobileScreen.kt",
+    "line": 572,
+    "function": "DriverApplicationPendingContent",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/TaxiMobileScreen.kt",
+    "line": 593,
+    "function": "OfflineScreen",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "S09"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/app/TaxiMobileScreen.kt",
+    "line": 606,
+    "function": "UpgradeRequiredScreen",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "S01"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt",
+    "line": 123,
+    "function": "DriverHome",
+    "classification": "composition shell",
+    "designRefs": [
+      "D07",
+      "D10",
+      "D11",
+      "D12",
+      "D13",
+      "D14",
+      "D15",
+      "D16",
+      "D17",
+      "D18",
+      "D19",
+      "D20",
+      "D23",
+      "D24",
+      "D25",
+      "D26",
+      "D27",
+      "D28",
+      "D29",
+      "D30",
+      "D31",
+      "D32",
+      "D33",
+      "D34",
+      "D35",
+      "D36",
+      "D37",
+      "D38",
+      "D41"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt",
+    "line": 388,
+    "function": "DriverToolbar",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "D11"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt",
+    "line": 412,
+    "function": "DriverOperationsSheet",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "D10",
+      "D12",
+      "D13",
+      "D15",
+      "D16",
+      "D17",
+      "D18",
+      "D19",
+      "D20",
+      "D38",
+      "D41"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt",
+    "line": 724,
+    "function": "DriverScheduledSheet",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "D14",
+      "D26",
+      "D27",
+      "D34"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt",
+    "line": 866,
+    "function": "TimedOfferCard",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "D13",
+      "D14",
+      "D41"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt",
+    "line": 923,
+    "function": "DriverCompletionControls",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "D19",
+      "D20"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt",
+    "line": 960,
+    "function": "DriverAccountSheet",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "D28",
+      "D35",
+      "D36",
+      "S14",
+      "S15",
+      "S16",
+      "S17",
+      "S18",
+      "S19"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt",
+    "line": 1101,
+    "function": "DriverSafetySheet",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "D33"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt",
+    "line": 1120,
+    "function": "DriverRideHistoryDetail",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "D24"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt",
+    "line": 1147,
+    "function": "DriverEarningCard",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "D23",
+      "D24"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt",
+    "line": 1202,
+    "function": "DriverVehicleSection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "D29",
+      "D30",
+      "D37"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt",
+    "line": 1320,
+    "function": "DriverInboxSheet",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "D31"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/DriverHome.kt",
+    "line": 1332,
+    "function": "vehicleVerificationLabel",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/onboarding/CityAuthorizationPresentation.kt",
+    "line": 20,
+    "function": "CityAuthorizationSummary",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "D07"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/onboarding/DriverOnboardingScreen.kt",
+    "line": 62,
+    "function": "DriverOnboardingScreen",
+    "classification": "composition shell",
+    "designRefs": [
+      "D00",
+      "D01",
+      "D02",
+      "D03",
+      "D04",
+      "D05",
+      "D06"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/onboarding/DriverOnboardingScreen.kt",
+    "line": 222,
+    "function": "RecruitingCities",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "D01"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/onboarding/DriverOnboardingScreen.kt",
+    "line": 277,
+    "function": "ApplicationDetail",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "D00",
+      "D05",
+      "D06"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/onboarding/DriverOnboardingScreen.kt",
+    "line": 570,
+    "function": "RequirementEditor",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "D02",
+      "D03"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/onboarding/DriverOnboardingScreen.kt",
+    "line": 698,
+    "function": "EvidenceChoices",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "D03"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/onboarding/DriverOnboardingScreen.kt",
+    "line": 723,
+    "function": "ApplicantVehicleForm",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "D04"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/onboarding/DriverOnboardingScreen.kt",
+    "line": 790,
+    "function": "ApplicationTimeline",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "D06"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/driver/PendingCashPaymentsSection.kt",
+    "line": 22,
+    "function": "PendingCashPaymentsSection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "D21",
+      "D22"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/maps/MapLibreTripMap.kt",
+    "line": 8,
+    "function": "MapLibreTripMap",
+    "classification": "shared component",
+    "designRefs": [
+      "C10",
+      "C16"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 167,
+    "function": "PassengerHome",
+    "classification": "composition shell",
+    "designRefs": [
+      "R00",
+      "R01",
+      "R02",
+      "R03",
+      "R05",
+      "R06",
+      "R07",
+      "R08",
+      "R09",
+      "R10",
+      "R11",
+      "R12",
+      "R13",
+      "R14",
+      "R15",
+      "R16",
+      "R17",
+      "R18",
+      "R19",
+      "R20",
+      "R21",
+      "R22",
+      "R23",
+      "R24",
+      "R25",
+      "R26",
+      "R27",
+      "R28",
+      "R29",
+      "R30",
+      "R31",
+      "R32",
+      "R33",
+      "R38",
+      "R41",
+      "R42"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 519,
+    "function": "PassengerToolbar",
+    "classification": "composition shell",
+    "designRefs": [
+      "R00",
+      "R01",
+      "R02",
+      "R03",
+      "R05",
+      "R06",
+      "R07",
+      "R08",
+      "R09",
+      "R10",
+      "R11",
+      "R12",
+      "R13",
+      "R14",
+      "R15",
+      "R16",
+      "R17",
+      "R18",
+      "R19",
+      "R20",
+      "R21",
+      "R22",
+      "R23",
+      "R24",
+      "R25",
+      "R26",
+      "R27",
+      "R28",
+      "R29",
+      "R30",
+      "R31",
+      "R32",
+      "R33",
+      "R38",
+      "R41",
+      "R42"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 543,
+    "function": "PassengerRideSheet",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R00",
+      "R01",
+      "R02",
+      "R03",
+      "R05",
+      "R06",
+      "R07",
+      "R08",
+      "R09",
+      "R10",
+      "R11",
+      "R12",
+      "R13",
+      "R14",
+      "R15",
+      "R16",
+      "R17"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 815,
+    "function": "PassengerScheduledSheet",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R26",
+      "R27",
+      "R28",
+      "R29"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1017,
+    "function": "ScheduledCancellationTerms.localizedSummary",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1034,
+    "function": "PassengerFixedRoutesSheet",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R24"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1129,
+    "function": "FixedRouteDirectionCard",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R25"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1172,
+    "function": "SelectionSummary",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1210,
+    "function": "CoordinateFields",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R42"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1218,
+    "function": "RecentDestinationSection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R38"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1236,
+    "function": "PassengerAccountSheet",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R30",
+      "S14",
+      "S15",
+      "S16",
+      "S17",
+      "S18",
+      "S19"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1300,
+    "function": "PassengerSafetySheet",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R36"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1319,
+    "function": "PassengerProfileSection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R31"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1337,
+    "function": "PassengerHistorySection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R22"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1366,
+    "function": "PassengerRideHistoryDetail",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R23"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1388,
+    "function": "PassengerReceipt",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R18"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1431,
+    "function": "RefundReceiptSummary",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R20"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1464,
+    "function": "ManualTransferReceipt",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R19"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1551,
+    "function": "RideRatingSection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R21"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1580,
+    "function": "PassengerInboxSheet",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R32"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1592,
+    "function": "fareComponentLabel",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1606,
+    "function": "paymentMethodLabel",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1617,
+    "function": "paymentStatusLabel",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PassengerHome.kt",
+    "line": 1631,
+    "function": "refundReasonLabel",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PlaceDiscoverySection.kt",
+    "line": 38,
+    "function": "PlaceDiscoverySection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R04"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/passenger/PlaceDiscoverySection.kt",
+    "line": 193,
+    "function": "placeKindLabel",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/rides/RideCoordinationSection.kt",
+    "line": 33,
+    "function": "RideLatestCoordinationMessage",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/rides/RideCoordinationSection.kt",
+    "line": 49,
+    "function": "RideCoordinationActions",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "R37",
+      "D33"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/ConfirmDialog.kt",
+    "line": 14,
+    "function": "ConfirmDialog",
+    "classification": "shared component",
+    "designRefs": [
+      "C22"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/DriverCard.kt",
+    "line": 17,
+    "function": "DriverCard",
+    "classification": "shared component",
+    "designRefs": [
+      "C12"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/FareBlock.kt",
+    "line": 18,
+    "function": "FareBlock",
+    "classification": "shared component",
+    "designRefs": [
+      "C11"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/MapFab.kt",
+    "line": 19,
+    "function": "MapFab",
+    "classification": "shared component",
+    "designRefs": [
+      "C02"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/MapToolbar.kt",
+    "line": 34,
+    "function": "MapToolbar",
+    "classification": "shared component",
+    "designRefs": [
+      "C06"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/MapToolbar.kt",
+    "line": 78,
+    "function": "MapToolbarAction",
+    "classification": "shared component",
+    "designRefs": [
+      "C06"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/MapToolbar.kt",
+    "line": 104,
+    "function": "MapToolbarGlyph",
+    "classification": "shared component",
+    "designRefs": [
+      "C06"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/OfferCard.kt",
+    "line": 17,
+    "function": "OfferCard",
+    "classification": "shared component",
+    "designRefs": [
+      "C13"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/OptionalArtwork.kt",
+    "line": 52,
+    "function": "rememberOptionalArtworkPainter",
+    "classification": "shared component",
+    "designRefs": [
+      "C39"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/Skeleton.kt",
+    "line": 20,
+    "function": "Skeleton",
+    "classification": "shared component",
+    "designRefs": [
+      "C19"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/SpecializedFields.kt",
+    "line": 33,
+    "function": "EmailField",
+    "classification": "shared component",
+    "designRefs": [
+      "C03",
+      "C04"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/SpecializedFields.kt",
+    "line": 53,
+    "function": "PasswordField",
+    "classification": "shared component",
+    "designRefs": [
+      "C03",
+      "C04"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/SpecializedFields.kt",
+    "line": 74,
+    "function": "PhoneNumberField",
+    "classification": "shared component",
+    "designRefs": [
+      "C03",
+      "C04"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/SpecializedFields.kt",
+    "line": 119,
+    "function": "OtpInput",
+    "classification": "shared component",
+    "designRefs": [
+      "C03",
+      "C04"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/SpecializedFields.kt",
+    "line": 162,
+    "function": "RatingStars",
+    "classification": "shared component",
+    "designRefs": [
+      "C03",
+      "C04"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/StatusPill.kt",
+    "line": 42,
+    "function": "StatusPill",
+    "classification": "shared component",
+    "designRefs": [
+      "C17"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/SuccessConfirmation.kt",
+    "line": 31,
+    "function": "SuccessConfirmation",
+    "classification": "shared component",
+    "designRefs": [
+      "C18"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiArtwork.kt",
+    "line": 39,
+    "function": "TaxiBrandArtwork",
+    "classification": "shared component",
+    "designRefs": [
+      "C39"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiArtwork.kt",
+    "line": 65,
+    "function": "TaxiBrandFallbackArtwork",
+    "classification": "shared component",
+    "designRefs": [
+      "C39"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiArtwork.kt",
+    "line": 122,
+    "function": "EmptyState",
+    "classification": "shared component",
+    "designRefs": [
+      "C39"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiButton.kt",
+    "line": 26,
+    "function": "TaxiButton",
+    "classification": "shared component",
+    "designRefs": [
+      "C01"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiCards.kt",
+    "line": 34,
+    "function": "TaxiCard",
+    "classification": "shared component",
+    "designRefs": [
+      "C25"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiCards.kt",
+    "line": 55,
+    "function": "LocationSelectionField",
+    "classification": "shared component",
+    "designRefs": [
+      "C25"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiCards.kt",
+    "line": 95,
+    "function": "DriverDocumentCard",
+    "classification": "shared component",
+    "designRefs": [
+      "C25"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiCards.kt",
+    "line": 111,
+    "function": "PaymentMethodCard",
+    "classification": "shared component",
+    "designRefs": [
+      "C25"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiCards.kt",
+    "line": 153,
+    "function": "VehicleAssetFallback",
+    "classification": "shared component",
+    "designRefs": [
+      "C25"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiSegmentedControl.kt",
+    "line": 19,
+    "function": "TaxiSegmentedControl",
+    "classification": "shared component",
+    "designRefs": [
+      "C05"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiSegmentedControl.kt",
+    "line": 36,
+    "function": "Segment",
+    "classification": "shared component",
+    "designRefs": [
+      "C05"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiSheet.kt",
+    "line": 59,
+    "function": "TaxiSheet",
+    "classification": "shared component",
+    "designRefs": [
+      "C08"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/TaxiTextField.kt",
+    "line": 27,
+    "function": "TaxiTextField",
+    "classification": "shared component",
+    "designRefs": [
+      "C03"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/components/ToastBanner.kt",
+    "line": 21,
+    "function": "ToastBanner",
+    "classification": "shared component",
+    "designRefs": [
+      "C18"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/text/UiMessage.kt",
+    "line": 17,
+    "function": "UiMessage.resolve",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/theme/TaxiTheme.kt",
+    "line": 20,
+    "function": "TaxiTheme",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/theme/TaxiTypography.kt",
+    "line": 22,
+    "function": "taxiArabicFontFamily",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/commonMain/kotlin/org/example/taximobile/feature/ui/theme/TaxiTypography.kt",
+    "line": 29,
+    "function": "taxiTypography",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/shared/src/androidMain/kotlin/org/example/taximobile/feature/maps/MapLibreTripMap.android.kt",
+    "line": 30,
+    "function": "MapLibreTripMap",
+    "classification": "shared component",
+    "designRefs": [
+      "C10",
+      "C16"
+    ]
+  },
+  {
+    "source": "TaxiMobile/shared/src/iosMain/kotlin/org/example/taximobile/feature/maps/MapLibreTripMap.ios.kt",
+    "line": 30,
+    "function": "MapLibreTripMap",
+    "classification": "shared component",
+    "designRefs": [
+      "C10",
+      "C16"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantApplicationEditor.kt",
+    "line": 43,
+    "function": "ApplicantApplicationEditor",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "A04",
+      "A05",
+      "A06",
+      "A07",
+      "A08",
+      "A09",
+      "A10",
+      "A11"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantApplicationEditor.kt",
+    "line": 272,
+    "function": "ApplicantRequirementEditor",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "A05",
+      "A06"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantApplicationEditor.kt",
+    "line": 387,
+    "function": "EvidenceChoices",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "A06"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantApplicationEditor.kt",
+    "line": 412,
+    "function": "ApplicantVehicleForm",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "A07"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantApplicationEditor.kt",
+    "line": 457,
+    "function": "ApplicationTimeline",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "A09"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantComponents.kt",
+    "line": 28,
+    "function": "ApplicantWordmark",
+    "classification": "shared component",
+    "designRefs": [
+      "C01",
+      "C17",
+      "C18",
+      "C23"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantComponents.kt",
+    "line": 48,
+    "function": "ApplicantCard",
+    "classification": "shared component",
+    "designRefs": [
+      "C01",
+      "C17",
+      "C18",
+      "C23"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantComponents.kt",
+    "line": 67,
+    "function": "ApplicantMessageBanner",
+    "classification": "shared component",
+    "designRefs": [
+      "C01",
+      "C17",
+      "C18",
+      "C23"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantComponents.kt",
+    "line": 95,
+    "function": "ApplicantPrimaryButton",
+    "classification": "shared component",
+    "designRefs": [
+      "C01",
+      "C17",
+      "C18",
+      "C23"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantComponents.kt",
+    "line": 113,
+    "function": "ApplicantStatus",
+    "classification": "shared component",
+    "designRefs": [
+      "C01",
+      "C17",
+      "C18",
+      "C23"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantPortalApp.kt",
+    "line": 48,
+    "function": "ApplicantPortalApp",
+    "classification": "composition shell",
+    "designRefs": [
+      "A00",
+      "A01",
+      "A02",
+      "A03",
+      "A12"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantPortalApp.kt",
+    "line": 62,
+    "function": "ApplicantWelcome",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "A00"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantPortalApp.kt",
+    "line": 93,
+    "function": "WelcomePanel",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "A00"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantPortalApp.kt",
+    "line": 135,
+    "function": "AuthenticationPanel",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "A01",
+      "A02"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/applicant/ui/ApplicantPortalApp.kt",
+    "line": 234,
+    "function": "ApplicantDashboard",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "A03",
+      "A12"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/AccountSecurityScreen.kt",
+    "line": 36,
+    "function": "AccountSecurityScreen",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O53",
+      "O54"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/AnalyticsScreen.kt",
+    "line": 31,
+    "function": "AnalyticsScreen",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O45",
+      "O46"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 106,
+    "function": "CaseOperationsScreen",
+    "classification": "composition shell",
+    "designRefs": [
+      "O47",
+      "O48",
+      "O49",
+      "O50",
+      "O51",
+      "O52",
+      "O71",
+      "O72",
+      "O73",
+      "O74",
+      "O75",
+      "O84",
+      "O85"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 233,
+    "function": "OverdueAlertsSection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O75"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 291,
+    "function": "SupportQueueSection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O47"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 332,
+    "function": "SafetyQueueSection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O47"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 373,
+    "function": "QueueHeader",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 396,
+    "function": "QueueText",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 401,
+    "function": "RetentionSection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O52",
+      "O72"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 467,
+    "function": "SupportCaseFlow",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O48",
+      "O49",
+      "O50",
+      "O84"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 512,
+    "function": "SupportCaseDetailDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O48"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 573,
+    "function": "SafetyCaseFlow",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O71",
+      "O85"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 637,
+    "function": "CaseDetailBody",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O48",
+      "O71"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 698,
+    "function": "SupportTriageDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O84"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 719,
+    "function": "SupportTransitionDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O49"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 750,
+    "function": "SafetyHandoffDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O50"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 768,
+    "function": "SafetyTransitionDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O85"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 799,
+    "function": "AlertAcknowledgementDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O51"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 816,
+    "function": "LegalHoldDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O73",
+      "O74"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 848,
+    "function": "CommandDialog",
+    "classification": "shared component",
+    "designRefs": [
+      "C22"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 873,
+    "function": "ControlledChoice",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CaseOperationsScreen.kt",
+    "line": 889,
+    "function": "CommandText",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/CityAuthorizationReview.kt",
+    "line": 24,
+    "function": "CityAuthorizationReview",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O62",
+      "O63",
+      "O64",
+      "O65"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/ControlPlaneEditors.kt",
+    "line": 47,
+    "function": "CreateCityDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O07"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/ControlPlaneEditors.kt",
+    "line": 100,
+    "function": "CreateOperatorDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O15"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/ControlPlaneEditors.kt",
+    "line": 145,
+    "function": "CreateAssignmentDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O66"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/ControlPlaneEditors.kt",
+    "line": 183,
+    "function": "CreateServiceAreaDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O67"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/ControlPlaneEditors.kt",
+    "line": 237,
+    "function": "CreateConfigurationDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O10"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/ControlPlaneEditors.kt",
+    "line": 357,
+    "function": "ControlPlaneReviewDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O09",
+      "O11",
+      "O16"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/ControlPlaneEditors.kt",
+    "line": 388,
+    "function": "ControlPlaneConfirmDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O09",
+      "O11",
+      "O16"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/ControlPlaneEditors.kt",
+    "line": 468,
+    "function": "EditorDialog",
+    "classification": "shared component",
+    "designRefs": [
+      "C23"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/ControlPlaneEditors.kt",
+    "line": 500,
+    "function": "EditorField",
+    "classification": "shared component",
+    "designRefs": [
+      "C03"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/ControlPlaneEditors.kt",
+    "line": 518,
+    "function": "ChoiceChips",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/ControlPlaneEditors.kt",
+    "line": 532,
+    "function": "RecordChoice",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/DriverRecruitmentScreen.kt",
+    "line": 54,
+    "function": "DriverRecruitmentScreen",
+    "classification": "composition shell",
+    "designRefs": [
+      "O31",
+      "O32",
+      "O33",
+      "O34",
+      "O35",
+      "O36",
+      "O78"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/DriverRecruitmentScreen.kt",
+    "line": 94,
+    "function": "OnboardingAggregateSection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O31"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/DriverRecruitmentScreen.kt",
+    "line": 143,
+    "function": "RequirementVersionSection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O32"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/DriverRecruitmentScreen.kt",
+    "line": 220,
+    "function": "RequirementVersionEditor",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O33"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/DriverRecruitmentScreen.kt",
+    "line": 301,
+    "function": "RequirementItemEditor",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O33"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/DriverRecruitmentScreen.kt",
+    "line": 370,
+    "function": "LocalizedCopyFields",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/DriverRecruitmentScreen.kt",
+    "line": 386,
+    "function": "RequirementTransitionDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O78"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/DriverRecruitmentScreen.kt",
+    "line": 419,
+    "function": "DriverReviewSection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O31"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/DriverRecruitmentScreen.kt",
+    "line": 451,
+    "function": "DriverApplicationReview",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O34",
+      "O36",
+      "O62"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/DriverRecruitmentScreen.kt",
+    "line": 534,
+    "function": "DriverDecisionForm",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O35"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/DriverRecruitmentScreen.kt",
+    "line": 634,
+    "function": "ServiceCheckbox",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/FixedRoutesScreen.kt",
+    "line": 53,
+    "function": "FixedRoutesScreen",
+    "classification": "composition shell",
+    "designRefs": [
+      "O23",
+      "O24",
+      "O25",
+      "O26",
+      "O82",
+      "O83"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/FixedRoutesScreen.kt",
+    "line": 154,
+    "function": "RouteScopeBanner",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/FixedRoutesScreen.kt",
+    "line": 176,
+    "function": "FixedRouteCard",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O23"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/FixedRoutesScreen.kt",
+    "line": 243,
+    "function": "GeometryPreview",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O25"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/FixedRoutesScreen.kt",
+    "line": 274,
+    "function": "RouteIdentityEditor",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O24"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/FixedRoutesScreen.kt",
+    "line": 383,
+    "function": "RouteVersionEditor",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O25"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/FixedRoutesScreen.kt",
+    "line": 466,
+    "function": "LocalizedFields",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/FixedRoutesScreen.kt",
+    "line": 483,
+    "function": "EditorField",
+    "classification": "shared component",
+    "designRefs": [
+      "C03"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/FixedRoutesScreen.kt",
+    "line": 494,
+    "function": "RouteCommandDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O26",
+      "O82",
+      "O83"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsApp.kt",
+    "line": 59,
+    "function": "OperationsApp",
+    "classification": "composition shell",
+    "designRefs": [
+      "O00",
+      "O01",
+      "O02",
+      "O03",
+      "O04",
+      "O70"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsApp.kt",
+    "line": 91,
+    "function": "OperationsLogin",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsApp.kt",
+    "line": 161,
+    "function": "LoginBrandPanel",
+    "classification": "composition shell",
+    "designRefs": [
+      "O00",
+      "O01",
+      "O02",
+      "O03",
+      "O04",
+      "O70"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsApp.kt",
+    "line": 190,
+    "function": "LoginCard",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O00"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsApp.kt",
+    "line": 276,
+    "function": "OperationsMfaVerification",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsApp.kt",
+    "line": 336,
+    "function": "OperationsShell",
+    "classification": "composition shell",
+    "designRefs": [
+      "O00",
+      "O01",
+      "O02",
+      "O03",
+      "O04",
+      "O70"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsApp.kt",
+    "line": 375,
+    "function": "OperationsSidebar",
+    "classification": "composition shell",
+    "designRefs": [
+      "O00",
+      "O01",
+      "O02",
+      "O03",
+      "O04",
+      "O70"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsApp.kt",
+    "line": 434,
+    "function": "SidebarDestination",
+    "classification": "composition shell",
+    "designRefs": [
+      "O00",
+      "O01",
+      "O02",
+      "O03",
+      "O04",
+      "O70"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsApp.kt",
+    "line": 464,
+    "function": "CompactNavigation",
+    "classification": "composition shell",
+    "designRefs": [
+      "O00",
+      "O01",
+      "O02",
+      "O03",
+      "O04",
+      "O70"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsApp.kt",
+    "line": 515,
+    "function": "MfaStepUpDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O02"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsApp.kt",
+    "line": 546,
+    "function": "OperationsWorkspace",
+    "classification": "composition shell",
+    "designRefs": [
+      "O00",
+      "O01",
+      "O02",
+      "O03",
+      "O04",
+      "O70"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsApp.kt",
+    "line": 624,
+    "function": "ScopeTopBar",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O03"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsApp.kt",
+    "line": 686,
+    "function": "InitialLoading",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O04"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsApp.kt",
+    "line": 699,
+    "function": "LoadFailure",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O04"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsComponents.kt",
+    "line": 48,
+    "function": "OperationsWordmark",
+    "classification": "shared component",
+    "designRefs": [
+      "C17",
+      "C18",
+      "C30",
+      "C31",
+      "C32",
+      "C39"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsComponents.kt",
+    "line": 80,
+    "function": "StatusBadge",
+    "classification": "shared component",
+    "designRefs": [
+      "C17",
+      "C18",
+      "C30",
+      "C31",
+      "C32",
+      "C39"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsComponents.kt",
+    "line": 107,
+    "function": "MessageBanner",
+    "classification": "shared component",
+    "designRefs": [
+      "C17",
+      "C18",
+      "C30",
+      "C31",
+      "C32",
+      "C39"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsComponents.kt",
+    "line": 145,
+    "function": "MetricCard",
+    "classification": "shared component",
+    "designRefs": [
+      "C17",
+      "C18",
+      "C30",
+      "C31",
+      "C32",
+      "C39"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsComponents.kt",
+    "line": 169,
+    "function": "SectionHeading",
+    "classification": "shared component",
+    "designRefs": [
+      "C17",
+      "C18",
+      "C30",
+      "C31",
+      "C32",
+      "C39"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsComponents.kt",
+    "line": 189,
+    "function": "EmptyState",
+    "classification": "shared component",
+    "designRefs": [
+      "C17",
+      "C18",
+      "C30",
+      "C31",
+      "C32",
+      "C39"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsComponents.kt",
+    "line": 220,
+    "function": "ScopeMenu",
+    "classification": "shared component",
+    "designRefs": [
+      "C17",
+      "C18",
+      "C30",
+      "C31",
+      "C32",
+      "C39"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsComponents.kt",
+    "line": 264,
+    "function": "DataCard",
+    "classification": "shared component",
+    "designRefs": [
+      "C17",
+      "C18",
+      "C30",
+      "C31",
+      "C32",
+      "C39"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsComponents.kt",
+    "line": 294,
+    "function": "KeyValue",
+    "classification": "shared component",
+    "designRefs": [
+      "C17",
+      "C18",
+      "C30",
+      "C31",
+      "C32",
+      "C39"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsComponents.kt",
+    "line": 302,
+    "function": "PageLimitNote",
+    "classification": "shared component",
+    "designRefs": [
+      "C17",
+      "C18",
+      "C30",
+      "C31",
+      "C32",
+      "C39"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsScreens.kt",
+    "line": 70,
+    "function": "RolloutScreen",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O05"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsScreens.kt",
+    "line": 147,
+    "function": "CitiesScreen",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O06"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsScreens.kt",
+    "line": 313,
+    "function": "CityDetail",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O86"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsScreens.kt",
+    "line": 524,
+    "function": "ReadinessGateGroup",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O12"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsScreens.kt",
+    "line": 571,
+    "function": "ReadinessReviewDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O87"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsScreens.kt",
+    "line": 620,
+    "function": "OperatorsScreen",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O14"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsScreens.kt",
+    "line": 779,
+    "function": "AuditScreen",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O60"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsScreens.kt",
+    "line": 814,
+    "function": "LifecycleReviewDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O13"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsScreens.kt",
+    "line": 858,
+    "function": "ScreenColumn",
+    "classification": "shared component",
+    "designRefs": [
+      "C32"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsScreens.kt",
+    "line": 869,
+    "function": "TableHeader",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsScreens.kt",
+    "line": 888,
+    "function": "TableRow",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/OperationsScreens.kt",
+    "line": 905,
+    "function": "RowScope.TableCell",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PaymentOperationsScreen.kt",
+    "line": 47,
+    "function": "PaymentOperationsScreen",
+    "classification": "composition shell",
+    "designRefs": [
+      "O37",
+      "O38",
+      "O39",
+      "O40",
+      "O41",
+      "O42",
+      "O43",
+      "O68",
+      "O69",
+      "O76",
+      "O77"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PaymentOperationsScreen.kt",
+    "line": 83,
+    "function": "RecipientCreator",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O76"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PaymentOperationsScreen.kt",
+    "line": 112,
+    "function": "RecipientList",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O38",
+      "O68"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PaymentOperationsScreen.kt",
+    "line": 149,
+    "function": "CapabilityCreator",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O77"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PaymentOperationsScreen.kt",
+    "line": 205,
+    "function": "CapabilityList",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O39",
+      "O69"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PaymentOperationsScreen.kt",
+    "line": 221,
+    "function": "CapabilityRow",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O69"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PaymentOperationsScreen.kt",
+    "line": 250,
+    "function": "TransferQueue",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O40",
+      "O41"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PaymentOperationsScreen.kt",
+    "line": 282,
+    "function": "RefundRecorder",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O42"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PaymentOperationsScreen.kt",
+    "line": 310,
+    "function": "RefundHistory",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O43"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PaymentOperationsScreen.kt",
+    "line": 324,
+    "function": "OperationsPanel",
+    "classification": "shared component",
+    "designRefs": [
+      "C23"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PaymentOperationsScreen.kt",
+    "line": 340,
+    "function": "RecordSurface",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PaymentOperationsScreen.kt",
+    "line": 351,
+    "function": "Field",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PricingEconomicsEditors.kt",
+    "line": 315,
+    "function": "TariffEditor",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O18"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PricingEconomicsEditors.kt",
+    "line": 370,
+    "function": "FeePolicyEditor",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O20"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PricingEconomicsEditors.kt",
+    "line": 414,
+    "function": "SchedulingPolicyEditor",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O22"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PricingEconomicsEditors.kt",
+    "line": 470,
+    "function": "PolicyEditorFrame",
+    "classification": "shared component",
+    "designRefs": [
+      "C33"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PricingEconomicsEditors.kt",
+    "line": 496,
+    "function": "PolicyField",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PricingEconomicsEditors.kt",
+    "line": 508,
+    "function": "EffectiveFields",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PricingEconomicsEditors.kt",
+    "line": 520,
+    "function": "PolicyChoice",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PricingEconomicsEditors.kt",
+    "line": 545,
+    "function": "ValidationAndSave",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PricingEconomicsScreen.kt",
+    "line": 45,
+    "function": "PricingEconomicsScreen",
+    "classification": "composition shell",
+    "designRefs": [
+      "O17",
+      "O19",
+      "O21",
+      "O79",
+      "O80",
+      "O81"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PricingEconomicsScreen.kt",
+    "line": 95,
+    "function": "PricingScopeBanner",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PricingEconomicsScreen.kt",
+    "line": 126,
+    "function": "PricingMetrics",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PricingEconomicsScreen.kt",
+    "line": 144,
+    "function": "TariffSection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O17"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PricingEconomicsScreen.kt",
+    "line": 212,
+    "function": "OperatorFeeSection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O19"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PricingEconomicsScreen.kt",
+    "line": 271,
+    "function": "SchedulingPolicySection",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O21"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PricingEconomicsScreen.kt",
+    "line": 329,
+    "function": "PolicyCollection",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PricingEconomicsScreen.kt",
+    "line": 339,
+    "function": "PolicyCard",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/PricingEconomicsScreen.kt",
+    "line": 377,
+    "function": "PolicyTransitionDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O79",
+      "O80",
+      "O81"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/ScheduledExceptionsScreen.kt",
+    "line": 25,
+    "function": "ScheduledExceptionsScreen",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O44"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/ScheduledExceptionsScreen.kt",
+    "line": 68,
+    "function": "ScheduledExceptionCard",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/SecurityIncidentScreen.kt",
+    "line": 48,
+    "function": "SecurityIncidentScreen",
+    "classification": "composition shell",
+    "designRefs": [
+      "O55",
+      "O56",
+      "O57",
+      "O58",
+      "O59"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/SecurityIncidentScreen.kt",
+    "line": 94,
+    "function": "CreateSecurityIncidentPanel",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O55"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/SecurityIncidentScreen.kt",
+    "line": 190,
+    "function": "IncidentQueue",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O55"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/SecurityIncidentScreen.kt",
+    "line": 229,
+    "function": "IncidentDetail",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O56"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/SecurityIncidentScreen.kt",
+    "line": 259,
+    "function": "IncidentResponsibilitiesPanel",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O56"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/SecurityIncidentScreen.kt",
+    "line": 409,
+    "function": "TimelinePanel",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O57"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/SecurityIncidentScreen.kt",
+    "line": 510,
+    "function": "IncidentTransitionPanel",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O58"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/SecurityIncidentScreen.kt",
+    "line": 597,
+    "function": "IncidentPostmortemPanel",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O59"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/SecurityIncidentScreen.kt",
+    "line": 711,
+    "function": "TimestampFields",
+    "classification": "presentation helper",
+    "designRefs": []
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/SecurityIncidentScreen.kt",
+    "line": 744,
+    "function": "SecurityIncidentPanel",
+    "classification": "shared component",
+    "designRefs": [
+      "C23"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/StaffAccessScreen.kt",
+    "line": 42,
+    "function": "StaffAccessScreen",
+    "classification": "composition shell",
+    "designRefs": [
+      "O27",
+      "O28",
+      "O29",
+      "O30"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/StaffAccessScreen.kt",
+    "line": 280,
+    "function": "CreateAdministrativeGrantDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O28"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/StaffAccessScreen.kt",
+    "line": 401,
+    "function": "RevokeAdministrativeGrantDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O29"
+    ]
+  },
+  {
+    "source": "TaxiMobile/webApp/src/webMain/kotlin/org/example/taximobile/operations/ui/StaffAccessScreen.kt",
+    "line": 449,
+    "function": "AdministrativeGrantDecisionDialog",
+    "classification": "page/detail/editor",
+    "designRefs": [
+      "O30"
+    ]
+  }
+]

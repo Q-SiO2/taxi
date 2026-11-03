@@ -1,0 +1,83 @@
+{
+  "observed_utc": "2026-10-23T23:03:19.489332+00:00",
+  "project_id": "9f841575-c4f3-4a4d-bb83-2e6ff92e436e",
+  "environment_id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+  "environment_name": "staging",
+  "method": "Existing authorized CLI status only; connector UNAUTHORIZED. No mutation or secret values.",
+  "services": [
+    {
+      "id": "2d8ab069-2310-46ff-afe0-8fd4f42a5bd1",
+      "name": "alpha-web",
+      "deployment_id": "da158b10-2d82-468e-b1f1-cffba5c32ee4",
+      "deployment_status": "SUCCESS",
+      "deployment_created_utc": "2026-10-23T10:08:13.728Z",
+      "deployment_stopped": false,
+      "replicas": null,
+      "active_deployments": 1
+    },
+    {
+      "id": "758fa7d5-f8b8-4730-a00f-438e28184e35",
+      "name": "alpha-api",
+      "deployment_id": "8b03ad50-ba24-4d38-88b3-dc5321cd77cd",
+      "deployment_status": "SUCCESS",
+      "deployment_created_utc": "2026-10-22T23:51:54.528Z",
+      "deployment_stopped": false,
+      "replicas": null,
+      "active_deployments": 1
+    },
+    {
+      "id": "eb42d0ba-feae-4f7a-9c86-48f4d38006d0",
+      "name": "alpha-worker",
+      "deployment_id": "0bc39434-5d26-4e7b-8645-350526e638dd",
+      "deployment_status": "SUCCESS",
+      "deployment_created_utc": "2026-10-22T23:49:57.498Z",
+      "deployment_stopped": false,
+      "replicas": null,
+      "active_deployments": 1
+    },
+    {
+      "id": "568723a2-e456-4130-825a-077c5cae9f81",
+      "name": "alpha-routing",
+      "deployment_id": "dec657d1-e507-421d-9bc2-15f0250385b7",
+      "deployment_status": "SUCCESS",
+      "deployment_created_utc": "2026-10-12T17:25:06.150Z",
+      "deployment_stopped": false,
+      "replicas": null,
+      "active_deployments": 1
+    },
+    {
+      "id": "41ccd6b2-41e2-4886-8d96-cc56f62aaab7",
+      "name": "alpha-postgis",
+      "deployment_id": "d8645fc6-04d2-4ffc-b42d-c93709ede85a",
+      "deployment_status": "SUCCESS",
+      "deployment_created_utc": "2026-10-22T23:47:14.472Z",
+      "deployment_stopped": false,
+      "replicas": null,
+      "active_deployments": 1
+    }
+  ],
+  "volumes": [
+    {
+      "id": "b9097b45-80a9-4964-9844-c247b08d1db5",
+      "name": "alpha-postgis-data",
+      "mounted_service_id": null,
+      "mount_path": "/var/lib/postgresql/data",
+      "size_mb": 500,
+      "current_size_mb": 489.0460159999999,
+      "pending_deletion": false,
+      "state": "READY"
+    },
+    {
+      "id": "8ed86e48-25f5-4fa6-8feb-2f930ba8b547",
+      "name": "alpha-board-data-20261015",
+      "mounted_service_id": "41ccd6b2-41e2-4886-8d96-cc56f62aaab7",
+      "mount_path": "/var/lib/postgresql/data",
+      "size_mb": 500,
+      "current_size_mb": 219.365376,
+      "pending_deletion": false,
+      "state": "READY"
+    }
+  ],
+  "interpretation": "Timestamped hosting metadata; not a runtime health, backup/restore, funding, migration or production acceptance.",
+  "next_upgrade": "Before schema0053: verify current0052 and runtime/owner privileges, create protected backup, restore into isolated target and test0053 upgrade with old/new API/worker compatibility; bind exact reviewed images. Never replay credential/MFA recovery or delete either volume."
+}

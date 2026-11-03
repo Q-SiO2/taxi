@@ -1,0 +1,22 @@
+{
+  "verified_utc": "2026-10-17T09:05:11.952527+00:00",
+  "candidate": "candidate-native-v9.json",
+  "accepted_for_trip_rehearsal": false,
+  "driver_avd": "taximobile-board-aosp31-driver",
+  "api_level": 31,
+  "observations": {
+    "map_renderer": "Vulkan required; both actual maps rendered after enabling Vulkan",
+    "gps_coordinates": "synthetic Casablanca only",
+    "last_gps_elapsed_timestamp": "20743d8h57m13s931ms",
+    "proc_uptime_seconds": 21219.12,
+    "driver_state": "Location required, OFFLINE; no booking or cash command submitted",
+    "native_listener_received_reports": 48
+  },
+  "conclusion": "GPS elapsed timestamp is incompatible with boot uptime; native fresh-after-request guard rejects these fixes. Use a corrected newer emulator image; do not weaken freshness or dispatch rules.",
+  "failed_trip_record": "v9-native-first.json",
+  "passenger_login_record": "v9-aosp31-passenger-login.json",
+  "limitations": [
+    "Runtime observation identifies the fixture mismatch; no full HAL root-cause claim",
+    "A valid newer driver fixture and two complete v9 trips still required"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "recorded_utc": "2026-10-24T15:06:20.526741+00:00",
+  "version": "1.5.4",
+  "origin": "https://www.clamav.net/downloads",
+  "scope": "Local portable daemon for synthetic protocol acceptance; no service installation, signature-feed acceptance, hosting or application dependency change",
+  "phase": "DOWNLOAD",
+  "files": {
+    "clamav-1.5.4.win.x64.zip": {
+      "source": "https://www.clamav.net/downloads/production/clamav-1.5.4.win.x64.zip",
+      "bytes": 225774978,
+      "sha256": "0d9e0228b2674137ea1a2853566c98a0278ad52ab2582c3d6dbd75373848c395"
+    },
+    "clamav-1.5.4.win.x64.zip.sig": {
+      "source": "https://www.clamav.net/downloads/production/clamav-1.5.4.win.x64.zip.sig",
+      "bytes": 801,
+      "sha256": "42189dd43040cd5fe4ba71a963f8d7a402b6cd2284099b653f42ca73f4055f50"
+    }
+  },
+  "passed": false,
+  "error_type": "HTTPError"
+}

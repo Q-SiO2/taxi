@@ -89,14 +89,22 @@ def economics_response(booking: ScheduledBooking) -> BookingEconomicsResponse:
 def cancellation_terms(booking: ScheduledBooking) -> CancellationTermsResponse:
     cutoff = int(booking.policy_snapshot["passenger_cancel_cutoff_minutes"])
     mode = str(booking.policy_snapshot["surcharge_refund_mode"])
-    if mode == "ALWAYS_FULL":
+    return cancellation_terms_response(cutoff, mode)
+
+
+def cancellation_terms_response(cutoff: int, mode: str) -> CancellationTermsResponse:
+    if not 0 <= cutoff <= 10080:
+        summary = "Cancellation terms are unavailable; refresh before confirming."
+    elif mode == "ALWAYS_FULL":
         summary = "Cancellation does not retain the scheduling surcharge."
     elif mode == "FULL_BEFORE_CUTOFF":
         summary = (
             f"The scheduling surcharge is refundable until {cutoff} minutes before pickup."
         )
-    else:
+    elif mode == "NON_REFUNDABLE":
         summary = "The scheduling surcharge is non-refundable after confirmation."
+    else:
+        summary = "Cancellation terms are unavailable; refresh before confirming."
     return CancellationTermsResponse(
         passenger_cancel_cutoff_minutes=cutoff,
         surcharge_refund_mode=mode,
@@ -120,18 +128,8 @@ def quote_economics_response(quote) -> BookingEconomicsResponse:
 
 
 def policy_cancellation_terms(policy) -> CancellationTermsResponse:
-    cutoff = policy.passenger_cancel_cutoff_minutes
-    mode = policy.surcharge_refund_mode.value
-    if mode == "ALWAYS_FULL":
-        summary = "Cancellation does not retain the scheduling surcharge."
-    elif mode == "FULL_BEFORE_CUTOFF":
-        summary = f"The scheduling surcharge is refundable until {cutoff} minutes before pickup."
-    else:
-        summary = "The scheduling surcharge is non-refundable after confirmation."
-    return CancellationTermsResponse(
-        passenger_cancel_cutoff_minutes=cutoff,
-        surcharge_refund_mode=mode,
-        summary=summary,
+    return cancellation_terms_response(
+        policy.passenger_cancel_cutoff_minutes, policy.surcharge_refund_mode.value,
     )
 
 

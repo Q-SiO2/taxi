@@ -21,6 +21,7 @@ from taximobile_api.core.notification_policy import (
 EXPECTED_TOPICS = {
     "ride.offer.created",
     "ride.accepted",
+    "ride.updated",
     "ride.cancelled",
     "ride.matching.failed",
     "ride.coordination.message",

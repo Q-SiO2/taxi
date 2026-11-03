@@ -1,0 +1,49 @@
+{
+  "recorded_utc": "2026-10-26 10:07:44 UTC",
+  "source_head": "b1be457bfe4de0146c8153a70ec14c1280f9e12b",
+  "candidate_tree": "e756a576546f6caaa19258d71e7807a663fd5e7f",
+  "run_id": 40304735444,
+  "run_number": 246,
+  "status": "in_progress",
+  "conclusion": null,
+  "required_jobs": {
+    "gradle-dependency-submission": {
+      "id": 121510936913,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "documentation-and-provenance": {
+      "id": 121510937045,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "web": {
+      "id": 121510937100,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "backend": {
+      "id": 121510937111,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "gradle-wrapper-integrity": {
+      "id": 121510937162,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "mobile": {
+      "id": 121510937230,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "ios-shared": {
+      "id": 121510937308,
+      "status": "in_progress",
+      "conclusion": null
+    }
+  },
+  "predecessor_ci_244_accepted_only_its_own_source": true,
+  "physical_hosted_pilot_or_public_accepted": false,
+  "next_action": "Observe this exact run to terminal and verify source-tree/artifact digests. Do not restart for unchanged polling or borrow predecessor checks."
+}

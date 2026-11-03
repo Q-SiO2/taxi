@@ -1,0 +1,8 @@
+{
+  "candidate": "candidate-native-v23.json",
+  "pid": "2013",
+  "first_complete_run": "release-v23-r2-native-first.json",
+  "passed": true,
+  "pid_after_first_trip": "2013",
+  "finished_utc": "2026-10-23T11:03:06.528120+00:00"
+}

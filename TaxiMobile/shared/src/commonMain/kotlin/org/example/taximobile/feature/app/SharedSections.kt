@@ -67,6 +67,7 @@ internal fun notificationCopyResources(type: String): Pair<StringResource, Strin
     "RIDE_CANCELLED_BY_DRIVER" ->
         Res.string.notification_driver_cancelled_title to Res.string.notification_driver_cancelled_body
     "DRIVER_ASSIGNED" -> Res.string.notification_driver_assigned_title to Res.string.notification_driver_assigned_body
+    "RIDE_UPDATED" -> Res.string.notification_ride_update_title to Res.string.notification_ride_update_body
     "DRIVER_CREDENTIAL_EXPIRING" ->
         Res.string.notification_credential_expiring_title to Res.string.notification_credential_expiring_body
     "DRIVER_CREDENTIAL_EXPIRED" ->

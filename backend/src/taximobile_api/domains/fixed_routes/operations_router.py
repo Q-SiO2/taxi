@@ -104,6 +104,7 @@ async def _scope_context(
     *,
     city_id: UUID,
     operator_id: UUID,
+    require_assignment: bool = True,
 ) -> City:
     if not _scope_allowed(principal, city_id=city_id, operator_id=operator_id):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Route scope not found.")
@@ -111,6 +112,8 @@ async def _scope_context(
     operator = await session.get(Operator, operator_id)
     if city is None or operator is None or operator.market_id != city.market_id:
         raise FixedRouteConflict("The route city and operator must share a market.")
+    if not require_assignment:
+        return city
     assignment = await session.scalar(
         select(OperatorCityAssignment.id)
         .where(
@@ -193,9 +196,13 @@ async def list_fixed_routes(
     principal: OperationsPrincipal = Depends(require_operations_permission(PERMISSION)),
     session: AsyncSession = Depends(database_session),
 ) -> FixedRouteListResponse:
-    await _scope_context(
-        session, principal, city_id=city_id, operator_id=operator_id
-    )
+    try:
+        await _scope_context(
+            session, principal, city_id=city_id, operator_id=operator_id,
+            require_assignment=False,
+        )
+    except FixedRouteConflict as error:
+        raise _conflict(error) from error
     filters = [FixedRoute.city_id == city_id, FixedRoute.operator_id == operator_id]
     if route_status is not None:
         filters.append(FixedRoute.status == route_status)
@@ -237,12 +244,13 @@ async def list_fixed_route_fare_options(
     are already bound one-to-one and cannot be reassigned to another direction.
     """
 
-    await _scope_context(
-        session,
-        principal,
-        city_id=city_id,
-        operator_id=operator_id,
-    )
+    try:
+        await _scope_context(
+            session, principal, city_id=city_id, operator_id=operator_id,
+            require_assignment=False,
+        )
+    except FixedRouteConflict as error:
+        raise _conflict(error) from error
     rules = list(
         await session.scalars(
             select(PricingRule)

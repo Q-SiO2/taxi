@@ -9,8 +9,10 @@ from taximobile_api.db.pool import InstrumentedAsyncAdaptedQueuePool
 
 
 def create_session_factory(settings: Settings) -> async_sessionmaker[AsyncSession]:
+    settings.database_tls.validate_environment(settings.environment)
     engine = create_async_engine(
         settings.database_url,
+        connect_args=settings.database_tls.connect_args(settings.database_url),
         pool_pre_ping=True,
         pool_size=settings.database_pool_size,
         max_overflow=settings.database_pool_max_overflow,

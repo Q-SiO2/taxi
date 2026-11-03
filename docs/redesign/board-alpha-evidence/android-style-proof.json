@@ -1,0 +1,78 @@
+{
+  "checks": [
+    {
+      "language": "en",
+      "style": "Folded Streets",
+      "title_verified": true,
+      "screenshot": "C:\\Users\\Q\\Projects\\.tools\\alpha-delivery\\android-style-renders\\folded_streets-en.png"
+    },
+    {
+      "language": "en",
+      "style": "Street Press",
+      "title_verified": true,
+      "screenshot": "C:\\Users\\Q\\Projects\\.tools\\alpha-delivery\\android-style-renders\\street_press-en.png"
+    },
+    {
+      "language": "en",
+      "style": "Glazed Machine",
+      "title_verified": true,
+      "screenshot": "C:\\Users\\Q\\Projects\\.tools\\alpha-delivery\\android-style-renders\\glazed_machine-en.png"
+    },
+    {
+      "language": "en",
+      "style": "Notepad",
+      "title_verified": true,
+      "screenshot": "C:\\Users\\Q\\Projects\\.tools\\alpha-delivery\\android-style-renders\\notepad-en.png"
+    },
+    {
+      "language": "fr",
+      "style": "Folded Streets",
+      "title_verified": true,
+      "screenshot": "C:\\Users\\Q\\Projects\\.tools\\alpha-delivery\\android-style-renders\\folded_streets-fr.png"
+    },
+    {
+      "language": "fr",
+      "style": "Street Press",
+      "title_verified": true,
+      "screenshot": "C:\\Users\\Q\\Projects\\.tools\\alpha-delivery\\android-style-renders\\street_press-fr.png"
+    },
+    {
+      "language": "fr",
+      "style": "Glazed Machine",
+      "title_verified": true,
+      "screenshot": "C:\\Users\\Q\\Projects\\.tools\\alpha-delivery\\android-style-renders\\glazed_machine-fr.png"
+    },
+    {
+      "language": "fr",
+      "style": "Notepad",
+      "title_verified": true,
+      "screenshot": "C:\\Users\\Q\\Projects\\.tools\\alpha-delivery\\android-style-renders\\notepad-fr.png"
+    },
+    {
+      "language": "ar",
+      "style": "Folded Streets",
+      "title_verified": true,
+      "screenshot": "C:\\Users\\Q\\Projects\\.tools\\alpha-delivery\\android-style-renders\\folded_streets-ar.png"
+    },
+    {
+      "language": "ar",
+      "style": "Street Press",
+      "title_verified": true,
+      "screenshot": "C:\\Users\\Q\\Projects\\.tools\\alpha-delivery\\android-style-renders\\street_press-ar.png"
+    },
+    {
+      "language": "ar",
+      "style": "Glazed Machine",
+      "title_verified": true,
+      "screenshot": "C:\\Users\\Q\\Projects\\.tools\\alpha-delivery\\android-style-renders\\glazed_machine-ar.png"
+    },
+    {
+      "language": "ar",
+      "style": "Notepad",
+      "title_verified": true,
+      "screenshot": "C:\\Users\\Q\\Projects\\.tools\\alpha-delivery\\android-style-renders\\notepad-ar.png"
+    }
+  ],
+  "restart_persistence": true,
+  "physical_device": false
+}

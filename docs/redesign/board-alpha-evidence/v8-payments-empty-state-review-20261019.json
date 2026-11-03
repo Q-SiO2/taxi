@@ -1,0 +1,56 @@
+{
+  "verified_utc": "2026-10-19T12:12:30.571649+00:00",
+  "web_deployment": "ceee310c-e957-49ad-945d-b9f2d292eb61",
+  "passed_within_scope": true,
+  "scope": "Actual protected payment empty-state/form-copy review only; no populated financial flow or command acceptance",
+  "observed": [
+    "Casablanca and exact existing TaxiMobile legacy pilot operator selected through normal picker",
+    "No configured payment-method versions and no submitted transfer claims in scope",
+    "Claim is not proof of payment; amount/currency/reference/statement guidance localized",
+    "Refund form states it records an already returned payment and does not execute a transfer or reclaim driver earnings",
+    "Same scope and empty forms retained through Notepad to Street Press, EN to FR to AR"
+  ],
+  "screenshots": [
+    {
+      "path": "v8-payments-english-notepad-scope.jpg",
+      "sha256": "47c27bea49114d8574f8844548e7e26284d9378a38e1aa57987bc3d961059693",
+      "bytes": 60101,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-payments-empty-english-notepad.jpg",
+      "sha256": "31fb6d02493d22ad1e60667cedd05d14fa2e29ea7923eed753c6502415385689",
+      "bytes": 63475,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-payments-empty-english-street-press.jpg",
+      "sha256": "7df4c95f5f4e93a35a3fd3f3cae9a2e9f5a4dbe5697afeb9a3c2214d37b2928c",
+      "bytes": 65583,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-payments-empty-french-street-press.jpg",
+      "sha256": "d1b0b2bd599a403775c643b3210f3225d5b1ee34220c7cd02d522cdeee58d3b4",
+      "bytes": 73824,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    },
+    {
+      "path": "v8-payments-empty-arabic-street-press.jpg",
+      "sha256": "7fc5881e255253d37c84b5be5bd4219807a91a05eddc6555701218a488400b09",
+      "bytes": 59214,
+      "format": "JPEG",
+      "viewport": "1280x720"
+    }
+  ],
+  "limitations": [
+    "No recipient/capability creation or activation",
+    "No financial field was entered and no approve/reject/refund command sent",
+    "No populated reconciliation or real-money flow accepted",
+    "Full style/language/responsive/accessibility matrix remains open"
+  ]
+}

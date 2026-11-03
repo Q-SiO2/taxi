@@ -1,0 +1,19 @@
+{
+  "utc": "2026-10-17T00:23:54.128754+00:00",
+  "candidate": "candidate-native-v9.json",
+  "installed_driver_sha256": "a7171bd6a6dc21f3bf5c1f6a072ebcc5e88f759c5741e80827eacad911d62e56",
+  "api_level": 35,
+  "serial": "emulator-5556",
+  "graphics_attempts": [
+    "host, 2 cores",
+    "software, Vulkan disabled, 4 cores"
+  ],
+  "guest_memory_mb": 2560,
+  "observed": [
+    "Android System UI ANR",
+    "graphics Failed to find ColorBuffer: 22",
+    "initial connection-recovery page before network validation"
+  ],
+  "trip_passed": false,
+  "next_fixture": "clean lighter AOSP emulator; existing userdata preserved"
+}

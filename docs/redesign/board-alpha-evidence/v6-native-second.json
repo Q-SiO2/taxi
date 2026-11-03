@@ -1,0 +1,28 @@
+{
+  "candidate": "candidate-native-v6.json",
+  "run": "second",
+  "started_utc": "2026-10-15T21:42:46.618953+00:00",
+  "fidelity": "two API35 Android emulators, synthetic GPS/accounts/cash; native writes and server reads",
+  "passed": false,
+  "steps": [
+    {
+      "name": "Server on-demand availability confirmed",
+      "utc": "2026-10-15T21:43:19.613129+00:00"
+    }
+  ],
+  "clock_fixture": [
+    {
+      "role": "driver",
+      "host_minus_device_seconds_before": 0.76,
+      "host_minus_device_seconds_after": 1.04,
+      "method": "owned emulator cmd alarm set-time before trip only"
+    },
+    {
+      "role": "passenger",
+      "host_minus_device_seconds_before": 0.19,
+      "host_minus_device_seconds_after": 0.7,
+      "method": "owned emulator cmd alarm set-time before trip only"
+    }
+  ],
+  "finished_utc": "2026-10-15T21:43:46.118754+00:00"
+}

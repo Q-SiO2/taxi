@@ -7,8 +7,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from geoalchemy2.elements import WKTElement
 
 from taximobile_api.domains.auth.authority import user_account_is_active
+from taximobile_api.domains.cooperatives.authority import driver_membership_is_active
 from taximobile_api.domains.drivers.models import AvailabilityStatus, DriverAccountStatus, DriverProfile, Vehicle, VehicleStatus, VehicleVerificationStatus, VerificationStatus
 from taximobile_api.domains.drivers.service import invalid_driver_credentials
+from taximobile_api.domains.drivers.offer_location import offer_location_failure
 from taximobile_api.domains.driver_applications.models import (
     CityAuthorizationStatus,
     DriverCityAuthorization,
@@ -254,7 +256,31 @@ async def transition_assigned_ride(
         )
     )
     await database_session.flush()
+    await record_ride_update(database_session, ride)
     return ride
+
+
+async def record_ride_update(database_session: AsyncSession, ride: Ride) -> None:
+    """Persist a passenger catch-up signal inside the owning command transaction.
+
+    No transient status, coordinates or client-selected recipient is delivered.
+    Delayed/duplicate hints only cause an authorized current ride/receipt reload.
+    The durable inbox is intentionally generic: an old entry cannot claim that
+    an earlier arrival or pending payment is still the ride's current state.
+    """
+    await notify(
+        database_session,
+        user_id=ride.passenger_id,
+        notification_type="RIDE_UPDATED",
+        title="Ride updated",
+        body="Open your ride to see its current status and receipt.",
+        data={"ride_id": str(ride.id)},
+    )
+    await enqueue(
+        database_session,
+        topic="ride.updated",
+        payload={"ride_id": str(ride.id)},
+    )
 
 
 async def complete_assigned_ride(
@@ -312,6 +338,7 @@ async def complete_assigned_ride(
         )
     )
     await database_session.flush()
+    await record_ride_update(database_session, ride)
     return fare
 
 
@@ -325,7 +352,10 @@ def offer_failure(offer: RideOffer, ride: Ride, now: datetime) -> str | None:
     return None
 
 
-async def accept_offer_atomically(database_session: AsyncSession, offer_id, driver_id) -> Ride:
+async def accept_offer_atomically(
+    database_session: AsyncSession, offer_id, driver_id, *,
+    location_freshness_seconds: int = 30,
+) -> Ride:
     ride, offer = await lock_owned_offer(database_session, offer_id, driver_id)
     if ride is None or offer is None:
         raise RideOfferUnavailable("Ride offer is not available.")
@@ -339,6 +369,10 @@ async def accept_offer_atomically(database_session: AsyncSession, offer_id, driv
         serialize_with_status_change=True,
     ):
         raise RideOfferUnavailable("Driver account is no longer active.")
+    if not await driver_membership_is_active(
+        database_session, profile.user_id, ride.operator_id, serialize_with_changes=True
+    ):
+        raise RideOfferUnavailable("Active membership with this operator is required.")
     vehicle = await database_session.get(Vehicle, profile.active_vehicle_id) if profile.active_vehicle_id else None
     credential_ineligible = bool(
         await database_session.scalar(select(invalid_driver_credentials(profile.id, now)))
@@ -403,6 +437,19 @@ async def accept_offer_atomically(database_session: AsyncSession, offer_id, driv
     )
     if active_ride is not None:
         raise RideOfferUnavailable("Driver already has an active ride.")
+    # Discovery does not guarantee current readiness. Re-read the newest
+    # observation under the driver lock and use server time AFTER all lock
+    # waits. A fresh older row must never hide a newer invalid observation.
+    acceptance_time = datetime.now(UTC)
+    reason = offer_failure(offer, ride, acceptance_time)
+    if reason:
+        raise RideOfferUnavailable(reason)
+    location_reason = await offer_location_failure(
+        database_session, driver_id=driver_id, city_id=ride.city_id,
+        now=acceptance_time, freshness_seconds=location_freshness_seconds,
+    )
+    if location_reason:
+        raise RideOfferUnavailable(location_reason)
     offer.status = RideOfferStatus.ACCEPTED
     offer.responded_at = datetime.now(UTC)
     ride.driver_id = driver_id

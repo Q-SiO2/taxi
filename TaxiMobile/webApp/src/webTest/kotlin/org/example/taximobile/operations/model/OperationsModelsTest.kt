@@ -9,6 +9,16 @@ class OperationsModelsTest {
     private val json = Json { ignoreUnknownKeys = true }
 
     @Test
+    fun localized_city_name_uses_the_requested_language_and_a_defined_fallback() {
+        val city = LocalizedName("Casablanca", "Casablanca FR", "الدار البيضاء")
+        assertEquals("الدار البيضاء", city.preferred("ar-MA"))
+        assertEquals("Casablanca FR", city.preferred("fr_MA"))
+        assertEquals("Casablanca", city.preferred())
+        assertEquals("Casablanca", city.preferred("unknown"))
+        assertEquals("Rabat FR", LocalizedName("Rabat", "Rabat FR", "").preferred("ar"))
+    }
+
+    @Test
     fun loginEnvelopeDistinguishesPasswordOnlyTokensFromMfaChallenge() {
         val tokens = json.decodeFromString<OperationsLoginEnvelope>(
             """{

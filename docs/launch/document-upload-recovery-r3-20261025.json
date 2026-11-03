@@ -1,0 +1,23 @@
+{
+  "recorded_utc": "2026-10-25T14:45:28.898514+00:00",
+  "cluster_stopped": true,
+  "runtime": {
+    "head": "20261025_0054",
+    "postgres": "16.14",
+    "postgis": "3.5 USE_GEOS=1 USE_PROJ=1 USE_STATS=1"
+  },
+  "original_template_preserved_at": "20261023_0053",
+  "new_isolated_template": "taximobile_ci_documents_20261025",
+  "source_only": true,
+  "hosted_or_provider_acceptance": false,
+  "source_manifest_sha256": "b295bf9987e89424739302730e233229d1b1122079a357fcd6f8c83b7d32dcb2",
+  "source_changed_during_run": false,
+  "return_code": 0,
+  "totals": {
+    "tests": 17,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "junit_sha256": "aa8a90fc038a4cd942730b9646eb023fcf268749aeb9852ec31171e428e046bf"
+}

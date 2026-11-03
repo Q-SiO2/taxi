@@ -115,6 +115,7 @@ def operator_response(operator: Operator) -> OperatorResponse:
         id=operator.id,
         market_id=operator.market_id,
         cooperative_id=operator.cooperative_id,
+        requires_active_membership=operator.requires_active_membership,
         name=operator.name,
         operator_type=operator.operator_type.value,
         status=operator.status.value,
@@ -488,6 +489,7 @@ async def create_operator(
     operator = Operator(
         market_id=payload.market_id,
         cooperative_id=payload.cooperative_id,
+        requires_active_membership=payload.requires_active_membership,
         name=payload.name,
         operator_type=payload.operator_type,
         status=OperatorStatus.DRAFT,
@@ -512,6 +514,7 @@ async def create_operator(
                     "operator_type": operator.operator_type.value,
                     "status": operator.status.value,
                     "cooperative_linked": operator.cooperative_id is not None,
+                    "requires_active_membership": operator.requires_active_membership,
                 },
             )
     except IntegrityError as error:
@@ -552,11 +555,21 @@ async def update_operator(
                 OperationsPermission.MANAGE_OPERATORS,
                 lock=True,
             )
-            previous = {"name": operator.name, "status": operator.status.value}
+            previous = {
+                "name": operator.name, "status": operator.status.value,
+                "requires_active_membership": operator.requires_active_membership,
+            }
+            if payload.requires_active_membership is True and operator.cooperative_id is None:
+                raise HTTPException(
+                    status_code=422,
+                    detail="Closed-shop participation requires a linked membership register.",
+                )
             if payload.name is not None:
                 operator.name = payload.name
             if payload.status is not None:
                 operator.status = payload.status
+            if payload.requires_active_membership is not None:
+                operator.requires_active_membership = payload.requires_active_membership
             operator.updated_at = datetime.now(UTC)
             await audit(
                 session,
@@ -568,7 +581,10 @@ async def update_operator(
                 operator_id=operator.id,
                 changes={
                     "previous": previous,
-                    "current": {"name": operator.name, "status": operator.status.value},
+                    "current": {
+                        "name": operator.name, "status": operator.status.value,
+                        "requires_active_membership": operator.requires_active_membership,
+                    },
                 },
             )
     except IntegrityError as error:

@@ -23,6 +23,7 @@ PRODUCTS = (("passenger", "passengerRelease", "ma.taximobile.passenger"),
             ("driver", "driverRelease", "ma.taximobile.driver"))
 BUILD_TOOLS_VERSION = "36.1.0"
 R8_VERSION = "9.1.56"
+DESUGAR_CONFIGURATION = "com.tools.android:desugar_jdk_libs_configuration:2.1.5"
 
 
 class AndroidVerificationError(RuntimeError):
@@ -170,7 +171,7 @@ def mapping_record(root: Path, variant: str) -> dict:
             "mapping_sha256": before, "pg_map_id": map_ids[0]}
 
 
-def verify_dex_compiler(apk: Path, mapping: dict) -> None:
+def verify_dex_compiler(apk: Path, mapping: dict) -> dict:
     """Cross-check embedded R8 markers: a fresh sidecar cannot bless an old APK.
 
 This is build provenance under the trusted CI producer, not signature checking
@@ -188,22 +189,52 @@ or a general DEX verifier. Never export bytecode/marker text to the report.
                     or len(names) != len(set(names)) or sum(item.file_size for item in entries) > 256 * 1024 * 1024
                     or any(item.flag_bits & 1 or not 8 <= item.file_size <= 64 * 1024 * 1024 for item in entries)):
                 raise AndroidVerificationError("Invalid, duplicate or oversized APK DEX entries.")
-            markers = []
+            cohorts = []
             for item in entries:
                 payload = archive.read(item)
                 if not re.match(rb"dex\n0[0-9]{2}\x00", payload):
                     raise AndroidVerificationError("APK has an unreadable DEX header.")
-                for match in re.finditer(rb"~~R8(\{[^\x00]{1,4096}\})\x00", payload):
-                    markers.append(json.loads(match[1], object_pairs_hook=_pairs))
+                markers = []
+                for match in re.finditer(rb"~~(R8|L8)(\{[^\x00]{1,4096}\})\x00", payload):
+                    markers.append((match[1].decode("ascii"), json.loads(match[2], object_pairs_hook=_pairs)))
+                cohorts.append(markers)
     except AndroidVerificationError:
         raise
     except (zipfile.BadZipFile, RuntimeError, UnicodeError, ValueError):
         raise AndroidVerificationError("APK compiler marker inspection failed.") from None
-    if not markers or any(not isinstance(marker, dict)
-            or marker.get("version") != R8_VERSION or marker.get("backend") != "dex"
-            or marker.get("compilation-mode") != "release" or marker.get("r8-mode") != "full"
-            or marker.get("pg-map-id") != mapping["pg_map_id"] for marker in markers):
-        raise AndroidVerificationError("APK embedded compiler identity does not match the reviewed R8 mapping.")
+    program_markers, library_dex_count = [], 0
+    for markers in cohorts:
+        r8 = [marker for kind, marker in markers if kind == "R8"]
+        l8 = [marker for kind, marker in markers if kind == "L8"]
+        if any(not isinstance(marker, dict) or marker.get("version") != R8_VERSION
+               or marker.get("compilation-mode") != "release" for _, marker in markers):
+            raise AndroidVerificationError("APK embedded compiler identity does not match the reviewed R8 mapping.")
+        if any(marker.get("backend") != "dex" or marker.get("r8-mode") != "full" for marker in r8):
+            raise AndroidVerificationError("APK embedded compiler identity does not match the reviewed R8 mapping.")
+        if l8:
+            # L8 emits classfiles and R8 then shrinks/dexes that library separately.
+            # Its unmapped R8 marker may never bless application code or another DEX.
+            if (len(l8) != 1 or len(r8) != 1 or "pg-map-id" in r8[0] or "pg-map-id" in l8[0]
+                    or l8[0].get("backend") != "cf"
+                    or l8[0].get("desugared-library-identifiers") != [DESUGAR_CONFIGURATION]
+                    or any(type(marker.get("min-api")) is not int or marker["min-api"] != 24 for marker in (l8[0], r8[0]))
+                    or ("desugared-library-identifiers" in r8[0]
+                        and r8[0]["desugared-library-identifiers"] != [DESUGAR_CONFIGURATION])):
+                raise AndroidVerificationError("APK embedded compiler identity has an unsupported desugared-library cohort.")
+            library_dex_count += 1
+        else:
+            for marker in r8:
+                if (marker.get("pg-map-id") != mapping["pg_map_id"]
+                        or ("desugared-library-identifiers" in marker
+                            and marker["desugared-library-identifiers"] != [DESUGAR_CONFIGURATION])):
+                    raise AndroidVerificationError("APK embedded compiler identity does not match the reviewed R8 mapping.")
+                program_markers.append(marker)
+    if not program_markers or (library_dex_count and any(
+            marker.get("desugared-library-identifiers") != [DESUGAR_CONFIGURATION]
+            or type(marker.get("min-api")) is not int or marker["min-api"] != 24 for marker in program_markers)):
+        raise AndroidVerificationError("APK embedded compiler identity lacks the matching application/desugaring context.")
+    return {"program_marker_count": len(program_markers), "desugared_library_dex_count": library_dex_count,
+            "desugared_library_configuration": DESUGAR_CONFIGURATION if library_dex_count else None}
 
 
 def generate_manifest(project: Path, *, version_code: int, version_name: str, aapt2: Path) -> dict:
@@ -244,7 +275,7 @@ def generate_manifest(project: Path, *, version_code: int, version_name: str, aa
             raise AndroidVerificationError(f"The {role} APK is unexpectedly small.")
         before = sha256(apk)
         mapping = mapping_record(root, variant)
-        verify_dex_compiler(apk, mapping)
+        compiler_markers = verify_dex_compiler(apk, mapping)
         identity = packaged_identity(apk, aapt2)
         expected = {"application_id": application_id, "version_code": version_code, "version_name": version_name}
         if identity != expected:
@@ -259,7 +290,7 @@ def generate_manifest(project: Path, *, version_code: int, version_name: str, aa
         artifacts.append({"role": role, "variant": variant, **identity,
             "path": apk.relative_to(root).as_posix(), "bytes": apk.stat().st_size, "sha256": after,
             "identity_verification": "AAPT2_PACKAGED_MANIFEST", **mapping,
-            "compiler_verification": "R8_EMBEDDED_DEX_MARKER_AND_MAPPING"})
+            "compiler_verification": "R8_EMBEDDED_DEX_MARKER_AND_MAPPING", "compiler_markers": compiler_markers})
     return {"schema_version": 1, "generated_at": datetime.now(timezone.utc).isoformat(),
         "evidence_level": "ANDROID_VERIFICATION_ARTIFACTS", "deployment_accepted": False,
         "distribution_eligible": False, "expected_version_code": version_code,

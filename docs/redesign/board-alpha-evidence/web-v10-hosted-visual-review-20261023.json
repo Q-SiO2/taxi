@@ -1,0 +1,53 @@
+{
+  "observed_utc": "2026-10-23T10:56:46.808546+00:00",
+  "candidate": "candidate-web-v10.json",
+  "deployment": "da158b10-2d82-468e-b1f1-cffba5c32ee4",
+  "passed": true,
+  "scope": "Selected actual applicant timeline at 1280x720: all four styles in Arabic, French/English Notepad, same submitted Casablanca application retained without reload during these switches. No edit, withdrawal, resubmission or review decision.",
+  "current_status": "SUBMITTED",
+  "requirements_revision": 7,
+  "markers": "Filled current and hollow other vector circles, all five labels readable after font resources settle.",
+  "final_style": "Folded Streets",
+  "final_language": "ar",
+  "screenshots": [
+    {
+      "path": "web-v10-ar-notepad-timeline-settled.png",
+      "sha256": "c6e54bb4b527b45cdc860925307ed1514b952ac6353eaeb4b01cecfb805a4efd"
+    },
+    {
+      "path": "web-v10-ar-folded-timeline.png",
+      "sha256": "b2b1a32e64effa061c36de3e1e7f9cd691e149a89f5b6b928c5bd66bd1baf8c1"
+    },
+    {
+      "path": "web-v10-ar-street-press-timeline.png",
+      "sha256": "1773e7d24394539298f2fbd9af936393fbd9992e32976953a0acc7b70b444f9a"
+    },
+    {
+      "path": "web-v10-ar-glazed-machine-timeline.png",
+      "sha256": "db0e2c17ed9093e960c17f2dee4d8544e6f1ec59e5893c7422f3d186ef47b9c2"
+    },
+    {
+      "path": "web-v10-ar-notepad-live-switch.png",
+      "sha256": "c6e54bb4b527b45cdc860925307ed1514b952ac6353eaeb4b01cecfb805a4efd"
+    },
+    {
+      "path": "web-v10-fr-notepad-timeline.png",
+      "sha256": "9e3feba84a55d081e79859a851a281f67ccd2adfe98de9cecc16aa3574f7d1a7"
+    },
+    {
+      "path": "web-v10-en-notepad-timeline-settled.png",
+      "sha256": "1b9c81965e8f6172bd06d282b6ca4f96b4d8d2073a55317361605923346b383a"
+    },
+    {
+      "path": "web-v10-ar-folded-restored.png",
+      "sha256": "b2b1a32e64effa061c36de3e1e7f9cd691e149a89f5b6b928c5bd66bd1baf8c1"
+    }
+  ],
+  "qualifications": [
+    "Prior browser capture failure restored after owner kept panel open; earlier failed record retained.",
+    "AX tree became stale/empty after style changes although rendered UI/controls functioned; screenshot-grounded control used. Full accessibility acceptance remains open.",
+    "Initial locale-switch capture can precede font resource rendering; settled images retained.",
+    "One transient CDP timeout left Done dialog open; fresh screenshot confirmed it before explicit preference-only dismissal.",
+    "Selected views only, not all 213 views or all style/language/device combinations."
+  ]
+}

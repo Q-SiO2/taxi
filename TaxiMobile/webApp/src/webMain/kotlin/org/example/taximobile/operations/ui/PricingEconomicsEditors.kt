@@ -1,5 +1,6 @@
 package org.example.taximobile.operations.ui
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -323,6 +324,7 @@ internal fun TariffEditor(
     onUpdate: (PricingRuleRecord, PricingRuleUpdateRequest) -> Unit,
     onClose: () -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     var draft by remember(existing?.id, operatorId) {
         mutableStateOf(existing?.let(TariffDraft::from) ?: TariffDraft(currency = currencyHint))
     }
@@ -350,7 +352,7 @@ internal fun TariffEditor(
             )
             Text(
                 "A fixed-route fare may be drafted unbound, but activation fails until exactly one draft direction links back to it.",
-                color = TaxiColors.Ink500,
+                color = taxiColors.Ink500,
                 style = MaterialTheme.typography.bodySmall,
             )
         }
@@ -377,6 +379,7 @@ internal fun FeePolicyEditor(
     onUpdate: (OperatorFeePolicyRecord, OperatorFeePolicyUpdateRequest) -> Unit,
     onClose: () -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     var draft by remember(existing?.id, operatorId) {
         mutableStateOf(existing?.let(FeePolicyDraft::from) ?: FeePolicyDraft(currency = currencyHint))
     }
@@ -401,7 +404,7 @@ internal fun FeePolicyEditor(
         ), locked) { draft = draft.copy(fundingMode = it) }
         PolicyField("Currency", draft.currency, !locked) { draft = draft.copy(currency = it.uppercase().take(3)) }
         PolicyField("Minimum driver net", draft.minimumDriverNet, !locked) { draft = draft.copy(minimumDriverNet = it.take(16)) }
-        Text("Eligible base: TRANSPORT_FARE · rounding: HALF_UP_0_01", color = TaxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
+        Text("Eligible base: TRANSPORT_FARE · rounding: HALF_UP_0_01", color = taxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
         EffectiveFields(draft.effectiveFrom, draft.effectiveUntil, locked,
             { draft = draft.copy(effectiveFrom = it) }, { draft = draft.copy(effectiveUntil = it) })
         ValidationAndSave(draft.validationMessage(), locked) {
@@ -421,6 +424,7 @@ internal fun SchedulingPolicyEditor(
     onUpdate: (SchedulingPolicyRecord, SchedulingPolicyUpdateRequest) -> Unit,
     onClose: () -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     var draft by remember(existing?.id, operatorId) {
         mutableStateOf(existing?.let(SchedulingPolicyDraft::from) ?: SchedulingPolicyDraft(currency = currencyHint))
     }
@@ -435,7 +439,7 @@ internal fun SchedulingPolicyEditor(
         PolicyChoice("Beneficiary", draft.beneficiary, listOf("DRIVER" to "Driver", "OPERATOR" to "Operator"), locked) {
             draft = draft.copy(beneficiary = it)
         }
-        Text("Collection timing: AT_RIDE_SETTLEMENT", color = TaxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
+        Text("Collection timing: AT_RIDE_SETTLEMENT", color = taxiColors.Ink500, style = MaterialTheme.typography.bodySmall)
         Text("Booking windows", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         PolicyField("Minimum lead (minutes)", draft.minimumLeadMinutes, !locked) { draft = draft.copy(minimumLeadMinutes = it.filter(Char::isDigit).take(5)) }
         PolicyField("Maximum horizon (days)", draft.maximumHorizonDays, !locked) { draft = draft.copy(maximumHorizonDays = it.filter(Char::isDigit).take(3)) }
@@ -474,6 +478,7 @@ private fun PolicyEditorFrame(
     locked: Boolean,
     content: @Composable ColumnScope.() -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     DataCard {
         Column(
             Modifier.fillMaxWidth().padding(TaxiSpacing.Lg),
@@ -485,7 +490,7 @@ private fun PolicyEditorFrame(
             }
             Text(
                 "Times require a timezone, for example 2026-08-27T12:00:00Z. The backend validates range overlap, assignment, currency, and activation readiness.",
-                color = TaxiColors.Ink500,
+                color = taxiColors.Ink500,
                 style = MaterialTheme.typography.bodySmall,
             )
             content()
@@ -525,17 +530,18 @@ private fun PolicyChoice(
     locked: Boolean,
     onSelected: (String) -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
     Column(verticalArrangement = Arrangement.spacedBy(TaxiSpacing.Xs)) {
-        Text(label, style = MaterialTheme.typography.labelMedium, color = TaxiColors.Ink500)
+        Text(label, style = MaterialTheme.typography.labelMedium, color = taxiColors.Ink500)
         Row(
             Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(TaxiSpacing.Sm),
         ) {
             options.forEach { (value, display) ->
                 if (value == selected) {
-                    Button(onClick = { onSelected(value) }, enabled = !locked) { Text(display) }
+                    Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onSelected(value) }, enabled = !locked) { Text(display) }
                 } else {
-                    OutlinedButton(onClick = { onSelected(value) }, enabled = !locked) { Text(display) }
+                    OutlinedButton(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = { onSelected(value) }, enabled = !locked) { Text(display) }
                 }
             }
         }
@@ -544,10 +550,11 @@ private fun PolicyChoice(
 
 @Composable
 private fun ValidationAndSave(message: String?, locked: Boolean, onSave: () -> Unit) {
+    val taxiColors = TaxiTheme.colors
     Text(
         message ?: "Ready to send for backend validation.",
-        color = if (message == null) TaxiColors.Success600 else TaxiColors.Warning600,
+        color = if (message == null) taxiColors.Success600 else taxiColors.Warning600,
         style = MaterialTheme.typography.bodySmall,
     )
-    Button(onClick = onSave, enabled = message == null && !locked) { Text("Save draft") }
+    Button(shape = androidx.compose.foundation.shape.RoundedCornerShape(TaxiTheme.radii.Md),onClick = onSave, enabled = message == null && !locked) { Text("Save draft") }
 }

@@ -1,0 +1,45 @@
+{
+  "observed_utc": "2026-10-22T23:38:47.132728+00:00",
+  "project_id": "9f841575-c4f3-4a4d-bb83-2e6ff92e436e",
+  "environment_id": "ed891bc6-51ff-4acc-aed3-bb536931b855",
+  "services": [
+    {
+      "service": "alpha-api",
+      "deployment_id": "e5e108a0-e5dd-4553-93fd-292026c98b63",
+      "records_returned": 300,
+      "limit": 1000,
+      "possibly_truncated": false,
+      "fatal_or_panic_matches": 0,
+      "password_authentication_failed_matches": 0,
+      "traceback_matches": 0,
+      "raw_log_storage": "Windows current-user DPAPI; ignored private workspace, no raw lines in evidence"
+    },
+    {
+      "service": "alpha-worker",
+      "deployment_id": "8ca5a361-9b66-4d7a-8041-c9a5754bbe47",
+      "records_returned": 0,
+      "limit": 1000,
+      "possibly_truncated": false,
+      "fatal_or_panic_matches": 0,
+      "password_authentication_failed_matches": 0,
+      "traceback_matches": 0,
+      "raw_log_storage": "Windows current-user DPAPI; ignored private workspace, no raw lines in evidence"
+    },
+    {
+      "service": "alpha-postgis",
+      "deployment_id": "10348a72-65f4-4b80-8474-e8a950ccd282",
+      "records_returned": 1000,
+      "limit": 1000,
+      "possibly_truncated": true,
+      "fatal_or_panic_matches": 0,
+      "password_authentication_failed_matches": 0,
+      "traceback_matches": 0,
+      "raw_log_storage": "Windows current-user DPAPI; ignored private workspace, no raw lines in evidence"
+    }
+  ],
+  "scope": "Bounded current-deployment log pattern review before credential changes. Counts are observations, not proof of no compromise. No secret/URL/IP/username/request body/raw line retained in public evidence.",
+  "limitations": [
+    "Maximum1000records per current deployment/24h request; not historic deployments or workspace audit logs",
+    "Role/extension/schema and encrypted-MFA checks are independent; no full forensic clearance inferred"
+  ]
+}

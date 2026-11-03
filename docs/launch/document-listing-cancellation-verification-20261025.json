@@ -1,0 +1,34 @@
+{
+  "recorded_utc": "2026-10-25T15:02:55.375134+00:00",
+  "previous_checkpoint": "document-storage-workflow-verification-20261025.json",
+  "previous_checkpoint_sha256": "415780799f0bffc8e7aa2066e1363769a971dc26f768f31b2dba54b35c855e77",
+  "problem": "Repeated caller cancellation released the filesystem iterator lock before its thread finished; shutdown raised generator already executing",
+  "correction": "The listing job owns lock release and exception observation; caller cancellation remains shielded and shutdown waits for the actual job",
+  "retained_regression": {
+    "file": "document-listing-cancellation-baseline-20261025.xml",
+    "junit_sha256": "ae28f91c1d023d2d09b1b988d2f6d67cb7071456ad7a6943b689eafadcbb7d27",
+    "totals": {
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "corrected_focused_report": {
+    "file": "document-storage-activation-r2-20261025.xml",
+    "junit_sha256": "2ba68092c072bf8f8399c955d31cb72c82ba5aa40b28df1f92d0225f86a4abfe",
+    "totals": {
+      "tests": 185,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "source_sha256": {
+    "backend/src/taximobile_api/integrations/driver_documents.py": "9ad25c7aa15d3861858a5e3d2c9d8b000001bcf3c9f03c25c1a0bc022e0f9224",
+    "backend/tests/unit/test_driver_documents.py": "3811209c9ab660226f878717090bbc79ef94b85823e9c625112f286195c3b33f"
+  },
+  "other_backend_inputs_identical_to_post_lock_checkpoint": true,
+  "native_complete_ci_accepted": false,
+  "hosting_mutations_performed": false
+}

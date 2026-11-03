@@ -1,0 +1,13 @@
+{
+  "phase": "CLUSTER_INITIALIZED_WITH_LIVE_SERVER",
+  "postmaster_pid": 15848,
+  "port": 55441,
+  "verified_by": "pg_ctl status and owned process executable/data path",
+  "observation": "PostgreSQL ready log and terminal pg_ctl status show a running cluster; the first Python controller remained in subprocess pipe collection after pg_ctl exited.",
+  "controller_pid_terminated_after_identity_check": 2828,
+  "database_server_restarted": false,
+  "restore_or_migration_submitted": false,
+  "next": "Continue the same live cluster after independently confirming no target database or local owner/runtime roles exist. Use file-backed startup output and explicit backend working directory for migration.",
+  "source_mutations": false,
+  "passed_restore_claim": false
+}

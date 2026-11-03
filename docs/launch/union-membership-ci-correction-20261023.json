@@ -1,0 +1,36 @@
+{
+  "recorded_utc": "2026-10-23T17:40:04.369805+00:00",
+  "failed_commit": "e2cd441102e32bfbbd370898fea980fc47044c09",
+  "failed_run": {
+    "id": 39996331260,
+    "number": 220,
+    "url": "https://github.com/Q-SiO2/taxi/actions/runs/39996331260",
+    "job_id": 120560689340,
+    "job": "documentation-and-provenance",
+    "conclusion": "failure"
+  },
+  "failure": "Infrastructure environment-isolation test still asserted timeout 45 after source-worker budget changed to 180.",
+  "retained_job_log": {
+    "path": ".tools/real-world-launch/union-e2-doc-job-failure-20261023.log",
+    "sha256": "9163232347d042fdf1ce7fb3d5276a102b3d2c5a678cea0d2bc54e5694a4b017"
+  },
+  "correction": "Update only the finite timeout expectation to 180; retain isolation, untrusted environment exclusion and error redaction assertions.",
+  "changed_test": {
+    "path": "infra/scripts/tests/test_generate_openapi_evidence.py",
+    "sha256": "1ef7b7884b6712384d6836a79fcd9b999c7ae64f018816de8441697c6faad1b2"
+  },
+  "local_validation": {
+    "command": "python -m unittest discover -s infra/scripts/tests -p 'test_*.py'",
+    "tests": 270,
+    "failures": 0,
+    "errors": 0,
+    "log": {
+      "path": ".tools/real-world-launch/union-infrastructure-corrected-20261023.log",
+      "sha256": "3221188a80de6ddad97c6119435874895ce06d2be5720b2ae651e9b79e7542ee"
+    }
+  },
+  "application_implementation_changed": false,
+  "earlier_membership_source_reports": "union-membership-verification-20261023.json",
+  "fresh_successor_ci_required": true,
+  "deployment_accepted": false
+}

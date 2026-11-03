@@ -1,0 +1,31 @@
+{
+  "checked_utc": "2026-10-21T11:43:32.809683+00:00",
+  "passed": true,
+  "checks": [
+    {
+      "url": "https://alpha-api-staging.up.railway.app/health",
+      "status": 200,
+      "body": {
+        "status": "ok"
+      }
+    },
+    {
+      "url": "https://alpha-api-staging.up.railway.app/ready",
+      "status": 200,
+      "body": {
+        "status": "ready"
+      }
+    },
+    {
+      "url": "https://alpha-web-staging.up.railway.app/",
+      "status": 200,
+      "exact_v8_index_sha256_match": true
+    },
+    {
+      "url": "https://alpha-web-staging.up.railway.app/apply/",
+      "status": 200,
+      "exact_v8_index_sha256_match": true
+    }
+  ],
+  "scope": "Direct application health and canonical entry/index identity only; not the 103-check undeployed proxy acceptance"
+}

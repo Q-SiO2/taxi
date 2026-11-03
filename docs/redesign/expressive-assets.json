@@ -1,0 +1,194 @@
+[
+  {
+    "id": "G01",
+    "name": "City in layers",
+    "purpose": "Welcome and idle city identity; geometric Art Deco rhythm, not a literal city map.",
+    "file": "expressive-assets/G01.svg",
+    "sha256": "52653cc8c1c15394f8efd47c17440b0307c7df1a8bfe5240d0153329b3b80c5d",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G02",
+    "name": "Illustrated taxi",
+    "purpose": "Friendly original silhouette with separated windows, body, wheels and roof light.",
+    "file": "expressive-assets/G02.svg",
+    "sha256": "4503f45555203add6cae87ad3d496adf12b2c689d89fa896902b53d7fcd937ff",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G03",
+    "name": "City linework",
+    "purpose": "Editorial architectural line drawing for compact city headers.",
+    "file": "expressive-assets/G03.svg",
+    "sha256": "d54b1cd8c0cea7236c70e9a14b4049610e32fbb236c372cec6fd32cd32d1cd29",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G04",
+    "name": "Route ribbon",
+    "purpose": "Abstract brand route emblem; actual directions remain separate server geometry.",
+    "file": "expressive-assets/G04.svg",
+    "sha256": "f69159a7806db762e47ffb057a56db6c6e59986accaf4bd3ef6b795fa916db25",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G05",
+    "name": "Journey ticket",
+    "purpose": "Receipt/trip-history framing, perforations outside text and totals.",
+    "file": "expressive-assets/G05.svg",
+    "sha256": "5c75980cdd3a099eb46edde6faed0f3e413cbd834d377e1e245f973b8b143d29",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G06",
+    "name": "Sunburst accent",
+    "purpose": "A decorative chapter marker; carries no verified/eligible meaning.",
+    "file": "expressive-assets/G06.svg",
+    "sha256": "f644c0cdf8509f7319b9b9a543edd50313d8ed7b357e0bed29f6e8da23c076c6",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G07",
+    "name": "Architectural arch",
+    "purpose": "Streamline architectural framing on welcome/account headers.",
+    "file": "expressive-assets/G07.svg",
+    "sha256": "ff08f7c6ad2703094997d995ceb19ec40c4f4c86c804f2680f7c502472678a92",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G08",
+    "name": "Geometric corner tile",
+    "purpose": "Original geometric motif inspired by local visual rhythm, with large breathing room.",
+    "file": "expressive-assets/G08.svg",
+    "sha256": "86666ceda1dc11e1541979e2116c2572da5a1a0774a1c84ae6aae75fff8fe56b",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G09",
+    "name": "Atlantic wave",
+    "purpose": "A cropped horizon ornament with a calm finite drift.",
+    "file": "expressive-assets/G09.svg",
+    "sha256": "c5e88c3a51ddf5f186af3736c70af7647090720622358493c50867e6b195e456",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G10",
+    "name": "Taxi keyring",
+    "purpose": "Professional driver/onboarding object; not a security credential.",
+    "file": "expressive-assets/G10.svg",
+    "sha256": "144dd8a8248fecc4aa0d6f9de0e08e0e1a162d6287e56ff2c6b488528503d1a3",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G11",
+    "name": "Trip notebook",
+    "purpose": "Empty history and planning: an object with blank, clearly illustrative pages.",
+    "file": "expressive-assets/G11.svg",
+    "sha256": "4e1d3627832087197c5dbcc0428559850ca6f0b2ddc5450f468e502514fd9897",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G12",
+    "name": "Document folio",
+    "purpose": "Application/evidence explanations; submitted/scan states stay in real text.",
+    "file": "expressive-assets/G12.svg",
+    "sha256": "7cff662958a432ecbfd1d2c699fc7dd3d51763dcf2b5d115c41580b29b01d23f",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G13",
+    "name": "People together",
+    "purpose": "Cooperative/onboarding identity; abstract people, not live supply or member counts.",
+    "file": "expressive-assets/G13.svg",
+    "sha256": "7f04b59579d35301b9ed7edb99586dd4c8d22e3b84d62439f4eadad54451a6b4",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G14",
+    "name": "Helpful conversation",
+    "purpose": "General help art; no new chat, emergency service or response promise.",
+    "file": "expressive-assets/G14.svg",
+    "sha256": "763623b4b265652ecc1f5a7bcd158791adebee049e2948d05d4b963ca06e3d10",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G15",
+    "name": "Calendar tabs",
+    "purpose": "Scheduling header: actual booking date remains a stable text overlay.",
+    "file": "expressive-assets/G15.svg",
+    "sha256": "1f6b4847cb02a0f70415e4f1ce1a1034b5701e54fbd53fd92154cb4b488f4888",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G16",
+    "name": "Location compass",
+    "purpose": "Location rationale illustration; not a changing live GPS heading.",
+    "file": "expressive-assets/G16.svg",
+    "sha256": "fe846448316923b98fbac19fe7d0ffb37b5c1d261bf99a7e66368bec7aaef807",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G17",
+    "name": "Stop rhythm",
+    "purpose": "Directional route explainer; real stop labels/order remain data-owned.",
+    "file": "expressive-assets/G17.svg",
+    "sha256": "067a5681321161c0f56bab4f9dcb5ecc75d45b89d11a62cd5f8fa1d53810d012",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G18",
+    "name": "Inbox envelope",
+    "purpose": "Empty inbox / notification rationale; no imaginary unread arrival.",
+    "file": "expressive-assets/G18.svg",
+    "sha256": "68b4741340e6a20fa3f65f860459ae8d33da600b73a3032b2301482b4cde4031",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G19",
+    "name": "Quiet security",
+    "purpose": "Security overview/read instructions; authentication outcomes are separate text.",
+    "file": "expressive-assets/G19.svg",
+    "sha256": "de3a0e5b29a60f6051a871ead8e9b8a8db6c95c5802bb8814171907039197dca",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G20",
+    "name": "Vehicle blueprint",
+    "purpose": "Vehicle form/detail: a consistent illustration without pretending a photo exists.",
+    "file": "expressive-assets/G20.svg",
+    "sha256": "5cfd9c24b66d5922152b02affb33f9ee202121437d0c0a129aa1d3a55d3b5749",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G21",
+    "name": "Road weave",
+    "purpose": "Compact administrative header crop; never behind tables/controls.",
+    "file": "expressive-assets/G21.svg",
+    "sha256": "90434b6de7f5ac9e98183ee7dd1bdbc07a390ad386cf169b93be6f4bfb0c580b",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G22",
+    "name": "Print texture",
+    "purpose": "Static halftone corner/crop, generated geometry rather than bitmap noise.",
+    "file": "expressive-assets/G22.svg",
+    "sha256": "6e9250239ab1aed69de99ea2117dc03910f3ebdf9744ed16e36fb44d80441c86",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G23",
+    "name": "Day and night",
+    "purpose": "Night-driver/account visual; appearance selection stays labelled and controlled.",
+    "file": "expressive-assets/G23.svg",
+    "sha256": "1c584292a7b1edb952d87b7b3c46c2ba659f6bb62f9a517d95656857a3bc8022",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  },
+  {
+    "id": "G24",
+    "name": "Quiet celebration",
+    "purpose": "Finite thank-you accent after a confirmed outcome; pending payments retain pending art.",
+    "file": "expressive-assets/G24.svg",
+    "sha256": "928a39edee91d84d96ed996700634f2e1ffd27ee237b0836a224b882d8e49daf",
+    "provenance": "Original code-native planning artwork; no third-party image or AI raster input."
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "consolidated_utc": "2026-10-23T11:20:45.261716+00:00",
+  "passed": true,
+  "ride_id": "8acc246a-1e3d-463b-8538-24814c96b16b",
+  "server_before": "ACCEPTED",
+  "not_admitted_action": "heading",
+  "method": "Retrospective consolidation from actual journaled native server precondition, single heading intent, UI images and independent eight-command trace. No action replay or new domain mutation.",
+  "original_observer_failure": "Current enabled native command target must remain visible after server preconditions",
+  "confirmed_heading_utc": "2026-10-23T10:58:28.137578+00:00",
+  "each_business_command_confirmed_once": true,
+  "metadata_qualification": "Continuation helper reused variable r for rebooking before its final recovery-note write, replacing the initial recovery metadata with rebooking fields. That malformed note is retained unmodified. Native command journal, screenshot hashes, same-PID record and independent HTTP traces remain intact. This is a later consolidation, not an original pre-action checkpoint.",
+  "inputs": [
+    {
+      "path": "release-v23-r2-native-first.json",
+      "sha256": "966dbb969393416577f6c2346aeb94963fb346715ce8cb9101b09d02e97e25d9"
+    },
+    {
+      "path": "release-v23-r2-native-first-http.json",
+      "sha256": "0e6d7f59c6fa6c8c5f146333df79bed33d6b6db04d6b9c0bb1c02228e0c98bd5"
+    },
+    {
+      "path": "release-v23-r2-first-explicit-heading-precondition-recovery.json",
+      "sha256": "8c9b056a1a6638a6705db52d430047d2750a8abc499d51868f9cd7968c9389a1"
+    }
+  ]
+}

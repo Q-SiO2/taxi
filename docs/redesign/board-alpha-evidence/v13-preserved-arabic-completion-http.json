@@ -1,0 +1,13 @@
+{
+  "scope": "service",
+  "rows": [
+    {
+      "timestamp": "2026-10-19T20:13:51.567605397Z",
+      "method": "POST",
+      "path": "/api/v1/rides/b0c3cef5-372a-483d-ab81-cc096ad14ba5/complete",
+      "status": 200,
+      "duration": 85
+    }
+  ],
+  "note": "Exact route/time filter; source IP, client UA and other request metadata omitted"
+}

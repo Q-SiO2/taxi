@@ -1,5 +1,6 @@
 package org.example.taximobile.feature.ui.components
 
+import org.example.taximobile.feature.ui.theme.TaxiTheme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -21,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
@@ -29,9 +31,6 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import org.example.taximobile.feature.ui.theme.TaxiColors
 import org.example.taximobile.feature.ui.theme.TaxiRadii
 import org.example.taximobile.feature.ui.theme.TaxiSpacing
-import org.jetbrains.compose.resources.painterResource
-import taximobile.shared.generated.resources.Res
-import taximobile.shared.generated.resources.vehicle_silhouette_standard
 
 @Composable
 fun TaxiCard(
@@ -39,12 +38,14 @@ fun TaxiCard(
     selected: Boolean = false,
     content: @Composable () -> Unit,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     Surface(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(TaxiRadii.Lg),
-        color = if (selected) TaxiColors.Accent100 else TaxiColors.Surface0,
-        border = BorderStroke(if (selected) 2.dp else 1.dp, if (selected) TaxiColors.Accent500 else TaxiColors.StrokeSubtle),
-        shadowElevation = if (selected) 3.dp else 1.dp,
+        shape = RoundedCornerShape(taxiRadii.Lg),
+        color = if (selected) taxiColors.Accent100 else taxiColors.Surface0,
+        border = BorderStroke(if (selected) 2.dp else 1.dp, if (selected) taxiColors.Accent500 else taxiColors.StrokeSubtle),
+        shadowElevation = if (TaxiTheme.style == org.example.taximobile.feature.ui.theme.TaxiStyle.GlazedMachine) 3.dp else 0.dp,
     ) {
         Column(
             Modifier.padding(TaxiSpacing.Md),
@@ -62,6 +63,8 @@ fun LocationSelectionField(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     Surface(
         modifier = modifier.fillMaxWidth().defaultMinSize(minHeight = 64.dp)
             .semantics {
@@ -69,9 +72,9 @@ fun LocationSelectionField(
                 this.selected = selected
             }
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(TaxiRadii.Md),
-        color = if (selected) TaxiColors.Accent100 else TaxiColors.Surface0,
-        border = BorderStroke(if (selected) 2.dp else 1.dp, if (selected) TaxiColors.Accent500 else TaxiColors.StrokeSubtle),
+        shape = RoundedCornerShape(taxiRadii.Md),
+        color = if (selected) taxiColors.Accent100 else taxiColors.Surface0,
+        border = BorderStroke(if (selected) 2.dp else 1.dp, if (selected) taxiColors.Accent500 else taxiColors.StrokeSubtle),
     ) {
         Row(
             Modifier.padding(horizontal = TaxiSpacing.Md, vertical = TaxiSpacing.Sm),
@@ -80,15 +83,15 @@ fun LocationSelectionField(
         ) {
             Canvas(Modifier.size(20.dp)) {
                 if (selected) {
-                    drawCircle(TaxiColors.Accent500)
-                    drawCircle(TaxiColors.Navy900, radius = size.minDimension * 0.18f)
+                    drawCircle(taxiColors.Accent500)
+                    drawCircle(taxiColors.Navy900, radius = size.minDimension * 0.18f)
                 } else {
-                    drawCircle(TaxiColors.Navy900, style = Stroke(width = 2.dp.toPx()))
+                    drawCircle(taxiColors.Navy900, style = Stroke(width = 2.dp.toPx()))
                 }
             }
             Column(Modifier.weight(1f)) {
-                Text(label, style = MaterialTheme.typography.labelMedium, color = TaxiColors.Ink500)
-                Text(value, style = MaterialTheme.typography.bodyLarge, color = TaxiColors.Ink900)
+                Text(label, style = MaterialTheme.typography.labelMedium, color = taxiColors.Ink500)
+                Text(value, style = MaterialTheme.typography.bodyLarge, color = taxiColors.Ink900)
             }
         }
     }
@@ -101,12 +104,13 @@ fun DriverDocumentCard(
     detail: String?,
     modifier: Modifier = Modifier,
 ) {
+    val taxiColors = TaxiTheme.colors
     TaxiCard(modifier) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(title, style = MaterialTheme.typography.titleSmall)
-            Text(status, style = MaterialTheme.typography.labelMedium, color = TaxiColors.Navy700)
+            Text(status, style = MaterialTheme.typography.labelMedium, color = taxiColors.Navy700)
         }
-        detail?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = TaxiColors.Ink500) }
+        detail?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = taxiColors.Ink500) }
     }
 }
 
@@ -118,6 +122,8 @@ fun PaymentMethodCard(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
     val interactionModifier = if (onClick == null) {
         Modifier
     } else {
@@ -136,16 +142,16 @@ fun PaymentMethodCard(
         ) {
             Surface(
                 modifier = Modifier.defaultMinSize(minWidth = 44.dp, minHeight = 44.dp),
-                shape = RoundedCornerShape(TaxiRadii.Md),
-                color = TaxiColors.Navy900,
+                shape = RoundedCornerShape(taxiRadii.Md),
+                color = taxiColors.Navy900,
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    Text(label.take(1), color = TaxiColors.Surface0, style = MaterialTheme.typography.titleSmall)
+                    Text(label.take(1), color = taxiColors.Surface0, style = MaterialTheme.typography.titleSmall)
                 }
             }
             Column(Modifier.weight(1f)) {
                 Text(label, style = MaterialTheme.typography.titleSmall)
-                Text(detail, style = MaterialTheme.typography.bodyMedium, color = TaxiColors.Ink500)
+                Text(detail, style = MaterialTheme.typography.bodyMedium, color = taxiColors.Ink500)
             }
             StatusPill(label, if (selected) StatusTone.Accent else StatusTone.Neutral)
         }
@@ -158,17 +164,21 @@ fun VehicleAssetFallback(
     modifier: Modifier = Modifier,
     useBundledAsset: Boolean = true,
 ) {
+    val taxiColors = TaxiTheme.colors
+    val taxiRadii = TaxiTheme.radii
+    val painter = rememberOptionalArtworkPainter(BundledArtwork.VehicleSilhouette, useBundledAsset && TaxiTheme.style != org.example.taximobile.feature.ui.theme.TaxiStyle.Notepad)
     Surface(
-        modifier = modifier.defaultMinSize(minWidth = 72.dp, minHeight = 44.dp),
-        shape = RoundedCornerShape(TaxiRadii.Md),
-        color = TaxiColors.Navy100,
-        border = BorderStroke(1.dp, TaxiColors.Navy200),
+        modifier = modifier.defaultMinSize(minWidth = 72.dp, minHeight = 44.dp)
+            .semantics { contentDescription = vehicleLabel },
+        shape = RoundedCornerShape(taxiRadii.Md),
+        color = taxiColors.Navy100,
+        border = BorderStroke(1.dp, taxiColors.Navy200),
     ) {
         Box(Modifier.padding(TaxiSpacing.Xs), contentAlignment = Alignment.Center) {
-            if (useBundledAsset) {
+            if (painter != null) {
                 Image(
-                    painter = painterResource(Res.drawable.vehicle_silhouette_standard),
-                    contentDescription = vehicleLabel,
+                    painter = painter,
+                    contentDescription = null,
                     modifier = Modifier.size(width = 72.dp, height = 44.dp),
                     contentScale = ContentScale.Fit,
                 )
@@ -176,7 +186,7 @@ fun VehicleAssetFallback(
                 Text(
                     vehicleLabel.take(2).uppercase(),
                     style = MaterialTheme.typography.labelLarge,
-                    color = TaxiColors.Navy900,
+                    color = taxiColors.Navy900,
                 )
             }
         }

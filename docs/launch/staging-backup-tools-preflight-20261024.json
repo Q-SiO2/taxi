@@ -1,0 +1,18 @@
+{
+  "observed_utc": "2026-10-24T12:07:56.154541+00:00",
+  "return_code": 0,
+  "metadata": {
+    "pg_dump": "pg_dump (PostgreSQL) 16.4 (Debian 16.4-1.pgdg110+2)",
+    "python3": "no",
+    "server_version": "16.4 (Debian 16.4-1.pgdg110+2)",
+    "postgis_extversion": "3.4.3",
+    "database": "taximobile_alpha_ed891bc651ff",
+    "backup_login": "taximobile_owner",
+    "read_only": "on",
+    "ssl_enabled": "off"
+  },
+  "remote_script_sha256": "d86c4ab824aabe644b29ed4b6f230d996707042922a4a4eb1d415732ead07c15",
+  "stderr_bytes": 0,
+  "scope": "Existing authorized PostGIS SSH key and read-only metadata only; no dump, role, service, volume or credential mutation.",
+  "passed": true
+}

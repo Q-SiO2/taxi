@@ -1,0 +1,9 @@
+{
+  "utc": "2026-10-19T20:09:44.283815+00:00",
+  "scope": "Owned emulator-5556 only; selected Close app on observed Pixel Launcher ANR, then launched TaxiMobile. TaxiMobile was not force-stopped or reset.",
+  "ui_after": [
+    "System UI isn't responding",
+    "Close app",
+    "Wait"
+  ]
+}

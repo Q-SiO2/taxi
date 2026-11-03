@@ -1,0 +1,154 @@
+{
+  "candidate": "candidate-native-v18.json",
+  "started_utc": "2026-10-21T10:53:37.610424+00:00",
+  "passed": false,
+  "scope": "Actual owned passenger history detail and existing public support acknowledgement; empty form disabled; no consequential input",
+  "screenshots": [
+    {
+      "path": "v18-native-passenger-between-trips-history-list.png",
+      "sha256": "6e59d326f366c6b81d1b7d7b39c46c1784a923e525f58447cbcd5eb55393e7d0"
+    },
+    {
+      "path": "v18-native-passenger-between-trips-history-detail.png",
+      "sha256": "fa70325c717ecc07f2e94157e5a938cc14ee4885e048b71f88716caa26f1eafb"
+    },
+    {
+      "path": "v18-native-passenger-between-trips-history-detail-after-foreground-refresh.png",
+      "sha256": "b9e62e68a60b1cf207a6831f1878e6f2acd8d3e0e1d238170b06148ff17b3bf9"
+    },
+    {
+      "path": "v18-native-passenger-between-trips-history-detail-after-live-wait.png",
+      "sha256": "b9e62e68a60b1cf207a6831f1878e6f2acd8d3e0e1d238170b06148ff17b3bf9"
+    },
+    {
+      "path": "v18-native-passenger-between-trips-historical-cash-receipt.png",
+      "sha256": "846a33becbc93ba250efffacbb8afe1239f6de09b5fc176ad57e79de518f153a"
+    }
+  ],
+  "checks": [
+    {
+      "full_api_ride_id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+      "visible_reference": "57bb0f9a",
+      "full_id_absent_from_user_text": true
+    },
+    {
+      "selected_ride_id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+      "same_process_foreground_refresh": true,
+      "live_wait_seconds": 15,
+      "pid": "1860"
+    },
+    {
+      "history_ride_id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+      "server_phase": "COMPLETED",
+      "server_payment": {
+        "method": "CASH",
+        "status": "COMPLETED"
+      },
+      "amount": "35.00"
+    }
+  ],
+  "before": {
+    "rides": [
+      {
+        "id": "57bb0f9a-1212-4f81-add4-cc63852a2b68",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d8daeaaa-fbe9-4614-af7e-45b896d30ecb",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "25336df9-d090-4e8b-a5ab-f2b813e93ea8",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "733abbcf-5d1b-4ff2-b7f3-3563052cbd25",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "74cf05e3-9d1b-4d15-9a67-804226a20924",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "cb951af4-f5ae-4d05-8a06-a28b49797f33",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "c55e696d-2bae-4640-8801-f50d2c20a42b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "b7aac6ac-cc87-494d-aa95-842c21fc6759",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "b0c3cef5-372a-483d-ab81-cc096ad14ba5",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "d699a0f9-44fc-44d3-9036-56aedd8c10b9",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "98a253df-de13-4029-9daa-e538a520997d",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "359279df-4847-4ad3-bfa4-baa2136b45be",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "baf9a4e5-1455-41e1-a0db-6d9c5de96a55",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "e531e392-6f5b-4962-9964-3967a4afc418",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "082f8b85-6598-423d-aac5-cf31eec3f30a",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "e734ed2c-a37c-424b-9d84-b31e6811cd09",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+        "status": "COMPLETED"
+      },
+      {
+        "id": "65f3d974-1cb3-4c43-9486-80cd1007c256",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "03756c30-f453-4d09-ae50-c3fa8f3782a4",
+        "status": "UNMATCHED"
+      },
+      {
+        "id": "59576371-85a9-4732-a100-12f7295f0c0a",
+        "status": "COMPLETED"
+      }
+    ],
+    "tickets": [
+      {
+        "id": "e96bf80f-73d8-4959-a3b6-7c029c62519f",
+        "city_id": "10000000-0000-4000-8000-000000000003",
+        "category": "FARE_DISPUTE",
+        "subject": "Example fare question",
+        "description": "Synthetic ticket for local UX review.",
+        "ride_id": "ee13caaa-3461-418d-b0b4-f32eab7dd516",
+        "status": "IN_PROGRESS",
+        "latest_public_message": "ملف تجريبي: تسلّمنا طلب الدعم.",
+        "latest_public_message_at": "2026-10-19T11:43:20.627955Z",
+        "resolved_at": null,
+        "closed_at": null,
+        "created_at": "2026-10-14T11:46:19.121262Z",
+        "updated_at": "2026-10-19T11:43:20.627955Z"
+      }
+    ]
+  },
+  "failure_type": "SmokeFailure",
+  "failure_detail": "ADB did not complete the requested device action.",
+  "finished_utc": "2026-10-21T11:22:12.364555+00:00"
+}

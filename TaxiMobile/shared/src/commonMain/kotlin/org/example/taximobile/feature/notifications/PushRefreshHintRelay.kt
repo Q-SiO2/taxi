@@ -39,6 +39,7 @@ class PushRefreshHintRelay {
         val ALLOWED_EVENT_TYPES = setOf(
             "RIDE_OFFER_AVAILABLE",
             "DRIVER_ASSIGNED",
+            "RIDE_UPDATED",
             "RIDE_CANCELLED",
             "RIDE_UNMATCHED",
             "RIDE_COORDINATION_MESSAGE",

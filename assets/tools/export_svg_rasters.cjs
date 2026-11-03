@@ -32,16 +32,52 @@ const jobs = [
   },
 ];
 
+// Exact SVG-master exports, not new designs. Preserve the rectangular viewBox;
+// using a square image here would shrink the illustration and change its layout.
+const runtimeJobs = [
+  {
+    source: "illustrations/onboarding/source/illustration_landing_navy_outline_master.png",
+    destination: "illustrations/onboarding/exports/illustration_landing_runtime",
+    copyOnly: true,
+    runtimeMirror: "illustration_landing_runtime.png",
+  },
+  {
+    source: "brand/logo/brand_logo_mark.svg",
+    destination: "brand/logo/exports/brand_logo_mark_runtime",
+    dimensions: [{ width: 256, height: 256, suffix: "" }],
+    runtimeMirror: "brand_logo_mark_runtime.png",
+  },
+  {
+    source: "vehicles/renders/vehicle_silhouette_standard.svg",
+    destination: "vehicles/renders/exports/vehicle_silhouette_standard_runtime",
+    dimensions: [{ width: 640, height: 360, suffix: "" }],
+    runtimeMirror: "vehicle_silhouette_standard_runtime.png",
+  },
+];
+
+// The owner selected a generated thin-line portrait, not the rejected vector
+// candidate. Copy its pixels unchanged: no crop, stretch, recolour or re-render.
+
 async function renderJob(browser, job) {
   const sourcePath = path.join(assetRoot, job.source);
+  if (job.copyOnly) {
+    const destination = path.join(assetRoot, `${job.destination}.png`);
+    fs.mkdirSync(path.dirname(destination), { recursive: true });
+    fs.copyFileSync(sourcePath, destination);
+    const mirror = path.resolve(assetRoot, "../TaxiMobile/shared/src/commonMain/composeResources/drawable", job.runtimeMirror);
+    fs.copyFileSync(destination, mirror);
+    console.log(`copied selected portrait and mirrored ${job.runtimeMirror}`);
+    return;
+  }
   const svg = fs.readFileSync(sourcePath, "utf8");
 
-  for (const size of job.sizes) {
-    const destination = path.join(assetRoot, `${job.destination}_${size}.png`);
+  const dimensions = job.dimensions || job.sizes.map((size) => ({ width: size, height: size, suffix: `_${size}` }));
+  for (const { width, height, suffix } of dimensions) {
+    const destination = path.join(assetRoot, `${job.destination}${suffix}.png`);
     fs.mkdirSync(path.dirname(destination), { recursive: true });
 
     const page = await browser.newPage({
-      viewport: { width: size, height: size },
+      viewport: { width, height },
       deviceScaleFactor: 1,
     });
     await page.setContent(
@@ -54,6 +90,11 @@ async function renderJob(browser, job) {
     await page.screenshot({ path: destination, omitBackground: true });
     await page.close();
     console.log(`wrote ${path.relative(path.dirname(assetRoot), destination)}`);
+    if (job.runtimeMirror) {
+      const mirror = path.resolve(assetRoot, "../TaxiMobile/shared/src/commonMain/composeResources/drawable", job.runtimeMirror);
+      fs.copyFileSync(destination, mirror);
+      console.log(`mirrored ${job.runtimeMirror}`);
+    }
   }
 }
 
@@ -123,10 +164,11 @@ async function main() {
     executablePath: process.env.TAXI_ASSET_BROWSER_PATH || undefined,
   });
   try {
-    for (const job of jobs) {
+    const runtimeOnly = process.argv.includes("--runtime-only");
+    for (const job of runtimeOnly ? runtimeJobs : [...jobs, ...runtimeJobs]) {
       await renderJob(browser, job);
     }
-    await renderCatalog(browser);
+    if (!runtimeOnly) await renderCatalog(browser);
   } finally {
     await browser.close();
   }

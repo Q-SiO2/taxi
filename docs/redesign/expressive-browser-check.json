@@ -1,0 +1,225 @@
+{
+  "date": "2026-10-14",
+  "motionChecks": [
+    {
+      "id": "M01",
+      "animatedTargets": 3,
+      "scrubPhase": "scrubbed",
+      "stopPhase": "static"
+    },
+    {
+      "id": "M02",
+      "animatedTargets": 3,
+      "scrubPhase": "scrubbed",
+      "stopPhase": "static"
+    },
+    {
+      "id": "M03",
+      "animatedTargets": 1,
+      "scrubPhase": "scrubbed",
+      "stopPhase": "static"
+    },
+    {
+      "id": "M04",
+      "animatedTargets": 1,
+      "scrubPhase": "scrubbed",
+      "stopPhase": "static"
+    },
+    {
+      "id": "M05",
+      "animatedTargets": 1,
+      "scrubPhase": "scrubbed",
+      "stopPhase": "static"
+    },
+    {
+      "id": "M06",
+      "animatedTargets": 1,
+      "scrubPhase": "scrubbed",
+      "stopPhase": "static"
+    },
+    {
+      "id": "M07",
+      "animatedTargets": 2,
+      "scrubPhase": "scrubbed",
+      "stopPhase": "static"
+    },
+    {
+      "id": "M08",
+      "animatedTargets": 1,
+      "scrubPhase": "scrubbed",
+      "stopPhase": "static"
+    },
+    {
+      "id": "M09",
+      "animatedTargets": 1,
+      "scrubPhase": "scrubbed",
+      "stopPhase": "static"
+    },
+    {
+      "id": "M10",
+      "animatedTargets": 3,
+      "scrubPhase": "scrubbed",
+      "stopPhase": "static"
+    },
+    {
+      "id": "M11",
+      "animatedTargets": 2,
+      "scrubPhase": "scrubbed",
+      "stopPhase": "static"
+    },
+    {
+      "id": "M12",
+      "animatedTargets": 1,
+      "scrubPhase": "scrubbed",
+      "stopPhase": "static"
+    },
+    {
+      "id": "M13",
+      "animatedTargets": 1,
+      "scrubPhase": "scrubbed",
+      "stopPhase": "static"
+    },
+    {
+      "id": "M14",
+      "animatedTargets": 1,
+      "scrubPhase": "scrubbed",
+      "stopPhase": "static"
+    },
+    {
+      "id": "M15",
+      "animatedTargets": 1,
+      "scrubPhase": "scrubbed",
+      "stopPhase": "static"
+    },
+    {
+      "id": "M16",
+      "animatedTargets": 1,
+      "scrubPhase": "scrubbed",
+      "stopPhase": "static"
+    },
+    {
+      "id": "M17",
+      "animatedTargets": 1,
+      "scrubPhase": "scrubbed",
+      "stopPhase": "static"
+    },
+    {
+      "id": "M18",
+      "animatedTargets": 1,
+      "scrubPhase": "scrubbed",
+      "stopPhase": "static"
+    }
+  ],
+  "inContextChecks": [
+    {
+      "id": "S02",
+      "animatedTargets": 3,
+      "factsUnchanged": true
+    },
+    {
+      "id": "R05",
+      "animatedTargets": 1,
+      "factsUnchanged": true
+    },
+    {
+      "id": "D10",
+      "animatedTargets": 3,
+      "factsUnchanged": true
+    },
+    {
+      "id": "R18",
+      "animatedTargets": 1,
+      "factsUnchanged": true
+    },
+    {
+      "id": "A04",
+      "animatedTargets": 2,
+      "factsUnchanged": true
+    },
+    {
+      "id": "R33",
+      "animatedTargets": 2,
+      "factsUnchanged": true
+    }
+  ],
+  "styleChecks": [
+    {
+      "heroClass": "hero-art art line",
+      "phoneClass": "phone line",
+      "selected": "line"
+    },
+    {
+      "heroClass": "hero-art art print",
+      "phoneClass": "phone print",
+      "selected": "print"
+    },
+    {
+      "heroClass": "hero-art art paper",
+      "phoneClass": "phone paper",
+      "selected": "paper"
+    }
+  ],
+  "reducedCheck": "suppressed",
+  "driverCheck": "suppressed",
+  "offscreenCheck": "static",
+  "responsiveMotion": [
+    {
+      "assets": 24,
+      "headline": "لرحلتكطابعها الخاص.",
+      "motions": 18,
+      "overflow": [],
+      "pageOptions": 213,
+      "profile": "320 px / Arabic / Plex / Orchid / large type",
+      "scrollWidth": 305,
+      "width": 305
+    },
+    {
+      "overflow": [],
+      "profile": "1440 px / Jakarta / Orchid / normal type",
+      "scrollWidth": 1425,
+      "width": 1425
+    }
+  ],
+  "illustratedAtlasCheck": {
+    "artSlots": 181,
+    "overflow": [],
+    "scrollWidth": 345,
+    "views": 213,
+    "welcomeClass": "atlas-screen  illustrated-mode  welcome  ",
+    "width": 345
+  },
+  "limitations": "Documentation/browser specimens only; no native app, physical-device, alpha or launch acceptance.",
+  "finalNarrow": {
+    "art": [
+      {
+        "height": 140,
+        "id": "S02"
+      },
+      {
+        "height": 28,
+        "id": "R05"
+      },
+      {
+        "height": 64,
+        "id": "D10"
+      },
+      {
+        "height": 40,
+        "id": "R18"
+      },
+      {
+        "height": 48,
+        "id": "A04"
+      },
+      {
+        "height": 80,
+        "id": "R33"
+      }
+    ],
+    "overflow": [],
+    "profile": "320 Arabic Plex large",
+    "scroll": 305,
+    "width": 305
+  },
+  "responsiveProfiles": []
+}

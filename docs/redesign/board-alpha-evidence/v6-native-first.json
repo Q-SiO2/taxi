@@ -1,0 +1,44 @@
+{
+  "candidate": "candidate-native-v6.json",
+  "run": "first",
+  "started_utc": "2026-10-15T21:21:37.862350+00:00",
+  "fidelity": "two API35 Android emulators, synthetic GPS/accounts/cash; native writes and server reads",
+  "passed": true,
+  "steps": [
+    {
+      "name": "Native booking confirmed",
+      "utc": "2026-10-15T21:22:26.872373+00:00"
+    },
+    {
+      "name": "Private acceptance confirmed",
+      "utc": "2026-10-15T21:22:56.209677+00:00"
+    },
+    {
+      "name": "Native DRIVER_EN_ROUTE",
+      "utc": "2026-10-15T21:23:32.909743+00:00"
+    },
+    {
+      "name": "Native DRIVER_ARRIVED",
+      "utc": "2026-10-15T21:24:07.120603+00:00"
+    },
+    {
+      "name": "Native IN_PROGRESS",
+      "utc": "2026-10-15T21:24:38.421838+00:00"
+    },
+    {
+      "name": "Native completion confirmed",
+      "utc": "2026-10-15T21:24:48.412434+00:00"
+    },
+    {
+      "name": "Passenger pending cash visible",
+      "utc": "2026-10-15T21:24:59.767160+00:00"
+    },
+    {
+      "name": "Passenger confirmed cash visible",
+      "utc": "2026-10-15T21:25:25.302479+00:00"
+    }
+  ],
+  "ride_id": "d5aab5de-4416-4f4b-bde2-9b424c30a21b",
+  "fare": "35.00",
+  "finished_utc": "2026-10-15T21:25:25.303803+00:00"
+}

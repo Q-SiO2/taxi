@@ -1,0 +1,22 @@
+{
+  "recorded_utc": "2026-10-20T18:56:56.492335+00:00",
+  "live_web_deployment": "ceee310c-e957-49ad-945d-b9f2d292eb61",
+  "prepared_candidate": "candidate-web-v8-proxy-r1.json",
+  "upload_exit_code": 1,
+  "upload_result": "Deploys have been paused temporarily",
+  "new_deployment_created": false,
+  "provider_status_url": "https://status.railway.com/",
+  "provider_observation": "New builds temporarily paused for all workspaces; already running services unaffected; provider says rejected deploys must be triggered again after resumption",
+  "canonical_applicant_url": "https://alpha-web-staging.up.railway.app/apply/",
+  "still_open": "Non-canonical /apply currently redirects to internal HTTP port 8080; server config repair prepared but not live",
+  "packaging_unit_checks": {
+    "run": "backend/.venv/Scripts/python.exe -m unittest discover -s infra/scripts/tests -p test_package_web_release.py",
+    "passed": 8
+  },
+  "frozen_native_qualification": {
+    "candidate": "candidate-native-v15.json",
+    "native_application_sources_changed": false,
+    "post_freeze_current_checkout_delta": "infra/deploy/railway-web/nginx.conf only among the 412 broad archived inputs; native APKs and their compiled sources unchanged; old snapshot retained"
+  },
+  "no_paid_or_volume_change": true
+}

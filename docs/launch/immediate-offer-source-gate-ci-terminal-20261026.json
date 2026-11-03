@@ -1,0 +1,74 @@
+{
+  "recorded_utc": "2026-10-26 17:18:54 UTC",
+  "source_head": "3be3674fa813ffb924a42ed9fdd8836b35bd6d91",
+  "tested_merge_commit": "2efcf1d1d81ee1b29d8849c108551a854b6cd4bc",
+  "tree": "55228175d3d470c982b553fecbdfddb35a27efa7",
+  "run_id": 40363194838,
+  "run_number": 252,
+  "status": "completed",
+  "conclusion": "success",
+  "required_jobs": {
+    "backend": {
+      "id": 121713807786,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "mobile": {
+      "id": 121713808024,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "web": {
+      "id": 121713808032,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "documentation-and-provenance": {
+      "id": 121713808092,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "gradle-dependency-submission": {
+      "id": 121713808236,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "gradle-wrapper-integrity": {
+      "id": 121713808404,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "ios-shared": {
+      "id": 121713808487,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "dependency-review": {
+      "id": 121715233167,
+      "status": "completed",
+      "conclusion": "success"
+    }
+  },
+  "image_publisher": "skipped; draft PR",
+  "full_backend_suite": {
+    "tests": 1482,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "tls_cases": 8,
+  "tls_baseline_restored": true,
+  "backend_junit_sha256": "0262d9d88a207ede8302c5a51b2bca962771960f30267fe371505d61bccfe580",
+  "test_artifact": {
+    "id": 12668179313,
+    "zip_sha256": "743b2b8af25e4d6aac96233b039fc8c4f3be88dfbc05e176b027febe3089a72d"
+  },
+  "provenance_artifact": {
+    "id": 12670036433,
+    "zip_sha256": "2070a588f94a92da55673042ee8506ec1d506a928830fe66c9bf3c933973751f"
+  },
+  "same_tree_verified": true,
+  "scope": "Verifier-only successor accepts unchanged immediate-offer app source after CI250's Python failure; Android shared/debug/minified/identity, web release/browser, backend and iOS shared plus both unsigned Release simulator products pass.",
+  "city_time_source_accepted_by_this_run": false,
+  "physical_signing_store_hosted_provider_operational_pilot_or_public_accepted": false
+}

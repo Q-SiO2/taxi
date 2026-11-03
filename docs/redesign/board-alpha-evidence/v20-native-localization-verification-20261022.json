@@ -1,0 +1,63 @@
+{
+  "candidate": "candidate-native-v20.json",
+  "verified_utc": "2026-10-22T10:40:20.886831+00:00",
+  "passed": true,
+  "checks": [
+    {
+      "role": "passenger",
+      "locale": "en",
+      "record": "v20-native-passenger-en-core-review.json",
+      "sha256": "9ac2e6d8bb6c4d75ffb5104ce6c014633a384708df44d614466a3afc9500f197",
+      "actual_runtime_configuration": "config: mcc310-mnc260-en-rUS,ar-rMA,fr-rFR-ldltr-sw360dp-w360dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x720-v31",
+      "app_locales": null,
+      "screenshot_hashes_verified": true
+    },
+    {
+      "role": "passenger",
+      "locale": "fr",
+      "record": "v20-native-passenger-fr-core-review.json",
+      "sha256": "945dbe6a3fb989dbbe2a62251eafaf3a07fb7efd899f22715afb15c4ab1c8f1f",
+      "actual_runtime_configuration": "config: mcc310-mnc260-fr-rFR,en-rUS,ar-rMA-ldltr-sw360dp-w360dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x720-v31",
+      "app_locales": null,
+      "screenshot_hashes_verified": true
+    },
+    {
+      "role": "passenger",
+      "locale": "ar",
+      "record": "v20-native-passenger-ar-core-review-r2.json",
+      "sha256": "0232dfc8366d4ef8d8ce137b7fade105230744a5f03d68e45a5ae6170230fc2d",
+      "actual_runtime_configuration": "config: mcc310-mnc260-ar-rMA,fr-rFR,en-rUS-ldrtl-sw360dp-w360dp-h728dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1504x720-v31",
+      "app_locales": null,
+      "screenshot_hashes_verified": true
+    },
+    {
+      "role": "driver",
+      "locale": "en",
+      "record": "v20-native-driver-en-core-review.json",
+      "sha256": "e7fae9478850824fe2573af082a4273461602a3fc4a0d8ac8f97fa71eeb0074b",
+      "actual_runtime_configuration": "config: mcc310-mnc260-en-rUS-ldltr-sw360dp-w360dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x720-v35",
+      "app_locales": "Locales for ma.taximobile.driver for user 0 are [en-US]",
+      "screenshot_hashes_verified": true
+    },
+    {
+      "role": "driver",
+      "locale": "fr",
+      "record": "v20-native-driver-fr-core-review.json",
+      "sha256": "3576a4e1b2e5fb764de6bc94c91afaa0160263806f6ae01e68343b6a79fe4519",
+      "actual_runtime_configuration": "config: mcc310-mnc260-en-rUS-ldltr-sw360dp-w360dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x720-v35",
+      "app_locales": "Locales for ma.taximobile.driver for user 0 are [fr-FR]",
+      "screenshot_hashes_verified": true
+    },
+    {
+      "role": "driver",
+      "locale": "ar",
+      "record": "v20-native-driver-ar-core-review.json",
+      "sha256": "0052eb7762618b6827c563bc34860fb496ba3d9d85dccad25ff4400e6aa1ae8a",
+      "actual_runtime_configuration": "config: mcc310-mnc260-en-rUS-ldltr-sw360dp-w360dp-h800dp-normal-long-notround-nowidecg-lowdr-port-notnight-xhdpi-finger-keysexposed-qwerty-navexposed-dpad-1600x720-v35",
+      "app_locales": "Locales for ma.taximobile.driver for user 0 are [ar-MA]",
+      "screenshot_hashes_verified": true
+    }
+  ],
+  "scope": "Six actual selected authenticated account and populated receipt/earnings combinations, EN/FR/AR including real RTL on API31 passenger and API35 driver. Both emulators restored to English. Not all views/styles/font cross-product, full TalkBack, physical Android or iOS acceptance.",
+  "preserved_observer_failure": "Passenger initial Arabic attempt timed out because OS preference still led French; ordinary Settings drag corrected and unique r2 observed actual Arabic. No app source change or sign-in required for locale transition."
+}

@@ -1,0 +1,48 @@
+{
+  "candidate": "candidate-native-v9.json",
+  "run": "first",
+  "started_utc": "2026-10-17T08:56:48.163721+00:00",
+  "fidelity": "two Android emulators, synthetic GPS/accounts/cash; native writes and server reads",
+  "emulators": [
+    {
+      "role": "driver",
+      "serial": "emulator-5556",
+      "api_level": 31,
+      "avd": "taximobile-board-aosp31-driver"
+    },
+    {
+      "role": "passenger",
+      "serial": "emulator-5554",
+      "api_level": 31,
+      "avd": "taximobile-board-aosp31-passenger"
+    }
+  ],
+  "passed": false,
+  "steps": [],
+  "installed_apks": [
+    {
+      "role": "driver",
+      "sha256": "a7171bd6a6dc21f3bf5c1f6a072ebcc5e88f759c5741e80827eacad911d62e56"
+    },
+    {
+      "role": "passenger",
+      "sha256": "255fe68cd7eaed0ba41996130d11f08d6f03e5aec09baa35bff591521766bbc0"
+    }
+  ],
+  "clock_fixture": [
+    {
+      "role": "driver",
+      "host_minus_device_seconds_before": 0.27,
+      "host_minus_device_seconds_after": 0.53,
+      "method": "owned emulator cmd alarm set-time before trip only"
+    },
+    {
+      "role": "passenger",
+      "host_minus_device_seconds_before": 0.64,
+      "host_minus_device_seconds_after": 0.87,
+      "method": "owned emulator cmd alarm set-time before trip only"
+    }
+  ],
+  "failure_type": "SmokeFailure",
+  "finished_utc": "2026-10-17T08:58:14.463222+00:00"
+}

@@ -1,0 +1,57 @@
+{
+  "observed_utc": "2026-10-23 16:46:26 UTC",
+  "head": "7d757a69a17fa126caad33c3eb7f4d510c8cf981",
+  "run_id": 39989234575,
+  "url": "https://github.com/Q-SiO2/taxi/actions/runs/39989234575",
+  "jobs": [
+    {
+      "id": 120536376512,
+      "name": "ios-shared",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 120536376816,
+      "name": "documentation-and-provenance",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120536376915,
+      "name": "web",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 120536376946,
+      "name": "gradle-wrapper-integrity",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120536376948,
+      "name": "dependency-review",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 120536376954,
+      "name": "backend",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 120536376996,
+      "name": "mobile",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 120536377954,
+      "name": "gradle-dependency-submission",
+      "status": "completed",
+      "conclusion": "skipped"
+    }
+  ],
+  "scope": "Live CI observation only. Not final run acceptance; re-observe the existing run handle."
+}

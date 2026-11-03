@@ -1,0 +1,26 @@
+{
+  "kind": "Web v8 proxy-only revision r1; compiled application assets unchanged",
+  "predecessor": "candidate-web-v8.json",
+  "package": ".tools/alpha-delivery/web-board-v8-proxy-r1",
+  "public_asset_count": 93,
+  "public_manifest_sha256": "c102804385af05a5c1414b7dc36792d729cdc36b7dff736aa6812193c94af61a",
+  "configuration_delta": "absolute_redirect off at server scope; relative applicant redirect preserves public HTTPS origin",
+  "inputs": [
+    {
+      "path": "infra/deploy/railway-web/nginx.conf",
+      "sha256": "2ec82c8833c30e1f7acddc180295e1de6104252ca47c9a1f7854b7b5039b0196"
+    },
+    {
+      "path": ".tools/alpha-delivery/web-board-v8-proxy-r1/nginx.conf",
+      "sha256": "267ed405c218f33ac1284b44cca305e64751002cc27f551bad1745568ae63b85"
+    },
+    {
+      "path": ".tools/alpha-delivery/web-board-v8-proxy-r1/Dockerfile",
+      "sha256": "c708e6b7ace89fc3e61a5d957a1ea4ab56afec1c7ad900bd3d7a0c0fce4bc71c"
+    },
+    {
+      "path": ".tools/alpha-delivery/web-board-v8-proxy-r1/start.sh",
+      "sha256": "15fd9e52533a0a9cbfaf8e83db7a4720eae0c8594057d10d432ae6838b25527b"
+    }
+  ]
+}

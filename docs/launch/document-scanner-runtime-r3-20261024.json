@@ -1,0 +1,11 @@
+{
+  "recorded_utc": "2026-10-24T15:14:14.069285+00:00",
+  "version": "1.5.4",
+  "phase": "VERIFY_VENDOR_SIGNATURE",
+  "scope": "Continue the retained complete vendor ZIP/signature; no redownload or signature bypass",
+  "prior_observation": "document-scanner-runtime-20261024.json",
+  "passed": false,
+  "key_origin": "Official vendor HTTPS downloads page as returned by the web tool; direct key/page requests returned HTTP403",
+  "key_sha256": "8525af41798f3f7455b498f1835293d7d34ada1b347fcf88e2d3f15ccb46ffd8",
+  "error_type": "AssertionError"
+}

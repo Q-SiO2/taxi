@@ -199,6 +199,7 @@ def controlled_listener(monkeypatch, connections, *, hub=None):
     calls = []
 
     async def connect(_dsn, **options):
+        assert options.pop("ssl") is False
         assert options == {"timeout": 0.1, "command_timeout": 0.03}
         calls.append(len(calls))
         return connections[len(calls) - 1]

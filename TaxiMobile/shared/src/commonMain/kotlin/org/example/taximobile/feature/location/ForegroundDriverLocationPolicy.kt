@@ -20,6 +20,7 @@ class ForegroundDriverLocationPolicy(
 ) {
     private var operationalWindowActive = false
     private var nextEligibleAtMillis = 0L
+    private var submissionIntervalMillis = availableIntervalMillis
 
     init {
         require(availableIntervalMillis > 0)
@@ -48,12 +49,25 @@ class ForegroundDriverLocationPolicy(
         if (platformRequestInFlight || appActionInFlight || nowMillis < nextEligibleAtMillis) {
             return false
         }
-        nextEligibleAtMillis = nowMillis + when (availability) {
+        submissionIntervalMillis = when (availability) {
             DriverAvailabilityStatus.AVAILABLE,
             DriverAvailabilityStatus.OFFERED_RIDE -> availableIntervalMillis
             else -> activeRideIntervalMillis
         }
+        nextEligibleAtMillis = nowMillis + submissionIntervalMillis
         return true
+    }
+
+    /**
+     * A slow submission plus authoritative readback must leave an idle interval
+     * for driver actions. Starting the next sample immediately after a slow
+     * action finishes can otherwise monopolize the root's single-action gate.
+     * Does not rearm a disarmed window or shorten permission/GPS backoff.
+     */
+    fun recordSubmissionFinished(nowMillis: Long) {
+        if (operationalWindowActive) {
+            nextEligibleAtMillis = maxOf(nextEligibleAtMillis, nowMillis + submissionIntervalMillis)
+        }
     }
 
     /** Avoids repeatedly probing disabled services or revoked permission. */

@@ -1,0 +1,121 @@
+{
+  "run": "first",
+  "base_url": "https://alpha-api-staging.up.railway.app",
+  "started_utc": "2026-10-15T11:48:13.817776+00:00",
+  "evidence": "synthetic hosted REST only",
+  "checks": [
+    {
+      "action": "passenger sign in",
+      "http": 200,
+      "expected": 200
+    },
+    {
+      "action": "driver sign in",
+      "http": 200,
+      "expected": 200
+    },
+    {
+      "action": "driver-pending sign in",
+      "http": 200,
+      "expected": 200
+    },
+    {
+      "action": "ineligible driver cannot go online",
+      "http": 409,
+      "expected": 409
+    },
+    {
+      "action": "synthetic driver observation",
+      "http": 200,
+      "expected": 200
+    },
+    {
+      "action": "eligible driver goes online",
+      "http": 200,
+      "expected": 200
+    },
+    {
+      "action": "authoritative quote",
+      "http": 200,
+      "expected": 200
+    },
+    {
+      "action": "create cash ride",
+      "http": 201,
+      "expected": 201
+    },
+    {
+      "action": "booking idempotency",
+      "http": 201,
+      "expected": 201
+    },
+    {
+      "action": "private offers reload",
+      "http": 200,
+      "expected": 200
+    },
+    {
+      "action": "accept private offer",
+      "http": 200,
+      "expected": 200
+    },
+    {
+      "action": "en-route",
+      "http": 200,
+      "expected": 200
+    },
+    {
+      "action": "arrived",
+      "http": 200,
+      "expected": 200
+    },
+    {
+      "action": "start",
+      "http": 200,
+      "expected": 200
+    },
+    {
+      "action": "complete ride",
+      "http": 200,
+      "expected": 200
+    },
+    {
+      "action": "cash remains pending before confirmation",
+      "http": 200,
+      "expected": 200
+    },
+    {
+      "action": "passenger cannot settle driver cash",
+      "http": 404,
+      "expected": 404
+    },
+    {
+      "action": "driver confirms synthetic cash",
+      "http": 200,
+      "expected": 200
+    },
+    {
+      "action": "cash confirmation idempotency",
+      "http": 200,
+      "expected": 200
+    },
+    {
+      "action": "confirmed authoritative receipt",
+      "http": 200,
+      "expected": 200
+    },
+    {
+      "action": "driver offline after rehearsal",
+      "http": 200,
+      "expected": 200
+    }
+  ],
+  "passed": true,
+  "quote": {
+    "amount": "35.00",
+    "currency": "MAD"
+  },
+  "ride_id": "e8948a59-659f-4d70-b756-eaafd9cc1fa1",
+  "final_fare": "35.00",
+  "finished_utc": "2026-10-15T11:48:22.155510+00:00"
+}

@@ -51,6 +51,7 @@ enum class DriverRideAction { EN_ROUTE, ARRIVED, START }
 
 interface DriverRideGateway {
     suspend fun rides(): List<DriverRideSummary>
+    suspend fun pendingCashPayments(page: Int = 1): PendingCashPaymentsPage
     suspend fun earnings(): DriverEarnings
     suspend fun markEnRoute(rideId: String): DriverRideSummary
     suspend fun markArrived(rideId: String): DriverRideSummary

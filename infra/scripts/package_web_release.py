@@ -29,10 +29,11 @@ DEFAULT_INPUT = (
     / "productionExecutable"
 )
 WEB_BUDGETS = {
-    # Reviewed against the 2026-09-09 production fallback (6,104,171 bytes).
-    # The 2.39% margin admits the measured candidate while still turning
-    # material dependency or feature growth into a release gate.
-    "originJsWebApp.js": 6_250_000,
+    # Reviewed 2026-10-23 for scoped membership operations and session recovery.
+    # 6,935,862 bytes after removing 48,698 bytes of avoidable selection support.
+    # 64,138 bytes of headroom; Wasm/total caps stay unchanged. See deployment.md
+    # and launch/session-recovery.md. Size review does not accept startup latency.
+    "originJsWebApp.js": 7_000_000,
     "originWasmWebApp.js": 700_000,
 }
 MAX_WASM_BYTES = 9_000_000
@@ -42,6 +43,7 @@ REQUIRED_FILES = (
     "favicon.svg",
     "styles.css",
     "compatibility.js",
+    "locale.js",
     "webApp.js",
     "originJsWebApp.js",
     "originWasmWebApp.js",
@@ -73,6 +75,22 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def wasm_aliases(source: Path) -> dict[str, str]:
+    """Serve Compose's byte-identical Skiko alias through its hashed asset.
+
+    The host must install the returned aliases. Never remove a different binary,
+    or infer equivalence from size or filename alone.
+    """
+    alias = source / "skiko.wasm"
+    if not alias.is_file():
+        return {}
+    alias_hash = _sha256(alias)
+    for candidate in sorted(source.glob("*.wasm")):
+        if re.fullmatch(r"[a-f0-9]{20}\.wasm", candidate.name) and _sha256(candidate) == alias_hash:
+            return {alias.name: candidate.name}
+    return {}
+
+
 def validate_distribution(source: Path) -> dict[str, object]:
     if not source.is_dir():
         raise WebPackageError(f"Web distribution does not exist: {source}")
@@ -84,6 +102,13 @@ def validate_distribution(source: Path) -> dict[str, object]:
     index = (source / "index.html").read_text(encoding="utf-8")
     if 'src="compatibility.js"' not in index and "src='compatibility.js'" not in index:
         raise WebPackageError("index.html must boot through compatibility.js")
+    scripts = list(re.finditer(r'<script\b[^>]*\bsrc=[\"\']([^\"\']+)[\"\'][^>]*>', index, re.IGNORECASE))
+    script_names = [match[1] for match in scripts]
+    if script_names.count('locale.js') != 1 or script_names.count('compatibility.js') != 1:
+        raise WebPackageError("index.html must load locale.js once before compatibility.js")
+    locale_script = scripts[script_names.index('locale.js')]
+    if script_names.index('locale.js') > script_names.index('compatibility.js') or re.search(r'\b(?:async|defer)\b', locale_script[0]):
+        raise WebPackageError("index.html must load locale.js before compatibility.js synchronously")
     if 'src="webApp.js"' in index or "src='webApp.js'" in index:
         raise WebPackageError("index.html must not bypass the client compatibility preflight")
     if REMOTE_REFERENCE.search(index):
@@ -135,7 +160,9 @@ def validate_distribution(source: Path) -> dict[str, object]:
                 f"{MAX_WASM_BYTES}-byte Wasm budget"
             )
 
-    included = [path for path in source.rglob("*") if path.is_file() and path.suffix != ".map"]
+    aliases = wasm_aliases(source)
+    included = [path for path in source.rglob("*") if path.is_file() and path.suffix != ".map"
+                and path.relative_to(source).as_posix() not in aliases]
     total = sum(path.stat().st_size for path in included)
     if total > MAX_RELEASE_BYTES:
         raise WebPackageError(
@@ -148,6 +175,7 @@ def validate_distribution(source: Path) -> dict[str, object]:
         "excluded_source_map_count": len(list(source.rglob("*.map"))),
         "client_version": client_version.group("value"),
         "client_build": client_build.group("value"),
+        "wasm_aliases": aliases,
     }
 
 
@@ -159,7 +187,8 @@ def package_distribution(source: Path, output: Path) -> dict[str, object]:
 
     records: list[dict[str, object]] = []
     for path in sorted(source.rglob("*")):
-        if not path.is_file() or path.suffix == ".map":
+        if (not path.is_file() or path.suffix == ".map"
+                or path.relative_to(source).as_posix() in summary["wasm_aliases"]):
             continue
         relative = path.relative_to(source)
         destination = output / relative
@@ -184,6 +213,7 @@ def package_distribution(source: Path, output: Path) -> dict[str, object]:
             "maximum_release_bytes_excluding_maps": MAX_RELEASE_BYTES,
         },
         "hosting_requirements": {
+            "asset_aliases": summary["wasm_aliases"],
             "tls_only": True,
             "source_maps_public": False,
             "template_requires_exact_api_and_websocket_hosts": True,
@@ -196,6 +226,7 @@ def package_distribution(source: Path, output: Path) -> dict[str, object]:
             "cache_policy": {
                 "index.html": "no-cache",
                 "compatibility.js": "no-cache",
+                "locale.js": "no-cache",
                 "webApp.js": "no-cache",
                 "originJsWebApp.js": "no-cache",
                 "originWasmWebApp.js": "no-cache",

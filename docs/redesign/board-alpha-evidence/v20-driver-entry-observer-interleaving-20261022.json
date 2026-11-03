@@ -1,0 +1,7 @@
+{
+  "recorded_utc": "2026-10-22T10:28:41.319586+00:00",
+  "candidate": "candidate-native-v20.json",
+  "qualified_record": "v20-driver-activity-launcher-r2.json",
+  "issue": "Controller started French locale configuration change while launcher observer was still running after its second entry. No business command or sign-in, but this observer is not isolated repeated-entry proof even if its final predicate passes.",
+  "acceptance": "Withhold isolated entry acceptance for r2; finish locale observation and run a new unique launcher observer sequentially. Initial plain-entry driver observer authenticated but counted one OS-reused activity and correctly failed its multiple-entry predicate."
+}
