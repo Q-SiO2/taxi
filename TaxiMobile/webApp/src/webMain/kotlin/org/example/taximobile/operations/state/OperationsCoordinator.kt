@@ -1648,7 +1648,7 @@ class OperationsCoordinator(
     ) {
         val current = mutableState.value
         if (current.session?.hasPermission(MANAGE_ACCOUNT_SECURITY) != true) {
-            fail("Not authorized", "The dedicated account-security permission is required.")
+            fail(UiMessage(Res.string.web_check_details), UiMessage(Res.string.web_account_access_denied))
             return
         }
         val inputError = accountSecurityInputError(
@@ -1660,12 +1660,12 @@ class OperationsCoordinator(
             confirmation = confirmation,
         )
         if (inputError != null) {
-            fail("Review the containment command", inputError)
+            fail(UiMessage(Res.string.web_account_review_command), UiMessage(Res.string.web_account_review_input))
             return
         }
         val marketId = current.scope.marketId ?: return
         val userId = targetUserId.trim().lowercase()
-        launchMutation("Applying ${action.label.lowercase()}") {
+        launchMutation("Applying account security action") {
             val result = withAccessToken {
                 gateway.accountSecurity.apply(
                     accessToken = it,
@@ -1681,8 +1681,8 @@ class OperationsCoordinator(
             }
             reloadNow(mutableState.value.scope, initial = false)
             notice(
-                "Account command recorded",
-                "${result.status}: ${result.sessionsRevoked} sessions and ${result.deviceRegistrationsRevoked} push registrations revoked.",
+                UiMessage(Res.string.web_account_recorded),
+                UiMessage(Res.string.web_account_recorded_help, listOf(result.sessionsRevoked, result.deviceRegistrationsRevoked)),
             )
         }
     }

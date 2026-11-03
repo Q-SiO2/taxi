@@ -198,6 +198,7 @@ private fun membershipStatusLabel(status: String): String = stringResource(when 
 
 @Composable
 internal fun membershipMutationLabel(label: String): String = when (label) {
+    "Applying account security action" -> stringResource(Res.string.web_account_applying)
     "Loading member register" -> stringResource(Res.string.web_members_loading)
     "Recording membership", "Updating membership" -> stringResource(Res.string.web_members_saving)
     "Updating membership policy" -> stringResource(Res.string.web_members_policy_saving)

@@ -41,6 +41,26 @@ data class AccountSecurityActionResponse(
 private val uuidPattern = Regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
 private val caseReferencePattern = Regex("^(SUP|SAF|SEC)-[A-Z0-9][A-Z0-9-]{2,67}$")
 
+enum class AccountSecurityInputIssue {
+    MARKET, TARGET, REASON, CASE_REFERENCE, CONFIRMATION,
+}
+
+fun accountSecurityInputIssue(
+    marketId: String?,
+    targetUserId: String,
+    action: AccountSecurityAction,
+    reasonCode: String,
+    caseReference: String,
+    confirmation: String,
+): AccountSecurityInputIssue? = when {
+    marketId.isNullOrBlank() -> AccountSecurityInputIssue.MARKET
+    !uuidPattern.matches(targetUserId.trim()) -> AccountSecurityInputIssue.TARGET
+    reasonCode !in ACCOUNT_SECURITY_REASON_CODES -> AccountSecurityInputIssue.REASON
+    !caseReferencePattern.matches(caseReference.trim().uppercase()) -> AccountSecurityInputIssue.CASE_REFERENCE
+    confirmation.trim().uppercase() != action.confirmationPhrase -> AccountSecurityInputIssue.CONFIRMATION
+    else -> null
+}
+
 fun accountSecurityInputError(
     marketId: String?,
     targetUserId: String,
@@ -48,13 +68,11 @@ fun accountSecurityInputError(
     reasonCode: String,
     caseReference: String,
     confirmation: String,
-): String? = when {
-    marketId.isNullOrBlank() -> "Select the market associated with the reviewed case."
-    !uuidPattern.matches(targetUserId.trim()) -> "Enter the exact target user UUID from an authorized case record."
-    reasonCode !in ACCOUNT_SECURITY_REASON_CODES -> "Choose one controlled reason code."
-    !caseReferencePattern.matches(caseReference.trim().uppercase()) ->
-        "Use an approved SUP-, SAF-, or SEC- case reference."
-    confirmation.trim().uppercase() != action.confirmationPhrase ->
-        "Type ${action.confirmationPhrase} to confirm this account-wide action."
-    else -> null
+): String? = when (accountSecurityInputIssue(marketId, targetUserId, action, reasonCode, caseReference, confirmation)) {
+    AccountSecurityInputIssue.MARKET -> "Select the market associated with the reviewed case."
+    AccountSecurityInputIssue.TARGET -> "Enter the exact target user UUID from an authorized case record."
+    AccountSecurityInputIssue.REASON -> "Choose one controlled reason code."
+    AccountSecurityInputIssue.CASE_REFERENCE -> "Use an approved SUP-, SAF-, or SEC- case reference."
+    AccountSecurityInputIssue.CONFIRMATION -> "Type ${action.confirmationPhrase} to confirm this account-wide action."
+    null -> null
 }

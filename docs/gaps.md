@@ -1920,6 +1920,14 @@ requires retained hashes and defect links, and credits evidence kinds
 independently. The committed template remains 0/56 `NOT_STARTED`; this improves
 execution discipline but closes none of the human/device acceptance gap by itself.
 
+**Source progress (2026-11-03):** the operations account-containment form now
+uses English, French and Arabic resources for its scope warning, controlled
+choices, validation feedback and result banner. UUID, case reference and typed
+confirmation inputs keep left-to-right text direction under Arabic RTL. Web JS
+browser tests pass locally. This source change does not establish translated
+copy review, a complete operations-screen inventory, or the browser/device and
+assistive-technology acceptance required above.
+
 ### GAP-026 — Accept routing narration and all operational copy
 
 **Current gap:** localization infrastructure exists, but provider-generated
