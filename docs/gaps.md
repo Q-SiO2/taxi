@@ -1715,11 +1715,16 @@ unsafe manual recovery process can enable account takeover.
 
 **Required closure:** device-test and approve the one-time recovery-code save/
 acknowledgement interaction and decide whether a protected platform export is
-needed; select a no-cost/sustainable contact-verification channel and policy without
-assuming Firebase phone authentication; define compromised-account and
-high-assurance driver recovery without weakening the separate staff-MFA recovery
-procedure; prove enumeration/timing, notification, redaction and provider-outage
-behavior in production-like staging.
+needed. The owner selected **both email and SMS** for contact verification on
+3 November 2026 (see [R1 decision D07](launch/r1-decisions.md)); channel scope is
+settled, but delivery provider/account owner, budget ceiling, contact-change
+proofing, resend/abuse limits, outage behavior and compromised-account recovery
+policy remain open. Define a provider-neutral challenge lifecycle and its negative
+cases before enabling delivery; do not assume Firebase phone authentication or
+claim that configured contacts are verified. Define high-assurance driver recovery
+without weakening the separate staff-MFA recovery procedure; prove
+enumeration/timing, notification, redaction and provider-outage behavior in
+production-like staging.
 
 **Implementation progress (2026-09-02):** eight independent 100-bit codes are
 shown once by the backend, stored only as domain-separated SHA-256 digests,

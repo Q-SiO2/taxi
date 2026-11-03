@@ -17,7 +17,7 @@ See [baseline/check provenance](r0-baseline-20261023.json), [generated contracts
 
 | Capability | Source assessment | Packet | Next action |
 | --- | --- | --- | --- |
-| Identity and accounts | PARTIAL | R5/R8 | Account lifecycle and verified-contact recovery remain partial; agree proofing, retention and rights policy before implementing their missing contracts. |
+| Identity and accounts | PARTIAL | R5/R8 | Account lifecycle and verified-contact recovery remain partial. Email and SMS are both selected; delivery ownership/budget, proofing, abuse/outage and recovery policy remain open before enabling delivery. |
 | Passenger on-demand | SOURCE_PATHS_PRESENT_NOT_FULLY_ACCEPTED | R5 | Run candidate-bound client journeys and negative/concurrent recovery cases; retain alpha trips as historical synthetic evidence. |
 | Licensed-driver lifecycle | SOURCE_PATHS_PRESENT_NOT_FULLY_ACCEPTED | R5/R8 | Exercise protected application, correction, eligibility, vehicle and live-driver lifecycle using approved synthetic fixtures before enrolling actual drivers. |
 | Fixed routes | SOURCE_PATHS_PRESENT_NOT_FULLY_ACCEPTED | R6 | Rehearse publish, browse/book, capacity, cancellation and execution under the approved operator service scope. |
@@ -85,7 +85,7 @@ All eleven phases T0–T10 are indexed in the [phase requirements map](r0-phase-
 
 1. **R2: preserve a reviewable engineering candidate.** The checkout is dirty and historical CI belongs to older commits. Compare against the retained alpha manifests, separate intentional source deltas, and prepare an isolated candidate without staging unrelated work. Run relevant checks once against that candidate before immutable CI.
 2. **R1: resolve first-city operating decisions.** Use the [prepared decision packet](r1-decisions.md). City/operator authorization, budget, provider accounts, financial responsibility and real staff cannot be manufactured in code.
-3. **R8/GAP-020–021: verified contact and rights workflows.** Existing offline recovery, sessions and password controls are partial coverage. No complete export/correction/restriction/deletion workflow was found in the reviewed auth API. Agree retention/hold, verification and fulfillment policy before a bounded API/schema implementation.
+3. **R8/GAP-020–021: verified contact and rights workflows.** Both email and SMS are selected for verification; provider/account owner, budget, proofing, abuse/outage and compromised-account recovery policy remain open. Existing offline recovery, sessions and password controls are partial coverage. No complete export/correction/restriction/deletion workflow was found in the reviewed auth API. Agree fulfillment and retention/hold policy before a bounded API/schema implementation.
 4. **R7/GAP-024: driver accounting.** Existing earnings and passenger payment/refund/transfer settlement references do not establish driver payables, settlement periods, offsets or adjustments. Obtain the financial contract before implementing it.
 5. **R4/R9/R10: provider and hardware acceptance.** Preserve foreground-only policy pending decision. Arrange real Android/iOS, Mac/signing and providers, and expand source surface candidates into actual state-by-state acceptance.
 
