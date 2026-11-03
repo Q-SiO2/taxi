@@ -339,6 +339,10 @@ rejected.
 
 ## Driver Settlement
 
+The Fès [D05 settlement decision packet](launch/operator-driver-settlement-decision.md)
+sets out the still-unapproved cash custody, transfer payable, offset, period,
+refund and payout choices. It does not authorize a ledger migration or payout.
+
 Driver earnings must be recorded separately from the passenger charge.
 
 ```text

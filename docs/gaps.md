@@ -1862,6 +1862,11 @@ implementation.
 
 ### GAP-024 — Implement operator-to-driver settlement and payout accounting
 
+The [D05 decision packet](launch/operator-driver-settlement-decision.md) now
+contains balanced synthetic cash/transfer/scheduled/refund examples, clearing
+choices and approval gates. It is a proposal only; no financial policy, ledger,
+payout or real-money acceptance follows from it.
+
 **Current gap:** driver earnings are created from completed payments, but there is
 no operator settlement period, payable balance, payout instruction, cash offset,
 adjustment/recovery policy, payout status, remittance statement or reconciliation

@@ -398,6 +398,11 @@ may support them; it never automatically closes a production GAP or T phase.
 | **C-02 Operations/security: sustainable public service** | 002, 003, 011, 015–018, 024, 027, 029, 031, 032 | Production backups/restore, security/operations review, reliable providers, support/on-call, incident handling, measured SLOs and viable actual costs/revenue/settlement; explicit public launch decision. |
 | **C-03 Engineering/operator: maintainability and expansion** | 033–037 | CI, contract drift, release/support policy, analytics/data governance, multi-city/operator isolation and measured capacity. Per-city approval and learned pilot outcomes before expansion; national scale is outside A. |
 
+For B-05/C-02, the [Fès D05 settlement packet](launch/operator-driver-settlement-decision.md)
+now makes cash remittance, transfer payable, offset, period, refund and payout
+choices reviewable. It is unapproved; GAP-024 and the real-money pilot gate stay
+open until the operator/finance decisions and reconciliation evidence exist.
+
 ## Requirement coverage and checkpoint reporting
 
 | Brief section | Implementation location |
