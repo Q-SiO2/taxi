@@ -28,6 +28,7 @@ import org.example.taximobile.operations.model.AdministrativeGrantDecisionReques
 import org.example.taximobile.operations.model.AdministrativeGrantRecord
 import org.example.taximobile.operations.model.AdministrativeGrantRevocationRequest
 import org.example.taximobile.operations.model.StaffPageState
+import org.example.taximobile.operations.model.PagedResponse
 import org.example.taximobile.operations.model.CityRecord
 import org.example.taximobile.operations.model.CityConfigurationRecord
 import org.example.taximobile.operations.model.CityConfigurationCreateRequest
@@ -716,12 +717,16 @@ class OperationsCoordinator(
         reload(current.scope.copy(cityId = cityId))
     }
 
-    fun selectStaffRequestPage(requestedPage: Int) {
+    fun selectStaffRequestPage(requestedPage: Int) = selectStaffPage(requestedPage, requests = true)
+    fun selectStaffGrantPage(requestedPage: Int) = selectStaffPage(requestedPage, requests = false)
+
+    private fun selectStaffPage(requestedPage: Int, requests: Boolean) {
         val current = mutableState.value
-        val page = current.snapshot?.grantRequests ?: return
+        val snapshot = current.snapshot ?: return
+        val page: PagedResponse<*> = (if (requests) snapshot.grantRequests else snapshot.grants) ?: return
         val session = current.session ?: return
         val marketId = current.scope.marketId ?: return
-        if (current.snapshot.staffMarketId != marketId) return
+        if (snapshot.staffMarketId != marketId) return
         if (current.interactionLocked || !session.hasPermission(MANAGE_SCOPED_STAFF_GRANTS)) return
         val navigation = StaffPageState(page.page, page.limit, page.total, page.items.size)
         if (!navigation.allowsNavigation(requestedPage)) return
@@ -733,23 +738,37 @@ class OperationsCoordinator(
         mutate { it.copy(isRefreshing = true, error = null) }
         staffPageJob = scope.launch {
             try {
-                val result = withAccessToken { gateway.staffAccess.listPendingRequests(it, marketId, requestedPage) }
-                if (result.page != requestedPage || result.limit <= 0 || result.total < 0 ||
-                    result.items.any { it.status != "PENDING" }
-                ) {
-                    throw IllegalStateException("Invalid pending staff-request page")
+                val updatedSnapshot = if (requests) {
+                    val result = withAccessToken { gateway.staffAccess.listPendingRequests(it, marketId, requestedPage) }
+                    if (result.page != requestedPage || result.limit <= 0 || result.total < 0 ||
+                        result.items.any { it.status != "PENDING" }
+                    ) throw IllegalStateException("Invalid pending staff-request page")
+                    snapshot.copy(grantRequests = result)
+                } else {
+                    val result = withAccessToken { gateway.staffAccess.listActiveGrants(it, marketId, requestedPage) }
+                    if (result.page != requestedPage || result.limit <= 0 || result.total < 0 ||
+                        result.items.any { it.revokedAt != null }
+                    ) throw IllegalStateException("Invalid active staff-grant page")
+                    snapshot.copy(grants = result)
                 }
                 if (version != staffReadVersion || mutableState.value.session?.userId != ownerId ||
                     mutableState.value.scope != ownerScope
                 ) return@launch
-                mutate { it.copy(snapshot = it.snapshot?.copy(grantRequests = result), isRefreshing = false) }
+                mutate { state ->
+                    val live = state.snapshot
+                    state.copy(
+                        snapshot = if (requests) live?.copy(grantRequests = updatedSnapshot.grantRequests)
+                        else live?.copy(grants = updatedSnapshot.grants),
+                        isRefreshing = false,
+                    )
+                }
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (error: Throwable) {
                 if (version != staffReadVersion || mutableState.value.session?.userId != ownerId ||
                     mutableState.value.scope != ownerScope
                 ) return@launch
-                diagnoseLocalFailure("staff request page", error)
+                diagnoseLocalFailure("staff page", error)
                 if (error is OperationsApiException && error.statusCode == 401) {
                     expireSession()
                 } else {
@@ -757,59 +776,8 @@ class OperationsCoordinator(
                         it.copy(
                             isRefreshing = false,
                             error = OperationsMessage(
-                                UiMessage(Res.string.web_staff_queue_error_title),
-                                UiMessage(Res.string.web_staff_queue_error_detail),
-                            ),
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    fun selectStaffGrantPage(requestedPage: Int) {
-        val current = mutableState.value
-        val page = current.snapshot?.grants ?: return
-        val session = current.session ?: return
-        val marketId = current.scope.marketId ?: return
-        if (current.snapshot.staffMarketId != marketId) return
-        if (current.interactionLocked || !session.hasPermission(MANAGE_SCOPED_STAFF_GRANTS)) return
-        val navigation = StaffPageState(page.page, page.limit, page.total, page.items.size)
-        if (!navigation.allowsNavigation(requestedPage)) return
-
-        staffPageJob?.cancel()
-        val version = ++staffReadVersion
-        val ownerId = session.userId
-        val ownerScope = current.scope
-        mutate { it.copy(isRefreshing = true, error = null) }
-        staffPageJob = scope.launch {
-            try {
-                val result = withAccessToken { gateway.staffAccess.listActiveGrants(it, marketId, requestedPage) }
-                if (result.page != requestedPage || result.limit <= 0 || result.total < 0 ||
-                    result.items.any { it.revokedAt != null }
-                ) {
-                    throw IllegalStateException("Invalid active staff-grant page")
-                }
-                if (version != staffReadVersion || mutableState.value.session?.userId != ownerId ||
-                    mutableState.value.scope != ownerScope
-                ) return@launch
-                mutate { it.copy(snapshot = it.snapshot?.copy(grants = result), isRefreshing = false) }
-            } catch (cancelled: CancellationException) {
-                throw cancelled
-            } catch (error: Throwable) {
-                if (version != staffReadVersion || mutableState.value.session?.userId != ownerId ||
-                    mutableState.value.scope != ownerScope
-                ) return@launch
-                diagnoseLocalFailure("staff grant page", error)
-                if (error is OperationsApiException && error.statusCode == 401) {
-                    expireSession()
-                } else {
-                    mutate {
-                        it.copy(
-                            isRefreshing = false,
-                            error = OperationsMessage(
-                                UiMessage(Res.string.web_staff_grants_error_title),
-                                UiMessage(Res.string.web_staff_grants_error_detail),
+                                UiMessage(if (requests) Res.string.web_staff_queue_error_title else Res.string.web_staff_grants_error_title),
+                                UiMessage(if (requests) Res.string.web_staff_queue_error_detail else Res.string.web_staff_grants_error_detail),
                             ),
                         )
                     }
